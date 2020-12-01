@@ -1,3 +1,4 @@
+import 'package:BuyTime/UI/theme/buytime_theme.dart';
 import 'package:flutter/material.dart';
 
 class ErrorDialog extends StatelessWidget {
@@ -32,7 +33,7 @@ class ErrorDialog extends StatelessWidget {
         Text(
           this.message,
           style: TextStyle(
-            fontFamily: 'Roboto',
+            fontFamily: BuytimeTheme.FontFamily,
             fontSize: 22,
             fontWeight: FontWeight.w400,
           ),
@@ -52,7 +53,7 @@ class ErrorDialog extends StatelessWidget {
             this.closeMessage,
             style: TextStyle(
               fontSize: 24,
-              fontFamily: 'Roboto',
+              fontFamily: BuytimeTheme.FontFamily,
               fontWeight: FontWeight.bold,
             ),
           ),
