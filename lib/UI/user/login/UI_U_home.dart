@@ -92,7 +92,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                             child: Text(
                               "Ciao, benvenuto sul tuo centro servizi!",
                               style: TextStyle(
-                                fontFamily: 'Roboto',
+                                fontFamily: BuytimeTheme.FontFamily,
                                 fontSize: 28,
                                 fontWeight: FontWeight.normal,
                               ),
@@ -115,7 +115,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                           child: Text(
                             "Iscriviti come utente o come business",
                             style: TextStyle(
-                              fontFamily: 'Roboto',
+                              fontFamily: BuytimeTheme.FontFamily,
                               fontSize: 24,
                               fontWeight: FontWeight.w200,
                             ),
@@ -149,7 +149,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                           "Cerco un servizio",
                           style: TextStyle(
                             fontSize: 26,
-                            fontFamily: 'Roboto',
+                            fontFamily: BuytimeTheme.FontFamily,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -177,7 +177,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                           "Ho un'attività",
                           style: TextStyle(
                             fontSize: 26,
-                            fontFamily: 'Roboto',
+                            fontFamily: BuytimeTheme.FontFamily,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -200,7 +200,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                         style: TextStyle(
                           fontSize: 22,
                           color: BuytimeTheme.TextDark,
-                          fontFamily: 'Roboto',
+                          fontFamily: BuytimeTheme.FontFamily,
                           fontWeight: FontWeight.normal,
                         ),
                       )),

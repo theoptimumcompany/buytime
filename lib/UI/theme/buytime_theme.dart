@@ -26,6 +26,8 @@ class BuytimeTheme {
   static const Color AccentRed = Color.fromARGB(255, 255, 99, 99);
   static const Color BackgroundCerulean = Color.fromARGB(255, 119, 148, 170);
 
+  static const String FontFamily = 'Roboto';
+
 
   get managerTheme => ThemeData(
     primarySwatch: ManagerPrimary,
@@ -34,7 +36,7 @@ class BuytimeTheme {
       hintStyle: TextStyle(color: TextMedium),
       labelStyle: TextStyle(color: TextMedium),
     ),
-    fontFamily: 'Roboto',
+    fontFamily: BuytimeTheme.FontFamily,
     brightness: Brightness.light,
     canvasColor: BackgroundWhite,
     accentColor: Secondary,
@@ -43,7 +45,7 @@ class BuytimeTheme {
 
   get userTheme => ThemeData(
     primarySwatch: UserPrimary,
-    fontFamily: 'Roboto',
+    fontFamily: BuytimeTheme.FontFamily,
     appBarTheme:
     AppBarTheme(brightness: Brightness.light, color: TextDark,),
     inputDecorationTheme: InputDecorationTheme(

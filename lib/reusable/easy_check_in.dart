@@ -1,3 +1,4 @@
+import 'package:BuyTime/UI/theme/buytime_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:nfc_in_flutter/nfc_in_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -115,7 +116,7 @@ class EasyCheckInState extends State<EasyCheckIn>
                                     "We have detected that your device has NFC, Search the NFC symbol to go directly to the service menu",
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                      fontFamily: 'Roboto',
+                                      fontFamily: BuytimeTheme.FontFamily,
                                       color: Colors.black,
                                       fontWeight: FontWeight.w200,
                                     ),
@@ -155,7 +156,7 @@ class EasyCheckInState extends State<EasyCheckIn>
                                         "find the QR Code around you to quickly check in the service list",
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
-                                          fontFamily: 'Roboto',
+                                          fontFamily: BuytimeTheme.FontFamily,
                                           color: Colors.black,
                                           fontWeight: FontWeight.w200,
                                         ),
@@ -191,7 +192,7 @@ class EasyCheckInState extends State<EasyCheckIn>
                                     "Do not show again",
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                      fontFamily: 'Roboto',
+                                      fontFamily: BuytimeTheme.FontFamily,
                                       color: Colors.black,
                                       fontWeight: FontWeight.w200,
                                     ),
@@ -219,7 +220,7 @@ class EasyCheckInState extends State<EasyCheckIn>
                                       "Ok I got it!",
                                       style: TextStyle(
                                         fontSize: 23,
-                                        fontFamily: 'Roboto',
+                                        fontFamily: BuytimeTheme.FontFamily,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),

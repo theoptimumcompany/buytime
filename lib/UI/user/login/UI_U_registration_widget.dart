@@ -374,7 +374,7 @@ class RegistrationWidgetState extends State<RegistrationWidget> {
                               hintText: "email *",
                               hintStyle: TextStyle(color: BuytimeTheme.AccentRed),
                               labelStyle: TextStyle(
-                                fontFamily: 'Roboto',
+                                fontFamily: BuytimeTheme.FontFamily,
                                 color: BuytimeTheme.UserPrimary,
                                 fontWeight: FontWeight.w200,
                               ),
@@ -402,7 +402,7 @@ class RegistrationWidgetState extends State<RegistrationWidget> {
                               hintText: "password *",
                               hintStyle: TextStyle(color: BuytimeTheme.AccentRed),
                               labelStyle: TextStyle(
-                                fontFamily: 'Roboto',
+                                fontFamily: BuytimeTheme.FontFamily,
                                 color: BuytimeTheme.UserPrimary,
                                 fontWeight: FontWeight.w200,
                               ),
@@ -429,7 +429,7 @@ class RegistrationWidgetState extends State<RegistrationWidget> {
                               hintText: "name *",
                               hintStyle: TextStyle(color: BuytimeTheme.AccentRed),
                               labelStyle: TextStyle(
-                                fontFamily: 'Roboto',
+                                fontFamily: BuytimeTheme.FontFamily,
                                 color: BuytimeTheme.UserPrimary,
                                 fontWeight: FontWeight.w200,
                               ),
@@ -463,7 +463,7 @@ class RegistrationWidgetState extends State<RegistrationWidget> {
                                 "Register",
                                 style: TextStyle(
                                   fontSize: 23,
-                                  fontFamily: 'Roboto',
+                                  fontFamily: BuytimeTheme.FontFamily,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
