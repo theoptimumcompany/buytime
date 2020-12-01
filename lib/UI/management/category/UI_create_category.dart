@@ -19,6 +19,8 @@ class UI_CreateCategory extends StatefulWidget {
 }
 
 class UI_CreateCategoryState extends State<UI_CreateCategory> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   ObjectState _dropdownParentCategory = ObjectState(level: 0, id: "no_parent", name: "No Parent");
 
   List<DropdownMenuItem<ObjectState>> _dropdownMenuParentCategory =
@@ -36,6 +38,15 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
 
   void initState() {
     super.initState();
+  }
+
+  bool validateAndSave() {
+    final FormState form = _formKey.currentState;
+    if (form.validate()) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   setNewCategoryParent(ObjectState contentSelectDrop, List<dynamic> list) {
@@ -211,72 +222,40 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
                       ),
                       tooltip: 'Submit New Category',
                       onPressed: () {
-                        if (changeParent == false) {
-                          print("Non ho scelto parent");
-                          ObjectState newCategoryParent =
-                              ObjectState(level: 0, id: "no_parent", name: "No Parent");
-                          StoreProvider.of<AppState>(context).dispatch(SetCategoryChildren(0));
-                          StoreProvider.of<AppState>(context).dispatch(SetCategoryLevel(0));
-                          StoreProvider.of<AppState>(context)
-                              .dispatch(SetCategoryParent(newCategoryParent));
-                          StoreProvider.of<AppState>(context)
-                              .dispatch(new CreateCategory(snapshot.category));
-                          StoreProvider.of<AppState>(context)
-                              .dispatch(new AddCategorySnippet(newCategoryParent));
-                        } else {
-                          StoreProvider.of<AppState>(context)
-                              .dispatch(new CreateCategory(snapshot.category));
-                          StoreProvider.of<AppState>(context)
-                              .dispatch(new AddCategorySnippet(newParent));
-                        }
+                        if (validateAndSave()) {
+                          if (changeParent == false) {
+                            print("Non ho scelto parent");
+                            ObjectState newCategoryParent =
+                                ObjectState(level: 0, id: "no_parent", name: "No Parent");
+                            StoreProvider.of<AppState>(context).dispatch(SetCategoryChildren(0));
+                            StoreProvider.of<AppState>(context).dispatch(SetCategoryLevel(0));
+                            StoreProvider.of<AppState>(context)
+                                .dispatch(SetCategoryParent(newCategoryParent));
+                            StoreProvider.of<AppState>(context)
+                                .dispatch(new CreateCategory(snapshot.category));
+                            StoreProvider.of<AppState>(context)
+                                .dispatch(new AddCategorySnippet(newCategoryParent));
+                          } else {
+                            StoreProvider.of<AppState>(context)
+                                .dispatch(new CreateCategory(snapshot.category));
+                            StoreProvider.of<AppState>(context)
+                                .dispatch(new AddCategorySnippet(newParent));
+                          }
 
-                        Future.delayed(const Duration(milliseconds: 500), () {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => UI_ManageCategory(
-                                      created: true,
-                                    )),
-                          );
-                        });
+                          Future.delayed(const Duration(milliseconds: 500), () {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => UI_ManageCategory(
+                                        created: true,
+                                      )),
+                            );
+                          });
+                        }
                       },
                     ),
                   ),
                 ],
-              ),
-              drawer: Drawer(
-                child: ListView(
-                  padding: EdgeInsets.zero,
-                  children: <Widget>[
-                    UserAccountsDrawerHeader(
-                        accountName:
-                            snapshot.user.name != null ? Text(snapshot.user.name) : Text(""),
-                        accountEmail: Text(snapshot.user.email),
-                        decoration: new BoxDecoration(
-                          color: Colors.blue,
-                        ),
-                        currentAccountPicture: CircleAvatar(
-                          radius: 30.0,
-                          backgroundImage: snapshot != null &&
-                                  snapshot.user != null &&
-                                  snapshot.user.photo != null &&
-                                  snapshot.user.photo.isEmpty
-                              ? NetworkImage("${snapshot.user.photo}")
-                              : null,
-                          backgroundColor: Colors.transparent,
-                        )),
-                    ListTile(
-                      leading: Icon(Icons.business_center),
-                      title: Text('Businesses'),
-                      onTap: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (context) => UI_M_BusinessList()),
-                        );
-                      },
-                    ),
-                  ],
-                ),
               ),
               body: Padding(
                 padding: EdgeInsets.all(10.0),
@@ -291,22 +270,25 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
                               borderRadius: BorderRadius.circular(8.0),
                               border: Border.all(color: Colors.grey)),
                           child: Form(
+                              key: _formKey,
                               child: Padding(
-                            padding: const EdgeInsets.only(
-                                top: 0.0, bottom: 5.0, left: 10.0, right: 10.0),
-                            child: TextFormField(
-                              initialValue: _selectedCategoryName,
-                              onChanged: (value) {
-                                _selectedCategoryName = value;
-                                StoreProvider.of<AppState>(context)
-                                    .dispatch(SetCategoryName(_selectedCategoryName));
-                              },
-                              onSaved: (value) {
-                                _selectedCategoryName = value;
-                              },
-                              decoration: InputDecoration(labelText: 'Category Name'),
-                            ),
-                          )),
+                                padding: const EdgeInsets.only(
+                                    top: 0.0, bottom: 5.0, left: 10.0, right: 10.0),
+                                child: TextFormField(
+                                  validator: (value) =>
+                                      value.isEmpty ? 'Category name cannot be blank' : null,
+                                  initialValue: _selectedCategoryName,
+                                  onChanged: (value) {
+                                    _selectedCategoryName = value;
+                                    StoreProvider.of<AppState>(context)
+                                        .dispatch(SetCategoryName(_selectedCategoryName));
+                                  },
+                                  onSaved: (value) {
+                                    _selectedCategoryName = value;
+                                  },
+                                  decoration: InputDecoration(labelText: 'Category Name'),
+                                ),
+                              )),
                         ),
                       ),
                     ),

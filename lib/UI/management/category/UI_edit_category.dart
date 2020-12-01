@@ -20,6 +20,8 @@ class UI_EditCategory extends StatefulWidget {
 }
 
 class UI_EditCategoryState extends State<UI_EditCategory> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   ObjectState _dropdownParentCategory = ObjectState(level: 0, id: "no_parent", name: "No Parent");
 
   List<DropdownMenuItem<ObjectState>> _dropdownMenuParentCategory =
@@ -37,6 +39,15 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
 
   void initState() {
     super.initState();
+  }
+
+  bool validateAndSave() {
+    final FormState form = _formKey.currentState;
+    if (form.validate()) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   setNewCategoryParent(ObjectState contentSelectDrop, List<dynamic> list) {
@@ -252,80 +263,48 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
                     child: IconButton(
-                      icon: const Icon(
-                        Icons.check,
-                        color: Colors.white,
-                        size: 25.0,
-                      ),
-                      tooltip: 'Submit New Category',
-                      onPressed: () {
-                        if (canMoveToParent) {
-                          ObjectState newCategoryParent = selectedParentCategory;
-                          print("Aggiorno " + newCategoryParent.name);
-                          StoreProvider.of<AppState>(context)
-                              .dispatch(new UpdateCategory(snapshot.category));
-                          StoreProvider.of<AppState>(context)
-                              .dispatch(new UpdateCategorySnippet(newCategoryParent));
+                        icon: const Icon(
+                          Icons.check,
+                          color: Colors.white,
+                          size: 25.0,
+                        ),
+                        tooltip: 'Submit New Category',
+                        onPressed: () {
+                          if (validateAndSave()) {
+                            if (canMoveToParent) {
+                              ObjectState newCategoryParent = selectedParentCategory;
+                              print("Aggiorno " + newCategoryParent.name);
+                              StoreProvider.of<AppState>(context)
+                                  .dispatch(new UpdateCategory(snapshot.category));
+                              StoreProvider.of<AppState>(context)
+                                  .dispatch(new UpdateCategorySnippet(newCategoryParent));
 
-                          Future.delayed(const Duration(milliseconds: 500), () {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => UI_ManageCategory(
-                                        edited: true,
-                                      )),
-                            );
-                          });
-                        } else {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              // return object of type Dialog
-                              return AlertDialog(
-                                title: new Text("Caution"),
-                                content: new Text("You can't move the branch to selected parent!"),
+                              Future.delayed(const Duration(milliseconds: 500), () {
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => UI_ManageCategory(
+                                            edited: true,
+                                          )),
+                                );
+                              });
+                            } else {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  // return object of type Dialog
+                                  return AlertDialog(
+                                    title: new Text("Caution"),
+                                    content:
+                                        new Text("You can't move the branch to selected parent!"),
+                                  );
+                                },
                               );
-                            },
-                          );
-                        }
-                      },
-                    ),
+                            }
+                          }
+                        }),
                   ),
                 ],
-              ),
-              drawer: Drawer(
-                child: ListView(
-                  padding: EdgeInsets.zero,
-                  children: <Widget>[
-                    UserAccountsDrawerHeader(
-                        accountName:
-                            snapshot.user.name != null ? Text(snapshot.user.name) : Text(""),
-                        accountEmail: Text(snapshot.user.email),
-                        decoration: new BoxDecoration(
-                          color: Colors.blue,
-                        ),
-                        currentAccountPicture: CircleAvatar(
-                          radius: 30.0,
-                          backgroundImage: snapshot != null &&
-                                  snapshot.user != null &&
-                                  snapshot.user.photo != null &&
-                                  snapshot.user.photo.isEmpty
-                              ? NetworkImage("${snapshot.user.photo}")
-                              : null,
-                          backgroundColor: Colors.transparent,
-                        )),
-                    ListTile(
-                      leading: Icon(Icons.business_center),
-                      title: Text('Businesses'),
-                      onTap: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (context) => UI_M_BusinessList()),
-                        );
-                      },
-                    ),
-                  ],
-                ),
               ),
               floatingActionButton: !hasChild
                   ? FloatingActionButton(
@@ -362,22 +341,25 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
                               borderRadius: BorderRadius.circular(8.0),
                               border: Border.all(color: Colors.grey)),
                           child: Form(
+                              key: _formKey,
                               child: Padding(
-                            padding: const EdgeInsets.only(
-                                top: 0.0, bottom: 5.0, left: 10.0, right: 10.0),
-                            child: TextFormField(
-                              initialValue: snapshot.category.name,
-                              onChanged: (value) {
-                                _selectedCategoryName = value;
-                                StoreProvider.of<AppState>(context)
-                                    .dispatch(SetCategoryName(_selectedCategoryName));
-                              },
-                              onSaved: (value) {
-                                _selectedCategoryName = value;
-                              },
-                              decoration: InputDecoration(labelText: 'Category Name'),
-                            ),
-                          )),
+                                padding: const EdgeInsets.only(
+                                    top: 0.0, bottom: 5.0, left: 10.0, right: 10.0),
+                                child: TextFormField(
+                                  validator: (value) =>
+                                      value.isEmpty ? 'Category name cannot be blank' : null,
+                                  initialValue: snapshot.category.name,
+                                  onChanged: (value) {
+                                    _selectedCategoryName = value;
+                                    StoreProvider.of<AppState>(context)
+                                        .dispatch(SetCategoryName(_selectedCategoryName));
+                                  },
+                                  onSaved: (value) {
+                                    _selectedCategoryName = value;
+                                  },
+                                  decoration: InputDecoration(labelText: 'Category Name'),
+                                ),
+                              )),
                         ),
                       ),
                     ),
