@@ -9,6 +9,8 @@ import 'package:BuyTime/reblox/reducer/category_reducer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
+import '../../../reusable/appbar/manager_buytime_appbar.dart';
+
 class UI_CreateCategory extends StatefulWidget {
   final String title = 'Categories';
 
@@ -19,7 +21,8 @@ class UI_CreateCategory extends StatefulWidget {
 class UI_CreateCategoryState extends State<UI_CreateCategory> {
   ObjectState _dropdownParentCategory = ObjectState(level: 0, id: "no_parent", name: "No Parent");
 
-  List<DropdownMenuItem<ObjectState>> _dropdownMenuParentCategory = new List<DropdownMenuItem<ObjectState>>();
+  List<DropdownMenuItem<ObjectState>> _dropdownMenuParentCategory =
+      new List<DropdownMenuItem<ObjectState>>();
 
   List<DropdownMenuItem<ObjectState>> _dropdownMenuManagerCategory;
   String _selectedManagerCategory;
@@ -72,14 +75,14 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
   }*/
 
   void buildDropDownMenuItemsParent(ObjectState item) {
-
     if (stopBuildDropDown == false) {
       stopBuildDropDown = true;
       CategorySnippet categoryNode = StoreProvider.of<AppState>(context).state.categorySnippet;
       List<DropdownMenuItem<ObjectState>> items = List();
 
       if (categoryNode.categoryNodeList != null) {
-        if (categoryNode.categoryNodeList.length != 0 && categoryNode.categoryNodeList.length != null) {
+        if (categoryNode.categoryNodeList.length != 0 &&
+            categoryNode.categoryNodeList.length != null) {
           List<dynamic> list = categoryNode.categoryNodeList;
           items = openTree(list, items);
         }
@@ -99,7 +102,8 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
   openTree(List<dynamic> list, List<DropdownMenuItem<ObjectState>> items) {
     for (int i = 0; i < list.length; i++) {
       if (list[i]['level'] < 6) {
-        ObjectState objectState = ObjectState(name: list[i]['nodeName'].toString(), id: list[i]['nodeId'], level: list[i]['level']);
+        ObjectState objectState = ObjectState(
+            name: list[i]['nodeName'].toString(), id: list[i]['nodeId'], level: list[i]['level']);
         items.add(
           DropdownMenuItem(
             child: Text(objectState.name),
@@ -164,59 +168,101 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
           return WillPopScope(
             onWillPop: _onWillPop,
             child: Scaffold(
-              appBar: AppBar(
-                title: Text(
-                  'Create Category',
-                  style: TextStyle(
-                    color: Colors.black,
-                  ),
-                ),
-                backgroundColor: Colors.blue,
-                actions: <Widget>[
-                  FlatButton(
-                    textColor: Colors.black,
-                    onPressed: () {
-                      if (changeParent == false) {
-                        print("Non ho scelto parent");
-                        ObjectState newCategoryParent = ObjectState(level: 0, id: "no_parent", name: "No Parent");
-                        StoreProvider.of<AppState>(context).dispatch(SetCategoryChildren(0));
-                        StoreProvider.of<AppState>(context).dispatch(SetCategoryLevel(0));
-                        StoreProvider.of<AppState>(context).dispatch(SetCategoryParent(newCategoryParent));
-                        StoreProvider.of<AppState>(context).dispatch(new CreateCategory(snapshot.category));
-                        StoreProvider.of<AppState>(context).dispatch(new AddCategorySnippet(newCategoryParent));
-                      } else {
-                        StoreProvider.of<AppState>(context).dispatch(new CreateCategory(snapshot.category));
-                        StoreProvider.of<AppState>(context).dispatch(new AddCategorySnippet(newParent));
-                      }
-
-                      Future.delayed(const Duration(milliseconds: 500), () {
+              appBar: BuyTimeAppbarManager(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
+                    child: IconButton(
+                      icon: const Icon(
+                        Icons.arrow_back_ios_rounded,
+                        color: Colors.white,
+                        size: 25.0,
+                      ),
+                      tooltip: 'Come back',
+                      onPressed: () {
                         Navigator.pushReplacement(
                           context,
-                          MaterialPageRoute(
-                              builder: (context) => UI_ManageCategory(
-                                    created: true,
-                                  )),
+                          MaterialPageRoute(builder: (context) => UI_ManageCategory()),
                         );
-                      });
-                    },
-                    child: Icon(Icons.check),
+                      },
+                    ),
+                  ),
+                  Container(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 0.0),
+                      child: Text(
+                        "Create Category",
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: media.height * 0.028,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
+                    child: IconButton(
+                      icon: const Icon(
+                        Icons.check,
+                        color: Colors.white,
+                        size: 25.0,
+                      ),
+                      tooltip: 'Submit New Category',
+                      onPressed: () {
+                        if (changeParent == false) {
+                          print("Non ho scelto parent");
+                          ObjectState newCategoryParent =
+                              ObjectState(level: 0, id: "no_parent", name: "No Parent");
+                          StoreProvider.of<AppState>(context).dispatch(SetCategoryChildren(0));
+                          StoreProvider.of<AppState>(context).dispatch(SetCategoryLevel(0));
+                          StoreProvider.of<AppState>(context)
+                              .dispatch(SetCategoryParent(newCategoryParent));
+                          StoreProvider.of<AppState>(context)
+                              .dispatch(new CreateCategory(snapshot.category));
+                          StoreProvider.of<AppState>(context)
+                              .dispatch(new AddCategorySnippet(newCategoryParent));
+                        } else {
+                          StoreProvider.of<AppState>(context)
+                              .dispatch(new CreateCategory(snapshot.category));
+                          StoreProvider.of<AppState>(context)
+                              .dispatch(new AddCategorySnippet(newParent));
+                        }
+
+                        Future.delayed(const Duration(milliseconds: 500), () {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => UI_ManageCategory(
+                                      created: true,
+                                    )),
+                          );
+                        });
+                      },
+                    ),
                   ),
                 ],
-                iconTheme: new IconThemeData(color: Colors.black),
               ),
               drawer: Drawer(
                 child: ListView(
                   padding: EdgeInsets.zero,
                   children: <Widget>[
                     UserAccountsDrawerHeader(
-                        accountName: snapshot.user.name != null ? Text(snapshot.user.name) : Text(""),
+                        accountName:
+                            snapshot.user.name != null ? Text(snapshot.user.name) : Text(""),
                         accountEmail: Text(snapshot.user.email),
                         decoration: new BoxDecoration(
                           color: Colors.blue,
                         ),
                         currentAccountPicture: CircleAvatar(
                           radius: 30.0,
-                          backgroundImage: snapshot != null && snapshot.user != null && snapshot.user.photo != null && snapshot.user.photo.isEmpty ? NetworkImage("${snapshot.user.photo}") : null,
+                          backgroundImage: snapshot != null &&
+                                  snapshot.user != null &&
+                                  snapshot.user.photo != null &&
+                                  snapshot.user.photo.isEmpty
+                              ? NetworkImage("${snapshot.user.photo}")
+                              : null,
                           backgroundColor: Colors.transparent,
                         )),
                     ListTile(
@@ -241,15 +287,19 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
                       child: Center(
                         child: Container(
                           width: media.width * 0.9,
-                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8.0),
+                              border: Border.all(color: Colors.grey)),
                           child: Form(
                               child: Padding(
-                            padding: const EdgeInsets.only(top: 0.0, bottom: 5.0, left: 10.0, right: 10.0),
+                            padding: const EdgeInsets.only(
+                                top: 0.0, bottom: 5.0, left: 10.0, right: 10.0),
                             child: TextFormField(
                               initialValue: _selectedCategoryName,
                               onChanged: (value) {
                                 _selectedCategoryName = value;
-                                StoreProvider.of<AppState>(context).dispatch(SetCategoryName(_selectedCategoryName));
+                                StoreProvider.of<AppState>(context)
+                                    .dispatch(SetCategoryName(_selectedCategoryName));
                               },
                               onSaved: (value) {
                                 _selectedCategoryName = value;
@@ -265,21 +315,28 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
                       child: Center(
                         child: Container(
                           width: media.width * 0.9,
-                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8.0),
+                              border: Border.all(color: Colors.grey)),
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: DropdownButtonHideUnderline(
                               child: DropdownButtonFormField<ObjectState>(
                                   value: selectedDropValue,
                                   items: _dropdownMenuParentCategory,
-                                  decoration: InputDecoration(labelText: 'Parent Category', enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white))),
+                                  decoration: InputDecoration(
+                                      labelText: 'Parent Category',
+                                      enabledBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(color: Colors.white))),
                                   onChanged: (ObjectState newValue) {
                                     setState(() {
                                       changeParent = true;
                                       selectedDropValue = newValue;
                                       newParent = newValue;
-                                      print("Drop Selezionato su onchangedrop : " + selectedDropValue.name);
-                                      setNewCategoryParent(selectedDropValue, snapshot.categorySnippet.categoryNodeList);
+                                      print("Drop Selezionato su onchangedrop : " +
+                                          selectedDropValue.name);
+                                      setNewCategoryParent(selectedDropValue,
+                                          snapshot.categorySnippet.categoryNodeList);
                                     });
                                   }),
                             ),
