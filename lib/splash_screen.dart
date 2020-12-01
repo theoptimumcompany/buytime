@@ -368,12 +368,12 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     return Scaffold(
       // body: OldSplashScreen(spinnerX: spinnerX, spinnerY: spinnerY, arrowAnimationController: _arrowAnimationController, arrowAnimation: _arrowAnimation),
       body: Scaffold(
-        backgroundColor: Color(0xFF207CC4),
+        backgroundColor: Color(0xFF207CC3),
         body: Container(
-          margin: EdgeInsets.only(
+          /*margin: EdgeInsets.only(
             bottom: height / 5,
-          ),
-          child: Center(child: new Image.asset('assets/img/brand/logo.png', width: width * 0.7)),
+          ),*/
+          child: Center(child: new Image.asset('assets/img/brand/logo_b.png', width: width * 0.7, height: height * 0.3)),
         ),
       ),
     );
