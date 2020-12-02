@@ -140,6 +140,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                 height: double.infinity,
                               ),
                             ),
+
                           ),
                           ///Logo & Buytime text
                           Positioned.fill(
