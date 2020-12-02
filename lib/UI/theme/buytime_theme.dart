@@ -16,6 +16,7 @@ class BuytimeTheme {
     900: Color.fromRGBO(16, 114, 203, 1.0),
   };
 
+
   static const Color TextDark = Color.fromARGB(255, 16, 5, 14);
   static const Color TextMedium = Color.fromARGB(255, 117, 117, 117);
   static const Color ManagerPrimary = Color.fromARGB(255, 0, 103, 145);
