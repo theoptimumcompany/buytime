@@ -99,15 +99,14 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
     return WillPopScope(
       onWillPop: () async => false,
-      child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          home: Scaffold(
-            body: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    ///Background video & Logo & Buytime text & Slogan
-                    Expanded(
+      child: Scaffold(
+        body: SafeArea(
+          child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ///Background video & Logo & Buytime text & Slogan
+                  Expanded(
                       flex: 5,
                       child: Stack(
                         children: [
@@ -150,7 +149,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                 children: [
                                   ///Logo
                                   Container(
-                                    margin: EdgeInsets.only(top: SizeConfig.safeAreaVertical * 3.5),
+                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 10),
                                     decoration: BoxDecoration(
                                       color: Colors.white,
                                       borderRadius: BorderRadius.all(Radius.circular(20)),
@@ -182,7 +181,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                                 "Buytime",
                                                 style: TextStyle(
                                                     fontFamily: 'Roboto',
-                                                    fontSize: 28,
+                                                    fontSize: SizeConfig.safeBlockVertical * 5,
                                                     fontWeight: FontWeight.normal,
                                                     color: Colors.white
                                                 ),
@@ -198,7 +197,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                           ),
                           ///Slogan
                           Positioned.fill(
-                            bottom: SizeConfig.safeAreaVertical * 3.5,
+                            bottom: SizeConfig.safeBlockVertical * 12.5,
                             child: Align(
                               alignment: Alignment.bottomCenter,
                               child: Container(
@@ -225,142 +224,144 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                           )
                         ],
                       )
-                    ),
-                    ///Sign up & Sign in & ToS % PRivacy policy
-                    Expanded(
-                      flex: 2,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            children: [
-                              ///Sign up
-                              Container(
-                                  width: media.width * .6,
-                                  margin: EdgeInsets.only(top: 20.0, bottom: 10.0),
-                                  child: FadeTransition(
-                                    opacity: _animation3,
-                                    child: RaisedButton(
-                                      onPressed: () {
-                                        Navigator.push(context, MaterialPageRoute(builder: (context) => RegistrationWidget()),);
-                                      },
-                                      textColor: BuytimeTheme.TextWhite,
-                                      color: BuytimeTheme.UserPrimary,
-                                      padding: EdgeInsets.all(media.width * 0.03),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: new BorderRadius.circular(5),
-                                      ),
-                                      child: Text(
-                                        "Inizia Il Mio Soggiorno",
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          fontFamily: 'Roboto',
-                                          fontWeight: FontWeight.w500,
-                                        ),
+                  ),
+                  ///Sign up & Sign in & ToS % PRivacy policy
+                  Expanded(
+                    flex: 2,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          children: [
+                            ///Sign up
+                            Container(
+                                width: media.width * .6,
+                                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 5, bottom: SizeConfig.safeBlockVertical * 2),
+                                child: FadeTransition(
+                                  opacity: _animation3,
+                                  child: RaisedButton(
+                                    onPressed: () {
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => RegistrationWidget()),);
+                                    },
+                                    textColor: BuytimeTheme.TextWhite,
+                                    color: BuytimeTheme.UserPrimary,
+                                    padding: EdgeInsets.all(media.width * 0.03),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: new BorderRadius.circular(5),
+                                    ),
+                                    child: Text(
+                                      "Inizia Il Mio Soggiorno",
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontFamily: 'Roboto',
+                                        fontWeight: FontWeight.w500,
                                       ),
                                     ),
-                                  )),
-                              ///Sign in
-                              Container(
-                                  width: media.width * .6,
-                                  child: FadeTransition(
-                                    opacity: _animation3,
-                                    child: RaisedButton(
-                                      /*onPressed: () {
+                                  ),
+                                )),
+                            ///Sign in
+                            Container(
+                                width: media.width * .6,
+                                child: FadeTransition(
+                                  opacity: _animation3,
+                                  child: RaisedButton(
+                                    /*onPressed: () {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) => BusinessData()),
                                     );
                                   },*/
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(builder: (context) => LoginWidget()),
-                                        );
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => LoginWidget()),
+                                      );
+                                    },
+                                    textColor: BuytimeTheme.UserPrimary.withOpacity(0.3),
+                                    color: Colors.white,
+                                    padding: EdgeInsets.all(media.width * 0.03),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: new BorderRadius.circular(5),
+                                    ),
+                                    child: Text(
+                                      "Riloggati",
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontFamily: 'Roboto',
+                                          fontWeight: FontWeight.w500,
+                                          color: BuytimeTheme.UserPrimary
+                                      ),
+                                    ),
+                                  ),
+                                )),
+                          ],
+                        ),
+                        ///ToS & Privacy Policy
+                        FadeTransition(
+                          opacity: _animation3,
+                          child: Container(
+                            margin: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 3),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                  child: Text(
+                                    'Iscrivendoti accetti i nostri ',
+                                    style: TextStyle(
+                                        color: Colors.grey,
+                                        fontWeight: FontWeight.w400
+                                    ),
+                                  ),
+                                ),
+                                RichText(
+                                  text: TextSpan(
+                                    style: TextStyle(
+                                        color: BuytimeTheme.userPrimarySwatch[300],
+                                        fontWeight: FontWeight.w500
+                                    ),
+                                    text: 'ToS',
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = (){
+                                        debugPrint('ToS Clicked');
                                       },
-                                      textColor: BuytimeTheme.UserPrimary.withOpacity(0.3),
-                                      color: Colors.white,
-                                      padding: EdgeInsets.all(media.width * 0.03),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: new BorderRadius.circular(5),
-                                      ),
-                                      child: Text(
-                                        "Riloggati",
-                                        style: TextStyle(
-                                            fontSize: 18,
-                                            fontFamily: 'Roboto',
-                                            fontWeight: FontWeight.w500,
-                                            color: BuytimeTheme.UserPrimary
-                                        ),
-                                      ),
-                                    ),
-                                  )),
-                            ],
-                          ),
-                          ///ToS & Privacy Policy
-                          FadeTransition(
-                            opacity: _animation3,
-                            child: Container(
-                              margin: EdgeInsets.only(bottom: 10.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    child: Text(
-                                      'Iscrivendoti accetti i nostri ',
-                                      style: TextStyle(
-                                          color: Colors.grey,
-                                          fontWeight: FontWeight.w400
-                                      ),
+                                  ),
+                                ),
+                                Container(
+                                  child: Text(
+                                    ' e ',
+                                    style: TextStyle(
+                                        color: Colors.grey,
+                                        fontWeight: FontWeight.w400
                                     ),
                                   ),
-                                  RichText(
-                                    text: TextSpan(
-                                      style: TextStyle(
-                                          color: BuytimeTheme.userPrimarySwatch[300],
-                                          fontWeight: FontWeight.w500
-                                      ),
-                                      text: 'ToS',
-                                      recognizer: TapGestureRecognizer()
-                                        ..onTap = (){
-                                          debugPrint('ToS Clicked');
-                                        },
+                                ),
+                                RichText(
+                                  text: TextSpan(
+                                    style: TextStyle(
+                                        color: BuytimeTheme.userPrimarySwatch[300],
+                                        fontWeight: FontWeight.w500
                                     ),
+                                    text: 'Privacy Policy',
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = (){
+                                        debugPrint('Privacy Policy Clicked');
+                                      },
                                   ),
-                                  Container(
-                                    child: Text(
-                                      ' e ',
-                                      style: TextStyle(
-                                          color: Colors.grey,
-                                          fontWeight: FontWeight.w400
-                                      ),
-                                    ),
-                                  ),
-                                  RichText(
-                                    text: TextSpan(
-                                      style: TextStyle(
-                                          color: BuytimeTheme.userPrimarySwatch[300],
-                                          fontWeight: FontWeight.w500
-                                      ),
-                                      text: 'Privacy Policy',
-                                      recognizer: TapGestureRecognizer()
-                                        ..onTap = (){
-                                          debugPrint('Privacy Policy Clicked');
-                                        },
-                                    ),
-                                  ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
-                          )
-                        ],
-                      ),
+                          ),
+                        )
+                      ],
                     ),
-                  ],
-                )),
-            /* )*/
-          )),
+                  ),
+                ],
+              )
+          ),
+        ),
+        /* )*/
+      ),
     );
   }
 }
