@@ -16,6 +16,7 @@ class BuytimeTheme {
     900: Color.fromRGBO(16, 114, 203, 1.0),
   };
 
+
   static const Color TextDark = Color.fromARGB(255, 16, 5, 14);
   static const Color TextMedium = Color.fromARGB(255, 117, 117, 117);
   static const Color ManagerPrimary = Color.fromARGB(255, 0, 103, 145);
@@ -28,6 +29,12 @@ class BuytimeTheme {
 
   static const String FontFamily = 'Roboto';
 
+  static const TextTheme themeText =  TextTheme(
+  headline1: TextStyle(fontSize: 72.0, fontWeight: FontWeight.normal),
+  headline6: TextStyle(fontSize: 36.0, fontStyle: FontStyle.normal),
+  bodyText2: TextStyle(fontSize: 14.0, fontFamily: FontFamily, fontStyle: FontStyle.normal),
+  );
+
 
   get managerTheme => ThemeData(
     primarySwatch: ManagerPrimary,
@@ -37,6 +44,7 @@ class BuytimeTheme {
       labelStyle: TextStyle(color: TextMedium),
     ),
     fontFamily: BuytimeTheme.FontFamily,
+    textTheme: BuytimeTheme.themeText,
     brightness: Brightness.light,
     canvasColor: BackgroundWhite,
     accentColor: Secondary,
@@ -46,6 +54,7 @@ class BuytimeTheme {
   get userTheme => ThemeData(
     primarySwatch: UserPrimary,
     fontFamily: BuytimeTheme.FontFamily,
+    textTheme: BuytimeTheme.themeText,
     appBarTheme:
     AppBarTheme(brightness: Brightness.light, color: TextDark,),
     inputDecorationTheme: InputDecorationTheme(
