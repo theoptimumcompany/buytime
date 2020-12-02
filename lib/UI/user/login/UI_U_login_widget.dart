@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:BuyTime/UI/theme/buytime_theme.dart';
 import 'package:BuyTime/reblox/model/object_state.dart';
 import 'package:BuyTime/reblox/model/user/user_state.dart';
 import 'package:BuyTime/reblox/reducer/user_reducer.dart';
@@ -350,7 +351,7 @@ class LoginWidgetState extends State<LoginWidget> {
                           hintText: "email *",
                           hintStyle: TextStyle(color: Colors.redAccent),
                           labelStyle: TextStyle(
-                            fontFamily: 'Roboto',
+                            fontFamily: BuytimeTheme.FontFamily,
                             color: Colors.blue,
                             fontWeight: FontWeight.w200,
                           ),
@@ -380,7 +381,7 @@ class LoginWidgetState extends State<LoginWidget> {
                           hintText: "password *",
                           hintStyle: TextStyle(color: Colors.redAccent),
                           labelStyle: TextStyle(
-                            fontFamily: 'Roboto',
+                            fontFamily: BuytimeTheme.FontFamily,
                             color: Colors.blue,
                             fontWeight: FontWeight.w200,
                           ),
@@ -413,7 +414,7 @@ class LoginWidgetState extends State<LoginWidget> {
                             "Login",
                             style: TextStyle(
                               fontSize: 25,
-                              fontFamily: 'Roboto',
+                              fontFamily: BuytimeTheme.FontFamily,
                               fontWeight: FontWeight.bold,
                             ),
                           ),

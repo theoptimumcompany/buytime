@@ -10,6 +10,7 @@ import 'package:BuyTime/reusable/form/optimum_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
+import '../../../reusable/appbar/manager_buytime_appbar.dart';
 
 class UI_EditCategory extends StatefulWidget {
   final String title = 'Categories';
@@ -19,9 +20,12 @@ class UI_EditCategory extends StatefulWidget {
 }
 
 class UI_EditCategoryState extends State<UI_EditCategory> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   ObjectState _dropdownParentCategory = ObjectState(level: 0, id: "no_parent", name: "No Parent");
 
-  List<DropdownMenuItem<ObjectState>> _dropdownMenuParentCategory = new List<DropdownMenuItem<ObjectState>>();
+  List<DropdownMenuItem<ObjectState>> _dropdownMenuParentCategory =
+      new List<DropdownMenuItem<ObjectState>>();
 
   List<DropdownMenuItem<ObjectState>> _dropdownMenuManagerCategory;
   String _selectedManagerCategory;
@@ -35,6 +39,15 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
 
   void initState() {
     super.initState();
+  }
+
+  bool validateAndSave() {
+    final FormState form = _formKey.currentState;
+    if (form.validate()) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   setNewCategoryParent(ObjectState contentSelectDrop, List<dynamic> list) {
@@ -73,17 +86,15 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
     }
   }*/
 
-  void  buildDropDownMenuItemsParent(ObjectState item) {
+  void buildDropDownMenuItemsParent(ObjectState item) {
     if (stopBuildDropDown == false) {
       stopBuildDropDown = true;
-      CategorySnippet categoryNode = StoreProvider
-          .of<AppState>(context)
-          .state
-          .categorySnippet;
+      CategorySnippet categoryNode = StoreProvider.of<AppState>(context).state.categorySnippet;
       List<DropdownMenuItem<ObjectState>> items = List();
 
       if (categoryNode.categoryNodeList != null) {
-        if (categoryNode.categoryNodeList.length != 0 && categoryNode.categoryNodeList.length != null) {
+        if (categoryNode.categoryNodeList.length != 0 &&
+            categoryNode.categoryNodeList.length != null) {
           List<dynamic> list = categoryNode.categoryNodeList;
           items = openTree(list, items);
         }
@@ -127,8 +138,10 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
 
   openTree(List<dynamic> list, List<DropdownMenuItem<ObjectState>> items) {
     for (int i = 0; i < list.length; i++) {
-      if (list[i]['nodeId'] == StoreProvider.of<AppState>(context).state.category.parent && StoreProvider.of<AppState>(context).state.category.parent != "no_parent") {
-        ObjectState objectState = ObjectState(name: list[i]['nodeName'].toString(), id: list[i]['nodeId'], level: list[i]['level']);
+      if (list[i]['nodeId'] == StoreProvider.of<AppState>(context).state.category.parent &&
+          StoreProvider.of<AppState>(context).state.category.parent != "no_parent") {
+        ObjectState objectState = ObjectState(
+            name: list[i]['nodeName'].toString(), id: list[i]['nodeId'], level: list[i]['level']);
         parentValue = objectState;
       }
       if (list[i]['nodeId'] == StoreProvider.of<AppState>(context).state.category.id) {
@@ -139,7 +152,8 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
         }
       }
       if (list[i]['nodeId'] != StoreProvider.of<AppState>(context).state.category.id) {
-        ObjectState objectState = ObjectState(name: list[i]['nodeName'].toString(), id: list[i]['nodeId'], level: list[i]['level']);
+        ObjectState objectState = ObjectState(
+            name: list[i]['nodeName'].toString(), id: list[i]['nodeId'], level: list[i]['level']);
         items.add(
           DropdownMenuItem(
             child: Text(objectState.name),
@@ -197,8 +211,9 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
     return StoreConnector<AppState, AppState>(
         converter: (store) => store.state,
         builder: (context, snapshot) {
-          ObjectState objectState =  ObjectState(level: 0, id: "no_parent", name: "No Parent");
-          parentValue = snapshot.category.parent.id == "no_parent" ? objectState : snapshot.category.parent;
+          ObjectState objectState = ObjectState(level: 0, id: "no_parent", name: "No Parent");
+          parentValue =
+              snapshot.category.parent.id == "no_parent" ? objectState : snapshot.category.parent;
           buildDropDownMenuItemsParent(_dropdownParentCategory);
           for (int i = 0; i < _dropdownMenuParentCategory.length; i++) {
             if (parentValue.id == _dropdownMenuParentCategory[i].value.id) {
@@ -212,88 +227,97 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
           return WillPopScope(
             onWillPop: _onWillPop,
             child: Scaffold(
-              appBar: AppBar(
-                title: Text(
-                  'Edit Category',
-                  style: TextStyle(
-                    color: Colors.black,
-                  ),
-                ),
-                backgroundColor: Colors.blue,
-                actions: <Widget>[
-                  FlatButton(
-                    textColor: Colors.black,
-                    onPressed: () {
-                      if (canMoveToParent) {
-                        ObjectState newCategoryParent = selectedParentCategory;
-                        print("Aggiorno " + newCategoryParent.name);
-                        StoreProvider.of<AppState>(context).dispatch(new UpdateCategory(snapshot.category));
-                        StoreProvider.of<AppState>(context).dispatch(new UpdateCategorySnippet(newCategoryParent));
-
-                        Future.delayed(const Duration(milliseconds: 500), () {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => UI_ManageCategory(
-                                      edited: true,
-                                    )),
-                          );
-                        });
-                      } else {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            // return object of type Dialog
-                            return AlertDialog(
-                              title: new Text("Caution"),
-                              content: new Text("You can't move the branch to selected parent!"),
-                            );
-                          },
-                        );
-                      }
-                    },
-                    child: Icon(Icons.check),
-                  ),
-                ],
-                iconTheme: new IconThemeData(color: Colors.black),
-              ),
-              drawer: Drawer(
-                child: ListView(
-                  padding: EdgeInsets.zero,
-                  children: <Widget>[
-                    UserAccountsDrawerHeader(
-                        accountName: snapshot.user.name != null ? Text(snapshot.user.name) : Text(""),
-                        accountEmail: Text(snapshot.user.email),
-                        decoration: new BoxDecoration(
-                          color: Colors.blue,
-                        ),
-                        currentAccountPicture: CircleAvatar(
-                          radius: 30.0,
-                          backgroundImage: snapshot != null && snapshot.user != null && snapshot.user.photo != null && snapshot.user.photo.isEmpty ? NetworkImage("${snapshot.user.photo}") : null,
-                          backgroundColor: Colors.transparent,
-                        )),
-                    ListTile(
-                      leading: Icon(Icons.business_center),
-                      title: Text('Businesses'),
-                      onTap: () {
+              appBar: BuyTimeAppbarManager(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
+                    child: IconButton(
+                      icon: const Icon(
+                        Icons.arrow_back_ios_rounded,
+                        color: Colors.white,
+                        size: 25.0,
+                      ),
+                      tooltip: 'Come back',
+                      onPressed: () {
                         Navigator.pushReplacement(
                           context,
-                          MaterialPageRoute(builder: (context) => UI_M_BusinessList()),
+                          MaterialPageRoute(builder: (context) => UI_ManageCategory()),
                         );
                       },
                     ),
-                  ],
-                ),
+                  ),
+                  Container(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 0.0),
+                      child: Text(
+                        "Edit " + snapshot.category.name,
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: media.height * 0.028,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
+                    child: IconButton(
+                        icon: const Icon(
+                          Icons.check,
+                          color: Colors.white,
+                          size: 25.0,
+                        ),
+                        tooltip: 'Submit New Category',
+                        onPressed: () {
+                          if (validateAndSave()) {
+                            if (canMoveToParent) {
+                              ObjectState newCategoryParent = selectedParentCategory;
+                              print("Aggiorno " + newCategoryParent.name);
+                              StoreProvider.of<AppState>(context)
+                                  .dispatch(new UpdateCategory(snapshot.category));
+                              StoreProvider.of<AppState>(context)
+                                  .dispatch(new UpdateCategorySnippet(newCategoryParent));
+
+                              Future.delayed(const Duration(milliseconds: 500), () {
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => UI_ManageCategory(
+                                            edited: true,
+                                          )),
+                                );
+                              });
+                            } else {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  // return object of type Dialog
+                                  return AlertDialog(
+                                    title: new Text("Caution"),
+                                    content:
+                                        new Text("You can't move the branch to selected parent!"),
+                                  );
+                                },
+                              );
+                            }
+                          }
+                        }),
+                  ),
+                ],
               ),
               floatingActionButton: !hasChild
                   ? FloatingActionButton(
                       onPressed: () {
-                        StoreProvider.of<AppState>(context).dispatch(DeleteCategorySnippet(snapshot.category.id));
-                        StoreProvider.of<AppState>(context).dispatch(DeleteCategory(snapshot.category.id));
+                        StoreProvider.of<AppState>(context)
+                            .dispatch(DeleteCategorySnippet(snapshot.category.id));
+                        StoreProvider.of<AppState>(context)
+                            .dispatch(DeleteCategory(snapshot.category.id));
                         Future.delayed(const Duration(milliseconds: 500), () {
                           Navigator.pushReplacement(
                             context,
-                            MaterialPageRoute(builder: (context) => UI_ManageCategory(deleted: true)),
+                            MaterialPageRoute(
+                                builder: (context) => UI_ManageCategory(deleted: true)),
                           );
                         });
                       },
@@ -313,22 +337,29 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
                       child: Center(
                         child: Container(
                           width: media.width * 0.9,
-                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8.0),
+                              border: Border.all(color: Colors.grey)),
                           child: Form(
+                              key: _formKey,
                               child: Padding(
-                            padding: const EdgeInsets.only(top: 0.0, bottom: 5.0, left: 10.0, right: 10.0),
-                            child: TextFormField(
-                              initialValue: snapshot.category.name,
-                              onChanged: (value) {
-                                _selectedCategoryName = value;
-                                StoreProvider.of<AppState>(context).dispatch(SetCategoryName(_selectedCategoryName));
-                              },
-                              onSaved: (value) {
-                                _selectedCategoryName = value;
-                              },
-                              decoration: InputDecoration(labelText: 'Category Name'),
-                            ),
-                          )),
+                                padding: const EdgeInsets.only(
+                                    top: 0.0, bottom: 5.0, left: 10.0, right: 10.0),
+                                child: TextFormField(
+                                  validator: (value) =>
+                                      value.isEmpty ? 'Category name cannot be blank' : null,
+                                  initialValue: snapshot.category.name,
+                                  onChanged: (value) {
+                                    _selectedCategoryName = value;
+                                    StoreProvider.of<AppState>(context)
+                                        .dispatch(SetCategoryName(_selectedCategoryName));
+                                  },
+                                  onSaved: (value) {
+                                    _selectedCategoryName = value;
+                                  },
+                                  decoration: InputDecoration(labelText: 'Category Name'),
+                                ),
+                              )),
                         ),
                       ),
                     ),
@@ -337,19 +368,27 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
                       child: Center(
                         child: Container(
                           width: media.width * 0.9,
-                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8.0),
+                              border: Border.all(color: Colors.grey)),
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: DropdownButtonHideUnderline(
                               child: DropdownButtonFormField<ObjectState>(
                                   value: selectedParentCategory,
                                   items: _dropdownMenuParentCategory,
-                                  decoration: InputDecoration(labelText: 'Parent Category', enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white))),
+                                  decoration: InputDecoration(
+                                      labelText: 'Parent Category',
+                                      enabledBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(color: Colors.white))),
                                   onChanged: (value) {
                                     setState(() {
                                       selectedParentCategory = value;
-                                      checkNumberLevelToMove(snapshot.categorySnippet.categoryNodeList, snapshot.category.id);
-                                      setNewCategoryParent(selectedParentCategory, snapshot.categorySnippet.categoryNodeList);
+                                      checkNumberLevelToMove(
+                                          snapshot.categorySnippet.categoryNodeList,
+                                          snapshot.category.id);
+                                      setNewCategoryParent(selectedParentCategory,
+                                          snapshot.categorySnippet.categoryNodeList);
                                       if (selectedParentCategory.level + numberLevel < 6) {
                                         canMoveToParent = true;
                                         numberLevel = 0;
@@ -369,22 +408,24 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
                       child: Center(
                         child: Container(
                           width: media.width * 0.9,
-                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8.0),
+                              border: Border.all(color: Colors.grey)),
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: OptimumFormField(
                               field: "manager",
                               validateEmail: true,
                               minLength: 4,
-                              inputDecoration: InputDecoration(labelText: 'invite manager by email'),
+                              inputDecoration:
+                                  InputDecoration(labelText: 'invite manager by email'),
                               globalFieldKey: _formKeyManagerField,
                               typeOfValidate: "email",
                               initialFieldValue: "",
                               onSaveOrChangedCallback: (value) {
-                             //TODO : Settare un objectState manager da aggiungere ? O vogliamo mail e basta?
+                                //TODO : Settare un objectState manager da aggiungere ? O vogliamo mail e basta?
                                 //StoreProvider.of<AppState>(context).dispatch(AddCategoryManager(value));
                               },
-                              
                             ),
                           ),
                         ),

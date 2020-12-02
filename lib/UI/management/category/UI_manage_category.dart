@@ -172,27 +172,53 @@ class UI_ManageCategoryState extends State<UI_ManageCategory> {
   Widget buildBranchesRoot(List<dynamic> list, int index) {
     if (list != null) {
       return Padding(
-        padding: EdgeInsets.only(
-            left: double.parse(list[index]["level"].toString()) * 10.0,
-            right: (list[index]['nodeCategory'] != null && list[index]['nodeCategory'].length != 0)
-                ? 0.0
-                : 39.0),
-        child: (list[index]['nodeCategory'] != null && list[index]['nodeCategory'].length != 0)
-            ? Container(
-                child: Container(
-                  child: ExpansionTile(
-                    title: GestureDetector(
-                      onTap: () {
-                        StoreProvider.of<AppState>(context)
-                            .dispatch(CategoryRequest(list[index]["nodeId"]));
-                        Future.delayed(const Duration(milliseconds: 500), () {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (context) => UI_EditCategory()),
-                          );
-                        });
-                      },
-                      child: Row(
+          padding: EdgeInsets.only(
+              left: double.parse(list[index]["level"].toString()) * 10.0,
+              right:
+                  (list[index]['nodeCategory'] != null && list[index]['nodeCategory'].length != 0)
+                      ? 0.0
+                      : 39.0),
+          child: Container(
+            color: Colors.yellow,
+            child: (list[index]['nodeCategory'] != null && list[index]['nodeCategory'].length != 0)
+                ? Container(
+                    child: ExpansionTile(
+                      title: GestureDetector(
+                        onTap: () {
+                          StoreProvider.of<AppState>(context)
+                              .dispatch(CategoryRequest(list[index]["nodeId"]));
+                          Future.delayed(const Duration(milliseconds: 500), () {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (context) => UI_EditCategory()),
+                            );
+                          });
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              list[index]["nodeName"],
+                              style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.normal),
+                            ),
+                            IconButton(
+                              icon: const Icon(
+                                Icons.add_circle_sharp,
+                                color: Colors.black,
+                                size: 25.0,
+                              ),
+                              tooltip: 'Create Sub-Category',
+                              onPressed: () {},
+                            ),
+                          ],
+                        ),
+                      ),
+                      children: listChildrenBranchCategory(list[index]['nodeCategory']),
+                    ),
+                  )
+                : Container(
+                    child: ListTile(
+                      title: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
@@ -210,44 +236,19 @@ class UI_ManageCategoryState extends State<UI_ManageCategory> {
                           ),
                         ],
                       ),
+                      onTap: () {
+                        StoreProvider.of<AppState>(context)
+                            .dispatch(CategoryRequest(list[index]["nodeId"]));
+                        Future.delayed(const Duration(milliseconds: 500), () {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) => UI_EditCategory()),
+                          );
+                        });
+                      },
                     ),
-                    children: listChildrenBranchCategory(list[index]['nodeCategory']),
                   ),
-                ),
-              )
-            : Container(
-                child: ListTile(
-                  title: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        list[index]["nodeName"],
-                        style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.normal),
-                      ),
-                      IconButton(
-                        icon: const Icon(
-                          Icons.add_circle_sharp,
-                          color: Colors.black,
-                          size: 25.0,
-                        ),
-                        tooltip: 'Create Sub-Category',
-                        onPressed: () {},
-                      ),
-                    ],
-                  ),
-                  onTap: () {
-                    StoreProvider.of<AppState>(context)
-                        .dispatch(CategoryRequest(list[index]["nodeId"]));
-                    Future.delayed(const Duration(milliseconds: 500), () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => UI_EditCategory()),
-                      );
-                    });
-                  },
-                ),
-              ),
-      );
+          ));
     } else {
       return Container();
     }
@@ -317,9 +318,9 @@ class UI_ManageCategoryState extends State<UI_ManageCategory> {
                     padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
                     child: IconButton(
                       icon: const Icon(
-                        Icons.arrow_back,
+                        Icons.arrow_back_ios_rounded,
                         color: Colors.white,
-                        size: 30.0,
+                        size: 25.0,
                       ),
                       tooltip: 'Come back',
                       onPressed: () {

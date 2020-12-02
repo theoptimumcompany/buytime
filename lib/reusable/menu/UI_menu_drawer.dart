@@ -1,4 +1,5 @@
 import 'package:BuyTime/UI/management/business/UI_M_business_list.dart';
+import 'package:BuyTime/UI/theme/buytime_theme.dart';
 import 'package:BuyTime/UI/user/UI_U_Tabs.dart';
 import 'package:BuyTime/reblox/model/app_state.dart';
 import 'package:BuyTime/reblox/model/role/role.dart';
@@ -92,7 +93,7 @@ class MenuDrawer extends StatelessWidget {
                                       : 'Switch to Manager',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
-                                      fontFamily: 'Roboto',
+                                      fontFamily: BuytimeTheme.FontFamily,
                                       color: Colors.black,
                                       fontWeight: FontWeight.w200,
                                       fontSize: 20),
@@ -196,7 +197,7 @@ class MenuDrawer extends StatelessWidget {
                       "Logout",
                       style: TextStyle(
                         fontSize: 23,
-                        fontFamily: 'Roboto',
+                        fontFamily: BuytimeTheme.FontFamily,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
