@@ -7,6 +7,7 @@ import 'package:BuyTime/UI/user/login/UI_U_registration_widget.dart';
 import 'package:BuyTime/utils/size_config.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:video_player/video_player.dart';
 
 
@@ -95,12 +96,16 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     var media = MediaQuery.of(context).size;
     _animationController.forward();
 
+    //SystemChrome.setEnabledSystemUIOverlays([]);
+    //SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+
     SizeConfig().init(context);
 
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
         body: SafeArea(
+          top: false,
           child: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -134,7 +139,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                             child: Align(
                               alignment: Alignment.center,
                               child: Container(
-                                color: Colors.black54.withOpacity(0.2),
+                                color: Color(0xff1b4c72).withOpacity(0.5),
                                 width: double.infinity,
                                 height: double.infinity,
                               ),
@@ -163,7 +168,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                       ],
                                     ),
                                     child: Image.asset('assets/img/img_buytime.png',
-                                        height: media.height * 0.15),
+                                        height: media.height * 0.12),
                                   ),
                                   SizedBox(
                                     height: media.height * .05,

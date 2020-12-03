@@ -366,17 +366,14 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
-      // body: OldSplashScreen(spinnerX: spinnerX, spinnerY: spinnerY, arrowAnimationController: _arrowAnimationController, arrowAnimation: _arrowAnimation),
-      body: Scaffold(
-        backgroundColor: Color(0xFF207CC3),
-        body: Container(
-          /*margin: EdgeInsets.only(
-            bottom: height / 5,
-          ),*/
-          child: Center(child: new Image.asset('assets/img/brand/logo_b.png', width: width * 0.7, height: height * 0.3)),
-        ),
+      backgroundColor: Color(0xFF207CC3),
+      body: Center(child: new Image.asset('assets/img/brand/logo_b.png', width: 200, height: 200),
       ),
     );
+      /*Scaffold(
+      // body: OldSplashScreen(spinnerX: spinnerX, spinnerY: spinnerY, arrowAnimationController: _arrowAnimationController, arrowAnimation: _arrowAnimation),
+      body: ,
+    )*/;
   }
 }
 
