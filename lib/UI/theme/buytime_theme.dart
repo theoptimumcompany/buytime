@@ -38,6 +38,11 @@ class BuytimeTheme {
   );
 
 
+  static const TextStyle menuEntry = TextStyle(
+  color: TextMedium,
+  // fontSize: mediaHeight * 0.025,
+  );
+
   get managerTheme => ThemeData(
     primarySwatch: ManagerPrimary,
     appBarTheme: AppBarTheme(brightness: Brightness.light, color: TextDark),
