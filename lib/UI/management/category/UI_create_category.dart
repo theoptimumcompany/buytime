@@ -1,15 +1,14 @@
-import 'package:BuyTime/UI/management/business/UI_M_business_list.dart';
 import 'package:BuyTime/UI/management/category/UI_manage_category.dart';
 import 'package:BuyTime/reblox/model/app_state.dart';
-import 'package:BuyTime/UI/management/business/UI_C_business_list.dart';
 import 'package:BuyTime/reblox/model/category/category_snippet_state.dart';
 import 'package:BuyTime/reblox/model/object_state.dart';
 import 'package:BuyTime/reblox/reducer/category_snippet_reducer.dart';
 import 'package:BuyTime/reblox/reducer/category_reducer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-
 import '../../../reusable/appbar/manager_buytime_appbar.dart';
+import '../../theme/buytime_theme.dart';
+import '../../theme/buytime_theme.dart';
 
 class UI_CreateCategory extends StatefulWidget {
   final String title = 'Categories';
@@ -35,6 +34,12 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
   ObjectState newParent;
   bool changeParent = false;
   bool stopBuildDropDown = false;
+
+  ///Managers List
+  List<ObjectState> managerList;
+
+  ///Workers List
+  List<ObjectState> workerList;
 
   void initState() {
     super.initState();
@@ -170,6 +175,8 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
     return StoreConnector<AppState, AppState>(
         converter: (store) => store.state,
         builder: (context, snapshot) {
+          managerList = snapshot.category.manager;
+          workerList = snapshot.category.notificationTo;
           buildDropDownMenuItemsParent(_dropdownParentCategory);
           selectedDropValue = _dropdownMenuParentCategory.first.value;
 
@@ -257,101 +264,262 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
                   ),
                 ],
               ),
-              body: Padding(
-                padding: EdgeInsets.all(10.0),
-                child: Column(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
-                      child: Center(
-                        child: Container(
-                          width: media.width * 0.9,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8.0),
-                              border: Border.all(color: Colors.grey)),
-                          child: Form(
-                              key: _formKey,
+              floatingActionButton: FloatingActionButton(
+                onPressed: () {
+                  print("add worker/manager");
+                },
+                child: Icon(Icons.add),
+                backgroundColor: BuytimeTheme.Secondary,
+              ),
+              body: Column(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.all(10.0),
+                    child: Column(
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+                          child: Center(
+                            child: Container(
+                              width: media.width * 0.9,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  border: Border.all(color: Colors.grey)),
+                              child: Form(
+                                  key: _formKey,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 0.0, bottom: 5.0, left: 10.0, right: 10.0),
+                                    child: TextFormField(
+                                      validator: (value) =>
+                                          value.isEmpty ? 'Category name cannot be blank' : null,
+                                      initialValue: _selectedCategoryName,
+                                      onChanged: (value) {
+                                        _selectedCategoryName = value;
+                                        StoreProvider.of<AppState>(context)
+                                            .dispatch(SetCategoryName(_selectedCategoryName));
+                                      },
+                                      onSaved: (value) {
+                                        _selectedCategoryName = value;
+                                      },
+                                      decoration: InputDecoration(labelText: 'Category Name'),
+                                    ),
+                                  )),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+                          child: Center(
+                            child: Container(
+                              width: media.width * 0.9,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  border: Border.all(color: Colors.grey)),
                               child: Padding(
-                                padding: const EdgeInsets.only(
-                                    top: 0.0, bottom: 5.0, left: 10.0, right: 10.0),
-                                child: TextFormField(
-                                  validator: (value) =>
-                                      value.isEmpty ? 'Category name cannot be blank' : null,
-                                  initialValue: _selectedCategoryName,
-                                  onChanged: (value) {
-                                    _selectedCategoryName = value;
-                                    StoreProvider.of<AppState>(context)
-                                        .dispatch(SetCategoryName(_selectedCategoryName));
-                                  },
-                                  onSaved: (value) {
-                                    _selectedCategoryName = value;
-                                  },
-                                  decoration: InputDecoration(labelText: 'Category Name'),
+                                padding: const EdgeInsets.all(8.0),
+                                child: DropdownButtonHideUnderline(
+                                  child: DropdownButtonFormField<ObjectState>(
+                                      value: selectedDropValue,
+                                      items: _dropdownMenuParentCategory,
+                                      decoration: InputDecoration(
+                                          labelText: 'Parent Category',
+                                          enabledBorder: UnderlineInputBorder(
+                                              borderSide: BorderSide(color: Colors.white))),
+                                      onChanged: (ObjectState newValue) {
+                                        setState(() {
+                                          changeParent = true;
+                                          selectedDropValue = newValue;
+                                          newParent = newValue;
+                                          print("Drop Selezionato su onchangedrop : " +
+                                              selectedDropValue.name);
+                                          setNewCategoryParent(selectedDropValue,
+                                              snapshot.categorySnippet.categoryNodeList);
+                                        });
+                                      }),
                                 ),
-                              )),
+                              ),
+                            ),
+                          ),
+                        ), /*
+                        Padding(
+                          padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+                          child: Center(
+                            child: Container(
+                              width: media.width * 0.9,
+                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: DropdownButtonHideUnderline(
+                                  child: DropdownButtonFormField<String>(
+                                      value: _selectedManagerCategory,
+                                      items: _dropdownMenuManagerCategory,
+                                      decoration: InputDecoration(labelText: 'Manager Category', enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white))),
+                                      onChanged: (value) {
+                                        setState(() {
+                                          _selectedManagerCategory = value;
+                                          setNewCategoryParent(_selectedManagerCategory);
+                                        });
+                                      }),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),*/
+                      ],
+                    ),
+                  ),
+                  Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      border: Border(
+                        top: BorderSide(
+                          //                   <--- left side
+                          color: BuytimeTheme.DividerGrey,
+                          width: 4.0,
+                        ),
+                        bottom: BorderSide(
+                          //                    <--- top side
+                          color: BuytimeTheme.DividerGrey,
+                          width: 2.0,
                         ),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
-                      child: Center(
-                        child: Container(
-                          width: media.width * 0.9,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8.0),
-                              border: Border.all(color: Colors.grey)),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: DropdownButtonHideUnderline(
-                              child: DropdownButtonFormField<ObjectState>(
-                                  value: selectedDropValue,
-                                  items: _dropdownMenuParentCategory,
-                                  decoration: InputDecoration(
-                                      labelText: 'Parent Category',
-                                      enabledBorder: UnderlineInputBorder(
-                                          borderSide: BorderSide(color: Colors.white))),
-                                  onChanged: (ObjectState newValue) {
-                                    setState(() {
-                                      changeParent = true;
-                                      selectedDropValue = newValue;
-                                      newParent = newValue;
-                                      print("Drop Selezionato su onchangedrop : " +
-                                          selectedDropValue.name);
-                                      setNewCategoryParent(selectedDropValue,
-                                          snapshot.categorySnippet.categoryNodeList);
-                                    });
-                                  }),
-                            ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                child: Icon(
+                                  Icons.account_balance_rounded,
+                                  size: 24,
+                                ),
+                              ),
+                              Container(
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 5.0),
+                                  child: Text(
+                                    "Managers",
+                                    textAlign: TextAlign.start,
+                                    style: TextStyle(
+                                      color: BuytimeTheme.TextDark,
+                                      fontSize: media.height * 0.023,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
                           ),
-                        ),
+                          managerList.length > 1 && managerList != null
+                              ? Wrap(
+                                  alignment: WrapAlignment.start,
+                                  children: List.generate(
+                                    managerList.length,
+                                    (index) {
+                                      return Padding(
+                                        padding: const EdgeInsets.only(right: 10.0),
+                                        child: InputChip(
+                                          selected: false,
+                                          label: Text(managerList[index].name),
+                                          //avatar: FlutterLogo(),
+                                          onPressed: () {
+                                            print('Manager is pressed');
+
+                                            setState(() {
+                                              //_selected = !_selected;
+                                            });
+                                          },
+                                          onDeleted: () {
+                                            print('Manager is deleted');
+                                          },
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                )
+                              : Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Container(
+                                    child:
+                                        Text("Non ci sono manager assegnati a questa categoria."),
+                                  ),
+                                )
+                        ],
                       ),
-                    ), /*
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
-                      child: Center(
-                        child: Container(
-                          width: media.width * 0.9,
-                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: DropdownButtonHideUnderline(
-                              child: DropdownButtonFormField<String>(
-                                  value: _selectedManagerCategory,
-                                  items: _dropdownMenuManagerCategory,
-                                  decoration: InputDecoration(labelText: 'Manager Category', enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white))),
-                                  onChanged: (value) {
-                                    setState(() {
-                                      _selectedManagerCategory = value;
-                                      setNewCategoryParent(_selectedManagerCategory);
-                                    });
-                                  }),
-                            ),
+                    ),
+                  ),
+                  Container(
+                    width: double.infinity,
+                    child: Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                child: Icon(
+                                  Icons.room_service,
+                                  size: 24,
+                                ),
+                              ),
+                              Container(
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 5.0),
+                                  child: Text(
+                                    "Workers",
+                                    textAlign: TextAlign.start,
+                                    style: TextStyle(
+                                      color: BuytimeTheme.TextDark,
+                                      fontSize: media.height * 0.023,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
                           ),
-                        ),
+                          workerList.length > 1 && workerList != null
+                              ? Wrap(
+                                  alignment: WrapAlignment.start,
+                                  children: List.generate(
+                                    workerList.length,
+                                    (index) {
+                                      return Padding(
+                                        padding: const EdgeInsets.only(right: 10.0),
+                                        child: InputChip(
+                                          selected: false,
+                                          label: Text(workerList[index].name),
+                                          //avatar: FlutterLogo(),
+                                          onPressed: () {
+                                            print('Worker is pressed');
+
+                                            setState(() {
+                                              //_selected = !_selected;
+                                            });
+                                          },
+                                          onDeleted: () {
+                                            print('Worker is deleted');
+                                          },
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                )
+                              : Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Container(
+                                    child: Text(
+                                        "Non ci sono lavoratori assegnati a questa categoria."),
+                                  ),
+                                )
+                        ],
                       ),
-                    ),*/
-                  ],
-                ),
+                    ),
+                  ),
+                ],
               ),
             ),
           );

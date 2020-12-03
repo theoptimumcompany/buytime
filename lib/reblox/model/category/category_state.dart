@@ -28,9 +28,9 @@ class CategoryState {
       level: 0,
       children: 0,
       parent: ObjectState(name: "No Parent", id: "no_parent"),
-      manager: [ObjectState(name: "No Manager", id: "no_manager")],
+      manager: [ObjectState()],
       businessId: "",
-      notificationTo: [ObjectState(name: "No One", id: "no_one")],
+      notificationTo: [ObjectState()],
     );
   }
 

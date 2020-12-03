@@ -17,15 +17,17 @@ class BuytimeTheme {
   };
 
 
+  static const Color TextWhite = Color.fromARGB(255, 255, 255, 255);
   static const Color TextDark = Color.fromARGB(255, 16, 5, 14);
   static const Color TextMedium = Color.fromARGB(255, 117, 117, 117);
+  static const Color IconGrey = Color.fromARGB(255, 117, 117, 117);
+  static const Color BackgroundWhite = Color.fromARGB(255, 255, 255, 255);
+  static const Color BackgroundCerulean = Color.fromARGB(255, 119, 148, 170);
+  static const Color BackgroundLightGrey = Color.fromARGB(255, 237, 237, 237);
+  static const Color DividerGrey = Color.fromARGB(255, 196, 196, 196);
   static const Color ManagerPrimary = Color.fromARGB(255, 0, 103, 145);
   static const Color Secondary = Color.fromARGB(255, 253, 192, 47);
-  static const Color BackgroundWhite = Color.fromARGB(255, 255, 255, 255);
-  static const Color TextWhite = Color.fromARGB(255, 255, 255, 255);
-  static const Color IconGrey = Color.fromARGB(255, 117, 117, 117);
   static const Color AccentRed = Color.fromARGB(255, 255, 99, 99);
-  static const Color BackgroundCerulean = Color.fromARGB(255, 119, 148, 170);
 
   static const String FontFamily = 'Roboto';
 
