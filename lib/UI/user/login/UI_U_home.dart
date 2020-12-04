@@ -206,12 +206,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                         padding: const EdgeInsets.symmetric(horizontal: 40.0),
                                         child: Text(
                                           "Unisciti a un nuovo mondo di servizi per il tuo soggiorno in hotel",
-                                          style: TextStyle(
-                                            //fontFamily: 'Roboto',
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.w400,
-                                              color: Colors.white
-                                          ),
+                                          style: BuytimeTheme.whiteSubtitle,
                                           textAlign: TextAlign.center,
                                         ),
                                       ),
