@@ -96,9 +96,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     var media = MediaQuery.of(context).size;
     _animationController.forward();
 
-    //SystemChrome.setEnabledSystemUIOverlays([]);
-    //SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
-
     SizeConfig().init(context);
 
     return WillPopScope(
@@ -184,12 +181,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                               padding: const EdgeInsets.symmetric(horizontal: 12.0),
                                               child: Text(
                                                 "Buytime",
-                                                style: TextStyle(
-                                                    fontFamily: 'Roboto',
-                                                    fontSize: SizeConfig.safeBlockVertical * 5,
-                                                    fontWeight: FontWeight.normal,
-                                                    color: Colors.white
-                                                ),
+                                                style: BuytimeTheme.whiteTitle,
                                                 textAlign: TextAlign.center,
                                               ),
                                             ),

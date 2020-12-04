@@ -1,3 +1,4 @@
+import 'package:BuyTime/utils/size_config.dart';
 import 'package:flutter/material.dart';
 
 class BuytimeTheme {
@@ -37,10 +38,16 @@ class BuytimeTheme {
   bodyText2: TextStyle(fontSize: 14.0, fontFamily: FontFamily, fontStyle: FontStyle.normal),
   );
 
+  static TextStyle whiteTitle = TextStyle(
+      fontFamily: 'Roboto',
+      fontSize: SizeConfig.safeBlockVertical * 5,
+      fontWeight: FontWeight.normal,
+      color: Colors.white
+  );
 
   static const TextStyle menuEntry = TextStyle(
-  color: TextMedium,
-  // fontSize: mediaHeight * 0.025,
+    color: TextMedium,
+    // fontSize: media.height * 0.025,
   );
 
   get managerTheme => ThemeData(
