@@ -4,9 +4,11 @@ import 'package:BuyTime/reblox/model/category/category_snippet_state.dart';
 import 'package:BuyTime/reblox/model/object_state.dart';
 import 'package:BuyTime/reblox/reducer/category_snippet_reducer.dart';
 import 'package:BuyTime/reblox/reducer/category_reducer.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import '../../../reusable/appbar/manager_buytime_appbar.dart';
+import '../../theme/buytime_theme.dart';
 import '../../theme/buytime_theme.dart';
 import '../../theme/buytime_theme.dart';
 
@@ -19,6 +21,8 @@ class UI_CreateCategory extends StatefulWidget {
 
 class UI_CreateCategoryState extends State<UI_CreateCategory> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formInviteManagerKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formInviteWorkerKey = GlobalKey<FormState>();
 
   ObjectState _dropdownParentCategory = ObjectState(level: 0, id: "no_parent", name: "No Parent");
 
@@ -40,6 +44,12 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
 
   ///Workers List
   List<ObjectState> workerList;
+
+  ///Boolean sendManagerInvite to open email section
+  bool sendManagerInvite = false;
+
+  ///Boolean sendWorkerInvite to open email section
+  bool sendWorkerInvite = false;
 
   void initState() {
     super.initState();
@@ -135,32 +145,133 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
     return items;
   }
 
-  /* List<DropdownMenuItem<String>> buildDropDownMenuItemsManager(List listItems) {
-    CategoryListState categoryListState = StoreProvider.of<AppState>(context).state.categoryList;
-    List<DropdownMenuItem<String>> items = List();
-    if (categoryListState.categoryListState.length == 0 || categoryListState.categoryListState.length == null) {
-      for (CategoryManager listItem in listItems) {
-        items.add(
-          DropdownMenuItem(
-            child: Text(listItem.managerName[0]),
-            value: listItem.managerId[0],
+  void sendInvitationMailDialog(context) {
+    var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width;
+    double wrap_width_text = MediaQuery.of(context).size.width * 0.6;
+    showDialog(
+      context: context,
+      builder: (_) => new AlertDialog(
+        actions: <Widget>[
+          FlatButton(
+            child: Text("Cancel"),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
           ),
-        );
-      }
-    } else {
-      for (int i = 0; i < categoryListState.categoryListState.length; i++) {
-        for (int y = 0; y < categoryListState.categoryListState[i].manager.managerName.length; y++) {
-          items.add(
-            DropdownMenuItem(
-              child: Text(categoryListState.categoryListState[i].manager.managerName[y]),
-              value: categoryListState.categoryListState[i].manager.managerId[y],
+          FlatButton(
+            child: Text("Invite"),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          )
+        ],
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
+        content: Container(
+          height: height * 0.245,
+          child: new Column(
+            children: <Widget>[
+              Container(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 5.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Container(
+                        child: Text(
+                          "Invite a Gattini",
+                          textAlign: TextAlign.start,
+                          style: TextStyle(
+                            color: BuytimeTheme.TextDark,
+                            fontSize: height * 0.024,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Container(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 10.0, left: 5.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: wrap_width_text,
+                        child: Text(
+                          "Type a Gattini email below. They will receive an email invite to install the application and join the business",
+                          textAlign: TextAlign.start,
+                          style: TextStyle(
+                            color: BuytimeTheme.TextDark,
+                            fontSize: height * 0.018,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 30.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8.0),
+                      border: Border.all(color: Colors.grey)),
+                  child: Form(
+                      key: _formInviteManagerKey,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+                        child: Container(
+                          child: TextFormField(
+                            validator: (value) => value.isEmpty ? 'Email cannot be blank' : null,
+                            onChanged: (value) {},
+                            onSaved: (value) {},
+                            decoration: InputDecoration(
+                              labelText: 'Email address',
+                              border: InputBorder.none,
+                              focusedBorder: InputBorder.none,
+                              enabledBorder: InputBorder.none,
+                              errorBorder: InputBorder.none,
+                              disabledBorder: InputBorder.none,
+                            ),
+                          ),
+                        ),
+                      )),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _modalAddPerson(context) {
+    showModalBottomSheet(
+        elevation: 3,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        context: context,
+        builder: (BuildContext bc) {
+          return Container(
+            child: new Wrap(
+              children: <Widget>[
+                new ListTile(
+                    title: new Text('Add Manager'),
+                    onTap: () => {sendInvitationMailDialog(context)}),
+                new ListTile(
+                  title: new Text('Add Worker'),
+                  onTap: () => {sendInvitationMailDialog(context)},
+                ),
+              ],
             ),
           );
-        }
-      }
-    }
-    return items;
-  }*/
+        });
+  }
 
   Future<bool> _onWillPop() {
     Navigator.pushReplacement(
@@ -267,6 +378,7 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
               floatingActionButton: FloatingActionButton(
                 onPressed: () {
                   print("add worker/manager");
+                  _modalAddPerson(context);
                 },
                 child: Icon(Icons.add),
                 backgroundColor: BuytimeTheme.Secondary,
@@ -341,31 +453,7 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
                               ),
                             ),
                           ),
-                        ), /*
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
-                          child: Center(
-                            child: Container(
-                              width: media.width * 0.9,
-                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: DropdownButtonHideUnderline(
-                                  child: DropdownButtonFormField<String>(
-                                      value: _selectedManagerCategory,
-                                      items: _dropdownMenuManagerCategory,
-                                      decoration: InputDecoration(labelText: 'Manager Category', enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white))),
-                                      onChanged: (value) {
-                                        setState(() {
-                                          _selectedManagerCategory = value;
-                                          setNewCategoryParent(_selectedManagerCategory);
-                                        });
-                                      }),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),*/
+                        ),
                       ],
                     ),
                   ),
@@ -374,12 +462,10 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
                     decoration: BoxDecoration(
                       border: Border(
                         top: BorderSide(
-                          //                   <--- left side
                           color: BuytimeTheme.DividerGrey,
                           width: 4.0,
                         ),
                         bottom: BorderSide(
-                          //                    <--- top side
                           color: BuytimeTheme.DividerGrey,
                           width: 2.0,
                         ),
@@ -390,27 +476,46 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
                       child: Column(
                         children: [
                           Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Container(
-                                child: Icon(
-                                  Icons.account_balance_rounded,
-                                  size: 24,
-                                ),
-                              ),
-                              Container(
-                                child: Padding(
-                                  padding: const EdgeInsets.only(left: 5.0),
-                                  child: Text(
-                                    "Managers",
-                                    textAlign: TextAlign.start,
-                                    style: TextStyle(
-                                      color: BuytimeTheme.TextDark,
-                                      fontSize: media.height * 0.023,
-                                      fontWeight: FontWeight.w500,
+                              Row(
+                                children: [
+                                  Container(
+                                    child: Icon(
+                                      Icons.account_balance_rounded,
+                                      size: 24,
                                     ),
                                   ),
-                                ),
-                              )
+                                  Container(
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(left: 5.0),
+                                      child: Text(
+                                        "Managers",
+                                        textAlign: TextAlign.start,
+                                        style: TextStyle(
+                                          color: BuytimeTheme.TextDark,
+                                          fontSize: media.height * 0.023,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              // Container(
+                              //   child: IconButton(
+                              //     onPressed: () {
+                              //       setState(() {
+                              //         sendManagerInvite = true;
+                              //       });
+                              //     },
+                              //     icon: Icon(
+                              //       Icons.add,
+                              //       color: BuytimeTheme.TextDark,
+                              //       size: 24,
+                              //     ),
+                              //   ),
+                              // ),
                             ],
                           ),
                           managerList.length > 1 && managerList != null
@@ -458,27 +563,46 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
                       child: Column(
                         children: [
                           Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Container(
-                                child: Icon(
-                                  Icons.room_service,
-                                  size: 24,
-                                ),
-                              ),
-                              Container(
-                                child: Padding(
-                                  padding: const EdgeInsets.only(left: 5.0),
-                                  child: Text(
-                                    "Workers",
-                                    textAlign: TextAlign.start,
-                                    style: TextStyle(
-                                      color: BuytimeTheme.TextDark,
-                                      fontSize: media.height * 0.023,
-                                      fontWeight: FontWeight.w500,
+                              Row(
+                                children: [
+                                  Container(
+                                    child: Icon(
+                                      Icons.room_service,
+                                      size: 24,
                                     ),
                                   ),
-                                ),
-                              )
+                                  Container(
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(left: 5.0),
+                                      child: Text(
+                                        "Workers",
+                                        textAlign: TextAlign.start,
+                                        style: TextStyle(
+                                          color: BuytimeTheme.TextDark,
+                                          fontSize: media.height * 0.023,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              //     Container(
+                              //       child: IconButton(
+                              //         onPressed: () {
+                              //           setState(() {
+                              //             sendWorkerInvite = true;
+                              //           });
+                              //         },
+                              //         icon: Icon(
+                              //           Icons.add,
+                              //           color: BuytimeTheme.TextDark,
+                              //           size: 24,
+                              //         ),
+                              //       ),
+                              //     ),
                             ],
                           ),
                           workerList.length > 1 && workerList != null
