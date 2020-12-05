@@ -21,8 +21,7 @@ class UI_CreateCategory extends StatefulWidget {
 
 class UI_CreateCategoryState extends State<UI_CreateCategory> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final GlobalKey<FormState> _formInviteManagerKey = GlobalKey<FormState>();
-  final GlobalKey<FormState> _formInviteWorkerKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formInviteKey = GlobalKey<FormState>();
 
   ObjectState _dropdownParentCategory = ObjectState(level: 0, id: "no_parent", name: "No Parent");
 
@@ -45,12 +44,6 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
   ///Workers List
   List<ObjectState> workerList;
 
-  ///Boolean sendManagerInvite to open email section
-  bool sendManagerInvite = false;
-
-  ///Boolean sendWorkerInvite to open email section
-  bool sendWorkerInvite = false;
-
   void initState() {
     super.initState();
   }
@@ -62,6 +55,22 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
     } else {
       return false;
     }
+  }
+
+  bool validateAndSaveInvite() {
+    final FormState form = _formInviteKey.currentState;
+    if (form.validate()) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  bool validateEmail(String value) {
+    Pattern pattern =
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+    RegExp regex = new RegExp(pattern);
+    return (!regex.hasMatch(value)) ? false : true;
   }
 
   setNewCategoryParent(ObjectState contentSelectDrop, List<dynamic> list) {
@@ -162,13 +171,13 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
           FlatButton(
             child: Text("Invite"),
             onPressed: () {
-              Navigator.of(context).pop();
+              validateAndSaveInvite();
             },
           )
         ],
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
         content: Container(
-          height: height * 0.245,
+          height: height * 0.28,
           child: new Column(
             children: <Widget>[
               Container(
@@ -221,12 +230,17 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
                       borderRadius: BorderRadius.circular(8.0),
                       border: Border.all(color: Colors.grey)),
                   child: Form(
-                      key: _formInviteManagerKey,
+                      key: _formInviteKey,
                       child: Padding(
                         padding: const EdgeInsets.only(left: 10.0, right: 10.0),
                         child: Container(
                           child: TextFormField(
-                            validator: (value) => value.isEmpty ? 'Email cannot be blank' : null,
+                            autofocus: true,
+                            validator: (value) => value.isEmpty
+                                ? 'Email cannot be blank'
+                                : validateEmail(value)
+                                    ? null
+                                    : 'Not a valid email',
                             onChanged: (value) {},
                             onSaved: (value) {},
                             decoration: InputDecoration(
@@ -262,10 +276,13 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
               children: <Widget>[
                 new ListTile(
                     title: new Text('Add Manager'),
-                    onTap: () => {sendInvitationMailDialog(context)}),
+                    onTap: () => {
+                          Navigator.of(context).pop(),
+                          sendInvitationMailDialog(context),
+                        }),
                 new ListTile(
                   title: new Text('Add Worker'),
-                  onTap: () => {sendInvitationMailDialog(context)},
+                  onTap: () => {Navigator.of(context).pop(), sendInvitationMailDialog(context)},
                 ),
               ],
             ),
@@ -297,6 +314,7 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
           return WillPopScope(
             onWillPop: _onWillPop,
             child: Scaffold(
+              resizeToAvoidBottomInset: false,
               appBar: BuyTimeAppbarManager(
                 children: [
                   Padding(
