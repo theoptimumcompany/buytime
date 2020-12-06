@@ -28,8 +28,6 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
   List<DropdownMenuItem<ObjectState>> _dropdownMenuParentCategory =
       new List<DropdownMenuItem<ObjectState>>();
 
-  List<DropdownMenuItem<ObjectState>> _dropdownMenuManagerCategory;
-  String _selectedManagerCategory;
   var size;
 
   String _selectedCategoryName = "";
@@ -84,31 +82,6 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
     }
   }
 
-  /* setNewCategoryManager(String id) {
-    List<CategoryState> categoryList = StoreProvider.of<AppState>(context).state.categoryList.categoryListState;
-
-    if (categoryList.length == 0 || categoryList.length == null) {
-      CategoryManager newCategoryManager = new CategoryManager(["0"], ["Owner"]);
-      StoreProvider.of<AppState>(context).dispatch(SetCategoryManager(newCategoryManager));
-    } else {
-      for (int i = 0; i < categoryList.length; i++) {
-        for (int y = 0; y < categoryList[i].manager.managerId.length; y++) {
-          if (categoryList[i].manager.managerId[y] == id) {
-            List<String> newCategoryManagerName = new List<String>();
-            List<String> newCategoryManagerId = new List<String>();
-            for (int z = 0; z <= y; z++) {
-              newCategoryManagerName.add(categoryList[i].manager.managerName[z]);
-              newCategoryManagerId.add(categoryList[i].manager.managerId[z]);
-            }
-            CategoryManager newCategoryManager = new CategoryManager(newCategoryManagerId, newCategoryManagerName);
-            StoreProvider.of<AppState>(context).dispatch(SetCategoryManager(newCategoryManager));
-          }
-        }
-      }
-      return null;
-    }
-  }*/
-
   void buildDropDownMenuItemsParent(ObjectState item) {
     if (stopBuildDropDown == false) {
       stopBuildDropDown = true;
@@ -122,8 +95,7 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
           items = openTree(list, items);
         }
       }
-      items.insert(
-        0,
+      items.add(
         DropdownMenuItem(
           child: Text(item.name),
           value: item,
@@ -306,7 +278,7 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
           managerList = snapshot.category.manager;
           workerList = snapshot.category.notificationTo;
           buildDropDownMenuItemsParent(_dropdownParentCategory);
-          selectedDropValue = _dropdownMenuParentCategory.first.value;
+          selectedDropValue =  _dropdownMenuParentCategory.first.value;
 
           /* _dropdownMenuManagerCategory = buildDropDownMenuItemsManager(_dropdownManagerCategory);
           _selectedManagerCategory = _dropdownMenuManagerCategory[0].value;*/
