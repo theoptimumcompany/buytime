@@ -128,10 +128,12 @@ class UI_ManageCategoryState extends State<UI_ManageCategory> {
                                         .categorySnippet
                                         .numberOfCategories <
                                     50
-                                ? Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => UI_CreateCategory()),
-                                  )
+                                ? Future.delayed(const Duration(milliseconds: 500), () {
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => UI_CreateCategory()),
+                                    );
+                                  })
                                 : showDialog(
                                     context: context,
                                     builder: (BuildContext context) {
@@ -176,10 +178,12 @@ class UI_ManageCategoryState extends State<UI_ManageCategory> {
                                     .categorySnippet
                                     .numberOfCategories <
                                 50
-                            ? Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(builder: (context) => UI_CreateCategory()),
-                              )
+                            ? Future.delayed(const Duration(milliseconds: 500), () {
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => UI_CreateCategory()),
+                                );
+                              })
                             : showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
@@ -262,11 +266,13 @@ class UI_ManageCategoryState extends State<UI_ManageCategory> {
                                             .categorySnippet
                                             .numberOfCategories <
                                         50
-                                    ? Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => UI_CreateCategory()),
-                                      )
+                                    ? Future.delayed(const Duration(milliseconds: 500), () {
+                                        Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => UI_CreateCategory()),
+                                        );
+                                      })
                                     : showDialog(
                                         context: context,
                                         builder: (BuildContext context) {
@@ -309,10 +315,12 @@ class UI_ManageCategoryState extends State<UI_ManageCategory> {
                                         .categorySnippet
                                         .numberOfCategories <
                                     50
-                                ? Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => UI_CreateCategory()),
-                                  )
+                                ? Future.delayed(const Duration(milliseconds: 500), () {
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => UI_CreateCategory()),
+                                    );
+                                  })
                                 : showDialog(
                                     context: context,
                                     builder: (BuildContext context) {
@@ -449,7 +457,8 @@ class UI_ManageCategoryState extends State<UI_ManageCategory> {
                         snapshot.categorySnippet.numberOfCategories < 50
                             ? Navigator.pushReplacement(
                                 context,
-                                MaterialPageRoute(builder: (context) => UI_CreateCategory()),
+                                MaterialPageRoute(
+                                    builder: (context) => UI_CreateCategory(empty: "empty")),
                               )
                             : showDialog(
                                 context: context,

@@ -14,6 +14,11 @@ import '../../theme/buytime_theme.dart';
 
 class UI_CreateCategory extends StatefulWidget {
   final String title = 'Categories';
+  String empty;
+
+  UI_CreateCategory({String empty}) {
+    this.empty = empty;
+  }
 
   @override
   State<StatefulWidget> createState() => UI_CreateCategoryState();
@@ -269,19 +274,31 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
     );
   }
 
+  ObjectState searchDropdownParent(var snapshot) {
+    if (widget.empty == 'empty') {
+      return _dropdownMenuParentCategory.last.value;
+    }
+
+    for (var element in _dropdownMenuParentCategory) {
+      if (snapshot.category.id == element.value.id) {
+        return element.value;
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
     return StoreConnector<AppState, AppState>(
         converter: (store) => store.state,
         builder: (context, snapshot) {
-          managerList = snapshot.category.manager;
-          workerList = snapshot.category.notificationTo;
           buildDropDownMenuItemsParent(_dropdownParentCategory);
-          selectedDropValue =  _dropdownMenuParentCategory.first.value;
 
-          /* _dropdownMenuManagerCategory = buildDropDownMenuItemsManager(_dropdownManagerCategory);
-          _selectedManagerCategory = _dropdownMenuManagerCategory[0].value;*/
+          if (snapshot.category != null) {
+            managerList = snapshot.category.manager;
+            workerList = snapshot.category.notificationTo;
+            selectedDropValue = searchDropdownParent(snapshot);
+          }
 
           return WillPopScope(
             onWillPop: _onWillPop,
