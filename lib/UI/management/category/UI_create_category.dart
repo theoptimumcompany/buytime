@@ -509,56 +509,59 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
                                   ),
                                 ],
                               ),
-                              // Container(
-                              //   child: IconButton(
-                              //     onPressed: () {
-                              //       setState(() {
-                              //         sendManagerInvite = true;
-                              //       });
-                              //     },
-                              //     icon: Icon(
-                              //       Icons.add,
-                              //       color: BuytimeTheme.TextDark,
-                              //       size: 24,
-                              //     ),
-                              //   ),
-                              // ),
                             ],
                           ),
-                          managerList.length > 1 && managerList != null
-                              ? Wrap(
-                                  alignment: WrapAlignment.start,
-                                  children: List.generate(
-                                    managerList.length,
-                                    (index) {
-                                      return Padding(
-                                        padding: const EdgeInsets.only(right: 10.0),
-                                        child: InputChip(
-                                          selected: false,
-                                          label: Text(managerList[index].name),
-                                          //avatar: FlutterLogo(),
-                                          onPressed: () {
-                                            print('Manager is pressed');
+                          Wrap(
+                            alignment: WrapAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(right: 10.0),
+                                child: InputChip(
+                                  selected: false,
+                                  label: Text(snapshot.business.owner.name +
+                                      " " +
+                                      snapshot.business.owner.surname),
+                                ),
+                              ),
+                              snapshot.business.salesman.name != null &&
+                                      snapshot.business.salesman.name != ''
+                                  ? Padding(
+                                      padding: const EdgeInsets.only(right: 10.0),
+                                      child: InputChip(
+                                        selected: false,
+                                        label: Text(snapshot.business.salesman.name +
+                                            " " +
+                                            snapshot.business.salesman.surname),
+                                      ),
+                                    )
+                                  : Container(),
+                              managerList.length > 1 && managerList != null
+                                  ? List.generate(
+                                      managerList.length,
+                                      (index) {
+                                        return Padding(
+                                          padding: const EdgeInsets.only(right: 10.0),
+                                          child: InputChip(
+                                            selected: false,
+                                            label: Text(managerList[index].name),
+                                            //avatar: FlutterLogo(),
+                                            onPressed: () {
+                                              print('Manager is pressed');
 
-                                            setState(() {
-                                              //_selected = !_selected;
-                                            });
-                                          },
-                                          onDeleted: () {
-                                            print('Manager is deleted');
-                                          },
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                )
-                              : Padding(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: Container(
-                                    child:
-                                        Text("Non ci sono manager assegnati a questa categoria."),
-                                  ),
-                                )
+                                              setState(() {
+                                                //_selected = !_selected;
+                                              });
+                                            },
+                                            onDeleted: () {
+                                              print('Manager is deleted');
+                                            },
+                                          ),
+                                        );
+                                      },
+                                    )
+                                  : Container()
+                            ],
+                          ),
                         ],
                       ),
                     ),

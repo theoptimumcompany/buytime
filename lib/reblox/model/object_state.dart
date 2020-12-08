@@ -1,5 +1,6 @@
 class ObjectState {
   String name;
+  String surname;
   String id;
   int level;
   String business_thumbnail;
@@ -7,6 +8,7 @@ class ObjectState {
 
   ObjectState({
     this.name = "",
+    this.surname = "",
     this.id = "",
     this.level = 0,
     this.business_thumbnail = "",
@@ -15,6 +17,7 @@ class ObjectState {
 
   ObjectState.fromJson(Map<String, dynamic> json)
       : name = json['name'],
+        surname = json['surname'],
         id = json['id'],
         business_thumbnail = json['business_thumbnail'],
         level = json['level'],
@@ -22,6 +25,7 @@ class ObjectState {
 
   Map<String, dynamic> toJson() => {
         'name': name,
+        'surname': surname,
         'id': id,
         'level': level,
         'business_thumbnail': business_thumbnail,
