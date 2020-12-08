@@ -1,3 +1,4 @@
+import 'package:BuyTime/utils/size_config.dart';
 import 'package:flutter/material.dart';
 
 class BuytimeTheme {
@@ -17,24 +18,44 @@ class BuytimeTheme {
   };
 
 
+  static const Color TextWhite = Color.fromARGB(255, 255, 255, 255);
   static const Color TextDark = Color.fromARGB(255, 16, 5, 14);
   static const Color TextMedium = Color.fromARGB(255, 117, 117, 117);
+  static const Color IconGrey = Color.fromARGB(255, 117, 117, 117);
+  static const Color BackgroundWhite = Color.fromARGB(255, 255, 255, 255);
+  static const Color BackgroundCerulean = Color.fromARGB(255, 119, 148, 170);
+  static const Color BackgroundLightGrey = Color.fromARGB(255, 237, 237, 237);
+  static const Color DividerGrey = Color.fromARGB(255, 196, 196, 196);
   static const Color ManagerPrimary = Color.fromARGB(255, 0, 103, 145);
   static const Color Secondary = Color.fromARGB(255, 253, 192, 47);
-  static const Color BackgroundWhite = Color.fromARGB(255, 255, 255, 255);
-  static const Color TextWhite = Color.fromARGB(255, 255, 255, 255);
-  static const Color IconGrey = Color.fromARGB(255, 117, 117, 117);
   static const Color AccentRed = Color.fromARGB(255, 255, 99, 99);
-  static const Color BackgroundCerulean = Color.fromARGB(255, 119, 148, 170);
 
   static const String FontFamily = 'Roboto';
 
   static const TextTheme themeText =  TextTheme(
-  headline1: TextStyle(fontSize: 72.0, fontWeight: FontWeight.normal),
-  headline6: TextStyle(fontSize: 36.0, fontStyle: FontStyle.normal),
-  bodyText2: TextStyle(fontSize: 14.0, fontFamily: FontFamily, fontStyle: FontStyle.normal),
+    headline1: TextStyle(fontSize: 72.0, fontWeight: FontWeight.normal),
+    headline6: TextStyle(fontSize: 36.0, fontStyle: FontStyle.normal),
+    bodyText2: TextStyle(fontSize: 14.0, fontFamily: FontFamily, fontStyle: FontStyle.normal),
   );
 
+  static TextStyle whiteTitle = TextStyle(
+      fontFamily: FontFamily,
+      fontSize: SizeConfig.safeBlockVertical * 5,
+      fontWeight: FontWeight.normal,
+      color: Colors.white
+  );
+
+  static TextStyle whiteSubtitle = TextStyle(
+      fontFamily: FontFamily,
+      fontSize: 18,
+      fontWeight: FontWeight.w400,
+      color: Colors.white
+  );
+
+  static const TextStyle menuEntry = TextStyle(
+    color: TextMedium,
+    // fontSize: media.height * 0.025,
+  );
 
   get managerTheme => ThemeData(
     primarySwatch: ManagerPrimary,

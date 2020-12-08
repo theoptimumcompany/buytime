@@ -21,20 +21,21 @@ class BuyTimeAppbarManager extends StatelessWidget implements PreferredSizeWidge
     var mediaWidth = media.width;
     return Container(
       height: mediaHeight * 0.15,
-      child: SafeArea(
-        child: Column(
-          children: [
-            CustomPaint(
-              painter: ContainerShapeBottomCircle(
-                Color.fromRGBO(0, 103, 145, 1.0),
-              ),
+      child: Column(
+        children: [
+          CustomPaint(
+            painter: ContainerShapeBottomCircle(
+              Color.fromRGBO(0, 103, 145, 1.0),
+            ),
+            child: Padding(
+              padding:  const EdgeInsets.only(top: 30.0),
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: children
               ),
+            ),
     ),
-          ],
-        ),
+        ],
       )
     );
   }

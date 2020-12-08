@@ -81,12 +81,19 @@ void main() {
       level: 0,
       children: 0,
       parent: ObjectState(name: "No Parent", id: "no_parent"),
-      manager: [ObjectState(name: "No Manager", id: "no_manager")],
+      manager: [ObjectState()],
       businessId: "",
-      notificationTo: [ObjectState(name: "No One", id: "no_one")],
+      notificationTo: [ObjectState()],
     ),
-    filterSearch: FilterSearchState(star: [false, false, false, false, false], euro: [false, false, false, false], distance: 10.0, searchText: "", food: false, hotel: false),
-    categorySnippet: CategorySnippet(nodeName: "", nodeId: "", nodeLevel: 0, numberOfCategories: 0, categoryNodeList: null),
+    filterSearch: FilterSearchState(
+        star: [false, false, false, false, false],
+        euro: [false, false, false, false],
+        distance: 10.0,
+        searchText: "",
+        food: false,
+        hotel: false),
+    categorySnippet: CategorySnippet(
+        nodeName: "", nodeId: "", nodeLevel: 0, numberOfCategories: 0, categoryNodeList: null),
     business: BusinessState(
       name: "",
       responsible_person_name: "",
@@ -108,9 +115,12 @@ void main() {
       business_type: [ObjectState()],
       description: "",
       id_firestore: "",
+      salesman: ObjectState(),
       salesmanId: "",
+      owner: ObjectState(),
       ownerId: "",
       fileToUploadList: null,
+      draft: true,
     ),
     order: OrderState(
         itemList: List<OrderEntry>(),
@@ -124,13 +134,19 @@ void main() {
         taxPercent: 0.0,
         progress: "unpaid",
         addCardProgress: false,
-        businessId: ""
-    ),
+        businessId: ""),
     orderList: OrderListState(orderListState: List<OrderState>()),
-    stripe: StripeState(paymentMethodList: List<Map<String, dynamic>>(), date: DateTime.now(), position: "", total: 0.0, stripeCard: StripeCardResponse(), error: ""),
+    stripe: StripeState(
+        paymentMethodList: List<Map<String, dynamic>>(),
+        date: DateTime.now(),
+        position: "",
+        total: 0.0,
+        stripeCard: StripeCardResponse(),
+        error: ""),
     businessList: BusinessListState(businessListState: List<BusinessState>()),
     categoryList: CategoryListState(categoryListState: List<CategoryState>()),
-    categorySnippetListState: CategorySnippetListState(categorySnippetListState: Map<String, CategorySnippet>()),
+    categorySnippetListState:
+        CategorySnippetListState(categorySnippetListState: Map<String, CategorySnippet>()),
     serviceList: ServiceListState(serviceListState: List<ServiceState>()),
     pipelineList: PipelineList(pipelineList: List<Pipeline>()),
     user: UserState(
@@ -186,8 +202,6 @@ void main() {
     ],
   );
 
-
-
   // Ensure that plugin services are initialized so that `availableCameras()`
 // can be called before `runApp()`
   WidgetsFlutterBinding.ensureInitialized();
@@ -214,7 +228,7 @@ class BuyTime extends StatelessWidget {
       child: MaterialApp(
         navigatorKey: NavigatorHolder.navigatorKey,
         navigatorObservers: [routeObserver],
-        onGenerateRoute: (RouteSettings settings) =>  _getRoute(settings),
+        onGenerateRoute: (RouteSettings settings) => _getRoute(settings),
         title: 'BuyTime',
         debugShowCheckedModeBanner: false,
         theme: BuytimeTheme().userTheme,
@@ -235,9 +249,7 @@ final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
 
 class MainRoute<T> extends MaterialPageRoute<T> {
   MainRoute(Widget widget, {RouteSettings settings})
-      : super(
-      builder: (_) => RouteAwareWidget(child: widget),
-      settings: settings);
+      : super(builder: (_) => RouteAwareWidget(child: widget), settings: settings);
 
   @override
   Widget buildTransitions(BuildContext context, Animation<double> animation,
@@ -250,9 +262,7 @@ class MainRoute<T> extends MaterialPageRoute<T> {
 
 class FabRoute<T> extends MaterialPageRoute<T> {
   FabRoute(Widget widget, {RouteSettings settings})
-      : super(
-      builder: (_) => RouteAwareWidget(child: widget),
-      settings: settings);
+      : super(builder: (_) => RouteAwareWidget(child: widget), settings: settings);
 
   @override
   Widget buildTransitions(BuildContext context, Animation<double> animation,
@@ -265,7 +275,6 @@ class FabRoute<T> extends MaterialPageRoute<T> {
         child: child);
   }
 }
-
 
 _navigateReplace(Store<AppState> store, action, NextDispatcher next) {
   final routeName = (action as NavigateReplaceAction).routeName;

@@ -18,14 +18,15 @@ class BuyTimeAppbarUser extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 120.0,
-      child: SafeArea(
-        child: CustomPaint(
-          painter: ContainerShapeBottomCircle(
-            Color.fromRGBO(1, 159, 224, 1.0)
-          ),
+      child: CustomPaint(
+        painter: ContainerShapeBottomCircle(
+          Color.fromRGBO(1, 159, 224, 1.0)
+        ),
+        child: Padding(
+          padding: const EdgeInsets.only(top: 20.0),
           child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,children: children),
-    ),
-      )
+        ),
+    )
     );
   }
 

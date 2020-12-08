@@ -24,7 +24,9 @@ class BusinessState {
   List<ObjectState> business_type;
   String description;
   String id_firestore;
+  ObjectState salesman;
   String salesmanId;
+  ObjectState owner;
   String ownerId;
   bool draft;
   List<OptimumFileToUpload> fileToUploadList;
@@ -59,7 +61,9 @@ class BusinessState {
     @required this.business_type,
     @required this.description,
     @required this.id_firestore,
+    this.salesman,
     this.salesmanId,
+    this.owner,
     this.ownerId,
     this.fileToUploadList,
   });
@@ -87,7 +91,9 @@ class BusinessState {
       business_type: [ObjectState()],
       description: "",
       id_firestore: "",
+      salesman: ObjectState(),
       salesmanId: "",
+      owner: ObjectState(),
       ownerId: "",
       fileToUploadList: null,
     );
@@ -114,7 +120,9 @@ class BusinessState {
     this.business_type = state.business_type;
     this.description = state.description;
     this.id_firestore = state.id_firestore;
+    this.salesman = state.salesman;
     this.salesmanId = state.salesmanId;
+    this.owner = state.owner;
     this.ownerId = state.ownerId;
     this.draft = state.draft;
     this.fileToUploadList = state.fileToUploadList;
@@ -141,7 +149,9 @@ class BusinessState {
     List<ObjectState> business_type,
     String description,
     String id_firestore,
+    ObjectState salesman,
     String salesmanId,
+    ObjectState owner,
     String ownerId,
     bool draft,
     List<OptimumFileToUpload> fileToUploadList,
@@ -167,7 +177,9 @@ class BusinessState {
       business_type: business_type ?? this.business_type,
       description: description ?? this.description,
       id_firestore: id_firestore ?? this.id_firestore,
+      salesman: salesman ?? this.salesman,
       salesmanId: salesmanId ?? this.salesmanId,
+      owner: owner ?? this.owner,
       ownerId: ownerId ?? this.ownerId,
       draft: draft ?? this.draft,
       fileToUploadList: fileToUploadList ?? this.fileToUploadList,
@@ -195,7 +207,9 @@ class BusinessState {
     List<ObjectState> business_type,
     String description,
     String id_firestore,
+    ObjectState salesaman,
     String salesmanId,
+    ObjectState owner,
     String ownerId,
     bool draft,
     List<OptimumFileToUpload> fileToUploadList,
@@ -221,7 +235,9 @@ class BusinessState {
       business_type: business_type ?? this.business_type,
       description: description ?? this.description,
       id_firestore: id_firestore ?? this.id_firestore,
+      salesman: salesman ?? this.salesman,
       salesmanId: salesmanId ?? this.salesmanId,
+      owner: owner ?? this.owner,
       ownerId: ownerId ?? this.ownerId,
       draft: draft ?? this.draft,
       fileToUploadList: fileToUploadList ?? this.fileToUploadList,
@@ -256,8 +272,10 @@ class BusinessState {
         })),
         description = json['description'],
         id_firestore = json['id_firestore'],
+        salesman = ObjectState.fromJson(json["salesman"]) ?? ObjectState.fromJson(json["salesman"]),
         salesmanId = json['salesmanId'],
         draft = json['draft'],
+        owner = ObjectState.fromJson(json["owner"]),
         ownerId = json['ownerId'];
 
   Map<String, dynamic> toJson() => {
@@ -281,7 +299,9 @@ class BusinessState {
         'business_type': convertToJson(business_type),
         'description': description,
         'id_firestore': id_firestore,
+        'salesman': salesman.toJson(),
         'salesmanId': salesmanId,
+        'owner': owner.toJson(),
         'ownerId': ownerId,
         'draft': draft,
       };
