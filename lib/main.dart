@@ -217,7 +217,6 @@ class BuyTime extends StatelessWidget {
         onGenerateRoute: (RouteSettings settings) =>  _getRoute(settings),
         title: 'BuyTime',
         debugShowCheckedModeBanner: false,
-
         theme: BuytimeTheme().userTheme,
         home: SplashScreen(),
         routes: <String, WidgetBuilder>{

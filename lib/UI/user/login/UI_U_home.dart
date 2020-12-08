@@ -1,13 +1,18 @@
+import 'dart:async';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:BuyTime/UI/theme/buytime_theme.dart';
+import 'package:BuyTime/UI/user/login/UI_U_ToS_TermsConditons.dart';
 import 'package:BuyTime/UI/user/login/UI_U_business_data.dart';
 import 'package:BuyTime/UI/user/login/UI_U_login_widget.dart';
 import 'package:BuyTime/UI/user/login/UI_U_registration_widget.dart';
 import 'package:BuyTime/utils/size_config.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:video_player/video_player.dart';
 
 
@@ -37,6 +42,10 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   int randomNumber = 0;
 
+  String tcPdfPath = '';
+  String tosPdfPath = '';
+  String urlPdf = '';
+
   @override
   void initState() {
 
@@ -64,7 +73,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
     super.initState();
 
-    backgroundVideoList.add('star_trails.mp4');
+    //backgroundVideoList.add('star_trails.mp4');
     backgroundVideoList.add('duomo.mov');
     backgroundVideoList.add('waves.mp4');
     backgroundVideoList.add('snow.mov');
@@ -81,6 +90,71 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         // Ensure the first frame is shown after the video is initialized.
         setState(() {});
       });
+
+    /// Get User manual from assets folder
+    getFileFromAssets("assets/documents/tc.pdf", 'tc.pdf').then((f) {
+      setState(() {
+        tcPdfPath = f.path;
+        debugPrint('full path tc: ' + tcPdfPath);
+      });
+    });
+
+    getFileFromAssets("assets/documents/tos.pdf", 'tos.pdf').then((f) {
+      setState(() {
+        tosPdfPath = f.path;
+        debugPrint('full path tos: ' + tosPdfPath);
+      });
+    });
+
+    /*createFileOfPdfUrl().then((f) {
+      setState(() {
+        urlPdf = f.path;
+        debugPrint('full path url: ' + urlPdf);
+      });
+    });*/
+  }
+
+  Future<File> createFileOfPdfUrl() async {
+    Completer<File> completer = Completer();
+    print("Start download file from internet!");
+    try {
+      // "https://berlin2017.droidcon.cod.newthinking.net/sites/global.droidcon.cod.newthinking.net/files/media/documents/Flutter%20-%2060FPS%20UI%20of%20the%20future%20%20-%20DroidconDE%2017.pdf";
+      // final url = "https://pdfkit.org/docs/guide.pdf";
+      final url = "http://www.pdf995.com/samples/pdf.pdf";
+      final filename = url.substring(url.lastIndexOf("/") + 1);
+      var request = await HttpClient().getUrl(Uri.parse(url));
+      var response = await request.close();
+      var bytes = await consolidateHttpClientResponseBytes(response);
+      var dir = await getApplicationDocumentsDirectory();
+      print("Download files");
+      print("${dir.path}/$filename");
+      File file = File("${dir.path}/$filename");
+
+      await file.writeAsBytes(bytes, flush: true);
+      completer.complete(file);
+    } catch (e) {
+      throw Exception('Error parsing asset file!');
+    }
+
+    return completer.future;
+  }
+
+  /// PDF loader from assets
+  Future<File> getFileFromAssets(String asset, String fileName) async {
+    Completer<File> completer = Completer();
+
+    try {
+      var dir = await getApplicationDocumentsDirectory();
+      File file = File("${dir.path}/$fileName");
+      var data = await rootBundle.load(asset);
+      var bytes = data.buffer.asUint8List();
+      await file.writeAsBytes(bytes, flush: true);
+      completer.complete(file);
+    } catch (e) {
+      throw Exception('Error parsing asset file!');
+    }
+
+    return completer.future;
   }
 
 
@@ -230,7 +304,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                         ],
                       )
                   ),
-                  ///Sign up & Sign in & ToS % PRivacy policy
+                  ///Sign up & Sign in & ToS % Privacy policy
                   Expanded(
                     flex: 2,
                     child: Column(
@@ -328,7 +402,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                     text: 'ToS',
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = (){
-                                        debugPrint('ToS Clicked');
+                                        debugPrint('ToS Clicked: ' + tosPdfPath);
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => TosTermsConditons(tosPdfPath)));
                                       },
                                   ),
                                 ),
@@ -350,7 +425,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                     text: 'Privacy Policy',
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = (){
-                                        debugPrint('Privacy Policy Clicked');
+                                        debugPrint('Privacy Policy Clicked: ' + tcPdfPath);
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => TosTermsConditons(tcPdfPath)));
                                       },
                                   ),
                                 ),
