@@ -163,6 +163,7 @@ CategoryState categoryReducer(CategoryState state, action) {
   }
   if (action is SetCategoryLevel) {
     categoryState.level = action.level;
+    print("Setto livello categoria a " + action.level.toString());
     return categoryState;
   }
   if (action is SetCategoryChildren) {

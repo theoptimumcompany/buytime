@@ -1,6 +1,7 @@
 import 'package:BuyTime/UI/management/category/UI_manage_category.dart';
 import 'package:BuyTime/reblox/model/app_state.dart';
 import 'package:BuyTime/reblox/model/category/category_snippet_state.dart';
+import 'package:BuyTime/reblox/model/category/category_state.dart';
 import 'package:BuyTime/reblox/model/object_state.dart';
 import 'package:BuyTime/reblox/reducer/category_snippet_reducer.dart';
 import 'package:BuyTime/reblox/reducer/category_reducer.dart';
@@ -30,8 +31,7 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
 
   ObjectState _dropdownParentCategory = ObjectState(level: 0, id: "no_parent", name: "No Parent");
 
-  List<DropdownMenuItem<ObjectState>> _dropdownMenuParentCategory =
-      new List<DropdownMenuItem<ObjectState>>();
+  List<DropdownMenuItem<ObjectState>> _dropdownMenuParentCategory = new List<DropdownMenuItem<ObjectState>>();
 
   var size;
 
@@ -93,13 +93,6 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
       CategorySnippet categoryNode = StoreProvider.of<AppState>(context).state.categorySnippet;
       List<DropdownMenuItem<ObjectState>> items = List();
 
-      if (categoryNode.categoryNodeList != null) {
-        if (categoryNode.categoryNodeList.length != 0 &&
-            categoryNode.categoryNodeList.length != null) {
-          List<dynamic> list = categoryNode.categoryNodeList;
-          items = openTree(list, items);
-        }
-      }
       items.add(
         DropdownMenuItem(
           child: Text(item.name),
@@ -107,18 +100,30 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
         ),
       );
 
+      if (categoryNode.categoryNodeList != null) {
+        if (categoryNode.categoryNodeList.length != 0 && categoryNode.categoryNodeList.length != null) {
+          List<dynamic> list = categoryNode.categoryNodeList;
+          items = openTree(list, items);
+        }
+      }
+
       _dropdownMenuParentCategory = items;
     }
   }
 
   openTree(List<dynamic> list, List<DropdownMenuItem<ObjectState>> items) {
     for (int i = 0; i < list.length; i++) {
-      if (list[i]['level'] < 6) {
-        ObjectState objectState = ObjectState(
-            name: list[i]['nodeName'].toString(), id: list[i]['nodeId'], level: list[i]['level']);
+      if (list[i]['level'] < 4) {
+        ObjectState objectState =
+            ObjectState(name: list[i]['nodeName'].toString(), id: list[i]['nodeId'], level: list[i]['level']);
         items.add(
           DropdownMenuItem(
-            child: Text(objectState.name),
+            child: Padding(
+              padding: EdgeInsets.only(
+                left: double.parse(list[i]["level"].toString()) * 12.0,
+              ),
+              child: Text(objectState.name),
+            ),
             value: objectState,
           ),
         );
@@ -203,9 +208,8 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
               Padding(
                 padding: const EdgeInsets.only(top: 30.0),
                 child: Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8.0),
-                      border: Border.all(color: Colors.grey)),
+                  decoration:
+                      BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
                   child: Form(
                       key: _formInviteKey,
                       child: Padding(
@@ -276,7 +280,7 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
 
   ObjectState searchDropdownParent(var snapshot) {
     if (widget.empty == 'empty') {
-      return _dropdownMenuParentCategory.last.value;
+      return _dropdownMenuParentCategory.first.value;
     }
 
     for (var element in _dropdownMenuParentCategory) {
@@ -349,22 +353,18 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
                       onPressed: () {
                         if (validateAndSave()) {
                           if (changeParent == false) {
-                            print("Non ho scelto parent");
-                            ObjectState newCategoryParent =
-                                ObjectState(level: 0, id: "no_parent", name: "No Parent");
-                            StoreProvider.of<AppState>(context).dispatch(SetCategoryChildren(0));
-                            StoreProvider.of<AppState>(context).dispatch(SetCategoryLevel(0));
-                            StoreProvider.of<AppState>(context)
-                                .dispatch(SetCategoryParent(newCategoryParent));
-                            StoreProvider.of<AppState>(context)
-                                .dispatch(new CreateCategory(snapshot.category));
-                            StoreProvider.of<AppState>(context)
-                                .dispatch(new AddCategorySnippet(newCategoryParent));
+                            print("CategoryCreate : Parent non Scelto");
+                            CategoryState categoryCreate = snapshot.category;
+                            ObjectState newCategoryParent = selectedDropValue;
+                            print("Livello prima : " + snapshot.category.level.toString());
+                            categoryCreate.level = newCategoryParent.level + 1;
+                            categoryCreate.parent = newCategoryParent;
+
+                            StoreProvider.of<AppState>(context).dispatch(new CreateCategory(categoryCreate));
+                            StoreProvider.of<AppState>(context).dispatch(new AddCategorySnippet(newCategoryParent));
                           } else {
-                            StoreProvider.of<AppState>(context)
-                                .dispatch(new CreateCategory(snapshot.category));
-                            StoreProvider.of<AppState>(context)
-                                .dispatch(new AddCategorySnippet(newParent));
+                            StoreProvider.of<AppState>(context).dispatch(new CreateCategory(snapshot.category));
+                            StoreProvider.of<AppState>(context).dispatch(new AddCategorySnippet(newParent));
                           }
 
                           Future.delayed(const Duration(milliseconds: 500), () {
@@ -402,16 +402,13 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
                             child: Container(
                               width: media.width * 0.9,
                               decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                  border: Border.all(color: Colors.grey)),
+                                  borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
                               child: Form(
                                   key: _formKey,
                                   child: Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 0.0, bottom: 5.0, left: 10.0, right: 10.0),
+                                    padding: const EdgeInsets.only(top: 0.0, bottom: 5.0, left: 10.0, right: 10.0),
                                     child: TextFormField(
-                                      validator: (value) =>
-                                          value.isEmpty ? 'Category name cannot be blank' : null,
+                                      validator: (value) => value.isEmpty ? 'Category name cannot be blank' : null,
                                       initialValue: _selectedCategoryName,
                                       onChanged: (value) {
                                         _selectedCategoryName = value;
@@ -433,8 +430,7 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
                             child: Container(
                               width: media.width * 0.9,
                               decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                  border: Border.all(color: Colors.grey)),
+                                  borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: DropdownButtonHideUnderline(
@@ -443,17 +439,16 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
                                       items: _dropdownMenuParentCategory,
                                       decoration: InputDecoration(
                                           labelText: 'Parent Category',
-                                          enabledBorder: UnderlineInputBorder(
-                                              borderSide: BorderSide(color: Colors.white))),
+                                          enabledBorder:
+                                              UnderlineInputBorder(borderSide: BorderSide(color: Colors.white))),
                                       onChanged: (ObjectState newValue) {
                                         setState(() {
                                           changeParent = true;
                                           selectedDropValue = newValue;
                                           newParent = newValue;
-                                          print("Drop Selezionato su onchangedrop : " +
-                                              selectedDropValue.name);
-                                          setNewCategoryParent(selectedDropValue,
-                                              snapshot.categorySnippet.categoryNodeList);
+                                          print("Drop Selezionato su onchangedrop : " + selectedDropValue.name);
+                                          setNewCategoryParent(
+                                              selectedDropValue, snapshot.categorySnippet.categoryNodeList);
                                         });
                                       }),
                                 ),
@@ -518,20 +513,16 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
                                 padding: const EdgeInsets.only(right: 10.0),
                                 child: InputChip(
                                   selected: false,
-                                  label: Text(snapshot.business.owner.name +
-                                      " " +
-                                      snapshot.business.owner.surname),
+                                  label: Text(snapshot.business.owner.name + " " + snapshot.business.owner.surname),
                                 ),
                               ),
-                              snapshot.business.salesman.name != null &&
-                                      snapshot.business.salesman.name != ''
+                              snapshot.business.salesman.name != null && snapshot.business.salesman.name != ''
                                   ? Padding(
                                       padding: const EdgeInsets.only(right: 10.0),
                                       child: InputChip(
                                         selected: false,
-                                        label: Text(snapshot.business.salesman.name +
-                                            " " +
-                                            snapshot.business.salesman.surname),
+                                        label: Text(
+                                            snapshot.business.salesman.name + " " + snapshot.business.salesman.surname),
                                       ),
                                     )
                                   : Container(),
@@ -645,8 +636,7 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
                               : Padding(
                                   padding: const EdgeInsets.all(10.0),
                                   child: Container(
-                                    child: Text(
-                                        "Non ci sono lavoratori assegnati a questa categoria."),
+                                    child: Text("Non ci sono lavoratori assegnati a questa categoria."),
                                   ),
                                 )
                         ],

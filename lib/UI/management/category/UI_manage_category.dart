@@ -90,15 +90,12 @@ class UI_ManageCategoryState extends State<UI_ManageCategory> {
       return Padding(
         padding: EdgeInsets.only(
             left: double.parse(list[index]["level"].toString()) * 12.0,
-            right: (list[index]['nodeCategory'] != null && list[index]['nodeCategory'].length != 0)
-                ? 0.0
-                : 39.0),
+            right: (list[index]['nodeCategory'] != null && list[index]['nodeCategory'].length != 0) ? 0.0 : 39.0),
         child: (list[index]['nodeCategory'] != null && list[index]['nodeCategory'].length != 0)
             ? ExpansionTile(
                 title: GestureDetector(
                     onTap: () {
-                      StoreProvider.of<AppState>(context)
-                          .dispatch(CategoryRequest(list[index]["nodeId"]));
+                      StoreProvider.of<AppState>(context).dispatch(CategoryRequest(list[index]["nodeId"]));
                       Future.delayed(const Duration(milliseconds: 1000), () {
                         Navigator.pushReplacement(
                           context,
@@ -121,13 +118,8 @@ class UI_ManageCategoryState extends State<UI_ManageCategory> {
                           ),
                           tooltip: 'Create Sub-Category',
                           onPressed: () {
-                            StoreProvider.of<AppState>(context)
-                                .dispatch(CategoryRequest(list[index]["nodeId"]));
-                            StoreProvider.of<AppState>(context)
-                                        .state
-                                        .categorySnippet
-                                        .numberOfCategories <
-                                    50
+                            StoreProvider.of<AppState>(context).dispatch(CategoryRequest(list[index]["nodeId"]));
+                            StoreProvider.of<AppState>(context).state.categorySnippet.numberOfCategories < 50
                                 ? Future.delayed(const Duration(milliseconds: 500), () {
                                     Navigator.pushReplacement(
                                       context,
@@ -140,8 +132,7 @@ class UI_ManageCategoryState extends State<UI_ManageCategory> {
                                       // return object of type Dialog
                                       return AlertDialog(
                                         title: new Text("Caution"),
-                                        content: new Text(
-                                            "You can't create another category, the maximum is 50!"),
+                                        content: new Text("You can't create another category, the maximum is 50!"),
                                       );
                                     },
                                   );
@@ -163,6 +154,7 @@ class UI_ManageCategoryState extends State<UI_ManageCategory> {
                       list[index]["nodeName"],
                       style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.normal),
                     ),
+                    list[index]['level'] < 4?
                     IconButton(
                       icon: const Icon(
                         Icons.add_circle_sharp,
@@ -171,13 +163,8 @@ class UI_ManageCategoryState extends State<UI_ManageCategory> {
                       ),
                       tooltip: 'Create Sub-Category',
                       onPressed: () {
-                        StoreProvider.of<AppState>(context)
-                            .dispatch(CategoryRequest(list[index]["nodeId"]));
-                        StoreProvider.of<AppState>(context)
-                                    .state
-                                    .categorySnippet
-                                    .numberOfCategories <
-                                50
+                        StoreProvider.of<AppState>(context).dispatch(CategoryRequest(list[index]["nodeId"]));
+                        StoreProvider.of<AppState>(context).state.categorySnippet.numberOfCategories < 50
                             ? Future.delayed(const Duration(milliseconds: 500), () {
                                 Navigator.pushReplacement(
                                   context,
@@ -190,18 +177,16 @@ class UI_ManageCategoryState extends State<UI_ManageCategory> {
                                   // return object of type Dialog
                                   return AlertDialog(
                                     title: new Text("Caution"),
-                                    content: new Text(
-                                        "You can't create another category, the maximum is 50!"),
+                                    content: new Text("You can't create another category, the maximum is 50!"),
                                   );
                                 },
                               );
                       },
-                    ),
+                    ):Container(),
                   ],
                 ),
                 onTap: () {
-                  StoreProvider.of<AppState>(context)
-                      .dispatch(CategoryRequest(list[index]["nodeId"]));
+                  StoreProvider.of<AppState>(context).dispatch(CategoryRequest(list[index]["nodeId"]));
                   Future.delayed(const Duration(milliseconds: 500), () {
                     Navigator.pushReplacement(
                       context,
@@ -225,18 +210,14 @@ class UI_ManageCategoryState extends State<UI_ManageCategory> {
           padding: EdgeInsets.only(
               bottom: 15.0,
               left: double.parse(list[index]["level"].toString()) * 12.0,
-              right:
-                  (list[index]['nodeCategory'] != null && list[index]['nodeCategory'].length != 0)
-                      ? 0.0
-                      : 39.0),
+              right: (list[index]['nodeCategory'] != null && list[index]['nodeCategory'].length != 0) ? 0.0 : 39.0),
           child: Container(
             child: (list[index]['nodeCategory'] != null && list[index]['nodeCategory'].length != 0)
                 ? Container(
                     child: ExpansionTile(
                       title: GestureDetector(
                         onTap: () {
-                          StoreProvider.of<AppState>(context)
-                              .dispatch(CategoryRequest(list[index]["nodeId"]));
+                          StoreProvider.of<AppState>(context).dispatch(CategoryRequest(list[index]["nodeId"]));
                           Future.delayed(const Duration(milliseconds: 500), () {
                             Navigator.pushReplacement(
                               context,
@@ -259,18 +240,12 @@ class UI_ManageCategoryState extends State<UI_ManageCategory> {
                               ),
                               tooltip: 'Create Sub-Category',
                               onPressed: () {
-                                StoreProvider.of<AppState>(context)
-                                    .dispatch(CategoryRequest(list[index]["nodeId"]));
-                                StoreProvider.of<AppState>(context)
-                                            .state
-                                            .categorySnippet
-                                            .numberOfCategories <
-                                        50
+                                StoreProvider.of<AppState>(context).dispatch(CategoryRequest(list[index]["nodeId"]));
+                                StoreProvider.of<AppState>(context).state.categorySnippet.numberOfCategories < 50
                                     ? Future.delayed(const Duration(milliseconds: 500), () {
                                         Navigator.pushReplacement(
                                           context,
-                                          MaterialPageRoute(
-                                              builder: (context) => UI_CreateCategory()),
+                                          MaterialPageRoute(builder: (context) => UI_CreateCategory()),
                                         );
                                       })
                                     : showDialog(
@@ -279,8 +254,7 @@ class UI_ManageCategoryState extends State<UI_ManageCategory> {
                                           // return object of type Dialog
                                           return AlertDialog(
                                             title: new Text("Caution"),
-                                            content: new Text(
-                                                "You can't create another category, the maximum is 50!"),
+                                            content: new Text("You can't create another category, the maximum is 50!"),
                                           );
                                         },
                                       );
@@ -300,6 +274,7 @@ class UI_ManageCategoryState extends State<UI_ManageCategory> {
                           list[index]["nodeName"],
                           style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.normal),
                         ),
+                        list[index]['level'] < 4?
                         IconButton(
                           icon: const Icon(
                             Icons.add_circle_sharp,
@@ -308,13 +283,8 @@ class UI_ManageCategoryState extends State<UI_ManageCategory> {
                           ),
                           tooltip: 'Create Sub-Category',
                           onPressed: () {
-                            StoreProvider.of<AppState>(context)
-                                .dispatch(CategoryRequest(list[index]["nodeId"]));
-                            StoreProvider.of<AppState>(context)
-                                        .state
-                                        .categorySnippet
-                                        .numberOfCategories <
-                                    50
+                            StoreProvider.of<AppState>(context).dispatch(CategoryRequest(list[index]["nodeId"]));
+                            StoreProvider.of<AppState>(context).state.categorySnippet.numberOfCategories < 50
                                 ? Future.delayed(const Duration(milliseconds: 500), () {
                                     Navigator.pushReplacement(
                                       context,
@@ -327,18 +297,16 @@ class UI_ManageCategoryState extends State<UI_ManageCategory> {
                                       // return object of type Dialog
                                       return AlertDialog(
                                         title: new Text("Caution"),
-                                        content: new Text(
-                                            "You can't create another category, the maximum is 50!"),
+                                        content: new Text("You can't create another category, the maximum is 50!"),
                                       );
                                     },
                                   );
                           },
-                        ),
+                        ):Container(),
                       ],
                     ),
                     onTap: () {
-                      StoreProvider.of<AppState>(context)
-                          .dispatch(CategoryRequest(list[index]["nodeId"]));
+                      StoreProvider.of<AppState>(context).dispatch(CategoryRequest(list[index]["nodeId"]));
                       Future.delayed(const Duration(milliseconds: 500), () {
                         Navigator.pushReplacement(
                           context,
@@ -355,8 +323,7 @@ class UI_ManageCategoryState extends State<UI_ManageCategory> {
 
   List<Widget> listBranchCategory() {
     List<Widget> branches = new List();
-    List<dynamic> firebaseTree =
-        StoreProvider.of<AppState>(context).state.categorySnippet.categoryNodeList;
+    List<dynamic> firebaseTree = StoreProvider.of<AppState>(context).state.categorySnippet.categoryNodeList;
     branches.add(SizedBox(
       height: 10,
     ));
@@ -457,8 +424,7 @@ class UI_ManageCategoryState extends State<UI_ManageCategory> {
                         snapshot.categorySnippet.numberOfCategories < 50
                             ? Navigator.pushReplacement(
                                 context,
-                                MaterialPageRoute(
-                                    builder: (context) => UI_CreateCategory(empty: "empty")),
+                                MaterialPageRoute(builder: (context) => UI_CreateCategory(empty: "empty")),
                               )
                             : showDialog(
                                 context: context,
@@ -466,8 +432,7 @@ class UI_ManageCategoryState extends State<UI_ManageCategory> {
                                   // return object of type Dialog
                                   return AlertDialog(
                                     title: new Text("Caution"),
-                                    content: new Text(
-                                        "You can't create another category, the maximum is 50!"),
+                                    content: new Text("You can't create another category, the maximum is 50!"),
                                   );
                                 },
                               );
