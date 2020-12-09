@@ -1,15 +1,9 @@
 import 'dart:async';
-import 'dart:io';
-
 import 'package:BuyTime/UI/theme/buytime_theme.dart';
 import 'package:BuyTime/utils/size_config.dart';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
-import 'package:path_provider/path_provider.dart';
-
 
 class TosTermsConditons extends StatefulWidget {
 
@@ -33,7 +27,7 @@ class _TosTermsConditonsState extends State<TosTermsConditons> with WidgetsBindi
   @override
   void initState() {
     super.initState();
-    debugPrint('path: ${widget.path}');
+    debugPrint('UI_U_ToS_TermsConditions - path 1 : ${widget.path}');
   } //PDFViewController _pdfViewController;
 
 
@@ -42,7 +36,7 @@ class _TosTermsConditonsState extends State<TosTermsConditons> with WidgetsBindi
   Widget build(BuildContext context) {
 
     var media = MediaQuery.of(context).size;
-
+    debugPrint('UI_U_ToS_TermsConditions - path 2 : ${widget.path}');
     SizeConfig().init(context);
 
     return Scaffold(
@@ -129,9 +123,10 @@ class _TosTermsConditonsState extends State<TosTermsConditons> with WidgetsBindi
                             swipeHorizontal: true,
                             nightMode: false,
                             onError: (e) {
-                              print(e);
+                              print('UI_U_ToS_TermsConditions - path error : ' + e);
                             },
                             onRender: (_pages) {
+                              debugPrint('UI_U_ToS_TermsConditions - path 3 : ${widget.path}');
                               setState(() {
                                 _totalPages = _pages;
                                 pdfReady = true;

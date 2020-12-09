@@ -4,7 +4,6 @@ import 'dart:math';
 
 import 'package:BuyTime/UI/theme/buytime_theme.dart';
 import 'package:BuyTime/UI/user/login/UI_U_ToS_TermsConditons.dart';
-import 'package:BuyTime/UI/user/login/UI_U_business_data.dart';
 import 'package:BuyTime/UI/user/login/UI_U_login_widget.dart';
 import 'package:BuyTime/UI/user/login/UI_U_registration_widget.dart';
 import 'package:BuyTime/utils/size_config.dart';
