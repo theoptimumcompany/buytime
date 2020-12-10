@@ -9,6 +9,7 @@ import 'package:BuyTime/reusable/back_button_blue.dart';
 import 'package:BuyTime/reusable/branded_button.dart';
 import 'package:BuyTime/reusable/container_shape_top_circle.dart';
 import 'package:BuyTime/reusable/error_dialog.dart';
+import 'package:BuyTime/utils/size_config.dart';
 import 'package:device_info/device_info.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -31,10 +32,14 @@ class RegistrationWidget extends StatefulWidget {
 }
 
 class RegistrationWidgetState extends State<RegistrationWidget> {
+
+  ///Global key
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  ///Text controller
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _nameController = TextEditingController();
+
   bool _isRequestFlying = false;
 
   bool _success;
@@ -42,6 +47,7 @@ class RegistrationWidgetState extends State<RegistrationWidget> {
 
   bool isLoggedIn = false;
 
+  ///Firebase auth
   final auth.FirebaseAuth _auth = auth.FirebaseAuth.instance;
   final GoogleSignIn googleSignIn = GoogleSignIn();
 
@@ -53,6 +59,11 @@ class RegistrationWidgetState extends State<RegistrationWidget> {
   String serverToken =
       'AAAA6xUtyfE:APA91bGHhEzVUY9fnj4FbTXJX57qcgF-8GBrfBbGIa8kEpEIdsXRgQxbtsvbhL-w-_MQYKIj0XVlSaDSf2s6O3D3SM3o-z_AZnHQwBNLiw1ygyZOuVAKa5YmXeu6Da9eBqRD9uwFHSPi';
   final FirebaseMessaging firebaseMessaging = FirebaseMessaging();
+
+
+  bool emailHasError = true;
+  bool passwordHasError = true;
+  String responseMessage = '';
 
   @override
   void initState() {
@@ -74,6 +85,7 @@ class RegistrationWidgetState extends State<RegistrationWidget> {
     initPlatformState();
   }
 
+  ///Init platform state
   Future<void> initPlatformState() async {
     Map<String, dynamic> deviceData;
     if(!kIsWeb) {
@@ -98,6 +110,7 @@ class RegistrationWidgetState extends State<RegistrationWidget> {
     });
   }
 
+  ///Read android data
   Map<String, dynamic> _readAndroidBuildData(AndroidDeviceInfo build) {
     return <String, dynamic>{
       'version.securityPatch': build.version.securityPatch,
@@ -130,6 +143,7 @@ class RegistrationWidgetState extends State<RegistrationWidget> {
     };
   }
 
+  ///Read ios data
   Map<String, dynamic> _readIosDeviceInfo(IosDeviceInfo data) {
     return <String, dynamic>{
       'name': data.name,
@@ -147,12 +161,13 @@ class RegistrationWidgetState extends State<RegistrationWidget> {
     };
   }
 
+  ///Google sign in
   Future<int> signInWithGoogle(context) async {
     final GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
     final GoogleSignInAuthentication googleSignInAuthentication =
-        await googleSignInAccount.authentication;
+    await googleSignInAccount.authentication;
     final auth.AuthCredential credential =
-        auth.GoogleAuthProvider.credential(
+    auth.GoogleAuthProvider.credential(
       accessToken: googleSignInAuthentication.accessToken,
       idToken: googleSignInAuthentication.idToken,
     );
@@ -201,10 +216,10 @@ class RegistrationWidgetState extends State<RegistrationWidget> {
 
     StoreProvider.of<AppState>(context).dispatch(new LoggedUser(UserState.fromFirebaseUser(user, deviceId, serverToken)));
     ObjectState field =
-        ObjectState(name: "device", id: deviceId, user_uid: user.uid);
+    ObjectState(name: "device", id: deviceId, user_uid: user.uid);
     StoreProvider.of<AppState>(context).dispatch(new UpdateUserField(field));
     ObjectState token =
-        ObjectState(name: "token", id: serverToken, user_uid: user.uid);
+    ObjectState(name: "token", id: serverToken, user_uid: user.uid);
     StoreProvider.of<AppState>(context).dispatch(new UpdateUserField(token));
 
     // return 'signInWithGoogle succeeded: $user';
@@ -212,26 +227,26 @@ class RegistrationWidgetState extends State<RegistrationWidget> {
     return 1;
   }
 
+  ///Google sign out
   void signOutGoogle() async {
     await googleSignIn.signOut();
-
     print("User Sign Out");
   }
 
+  ///Init google sign in
   void initiateGoogleSignIn() {
     signInWithGoogle(context).then((result) {
       if (result == 1) {
         setState(() {
           isLoggedIn = true;
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => UI_U_Tabs()),
+          Navigator.push(context, MaterialPageRoute(builder: (context) => UI_U_Tabs()),
           );
         });
       } else {}
     });
   }
 
+  ///Init facebook sign in
   void initiateFacebookSignIn() {
     _handleSignIn().then((result) {
       if (result == 1) {
@@ -246,6 +261,7 @@ class RegistrationWidgetState extends State<RegistrationWidget> {
     });
   }
 
+  ///Facebook sign in
   Future<int> _handleSignIn() async {
     FacebookLoginResult facebookLoginResult = await _handleFBSignIn();
     if (facebookLoginResult.accessToken != null) {
@@ -271,9 +287,9 @@ class RegistrationWidgetState extends State<RegistrationWidget> {
 
       if (facebookLoginResult.status == FacebookLoginStatus.loggedIn) {
         final facebookAuthCred =
-            auth.FacebookAuthProvider.credential(accessToken);
+        auth.FacebookAuthProvider.credential(accessToken);
         final facebookUserFromFirebase =
-            await _auth.signInWithCredential(facebookAuthCred);
+        await _auth.signInWithCredential(facebookAuthCred);
         await pr.hide();
 
         String deviceId = "web";
@@ -313,10 +329,11 @@ class RegistrationWidgetState extends State<RegistrationWidget> {
     }
   }
 
+  ///Handle facebook sign in
   Future<FacebookLoginResult> _handleFBSignIn() async {
     FacebookLogin facebookLogin = FacebookLogin();
     FacebookLoginResult facebookLoginResult =
-        await facebookLogin.logIn(['email']);
+    await facebookLogin.logIn(['email']);
     switch (facebookLoginResult.status) {
       case FacebookLoginStatus.cancelledByUser:
         print("Cancelled");
@@ -331,13 +348,47 @@ class RegistrationWidgetState extends State<RegistrationWidget> {
     return facebookLoginResult;
   }
 
+
+  void checkFormValidation(){
+    setState(() {
+      if(_success == null){
+        responseMessage = '';
+      }else{
+        if(emailHasError && passwordHasError)
+          responseMessage = 'Please enter a valid Email and Password';
+        else if(emailHasError)
+          responseMessage = 'Please enter a valid Email address';
+        else if(passwordHasError)
+          responseMessage = 'Password must be longer than 6 digits';
+        else if(!_success)
+          responseMessage = 'Registration failed';
+        else
+          responseMessage = 'Successfully registered with ' + _userEmail;
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     // the media containing information on width and height
     var media = MediaQuery.of(context).size;
+    SizeConfig().init(context);
 
     return Scaffold(
         resizeToAvoidBottomPadding: false,
+        appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: BuytimeTheme.UserPrimary,
+            ),
+            onPressed: (){
+              Navigator.of(context).pop();
+            },
+          ),
+          backgroundColor: Colors.white,
+          elevation: 0,
+        ),
         body: Form(
             key: _formKey,
             child: SafeArea(
@@ -345,158 +396,211 @@ class RegistrationWidgetState extends State<RegistrationWidget> {
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                    Container(
-                        width: double.infinity,
-                        color: Colors.transparent,
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              BackButtonBlue(media: media, externalContext: context)
-                            ])),
-                    Center(
-                        child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Container(
-                          child: Image.asset('assets/img/img_buytime.png',
-                              height: media.height * 0.22),
-                        ),
-                        Container(
-                          width: media.width * 0.65,
-                          child: TextFormField(
-                            controller: _emailController,
-                            textAlign: TextAlign.start,
-                            decoration: const InputDecoration(
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: BuytimeTheme.UserPrimary),
-                              ),
-                              labelText: 'E-Mail',
-                              hintText: "email *",
-                              hintStyle: TextStyle(color: BuytimeTheme.AccentRed),
-                              labelStyle: TextStyle(
-                                fontFamily: BuytimeTheme.FontFamily,
-                                color: BuytimeTheme.UserPrimary,
-                                fontWeight: FontWeight.w200,
-                              ),
-                            ),
-                            validator: (String value) {
-                              if (value.isNotEmpty &&
-                                  EmailValidator.validate(value)) {
-                                return null;
-                              }
-                              return 'Please enter a valid email address';
-                            },
-                          ),
-                        ),
-                        Container(
-                          width: media.width * 0.65,
-                          child: TextFormField(
-                            controller: _passwordController,
-                            textAlign: TextAlign.start,
-                            obscureText: true,
-                            decoration: const InputDecoration(
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: BuytimeTheme.UserPrimary),
-                              ),
-                              labelText: 'Password',
-                              hintText: "password *",
-                              hintStyle: TextStyle(color: BuytimeTheme.AccentRed),
-                              labelStyle: TextStyle(
-                                fontFamily: BuytimeTheme.FontFamily,
-                                color: BuytimeTheme.UserPrimary,
-                                fontWeight: FontWeight.w200,
-                              ),
-                            ),
-                            validator: (String value) {
-                              if (value.isNotEmpty &&
-                                  EmailValidator.validate(value)) {
-                                return null;
-                              }
-                              return null;
-                            },
-                          ),
-                        ),
-                        Container(
-                          width: media.width * 0.65,
-                          child: TextFormField(
-                            controller: _nameController,
-                            textAlign: TextAlign.start,
-                            decoration: const InputDecoration(
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: BuytimeTheme.UserPrimary),
-                              ),
-                              labelText: 'Name',
-                              hintText: "name *",
-                              hintStyle: TextStyle(color: BuytimeTheme.AccentRed),
-                              labelStyle: TextStyle(
-                                fontFamily: BuytimeTheme.FontFamily,
-                                color: BuytimeTheme.UserPrimary,
-                                fontWeight: FontWeight.w200,
-                              ),
-                            ),
-                            validator: (String value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter some text';
-                              }
-                              return null;
-                            },
-                          ),
-                        ),
-                        SizedBox(
-                          height: media.height * 0.03,
-                        ),
-                        Container(
-                            width: media.width * 0.7,
-                            child: RaisedButton(
-                              onPressed: () async {
-                                if (_formKey.currentState.validate() &&
-                                    !_isRequestFlying) {
-                                  _register();
-                                }
-                              },
-                              padding: EdgeInsets.all(media.width * 0.025),
-                              textColor: BuytimeTheme.TextWhite,
-                              color: _isRequestFlying ? BuytimeTheme.IconGrey : BuytimeTheme.UserPrimary,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: new BorderRadius.circular(500.0)),
-                              child: Text(
-                                "Register",
-                                style: TextStyle(
-                                  fontSize: 23,
-                                  fontFamily: BuytimeTheme.FontFamily,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            )),
-                      ],
-                    )),
-                    Container(
-                      alignment: Alignment.center,
-                      child: Text(_success == null
-                          ? ''
-                          : (_success
-                              ? 'Successfully registered ' + _userEmail
-                              : 'Registration failed')),
-                    ),
-                    SizedBox(
-                      height: media.height * 0.125,
-                    ),
-                    Expanded(
-                      child: CustomPaint(
-                        painter: ContainerShapeTopCircle(BuytimeTheme.UserPrimary),
-                        child: Column(
+                        ///Logo & Email & Password & & Error message & Sign up button
+                        Expanded(
+                          flex: 5,
+                          child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              BrandedButton("assets/img/google_logo.png",'sign in with Google', initiateGoogleSignIn),
-                              // BrandedButton(
-                              //     "assets/img/facebook_logo.png",
-                              //     'sign in with Facebook',
-                              //     initiateFacebookSignIn),
-                            ]),
-                      ),
-                    )
-                  ])),
-            )));
+                              ///Logo
+                              Container(
+                                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black54.withOpacity(0.3),
+                                      spreadRadius: 2,
+                                      blurRadius: 6,
+                                      offset: Offset(0, 0), // changes position of shadow
+                                    ),
+                                  ],
+                                ),
+                                child: Image.asset('assets/img/img_buytime.png',
+                                    height: media.height * 0.12),
+                              ),
+                              ///Email & Password & Error message
+                              Flexible(
+                                flex: 3,
+                                child: Container(
+                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 8, right: SizeConfig.safeBlockHorizontal * 8), ///8% - 8%
+                                  child: Column(
+                                    children: [
+                                      ///Sign up text
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            margin: EdgeInsets.only(top: 50.0),
+                                            child: Text(
+                                                'Please Sign up:',
+                                              style: TextStyle(
+                                                fontFamily: BuytimeTheme.FontFamily,
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 16
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      ///Email address
+                                      Container(
+                                        margin: EdgeInsets.only(top: 10.0),
+                                        child: TextFormField(
+                                          controller: _emailController,
+                                          textAlign: TextAlign.start,
+                                          decoration: InputDecoration(
+                                            enabledBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(color: Color(0xffe0e0e0)),
+                                                borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                            ),
+                                            focusedBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(color: Color(0xff666666)),
+                                                borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                            ),
+                                            errorBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(color: Colors.redAccent),
+                                                borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                            ),
+                                            labelText: 'Email address',
+                                            //hintText: "email *",
+                                            //hintStyle: TextStyle(color: Color(0xff666666)),
+                                            labelStyle: TextStyle(
+                                              fontFamily: BuytimeTheme.FontFamily,
+                                              color: Color(0xff666666),
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                          style: TextStyle(
+                                            fontFamily: BuytimeTheme.FontFamily,
+                                            color: Color(0xff666666),
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                          validator: (String value) {
+                                            setState(() {
+                                              if (value.isNotEmpty && EmailValidator.validate(value)) {
+                                                emailHasError = false;
+                                              }else
+                                                emailHasError = true;
+                                            });
+                                            return null;
+                                          },
+                                        ),
+                                      ),
+                                      ///Password
+                                      Container(
+                                        margin: EdgeInsets.only(top: 10.0),
+                                        child: TextFormField(
+                                          controller: _passwordController,
+                                          textAlign: TextAlign.start,
+                                          obscureText: true,
+                                          decoration: InputDecoration(
+                                            enabledBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(color: Color(0xffe0e0e0)),
+                                                borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                            ),
+                                            focusedBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(color: Color(0xff666666)),
+                                                borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                            ),
+                                            errorBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(color: Colors.redAccent),
+                                                borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                            ),
+                                            labelText: 'Password',
+                                            //hintText: "email *",
+                                            //hintStyle: TextStyle(color: Color(0xff666666)),
+                                            labelStyle: TextStyle(
+                                              fontFamily: BuytimeTheme.FontFamily,
+                                              color: Color(0xff666666),
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                          style: TextStyle(
+                                            fontFamily: BuytimeTheme.FontFamily,
+                                            color: Color(0xff666666),
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                          validator: (String value) {
+                                            setState(() {
+                                              if (value.length >= 6) {
+                                                passwordHasError = false;
+                                              }else
+                                                passwordHasError = true;
+                                            });
+                                            return null;
+                                          },
+                                        ),
+                                      ),
+                                      ///Error message
+                                      Container(
+                                        alignment: Alignment.center,
+                                        margin: EdgeInsets.only(top: 12.0),
+                                        child: Text(
+                                          responseMessage,
+                                          style: TextStyle(
+                                            color: _success != null ? _success ? Colors.greenAccent : Colors.redAccent : Colors.redAccent
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              ///Sign up button
+                              Expanded(
+                                flex: 1,
+                                  child: Container(
+                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 8, right: SizeConfig.safeBlockHorizontal * 8),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      FloatingActionButton(
+                                        onPressed: () async {
+                                          if (_formKey.currentState.validate() && !_isRequestFlying) {
+                                            _register();
+                                            checkFormValidation();
+                                          }
+                                        },
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius: new BorderRadius.circular(500.0)),
+                                        child: Icon(
+                                          Icons.chevron_right,
+                                          size: 30,
+                                          color: BuytimeTheme.UserPrimary,
+                                        ),
+                                      )
+                                    ],
+                                  )
+                                )
+                              )
+                            ],
+                          ),
+                        ),
+                        ///Google & Facebook & Apple Sign up buttons
+                        Expanded(
+                          flex: 3,
+                          child: Container(
+                            color: Color(0xff7694aa),
+                            child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  BrandedButton("assets/img/google_logo.png",'Sign up with Google', initiateGoogleSignIn),
+                                  BrandedButton("assets/img/apple_logo.png",'Sign up with Apple', initiateGoogleSignIn),
+                                  BrandedButton("assets/img/facebook_logo.png",'Sign up with Facebook', initiateFacebookSignIn),
+                                ]
+                            ),
+                          ),
+                        )
+                      ]
+                  )
+              ),
+            )
+        )
+    );
   }
 
   @override
@@ -504,20 +608,18 @@ class RegistrationWidgetState extends State<RegistrationWidget> {
     // Clean up the controller when the Widget is disposed
     _emailController.dispose();
     _passwordController.dispose();
-    _nameController.dispose();
     super.dispose();
   }
 
-  // Example code for registration.
+  /// Example code for registration.
   void _register() async {
-    final auth.User user = (await _auth
-            .createUserWithEmailAndPassword(
-              email: _emailController.text,
-              password: _passwordController.text,
-            )
-            .catchError(onError))
-        .user;
-    if (user != null) {
+
+     auth.User user;
+
+     if(!emailHasError && !passwordHasError)
+       user = (await _auth.createUserWithEmailAndPassword(email: _emailController.text, password: _passwordController.text,).catchError(onError)).user;
+
+     if (user != null) {
       String deviceId = "web";
       if(!kIsWeb) {
         try {
@@ -537,10 +639,10 @@ class RegistrationWidgetState extends State<RegistrationWidget> {
 
       StoreProvider.of<AppState>(context).dispatch(new LoggedUser(UserState.fromFirebaseUser(user, deviceId, serverToken)));
       ObjectState field =
-          ObjectState(name: "device", id: deviceId, user_uid: user.uid);
+      ObjectState(name: "device", id: deviceId, user_uid: user.uid);
       StoreProvider.of<AppState>(context).dispatch(new UpdateUserField(field));
       ObjectState token =
-          ObjectState(name: "token", id: serverToken, user_uid: user.uid);
+      ObjectState(name: "token", id: serverToken, user_uid: user.uid);
       StoreProvider.of<AppState>(context).dispatch(new UpdateUserField(token));
       setState(() {
         _success = true;
@@ -552,17 +654,22 @@ class RegistrationWidgetState extends State<RegistrationWidget> {
       });
     } else {
       _success = false;
-      onError(new PlatformException(code: "1111", message: "user not found"));
+      //debugPrint('UI_U_Registration - Email error: ' + email.toString() + ' Password error: ' + password.toString());
+      if(!emailHasError && !passwordHasError){
+        onError(new PlatformException(code: "1111", message: "user not found"));
+      }
     }
   }
 
   void onError(error) {
     print("error is: " + error.toString());
-    showDialog(
-        context: context,
-        builder: (context) {
-          return ErrorDialog(error.message, "ok");
-        });
+    if (!emailHasError && !passwordHasError) {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return ErrorDialog(error.message, "ok");
+          });
+    }
   }
 }
 

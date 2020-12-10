@@ -64,7 +64,7 @@ class _BusinessDataState extends State<BusinessData> with SingleTickerProviderSt
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => TermsAndConditions()),
+                                        builder: (context) => TermsAndConditions('')),
                                   );
                                 }),
                           TextSpan(text: ' che devi accettare per utilizzare il nostro servizio come business.'),

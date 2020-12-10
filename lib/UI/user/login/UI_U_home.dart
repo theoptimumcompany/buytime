@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:BuyTime/UI/theme/buytime_theme.dart';
+import 'package:BuyTime/UI/user/login/UI_U_TermsAndConditions.dart';
 import 'package:BuyTime/UI/user/login/UI_U_ToS_TermsConditons.dart';
 import 'package:BuyTime/UI/user/login/UI_U_login_widget.dart';
 import 'package:BuyTime/UI/user/login/UI_U_registration_widget.dart';
@@ -94,14 +95,14 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     getFileFromAssets("assets/documents/tc.pdf", 'tc.pdf').then((f) {
       setState(() {
         tcPdfPath = f.path;
-        debugPrint('full path tc: ' + tcPdfPath);
+        debugPrint('UI_U_Home - full path tc: ' + tcPdfPath);
       });
     });
 
     getFileFromAssets("assets/documents/tos.pdf", 'tos.pdf').then((f) {
       setState(() {
         tosPdfPath = f.path;
-        debugPrint('full path tos: ' + tosPdfPath);
+        debugPrint('UI_U_Home - full path tos: ' + tosPdfPath);
       });
     });
 
@@ -115,7 +116,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   Future<File> createFileOfPdfUrl() async {
     Completer<File> completer = Completer();
-    print("Start download file from internet!");
+    debugPrint("UI_U_Home - Start download file from internet!");
     try {
       // "https://berlin2017.droidcon.cod.newthinking.net/sites/global.droidcon.cod.newthinking.net/files/media/documents/Flutter%20-%2060FPS%20UI%20of%20the%20future%20%20-%20DroidconDE%2017.pdf";
       // final url = "https://pdfkit.org/docs/guide.pdf";
@@ -125,7 +126,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       var response = await request.close();
       var bytes = await consolidateHttpClientResponseBytes(response);
       var dir = await getApplicationDocumentsDirectory();
-      print("Download files");
+      debugPrint("UI_U_Home - Download files");
       print("${dir.path}/$filename");
       File file = File("${dir.path}/$filename");
 
@@ -388,7 +389,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                     text: 'ToS',
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = (){
-                                        debugPrint('ToS Clicked: ' + tosPdfPath);
+                                        debugPrint('UI_U_Home - ToS Clicked: ' + tosPdfPath);
                                         Navigator.push(context, MaterialPageRoute(builder: (context) => TosTermsConditons(tosPdfPath)));
                                       },
                                   ),
@@ -411,7 +412,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                     text: 'Privacy Policy',
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = (){
-                                        debugPrint('Privacy Policy Clicked: ' + tcPdfPath);
+                                        debugPrint('UI_U_Home - Privacy Policy Clicked: ' + tcPdfPath);
                                         Navigator.push(context, MaterialPageRoute(builder: (context) => TosTermsConditons(tcPdfPath)));
                                       },
                                   ),

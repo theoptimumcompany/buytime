@@ -18,7 +18,9 @@ class TosTermsConditons extends StatefulWidget {
 
 class _TosTermsConditonsState extends State<TosTermsConditons> with WidgetsBindingObserver{
 
+  ///Controller
   final Completer<PDFViewController> _controller = Completer<PDFViewController>();
+
   ///Pdf values
   int _totalPages = 0;
   int _currentPage = 0;
@@ -39,6 +41,8 @@ class _TosTermsConditonsState extends State<TosTermsConditons> with WidgetsBindi
     debugPrint('UI_U_ToS_TermsConditions - path 2 : ${widget.path}');
     SizeConfig().init(context);
 
+   widget.path ??= '/';
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -55,7 +59,7 @@ class _TosTermsConditonsState extends State<TosTermsConditons> with WidgetsBindi
       ),
       body: Stack(
         children: <Widget>[
-          ///Logo & Buytime text
+          ///Logo & Buytime text & PDF
           Positioned(
             child: Align(
               alignment: Alignment.topCenter,
@@ -65,6 +69,7 @@ class _TosTermsConditonsState extends State<TosTermsConditons> with WidgetsBindi
                   mainAxisAlignment: MainAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
+                    ///Logo & Buytime text
                     Expanded(
                       flex: 2,
                       child: Column(
@@ -79,8 +84,8 @@ class _TosTermsConditonsState extends State<TosTermsConditons> with WidgetsBindi
                                 BoxShadow(
                                   color: Colors.black54.withOpacity(0.3),
                                   spreadRadius: 2,
-                                  blurRadius: 3,
-                                  offset: Offset(0, 3), // changes position of shadow
+                                  blurRadius: 6,
+                                  offset: Offset(0, 0), // changes position of shadow
                                 ),
                               ],
                             ),
@@ -110,6 +115,7 @@ class _TosTermsConditonsState extends State<TosTermsConditons> with WidgetsBindi
                         ],
                       ),
                     ),
+                    ///PDF
                     Expanded(
                       flex: 6,
                         child: Container(
@@ -121,7 +127,9 @@ class _TosTermsConditonsState extends State<TosTermsConditons> with WidgetsBindi
                             enableSwipe: true,
                             pageSnap: true,
                             swipeHorizontal: true,
+                            defaultPage: _currentPage,
                             nightMode: false,
+                            preventLinkNavigation: false, // if set to true the link is handled in flutter
                             onError: (e) {
                               print('UI_U_ToS_TermsConditions - path error : ' + e);
                             },
@@ -149,6 +157,7 @@ class _TosTermsConditonsState extends State<TosTermsConditons> with WidgetsBindi
               ),
             ),
           ),
+          ///Circular progress bar
           !pdfReady
               ? Center(
             child: CircularProgressIndicator(),
@@ -156,6 +165,7 @@ class _TosTermsConditonsState extends State<TosTermsConditons> with WidgetsBindi
               : Offstage()
         ],
       ),
+      ///Floating button
       floatingActionButton: FutureBuilder<PDFViewController>(
         future: _controller.future,
         builder: (context, AsyncSnapshot<PDFViewController> snapshot) {
