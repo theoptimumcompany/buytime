@@ -5,9 +5,11 @@ import 'package:BuyTime/reblox/model/category/category_state.dart';
 import 'package:BuyTime/reblox/model/object_state.dart';
 import 'package:BuyTime/reblox/reducer/category_snippet_reducer.dart';
 import 'package:BuyTime/reblox/reducer/category_reducer.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:share/share.dart';
 import '../../../reusable/appbar/manager_buytime_appbar.dart';
 import '../../theme/buytime_theme.dart';
 import '../../theme/buytime_theme.dart';
@@ -136,7 +138,7 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
     return items;
   }
 
-  void sendInvitationMailDialog(context) {
+  void sendInvitationMailDialog(context, String role) {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
     double wrap_width_text = MediaQuery.of(context).size.width * 0.6;
@@ -152,8 +154,11 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
           ),
           FlatButton(
             child: Text("Invite"),
-            onPressed: () {
-              validateAndSaveInvite();
+            onPressed: () async {
+              if (validateAndSaveInvite()) {
+                Uri link = await _createDynamicLink(false);
+                Share.share('check out Buytime App at $link', subject: 'Take your Time!');
+              }
             },
           )
         ],
@@ -170,7 +175,7 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
                     children: [
                       Container(
                         child: Text(
-                          "Invite a Gattini",
+                          "Invite a $role",
                           textAlign: TextAlign.start,
                           style: TextStyle(
                             color: BuytimeTheme.TextDark,
@@ -192,7 +197,7 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
                       Container(
                         width: wrap_width_text,
                         child: Text(
-                          "Type a Gattini email below. They will receive an email invite to install the application and join the business",
+                          "Type a $role email below. They will receive an email invite to install the application and join the business",
                           textAlign: TextAlign.start,
                           style: TextStyle(
                             color: BuytimeTheme.TextDark,
@@ -259,16 +264,44 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
                     title: new Text('Add Manager'),
                     onTap: () => {
                           Navigator.of(context).pop(),
-                          sendInvitationMailDialog(context),
+                          sendInvitationMailDialog(context,'Manager'),
                         }),
                 new ListTile(
                   title: new Text('Add Worker'),
-                  onTap: () => {Navigator.of(context).pop(), sendInvitationMailDialog(context)},
+                  onTap: () => {Navigator.of(context).pop(), sendInvitationMailDialog(context,'Worker')},
                 ),
               ],
             ),
           );
         });
+  }
+
+  Future<Uri> _createDynamicLink(bool short) async {
+    final DynamicLinkParameters parameters = DynamicLinkParameters(
+      uriPrefix: 'https://buytime.page.link',
+      link: Uri.parse('https://beta.itunes.apple.com/v1/app/1508552491'),
+      androidParameters: AndroidParameters(
+        packageName: 'com.theoptimumcompany.buytime',
+        minimumVersion: 1,
+      ),
+      dynamicLinkParametersOptions: DynamicLinkParametersOptions(
+        shortDynamicLinkPathLength: ShortDynamicLinkPathLength.short,
+      ),
+      iosParameters: IosParameters(
+        bundleId: 'com.theoptimumcompany.buytime',
+        minimumVersion: '1',
+        appStoreId: '1508552491',
+      ),
+    );
+
+    Uri url;
+    if (short) {
+      final ShortDynamicLink shortLink = await parameters.buildShortLink();
+      url = shortLink.shortUrl;
+    } else {
+      url = await parameters.buildUrl();
+    }
+    return url;
   }
 
   Future<bool> _onWillPop() {
@@ -590,20 +623,6 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
                                   ),
                                 ],
                               ),
-                              //     Container(
-                              //       child: IconButton(
-                              //         onPressed: () {
-                              //           setState(() {
-                              //             sendWorkerInvite = true;
-                              //           });
-                              //         },
-                              //         icon: Icon(
-                              //           Icons.add,
-                              //           color: BuytimeTheme.TextDark,
-                              //           size: 24,
-                              //         ),
-                              //       ),
-                              //     ),
                             ],
                           ),
                           workerList.length > 1 && workerList != null

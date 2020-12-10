@@ -33,7 +33,7 @@ final GoogleSignIn googleSignIn = new GoogleSignIn();
 final FacebookLogin facebookSignIn = new FacebookLogin();
 
 class MenuDrawer extends StatelessWidget {
-  const MenuDrawer({
+  const  MenuDrawer({
     Key key,
     @required this.media,
     this.managerDrawer,
