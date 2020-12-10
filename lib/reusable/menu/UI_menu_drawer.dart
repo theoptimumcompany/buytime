@@ -1,5 +1,5 @@
 import 'package:BuyTime/UI/management/business/UI_M_business_list.dart';
-import 'package:BuyTime/UI/theme/buytime_theme.dart';
+import 'package:BuyTime/utils/theme/buytime_theme.dart';
 import 'package:BuyTime/UI/user/UI_U_Tabs.dart';
 import 'package:BuyTime/reblox/model/app_state.dart';
 import 'package:BuyTime/reblox/model/role/role.dart';
@@ -27,7 +27,7 @@ import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import '../globals.dart';
+import '../../utils/globals.dart';
 
 final GoogleSignIn googleSignIn = new GoogleSignIn();
 final FacebookLogin facebookSignIn = new FacebookLogin();

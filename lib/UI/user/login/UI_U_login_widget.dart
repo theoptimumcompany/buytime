@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:BuyTime/UI/theme/buytime_theme.dart';
+import 'package:BuyTime/utils/theme/buytime_theme.dart';
 import 'package:BuyTime/reblox/model/object_state.dart';
 import 'package:BuyTime/reblox/model/user/user_state.dart';
 import 'package:BuyTime/reblox/reducer/user_reducer.dart';

@@ -1,4 +1,4 @@
-import 'package:BuyTime/UI/theme/buytime_theme.dart';
+import 'package:BuyTime/utils/theme/buytime_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:nfc_in_flutter/nfc_in_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';

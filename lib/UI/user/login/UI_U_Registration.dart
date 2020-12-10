@@ -1,13 +1,10 @@
 import 'dart:io';
-
-import 'package:BuyTime/UI/theme/buytime_theme.dart';
+import 'package:BuyTime/utils/theme/buytime_theme.dart';
 import 'package:BuyTime/reblox/model/app_state.dart';
 import 'package:BuyTime/reblox/model/object_state.dart';
 import 'package:BuyTime/reblox/model/user/user_state.dart';
 import 'package:BuyTime/reblox/reducer/user_reducer.dart';
-import 'package:BuyTime/reusable/back_button_blue.dart';
 import 'package:BuyTime/reusable/branded_button.dart';
-import 'package:BuyTime/reusable/container_shape_top_circle.dart';
 import 'package:BuyTime/reusable/error_dialog.dart';
 import 'package:BuyTime/utils/size_config.dart';
 import 'package:device_info/device_info.dart';
@@ -23,15 +20,37 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import '../UI_U_Tabs.dart';
+import 'dart:convert';
+import 'dart:math';
+import 'package:crypto/crypto.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
-class RegistrationWidget extends StatefulWidget {
+/// Generates a cryptographically secure random nonce, to be included in a
+/// credential request.
+String generateNonce([int length = 32]) {
+  final charset ='0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._';
+  final random = Random.secure();
+  return List.generate(length, (_) => charset[random.nextInt(charset.length)]).join();
+}
+
+/// Returns the sha256 hash of [input] in hex notation.
+String sha256ofString(String input) {
+  final bytes = utf8.encode(input);
+  final digest = sha256.convert(bytes);
+  return digest.toString();
+}
+
+
+
+
+class Registration extends StatefulWidget {
   final String title = 'Registration';
 
   @override
-  State<StatefulWidget> createState() => RegistrationWidgetState();
+  State<StatefulWidget> createState() => RegistrationState();
 }
 
-class RegistrationWidgetState extends State<RegistrationWidget> {
+class RegistrationState extends State<Registration> {
 
   ///Global key
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -39,28 +58,19 @@ class RegistrationWidgetState extends State<RegistrationWidget> {
   ///Text controller
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
   bool _isRequestFlying = false;
-
   bool _success;
   String _userEmail;
-
   bool isLoggedIn = false;
 
   ///Firebase auth
   final auth.FirebaseAuth _auth = auth.FirebaseAuth.instance;
   final GoogleSignIn googleSignIn = GoogleSignIn();
-
   static final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
   Map<String, dynamic> _deviceData = <String, dynamic>{};
-
   String uid;
-
-  String serverToken =
-      'AAAA6xUtyfE:APA91bGHhEzVUY9fnj4FbTXJX57qcgF-8GBrfBbGIa8kEpEIdsXRgQxbtsvbhL-w-_MQYKIj0XVlSaDSf2s6O3D3SM3o-z_AZnHQwBNLiw1ygyZOuVAKa5YmXeu6Da9eBqRD9uwFHSPi';
+  String serverToken;
   final FirebaseMessaging firebaseMessaging = FirebaseMessaging();
-
-
   bool emailHasError = true;
   bool passwordHasError = true;
   String responseMessage = '';
@@ -70,15 +80,11 @@ class RegistrationWidgetState extends State<RegistrationWidget> {
     super.initState();
     Firebase.initializeApp().then((value) {
       firebaseMessaging.requestNotificationPermissions();
-
       firebaseMessaging.getToken().then((String token) {
         assert(token != null);
-
         print("Token " + token);
         serverToken = token;
       });
-
-      //   check_logged();
     }).catchError((onError) {
       print("error on firebase application start: " + onError.toString());
     });
@@ -101,10 +107,7 @@ class RegistrationWidgetState extends State<RegistrationWidget> {
         };
       }
     }
-
-
     if (!mounted) return;
-
     setState(() {
       _deviceData = deviceData;
     });
@@ -213,7 +216,6 @@ class RegistrationWidgetState extends State<RegistrationWidget> {
     }
 
     print("Device ID : " + deviceId);
-
     StoreProvider.of<AppState>(context).dispatch(new LoggedUser(UserState.fromFirebaseUser(user, deviceId, serverToken)));
     ObjectState field =
     ObjectState(name: "device", id: deviceId, user_uid: user.uid);
@@ -221,8 +223,6 @@ class RegistrationWidgetState extends State<RegistrationWidget> {
     ObjectState token =
     ObjectState(name: "token", id: serverToken, user_uid: user.uid);
     StoreProvider.of<AppState>(context).dispatch(new UpdateUserField(token));
-
-    // return 'signInWithGoogle succeeded: $user';
     await pr.hide();
     return 1;
   }
@@ -589,7 +589,7 @@ class RegistrationWidgetState extends State<RegistrationWidget> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   BrandedButton("assets/img/google_logo.png",'Sign up with Google', initiateGoogleSignIn),
-                                  BrandedButton("assets/img/apple_logo.png",'Sign up with Apple', initiateGoogleSignIn),
+                                  BrandedButton("assets/img/apple_logo.png",'Sign up with Apple', signInWithApple),
                                   BrandedButton("assets/img/facebook_logo.png",'Sign up with Facebook', initiateFacebookSignIn),
                                 ]
                             ),
@@ -611,14 +611,10 @@ class RegistrationWidgetState extends State<RegistrationWidget> {
     super.dispose();
   }
 
-  /// Example code for registration.
   void _register() async {
-
      auth.User user;
-
      if(!emailHasError && !passwordHasError)
        user = (await _auth.createUserWithEmailAndPassword(email: _emailController.text, password: _passwordController.text,).catchError(onError)).user;
-
      if (user != null) {
       String deviceId = "web";
       if(!kIsWeb) {
@@ -634,9 +630,7 @@ class RegistrationWidgetState extends State<RegistrationWidget> {
           print('Failed to get platform version');
         }
       }
-
       print("Device ID : " + deviceId);
-
       StoreProvider.of<AppState>(context).dispatch(new LoggedUser(UserState.fromFirebaseUser(user, deviceId, serverToken)));
       ObjectState field =
       ObjectState(name: "device", id: deviceId, user_uid: user.uid);
@@ -671,6 +665,35 @@ class RegistrationWidgetState extends State<RegistrationWidget> {
           });
     }
   }
+
+  Future<auth.UserCredential> signInWithApple() async {
+    // To prevent replay attacks with the credential returned from Apple, we
+    // include a nonce in the credential request. When signing in in with
+    // Firebase, the nonce in the id token returned by Apple, is expected to
+    // match the sha256 hash of `rawNonce`.
+    final rawNonce = generateNonce();
+    final nonce = sha256ofString(rawNonce);
+
+    // Request credential for the currently signed in Apple account.
+    final appleCredential = await SignInWithApple.getAppleIDCredential(
+      scopes: [
+        AppleIDAuthorizationScopes.email,
+        AppleIDAuthorizationScopes.fullName,
+      ],
+      nonce: nonce,
+    );
+
+    // Create an `OAuthCredential` from the credential returned by Apple.
+    final oauthCredential = auth.OAuthProvider("apple.com").credential(
+      idToken: appleCredential.identityToken,
+      rawNonce: rawNonce,
+    );
+
+    // Sign in the user with Firebase. If the nonce we generated earlier does
+    // not match the nonce in `appleCredential.identityToken`, sign in will fail.
+    return await auth.FirebaseAuth.instance.signInWithCredential(oauthCredential);
+  }
+
 }
 
 

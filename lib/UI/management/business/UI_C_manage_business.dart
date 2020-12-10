@@ -3,7 +3,7 @@ import 'package:BuyTime/UI/management/business/UI_M_business_list.dart';
 import 'package:BuyTime/UI/management/old_design/UI_M_Tabs.dart';
 import 'package:BuyTime/UI/management/business/UI_C_create_business.dart';
 import 'package:BuyTime/UI/management/business/UI_C_edit_business.dart';
-import 'package:BuyTime/UI/theme/buytime_theme.dart';
+import 'package:BuyTime/utils/theme/buytime_theme.dart';
 import 'package:BuyTime/UI/user/business/UI_U_business_list.dart';
 import 'package:BuyTime/reblox/model/app_state.dart';
 import 'package:BuyTime/reusable/appbar/manager_buytime_appbar.dart';

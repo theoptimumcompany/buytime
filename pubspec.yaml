@@ -63,6 +63,8 @@ dependencies:
   video_player: ^1.0.1
   flutter_pdfview: ^1.0.4
   path_provider: 1.6.7
+  crypto: ^2.1.5
+  sign_in_with_apple: ^2.5.4
 
 dev_dependencies:
   flutter_test:

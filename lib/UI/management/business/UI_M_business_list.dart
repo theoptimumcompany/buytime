@@ -1,7 +1,7 @@
 import 'package:BuyTime/UI/management/business/UI_C_manage_business.dart';
 import 'package:BuyTime/UI/management/business/UI_M_business.dart';
 import 'package:BuyTime/UI/management/service/UI_M_service_list.dart';
-import 'package:BuyTime/UI/theme/buytime_theme.dart';
+import 'package:BuyTime/utils/theme/buytime_theme.dart';
 import 'package:BuyTime/reblox/model/app_state.dart';
 import 'package:BuyTime/reblox/model/business/business_list_state.dart';
 import 'package:BuyTime/reblox/model/business/business_state.dart';

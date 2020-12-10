@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:BuyTime/UI/theme/buytime_theme.dart';
+import 'package:BuyTime/utils/theme/buytime_theme.dart';
 import 'package:BuyTime/reusable/back_button_blue.dart';
 import 'package:BuyTime/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';

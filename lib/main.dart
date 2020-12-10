@@ -1,4 +1,4 @@
-import 'package:BuyTime/UI/theme/buytime_theme.dart';
+import 'package:BuyTime/utils/theme/buytime_theme.dart';
 import 'package:BuyTime/UI/user/login/UI_U_home.dart';
 import 'package:BuyTime/UI/user/login/UI_U_login_widget.dart';
 import 'package:BuyTime/UI/user/order/UI_U_OrderDetail.dart';
@@ -23,7 +23,7 @@ import 'package:BuyTime/reblox/model/stripe/stripe_state.dart';
 import 'package:BuyTime/reblox/model/user/user_state.dart';
 import 'package:BuyTime/reblox/reducer/app_reducer.dart';
 import 'package:BuyTime/reblox/navigation/route_aware_widget.dart';
-import 'package:BuyTime/UI/user/login/UI_U_registration_widget.dart';
+import 'package:BuyTime/UI/user/login/UI_U_Registration.dart';
 import 'package:BuyTime/services/business_service_epic.dart';
 import 'package:BuyTime/services/category_snippet_service_epic.dart';
 import 'package:BuyTime/services/category_service_epic.dart';
@@ -237,7 +237,7 @@ class BuyTime extends StatelessWidget {
           // Set routes for using the Navigator.
           '/home': (BuildContext context) => new Home(),
           '/login': (BuildContext context) => new LoginWidget(),
-          '/registration': (BuildContext context) => new RegistrationWidget(),
+          '/registration': (BuildContext context) => new Registration(),
           '/orderDetail': (BuildContext context) => new UI_U_OrderDetail(),
         },
       ),

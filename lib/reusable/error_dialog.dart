@@ -1,4 +1,4 @@
-import 'package:BuyTime/UI/theme/buytime_theme.dart';
+import 'package:BuyTime/utils/theme/buytime_theme.dart';
 import 'package:flutter/material.dart';
 
 class ErrorDialog extends StatelessWidget {

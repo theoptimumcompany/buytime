@@ -3,7 +3,7 @@ import 'package:BuyTime/UI/user/order/UI_U_OrderDetail.dart';
 import 'package:BuyTime/reblox/model/app_state.dart';
 import 'package:BuyTime/reblox/reducer/order_reducer.dart';
 import 'package:BuyTime/reblox/reducer/stripe_payment_reducer.dart';
-import 'package:BuyTime/reusable/globals.dart';
+import 'package:BuyTime/utils/globals.dart';
 import 'package:BuyTime/reusable/order/order_total.dart';
 import 'package:BuyTime/reusable/stripe/optimum_credit_card_button.dart';
 import 'package:flutter/material.dart';

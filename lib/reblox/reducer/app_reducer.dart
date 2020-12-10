@@ -25,7 +25,7 @@ import 'package:BuyTime/reblox/reducer/service_list_reducer.dart';
 import 'package:BuyTime/reblox/reducer/service_reducer.dart';
 import 'package:BuyTime/reblox/reducer/stripe_payment_reducer.dart';
 import 'package:BuyTime/reblox/reducer/user_reducer.dart';
-import 'package:BuyTime/reusable/globals.dart';
+import 'package:BuyTime/utils/globals.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
 import 'business_reducer.dart';

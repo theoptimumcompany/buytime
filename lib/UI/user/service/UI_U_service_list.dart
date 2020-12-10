@@ -12,7 +12,7 @@ import 'package:BuyTime/reblox/reducer/order_reducer.dart';
 import 'package:BuyTime/reblox/reducer/service_list_reducer.dart';
 import 'package:BuyTime/reusable/appbar/user_buytime_appbar.dart';
 import 'package:BuyTime/reusable/easy_check_in.dart';
-import 'package:BuyTime/reusable/globals.dart';
+import 'package:BuyTime/utils/globals.dart';
 import 'package:BuyTime/reusable/menu/UI_menu_drawer.dart';
 import 'package:BuyTime/reusable/service/optimum_service_card_medium.dart';
 import 'package:BuyTime/services/service_service_epic.dart';

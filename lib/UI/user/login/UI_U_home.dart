@@ -2,11 +2,11 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 
-import 'package:BuyTime/UI/theme/buytime_theme.dart';
+import 'package:BuyTime/utils/theme/buytime_theme.dart';
 import 'package:BuyTime/UI/user/login/UI_U_TermsAndConditions.dart';
 import 'package:BuyTime/UI/user/login/UI_U_ToS_TermsConditons.dart';
 import 'package:BuyTime/UI/user/login/UI_U_login_widget.dart';
-import 'package:BuyTime/UI/user/login/UI_U_registration_widget.dart';
+import 'package:BuyTime/UI/user/login/UI_U_Registration.dart';
 import 'package:BuyTime/utils/size_config.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
@@ -307,7 +307,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                   opacity: _animation3,
                                   child: RaisedButton(
                                     onPressed: () {
-                                      Navigator.push(context, MaterialPageRoute(builder: (context) => RegistrationWidget()),);
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => Registration()),);
                                     },
                                     textColor: BuytimeTheme.TextWhite,
                                     color: BuytimeTheme.UserPrimary,
