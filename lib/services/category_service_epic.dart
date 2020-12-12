@@ -86,6 +86,30 @@ class CategoryRequestService implements EpicClass<AppState> {
   }
 }
 
+class CategoryInviteService implements EpicClass<AppState> {
+  @override
+  Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
+    return actions.whereType<CategoryInvite>().asyncMap((event) async {
+      String mail = event.mail;
+
+      // var query = await Firestore.instance
+      //     .collection("business")
+      //     .document(store.state.business.id_firestore)
+      //     .collection("category")
+      //     .where("id", isEqualTo: categoryId)
+      //     .getDocuments();
+      //
+      // CategoryState categoryState = new CategoryState();
+      //
+      // query.documents.forEach((snapshot) {
+      //   categoryState = CategoryState.fromJson(snapshot.data());
+      // });
+      // print("CategoryState return " + categoryState.name);
+      // return new CategoryRequestResponse(categoryState);
+    }).takeUntil(actions.whereType<UnlistenCategory>());
+  }
+}
+
 class CategoryUpdateService implements EpicClass<AppState> {
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {

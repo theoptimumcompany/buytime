@@ -333,7 +333,7 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
 
           if (snapshot.category != null) {
             managerList = snapshot.category.manager;
-            workerList = snapshot.category.notificationTo;
+            workerList = snapshot.category.worker;
             selectedDropValue = searchDropdownParent(snapshot);
           }
 

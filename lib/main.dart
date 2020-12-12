@@ -49,6 +49,7 @@ void main() {
     UserRequestService(),
     UserEditField(),
     CategoryRequestService(),
+    CategoryInviteService(),
     CategoryUpdateService(),
     CategoryCreateService(),
     CategoryDeleteService(),
@@ -83,7 +84,7 @@ void main() {
       parent: ObjectState(name: "No Parent", id: "no_parent"),
       manager: [ObjectState()],
       businessId: "",
-      notificationTo: [ObjectState()],
+      worker: [ObjectState()],
     ),
     filterSearch: FilterSearchState(
         star: [false, false, false, false, false],
