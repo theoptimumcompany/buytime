@@ -14,6 +14,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -74,6 +75,8 @@ class RegistrationState extends State<Registration> {
   bool emailHasError = true;
   bool passwordHasError = true;
   String responseMessage = '';
+
+  bool passwordVisible = true;
 
   @override
   void initState() {
@@ -167,64 +170,67 @@ class RegistrationState extends State<Registration> {
   ///Google sign in
   Future<int> signInWithGoogle(context) async {
     final GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
-    final GoogleSignInAuthentication googleSignInAuthentication =
-    await googleSignInAccount.authentication;
-    final auth.AuthCredential credential =
-    auth.GoogleAuthProvider.credential(
-      accessToken: googleSignInAuthentication.accessToken,
-      idToken: googleSignInAuthentication.idToken,
-    );
 
-    ProgressDialog pr = new ProgressDialog(context);
-    pr.style(
-        message: 'Authentication ...',
-        borderRadius: 10.0,
-        backgroundColor: BuytimeTheme.BackgroundWhite,
-        progressWidget: CircularProgressIndicator(),
-        elevation: 10.0,
-        insetAnimCurve: Curves.easeInOut,
-        progress: 0.0,
-        maxProgress: 100.0,
-        progressTextStyle: TextStyle(
-            color: BuytimeTheme.UserPrimary, fontSize: 13.0, fontWeight: FontWeight.w400),
-        messageTextStyle: TextStyle(
-            color: BuytimeTheme.TextDark, fontSize: 19.0, fontWeight: FontWeight.w600));
-    await pr.show();
+    if(googleSignInAccount != null){
+      final GoogleSignInAuthentication googleSignInAuthentication = await googleSignInAccount.authentication;
+      final auth.AuthCredential credential =
+      auth.GoogleAuthProvider.credential(
+        accessToken: googleSignInAuthentication.accessToken,
+        idToken: googleSignInAuthentication.idToken,
+      );
 
-    final dynamic authResult = await _auth.signInWithCredential(credential);
-    final dynamic user = authResult.user;
+      ProgressDialog pr = new ProgressDialog(context);
+      pr.style(
+          message: 'Authentication ...',
+          borderRadius: 10.0,
+          backgroundColor: BuytimeTheme.BackgroundWhite,
+          progressWidget: CircularProgressIndicator(),
+          elevation: 10.0,
+          insetAnimCurve: Curves.easeInOut,
+          progress: 0.0,
+          maxProgress: 100.0,
+          progressTextStyle: TextStyle(
+              color: BuytimeTheme.UserPrimary, fontSize: 13.0, fontWeight: FontWeight.w400),
+          messageTextStyle: TextStyle(
+              color: BuytimeTheme.TextDark, fontSize: 19.0, fontWeight: FontWeight.w600));
+      await pr.show();
 
-    assert(!user.isAnonymous);
-    assert(await user.getIdToken() != null);
+      final dynamic authResult = await _auth.signInWithCredential(credential);
+      final dynamic user = authResult.user;
 
-    final auth.User currentUser = await _auth.currentUser;
-    assert(user.uid == currentUser.uid);
+      assert(!user.isAnonymous);
+      assert(await user.getIdToken() != null);
 
-    String deviceId = "web";
-    if(!kIsWeb) {
-      try {
-        if (Platform.isAndroid) {
-          var build = await deviceInfoPlugin.androidInfo;
-          deviceId = build.androidId; //UUID for Android
-        } else if (Platform.isIOS) {
-          var data = await deviceInfoPlugin.iosInfo;
-          deviceId = data.identifierForVendor; //UUID for iOS
+      final auth.User currentUser = await _auth.currentUser;
+      assert(user.uid == currentUser.uid);
+
+      String deviceId = "web";
+      if(!kIsWeb) {
+        try {
+          if (Platform.isAndroid) {
+            var build = await deviceInfoPlugin.androidInfo;
+            deviceId = build.androidId; //UUID for Android
+          } else if (Platform.isIOS) {
+            var data = await deviceInfoPlugin.iosInfo;
+            deviceId = data.identifierForVendor; //UUID for iOS
+          }
+        } on PlatformException {
+          print('Failed to get platform version');
         }
-      } on PlatformException {
-        print('Failed to get platform version');
       }
-    }
 
-    print("Device ID : " + deviceId);
-    StoreProvider.of<AppState>(context).dispatch(new LoggedUser(UserState.fromFirebaseUser(user, deviceId, serverToken)));
-    ObjectState field =
-    ObjectState(name: "device", id: deviceId, user_uid: user.uid);
-    StoreProvider.of<AppState>(context).dispatch(new UpdateUserField(field));
-    ObjectState token =
-    ObjectState(name: "token", id: serverToken, user_uid: user.uid);
-    StoreProvider.of<AppState>(context).dispatch(new UpdateUserField(token));
-    await pr.hide();
-    return 1;
+      print("Device ID : " + deviceId);
+      StoreProvider.of<AppState>(context).dispatch(new LoggedUser(UserState.fromFirebaseUser(user, deviceId, serverToken)));
+      ObjectState field =
+      ObjectState(name: "device", id: deviceId, user_uid: user.uid);
+      StoreProvider.of<AppState>(context).dispatch(new UpdateUserField(field));
+      ObjectState token =
+      ObjectState(name: "token", id: serverToken, user_uid: user.uid);
+      StoreProvider.of<AppState>(context).dispatch(new UpdateUserField(token));
+      await pr.hide();
+      return 1;
+    }
+    return 0;
   }
 
   ///Google sign out
@@ -244,6 +250,35 @@ class RegistrationState extends State<Registration> {
         });
       } else {}
     });
+  }
+
+  ///Sign in with Apple
+  Future<auth.UserCredential> signInWithApple() async {
+    // To prevent replay attacks with the credential returned from Apple, we
+    // include a nonce in the credential request. When signing in in with
+    // Firebase, the nonce in the id token returned by Apple, is expected to
+    // match the sha256 hash of `rawNonce`.
+    final rawNonce = generateNonce();
+    final nonce = sha256ofString(rawNonce);
+
+    // Request credential for the currently signed in Apple account.
+    final appleCredential = await SignInWithApple.getAppleIDCredential(
+      scopes: [
+        AppleIDAuthorizationScopes.email,
+        AppleIDAuthorizationScopes.fullName,
+      ],
+      nonce: nonce,
+    );
+
+    // Create an `OAuthCredential` from the credential returned by Apple.
+    final oauthCredential = auth.OAuthProvider("apple.com").credential(
+      idToken: appleCredential.identityToken,
+      rawNonce: rawNonce,
+    );
+
+    // Sign in the user with Firebase. If the nonce we generated earlier does
+    // not match the nonce in `appleCredential.identityToken`, sign in will fail.
+    return _auth.signInWithCredential(oauthCredential);
   }
 
   ///Init facebook sign in
@@ -348,7 +383,7 @@ class RegistrationState extends State<Registration> {
     return facebookLoginResult;
   }
 
-
+  ///Validation
   void checkFormValidation(){
     setState(() {
       if(_success == null){
@@ -359,13 +394,20 @@ class RegistrationState extends State<Registration> {
         else if(emailHasError)
           responseMessage = 'Please enter a valid Email address';
         else if(passwordHasError)
-          responseMessage = 'Password must be longer than 6 digits';
+          responseMessage = 'Password has a minimum of 6 characters and at least 1 digit, 1 lowercase char and 1 uppercase char';
         else if(!_success)
           responseMessage = 'Registration failed';
         else
           responseMessage = 'Successfully registered with ' + _userEmail;
       }
     });
+  }
+
+  ///Password validator
+  bool passwordValidator(String value){
+    String  pattern = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{6,}$';
+    RegExp regExp = new RegExp(pattern);
+    return regExp.hasMatch(value);
   }
 
   @override
@@ -387,19 +429,22 @@ class RegistrationState extends State<Registration> {
           ),
           backgroundColor: Colors.white,
           elevation: 0,
+          brightness: Platform.isIOS ? Brightness.light : Brightness.dark,
         ),
         body: Form(
             key: _formKey,
             child: SafeArea(
-              child: Container(
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(),
                   child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         ///Logo & Email & Password & & Error message & Sign up button
                         Expanded(
-                          flex: 5,
+                          flex: 6,
                           child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               ///Logo
                               Container(
@@ -420,7 +465,7 @@ class RegistrationState extends State<Registration> {
                                     height: media.height * 0.12),
                               ),
                               ///Email & Password & Error message
-                              Flexible(
+                              Expanded(
                                 flex: 3,
                                 child: Container(
                                   margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 8, right: SizeConfig.safeBlockHorizontal * 8), ///8% - 8%
@@ -431,14 +476,14 @@ class RegistrationState extends State<Registration> {
                                         mainAxisAlignment: MainAxisAlignment.start,
                                         children: [
                                           Container(
-                                            margin: EdgeInsets.only(top: 50.0),
+                                            margin: EdgeInsets.only(top:  SizeConfig.safeBlockVertical * 5),
                                             child: Text(
-                                                'Please Sign up:',
+                                              'Please Sign up:',
                                               style: TextStyle(
-                                                fontFamily: BuytimeTheme.FontFamily,
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: 16
+                                                  fontFamily: BuytimeTheme.FontFamily,
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16
                                               ),
                                             ),
                                           ),
@@ -450,6 +495,8 @@ class RegistrationState extends State<Registration> {
                                         child: TextFormField(
                                           controller: _emailController,
                                           textAlign: TextAlign.start,
+                                          keyboardType: TextInputType.emailAddress,
+                                          autofillHints: [AutofillHints.email],
                                           decoration: InputDecoration(
                                             enabledBorder: OutlineInputBorder(
                                                 borderSide: BorderSide(color: Color(0xffe0e0e0)),
@@ -475,7 +522,7 @@ class RegistrationState extends State<Registration> {
                                           style: TextStyle(
                                             fontFamily: BuytimeTheme.FontFamily,
                                             color: Color(0xff666666),
-                                            fontWeight: FontWeight.w500,
+                                            fontWeight: FontWeight.bold,
                                           ),
                                           validator: (String value) {
                                             setState(() {
@@ -494,7 +541,7 @@ class RegistrationState extends State<Registration> {
                                         child: TextFormField(
                                           controller: _passwordController,
                                           textAlign: TextAlign.start,
-                                          obscureText: true,
+                                          obscureText: passwordVisible,
                                           decoration: InputDecoration(
                                             enabledBorder: OutlineInputBorder(
                                                 borderSide: BorderSide(color: Color(0xffe0e0e0)),
@@ -516,15 +563,28 @@ class RegistrationState extends State<Registration> {
                                               color: Color(0xff666666),
                                               fontWeight: FontWeight.w500,
                                             ),
+                                              suffixIcon: IconButton(
+                                                icon: Icon(
+                                                  // Based on passwordVisible state choose the icon
+                                                  passwordVisible ? Icons.visibility : Icons.visibility_off,
+                                                  color: Color(0xff666666),
+                                                ),
+                                                onPressed: () {
+                                                  // Update the state i.e. toogle the state of passwordVisible variable
+                                                  setState(() {
+                                                    passwordVisible = !passwordVisible;
+                                                  });
+                                                },
+                                              )
                                           ),
                                           style: TextStyle(
                                             fontFamily: BuytimeTheme.FontFamily,
                                             color: Color(0xff666666),
-                                            fontWeight: FontWeight.w500,
+                                            fontWeight: FontWeight.bold,
                                           ),
                                           validator: (String value) {
                                             setState(() {
-                                              if (value.length >= 6) {
+                                              if (passwordValidator(value)) {
                                                 passwordHasError = false;
                                               }else
                                                 passwordHasError = true;
@@ -540,7 +600,9 @@ class RegistrationState extends State<Registration> {
                                         child: Text(
                                           responseMessage,
                                           style: TextStyle(
-                                            color: _success != null ? _success ? Colors.greenAccent : Colors.redAccent : Colors.redAccent
+                                              color: _success != null ? _success ? Colors.greenAccent : Colors.redAccent : Colors.redAccent,
+                                            fontWeight: FontWeight.bold
+
                                           ),
                                         ),
                                       ),
@@ -550,31 +612,31 @@ class RegistrationState extends State<Registration> {
                               ),
                               ///Sign up button
                               Expanded(
-                                flex: 1,
+                                  flex: 1,
                                   child: Container(
-                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 8, right: SizeConfig.safeBlockHorizontal * 8),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      FloatingActionButton(
-                                        onPressed: () async {
-                                          if (_formKey.currentState.validate() && !_isRequestFlying) {
-                                            _register();
-                                            checkFormValidation();
-                                          }
-                                        },
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius: new BorderRadius.circular(500.0)),
-                                        child: Icon(
-                                          Icons.chevron_right,
-                                          size: 30,
-                                          color: BuytimeTheme.UserPrimary,
-                                        ),
+                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 8, right: SizeConfig.safeBlockHorizontal * 8),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.end,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          FloatingActionButton(
+                                            onPressed: () async {
+                                              if (_formKey.currentState.validate() && !_isRequestFlying) {
+                                                _register();
+                                                checkFormValidation();
+                                              }
+                                            },
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius: new BorderRadius.circular(500.0)),
+                                            child: Icon(
+                                              Icons.chevron_right,
+                                              size: 30,
+                                              color: BuytimeTheme.UserPrimary,
+                                            ),
+                                          )
+                                        ],
                                       )
-                                    ],
                                   )
-                                )
                               )
                             ],
                           ),
@@ -595,7 +657,8 @@ class RegistrationState extends State<Registration> {
                           ),
                         )
                       ]
-                  )
+                  ),
+                ),
               ),
             )
         )
@@ -612,8 +675,13 @@ class RegistrationState extends State<Registration> {
 
   void _register() async {
      auth.User user;
+     auth.UserCredential tmpUserCredential;
      if(!emailHasError && !passwordHasError)
-       user = (await _auth.createUserWithEmailAndPassword(email: _emailController.text, password: _passwordController.text,).catchError(onError)).user;
+       tmpUserCredential = (await _auth.createUserWithEmailAndPassword(email: _emailController.text, password: _passwordController.text,).catchError(onError));
+
+     if(tmpUserCredential != null)
+       user = tmpUserCredential.user;
+
      if (user != null) {
       String deviceId = "web";
       if(!kIsWeb) {
@@ -640,21 +708,19 @@ class RegistrationState extends State<Registration> {
       setState(() {
         _success = true;
         _userEmail = user.email;
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => UI_U_Tabs()),
-        );
+        Navigator.push(context, MaterialPageRoute(builder: (context) => UI_U_Tabs()),);
       });
-    } else {
-      _success = false;
-      //debugPrint('UI_U_Registration - Email error: ' + email.toString() + ' Password error: ' + password.toString());
-      if(!emailHasError && !passwordHasError){
-        onError(new PlatformException(code: "1111", message: "user not found"));
-      }
-    }
+    }else{
+       setState(() {
+         _success = false;
+       });
+     }
   }
 
   void onError(error) {
+    setState(() {
+      _success = false;
+    });
     print("error is: " + error.toString());
     if (!emailHasError && !passwordHasError) {
       showDialog(
@@ -663,34 +729,6 @@ class RegistrationState extends State<Registration> {
             return ErrorDialog(error.message, "ok");
           });
     }
-  }
-
-  Future<auth.UserCredential> signInWithApple() async {
-    // To prevent replay attacks with the credential returned from Apple, we
-    // include a nonce in the credential request. When signing in in with
-    // Firebase, the nonce in the id token returned by Apple, is expected to
-    // match the sha256 hash of `rawNonce`.
-    final rawNonce = generateNonce();
-    final nonce = sha256ofString(rawNonce);
-
-    // Request credential for the currently signed in Apple account.
-    final appleCredential = await SignInWithApple.getAppleIDCredential(
-      scopes: [
-        AppleIDAuthorizationScopes.email,
-        AppleIDAuthorizationScopes.fullName,
-      ],
-      nonce: nonce,
-    );
-
-    // Create an `OAuthCredential` from the credential returned by Apple.
-    final oauthCredential = auth.OAuthProvider("apple.com").credential(
-      idToken: appleCredential.identityToken,
-      rawNonce: rawNonce,
-    );
-
-    // Sign in the user with Firebase. If the nonce we generated earlier does
-    // not match the nonce in `appleCredential.identityToken`, sign in will fail.
-    return _auth.signInWithCredential(oauthCredential);
   }
 
 }

@@ -1,4 +1,6 @@
 
+import 'dart:io';
+
 import 'package:BuyTime/utils/theme/buytime_theme.dart';
 import 'package:BuyTime/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
@@ -26,11 +28,12 @@ class BrandedButton extends StatelessWidget {
             margin: EdgeInsets.only(top: 5.0, bottom: 5.0, left: SizeConfig.safeBlockHorizontal * 0, right: SizeConfig.safeBlockHorizontal * 0),
             child: RaisedButton(
               color: BuytimeTheme.BackgroundWhite,
-              onPressed: () => this.callbackAction(),
+              onPressed: buttonText.toString().contains('Apple') && Platform.isAndroid ? null : () =>  this.callbackAction(),
               highlightElevation: 0,
               shape: RoundedRectangleBorder(
                 borderRadius: new BorderRadius.circular(5),
               ),
+              disabledColor: Colors.white.withOpacity(.3),
               child: Container(
                 width: 240,
                 height: 45,

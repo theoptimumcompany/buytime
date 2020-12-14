@@ -11,7 +11,7 @@ import 'package:BuyTime/reblox/model/object_state.dart';
 import 'package:BuyTime/reblox/model/user/user_state.dart';
 import 'package:BuyTime/reblox/reducer/order_reducer.dart';
 import 'package:BuyTime/reblox/reducer/user_reducer.dart';
-import 'package:BuyTime/UI/user/login/UI_U_home.dart';
+import 'package:BuyTime/UI/user/login/UI_U_Home.dart';
 import 'package:BuyTime/reusable/buytime_widget.dart';
 import 'package:device_info/device_info.dart';
 import 'package:firebase_core/firebase_core.dart';

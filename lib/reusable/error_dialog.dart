@@ -17,7 +17,7 @@ class ErrorDialog extends StatelessWidget {
 
     return Dialog(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(30.0)
+        borderRadius: BorderRadius.circular(10.0)
       ),
       elevation: 0,
       backgroundColor: Colors.white,
@@ -30,24 +30,26 @@ class ErrorDialog extends StatelessWidget {
     child: Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
+        ///Error message
         Text(
           this.message,
           style: TextStyle(
             fontFamily: BuytimeTheme.FontFamily,
-            fontSize: 22,
+            fontSize: 20,
             fontWeight: FontWeight.w400,
           ),
           textAlign: TextAlign.center,
         ),
+        ///OK button
         RaisedButton(
           onPressed: () {
             Navigator.of(context).pop();
           },
           textColor: Colors.white,
           color: Colors.blue,
-          padding: EdgeInsets.all(media.width * 0.03),
+          padding: EdgeInsets.all(media.width * 0.02),
           shape: RoundedRectangleBorder(
-            borderRadius: new BorderRadius.circular(500.0),
+            borderRadius: new BorderRadius.circular(10.0),
           ),
           child: Text(
             this.closeMessage,

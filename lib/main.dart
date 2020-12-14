@@ -1,6 +1,6 @@
 import 'package:BuyTime/utils/theme/buytime_theme.dart';
-import 'package:BuyTime/UI/user/login/UI_U_home.dart';
-import 'package:BuyTime/UI/user/login/UI_U_login_widget.dart';
+import 'package:BuyTime/UI/user/login/UI_U_Home.dart';
+import 'package:BuyTime/UI/user/login/UI_U_Login.dart';
 import 'package:BuyTime/UI/user/order/UI_U_OrderDetail.dart';
 import 'package:BuyTime/reblox/model/app_state.dart';
 import 'package:BuyTime/reblox/model/business/business_list_state.dart';
@@ -34,6 +34,7 @@ import 'package:BuyTime/services/stripe_payment_service_epic.dart';
 import 'package:BuyTime/services/user_service_epic.dart';
 import 'package:BuyTime/splash_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_redux_navigation/flutter_redux_navigation.dart';
 import 'package:redux/redux.dart';
@@ -224,6 +225,9 @@ class BuyTime extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
+
     return StoreProvider<AppState>(
       store: store,
       child: MaterialApp(
@@ -237,7 +241,7 @@ class BuyTime extends StatelessWidget {
         routes: <String, WidgetBuilder>{
           // Set routes for using the Navigator.
           '/home': (BuildContext context) => new Home(),
-          '/login': (BuildContext context) => new LoginWidget(),
+          '/login': (BuildContext context) => new Login(),
           '/registration': (BuildContext context) => new Registration(),
           '/orderDetail': (BuildContext context) => new UI_U_OrderDetail(),
         },
