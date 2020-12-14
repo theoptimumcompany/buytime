@@ -184,7 +184,7 @@ CategoryState categoryReducer(CategoryState state, action) {
     return categoryState;
   }
   if (action is AddCategoryNotificationTo) {
-    categoryState.notificationTo = action.notificationTo;
+    categoryState.worker = action.notificationTo;
     return categoryState;
   }
   if (action is CategoryChanged) {

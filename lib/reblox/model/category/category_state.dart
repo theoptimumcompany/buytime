@@ -8,7 +8,7 @@ class CategoryState {
   ObjectState parent;
   List<ObjectState> manager;
   String businessId;
-  List<ObjectState> notificationTo;
+  List<ObjectState> worker;
 
   CategoryState({
     this.name,
@@ -18,7 +18,7 @@ class CategoryState {
     this.parent,
     this.manager,
     this.businessId,
-    this.notificationTo,
+    this.worker,
   });
 
   CategoryState toEmpty() {
@@ -30,7 +30,7 @@ class CategoryState {
       parent: ObjectState(name: "No Parent", id: "no_parent"),
       manager: [ObjectState()],
       businessId: "",
-      notificationTo: [ObjectState()],
+      worker: [ObjectState()],
     );
   }
 
@@ -42,7 +42,7 @@ class CategoryState {
     this.parent = category.parent;
     this.manager = category.manager;
     this.businessId = category.businessId;
-    this.notificationTo = category.notificationTo;
+    this.worker = category.worker;
   }
 
   categoryStateFieldUpdate(String name, String id, int level, int children, ObjectState parent, List<ObjectState> manager, String businessId, List<ObjectState> notificationTo) {
@@ -54,7 +54,7 @@ class CategoryState {
       parent: parent ?? this.parent,
       manager: manager ?? this.manager,
       businessId: businessId ?? this.businessId,
-      notificationTo: notificationTo ?? this.notificationTo,
+      worker: notificationTo ?? this.worker,
     );
   }
 
@@ -67,7 +67,7 @@ class CategoryState {
       parent: parent ?? this.parent,
       manager: manager ?? this.manager,
       businessId: businessId ?? this.businessId,
-      notificationTo: notificationTo ?? this.notificationTo,
+      worker: notificationTo ?? this.worker,
     );
   }
 
@@ -92,7 +92,7 @@ class CategoryState {
           );
         })),
         businessId = json['businessId'],
-        notificationTo = List<ObjectState>.from(json["notificationTo"].map((item) {
+        worker = List<ObjectState>.from(json["notificationTo"].map((item) {
           return new ObjectState(
             name: item["name"],
             id: item["id"],
@@ -107,6 +107,6 @@ class CategoryState {
         'parent': parent.toJson(),
         'manager': convertToJson(manager),
         'businessId': businessId,
-        'notificationTo': convertToJson(notificationTo),
+        'notificationTo': convertToJson(worker),
       };
 }

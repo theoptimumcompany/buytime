@@ -375,7 +375,7 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
           buildDropDownMenuItemsParent(_dropdownParentCategory);
           if (snapshot.category != null) {
             managerList = snapshot.category.manager;
-            workerList = snapshot.category.notificationTo;
+            workerList = snapshot.category.worker;
             selectedDropValue = searchDropdownParent(snapshot);
           }
 

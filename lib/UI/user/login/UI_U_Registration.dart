@@ -82,7 +82,7 @@ class RegistrationState extends State<Registration> {
       firebaseMessaging.requestNotificationPermissions();
       firebaseMessaging.getToken().then((String token) {
         assert(token != null);
-        print("Token " + token);
+        print("UI_U_Registration Token " + token);
         serverToken = token;
       });
     }).catchError((onError) {
@@ -373,7 +373,6 @@ class RegistrationState extends State<Registration> {
     // the media containing information on width and height
     var media = MediaQuery.of(context).size;
     SizeConfig().init(context);
-
     return Scaffold(
         resizeToAvoidBottomPadding: false,
         appBar: AppBar(
@@ -691,7 +690,7 @@ class RegistrationState extends State<Registration> {
 
     // Sign in the user with Firebase. If the nonce we generated earlier does
     // not match the nonce in `appleCredential.identityToken`, sign in will fail.
-    return await auth.FirebaseAuth.instance.signInWithCredential(oauthCredential);
+    return _auth.signInWithCredential(oauthCredential);
   }
 
 }
