@@ -19,11 +19,11 @@ import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:progress_dialog/progress_dialog.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import '../UI_U_Tabs.dart';
 import 'dart:convert';
 import 'dart:math';
 import 'package:crypto/crypto.dart';
-import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 /// Generates a cryptographically secure random nonce, to be included in a
 /// credential request.

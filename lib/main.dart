@@ -49,6 +49,7 @@ void main() {
     UserRequestService(),
     UserEditField(),
     CategoryRequestService(),
+    CategoryInviteService(),
     CategoryUpdateService(),
     CategoryCreateService(),
     CategoryDeleteService(),

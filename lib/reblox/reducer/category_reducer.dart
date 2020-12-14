@@ -3,23 +3,31 @@ import 'package:BuyTime/reblox/model/object_state.dart';
 
 class CategoryRequest {
   String _id;
-
   CategoryRequest(this._id);
-
   String get id => _id;
 }
-class SetCategoryToEmpty {
-  CategoryState _categoryState;
-  SetCategoryToEmpty();
-  CategoryState get categoryState => _categoryState;
-}
 
+class CategoryInvite {
+  String _mail;
+  CategoryInvite(this._mail);
+  String get mail => _mail;
+}
 
 class CategoryRequestResponse {
   CategoryState _categoryState;
-
   CategoryRequestResponse(this._categoryState);
+  CategoryState get categoryState => _categoryState;
+}
 
+class CategoryInviteResponse {
+  CategoryState _categoryState;
+  CategoryInviteResponse(this._categoryState);
+  CategoryState get categoryState => _categoryState;
+}
+
+class SetCategoryToEmpty {
+  CategoryState _categoryState;
+  SetCategoryToEmpty();
   CategoryState get categoryState => _categoryState;
 }
 
@@ -143,12 +151,12 @@ class SetCategoryBusinessId {
   String get businessId => _businessId;
 }
 
-class AddCategoryNotificationTo {
-  List<ObjectState> _notificationTo;
+class AddCategoryWorker {
+  List<ObjectState> _worker;
 
-  AddCategoryNotificationTo(this._notificationTo);
+  AddCategoryWorker(this._worker);
 
-  List<ObjectState> get notificationTo => _notificationTo;
+  List<ObjectState> get worker => _worker;
 }
 
 CategoryState categoryReducer(CategoryState state, action) {
@@ -183,8 +191,8 @@ CategoryState categoryReducer(CategoryState state, action) {
     print(categoryState.businessId);
     return categoryState;
   }
-  if (action is AddCategoryNotificationTo) {
-    categoryState.worker = action.notificationTo;
+  if (action is AddCategoryWorker) {
+    categoryState.worker = action.worker;
     return categoryState;
   }
   if (action is CategoryChanged) {
@@ -201,7 +209,10 @@ CategoryState categoryReducer(CategoryState state, action) {
   }
   if (action is CategoryRequestResponse) {
     categoryState = action.categoryState;
-    print("Nel reducer CategoryState");
+    return categoryState;
+  }
+  if (action is CategoryInviteResponse) {
+    categoryState = action.categoryState;
     return categoryState;
   }
   if (action is SetCategoryToEmpty) {

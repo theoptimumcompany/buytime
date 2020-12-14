@@ -45,7 +45,7 @@ class CategoryState {
     this.worker = category.worker;
   }
 
-  categoryStateFieldUpdate(String name, String id, int level, int children, ObjectState parent, List<ObjectState> manager, String businessId, List<ObjectState> notificationTo) {
+  categoryStateFieldUpdate(String name, String id, int level, int children, ObjectState parent, List<ObjectState> manager, String businessId, List<ObjectState> worker) {
     CategoryState(
       name: name ?? this.name,
       id: id ?? this.id,
@@ -54,11 +54,11 @@ class CategoryState {
       parent: parent ?? this.parent,
       manager: manager ?? this.manager,
       businessId: businessId ?? this.businessId,
-      worker: notificationTo ?? this.worker,
+      worker: worker ?? this.worker,
     );
   }
 
-  CategoryState copyWith({String name, String id, int level, int children, ObjectState parent, List<ObjectState> manager, String businessId, List<ObjectState> notificationTo}) {
+  CategoryState copyWith({String name, String id, int level, int children, ObjectState parent, List<ObjectState> manager, String businessId, List<ObjectState> worker}) {
     return CategoryState(
       name: name ?? this.name,
       id: id ?? this.id,
@@ -67,7 +67,7 @@ class CategoryState {
       parent: parent ?? this.parent,
       manager: manager ?? this.manager,
       businessId: businessId ?? this.businessId,
-      worker: notificationTo ?? this.worker,
+      worker: worker ?? this.worker,
     );
   }
 
@@ -92,7 +92,7 @@ class CategoryState {
           );
         })),
         businessId = json['businessId'],
-        worker = List<ObjectState>.from(json["notificationTo"].map((item) {
+        worker = List<ObjectState>.from(json["worker"].map((item) {
           return new ObjectState(
             name: item["name"],
             id: item["id"],
@@ -107,6 +107,6 @@ class CategoryState {
         'parent': parent.toJson(),
         'manager': convertToJson(manager),
         'businessId': businessId,
-        'notificationTo': convertToJson(worker),
+        'worker': convertToJson(worker),
       };
 }
