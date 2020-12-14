@@ -9,6 +9,7 @@ import 'package:BuyTime/reblox/model/category/category_list_state.dart';
 import 'package:BuyTime/reblox/model/category/category_state.dart';
 import 'package:BuyTime/reblox/reducer/category_list_reducer.dart';
 import 'package:BuyTime/reblox/reducer/category_snippet_reducer.dart';
+import 'package:BuyTime/reusable/appbar/manager_buytime_appbar.dart';
 import 'package:BuyTime/reusable/menu/UI_M_business_list_drawer.dart';
 import 'package:BuyTime/utils/size_config.dart';
 import 'package:BuyTime/utils/utils.dart';
@@ -46,8 +47,12 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
     //   menuItems =  MenuItemProvider.getMenuItems(customer.restaurantId);  //TODO: SCaricare items del menu
   }
 
+  final GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
+    var media = MediaQuery.of(context).size;
+
     ///Init sizeConfig
     SizeConfig().init(context);
     return StoreConnector<AppState, AppState>(
@@ -61,41 +66,62 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
         return WillPopScope(
           onWillPop: () async => false,
           child: Scaffold(
+            drawerEnableOpenDragGesture: false,
+            key: _drawerKey,
             ///Appbar
-            appBar: AppBar(
-              title: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [Text('Dashboard')],
-              ),
-              actions: [
+            appBar: BuyTimeAppbarManager(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
+                  child: IconButton(
+                    icon: const Icon(
+                      Icons.menu,
+                      color: Colors.white,
+                      size: 30.0,
+                    ),
+                    tooltip: 'Open Menu',
+                    onPressed: () {
+                      _drawerKey.currentState.openDrawer();
+                    },
+                  ),
+                ),
                 Container(
-                  margin: EdgeInsets.only(right: 10.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      InkWell(
-                        borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                        onTap: () {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (context) => UI_ManageBusiness(0)),
-                          );
-                        },
-                        child: Container(
-                          padding: EdgeInsets.all(5.0),
-                          child: Text(
-                            'Edit',
-                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 0.0),
+                    child: Text(
+                      "Dashboard",
+                      textAlign: TextAlign.start,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: media.height * 0.025,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
+                    child: InkWell(
+                      borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                      onTap: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => UI_ManageBusiness(0)),
+                        );
+                      },
+                      child: Container(
+                        padding: EdgeInsets.all(5.0),
+                        child: Text(
+                          'Edit',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: media.height * 0.025,
+                            fontWeight: FontWeight.w400,
                           ),
                         ),
-                      )
-                    ],
-                  ),
-                )
+                      ),
+                    )),
               ],
-              centerTitle: true,
-              backgroundColor: Color(0xff006791),
-              elevation: 0,
             ),
             drawer: UI_M_BusinessListDrawer(),
             body: SafeArea(
@@ -106,15 +132,15 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                     children: [
                       ///Appabar bottom arc & Worker card & Business logo
                       Container(
-                        height: 115,
+                        height: media.height * 0.18,
 
                         ///Fixed height
                         //width: double.infinity,
                         //color: Colors.deepOrange,
-                        child: Stack(
+                        child: Column(
                           children: [
                             ///Worker card & Business logo
-                            Positioned.fill(
+                            Container(
                               child: Align(
                                 alignment: Alignment.topCenter,
                                 child: Container(
@@ -136,10 +162,7 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                                               Container(
                                                 child: Text(
                                                   'Hi ',
-                                                  style: TextStyle(
-                                                      fontWeight: FontWeight.bold,
-                                                      fontSize: 25,
-                                                      color: Colors.black.withOpacity(0.7)),
+                                                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25, color: Colors.black.withOpacity(0.7)),
                                                 ),
                                               ),
 
@@ -148,10 +171,7 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                                                 margin: EdgeInsets.only(top: 10),
                                                 child: Text(
                                                   '1000 employees',
-                                                  style: TextStyle(
-                                                      fontWeight: FontWeight.w500,
-                                                      fontSize: 16,
-                                                      color: Colors.blueGrey),
+                                                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16, color: Colors.blueGrey),
                                                 ),
                                               ),
 
@@ -160,10 +180,7 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                                                 margin: EdgeInsets.only(top: 2.5),
                                                 child: Text(
                                                   '1 menu items',
-                                                  style: TextStyle(
-                                                      fontWeight: FontWeight.w500,
-                                                      fontSize: 16,
-                                                      color: Colors.blueGrey),
+                                                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16, color: Colors.blueGrey),
                                                 ),
                                               )
                                             ],
@@ -174,23 +191,15 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                                       ///Business logo
                                       Expanded(
                                         flex: 2,
-                                        child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.end,
-                                            children: [
-                                              Container(
-                                                //color: Colors.deepOrange,
-                                                width: 140,
+                                        child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                                          Container(
+                                            //color: Colors.deepOrange,
+                                            width: 140,
 
-                                                ///Fixed width
-                                                child: Image.network(
-                                                    StoreProvider.of<AppState>(context)
-                                                        .state
-                                                        .business
-                                                        .logo,
-                                                    fit: BoxFit.cover,
-                                                    scale: 1.1),
-                                              )
-                                            ]),
+                                            ///Fixed width
+                                            child: Image.network(StoreProvider.of<AppState>(context).state.business.logo, fit: BoxFit.cover, scale: 1.1),
+                                          )
+                                        ]),
                                       )
                                     ],
                                   ),
@@ -199,13 +208,13 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                             ),
 
                             ///Appbar bottom arc
-                            Positioned.fill(
-                              top: -10,
-                              child: Align(
-                                alignment: Alignment.topCenter,
-                                child: Utils.bottomArc,
-                              ),
-                            ),
+                            // Positioned.fill(
+                            //   top: -10,
+                            //   child: Align(
+                            //     alignment: Alignment.topCenter,
+                            //     child: Utils.bottomArc,
+                            //   ),
+                            // ),
                           ],
                         ),
                       ),
@@ -237,10 +246,7 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                                   padding: EdgeInsets.all(5.0),
                                   child: Text(
                                     'Test ServiceList',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 20,
-                                        color: Colors.lightBlue),
+                                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20, color: Colors.lightBlue),
                                   ),
                                 ),
                               ),
@@ -266,14 +272,8 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                               InkWell(
                                 onTap: () {
                                   debugPrint('MANAGE Clicked!');
-                                  if (StoreProvider.of<AppState>(context)
-                                          .state
-                                          .categorySnippet
-                                          .categoryNodeList ==
-                                      null) {
-                                    StoreProvider.of<AppState>(context).dispatch(
-                                        new CategorySnippetCreateIfNotExists(
-                                            snapshot.business.id_firestore, context));
+                                  if (StoreProvider.of<AppState>(context).state.categorySnippet.categoryNodeList == null) {
+                                    StoreProvider.of<AppState>(context).dispatch(new CategorySnippetCreateIfNotExists(snapshot.business.id_firestore, context));
                                   }
                                   Navigator.pushReplacement(
                                     context,
@@ -285,10 +285,7 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                                   padding: EdgeInsets.all(5.0),
                                   child: Text(
                                     'Manage',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 20,
-                                        color: Colors.lightBlue),
+                                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20, color: Colors.lightBlue),
                                   ),
                                 ),
                               ),
@@ -345,12 +342,10 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                                             delegate: SliverChildBuilderDelegate(
                                               (context, index) {
                                                 //MenuItemModel menuItem = menuItems.elementAt(index);
-                                                CategoryState categoryItem =
-                                                    categoryStateList.elementAt(index);
+                                                CategoryState categoryItem = categoryStateList.elementAt(index);
                                                 return InkWell(
                                                   onTap: () {
-                                                    debugPrint(
-                                                        'Category Item: ${categoryItem.name.toUpperCase()} Clicked!');
+                                                    debugPrint('Category Item: ${categoryItem.name.toUpperCase()} Clicked!');
                                                   },
                                                   //child: MenuItemListItemWidget(menuItem),
                                                   child: CategoryListItemWidget(categoryItem),
@@ -387,10 +382,7 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                                               debugPrint('INVITE USER Clicked!');
 
                                               final RenderBox box = context.findRenderObject();
-                                              Share.share('Share',
-                                                  subject: 'Test',
-                                                  sharePositionOrigin:
-                                                      box.localToGlobal(Offset.zero) & box.size);
+                                              Share.share('Share', subject: 'Test', sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
                                             },
                                             child: Container(
                                               height: 70,
@@ -412,28 +404,21 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                                                   Expanded(
                                                       flex: 3,
                                                       child: Container(
-                                                        margin:
-                                                            EdgeInsets.only(top: 10.0, bottom: 5.0),
+                                                        margin: EdgeInsets.only(top: 10.0, bottom: 5.0),
                                                         child: Column(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment.spaceEvenly,
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment.start,
+                                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
                                                           children: [
                                                             Container(
                                                               child: Text(
                                                                 'Invite user',
-                                                                style: TextStyle(
-                                                                    fontWeight: FontWeight.bold),
+                                                                style: TextStyle(fontWeight: FontWeight.bold),
                                                               ),
                                                             ),
                                                             Container(
                                                               child: Text(
                                                                 'Users join by scanning your QR code',
-                                                                style: TextStyle(
-                                                                    fontWeight: FontWeight.w500,
-                                                                    color: Colors.grey
-                                                                        .withOpacity(0.8)),
+                                                                style: TextStyle(fontWeight: FontWeight.w500, color: Colors.grey.withOpacity(0.8)),
                                                               ),
                                                             )
                                                           ],
@@ -444,8 +429,7 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                                                   Expanded(
                                                     flex: 1,
                                                     child: Container(
-                                                      child: Icon(Icons.keyboard_arrow_right,
-                                                          color: Colors.grey),
+                                                      child: Icon(Icons.keyboard_arrow_right, color: Colors.grey),
                                                     ),
                                                   )
                                                 ],
