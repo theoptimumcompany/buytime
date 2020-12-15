@@ -23,7 +23,7 @@ class ContainerShapeBottomCircle extends CustomPainter {
     path.moveTo(size.width, 0);
     path.lineTo(0, 0);
     path.lineTo(0, size.height);
-    path.quadraticBezierTo(size.width / 2, size.height * 1.3, size.width, size.height);
+    path.quadraticBezierTo(size.width / 2, size.height * 1.08, size.width, size.height);
     path.lineTo(size.width, 0);
     path.close();
 

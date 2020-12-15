@@ -43,17 +43,16 @@ class UI_U_TabsState extends State<UI_U_Tabs> {
                 return false;
               },
               child: Scaffold(
+                drawerEnableOpenDragGesture: false,
                 key: _drawerKeyTabs,
                 appBar: BuyTimeAppbarUser(
-                  width: media.width,
-                  height: media.height * 0.13,
                   children: [
                     (visibleDrawer
                         ? IconButton(
                             icon: const Icon(
                               Icons.menu,
                               color: Colors.white,
-                              size: 40.0,
+                              size: 30.0,
                             ),
                             tooltip: 'Show menu',
                             onPressed: () {

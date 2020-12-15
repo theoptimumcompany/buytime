@@ -20,7 +20,7 @@ class BuyTimeAppbarManager extends StatelessWidget implements PreferredSizeWidge
     var mediaHeight = media.height;
     var mediaWidth = media.width;
     return Container(
-      height: mediaHeight * 0.15,
+      height: mediaHeight * 0.12,
       child: Column(
         children: [
           CustomPaint(
@@ -28,8 +28,8 @@ class BuyTimeAppbarManager extends StatelessWidget implements PreferredSizeWidge
               Color.fromRGBO(0, 103, 145, 1.0),
             ),
             child: Padding(
-              padding:  const EdgeInsets.only(top: 30.0),
-              child: Row(
+                padding: const EdgeInsets.only(top: 50.0, bottom: 10.0),
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: children
               ),
