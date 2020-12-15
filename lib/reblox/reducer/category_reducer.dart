@@ -143,20 +143,21 @@ class AddCategoryManager {
   ObjectState get manager => _manager;
 }
 
+class AddCategoryWorker {
+  ObjectState _worker;
+
+  AddCategoryWorker(this._worker);
+
+  ObjectState get worker => _worker;
+}
+
+
 class SetCategoryBusinessId {
   String _businessId;
 
   SetCategoryBusinessId(this._businessId);
 
   String get businessId => _businessId;
-}
-
-class AddCategoryWorker {
-  List<ObjectState> _worker;
-
-  AddCategoryWorker(this._worker);
-
-  List<ObjectState> get worker => _worker;
 }
 
 CategoryState categoryReducer(CategoryState state, action) {
@@ -186,13 +187,13 @@ CategoryState categoryReducer(CategoryState state, action) {
     categoryState.manager.add(action.manager);
     return categoryState;
   }
+  if (action is AddCategoryWorker) {
+    categoryState.worker.add(action.worker);
+    return categoryState;
+  }
   if (action is SetCategoryBusinessId) {
     categoryState.businessId = action.businessId;
     print(categoryState.businessId);
-    return categoryState;
-  }
-  if (action is AddCategoryWorker) {
-    categoryState.worker = action.worker;
     return categoryState;
   }
   if (action is CategoryChanged) {

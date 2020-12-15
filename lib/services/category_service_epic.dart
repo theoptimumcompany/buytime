@@ -3,7 +3,7 @@ import 'package:BuyTime/reblox/model/category/category_state.dart';
 import 'package:BuyTime/reblox/reducer/category_list_reducer.dart';
 import 'package:BuyTime/reblox/reducer/category_reducer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
+import 'package:BuyTime/reblox/model/object_state.dart';
 import 'package:redux_epics/redux_epics.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -12,12 +12,7 @@ class CategoryListRequestService implements EpicClass<AppState> {
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     print("CategoryListService catched action");
     return actions.whereType<RequestListCategory>().asyncMap((event) {
-      return Firestore.instance
-          .collection("business")
-          .document(event.businessId)
-          .collection("category")
-          .getDocuments()
-          .then((QuerySnapshot snapshot) {
+      return Firestore.instance.collection("business").document(event.businessId).collection("category").getDocuments().then((QuerySnapshot snapshot) {
         print("CategoryListService firestore request");
         List<CategoryState> categoryStateList = List<CategoryState>();
         snapshot.documents.forEach((element) {
@@ -39,13 +34,7 @@ class CategoryRootListRequestService implements EpicClass<AppState> {
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     print("CategoryRootListService catched action");
     return actions.whereType<RequestRootListCategory>().asyncMap((event) {
-      return FirebaseFirestore.instance
-          .collection("business")
-          .doc(event.businessId)
-          .collection("category")
-          .where("level", isEqualTo: 0)
-          .get()
-          .then((QuerySnapshot snapshot) {
+      return FirebaseFirestore.instance.collection("business").doc(event.businessId).collection("category").where("level", isEqualTo: 0).get().then((QuerySnapshot snapshot) {
         print("CategoryRootListService firestore request");
         List<CategoryState> categoryStateList = List<CategoryState>();
         snapshot.docs.forEach((element) {
@@ -68,12 +57,7 @@ class CategoryRequestService implements EpicClass<AppState> {
     return actions.whereType<CategoryRequest>().asyncMap((event) async {
       String categoryId = event.id;
 
-      var query = await Firestore.instance
-          .collection("business")
-          .document(store.state.business.id_firestore)
-          .collection("category")
-          .where("id", isEqualTo: categoryId)
-          .getDocuments();
+      var query = await Firestore.instance.collection("business").document(store.state.business.id_firestore).collection("category").where("id", isEqualTo: categoryId).getDocuments();
 
       CategoryState categoryState = new CategoryState();
 
@@ -86,26 +70,32 @@ class CategoryRequestService implements EpicClass<AppState> {
   }
 }
 
-class CategoryInviteService implements EpicClass<AppState> {
+class CategoryInviteManagerService implements EpicClass<AppState> {
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    return actions.whereType<CategoryInvite>().asyncMap((event) async {
-      String mail = event.mail;
-
-      // var query = await Firestore.instance
-      //     .collection("business")
-      //     .document(store.state.business.id_firestore)
-      //     .collection("category")
-      //     .where("id", isEqualTo: categoryId)
-      //     .getDocuments();
-      //
-      // CategoryState categoryState = new CategoryState();
-      //
-      // query.documents.forEach((snapshot) {
-      //   categoryState = CategoryState.fromJson(snapshot.data());
+    return actions.whereType<AddCategoryManager>().asyncMap((event) async {
+      // ObjectState manager = event.manager;
+      // FirebaseFirestore.instance.collection("business").doc(store.state.business.id_firestore).collection("category").doc(store.state.category.id).update({
+      //   "manager": FieldValue.arrayUnion([manager])
+      // }).then((value) {
+      //   print("Category Service should be updated online ");
+      //   return new UpdatedCategory(null);
       // });
-      // print("CategoryState return " + categoryState.name);
-      // return new CategoryRequestResponse(categoryState);
+    });
+  }
+}
+
+class CategoryInviteWorkerService implements EpicClass<AppState> {
+  @override
+  Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
+    return actions.whereType<AddCategoryWorker>().asyncMap((event) async {
+      // ObjectState worker = event.worker;
+      // FirebaseFirestore.instance.collection("business").doc(store.state.business.id_firestore).collection("category").doc(store.state.category.id).update({
+      //   "worker": FieldValue.arrayUnion([worker])
+      // }).then((value) {
+      //   print("Category Service should be updated online ");
+      //   return new UpdatedCategory(null);
+      // });
     }).takeUntil(actions.whereType<UnlistenCategory>());
   }
 }
@@ -134,11 +124,7 @@ class CategoryCreateService implements EpicClass<AppState> {
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<CreateCategory>().asyncMap((event) {
       CategoryState categoryState = event.categoryState;
-      DocumentReference docReference = Firestore.instance
-          .collection('business')
-          .document(store.state.business.id_firestore)
-          .collection('category')
-          .document();
+      DocumentReference docReference = Firestore.instance.collection('business').document(store.state.business.id_firestore).collection('category').document();
       categoryState.id = docReference.documentID;
       store.state.category.id = docReference.documentID;
       categoryState.businessId = store.state.business.id_firestore;
@@ -160,12 +146,7 @@ class CategoryDeleteService implements EpicClass<AppState> {
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<DeleteCategory>().asyncMap((event) {
       String idCategoryToDelete = event.idCategory;
-      return Firestore.instance
-          .collection('business')
-          .document(store.state.business.id_firestore)
-          .collection('category')
-          .document(idCategoryToDelete)
-          .delete();
+      return Firestore.instance.collection('business').document(store.state.business.id_firestore).collection('category').document(idCategoryToDelete).delete();
     });
   }
 }

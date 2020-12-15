@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 class BuyTimeAppbarUser extends StatelessWidget implements PreferredSizeWidget {
   List<Widget> children = [];
-  final double _preferredHeight = 200.0;
+  final double _preferredHeight = 70.0;
   double width;
   double height;
 
@@ -16,15 +16,13 @@ class BuyTimeAppbarUser extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    var media = MediaQuery.of(context).size;
-    var mediaHeight = media.height;
-    var mediaWidth = media.width;
+    final double statusbarHeight = MediaQuery.of(context).padding.top;
     return Container(
-        height: mediaHeight * 0.12,
+        height: statusbarHeight + _preferredHeight,
         child: CustomPaint(
           painter: ContainerShapeBottomCircle(Color.fromRGBO(1, 159, 224, 1.0)),
           child: Padding(
-            padding: const EdgeInsets.only(top: 50.0, bottom: 10.0),
+            padding: new EdgeInsets.only(top: statusbarHeight),
             child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: children),
           ),
         ));
