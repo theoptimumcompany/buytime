@@ -720,15 +720,17 @@ class RegistrationState extends State<Registration> {
   void onError(error) {
     setState(() {
       _success = false;
-    });
-    print("error is: " + error.toString());
-    if (!emailHasError && !passwordHasError) {
-      showDialog(
+      print("error is: " + error.toString());
+      if (!emailHasError && !passwordHasError) {
+        responseMessage = error.message;
+        /*showDialog(
           context: context,
           builder: (context) {
             return ErrorDialog(error.message, "ok");
-          });
-    }
+          });*/
+      }
+      //_isRequestFlying = false;
+    });
   }
 
 }

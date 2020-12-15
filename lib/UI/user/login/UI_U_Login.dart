@@ -289,6 +289,7 @@ class LoginState extends State<Login> {
   ///Facebook sign in
   Future<int> _handleSignIn() async {
     FacebookLoginResult facebookLoginResult = await _handleFBSignIn();
+    debugPrint('UI_U_Login - facebookLoginResult 2 : ' + facebookLoginResult.toString());
     final accessToken = facebookLoginResult.accessToken.token;
 
     ProgressDialog pr = new ProgressDialog(context);
@@ -347,6 +348,7 @@ class LoginState extends State<Login> {
   Future<FacebookLoginResult> _handleFBSignIn() async {
     FacebookLogin facebookLogin = FacebookLogin();
     FacebookLoginResult facebookLoginResult = await facebookLogin.logIn(['email']);
+    debugPrint('UI_U_Login - facebookLoginResult 1 : ' + facebookLoginResult.status.toString());
     switch (facebookLoginResult.status) {
       case FacebookLoginStatus.cancelledByUser:
         print("Cancelled");
@@ -721,16 +723,15 @@ class LoginState extends State<Login> {
   void onError(error) {
     setState(() {
       _success = false;
-    });
-    print("error is: " + error.toString());
-    if (!emailHasError && !passwordHasError) {
-      showDialog(
+      print("error is: " + error.toString());
+      if (!emailHasError && !passwordHasError) {
+        responseMessage = error.message;
+        /*showDialog(
           context: context,
           builder: (context) {
             return ErrorDialog(error.message, "ok");
-          });
-    }
-    setState(() {
+          });*/
+      }
       _isRequestFlying = false;
     });
   }
