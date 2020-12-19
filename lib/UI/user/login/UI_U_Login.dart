@@ -472,7 +472,148 @@ class LoginState extends State<Login> {
                                   flex: 3,
                                   child: Container(
                                     margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 8, right: SizeConfig.safeBlockHorizontal * 8), ///8% - 8%
-                                    child: Column(
+                                    child: SizeConfig.screenHeight < 537 ?
+                                    Column(
+                                      children: [
+                                        ///Sign in text
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          children: [
+                                            Container(
+                                              margin: EdgeInsets.only(top:  SizeConfig.safeBlockVertical * 5),
+                                              child: Text(
+                                                'Please Sign in:',
+                                                style: TextStyle(
+                                                    fontFamily: BuytimeTheme.FontFamily,
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 16
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        ///Email address
+                                        Container(
+                                          margin: EdgeInsets.only(top: 10.0),
+                                          height: SizeConfig.safeBlockHorizontal * 16,
+                                          child: TextFormField(
+                                            controller: _emailController,
+                                            textAlign: TextAlign.start,
+                                            keyboardType: TextInputType.emailAddress,
+                                            autofillHints: [AutofillHints.email],
+                                            decoration: InputDecoration(
+                                              enabledBorder: OutlineInputBorder(
+                                                  borderSide: BorderSide(color: Color(0xffe0e0e0)),
+                                                  borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                              ),
+                                              focusedBorder: OutlineInputBorder(
+                                                  borderSide: BorderSide(color: Color(0xff666666)),
+                                                  borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                              ),
+                                              errorBorder: OutlineInputBorder(
+                                                  borderSide: BorderSide(color: Colors.redAccent),
+                                                  borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                              ),
+                                              labelText: 'Email address',
+                                              //hintText: "email *",
+                                              //hintStyle: TextStyle(color: Color(0xff666666)),
+                                              labelStyle: TextStyle(
+                                                fontFamily: BuytimeTheme.FontFamily,
+                                                color: Color(0xff666666),
+                                                fontWeight: FontWeight.w400,
+                                              ),
+                                            ),
+                                            style: TextStyle(
+                                              fontFamily: BuytimeTheme.FontFamily,
+                                              color: Color(0xff666666),
+                                              fontWeight: FontWeight.w800,
+                                            ),
+                                            validator: (String value) {
+                                              setState(() {
+                                                if (value.isNotEmpty && EmailValidator.validate(value)) {
+                                                  emailHasError = false;
+                                                }else
+                                                  emailHasError = true;
+                                              });
+                                              return null;
+                                            },
+                                          ),
+                                        ),
+                                        ///Password
+                                        Container(
+                                          margin: EdgeInsets.only(top: SizeConfig.safeBlockHorizontal * 2),
+                                          height: SizeConfig.safeBlockHorizontal * 16,
+                                          child: TextFormField(
+                                            controller: _passwordController,
+                                            textAlign: TextAlign.start,
+                                            obscureText: passwordVisible,
+                                            decoration: InputDecoration(
+                                                enabledBorder: OutlineInputBorder(
+                                                    borderSide: BorderSide(color: Color(0xffe0e0e0)),
+                                                    borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                                ),
+                                                focusedBorder: OutlineInputBorder(
+                                                    borderSide: BorderSide(color: Color(0xff666666)),
+                                                    borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                                ),
+                                                errorBorder: OutlineInputBorder(
+                                                    borderSide: BorderSide(color: Colors.redAccent),
+                                                    borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                                ),
+                                                labelText: 'Password',
+                                                //hintText: "email *",
+                                                //hintStyle: TextStyle(color: Color(0xff666666)),
+                                                labelStyle: TextStyle(
+                                                  fontFamily: BuytimeTheme.FontFamily,
+                                                  color: Color(0xff666666),
+                                                  fontWeight: FontWeight.w400,
+                                                ),
+                                                suffixIcon: IconButton(
+                                                  icon: Icon(
+                                                    // Based on passwordVisible state choose the icon
+                                                    passwordVisible ? Icons.visibility : Icons.visibility_off,
+                                                    color: Color(0xff666666),
+                                                  ),
+                                                  onPressed: () {
+                                                    // Update the state i.e. toogle the state of passwordVisible variable
+                                                    setState(() {
+                                                      passwordVisible = !passwordVisible;
+                                                    });
+                                                  },
+                                                )
+                                            ),
+                                            style: TextStyle(
+                                              fontFamily: BuytimeTheme.FontFamily,
+                                              color: Color(0xff666666),
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                            validator: (String value) {
+                                              setState(() {
+                                                if (passwordValidator(value)) {
+                                                  passwordHasError = false;
+                                                }else
+                                                  passwordHasError = true;
+                                              });
+                                              return null;
+                                            },
+                                          ),
+                                        ),
+                                        ///Error message
+                                        Container(
+                                          alignment: Alignment.center,
+                                          margin: EdgeInsets.only(top: 12.0),
+                                          child: Text(
+                                            responseMessage,
+                                            style: TextStyle(
+                                                color: _success != null ? _success ? Colors.greenAccent : Colors.redAccent : Colors.redAccent,
+                                              fontWeight: FontWeight.bold
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ) :
+                                    Column(
                                       children: [
                                         ///Sign in text
                                         Row(
@@ -546,26 +687,26 @@ class LoginState extends State<Login> {
                                             textAlign: TextAlign.start,
                                             obscureText: passwordVisible,
                                             decoration: InputDecoration(
-                                              enabledBorder: OutlineInputBorder(
-                                                  borderSide: BorderSide(color: Color(0xffe0e0e0)),
-                                                  borderRadius: BorderRadius.all(Radius.circular(10.0))
-                                              ),
-                                              focusedBorder: OutlineInputBorder(
-                                                  borderSide: BorderSide(color: Color(0xff666666)),
-                                                  borderRadius: BorderRadius.all(Radius.circular(10.0))
-                                              ),
-                                              errorBorder: OutlineInputBorder(
-                                                  borderSide: BorderSide(color: Colors.redAccent),
-                                                  borderRadius: BorderRadius.all(Radius.circular(10.0))
-                                              ),
-                                              labelText: 'Password',
-                                              //hintText: "email *",
-                                              //hintStyle: TextStyle(color: Color(0xff666666)),
-                                              labelStyle: TextStyle(
-                                                fontFamily: BuytimeTheme.FontFamily,
-                                                color: Color(0xff666666),
-                                                fontWeight: FontWeight.w400,
-                                              ),
+                                                enabledBorder: OutlineInputBorder(
+                                                    borderSide: BorderSide(color: Color(0xffe0e0e0)),
+                                                    borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                                ),
+                                                focusedBorder: OutlineInputBorder(
+                                                    borderSide: BorderSide(color: Color(0xff666666)),
+                                                    borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                                ),
+                                                errorBorder: OutlineInputBorder(
+                                                    borderSide: BorderSide(color: Colors.redAccent),
+                                                    borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                                ),
+                                                labelText: 'Password',
+                                                //hintText: "email *",
+                                                //hintStyle: TextStyle(color: Color(0xff666666)),
+                                                labelStyle: TextStyle(
+                                                  fontFamily: BuytimeTheme.FontFamily,
+                                                  color: Color(0xff666666),
+                                                  fontWeight: FontWeight.w400,
+                                                ),
                                                 suffixIcon: IconButton(
                                                   icon: Icon(
                                                     // Based on passwordVisible state choose the icon
@@ -604,7 +745,7 @@ class LoginState extends State<Login> {
                                             responseMessage,
                                             style: TextStyle(
                                                 color: _success != null ? _success ? Colors.greenAccent : Colors.redAccent : Colors.redAccent,
-                                              fontWeight: FontWeight.bold
+                                                fontWeight: FontWeight.bold
                                             ),
                                           ),
                                         ),

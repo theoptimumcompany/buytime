@@ -25,7 +25,7 @@ class BrandedButton extends StatelessWidget {
     return
       Center(
           child: Container(
-            margin: EdgeInsets.only(top: 5.0, bottom: 5.0, left: SizeConfig.safeBlockHorizontal * 0, right: SizeConfig.safeBlockHorizontal * 0),
+            margin: EdgeInsets.only(top: SizeConfig.screenHeight < 537 ? 2.0 : 5.0, bottom: SizeConfig.screenHeight < 537 ? 2.0 : 5.0, left: SizeConfig.safeBlockHorizontal * 0, right: SizeConfig.safeBlockHorizontal * 0),
             child: RaisedButton(
               color: BuytimeTheme.BackgroundWhite,
               onPressed: buttonText.toString().contains('Apple') && Platform.isAndroid ? null : () =>  this.callbackAction(),
@@ -36,7 +36,7 @@ class BrandedButton extends StatelessWidget {
               disabledColor: Colors.white.withOpacity(.3),
               child: Container(
                 width: 240,
-                height: 45,
+                height: SizeConfig.screenHeight < 537 ? SizeConfig.safeBlockHorizontal * 12.5 : 45,
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.start,
