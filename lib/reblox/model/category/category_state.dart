@@ -28,9 +28,9 @@ class CategoryState {
       level: 0,
       children: 0,
       parent: ObjectState(name: "No Parent", id: "no_parent"),
-      manager: [ObjectState()],
+      manager: [],
       businessId: "",
-      worker: [ObjectState()],
+      worker: [],
     );
   }
 

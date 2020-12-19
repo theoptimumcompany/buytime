@@ -144,30 +144,36 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
       context: context,
       builder: (_) => new AlertDialog(
         actions: <Widget>[
-          FlatButton(
-            child: Text("Cancel"),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
+          Row(
+            children: [
+              FlatButton(
+                child: Text("Cancel"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              FlatButton(
+                child: Text("Invite"),
+                onPressed: () async {
+                  if (validateAndSaveInvite()) {
+                    print("UI_create_category: Mail di Invito : " + inviteMail);
+                    ObjectState newObjectState = new ObjectState(mail: inviteMail);
+                    switch (role) {
+                      case 'Worker':
+                        StoreProvider.of<AppState>(context).dispatch(new AddCategoryWorker(newObjectState));
+                        break;
+                      case 'Manager':
+                        StoreProvider.of<AppState>(context).dispatch(new AddCategoryManager(newObjectState));
+                        break;
+                    }
+                    Uri link = await _createDynamicLink(false);
+                    Share.share('Enter in Buytime App at $link and use $inviteMail to login!', subject: 'Take your Time!');
+                    Navigator.of(context).pop();
+                  }
+                },
+              )
+            ],
           ),
-          FlatButton(
-            child: Text("Invite"),
-            onPressed: () async {
-              if (validateAndSaveInvite()) {
-                ObjectState newObjectState = new ObjectState(mail: inviteMail);
-                switch (role) {
-                  case 'Worker':
-                    StoreProvider.of<AppState>(context).dispatch(new AddCategoryWorker(newObjectState));
-                    break;
-                  case 'Manager':
-                    StoreProvider.of<AppState>(context).dispatch(new AddCategoryManager(newObjectState));
-                    break;
-                }
-                Uri link = await _createDynamicLink(false);
-                Share.share('check out Buytime App at $link', subject: 'Take your Time!');
-              }
-            },
-          )
         ],
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
         content: Container(
@@ -227,6 +233,7 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
                         padding: const EdgeInsets.only(left: 10.0, right: 10.0),
                         child: Container(
                           child: TextFormField(
+                            keyboardType: TextInputType.emailAddress,
                             autofocus: true,
                             validator: (value) => value.isEmpty
                                 ? 'Email cannot be blank'
@@ -335,6 +342,28 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
         return element.value;
       }
     }
+  }
+
+  _buildChipList(var list, String type) {
+    List<Widget> choices = List();
+    list.forEach((item) {
+      choices.add(Padding(
+        padding: const EdgeInsets.only(right: 10.0),
+        child: InputChip(
+          selected: false,
+          label: Text(item.name == "" || item.name == null ? item.mail : item.name),
+          //avatar: FlutterLogo(),
+          onPressed: () async {
+            Uri link = await _createDynamicLink(false);
+            Share.share('Enter in Buytime App at $link and use ' + item.mail + ' to login!', subject: 'Take your Time!');
+          },
+          onDeleted: () {
+            type == "manager" ? StoreProvider.of<AppState>(context).dispatch(new DeleteCategoryManager(item.mail)) : StoreProvider.of<AppState>(context).dispatch(new DeleteCategoryWorker(item.mail));
+          },
+        ),
+      ));
+    });
+    return choices;
   }
 
   @override
@@ -565,31 +594,7 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
                                       ),
                                     )
                                   : Container(),
-                              managerList.length > 1 && managerList != null
-                                  ? List.generate(
-                                      managerList.length,
-                                      (index) {
-                                        return Padding(
-                                          padding: const EdgeInsets.only(right: 10.0),
-                                          child: InputChip(
-                                            selected: false,
-                                            label: Text(managerList[index].name),
-                                            //avatar: FlutterLogo(),
-                                            onPressed: () {
-                                              print('Manager is pressed');
-
-                                              setState(() {
-                                                //_selected = !_selected;
-                                              });
-                                            },
-                                            onDeleted: () {
-                                              print('Manager is deleted');
-                                            },
-                                          ),
-                                        );
-                                      },
-                                    )
-                                  : Container()
+                              managerList.length > 0 && managerList != null ? Wrap(children: _buildChipList(managerList, "manager")) : Container()
                             ],
                           ),
                         ],
@@ -631,33 +636,8 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
                               ),
                             ],
                           ),
-                          workerList.length > 1 && workerList != null
-                              ? Wrap(
-                                  alignment: WrapAlignment.start,
-                                  children: List.generate(
-                                    workerList.length,
-                                    (index) {
-                                      return Padding(
-                                        padding: const EdgeInsets.only(right: 10.0),
-                                        child: InputChip(
-                                          selected: false,
-                                          label: Text(workerList[index].name),
-                                          //avatar: FlutterLogo(),
-                                          onPressed: () {
-                                            print('Worker is pressed');
-
-                                            setState(() {
-                                              //_selected = !_selected;
-                                            });
-                                          },
-                                          onDeleted: () {
-                                            print('Worker is deleted');
-                                          },
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                )
+                          workerList.length > 0 && workerList != null
+                              ? Wrap(alignment: WrapAlignment.start, children: _buildChipList(workerList, "worker"))
                               : Padding(
                                   padding: const EdgeInsets.all(10.0),
                                   child: Container(

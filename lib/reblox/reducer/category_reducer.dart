@@ -3,31 +3,57 @@ import 'package:BuyTime/reblox/model/object_state.dart';
 
 class CategoryRequest {
   String _id;
+
   CategoryRequest(this._id);
+
   String get id => _id;
 }
 
-class CategoryInvite {
-  String _mail;
-  CategoryInvite(this._mail);
-  String get mail => _mail;
+class CategoryInviteManager {
+  ObjectState _manager;
+
+  CategoryInviteManager(this._manager);
+
+  ObjectState get manager => _manager;
+}
+
+class CategoryInviteWorker {
+  ObjectState _worker;
+
+  CategoryInviteWorker(this._worker);
+
+  ObjectState get worker => _worker;
 }
 
 class CategoryRequestResponse {
   CategoryState _categoryState;
+
   CategoryRequestResponse(this._categoryState);
+
   CategoryState get categoryState => _categoryState;
 }
 
-class CategoryInviteResponse {
+class CategoryInviteManagerResponse {
   CategoryState _categoryState;
-  CategoryInviteResponse(this._categoryState);
+
+  CategoryInviteManagerResponse(this._categoryState);
+
+  CategoryState get categoryState => _categoryState;
+}
+
+class CategoryInviteWorkerResponse {
+  CategoryState _categoryState;
+
+  CategoryInviteWorkerResponse(this._categoryState);
+
   CategoryState get categoryState => _categoryState;
 }
 
 class SetCategoryToEmpty {
   CategoryState _categoryState;
+
   SetCategoryToEmpty();
+
   CategoryState get categoryState => _categoryState;
 }
 
@@ -143,6 +169,14 @@ class AddCategoryManager {
   ObjectState get manager => _manager;
 }
 
+class DeleteCategoryManager {
+  String _mail;
+
+  DeleteCategoryManager(this._mail);
+
+  String get mail => _mail;
+}
+
 class AddCategoryWorker {
   ObjectState _worker;
 
@@ -151,6 +185,13 @@ class AddCategoryWorker {
   ObjectState get worker => _worker;
 }
 
+class DeleteCategoryWorker {
+  String _mail;
+
+  DeleteCategoryWorker(this._mail);
+
+  String get mail => _mail;
+}
 
 class SetCategoryBusinessId {
   String _businessId;
@@ -187,8 +228,16 @@ CategoryState categoryReducer(CategoryState state, action) {
     categoryState.manager.add(action.manager);
     return categoryState;
   }
+  if (action is DeleteCategoryManager) {
+    categoryState.manager.removeWhere((element) => element.mail == action.mail);
+    return categoryState;
+  }
   if (action is AddCategoryWorker) {
     categoryState.worker.add(action.worker);
+    return categoryState;
+  }
+  if (action is DeleteCategoryWorker) {
+    categoryState.worker.removeWhere((element) => element.mail == action.mail);
     return categoryState;
   }
   if (action is SetCategoryBusinessId) {
@@ -212,7 +261,11 @@ CategoryState categoryReducer(CategoryState state, action) {
     categoryState = action.categoryState;
     return categoryState;
   }
-  if (action is CategoryInviteResponse) {
+  if (action is CategoryInviteManagerResponse) {
+    categoryState = action.categoryState;
+    return categoryState;
+  }
+  if (action is CategoryInviteWorkerResponse) {
     categoryState = action.categoryState;
     return categoryState;
   }

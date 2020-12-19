@@ -73,7 +73,7 @@ class CategoryRequestService implements EpicClass<AppState> {
 class CategoryInviteManagerService implements EpicClass<AppState> {
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    return actions.whereType<AddCategoryManager>().asyncMap((event) async {
+    return actions.whereType<CategoryInviteManager>().asyncMap((event) async {
       // ObjectState manager = event.manager;
       // FirebaseFirestore.instance.collection("business").doc(store.state.business.id_firestore).collection("category").doc(store.state.category.id).update({
       //   "manager": FieldValue.arrayUnion([manager])
@@ -88,7 +88,7 @@ class CategoryInviteManagerService implements EpicClass<AppState> {
 class CategoryInviteWorkerService implements EpicClass<AppState> {
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    return actions.whereType<AddCategoryWorker>().asyncMap((event) async {
+    return actions.whereType<CategoryInviteWorker>().asyncMap((event) async {
       // ObjectState worker = event.worker;
       // FirebaseFirestore.instance.collection("business").doc(store.state.business.id_firestore).collection("category").doc(store.state.category.id).update({
       //   "worker": FieldValue.arrayUnion([worker])

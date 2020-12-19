@@ -88,7 +88,7 @@ class BusinessState {
       thumbnail: "",
       logo: "",
       draft: true,
-      business_type: [ObjectState()],
+      business_type: [],
       description: "",
       id_firestore: "",
       salesman: ObjectState(),
