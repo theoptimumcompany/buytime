@@ -487,7 +487,7 @@ class LoginState extends State<Login> {
                                                     fontFamily: BuytimeTheme.FontFamily,
                                                     color: Colors.black,
                                                     fontWeight: FontWeight.w600,
-                                                    fontSize: 16
+                                                    fontSize: SizeConfig.safeBlockHorizontal * 3
                                                 ),
                                               ),
                                             ),
@@ -496,7 +496,7 @@ class LoginState extends State<Login> {
                                         ///Email address
                                         Container(
                                           margin: EdgeInsets.only(top: 10.0),
-                                          height: SizeConfig.safeBlockHorizontal * 16,
+                                          height: SizeConfig.safeBlockHorizontal * 14,
                                           child: TextFormField(
                                             controller: _emailController,
                                             textAlign: TextAlign.start,
@@ -542,8 +542,8 @@ class LoginState extends State<Login> {
                                         ),
                                         ///Password
                                         Container(
-                                          margin: EdgeInsets.only(top: SizeConfig.safeBlockHorizontal * 2),
-                                          height: SizeConfig.safeBlockHorizontal * 16,
+                                          margin: EdgeInsets.only(top: SizeConfig.safeBlockHorizontal * 1.5),
+                                          height: SizeConfig.safeBlockHorizontal * 14,
                                           child: TextFormField(
                                             controller: _passwordController,
                                             textAlign: TextAlign.start,
@@ -607,7 +607,8 @@ class LoginState extends State<Login> {
                                             responseMessage,
                                             style: TextStyle(
                                                 color: _success != null ? _success ? Colors.greenAccent : Colors.redAccent : Colors.redAccent,
-                                              fontWeight: FontWeight.bold
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: SizeConfig.safeBlockHorizontal * 3
                                             ),
                                           ),
                                         ),

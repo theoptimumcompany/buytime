@@ -297,6 +297,73 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
+                        SizeConfig.screenHeight < 537 ?
+                        Column(
+                          children: [
+                            ///Sign up
+                            Container(
+                                width: media.width * .7,
+                                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, bottom: SizeConfig.safeBlockVertical * 1),
+                                child: FadeTransition(
+                                  opacity: _animation3,
+                                  child: RaisedButton(
+                                    onPressed: () {
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => Registration()),);
+                                    },
+                                    textColor: BuytimeTheme.TextWhite,
+                                    color: BuytimeTheme.UserPrimary,
+                                    padding: EdgeInsets.all(media.width * 0.03),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: new BorderRadius.circular(5),
+                                    ),
+                                    child: Text(
+                                      "Inizia Il Mio Soggiorno",
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontFamily: 'Roboto',
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                )),
+                            ///Sign in
+                            Container(
+                                width: media.width * .7,
+                                child: FadeTransition(
+                                  opacity: _animation3,
+                                  child: RaisedButton(
+                                    /*onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => BusinessData()),
+                                    );
+                                  },*/
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => Login()),
+                                      );
+                                    },
+                                    textColor: BuytimeTheme.UserPrimary.withOpacity(0.3),
+                                    color: Colors.white,
+                                    padding: EdgeInsets.all(media.width * 0.03),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: new BorderRadius.circular(5),
+                                    ),
+                                    child: Text(
+                                      "Riloggati",
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontFamily: 'Roboto',
+                                          fontWeight: FontWeight.w500,
+                                          color: BuytimeTheme.UserPrimary
+                                      ),
+                                    ),
+                                  ),
+                                )),
+                          ],
+                        ) :
                         Column(
                           children: [
                             ///Sign up

@@ -484,7 +484,7 @@ class RegistrationState extends State<Registration> {
                                                   fontFamily: BuytimeTheme.FontFamily,
                                                   color: Colors.black,
                                                   fontWeight: FontWeight.w600,
-                                                  fontSize: 16
+                                                  fontSize: SizeConfig.safeBlockHorizontal * 3
                                               ),
                                             ),
                                           ),
@@ -493,7 +493,7 @@ class RegistrationState extends State<Registration> {
                                       ///Email address
                                       Container(
                                         margin: EdgeInsets.only(top: 10.0),
-                                        height: SizeConfig.safeBlockHorizontal * 16,
+                                        height: SizeConfig.safeBlockHorizontal * 14,
                                         child: TextFormField(
                                           controller: _emailController,
                                           textAlign: TextAlign.start,
@@ -539,8 +539,8 @@ class RegistrationState extends State<Registration> {
                                       ),
                                       ///Password
                                       Container(
-                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockHorizontal * 2),
-                                        height: SizeConfig.safeBlockHorizontal * 16,
+                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockHorizontal * 1.5),
+                                        height: SizeConfig.safeBlockHorizontal * 14,
                                         child: TextFormField(
                                           controller: _passwordController,
                                           textAlign: TextAlign.start,
@@ -604,7 +604,8 @@ class RegistrationState extends State<Registration> {
                                           responseMessage,
                                           style: TextStyle(
                                               color: _success != null ? _success ? Colors.greenAccent : Colors.redAccent : Colors.redAccent,
-                                              fontWeight: FontWeight.bold
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: SizeConfig.safeBlockHorizontal * 3
                                           ),
                                         ),
                                       ),
