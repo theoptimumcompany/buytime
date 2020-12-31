@@ -458,14 +458,14 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
                   ),
                 ],
               ),
-              floatingActionButton: FloatingActionButton(
-                onPressed: () {
-                  print("add worker/manager");
-                  _modalAddPerson(context);
-                },
-                child: Icon(Icons.add),
-                backgroundColor: BuytimeTheme.Secondary,
-              ),
+              // floatingActionButton: FloatingActionButton(
+              //   onPressed: () {
+              //     print("add worker/manager");
+              //     _modalAddPerson(context);
+              //   },
+              //   child: Icon(Icons.add),
+              //   backgroundColor: BuytimeTheme.Secondary,
+              // ),
               body: Column(
                 children: [
                   Padding(
@@ -528,126 +528,126 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
                       ],
                     ),
                   ),
-                  Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      border: Border(
-                        top: BorderSide(
-                          color: BuytimeTheme.DividerGrey,
-                          width: 4.0,
-                        ),
-                        bottom: BorderSide(
-                          color: BuytimeTheme.DividerGrey,
-                          width: 2.0,
-                        ),
-                      ),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                children: [
-                                  Container(
-                                    child: Icon(
-                                      Icons.account_balance_rounded,
-                                      size: 24,
-                                    ),
-                                  ),
-                                  Container(
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(left: 5.0),
-                                      child: Text(
-                                        "Managers",
-                                        textAlign: TextAlign.start,
-                                        style: TextStyle(
-                                          color: BuytimeTheme.TextDark,
-                                          fontSize: media.height * 0.023,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          Wrap(
-                            alignment: WrapAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(right: 10.0),
-                                child: InputChip(
-                                  selected: false,
-                                  label: Text(snapshot.business.owner.name + " " + snapshot.business.owner.surname),
-                                ),
-                              ),
-                              snapshot.business.salesman.name != null && snapshot.business.salesman.name != ''
-                                  ? Padding(
-                                      padding: const EdgeInsets.only(right: 10.0),
-                                      child: InputChip(
-                                        selected: false,
-                                        label: Text(snapshot.business.salesman.name + " " + snapshot.business.salesman.surname),
-                                      ),
-                                    )
-                                  : Container(),
-                              managerList.length > 0 && managerList != null ? Wrap(children: _buildChipList(managerList, "manager")) : Container()
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Container(
-                    width: double.infinity,
-                    child: Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                children: [
-                                  Container(
-                                    child: Icon(
-                                      Icons.room_service,
-                                      size: 24,
-                                    ),
-                                  ),
-                                  Container(
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(left: 5.0),
-                                      child: Text(
-                                        "Workers",
-                                        textAlign: TextAlign.start,
-                                        style: TextStyle(
-                                          color: BuytimeTheme.TextDark,
-                                          fontSize: media.height * 0.023,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          workerList.length > 0 && workerList != null
-                              ? Wrap(alignment: WrapAlignment.start, children: _buildChipList(workerList, "worker"))
-                              : Padding(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: Container(
-                                    child: Text("Non ci sono lavoratori assegnati a questa categoria."),
-                                  ),
-                                )
-                        ],
-                      ),
-                    ),
-                  ),
+                  // Container(
+                  //   width: double.infinity,
+                  //   decoration: BoxDecoration(
+                  //     border: Border(
+                  //       top: BorderSide(
+                  //         color: BuytimeTheme.DividerGrey,
+                  //         width: 4.0,
+                  //       ),
+                  //       bottom: BorderSide(
+                  //         color: BuytimeTheme.DividerGrey,
+                  //         width: 2.0,
+                  //       ),
+                  //     ),
+                  //   ),
+                  //   child: Padding(
+                  //     padding: const EdgeInsets.all(20.0),
+                  //     child: Column(
+                  //       children: [
+                  //         Row(
+                  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //           children: [
+                  //             Row(
+                  //               children: [
+                  //                 Container(
+                  //                   child: Icon(
+                  //                     Icons.account_balance_rounded,
+                  //                     size: 24,
+                  //                   ),
+                  //                 ),
+                  //                 Container(
+                  //                   child: Padding(
+                  //                     padding: const EdgeInsets.only(left: 5.0),
+                  //                     child: Text(
+                  //                       "Managers",
+                  //                       textAlign: TextAlign.start,
+                  //                       style: TextStyle(
+                  //                         color: BuytimeTheme.TextDark,
+                  //                         fontSize: media.height * 0.023,
+                  //                         fontWeight: FontWeight.w500,
+                  //                       ),
+                  //                     ),
+                  //                   ),
+                  //                 ),
+                  //               ],
+                  //             ),
+                  //           ],
+                  //         ),
+                  //         Wrap(
+                  //           alignment: WrapAlignment.start,
+                  //           children: [
+                  //             Padding(
+                  //               padding: const EdgeInsets.only(right: 10.0),
+                  //               child: InputChip(
+                  //                 selected: false,
+                  //                 label: Text(snapshot.business.owner.name + " " + snapshot.business.owner.surname),
+                  //               ),
+                  //             ),
+                  //             snapshot.business.salesman.name != null && snapshot.business.salesman.name != ''
+                  //                 ? Padding(
+                  //                     padding: const EdgeInsets.only(right: 10.0),
+                  //                     child: InputChip(
+                  //                       selected: false,
+                  //                       label: Text(snapshot.business.salesman.name + " " + snapshot.business.salesman.surname),
+                  //                     ),
+                  //                   )
+                  //                 : Container(),
+                  //             managerList.length > 0 && managerList != null ? Wrap(children: _buildChipList(managerList, "manager")) : Container()
+                  //           ],
+                  //         ),
+                  //       ],
+                  //     ),
+                  //   ),
+                  // ),
+                  // Container(
+                  //   width: double.infinity,
+                  //   child: Padding(
+                  //     padding: const EdgeInsets.all(20.0),
+                  //     child: Column(
+                  //       children: [
+                  //         Row(
+                  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //           children: [
+                  //             Row(
+                  //               children: [
+                  //                 Container(
+                  //                   child: Icon(
+                  //                     Icons.room_service,
+                  //                     size: 24,
+                  //                   ),
+                  //                 ),
+                  //                 Container(
+                  //                   child: Padding(
+                  //                     padding: const EdgeInsets.only(left: 5.0),
+                  //                     child: Text(
+                  //                       "Workers",
+                  //                       textAlign: TextAlign.start,
+                  //                       style: TextStyle(
+                  //                         color: BuytimeTheme.TextDark,
+                  //                         fontSize: media.height * 0.023,
+                  //                         fontWeight: FontWeight.w500,
+                  //                       ),
+                  //                     ),
+                  //                   ),
+                  //                 ),
+                  //               ],
+                  //             ),
+                  //           ],
+                  //         ),
+                  //         workerList.length > 0 && workerList != null
+                  //             ? Wrap(alignment: WrapAlignment.start, children: _buildChipList(workerList, "worker"))
+                  //             : Padding(
+                  //                 padding: const EdgeInsets.all(10.0),
+                  //                 child: Container(
+                  //                   child: Text("Non ci sono lavoratori assegnati a questa categoria."),
+                  //                 ),
+                  //               )
+                  //       ],
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               ),
             ),
