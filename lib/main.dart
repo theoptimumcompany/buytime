@@ -102,6 +102,7 @@ void main() {
       responsible_person_name: "",
       responsible_person_surname: "",
       responsible_person_email: "",
+      phone_number: '',
       email: "",
       VAT: "",
       street: "",

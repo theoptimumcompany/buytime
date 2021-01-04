@@ -37,62 +37,64 @@ class UI_U_TabsState extends State<UI_U_Tabs> {
           visibleDrawer =
               snapshot.user != null && (snapshot.user.getRole() != Role.user) ? true : false;
 
-          return WillPopScope(
+          return Scaffold(
+            drawerEnableOpenDragGesture: false,
+            key: _drawerKeyTabs,
+            appBar: BuyTimeAppbarUser(
+              children: [
+                (visibleDrawer
+                    ? IconButton(
+                  icon: const Icon(
+                    Icons.menu,
+                    color: Colors.white,
+                    size: 30.0,
+                  ),
+                  tooltip: 'Show menu',
+                  onPressed: () {
+                    _drawerKeyTabs.currentState.openDrawer();
+                  },
+                )
+                    : Container(height: media.height * 0.07, width: media.height * 0.07)),
+                kIsWeb
+                    ? Image.asset('assets/img/brand/logo_appbar.png',
+                    height: media.height * 0.065)
+                    : SvgPicture.asset('assets/img/brand/logo_appbar.svg',
+                    height: media.height * 0.065),
+                Container(height: media.height * 0.07, width: media.height * 0.07)
+              ],
+            ),
+            drawer: MenuDrawer(
+              media: media,
+              managerDrawer: false,
+            ),
+            body: IndexedStack(
+              index: _currentIndex,
+              children: [
+                for (final tabItem in UserTabNavigationItem.items) tabItem.page,
+              ],
+            ),
+            bottomNavigationBar: BottomNavigationBar(
+              backgroundColor: Color.fromRGBO(1, 159, 224, 1.0),
+              currentIndex: _currentIndex,
+              selectedItemColor: Colors.white,
+              unselectedItemColor: Colors.black,
+              onTap: (int index) => setState(() => _currentIndex = index),
+              items: [
+                for (final tabItem in UserTabNavigationItem.items)
+                  BottomNavigationBarItem(
+                    icon: tabItem.icon,
+                    title: tabItem.title,
+                  )
+              ],
+            ),
+          );
+
+          /*WillPopScope(
               onWillPop: () async {
                 FocusScope.of(context).unfocus();
                 return false;
               },
-              child: Scaffold(
-                drawerEnableOpenDragGesture: false,
-                key: _drawerKeyTabs,
-                appBar: BuyTimeAppbarUser(
-                  children: [
-                    (visibleDrawer
-                        ? IconButton(
-                            icon: const Icon(
-                              Icons.menu,
-                              color: Colors.white,
-                              size: 30.0,
-                            ),
-                            tooltip: 'Show menu',
-                            onPressed: () {
-                              _drawerKeyTabs.currentState.openDrawer();
-                            },
-                          )
-                        : Container(height: media.height * 0.07, width: media.height * 0.07)),
-                    kIsWeb
-                        ? Image.asset('assets/img/brand/logo_appbar.png',
-                            height: media.height * 0.065)
-                        : SvgPicture.asset('assets/img/brand/logo_appbar.svg',
-                            height: media.height * 0.065),
-                    Container(height: media.height * 0.07, width: media.height * 0.07)
-                  ],
-                ),
-                drawer: MenuDrawer(
-                  media: media,
-                  managerDrawer: false,
-                ),
-                body: IndexedStack(
-                  index: _currentIndex,
-                  children: [
-                    for (final tabItem in UserTabNavigationItem.items) tabItem.page,
-                  ],
-                ),
-                bottomNavigationBar: BottomNavigationBar(
-                  backgroundColor: Color.fromRGBO(1, 159, 224, 1.0),
-                  currentIndex: _currentIndex,
-                  selectedItemColor: Colors.white,
-                  unselectedItemColor: Colors.black,
-                  onTap: (int index) => setState(() => _currentIndex = index),
-                  items: [
-                    for (final tabItem in UserTabNavigationItem.items)
-                      BottomNavigationBarItem(
-                        icon: tabItem.icon,
-                        title: tabItem.title,
-                      )
-                  ],
-                ),
-              ));
+              child: )*/
         });
   }
 }

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:BuyTime/UI/user/landing/UI_U_Landing.dart';
 import 'package:BuyTime/utils/size_config.dart';
 import 'package:BuyTime/utils/theme/buytime_theme.dart';
 import 'package:BuyTime/reblox/model/object_state.dart';
@@ -422,7 +423,7 @@ class LoginState extends State<Login> {
         appBar: AppBar(
           leading: IconButton(
             icon: Icon(
-              Icons.arrow_back_ios,
+              Icons.keyboard_arrow_left,
               color: BuytimeTheme.UserPrimary,
             ),
             onPressed: (){
@@ -853,7 +854,7 @@ class LoginState extends State<Login> {
       StoreProvider.of<AppState>(context).dispatch(new UpdateUserField(token));
       setState(() {
         _success = true;
-        Navigator.push(context, MaterialPageRoute(builder: (context) => UI_U_Tabs()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => Landing()));
       });
     }else{
       setState(() {

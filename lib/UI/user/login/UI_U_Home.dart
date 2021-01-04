@@ -317,7 +317,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                       borderRadius: new BorderRadius.circular(5),
                                     ),
                                     child: Text(
-                                      "Inizia Il Mio Soggiorno",
+                                      "Inizia Il Tuo Soggiorno",
                                       style: TextStyle(
                                         fontSize: 18,
                                         fontFamily: 'Roboto',
@@ -383,7 +383,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                       borderRadius: new BorderRadius.circular(5),
                                     ),
                                     child: Text(
-                                      "Inizia Il Mio Soggiorno",
+                                      "Inizia Il Tuo Soggiorno",
                                       style: TextStyle(
                                         fontSize: 18,
                                         fontFamily: 'Roboto',

@@ -8,6 +8,7 @@ class BusinessState {
   String responsible_person_name;
   String responsible_person_surname;
   String responsible_person_email;
+  String phone_number;
   String email;
   String VAT;
   String street;
@@ -44,6 +45,7 @@ class BusinessState {
     @required this.responsible_person_name,
     @required this.responsible_person_surname,
     @required this.responsible_person_email,
+    @required this.phone_number,
     @required this.email,
     @required this.VAT,
     @required this.street,
@@ -74,6 +76,7 @@ class BusinessState {
       responsible_person_name: "",
       responsible_person_surname: "",
       responsible_person_email: "",
+      phone_number: '',
       email: "",
       VAT: "",
       street: "",
@@ -104,6 +107,7 @@ class BusinessState {
     this.responsible_person_name = state.responsible_person_name;
     this.responsible_person_surname = state.responsible_person_surname;
     this.responsible_person_email = state.responsible_person_email;
+    this.phone_number = state.phone_number;
     this.email = state.email;
     this.VAT = state.VAT;
     this.street = state.street;
@@ -133,6 +137,7 @@ class BusinessState {
     String responsible_person_name,
     String responsible_person_surname,
     String responsible_person_email,
+    String phone_number,
     String email,
     String VAT,
     String street,
@@ -161,6 +166,7 @@ class BusinessState {
       responsible_person_name: responsible_person_name ?? this.responsible_person_name,
       responsible_person_surname: responsible_person_surname ?? this.responsible_person_surname,
       responsible_person_email: responsible_person_email ?? this.responsible_person_email,
+      phone_number: phone_number ?? this.phone_number,
       email: email ?? this.email,
       VAT: VAT ?? this.VAT,
       street: street ?? this.street,
@@ -191,6 +197,7 @@ class BusinessState {
     String responsible_person_name,
     String responsible_person_surname,
     String responsible_person_email,
+    String phone_number,
     String email,
     String VAT,
     String street,
@@ -219,6 +226,7 @@ class BusinessState {
       responsible_person_name: responsible_person_name ?? this.responsible_person_name,
       responsible_person_surname: responsible_person_surname ?? this.responsible_person_surname,
       responsible_person_email: responsible_person_email ?? this.responsible_person_email,
+      phone_number: phone_number ?? this.phone_number,
       email: email ?? this.email,
       VAT: VAT ?? this.VAT,
       street: street ?? this.street,
@@ -249,6 +257,7 @@ class BusinessState {
         responsible_person_name = json['responsible_person_name'],
         responsible_person_surname = json['responsible_person_surname'],
         responsible_person_email = json['responsible_person_email'],
+        phone_number = json['phone_number'] ?? '000 000 0000',
         email = json['email'],
         VAT = json['VAT'],
         street = json['street'],
@@ -283,6 +292,7 @@ class BusinessState {
         'responsible_person_name': responsible_person_name,
         'responsible_person_surname': responsible_person_surname,
         'responsible_person_email': responsible_person_email,
+        'phone_number': phone_number,
         'email': email,
         'VAT': VAT,
         'street': street,

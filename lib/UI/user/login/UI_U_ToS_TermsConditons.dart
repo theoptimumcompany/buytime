@@ -47,7 +47,7 @@ class _TosTermsConditonsState extends State<TosTermsConditons> with WidgetsBindi
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(
-            Icons.arrow_back_ios,
+            Icons.keyboard_arrow_left,
             color: BuytimeTheme.UserPrimary,
           ),
           onPressed: (){

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:BuyTime/UI/user/landing/UI_U_Landing.dart';
 import 'package:BuyTime/utils/theme/buytime_theme.dart';
 import 'package:BuyTime/UI/user/UI_U_Tabs.dart';
 import 'package:BuyTime/UI/user/order/UI_U_OrderDetail.dart';
@@ -337,7 +338,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
         StoreProvider.of<AppState>(context).dispatch(new UpdateUserField(token));
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => UI_U_Tabs()),
+          MaterialPageRoute(builder: (context) => Landing()),
         );
       } else {
         Navigator.push(

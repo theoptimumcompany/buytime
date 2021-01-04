@@ -70,6 +70,7 @@ class BusinessRequestService implements EpicClass<AppState> {
           responsible_person_name: snapshot.get('responsible_person_name'),
           responsible_person_surname: snapshot.get('responsible_person_surname'),
           responsible_person_email: snapshot.get('responsible_person_email'),
+          phone_number: snapshot.get('phone_number') ?? '000 000 0000',
           email: snapshot.get('email'),
           VAT: snapshot.get('VAT'),
           street: snapshot.get('street'),
