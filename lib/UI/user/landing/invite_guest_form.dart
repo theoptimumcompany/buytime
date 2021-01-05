@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:BuyTime/UI/user/booking/UI_U_BookingConfirmation.dart';
 import 'package:BuyTime/utils/size_config.dart';
 import 'package:BuyTime/utils/theme/buytime_theme.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +28,7 @@ class _InviteGuestFormState extends State<InviteGuestForm> {
         actions: [
           IconButton(
             icon: Icon(
-              Icons.info_outline,
+              Icons.help_outline,
               color: Colors.white,
             ),
             onPressed: (){
@@ -85,7 +86,7 @@ class _InviteGuestFormState extends State<InviteGuestForm> {
                           Container(
                             margin: EdgeInsets.only(top: 50.0, left: SizeConfig.safeBlockHorizontal * 10, right: SizeConfig.safeBlockHorizontal * 10),
                             child: Text(
-                              'Inserisci il tuo Booking Code',
+                              'Enter your booking code',
                               style: TextStyle(
                                   fontFamily: BuytimeTheme.FontFamily,
                                   color: Colors.white,
@@ -121,7 +122,7 @@ class _InviteGuestFormState extends State<InviteGuestForm> {
                                 ),
                                 labelText: currentFocus.hasFocus ? '' : 'Booking Code',
                                 //hintText: 'Booking Code',
-                                helperText: 'Il tuo Booking Code è un codice a ## cifre, la puoi trovare in una delle tue email e nelle notifiche che il tuo hotel ti ha inviato. ',
+                                helperText: 'Your booking code is a ## digits code included in the email and text notification the hotel sent you',
                                 //hintText: "email *",
                                 //hintStyle: TextStyle(color: Color(0xff666666)),
                                 labelStyle: TextStyle(
@@ -147,6 +148,7 @@ class _InviteGuestFormState extends State<InviteGuestForm> {
                               ),
                               onEditingComplete: (){
                                 debugPrint('done');
+                                ///Ripple
                                 showDialog(
                                     context: context,
                                     builder: (context) {
@@ -183,6 +185,10 @@ class _InviteGuestFormState extends State<InviteGuestForm> {
 
                                 Timer(Duration(milliseconds: 5000), (){
                                   Navigator.of(context).pop();
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => BookingConfirmation()),
+                                  );
                                 });
 
                               },

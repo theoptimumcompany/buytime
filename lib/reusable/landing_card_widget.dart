@@ -24,7 +24,7 @@ class _LandingCardWidgetState extends State<LandingCardWidget> {
     return Container(
       height: SizeConfig.safeBlockVertical * 25,
       width: SizeConfig.safeBlockHorizontal * 50,
-      margin: EdgeInsets.all(SizeConfig.safeBlockVertical * 2),
+      //margin: EdgeInsets.all(SizeConfig.safeBlockVertical * 2),
       decoration: BoxDecoration(
         color: Colors.black,
           borderRadius: BorderRadius.all(Radius.circular(10)),

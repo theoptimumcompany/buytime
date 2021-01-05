@@ -1,7 +1,9 @@
 import 'dart:core';
 import 'package:BuyTime/UI/management/business/UI_C_business_list.dart';
 import 'package:BuyTime/UI/user/UI_U_Tabs.dart';
+import 'package:BuyTime/UI/user/booking/UI_U_PastBooking.dart';
 import 'package:BuyTime/UI/user/business/UI_U_business_list.dart';
+import 'package:BuyTime/UI/user/booking/UI_U_PastBooking.dart';
 import 'package:BuyTime/UI/user/landing/invite_guest_form.dart';
 import 'package:BuyTime/UI/user/landing/test.dart';
 import 'package:BuyTime/UI/user/login/UI_U_Home.dart';
@@ -26,6 +28,7 @@ import 'package:BuyTime/reusable/landing_card_widget.dart';
 import 'package:BuyTime/reusable/menu/UI_M_business_list_drawer.dart';
 import 'package:BuyTime/utils/globals.dart';
 import 'package:BuyTime/utils/size_config.dart';
+import 'package:BuyTime/utils/theme/buytime_config.dart';
 import 'package:BuyTime/utils/theme/buytime_theme.dart';
 import 'package:animations/animations.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -48,8 +51,8 @@ class LandingState extends State<Landing> {
   @override
   void initState() {
     super.initState();
-    cards.add(LandingCardWidget('Inserisci il Booking Code', 'Inizia il tuo viaggio', 'assets/img/booking_code.png', null));
-    cards.add(LandingCardWidget('About Buytime', 'Scopri la nostra rete', 'assets/img/beach_girl.png', null));
+    cards.add(LandingCardWidget('Enter booking bode', 'Start your journey', 'assets/img/booking_code.png', null));
+    cards.add(LandingCardWidget('About Buytime', 'Discover our network', 'assets/img/beach_girl.png', null));
   }
 
   @override
@@ -93,7 +96,7 @@ class LandingState extends State<Landing> {
                                         width: double.infinity,
                                         height: double.infinity,
                                         child: Text(
-                                          'Benvenuto su Buytime',
+                                          'Welcome to Buytime',
                                           style: TextStyle(
                                               fontFamily: BuytimeTheme.FontFamily,
                                               color: Colors.white,
@@ -134,9 +137,8 @@ class LandingState extends State<Landing> {
                               child: Container(
                                   margin: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 8, right: SizeConfig.safeBlockHorizontal * 8),
                                   child: Text(
-                                    'Quando prenoti con un Buytime Enabled® Hotel, '
-                                        'ti verrà concesso l\'accesso alle strutture del tuo hotel tramite l\'app Buytime.\n\n'
-                                        'Prenota massaggi e richiedi un drink con due soli tocchi.',
+                                    'When you book with a Buytime Enabled® Hotel, you\’ll be granted access to your hotel facilities via Buytime app.\n\n'
+                                        'Book massages and request a drink with just two taps.',
                                     style: TextStyle(
                                         fontFamily: BuytimeTheme.FontFamily,
                                         color: Colors.white,
@@ -172,7 +174,7 @@ class LandingState extends State<Landing> {
                                       itemBuilder: (context, index){
                                         LandingCardWidget landingCard = cards.elementAt(index);
                                         return Container(
-                                          margin: EdgeInsets.all(2.5),
+                                          margin: EdgeInsets.all(10),
                                           child: _OpenContainerWrapper(
                                             index: index,
                                             closedBuilder: (BuildContext _, VoidCallback openContainer) {
@@ -193,13 +195,16 @@ class LandingState extends State<Landing> {
                                       color: Colors.transparent,
                                       child: InkWell(
                                           onTap: (){
-
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(builder: (context) => PastBooking()),
+                                            );
                                           },
                                           borderRadius: BorderRadius.all(Radius.circular(5.0)),
                                           child: Container(
                                             padding: EdgeInsets.all(5.0),
                                             child: Text(
-                                              'CRONOLOGIA BOOKINGS',
+                                              'VIEW PAST BOOKINGS',
                                               style: TextStyle(
                                                   fontFamily: BuytimeTheme.FontFamily,
                                                   color: Color(0xff207cc3),
@@ -229,7 +234,7 @@ class LandingState extends State<Landing> {
                                       color: Colors.transparent,
                                       child: InkWell(
                                         onTap: () async{
-                                          String url = '000 000 0000'.trim();
+                                          String url = BuytimeConfig.FlaviosNumber.trim();
                                           debugPrint('Restaurant phonenumber: ' + url);
                                           if (await canLaunch('tel:$url')) {
                                             await launch('tel:$url');
@@ -238,8 +243,8 @@ class LandingState extends State<Landing> {
                                           }
                                         },
                                         child: CustomBottomButtonWidget(
-                                            'Contattaci',
-                                            'Hai domande?',
+                                            'Contact Us',
+                                            'Have any question?',
                                             Icon(
                                               Icons.call,
                                               color: Colors.grey,
@@ -359,7 +364,7 @@ class _OpenContainerWrapper extends StatelessWidget {
       },
       onClosed: onClosed,
       closedShape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(15)),
+        borderRadius: BorderRadius.all(Radius.circular(10)),
       ),
       tappable: false,
       closedBuilder: closedBuilder,

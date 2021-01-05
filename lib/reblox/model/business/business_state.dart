@@ -1,4 +1,5 @@
 import 'package:BuyTime/reblox/model/object_state.dart';
+import 'package:BuyTime/utils/theme/buytime_config.dart';
 import 'package:flutter/foundation.dart';
 
 import '../file/optimum_file_to_upload.dart';
@@ -257,7 +258,7 @@ class BusinessState {
         responsible_person_name = json['responsible_person_name'],
         responsible_person_surname = json['responsible_person_surname'],
         responsible_person_email = json['responsible_person_email'],
-        phone_number = json['phone_number'] ?? '000 000 0000',
+        phone_number = json['phone_number'] ?? BuytimeConfig.FlaviosNumber,
         email = json['email'],
         VAT = json['VAT'],
         street = json['street'],
