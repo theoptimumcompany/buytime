@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:BuyTime/UI/user/booking/UI_U_BookingConfirmation.dart';
+import 'package:BuyTime/UI/user/booking/UI_U_ConfirmBooking.dart';
 import 'package:BuyTime/utils/size_config.dart';
 import 'package:BuyTime/utils/theme/buytime_theme.dart';
 import 'package:flutter/material.dart';
@@ -187,7 +187,7 @@ class _InviteGuestFormState extends State<InviteGuestForm> {
                                   Navigator.of(context).pop();
                                   Navigator.push(
                                     context,
-                                    MaterialPageRoute(builder: (context) => BookingConfirmation()),
+                                    MaterialPageRoute(builder: (context) => ConfirmBooking()),
                                   );
                                 });
 

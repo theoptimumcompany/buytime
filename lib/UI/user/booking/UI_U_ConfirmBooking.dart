@@ -6,14 +6,14 @@ import 'package:BuyTime/utils/theme/buytime_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-class BookingConfirmation extends StatefulWidget {
+class ConfirmBooking extends StatefulWidget {
 
 
   @override
-  _BookingConfirmationState createState() => _BookingConfirmationState();
+  _ConfirmBookingState createState() => _ConfirmBookingState();
 }
 
-class _BookingConfirmationState extends State<BookingConfirmation> {
+class _ConfirmBookingState extends State<ConfirmBooking> {
   TextEditingController bookingCodeController = new TextEditingController();
   @override
   Widget build(BuildContext context) {
