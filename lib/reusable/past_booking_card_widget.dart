@@ -45,7 +45,7 @@ class _PastBookingCardWidgetState extends State<PastBookingCardWidget> {
             width: SizeConfig.safeBlockHorizontal * 50,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(10)),
-                color: Colors.black.withOpacity(.1)
+                color: Colors.black.withOpacity(.2)
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

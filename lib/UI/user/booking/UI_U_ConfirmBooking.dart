@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:BuyTime/UI/user/booking/UI_U_BookingPage.dart';
+import 'package:BuyTime/utils/b_cube_grid_spinner.dart';
 import 'package:BuyTime/utils/size_config.dart';
 import 'package:BuyTime/utils/theme/buytime_theme.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +22,7 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: BuytimeTheme.BackgroundCerulean,
+        brightness: Brightness.dark,
         elevation: 0,
         actions: [
           IconButton(
@@ -148,18 +150,51 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                           ),
                           ///Confirm Booking
                           Container(
-                              width: SizeConfig.safeBlockHorizontal * 50,
+                              width: SizeConfig.safeBlockHorizontal * 55,
                               margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 5, bottom: SizeConfig.safeBlockVertical * 2),
                               child: RaisedButton(
                                 onPressed: () {
-                                  //Navigator.push(context, MaterialPageRoute(builder: (context) => Registration()),);
-                                  /*Timer(Duration(milliseconds: 5000), (){
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return  WillPopScope(
+                                            onWillPop: () async {
+                                              FocusScope.of(context).unfocus();
+                                              return false;
+                                            },
+                                            child: Container(
+                                                height: SizeConfig.safeBlockVertical * 100,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white.withOpacity(.8),
+                                                ),
+                                                child: Center(
+                                                  child: Column(
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    children: <Widget>[
+                                                      Container(
+                                                        width: SizeConfig.safeBlockVertical * 20,
+                                                        height: SizeConfig.safeBlockVertical * 20,
+                                                        child: Center(
+                                                          child: BCubeGridSpinner(
+                                                            color: Colors.transparent,
+                                                            size: SizeConfig.safeBlockVertical * 15,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                )
+                                            )
+                                        );
+                                      });
+
+                                  Timer(Duration(milliseconds: 10000), (){
                                     Navigator.of(context).pop();
-                                    Navigator.push(
+                                    /*Navigator.push(
                                       context,
-                                      MaterialPageRoute(builder: (context) => BookingPage()),
-                                    );
-                                  });*/
+                                      MaterialPageRoute(builder: (context) => ConfirmBooking()),
+                                    );*/
+                                  });
                                 },
                                 textColor: BuytimeTheme.TextWhite,
                                 color: BuytimeTheme.UserPrimary,
@@ -193,8 +228,8 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                                         'SOMETHING ISN\'T RIGHT',
                                         style: TextStyle(
                                             fontFamily: BuytimeTheme.FontFamily,
-                                            color: Color(0xff207cc3),
-                                            fontWeight: FontWeight.w400,
+                                            color: BuytimeTheme.UserPrimary,
+                                            fontWeight: FontWeight.bold,
                                             fontSize: SizeConfig.safeBlockHorizontal * 4
                                         ),
                                       ),

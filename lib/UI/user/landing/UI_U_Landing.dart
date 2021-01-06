@@ -168,23 +168,30 @@ class LandingState extends State<Landing> {
                                   child: Container(
                                     margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 4),
                                     alignment: Alignment.centerLeft,
-                                    child: ListView.builder(
+                                    child: CustomScrollView(
+                                      shrinkWrap: true,
                                       scrollDirection: Axis.horizontal,
-                                      itemCount: cards.length,
-                                      itemBuilder: (context, index){
-                                        LandingCardWidget landingCard = cards.elementAt(index);
-                                        return Container(
-                                          margin: EdgeInsets.all(10),
-                                          child: _OpenContainerWrapper(
-                                            index: index,
-                                            closedBuilder: (BuildContext _, VoidCallback openContainer) {
-                                              landingCard.callback = openContainer;
-                                              return landingCard;
+                                      slivers: [
+                                        SliverList(
+                                          delegate: SliverChildBuilderDelegate(
+                                                (context, index){
+                                                  LandingCardWidget landingCard = cards.elementAt(index);
+                                                  return Container(
+                                                    margin: EdgeInsets.all(10),
+                                                    child: _OpenContainerWrapper(
+                                                      index: index,
+                                                      closedBuilder: (BuildContext _, VoidCallback openContainer) {
+                                                        landingCard.callback = openContainer;
+                                                        return landingCard;
+                                                      },
+                                                    ),
+                                                  );
                                             },
+                                            childCount: cards.length,
                                           ),
-                                        );
-                                      },
-                                    ),
+                                        ),
+                                      ],
+                                    )
                                   ),
                                 ),
                                 ///Booking history
@@ -207,8 +214,8 @@ class LandingState extends State<Landing> {
                                               'VIEW PAST BOOKINGS',
                                               style: TextStyle(
                                                   fontFamily: BuytimeTheme.FontFamily,
-                                                  color: Color(0xff207cc3),
-                                                  fontWeight: FontWeight.w400,
+                                                  color: BuytimeTheme.UserPrimary,
+                                                  fontWeight: FontWeight.bold,
                                                   fontSize: SizeConfig.safeBlockHorizontal * 4
                                               ),
                                             ),
@@ -230,6 +237,7 @@ class LandingState extends State<Landing> {
                                   flex: 1,
                                   child: Container(
                                     color: Colors.white,
+                                    height: 60,
                                     child: Material(
                                       color: Colors.transparent,
                                       child: InkWell(
@@ -247,7 +255,7 @@ class LandingState extends State<Landing> {
                                             'Have any question?',
                                             Icon(
                                               Icons.call,
-                                              color: Colors.grey,
+                                              color: Colors.greenAccent,
                                             )
                                         ),
                                       ),
@@ -259,6 +267,8 @@ class LandingState extends State<Landing> {
                                   flex: 1,
                                   child: Container(
                                     color: Colors.white,
+                                    height: 60,
+                                    padding: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 1),
                                     child: Material(
                                       color: Colors.transparent,
                                       child: InkWell(
@@ -318,7 +328,7 @@ class LandingState extends State<Landing> {
                                               '',
                                               Icon(
                                                 Icons.logout,
-                                                color: Colors.grey,
+                                                color: Colors.redAccent,
                                               )
                                           )
                                       ),

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:BuyTime/UI/user/booking/UI_U_BookingPage.dart';
 import 'package:BuyTime/reusable/custom_bottom_button_widget.dart';
 import 'package:BuyTime/reusable/past_booking_card_widget.dart';
+import 'package:BuyTime/utils/b_cube_grid_spinner.dart';
 import 'package:BuyTime/utils/size_config.dart';
 import 'package:BuyTime/utils/theme/buytime_config.dart';
 import 'package:BuyTime/utils/theme/buytime_theme.dart';
@@ -50,6 +51,7 @@ class _PastBookingState extends State<PastBooking> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: BuytimeTheme.BackgroundCerulean,
+        brightness: Brightness.dark,
         elevation: 0,
         /*actions: [
           IconButton(
@@ -109,7 +111,7 @@ class _PastBookingState extends State<PastBooking> {
                   children: [
                     ///Card list
                     Expanded(
-                      flex: 8,
+                      flex: 7,
                       child: showList ?
                         Container(
                         margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 0),
@@ -117,23 +119,28 @@ class _PastBookingState extends State<PastBooking> {
                         child: MediaQuery.removePadding(
                             removeTop: true,
                             context: context,
-                            child: ListView.builder(
-                              scrollDirection: Axis.vertical,
-                              itemCount: cards.length,
+                            child: CustomScrollView(
                               shrinkWrap: true,
-                              itemBuilder: (context, index){
-                                PastBookingCardWidget pqstBooking = cards.elementAt(index);
-                                return Container(
-                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 8, right: SizeConfig.safeBlockHorizontal * 8, bottom: SizeConfig.safeBlockVertical * 3),
-                                  child: _OpenContainerWrapper(
-                                    index: index,
-                                    closedBuilder: (BuildContext _, VoidCallback openContainer) {
-                                      pqstBooking.callback = openContainer;
-                                      return pqstBooking;
+                              slivers: [
+                                SliverList(
+                                  delegate: SliverChildBuilderDelegate(
+                                        (context, index){
+                                      PastBookingCardWidget pqstBooking = cards.elementAt(index);
+                                      return Container(
+                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 8, right: SizeConfig.safeBlockHorizontal * 8, bottom: SizeConfig.safeBlockVertical * 3),
+                                        child: _OpenContainerWrapper(
+                                          index: index,
+                                          closedBuilder: (BuildContext _, VoidCallback openContainer) {
+                                            pqstBooking.callback = openContainer;
+                                            return pqstBooking;
+                                          },
+                                        ),
+                                      );
                                     },
+                                    childCount: cards.length,
                                   ),
-                                );
-                              },
+                                ),
+                              ],
                             )
                         ),
                       ) :
@@ -163,13 +170,13 @@ class _PastBookingState extends State<PastBooking> {
                                       'Would you want to know more about Buytime network? ',
                                   style: TextStyle(
                                       fontFamily: BuytimeTheme.FontFamily,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w400,
+                                      color: Colors.black54,
+                                      fontWeight: FontWeight.bold,
                                       fontSize: 18//SizeConfig.safeBlockHorizontal * 4
                                   ),
                                 )
                             ),
-                          )
+                          ),
                         ],
                       )
                     ),
@@ -178,6 +185,8 @@ class _PastBookingState extends State<PastBooking> {
                       flex: 1,
                       child: Container(
                         color: Colors.white,
+                        height: 60,
+                        padding: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 1),
                         child: Material(
                           color: Colors.transparent,
                           child: InkWell(
@@ -195,7 +204,7 @@ class _PastBookingState extends State<PastBooking> {
                                 'Have any question?',
                                 Icon(
                                   Icons.call,
-                                  color: Colors.grey,
+                                  color: Colors.greenAccent,
                                 )
                             ),
                           ),

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:BuyTime/UI/user/landing/UI_U_Landing.dart';
+import 'package:BuyTime/utils/b_cube_grid_spinner.dart';
 import 'package:BuyTime/utils/size_config.dart';
 import 'package:BuyTime/utils/theme/buytime_theme.dart';
 import 'package:BuyTime/reblox/model/object_state.dart';
@@ -159,7 +160,7 @@ class LoginState extends State<Login> {
           isLoggedIn = true;
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => UI_U_Tabs()),
+            MaterialPageRoute(builder: (context) => Landing()),
           );
         });
       } else {
@@ -280,7 +281,7 @@ class LoginState extends State<Login> {
           isLoggedIn = true;
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => UI_U_Tabs()),
+            MaterialPageRoute(builder: (context) => Landing()),
           );
         });
       } else {}
@@ -768,7 +769,6 @@ class LoginState extends State<Login> {
                                               onPressed: () async {
                                                 if (_formKey.currentState.validate() && !_isRequestFlying) {
                                                   _signInWithEmailAndPassword();
-                                                  checkFormValidation();
                                                 }
                                               },
                                               shape: RoundedRectangleBorder(
@@ -812,6 +812,45 @@ class LoginState extends State<Login> {
   }
 
   void _signInWithEmailAndPassword() async {
+
+    setState(() {
+      responseMessage = '';
+    });
+
+    showDialog(
+        context: context,
+        builder: (context) {
+          return  WillPopScope(
+              onWillPop: () async {
+                FocusScope.of(context).unfocus();
+                return false;
+              },
+              child: Container(
+                  height: SizeConfig.safeBlockVertical * 100,
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(.8),
+                  ),
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Container(
+                          width: SizeConfig.safeBlockVertical * 20,
+                          height: SizeConfig.safeBlockVertical * 20,
+                          child: Center(
+                            child: BCubeGridSpinner(
+                              color: Colors.transparent,
+                              size: SizeConfig.safeBlockVertical * 15,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+              )
+          );
+        });
+
     setState(() {
       _isRequestFlying = true;
     });
@@ -854,18 +893,24 @@ class LoginState extends State<Login> {
       StoreProvider.of<AppState>(context).dispatch(new UpdateUserField(token));
       setState(() {
         _success = true;
+        Navigator.of(context).pop();
         Navigator.push(context, MaterialPageRoute(builder: (context) => Landing()));
       });
     }else{
-      setState(() {
-        _success = false;
-      });
+      Navigator.of(context).pop();
+      debugPrint('response: $responseMessage');
+      if(responseMessage.isEmpty){
+        setState(() {
+          _success = false;
+        });
+        checkFormValidation();
+      }
     }
   }
 
   void onError(error) {
     setState(() {
-      _success = false;
+      //_success = false;
       print("error is: " + error.toString());
       if (!emailHasError && !passwordHasError) {
         responseMessage = error.message;

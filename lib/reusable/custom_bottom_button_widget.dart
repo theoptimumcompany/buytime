@@ -18,7 +18,6 @@ class _CustomBottomButtonWidgetState extends State<CustomBottomButtonWidget> {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
-      height: 60,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
@@ -37,7 +36,7 @@ class _CustomBottomButtonWidgetState extends State<CustomBottomButtonWidget> {
                         style: TextStyle(
                             fontFamily: BuytimeTheme.FontFamily,
                             color: Colors.black.withOpacity(.7),
-                            fontWeight: FontWeight.w400,
+                            fontWeight: FontWeight.w800,
                             fontSize: 18
                         ),
                       ),
@@ -48,7 +47,7 @@ class _CustomBottomButtonWidgetState extends State<CustomBottomButtonWidget> {
                         style: TextStyle(
                             fontFamily: BuytimeTheme.FontFamily,
                             color: Colors.black.withOpacity(.7),
-                            fontWeight: FontWeight.w400,
+                            fontWeight: FontWeight.w500,
                             fontSize: 16
                         ),
                       ),

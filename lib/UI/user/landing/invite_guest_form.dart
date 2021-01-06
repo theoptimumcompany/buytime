@@ -24,6 +24,7 @@ class _InviteGuestFormState extends State<InviteGuestForm> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: BuytimeTheme.BackgroundCerulean,
+        brightness: Brightness.dark,
         elevation: 0,
         actions: [
           IconButton(
