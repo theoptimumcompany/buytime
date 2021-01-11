@@ -337,7 +337,7 @@ BusinessState businessReducer(BusinessState state, action) {
     return businessState;
   }
   if (action is SetBusinessThumbnail) {
-    businessState.thumbnail = action.thumbnail;
+    businessState.wide_card_photo = action.thumbnail;
     return businessState;
   }
   if (action is SetBusinessLogo) {

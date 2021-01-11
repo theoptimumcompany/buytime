@@ -1,3 +1,4 @@
+import 'package:BuyTime/UI/user/service/UI_U_ServiceDetails.dart';
 import 'package:BuyTime/reblox/model/app_state.dart';
 import 'package:BuyTime/reblox/model/object_state.dart';
 import 'package:BuyTime/reblox/model/service/service_state.dart';
@@ -74,6 +75,10 @@ class _OptimumServiceCardMediumState extends State<OptimumServiceCardMedium> {
       child: GestureDetector(
         onTap: () {
           onServiceCardTap(serviceState);
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => ServiceDetails(serviceState: serviceState,)),
+          );
         },
         child: Row(
           children: [

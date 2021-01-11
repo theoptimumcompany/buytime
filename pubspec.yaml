@@ -92,6 +92,7 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
+    - assets/img/golfCourt.png
     - assets/img/nobookings.png
     - assets/img/iceresort.png
     - assets/img/hermitage.png

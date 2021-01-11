@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:BuyTime/UI/user/booking/UI_U_ConfirmBooking.dart';
+import 'package:BuyTime/reblox/model/booking/booking_state.dart';
 import 'package:BuyTime/utils/size_config.dart';
 import 'package:BuyTime/utils/theme/buytime_theme.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +16,15 @@ class InviteGuestForm extends StatefulWidget {
 
 class _InviteGuestFormState extends State<InviteGuestForm> {
   TextEditingController bookingCodeController = new TextEditingController();
+
+  BookingState state;
+  @override
+  void initState() {
+    super.initState();
+    state = new BookingState(business_id: null, business_name: null, business_address: null, guest_number_booked_for: null, start_date: null, end_date: null, booking_code: null, user: null, state: null, wide_card_photo: null);
+  }
+
+
   @override
   Widget build(BuildContext context) {
 
@@ -188,7 +198,7 @@ class _InviteGuestFormState extends State<InviteGuestForm> {
                                   Navigator.of(context).pop();
                                   Navigator.push(
                                     context,
-                                    MaterialPageRoute(builder: (context) => ConfirmBooking()),
+                                    MaterialPageRoute(builder: (context) => ConfirmBooking(state)),
                                   );
                                 });
 

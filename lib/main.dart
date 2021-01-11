@@ -114,7 +114,7 @@ void main() {
       municipality: "",
       profile: "",
       gallery: [""],
-      thumbnail: "",
+      wide_card_photo: "",
       logo: "",
       business_type: [],
       description: "",

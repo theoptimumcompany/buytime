@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:BuyTime/UI/user/booking/UI_U_BookingPage.dart';
+import 'package:BuyTime/reblox/model/booking/booking_state.dart';
 import 'package:BuyTime/utils/b_cube_grid_spinner.dart';
 import 'package:BuyTime/utils/size_config.dart';
 import 'package:BuyTime/utils/theme/buytime_theme.dart';
@@ -9,6 +10,8 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class ConfirmBooking extends StatefulWidget {
 
+  BookingState state;
+  ConfirmBooking(this.state);
 
   @override
   _ConfirmBookingState createState() => _ConfirmBookingState();
@@ -16,6 +19,16 @@ class ConfirmBooking extends StatefulWidget {
 
 class _ConfirmBookingState extends State<ConfirmBooking> {
   TextEditingController bookingCodeController = new TextEditingController();
+
+  BookingState state;
+
+
+  @override
+  void initState() {
+    super.initState();
+    state = widget.state;
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -89,7 +102,7 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                         margin: EdgeInsets.all(SizeConfig.safeBlockVertical * 1.5),
                         decoration: BoxDecoration(
                             image: DecorationImage(
-                                image: AssetImage('assets/img/placeholder.png'),
+                                image: AssetImage(state.wide_card_photo ?? 'assets/img/placeholder.png'),
                               fit: BoxFit.contain
                             )
                         ),
@@ -103,7 +116,7 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                           ///Hotel Name Text
                           Container(
                             child: Text(
-                              'HotelName',
+                              state.business_name ?? 'HotelName',
                               style: TextStyle(
                                   fontFamily: BuytimeTheme.FontFamily,
                                   color: Colors.black,
@@ -115,7 +128,7 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                           ///Location & Country Text
                           Container(
                             child: Text(
-                              'Location, Country',
+                              state.business_address ?? 'Location, Country',
                               style: TextStyle(
                                   fontFamily: BuytimeTheme.FontFamily,
                                   color: Colors.grey,
@@ -127,7 +140,7 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                           ///Guest Number
                           Container(
                             child: Text(
-                              '## guests',
+                              state.guest_number_booked_for ?? '## guests',
                               style: TextStyle(
                                   fontFamily: BuytimeTheme.FontFamily,
                                   color: Colors.grey,
@@ -139,7 +152,7 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                           ///Holiday Period
                           Container(
                             child: Text(
-                              '12 June - 18 June 2021',
+                              state.start_date ?? '12 June - 18 June 2021',
                               style: TextStyle(
                                   fontFamily: BuytimeTheme.FontFamily,
                                   color: Colors.grey,

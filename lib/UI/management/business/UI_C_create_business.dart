@@ -49,7 +49,7 @@ class UI_CreateBusinessState extends State<UI_CreateBusiness> {
   void uploadFirestore(snapshot) {
     upload(File(snapshot.profile), 'profile', snapshot.id_firestore);
     upload(File(snapshot.logo), 'logo', snapshot.id_firestore);
-    upload(File(snapshot.thumbnail), 'thumbnail', snapshot.id_firestore);
+    upload(File(snapshot.wide_card_photo), 'thumbnail', snapshot.id_firestore);
     for (int i = 0; i < snapshot.gallery.lenght; i++) {
       upload(File(snapshot.gallery[i]), 'gallery', snapshot.id_firestore);
     }

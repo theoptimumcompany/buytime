@@ -81,7 +81,7 @@ class UI_EditBusinessState extends State<UI_EditBusiness> {
   void uploadFirestore(snapshot) {
     upload(File(snapshot.profile), 'profile', snapshot.id_firestore);
     upload(File(snapshot.logo), 'logo', snapshot.id_firestore);
-    upload(File(snapshot.thumbnail), 'thumbnail', snapshot.id_firestore);
+    upload(File(snapshot.wide_card_photo), 'thumbnail', snapshot.id_firestore);
     for (int i = 0; i < snapshot.gallery.lenght; i++) {
       upload(File(snapshot.gallery[i]), 'gallery', snapshot.id_firestore);
     }
@@ -375,7 +375,7 @@ class UI_EditBusinessState extends State<UI_EditBusiness> {
                             maxWidth: 800,
                             minHeight: 200,
                             minWidth: 600,
-                            image: snapshot.thumbnail == null || snapshot.thumbnail.isEmpty ? null : Image.network(snapshot.thumbnail, width: media.width * 0.3),
+                            image: snapshot.wide_card_photo == null || snapshot.wide_card_photo.isEmpty ? null : Image.network(snapshot.wide_card_photo, width: media.width * 0.3),
                             onFilePicked: (fileToUpload) {
                               fileToUpload.remoteFolder = "business/" + businessName + "/thumbnail";
                               StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInBusiness(fileToUpload));
