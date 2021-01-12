@@ -27,12 +27,26 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
   void initState() {
     super.initState();
     serviceState = widget.serviceState;
+    debugPrint('image: ${serviceState.image}');
   }
 
 
   @override
   void dispose() {
     super.dispose();
+  }
+
+  String version200(String imageUrl) {
+    String result = "";
+    String extension = "";
+    if (imageUrl != null && imageUrl.length > 0 && imageUrl.contains("http")) {
+      extension = imageUrl.substring(imageUrl.lastIndexOf('.'), imageUrl.length);
+      result = imageUrl.substring(0, imageUrl.lastIndexOf('.'));
+      result += "_200x200" + extension;
+    }else {
+      result = "https://firebasestorage.googleapis.com/v0/b/buytime-458a1.appspot.com/o/general%2Fimage_placeholder_200x200.png?alt=media&token=d40ccab1-7fb5-4290-91c6-634871b7a4f3";
+    }
+    return result;
   }
 
   @override
@@ -61,7 +75,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                               width: double.infinity,
                               decoration: BoxDecoration(
                                   image: DecorationImage(
-                                      image: AssetImage('assets/img/golfCourt.png'),
+                                      image: NetworkImage(version200(serviceState.thumbnail)),
                                       fit: BoxFit.fill
                                   )
                               ),
@@ -73,7 +87,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                           child: Align(
                             alignment: Alignment.topLeft,
                             child: Container(
-                              margin: EdgeInsets.only(top: 25.0),
+                              margin: EdgeInsets.only(top: 10.0),
                               child: IconButton(
                                 iconSize: 30,
                                 icon: Icon(
@@ -213,8 +227,8 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                     serviceState.description != null ? serviceState.description : 'Lorem Ipsum ...',
                                     style: TextStyle(
                                         fontFamily: BuytimeTheme.FontFamily,
-                                        color: BuytimeTheme.UserPrimary,
-                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w500,
                                         fontSize: SizeConfig.safeBlockHorizontal * 4
                                     ),
                                   ),

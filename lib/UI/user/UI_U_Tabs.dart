@@ -44,14 +44,14 @@ class UI_U_TabsState extends State<UI_U_Tabs> {
               children: [
                 (visibleDrawer
                     ? IconButton(
-                  icon: const Icon(
-                    Icons.menu,
+                  icon: Icon(
+                    Icons.keyboard_arrow_left,
                     color: Colors.white,
-                    size: 30.0,
                   ),
                   tooltip: 'Show menu',
                   onPressed: () {
-                    _drawerKeyTabs.currentState.openDrawer();
+                    //_drawerKeyTabs.currentState.openDrawer();
+                    Navigator.of(context).pop();
                   },
                 )
                     : Container(height: media.height * 0.07, width: media.height * 0.07)),
