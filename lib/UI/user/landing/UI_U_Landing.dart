@@ -1,5 +1,6 @@
 import 'dart:core';
 import 'package:BuyTime/UI/management/business/UI_C_business_list.dart';
+import 'package:BuyTime/UI/management/business/UI_M_business_list.dart';
 import 'package:BuyTime/UI/user/UI_U_Tabs.dart';
 import 'package:BuyTime/UI/user/booking/UI_U_PastBooking.dart';
 import 'package:BuyTime/UI/user/business/UI_U_business_list.dart';
@@ -8,6 +9,7 @@ import 'package:BuyTime/UI/user/landing/invite_guest_form.dart';
 import 'package:BuyTime/UI/user/landing/test.dart';
 import 'package:BuyTime/UI/user/login/UI_U_Home.dart';
 import 'package:BuyTime/reblox/model/app_state.dart';
+import 'package:BuyTime/reblox/model/role/role.dart';
 import 'package:BuyTime/reblox/reducer/business_list_reducer.dart';
 import 'package:BuyTime/reblox/reducer/business_reducer.dart';
 import 'package:BuyTime/reblox/reducer/category_list_reducer.dart';
@@ -39,15 +41,14 @@ import 'package:share/share.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-
 class Landing extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => LandingState();
 }
 
 class LandingState extends State<Landing> {
-
   List<LandingCardWidget> cards = new List();
+
   @override
   void initState() {
     super.initState();
@@ -59,7 +60,7 @@ class LandingState extends State<Landing> {
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
     SizeConfig().init(context);
-
+    var isManagerOrAbove = false;
 
     return WillPopScope(
         onWillPop: () async {
@@ -101,11 +102,10 @@ class LandingState extends State<Landing> {
                                               fontFamily: BuytimeTheme.FontFamily,
                                               color: Colors.white,
                                               fontWeight: FontWeight.bold,
-                                              fontSize: SizeConfig.safeBlockHorizontal * 7.5
-                                          ),
-                                        )
-                                    ),
+                                              fontSize: SizeConfig.safeBlockHorizontal * 7.5),
+                                        )),
                                   ),
+
                                   ///Share icon
                                   Expanded(
                                     flex: 1,
@@ -113,13 +113,9 @@ class LandingState extends State<Landing> {
                                       alignment: Alignment.topRight,
                                       margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, right: SizeConfig.safeBlockHorizontal * 4),
                                       child: IconButton(
-                                        onPressed: (){
+                                        onPressed: () {
                                           final RenderBox box = context.findRenderObject();
-                                          Share.share('Share',
-                                              subject: 'Test',
-                                              sharePositionOrigin:
-                                              box.localToGlobal(Offset.zero) &
-                                              box.size);
+                                          Share.share('Share', subject: 'Test', sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
                                         },
                                         icon: Icon(
                                           Icons.share,
@@ -131,27 +127,31 @@ class LandingState extends State<Landing> {
                                 ],
                               ),
                             ),
+
                             ///Description
                             Expanded(
                               flex: 3,
                               child: Container(
-                                  margin: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 8, right: SizeConfig.safeBlockHorizontal * 8),
+                                  margin: EdgeInsets.only(
+                                      bottom: SizeConfig.safeBlockVertical * 1,
+                                      left: SizeConfig.safeBlockHorizontal * 8,
+                                      right: SizeConfig.safeBlockHorizontal * 8),
                                   child: Text(
                                     'When you book with a Buytime Enabled® Hotel, you\’ll be granted access to your hotel facilities via Buytime app.\n\n'
-                                        'Book massages and request a drink with just two taps.',
+                                    'Book massages and request a drink with just two taps.',
                                     style: TextStyle(
                                         fontFamily: BuytimeTheme.FontFamily,
                                         color: Colors.white,
                                         fontWeight: FontWeight.w400,
-                                        fontSize: 18//SizeConfig.safeBlockHorizontal * 4
-                                    ),
-                                  )
-                              ),
+                                        fontSize: 18 //SizeConfig.safeBlockHorizontal * 4
+                                        ),
+                                  )),
                             )
                           ],
                         ),
                       ),
                     ),
+
                     ///Card list & Booking history & Contact us & Log out
                     Expanded(
                       flex: 5,
@@ -166,34 +166,34 @@ class LandingState extends State<Landing> {
                                 Flexible(
                                   flex: 3,
                                   child: Container(
-                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 4),
-                                    alignment: Alignment.centerLeft,
-                                    child: CustomScrollView(
-                                      shrinkWrap: true,
-                                      scrollDirection: Axis.horizontal,
-                                      slivers: [
-                                        SliverList(
-                                          delegate: SliverChildBuilderDelegate(
-                                                (context, index){
-                                                  LandingCardWidget landingCard = cards.elementAt(index);
-                                                  return Container(
-                                                    margin: EdgeInsets.all(10),
-                                                    child: _OpenContainerWrapper(
-                                                      index: index,
-                                                      closedBuilder: (BuildContext _, VoidCallback openContainer) {
-                                                        landingCard.callback = openContainer;
-                                                        return landingCard;
-                                                      },
-                                                    ),
-                                                  );
-                                            },
-                                            childCount: cards.length,
+                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 4),
+                                      alignment: Alignment.centerLeft,
+                                      child: CustomScrollView(
+                                        shrinkWrap: true,
+                                        scrollDirection: Axis.horizontal,
+                                        slivers: [
+                                          SliverList(
+                                            delegate: SliverChildBuilderDelegate(
+                                              (context, index) {
+                                                LandingCardWidget landingCard = cards.elementAt(index);
+                                                return Container(
+                                                  margin: EdgeInsets.all(10),
+                                                  child: _OpenContainerWrapper(
+                                                    index: index,
+                                                    closedBuilder: (BuildContext _, VoidCallback openContainer) {
+                                                      landingCard.callback = openContainer;
+                                                      return landingCard;
+                                                    },
+                                                  ),
+                                                );
+                                              },
+                                              childCount: cards.length,
+                                            ),
                                           ),
-                                        ),
-                                      ],
-                                    )
-                                  ),
+                                        ],
+                                      )),
                                 ),
+
                                 ///Booking history
                                 Container(
                                     margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 8, bottom: SizeConfig.safeBlockVertical * 1),
@@ -201,7 +201,7 @@ class LandingState extends State<Landing> {
                                     child: Material(
                                       color: Colors.transparent,
                                       child: InkWell(
-                                          onTap: (){
+                                          onTap: () {
                                             Navigator.push(
                                               context,
                                               MaterialPageRoute(builder: (context) => PastBooking()),
@@ -216,128 +216,144 @@ class LandingState extends State<Landing> {
                                                   fontFamily: BuytimeTheme.FontFamily,
                                                   color: BuytimeTheme.UserPrimary,
                                                   fontWeight: FontWeight.bold,
-                                                  fontSize: SizeConfig.safeBlockHorizontal * 4
-                                              ),
+                                                  fontSize: SizeConfig.safeBlockHorizontal * 4),
                                             ),
-                                          )
-                                      ),
-                                    )
-                                ),
+                                          )),
+                                    )),
                               ],
                             ),
                           ),
+
                           ///Contact us & Log out
-                          Expanded(
-                            flex: 2,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                ///Contact us
-                                Flexible(
-                                  flex: 1,
-                                  child: Container(
-                                    color: Colors.white,
-                                    height: 60,
-                                    child: Material(
-                                      color: Colors.transparent,
-                                      child: InkWell(
-                                        onTap: () async{
-                                          String url = BuytimeConfig.FlaviosNumber.trim();
-                                          debugPrint('Restaurant phonenumber: ' + url);
-                                          if (await canLaunch('tel:$url')) {
-                                            await launch('tel:$url');
-                                          } else {
-                                            throw 'Could not launch $url';
-                                          }
-                                        },
-                                        child: CustomBottomButtonWidget(
-                                            'Contact Us',
-                                            'Have any question?',
-                                            Icon(
-                                              Icons.call,
-                                              color: Colors.greenAccent,
-                                            )
+                          StoreConnector<AppState, AppState>(
+                              converter: (store) => store.state,
+                              builder: (context, snapshot) {
+                                isManagerOrAbove = snapshot.user != null && (snapshot.user.getRole() != Role.user) ? true : false;
+                                return Expanded(
+                                  flex: isManagerOrAbove ? 3 : 2,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      ///Go to business management IF manager role or above.
+                                      isManagerOrAbove ? Flexible(
+                                        flex: 1,
+                                        child: Container(
+                                          color: Colors.white,
+                                          height: 60,
+                                          child: Material(
+                                            color: Colors.transparent,
+                                            child: InkWell(
+                                              onTap: () async {
+                                                StoreProvider.of<AppState>(context).dispatch(SetBusinessListToEmpty());
+                                                StoreProvider.of<AppState>(context).dispatch(SetOrderListToEmpty());
+                                                Navigator.pushReplacement(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          UI_M_BusinessList()),
+                                                );
+                                              },
+                                              child: CustomBottomButtonWidget(
+                                                  'Contact Us',
+                                                  'Have any question?',
+                                                  Icon(
+                                                    Icons.call,
+                                                    color: BuytimeTheme.IconGrey,
+                                                  )),
+                                            ),
+                                          ),
+                                        ),
+                                      ): Container(),
+                                      ///Contact us
+                                      Flexible(
+                                        flex: 1,
+                                        child: Container(
+                                          color: Colors.white,
+                                          height: 60,
+                                          child: Material(
+                                            color: Colors.transparent,
+                                            child: InkWell(
+                                              onTap: () async {
+                                                String url = BuytimeConfig.FlaviosNumber.trim();
+                                                debugPrint('Restaurant phonenumber: ' + url);
+                                                if (await canLaunch('tel:$url')) {
+                                                  await launch('tel:$url');
+                                                } else {
+                                                  throw 'Could not launch $url';
+                                                }
+                                              },
+                                              child: CustomBottomButtonWidget(
+                                                  'Contact Us',
+                                                  'Have any question?',
+                                                  Icon(
+                                                    Icons.call,
+                                                    color: BuytimeTheme.IconGrey,
+                                                  )),
+                                            ),
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ),
-                                ),
-                                ///Log out
-                                Flexible(
-                                  flex: 1,
-                                  child: Container(
-                                    color: Colors.white,
-                                    height: 60,
-                                    padding: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 1),
-                                    child: Material(
-                                      color: Colors.transparent,
-                                      child: InkWell(
-                                          onTap: () async {
-                                            SharedPreferences prefs = await SharedPreferences.getInstance();
 
-                                            await prefs.setBool('easy_check_in', false);
-                                            await prefs.setBool('star_explanation', false);
+                                      ///Log out
+                                      Flexible(
+                                        flex: 1,
+                                        child: Container(
+                                          color: Colors.white,
+                                          height: 60,
+                                          padding: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 1),
+                                          child: Material(
+                                            color: Colors.transparent,
+                                            child: InkWell(
+                                                onTap: () async {
+                                                  SharedPreferences prefs = await SharedPreferences.getInstance();
 
-                                            FirebaseAuth.instance.signOut().then((_) {
-                                              googleSignIn.signOut();
+                                                  await prefs.setBool('easy_check_in', false);
+                                                  await prefs.setBool('star_explanation', false);
 
-                                              facebookSignIn.logOut();
-                                              //Resetto il carrello
-                                              cartCounter = 0;
+                                                  FirebaseAuth.instance.signOut().then((_) {
+                                                    googleSignIn.signOut();
 
-                                              //Svuotare lo Store sul Logout
-                                              StoreProvider.of<AppState>(context)
-                                                  .dispatch(SetCategoryToEmpty());
-                                              StoreProvider.of<AppState>(context)
-                                                  .dispatch(SetCategoryListToEmpty());
-                                              StoreProvider.of<AppState>(context)
-                                                  .dispatch(SetCategorySnippetToEmpty());
-                                              StoreProvider.of<AppState>(context)
-                                                  .dispatch(SetCategorySnippetListToEmpty());
-                                              StoreProvider.of<AppState>(context)
-                                                  .dispatch(SetFilterToEmpty());
-                                              StoreProvider.of<AppState>(context)
-                                                  .dispatch(SetOrderToEmpty(""));
-                                              StoreProvider.of<AppState>(context)
-                                                  .dispatch(SetOrderListToEmpty());
-                                              StoreProvider.of<AppState>(context)
-                                                  .dispatch(SetBusinessToEmpty());
-                                              StoreProvider.of<AppState>(context)
-                                                  .dispatch(SetBusinessListToEmpty());
-                                              StoreProvider.of<AppState>(context)
-                                                  .dispatch(SetServiceToEmpty());
-                                              StoreProvider.of<AppState>(context)
-                                                  .dispatch(SetServiceListToEmpty());
-                                              StoreProvider.of<AppState>(context)
-                                                  .dispatch(SetPipelineToEmpty());
-                                              StoreProvider.of<AppState>(context)
-                                                  .dispatch(SetPipelineListToEmpty());
-                                              StoreProvider.of<AppState>(context)
-                                                  .dispatch(SetStripeToEmpty());
-                                              StoreProvider.of<AppState>(context)
-                                                  .dispatch(SetUserStateToEmpty());
-                                              //Torno al Login
-                                              Navigator.pushReplacement(
-                                                context,
-                                                MaterialPageRoute(builder: (context) => Home()),
-                                              );
-                                            });
-                                          },
-                                          child: CustomBottomButtonWidget(
-                                              'Log out',
-                                              '',
-                                              Icon(
-                                                Icons.logout,
-                                                color: Colors.redAccent,
-                                              )
-                                          )
+                                                    facebookSignIn.logOut();
+                                                    //Resetto il carrello
+                                                    cartCounter = 0;
+
+                                                    //Svuotare lo Store sul Logout
+                                                    StoreProvider.of<AppState>(context).dispatch(SetCategoryToEmpty());
+                                                    StoreProvider.of<AppState>(context).dispatch(SetCategoryListToEmpty());
+                                                    StoreProvider.of<AppState>(context).dispatch(SetCategorySnippetToEmpty());
+                                                    StoreProvider.of<AppState>(context).dispatch(SetCategorySnippetListToEmpty());
+                                                    StoreProvider.of<AppState>(context).dispatch(SetFilterToEmpty());
+                                                    StoreProvider.of<AppState>(context).dispatch(SetOrderToEmpty(""));
+                                                    StoreProvider.of<AppState>(context).dispatch(SetOrderListToEmpty());
+                                                    StoreProvider.of<AppState>(context).dispatch(SetBusinessToEmpty());
+                                                    StoreProvider.of<AppState>(context).dispatch(SetBusinessListToEmpty());
+                                                    StoreProvider.of<AppState>(context).dispatch(SetServiceToEmpty());
+                                                    StoreProvider.of<AppState>(context).dispatch(SetServiceListToEmpty());
+                                                    StoreProvider.of<AppState>(context).dispatch(SetPipelineToEmpty());
+                                                    StoreProvider.of<AppState>(context).dispatch(SetPipelineListToEmpty());
+                                                    StoreProvider.of<AppState>(context).dispatch(SetStripeToEmpty());
+                                                    StoreProvider.of<AppState>(context).dispatch(SetUserStateToEmpty());
+                                                    //Torno al Login
+                                                    Navigator.pushReplacement(
+                                                      context,
+                                                      MaterialPageRoute(builder: (context) => Home()),
+                                                    );
+                                                  });
+                                                },
+                                                child: CustomBottomButtonWidget(
+                                                    'Log out',
+                                                    '',
+                                                    Icon(
+                                                      Icons.logout,
+                                                      color: BuytimeTheme.IconGrey,
+                                                    ))),
+                                          ),
+                                        ),
                                       ),
-                                    ),
+                                    ],
                                   ),
-                                ),
-                              ],
-                            ),
-                          )
+                                );
+                              })
                         ],
                       ),
                     )
@@ -346,19 +362,12 @@ class LandingState extends State<Landing> {
               ),
             ),
           ),
-        )
-    );
+        ));
   }
 }
 
-
 class _OpenContainerWrapper extends StatelessWidget {
-  const _OpenContainerWrapper({
-    this.closedBuilder,
-    this.transitionType,
-    this.onClosed,
-    this.index
-  });
+  const _OpenContainerWrapper({this.closedBuilder, this.transitionType, this.onClosed, this.index});
 
   final OpenContainerBuilder closedBuilder;
   final ContainerTransitionType transitionType;
@@ -382,7 +391,3 @@ class _OpenContainerWrapper extends StatelessWidget {
     );
   }
 }
-
-
-
-
