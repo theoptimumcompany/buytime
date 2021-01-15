@@ -1,5 +1,6 @@
 import 'package:BuyTime/UI/management/business/UI_M_business_list.dart';
 import 'package:BuyTime/UI/user/UI_U_Tabs.dart';
+import 'package:BuyTime/UI/user/landing/UI_U_Landing.dart';
 import 'package:BuyTime/reblox/model/app_state.dart';
 import 'package:BuyTime/reblox/model/user/user_state.dart';
 import 'package:BuyTime/reblox/reducer/business_list_reducer.dart';
@@ -151,7 +152,7 @@ class _UI_M_BusinessListDrawerState extends State<UI_M_BusinessListDrawer> {
                       StoreProvider.of<AppState>(context)
                           .dispatch(SetOrderListToEmpty());
                       Navigator.pushReplacement(context,
-                          MaterialPageRoute(builder: (context) => UI_U_Tabs()));
+                          MaterialPageRoute(builder: (context) => Landing()));
                     },
                     title: Text('Switch to client mode',
                         style: TextStyle(

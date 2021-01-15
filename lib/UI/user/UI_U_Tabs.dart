@@ -42,8 +42,7 @@ class UI_U_TabsState extends State<UI_U_Tabs> {
             key: _drawerKeyTabs,
             appBar: BuyTimeAppbarUser(
               children: [
-                (visibleDrawer
-                    ? IconButton(
+                (IconButton(
                   icon: Icon(
                     Icons.keyboard_arrow_left,
                     color: Colors.white,
@@ -53,8 +52,7 @@ class UI_U_TabsState extends State<UI_U_Tabs> {
                     //_drawerKeyTabs.currentState.openDrawer();
                     Navigator.of(context).pop();
                   },
-                )
-                    : Container(height: media.height * 0.07, width: media.height * 0.07)),
+                )),
                 kIsWeb
                     ? Image.asset('assets/img/brand/logo_appbar.png',
                     height: media.height * 0.065)

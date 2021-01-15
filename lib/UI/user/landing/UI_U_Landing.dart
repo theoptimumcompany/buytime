@@ -254,10 +254,10 @@ class LandingState extends State<Landing> {
                                                 );
                                               },
                                               child: CustomBottomButtonWidget(
-                                                  'Contact Us',
-                                                  'Have any question?',
+                                                  'Go to Business managment',
+                                                  '',
                                                   Icon(
-                                                    Icons.call,
+                                                    Icons.business_center,
                                                     color: BuytimeTheme.IconGrey,
                                                   )),
                                             ),

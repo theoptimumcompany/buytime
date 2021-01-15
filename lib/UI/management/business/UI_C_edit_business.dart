@@ -363,7 +363,7 @@ class UI_EditBusinessState extends State<UI_EditBusiness> {
                             image: snapshot.logo == null || snapshot.logo.isEmpty ? null : Image.network(snapshot.logo, width: media.width * 0.3),
                             onFilePicked: (fileToUpload) {
                               fileToUpload.remoteFolder = "business/" + businessName + "/logo";
-                              StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInBusiness(fileToUpload));
+                              StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInBusiness(fileToUpload, fileToUpload.state, 0));
                             },
                           ),
                           //Business Thumbnail
@@ -378,7 +378,7 @@ class UI_EditBusinessState extends State<UI_EditBusiness> {
                             image: snapshot.wide_card_photo == null || snapshot.wide_card_photo.isEmpty ? null : Image.network(snapshot.wide_card_photo, width: media.width * 0.3),
                             onFilePicked: (fileToUpload) {
                               fileToUpload.remoteFolder = "business/" + businessName + "/thumbnail";
-                              StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInBusiness(fileToUpload));
+                              StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInBusiness(fileToUpload, fileToUpload.state, 1));
                             },
                           ),
                           //Photo Profile
@@ -393,7 +393,7 @@ class UI_EditBusinessState extends State<UI_EditBusiness> {
                             image: snapshot.profile == null || snapshot.profile.isEmpty ? null : Image.network(snapshot.profile, width: media.width * 0.3),
                             onFilePicked: (fileToUpload) {
                               fileToUpload.remoteFolder = "business/" + businessName + "/profile";
-                              StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInBusiness(fileToUpload));
+                              StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInBusiness(fileToUpload, fileToUpload.state, 2));
                             },
                           ),
                           //Business Gallery
@@ -408,7 +408,7 @@ class UI_EditBusinessState extends State<UI_EditBusiness> {
                             image: snapshot.gallery == null || snapshot.gallery.length == 0 || snapshot.gallery.isEmpty ? null :Image.network(snapshot.gallery[0], width: media.width * 0.3),
                             onFilePicked: (fileToUpload) {
                               fileToUpload.remoteFolder = "business/" + businessName + "/gallery";
-                              StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInBusiness(fileToUpload));
+                              StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInBusiness(fileToUpload, fileToUpload.state, 3));
                             },
                           ),
                         ],

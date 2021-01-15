@@ -1,6 +1,7 @@
 import 'package:BuyTime/reblox/model/business/business_state.dart';
 import 'package:BuyTime/reblox/model/object_state.dart';
 import 'package:BuyTime/reblox/model/file/optimum_file_to_upload.dart';
+import 'package:BuyTime/reusable/form/optimum_form_multi_photo.dart';
 
 class SetBusiness {
   BusinessState _businessState;
@@ -46,8 +47,10 @@ class UploadedFilesBusinessCreate {
 
 class AddFileToUploadInBusiness {
   OptimumFileToUpload _fileToUpload;
+  ImageState state;
+  int index;
 
-  AddFileToUploadInBusiness(this._fileToUpload);
+  AddFileToUploadInBusiness(this._fileToUpload, this.state, this.index);
 
   OptimumFileToUpload get fileToUpload => _fileToUpload;
 }
@@ -385,15 +388,26 @@ BusinessState businessReducer(BusinessState state, action) {
     print("business_reducer: addFileInbusiness. business: " + state.name);
     if (state.fileToUploadList != null) {
       print("business_reducer: fileuploadlist != null");
+
       businessState.fileToUploadList = []
-        ..addAll(state.fileToUploadList)
-        ..add(action.fileToUpload);
+        ..addAll(state.fileToUploadList);
+
+      businessState.fileToUploadList[action.index] = action.fileToUpload;
     } else {
       print("business_reducer: fileuploadlist == null");
-      businessState.fileToUploadList = []..add(action.fileToUpload);
+      businessState.fileToUploadList = [
+        new OptimumFileToUpload(),
+        new OptimumFileToUpload(),
+        new OptimumFileToUpload(),
+        new OptimumFileToUpload()
+      ];
+
+      businessState.fileToUploadList[action.index] = action.fileToUpload;
     }
-    print("business_reducer: fileToUploadList(0) is now: " +
-        businessState.fileToUploadList.elementAt(0).remoteName);
+    businessState.fileToUploadList.forEach((element) {
+      if(element.remoteName != null)
+        print("business_reducer: " + element.remoteName);
+    });
     return businessState;
   }
   return state;

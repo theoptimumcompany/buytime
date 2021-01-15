@@ -344,7 +344,7 @@ class UI_CreateBusinessState extends State<UI_CreateBusiness> {
                             minWidth: 600,
                             onFilePicked: (fileToUpload) {
                                 fileToUpload.remoteFolder = "business/" + businessName + "/logo";
-                                StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInBusiness(fileToUpload));
+                                StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInBusiness(fileToUpload, fileToUpload.state, 0));
                             },
                           ),
                           //Business Thumbnail
@@ -358,7 +358,7 @@ class UI_CreateBusinessState extends State<UI_CreateBusiness> {
                             minWidth: 600,
                             onFilePicked: (fileToUpload) {
                               fileToUpload.remoteFolder = "business/" + businessName + "/thumbnail";
-                              StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInBusiness(fileToUpload));
+                              StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInBusiness(fileToUpload, fileToUpload.state, 1));
                             },
                           ),
                           //Photo Profile
@@ -372,7 +372,7 @@ class UI_CreateBusinessState extends State<UI_CreateBusiness> {
                             minWidth: 600,
                             onFilePicked: (fileToUpload) {
                               fileToUpload.remoteFolder = "business/" + businessName + "/profile";
-                              StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInBusiness(fileToUpload));
+                              StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInBusiness(fileToUpload, fileToUpload.state, 2));
                             },
                           ),
                           //Business Gallery
@@ -386,7 +386,7 @@ class UI_CreateBusinessState extends State<UI_CreateBusiness> {
                             minWidth: 600,
                             onFilePicked: (fileToUpload) {
                               fileToUpload.remoteFolder = "business/" + businessName + "/gallery";
-                              StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInBusiness(fileToUpload));
+                              StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInBusiness(fileToUpload, fileToUpload.state, 3));
                             },
                           ),
                         ],
