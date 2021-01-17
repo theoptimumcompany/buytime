@@ -73,7 +73,8 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
   }
 
   bool validateEmail(String value) {
-    Pattern pattern = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+    Pattern pattern =
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
     RegExp regex = new RegExp(pattern);
     return (!regex.hasMatch(value)) ? false : true;
   }
@@ -116,7 +117,8 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
   openTree(List<dynamic> list, List<DropdownMenuItem<ObjectState>> items) {
     for (int i = 0; i < list.length; i++) {
       if (list[i]['level'] < 4) {
-        ObjectState objectState = ObjectState(name: list[i]['nodeName'].toString(), id: list[i]['nodeId'], level: list[i]['level']);
+        ObjectState objectState =
+            ObjectState(name: list[i]['nodeName'].toString(), id: list[i]['nodeId'], level: list[i]['level']);
         items.add(
           DropdownMenuItem(
             child: Padding(
@@ -167,7 +169,8 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
                         break;
                     }
                     Uri link = await _createDynamicLink(false);
-                    Share.share('Enter in Buytime App at $link and use $inviteMail to login!', subject: 'Take your Time!');
+                    Share.share('Enter in Buytime App at $link and use $inviteMail to login!',
+                        subject: 'Take your Time!');
                     Navigator.of(context).pop();
                   }
                 },
@@ -226,7 +229,8 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
               Padding(
                 padding: const EdgeInsets.only(top: 30.0),
                 child: Container(
-                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
+                  decoration:
+                      BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
                   child: Form(
                       key: _formInviteKey,
                       child: Padding(
@@ -355,10 +359,13 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
           //avatar: FlutterLogo(),
           onPressed: () async {
             Uri link = await _createDynamicLink(false);
-            Share.share('Enter in Buytime App at $link and use ' + item.mail + ' to login!', subject: 'Take your Time!');
+            Share.share('Enter in Buytime App at $link and use ' + item.mail + ' to login!',
+                subject: 'Take your Time!');
           },
           onDeleted: () {
-            type == "manager" ? StoreProvider.of<AppState>(context).dispatch(new DeleteCategoryManager(item.mail)) : StoreProvider.of<AppState>(context).dispatch(new DeleteCategoryWorker(item.mail));
+            type == "manager"
+                ? StoreProvider.of<AppState>(context).dispatch(new DeleteCategoryManager(item.mail))
+                : StoreProvider.of<AppState>(context).dispatch(new DeleteCategoryWorker(item.mail));
           },
         ),
       ));
@@ -433,8 +440,10 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
                             CategoryState categoryCreate = snapshot.category;
                             ObjectState newCategoryParent = selectedDropValue;
                             print("Livello prima : " + snapshot.category.level.toString());
-                            categoryCreate.level = newCategoryParent.level + 1;
                             categoryCreate.parent = newCategoryParent;
+                            if (categoryCreate.parent != _dropdownMenuParentCategory.first.value) {
+                              categoryCreate.level = newCategoryParent.level + 1;
+                            }
 
                             StoreProvider.of<AppState>(context).dispatch(new CreateCategory(categoryCreate));
                             StoreProvider.of<AppState>(context).dispatch(new AddCategorySnippet(newCategoryParent));
@@ -477,7 +486,8 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
                           child: Center(
                             child: Container(
                               width: media.width * 0.9,
-                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
                               child: Form(
                                   key: _formKey,
                                   child: Padding(
@@ -487,7 +497,8 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
                                       initialValue: _selectedCategoryName,
                                       onChanged: (value) {
                                         _selectedCategoryName = value;
-                                        StoreProvider.of<AppState>(context).dispatch(SetCategoryName(_selectedCategoryName));
+                                        StoreProvider.of<AppState>(context)
+                                            .dispatch(SetCategoryName(_selectedCategoryName));
                                       },
                                       onSaved: (value) {
                                         _selectedCategoryName = value;
@@ -503,21 +514,26 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
                           child: Center(
                             child: Container(
                               width: media.width * 0.9,
-                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: DropdownButtonHideUnderline(
                                   child: DropdownButtonFormField<ObjectState>(
                                       value: selectedDropValue,
                                       items: _dropdownMenuParentCategory,
-                                      decoration: InputDecoration(labelText: 'Parent Category', enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white))),
+                                      decoration: InputDecoration(
+                                          labelText: 'Parent Category',
+                                          enabledBorder:
+                                              UnderlineInputBorder(borderSide: BorderSide(color: Colors.white))),
                                       onChanged: (ObjectState newValue) {
                                         setState(() {
                                           changeParent = true;
                                           selectedDropValue = newValue;
                                           newParent = newValue;
                                           print("Drop Selezionato su onchangedrop : " + selectedDropValue.name);
-                                          setNewCategoryParent(selectedDropValue, snapshot.categorySnippet.categoryNodeList);
+                                          setNewCategoryParent(
+                                              selectedDropValue, snapshot.categorySnippet.categoryNodeList);
                                         });
                                       }),
                                 ),
