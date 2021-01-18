@@ -330,7 +330,7 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
   }
 
   ObjectState searchDropdownParent(var snapshot) {
-    if (widget.empty == 'empty') {
+    if (widget.empty == 'empty' || snapshot.category.level == 0) {
       return _dropdownMenuParentCategory.first.value;
     }
 
@@ -376,7 +376,7 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
           if (snapshot.category != null) {
             managerList = snapshot.category.manager;
             workerList = snapshot.category.worker;
-            selectedDropValue = searchDropdownParent(snapshot);
+            selectedParentCategory = searchDropdownParent(snapshot);
           }
 
           return WillPopScope(
@@ -460,13 +460,45 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
                   ),
                 ],
               ),
-              floatingActionButton: FloatingActionButton(
-                onPressed: () {
-                  print("add worker/manager");
-                  _modalAddPerson(context);
-                },
-                child: Icon(Icons.add),
-                backgroundColor: BuytimeTheme.Secondary,
+              floatingActionButton: Stack(
+                children: <Widget>[
+                  Align(
+                    alignment: Alignment.bottomLeft,
+                    child: !hasChild
+                        ? Padding(
+                          padding: const EdgeInsets.only(left: 25.0),
+                          child: FloatingActionButton(
+                              onPressed: () {
+                                StoreProvider.of<AppState>(context).dispatch(DeleteCategorySnippet(snapshot.category.id));
+                                StoreProvider.of<AppState>(context).dispatch(DeleteCategory(snapshot.category.id));
+                                Future.delayed(const Duration(milliseconds: 500), () {
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => UI_ManageCategory(deleted: true)),
+                                  );
+                                });
+                              },
+                              child: Icon(
+                                Icons.delete,
+                                color: Colors.black,
+                              ),
+                              backgroundColor: Colors.red,
+                            ),
+                        )
+                        : Container(),
+                  ),
+                  Align(
+                    alignment: Alignment.bottomRight,
+                    child: FloatingActionButton(
+                      onPressed: () {
+                        print("add worker/manager");
+                        _modalAddPerson(context);
+                      },
+                      child: Icon(Icons.add),
+                      backgroundColor: BuytimeTheme.Secondary,
+                    ),
+                  ),
+                ],
               ),
               body: Padding(
                 padding: EdgeInsets.all(10.0),
