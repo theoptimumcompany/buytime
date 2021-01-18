@@ -142,7 +142,8 @@ class BusinessCreateService implements EpicClass<AppState> {
     return actions.whereType<CreateBusiness>().asyncMap((event) async {
       BusinessState businessState = event.businessState;
 
-      if (businessState.business_type[0].toString().isEmpty &&
+
+      if (businessState.business_type.isNotEmpty && businessState.business_type[0].toString().isEmpty &&
           businessState.business_type.length > 1) {
         businessState.business_type = businessState.business_type.sublist(1);
       }

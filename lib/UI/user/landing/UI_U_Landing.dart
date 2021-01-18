@@ -1,4 +1,5 @@
 import 'dart:core';
+import 'dart:io';
 import 'package:BuyTime/UI/management/business/UI_C_business_list.dart';
 import 'package:BuyTime/UI/management/business/UI_M_business_list.dart';
 import 'package:BuyTime/UI/user/UI_U_Tabs.dart';
@@ -115,7 +116,11 @@ class LandingState extends State<Landing> {
                                       child: IconButton(
                                         onPressed: () {
                                           final RenderBox box = context.findRenderObject();
-                                          Share.share('Share', subject: 'Test', sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
+                                          Share.share('Share', subject:
+                                          Platform.isAndroid ?
+                                              'https://play.google.com/store/apps/details?id=com.theoptimumcompany.buytime' :
+                                          'Test'
+                                              , sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
                                         },
                                         icon: Icon(
                                           Icons.share,

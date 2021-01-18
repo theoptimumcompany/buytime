@@ -158,7 +158,7 @@ class OptimumFormMultiPhotoState extends State<OptimumFormMultiPhoto> {
                toolbarTitle: 'Cropper',
                toolbarColor: BuytimeTheme.UserPrimary,
                toolbarWidgetColor: Colors.white,
-               initAspectRatio: CropAspectRatioPreset.original,
+               initAspectRatio: CropAspectRatioPreset.square,
                lockAspectRatio: false),
            iosUiSettings: IOSUiSettings(
              title: 'Cropper',

@@ -386,24 +386,19 @@ BusinessState businessReducer(BusinessState state, action) {
   }
   if (action is AddFileToUploadInBusiness) {
     print("business_reducer: addFileInbusiness. business: " + state.name);
+
+    businessState.fileToUploadList = [];
+
     if (state.fileToUploadList != null) {
       print("business_reducer: fileuploadlist != null");
 
-      businessState.fileToUploadList = []
+      businessState.fileToUploadList
         ..addAll(state.fileToUploadList);
 
-      businessState.fileToUploadList[action.index] = action.fileToUpload;
-    } else {
-      print("business_reducer: fileuploadlist == null");
-      businessState.fileToUploadList = [
-        new OptimumFileToUpload(),
-        new OptimumFileToUpload(),
-        new OptimumFileToUpload(),
-        new OptimumFileToUpload()
-      ];
-
-      businessState.fileToUploadList[action.index] = action.fileToUpload;
     }
+
+    replaceIfExists(businessState.fileToUploadList, action.fileToUpload);
+
     businessState.fileToUploadList.forEach((element) {
       if(element.remoteName != null)
         print("business_reducer: " + element.remoteName);
@@ -411,4 +406,22 @@ BusinessState businessReducer(BusinessState state, action) {
     return businessState;
   }
   return state;
+}
+
+void replaceIfExists(List<OptimumFileToUpload> fileToUploadList, OptimumFileToUpload myFile){
+  bool replaced = false;
+  if(fileToUploadList.isNotEmpty){
+    fileToUploadList.forEach((element) {
+      if(element.remoteFolder == myFile.remoteFolder){
+        element = myFile;
+        replaced = true;
+      }
+    });
+  }else{
+
+  }
+
+  if(!replaced){
+    fileToUploadList.add(myFile);
+  }
 }

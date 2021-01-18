@@ -49,7 +49,7 @@ class UI_CreateBusinessState extends State<UI_CreateBusiness> {
   void uploadFirestore(snapshot) {
     upload(File(snapshot.profile), 'profile', snapshot.id_firestore);
     upload(File(snapshot.logo), 'logo', snapshot.id_firestore);
-    upload(File(snapshot.wide_card_photo), 'thumbnail', snapshot.id_firestore);
+    upload(File(snapshot.wide_card_photo), 'wide', snapshot.id_firestore);
     for (int i = 0; i < snapshot.gallery.lenght; i++) {
       upload(File(snapshot.gallery[i]), 'gallery', snapshot.id_firestore);
     }
@@ -349,15 +349,15 @@ class UI_CreateBusinessState extends State<UI_CreateBusiness> {
                           ),
                           //Business Thumbnail
                           OptimumFormMultiPhoto(
-                            text: "thumbnail",
-                            remotePath: "business/" + businessName + "/thumbnail",
+                            text: "Wide",
+                            remotePath: "business/" + businessName + "/wide",
                             maxHeight: 1000,
                             maxPhoto: 1,
                             maxWidth: 800,
                             minHeight: 200,
                             minWidth: 600,
                             onFilePicked: (fileToUpload) {
-                              fileToUpload.remoteFolder = "business/" + businessName + "/thumbnail";
+                              fileToUpload.remoteFolder = "business/" + businessName + "/wide";
                               StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInBusiness(fileToUpload, fileToUpload.state, 1));
                             },
                           ),

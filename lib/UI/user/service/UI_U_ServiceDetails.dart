@@ -42,7 +42,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
     if (imageUrl != null && imageUrl.length > 0 && imageUrl.contains("http")) {
       extension = imageUrl.substring(imageUrl.lastIndexOf('.'), imageUrl.length);
       result = imageUrl.substring(0, imageUrl.lastIndexOf('.'));
-      result += "_200x200" + extension;
+      result += "_1000x1000" + extension;
     }else {
       result = "https://firebasestorage.googleapis.com/v0/b/buytime-458a1.appspot.com/o/general%2Fimage_placeholder_200x200.png?alt=media&token=d40ccab1-7fb5-4290-91c6-634871b7a4f3";
     }

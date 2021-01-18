@@ -20,6 +20,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/services.dart';
+import 'package:flutter_autofill/flutter_autofill.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -62,6 +63,7 @@ class LoginState extends State<Login> {
   bool isLoggedIn = false;
   bool _isRequestFlying = false;
   bool _success;
+  bool _commited = false;
 
   final auth.FirebaseAuth _auth = auth.FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
@@ -639,47 +641,56 @@ class LoginState extends State<Login> {
                                         ///Email address
                                         Container(
                                           margin: EdgeInsets.only(top: 10.0),
-                                          child: TextFormField(
-                                            controller: _emailController,
-                                            textAlign: TextAlign.start,
-                                            keyboardType: TextInputType.emailAddress,
-                                            autofillHints: [AutofillHints.email],
-                                            decoration: InputDecoration(
-                                              enabledBorder: OutlineInputBorder(
-                                                  borderSide: BorderSide(color: Color(0xffe0e0e0)),
-                                                  borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                          child: Autofill(
+                                              onAutofilled: (val) {
+                                                // set value in controller & cursor position after auto-filled value
+                                                _emailController.value = TextEditingValue(text: val, selection: TextSelection.fromPosition(TextPosition(offset: val.length)));
+                                              },
+                                              autofillHints: [FlutterAutofill.AUTOFILL_HINT_EMAIL_ADDRESS],
+                                              autofillType: FlutterAutofill.AUTOFILL_TYPE_TEXT,
+                                            textController: _emailController,
+                                            child: TextFormField(
+                                              controller: _emailController,
+                                              textAlign: TextAlign.start,
+                                              keyboardType: TextInputType.emailAddress,
+                                              autofillHints: [AutofillHints.email],
+                                              decoration: InputDecoration(
+                                                enabledBorder: OutlineInputBorder(
+                                                    borderSide: BorderSide(color: Color(0xffe0e0e0)),
+                                                    borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                                ),
+                                                focusedBorder: OutlineInputBorder(
+                                                    borderSide: BorderSide(color: Color(0xff666666)),
+                                                    borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                                ),
+                                                errorBorder: OutlineInputBorder(
+                                                    borderSide: BorderSide(color: Colors.redAccent),
+                                                    borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                                ),
+                                                labelText: 'Email address',
+                                                //hintText: "email *",
+                                                //hintStyle: TextStyle(color: Color(0xff666666)),
+                                                labelStyle: TextStyle(
+                                                  fontFamily: BuytimeTheme.FontFamily,
+                                                  color: Color(0xff666666),
+                                                  fontWeight: FontWeight.w400,
+                                                ),
                                               ),
-                                              focusedBorder: OutlineInputBorder(
-                                                  borderSide: BorderSide(color: Color(0xff666666)),
-                                                  borderRadius: BorderRadius.all(Radius.circular(10.0))
-                                              ),
-                                              errorBorder: OutlineInputBorder(
-                                                  borderSide: BorderSide(color: Colors.redAccent),
-                                                  borderRadius: BorderRadius.all(Radius.circular(10.0))
-                                              ),
-                                              labelText: 'Email address',
-                                              //hintText: "email *",
-                                              //hintStyle: TextStyle(color: Color(0xff666666)),
-                                              labelStyle: TextStyle(
+                                              style: TextStyle(
                                                 fontFamily: BuytimeTheme.FontFamily,
                                                 color: Color(0xff666666),
-                                                fontWeight: FontWeight.w400,
+                                                fontWeight: FontWeight.w800,
                                               ),
-                                            ),
-                                            style: TextStyle(
-                                              fontFamily: BuytimeTheme.FontFamily,
-                                              color: Color(0xff666666),
-                                              fontWeight: FontWeight.w800,
-                                            ),
-                                            validator: (String value) {
-                                              setState(() {
-                                                if (value.isNotEmpty && EmailValidator.validate(value)) {
-                                                  emailHasError = false;
-                                                }else
-                                                  emailHasError = true;
-                                              });
-                                              return null;
-                                            },
+                                              validator: (String value) {
+                                                setState(() {
+                                                  if (value.isNotEmpty && EmailValidator.validate(value)) {
+                                                    emailHasError = false;
+                                                  }else
+                                                    emailHasError = true;
+                                                });
+                                                return null;
+                                              },
+                                            )
                                           ),
                                         ),
                                         ///Password
@@ -767,6 +778,7 @@ class LoginState extends State<Login> {
                                           children: [
                                             FloatingActionButton(
                                               onPressed: () async {
+                                                await FlutterAutofill.commit();
                                                 if (_formKey.currentState.validate() && !_isRequestFlying) {
                                                   _signInWithEmailAndPassword();
                                                 }
