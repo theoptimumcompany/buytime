@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:BuyTime/UI/user/landing/UI_U_Landing.dart';
 import 'package:BuyTime/utils/theme/buytime_theme.dart';
 import 'package:BuyTime/reblox/model/app_state.dart';
 import 'package:BuyTime/reblox/model/object_state.dart';
@@ -252,8 +253,25 @@ class RegistrationState extends State<Registration> {
     });
   }
 
+  ///Init Apple sign in
+  void initiateAppleSignIn() {
+    signInWithApple().then((result) {
+      if (result == 1) {
+        setState(() {
+          isLoggedIn = true;
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => Landing()),
+          );
+        });
+      } else {
+        print("No result");
+      }
+    });
+  }
+
   ///Sign in with Apple
-  Future<auth.UserCredential> signInWithApple() async {
+  Future<int> signInWithApple() async {
     // To prevent replay attacks with the credential returned from Apple, we
     // include a nonce in the credential request. When signing in in with
     // Firebase, the nonce in the id token returned by Apple, is expected to
@@ -276,9 +294,59 @@ class RegistrationState extends State<Registration> {
       rawNonce: rawNonce,
     );
 
-    // Sign in the user with Firebase. If the nonce we generated earlier does
-    // not match the nonce in `appleCredential.identityToken`, sign in will fail.
-    return _auth.signInWithCredential(oauthCredential);
+    if(oauthCredential != null){
+      ProgressDialog pr = new ProgressDialog(context);
+      pr.style(
+          message: 'Authentication ...',
+          borderRadius: 10.0,
+          backgroundColor: Colors.white,
+          progressWidget: CircularProgressIndicator(),
+          elevation: 10.0,
+          insetAnimCurve: Curves.easeInOut,
+          progress: 0.0,
+          maxProgress: 100.0,
+          progressTextStyle:
+          TextStyle(color: Colors.blue, fontSize: 13.0, fontWeight: FontWeight.w400),
+          messageTextStyle:
+          TextStyle(color: Colors.black, fontSize: 19.0, fontWeight: FontWeight.w600));
+      await pr.show();
+
+      final dynamic authResult = await _auth.signInWithCredential(oauthCredential);
+      final auth.User user = authResult.user;
+
+      assert(!user.isAnonymous);
+      assert(await user.getIdToken() != null);
+
+      final auth.User currentUser = await _auth.currentUser;
+      assert(user.uid == currentUser.uid);
+
+      String deviceId = "web";
+      if (!kIsWeb) {
+        try {
+          if (Platform.isAndroid) {
+            var build = await deviceInfoPlugin.androidInfo;
+            deviceId = build.androidId; //UUID for Android
+          } else if (Platform.isIOS) {
+            var data = await deviceInfoPlugin.iosInfo;
+            deviceId = data.identifierForVendor; //UUID for iOS
+          }
+        } on PlatformException {
+          print('Failed to get platform version');
+        }
+      }
+      print("Device ID : " + deviceId);
+
+      StoreProvider.of<AppState>(context)
+          .dispatch(new LoggedUser(UserState.fromFirebaseUser(user, deviceId, serverToken)));
+      ObjectState field = ObjectState(name: "device", id: deviceId, user_uid: user.uid);
+      StoreProvider.of<AppState>(context).dispatch(new UpdateUserField(field));
+      ObjectState token = ObjectState(name: "token", id: serverToken, user_uid: user.uid);
+      StoreProvider.of<AppState>(context).dispatch(new UpdateUserField(token));
+      // return 'signInWithGoogle succeeded: $user';
+      await pr.hide();
+      return 1;
+    }
+    return 0;
   }
 
   ///Init facebook sign in
@@ -791,7 +859,7 @@ class RegistrationState extends State<Registration> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   BrandedButton("assets/img/google_logo.png",'Sign up with Google', initiateGoogleSignIn),
-                                  BrandedButton("assets/img/apple_logo.png",'Sign up with Apple', signInWithApple),
+                                  BrandedButton("assets/img/apple_logo.png",'Sign up with Apple', initiateAppleSignIn),
                                   BrandedButton("assets/img/facebook_logo.png",'Sign up with Facebook', initiateFacebookSignIn),
                                 ]
                             ),
