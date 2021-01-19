@@ -53,7 +53,7 @@ class LandingState extends State<Landing> {
   @override
   void initState() {
     super.initState();
-    cards.add(LandingCardWidget('Enter booking bode', 'Start your journey', 'assets/img/booking_code.png', null));
+    cards.add(LandingCardWidget('Enter booking code', 'Start your journey', 'assets/img/booking_code.png', null));
     cards.add(LandingCardWidget('About Buytime', 'Discover our network', 'assets/img/beach_girl.png', null));
   }
 

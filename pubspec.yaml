@@ -22,17 +22,15 @@ dependencies:
   google_sign_in: ^4.0.0
   flutter_facebook_login: ^3.0.0
   cloud_firestore: ^0.14.0+2
-  carousel_slider: ^2.3.1   #carosello di widget
-  firebase_storage: ^4.0.0 #cloud firebase files
+  firebase_storage: ^4.0.0
   email_validator: ^1.0.0
   firebase_core: ^0.5.0
   firebase_analytics: ^5.0.11
   progress_dialog: ^1.2.2
   firebase_auth: ^0.18.1+1
-  nfc_in_flutter: ^2.0.4  # NFC  supporta solo tag ndef
-  shared_preferences: ^0.5.7 #mantenere lo stato di variabili alla chisusura
+  nfc_in_flutter: ^2.0.4
+  shared_preferences: ^0.5.7
   location: ^3.0.2  # GPS
-#  barcode_scan: ^3.0.0 # QR-Code Scanner
   google_maps_flutter: ^0.5.26+4 # Google Map
   cupertino_icons: ^0.1.2
   flutter_redux: ^0.7.0
@@ -46,7 +44,6 @@ dependencies:
   device_info: ^0.4.2+8
   stripe_sdk: ^3.0.1+1
   share: ^0.6.4+3
-  #intl: ^0.16.1
   flutter_web_image_picker:
     git:
       url: https://github.com/theoptimumcompany/flutter_web_image_picker
