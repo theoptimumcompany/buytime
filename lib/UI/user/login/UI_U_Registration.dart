@@ -484,7 +484,7 @@ class RegistrationState extends State<Registration> {
     var media = MediaQuery.of(context).size;
     SizeConfig().init(context);
     return Scaffold(
-        resizeToAvoidBottomPadding: false,
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           leading: IconButton(
             icon: Icon(

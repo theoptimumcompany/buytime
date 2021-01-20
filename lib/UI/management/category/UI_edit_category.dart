@@ -50,6 +50,9 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
   ///Workers List
   List<ObjectState> workerList;
 
+  /// Invite mail String
+  String inviteMail = '';
+
   void initState() {
     super.initState();
   }
@@ -177,10 +180,26 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
               Navigator.of(context).pop();
             },
           ),
+
+          ///Gestire invito manaager/worker da aggiungere alla categoria e alle sue sottocategorie
           FlatButton(
             child: Text("Invite"),
             onPressed: () async {
+              ///Avviare Spinner una volta pigiato invita, per attendere i controlli fatti dalla cloud function
               if (validateAndSaveInvite()) {
+                ///Controllo se invito manager o worker e lancio la opportuna dispatch
+                switch (role) {
+                  case 'Manager':
+                    ObjectState newManager;
+                    newManager.mail = inviteMail;
+                        StoreProvider.of<AppState>(context).dispatch(new CategoryInviteManager(newManager));
+                    break;
+                  case 'Worker':
+                    ObjectState newWorker;
+                    newWorker.mail = inviteMail;
+                    StoreProvider.of<AppState>(context).dispatch(new CategoryInviteWorker(newWorker));
+                    break;
+                }
                 Uri link = await _createDynamicLink(false);
                 Share.share('check out Buytime App at $link', subject: 'Take your Time!');
               }
@@ -252,8 +271,16 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
                                 : validateEmail(value)
                                     ? null
                                     : 'Not a valid email',
-                            onChanged: (value) {},
-                            onSaved: (value) {},
+                            onChanged: (value) {
+                              setState(() {
+                                inviteMail = value;
+                              });
+                            },
+                            onSaved: (value) {
+                              setState(() {
+                                inviteMail = value;
+                              });
+                            },
                             decoration: InputDecoration(
                               labelText: 'Email address',
                               border: InputBorder.none,
@@ -466,10 +493,11 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
                     alignment: Alignment.bottomLeft,
                     child: !hasChild
                         ? Padding(
-                          padding: const EdgeInsets.only(left: 25.0),
-                          child: FloatingActionButton(
+                            padding: const EdgeInsets.only(left: 25.0),
+                            child: FloatingActionButton(
                               onPressed: () {
-                                StoreProvider.of<AppState>(context).dispatch(DeleteCategorySnippet(snapshot.category.id));
+                                StoreProvider.of<AppState>(context)
+                                    .dispatch(DeleteCategorySnippet(snapshot.category.id));
                                 StoreProvider.of<AppState>(context).dispatch(DeleteCategory(snapshot.category.id));
                                 Future.delayed(const Duration(milliseconds: 500), () {
                                   Navigator.pushReplacement(
@@ -484,7 +512,7 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
                               ),
                               backgroundColor: Colors.red,
                             ),
-                        )
+                          )
                         : Container(),
                   ),
                   Align(
