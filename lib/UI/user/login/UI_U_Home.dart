@@ -31,6 +31,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   ///Controllers
   AnimationController _animationController;
   VideoPlayerController _controller;
+  VideoPlayerOptions videoPlayerOptions = VideoPlayerOptions(mixWithOthers: true);
 
   ///Animations
   Animation _animation;
@@ -82,11 +83,13 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     Random random = new Random();
     randomNumber = random.nextInt(backgroundVideoList.length); // from 0 upto 99 included
     // Pointing the video controller to our local asset.
-    _controller = VideoPlayerController.asset("assets/video/${backgroundVideoList[randomNumber]}")
+    _controller = VideoPlayerController.asset("assets/video/${backgroundVideoList[randomNumber]}",
+        videoPlayerOptions: videoPlayerOptions)
       ..initialize().then((_) {
         // Once the video has been loaded we play the video and set looping to true.
         _controller.play();
         _controller.setLooping(true);
+        _controller.setVolume(0.0);
         // Ensure the first frame is shown after the video is initialized.
         setState(() {});
       });
@@ -200,7 +203,9 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                     child: SizedBox(
                                       width: _controller.value.size?.width ?? 0,
                                       height: _controller.value.size?.height ?? 0,
-                                      child: VideoPlayer(_controller),
+                                      child: VideoPlayer(
+                                          _controller,
+                                      ),
                                     ),
                                   ),
                                 ) : Container()
