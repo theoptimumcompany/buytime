@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:ui' as ui;
 
+import 'package:BuyTime/UI/user/business/UI_U_business_list.dart';
 import 'package:BuyTime/reblox/model/app_state.dart';
 import 'package:BuyTime/reblox/model/file/optimum_file_to_upload.dart';
 import 'package:BuyTime/utils/size_config.dart';
@@ -155,11 +156,13 @@ class OptimumFormMultiPhotoState extends State<OptimumFormMultiPhoto> {
              CropAspectRatioPreset.ratio16x9
            ],
            androidUiSettings: AndroidUiSettings(
-               toolbarTitle: 'Cropper',
+               toolbarTitle: 'Crop your Image',
                toolbarColor: BuytimeTheme.UserPrimary,
-               toolbarWidgetColor: Colors.white,
+               toolbarWidgetColor: BuytimeTheme.TextWhite,
                initAspectRatio: CropAspectRatioPreset.square,
-               lockAspectRatio: false),
+               lockAspectRatio: true,
+             hideBottomControls: true
+           ),
            iosUiSettings: IOSUiSettings(
              title: 'Cropper',
            ));
