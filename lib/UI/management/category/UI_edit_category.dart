@@ -1,11 +1,12 @@
 import 'package:BuyTime/UI/management/business/UI_M_business_list.dart';
 import 'package:BuyTime/UI/management/category/UI_manage_category.dart';
+import 'package:BuyTime/reblox/model/category/tree/category_tree_state.dart';
+import 'package:BuyTime/reblox/reducer/category_tree_reducer.dart';
 import 'package:BuyTime/utils/theme/buytime_theme.dart';
 import 'package:BuyTime/reblox/model/app_state.dart';
 import 'package:BuyTime/UI/management/business/UI_C_business_list.dart';
-import 'package:BuyTime/reblox/model/category/category_snippet_state.dart';
+import 'package:BuyTime/reblox/model/category/snippet/category_snippet_state.dart';
 import 'package:BuyTime/reblox/model/object_state.dart';
-import 'package:BuyTime/reblox/reducer/category_snippet_reducer.dart';
 import 'package:BuyTime/reblox/reducer/category_reducer.dart';
 import 'package:BuyTime/reusable/form/optimum_form_field.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
@@ -80,7 +81,7 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
   void buildDropDownMenuItemsParent(ObjectState item) {
     if (stopBuildDropDown == false) {
       stopBuildDropDown = true;
-      CategorySnippet categoryNode = StoreProvider.of<AppState>(context).state.categorySnippet;
+      CategoryTree categoryNode = StoreProvider.of<AppState>(context).state.categoryTree;
       List<DropdownMenuItem<ObjectState>> items = List();
 
       if (categoryNode.categoryNodeList != null) {
@@ -459,7 +460,7 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
                               print("Aggiorno " + newCategoryParent.name);
                               StoreProvider.of<AppState>(context).dispatch(new UpdateCategory(snapshot.category));
                               StoreProvider.of<AppState>(context)
-                                  .dispatch(new UpdateCategorySnippet(newCategoryParent));
+                                  .dispatch(new UpdateCategoryTree(newCategoryParent));
 
                               Future.delayed(const Duration(milliseconds: 500), () {
                                 Navigator.pushReplacement(
@@ -496,8 +497,10 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
                             padding: const EdgeInsets.only(left: 25.0),
                             child: FloatingActionButton(
                               onPressed: () {
+                                print("CategoryEdit ::: Elimino nodo categoria dall'albero");
                                 StoreProvider.of<AppState>(context)
-                                    .dispatch(DeleteCategorySnippet(snapshot.category.id));
+                                    .dispatch(DeleteCategoryTree(snapshot.category.id));
+                                print("CategoryEdit ::: Elimino categoria " + snapshot.category.id);
                                 StoreProvider.of<AppState>(context).dispatch(DeleteCategory(snapshot.category.id));
                                 Future.delayed(const Duration(milliseconds: 500), () {
                                   Navigator.pushReplacement(
@@ -580,9 +583,9 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
                                     setState(() {
                                       selectedParentCategory = value;
                                       checkNumberLevelToMove(
-                                          snapshot.categorySnippet.categoryNodeList, snapshot.category.id);
+                                          snapshot.categoryTree.categoryNodeList, snapshot.category.id);
                                       setNewCategoryParent(
-                                          selectedParentCategory, snapshot.categorySnippet.categoryNodeList);
+                                          selectedParentCategory, snapshot.categoryTree.categoryNodeList);
                                       if (selectedParentCategory.level + numberLevel < 6) {
                                         canMoveToParent = true;
                                         numberLevel = 0;

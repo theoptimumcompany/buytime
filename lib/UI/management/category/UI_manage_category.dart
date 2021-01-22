@@ -2,8 +2,8 @@ import 'package:BuyTime/UI/management/business/UI_M_business.dart';
 import 'package:BuyTime/UI/management/category/UI_edit_category.dart';
 import 'package:BuyTime/reblox/model/app_state.dart';
 import 'package:BuyTime/UI/management/category/UI_create_category.dart';
-import 'package:BuyTime/reblox/reducer/category_snippet_reducer.dart';
 import 'package:BuyTime/reblox/reducer/category_reducer.dart';
+import 'package:BuyTime/reblox/reducer/category_tree_reducer.dart';
 import 'package:BuyTime/reusable/appbar/manager_buytime_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -119,7 +119,7 @@ class UI_ManageCategoryState extends State<UI_ManageCategory> {
                           tooltip: 'Create Sub-Category',
                           onPressed: () {
                             StoreProvider.of<AppState>(context).dispatch(CategoryRequest(list[index]["nodeId"]));
-                            StoreProvider.of<AppState>(context).state.categorySnippet.numberOfCategories < 50
+                            StoreProvider.of<AppState>(context).state.categoryTree.numberOfCategories < 50
                                 ? Future.delayed(const Duration(milliseconds: 500), () {
                                     Navigator.pushReplacement(
                                       context,
@@ -164,7 +164,7 @@ class UI_ManageCategoryState extends State<UI_ManageCategory> {
                       tooltip: 'Create Sub-Category',
                       onPressed: () {
                         StoreProvider.of<AppState>(context).dispatch(CategoryRequest(list[index]["nodeId"]));
-                        StoreProvider.of<AppState>(context).state.categorySnippet.numberOfCategories < 50
+                        StoreProvider.of<AppState>(context).state.categoryTree.numberOfCategories < 50
                             ? Future.delayed(const Duration(milliseconds: 500), () {
                                 Navigator.pushReplacement(
                                   context,
@@ -241,7 +241,7 @@ class UI_ManageCategoryState extends State<UI_ManageCategory> {
                               tooltip: 'Create Sub-Category',
                               onPressed: () {
                                 StoreProvider.of<AppState>(context).dispatch(CategoryRequest(list[index]["nodeId"]));
-                                StoreProvider.of<AppState>(context).state.categorySnippet.numberOfCategories < 50
+                                StoreProvider.of<AppState>(context).state.categoryTree.numberOfCategories < 50
                                     ? Future.delayed(const Duration(milliseconds: 500), () {
                                         Navigator.pushReplacement(
                                           context,
@@ -284,7 +284,7 @@ class UI_ManageCategoryState extends State<UI_ManageCategory> {
                           tooltip: 'Create Sub-Category',
                           onPressed: () {
                             StoreProvider.of<AppState>(context).dispatch(CategoryRequest(list[index]["nodeId"]));
-                            StoreProvider.of<AppState>(context).state.categorySnippet.numberOfCategories < 50
+                            StoreProvider.of<AppState>(context).state.categoryTree.numberOfCategories < 50
                                 ? Future.delayed(const Duration(milliseconds: 500), () {
                                     Navigator.pushReplacement(
                                       context,
@@ -323,11 +323,11 @@ class UI_ManageCategoryState extends State<UI_ManageCategory> {
 
   List<Widget> listBranchCategory() {
     List<Widget> branches = new List();
-    List<dynamic> firebaseTree = StoreProvider.of<AppState>(context).state.categorySnippet.categoryNodeList;
+    List<dynamic> firebaseTree = StoreProvider.of<AppState>(context).state.categoryTree.categoryNodeList;
     branches.add(SizedBox(
       height: 10,
     ));
-    if (firebaseTree != null) {
+    if (firebaseTree != null && firebaseTree.isNotEmpty) {
       for (int i = 0; i < firebaseTree.length; i++) {
         branches.add(buildBranchesRoot(firebaseTree, i));
       }
@@ -363,7 +363,7 @@ class UI_ManageCategoryState extends State<UI_ManageCategory> {
     var media = MediaQuery.of(context).size;
     return StoreConnector<AppState, AppState>(
         converter: (store) => store.state,
-        onInit: (store) => store.dispatch(new CategorySnippetRequest()),
+        onInit: (store) => store.dispatch(new CategoryTreeRequest()),
         onDidChange: (store) {},
         onWillChange: (store, AppState state) {},
         builder: (context, snapshot) {
@@ -421,7 +421,7 @@ class UI_ManageCategoryState extends State<UI_ManageCategory> {
                       ),
                       tooltip: 'Create Category',
                       onPressed: () {
-                        snapshot.categorySnippet.numberOfCategories < 50
+                        snapshot.categoryTree.numberOfCategories < 50
                             ? Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(builder: (context) => UI_CreateCategory(empty: "empty")),

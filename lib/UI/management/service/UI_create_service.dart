@@ -2,7 +2,8 @@ import 'package:BuyTime/UI/management/service/UI_M_service_list.dart';
 import 'package:BuyTime/UI/management/service/UI_manage_service_old.dart';
 import 'package:BuyTime/reblox/model/app_state.dart';
 import 'package:BuyTime/UI/management/business/UI_C_business_list.dart';
-import 'package:BuyTime/reblox/model/category/category_snippet_state.dart';
+import 'package:BuyTime/reblox/model/category/snippet/category_snippet_state.dart';
+import 'package:BuyTime/reblox/model/category/tree/category_tree_state.dart';
 import 'package:BuyTime/reblox/model/object_state.dart';
 import 'package:BuyTime/reblox/model/pipeline/pipeline_list_state.dart';
 import 'package:BuyTime/reblox/model/service/service_state.dart';
@@ -63,7 +64,7 @@ class UI_CreateServiceState extends State<UI_CreateService> {
   }
 
   void setCategoryList() {
-    CategorySnippet categoryNode = StoreProvider.of<AppState>(context).state.categorySnippet;
+    CategoryTree categoryNode = StoreProvider.of<AppState>(context).state.categoryTree;
     List<ObjectState> items = List();
 
     if (categoryNode.categoryNodeList != null) {

@@ -1,5 +1,7 @@
 import 'package:BuyTime/reblox/model/app_state.dart';
 import 'package:BuyTime/reblox/model/category/category_state.dart';
+import 'package:BuyTime/reblox/model/service/service_state.dart';
+import 'package:BuyTime/reblox/model/service/snippet/service_snippet_state.dart';
 import 'package:BuyTime/reblox/reducer/category_list_reducer.dart';
 import 'package:BuyTime/reblox/reducer/category_reducer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -68,16 +70,16 @@ class CategoryRequestService implements EpicClass<AppState> {
     return actions.whereType<CategoryRequest>().asyncMap((event) async {
       String categoryId = event.id;
 
-      var query = await Firestore.instance
+      var query = await FirebaseFirestore.instance
           .collection("business")
-          .document(store.state.business.id_firestore)
+          .doc(store.state.business.id_firestore)
           .collection("category")
           .where("id", isEqualTo: categoryId)
-          .getDocuments();
+          .get();
 
       CategoryState categoryState = new CategoryState();
 
-      query.documents.forEach((snapshot) {
+      query.docs.forEach((snapshot) {
         categoryState = CategoryState.fromJson(snapshot.data());
       });
       print("CategoryState return " + categoryState.name);
@@ -151,13 +153,15 @@ class CategoryCreateService implements EpicClass<AppState> {
       CategoryState categoryState = event.categoryState;
       DocumentReference docReference = Firestore.instance
           .collection('business')
-          .document(store.state.business.id_firestore)
+          .doc(store.state.business.id_firestore)
           .collection('category')
-          .document();
-      categoryState.id = docReference.documentID;
-      store.state.category.id = docReference.documentID;
+          .doc();
+      categoryState.id = docReference.id;
+      store.state.category.id = docReference.id;
       categoryState.businessId = store.state.business.id_firestore;
-      return docReference.setData(categoryState.toJson()).then((value) {
+      ServiceSnippet serviceState = ServiceSnippet().toEmpty();
+      categoryState.categorySnippet.mostSoldService = serviceState;
+      return docReference.set(categoryState.toJson()).then((value) {
         print("CategoryService has created new category " + docReference.documentID);
 
         return new CreatedCategory(categoryState);
@@ -175,11 +179,11 @@ class CategoryDeleteService implements EpicClass<AppState> {
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<DeleteCategory>().asyncMap((event) {
       String idCategoryToDelete = event.idCategory;
-      return Firestore.instance
+      return FirebaseFirestore.instance
           .collection('business')
-          .document(store.state.business.id_firestore)
+          .doc(store.state.business.id_firestore)
           .collection('category')
-          .document(idCategoryToDelete)
+          .doc(idCategoryToDelete)
           .delete();
     });
   }

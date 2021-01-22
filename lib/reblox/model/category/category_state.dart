@@ -1,3 +1,4 @@
+import 'package:BuyTime/reblox/model/category/snippet/category_snippet_state.dart';
 import 'package:BuyTime/reblox/model/object_state.dart';
 
 class CategoryState {
@@ -9,6 +10,7 @@ class CategoryState {
   List<ObjectState> manager;
   String businessId;
   List<ObjectState> worker;
+  CategorySnippet categorySnippet;
 
   CategoryState({
     this.name,
@@ -19,6 +21,7 @@ class CategoryState {
     this.manager,
     this.businessId,
     this.worker,
+    this.categorySnippet,
   });
 
   CategoryState toEmpty() {
@@ -31,6 +34,7 @@ class CategoryState {
       manager: [],
       businessId: "",
       worker: [],
+      categorySnippet: CategorySnippet().toEmpty(),
     );
   }
 
@@ -43,9 +47,11 @@ class CategoryState {
     this.manager = category.manager;
     this.businessId = category.businessId;
     this.worker = category.worker;
+    this.categorySnippet = category.categorySnippet;
   }
 
-  categoryStateFieldUpdate(String name, String id, int level, int children, ObjectState parent, List<ObjectState> manager, String businessId, List<ObjectState> worker) {
+  categoryStateFieldUpdate(String name, String id, int level, int children, ObjectState parent,
+      List<ObjectState> manager, String businessId, List<ObjectState> worker, CategorySnippet categorySnippet) {
     CategoryState(
       name: name ?? this.name,
       id: id ?? this.id,
@@ -55,10 +61,20 @@ class CategoryState {
       manager: manager ?? this.manager,
       businessId: businessId ?? this.businessId,
       worker: worker ?? this.worker,
+      categorySnippet: categorySnippet ?? this.categorySnippet,
     );
   }
 
-  CategoryState copyWith({String name, String id, int level, int children, ObjectState parent, List<ObjectState> manager, String businessId, List<ObjectState> worker}) {
+  CategoryState copyWith(
+      {String name,
+      String id,
+      int level,
+      int children,
+      ObjectState parent,
+      List<ObjectState> manager,
+      String businessId,
+      List<ObjectState> worker,
+      CategorySnippet categorySnippet}) {
     return CategoryState(
       name: name ?? this.name,
       id: id ?? this.id,
@@ -68,6 +84,7 @@ class CategoryState {
       manager: manager ?? this.manager,
       businessId: businessId ?? this.businessId,
       worker: worker ?? this.worker,
+      categorySnippet: categorySnippet ?? this.categorySnippet,
     );
   }
 
@@ -97,7 +114,8 @@ class CategoryState {
             name: item["name"],
             id: item["id"],
           );
-        }));
+        })),
+        categorySnippet = CategorySnippet.fromJson(json['snippet']);
 
   Map<String, dynamic> toJson() => {
         'name': name,
@@ -108,5 +126,6 @@ class CategoryState {
         'manager': convertToJson(manager),
         'businessId': businessId,
         'worker': convertToJson(worker),
+        'snippet': categorySnippet.toJson(),
       };
 }

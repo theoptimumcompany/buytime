@@ -7,8 +7,7 @@ import 'package:BuyTime/reblox/reducer/business_list_reducer.dart';
 import 'package:BuyTime/reblox/reducer/business_reducer.dart';
 import 'package:BuyTime/reblox/reducer/category_list_reducer.dart';
 import 'package:BuyTime/reblox/reducer/category_reducer.dart';
-import 'package:BuyTime/reblox/reducer/category_snippet_list_reducer.dart';
-import 'package:BuyTime/reblox/reducer/category_snippet_reducer.dart';
+import 'package:BuyTime/reblox/reducer/category_tree_reducer.dart';
 import 'package:BuyTime/reblox/reducer/filter_reducer.dart';
 import 'package:BuyTime/reblox/reducer/order_list_reducer.dart';
 import 'package:BuyTime/reblox/reducer/order_reducer.dart';
@@ -197,9 +196,7 @@ class _UI_M_BusinessListDrawerState extends State<UI_M_BusinessListDrawer> {
                         StoreProvider.of<AppState>(context)
                             .dispatch(SetCategoryListToEmpty());
                         StoreProvider.of<AppState>(context)
-                            .dispatch(SetCategorySnippetToEmpty());
-                        StoreProvider.of<AppState>(context)
-                            .dispatch(SetCategorySnippetListToEmpty());
+                            .dispatch(SetCategoryTreeToEmpty());
                         StoreProvider.of<AppState>(context)
                             .dispatch(SetFilterToEmpty());
                         StoreProvider.of<AppState>(context)

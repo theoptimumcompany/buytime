@@ -1,13 +1,12 @@
-class CategorySnippet {
+
+class CategoryTree {
   String nodeName;
   String nodeId;
   int nodeLevel;
   int numberOfCategories;
+  List<dynamic> categoryNodeList; // Array di mappe che costruisce l'albero delle categorie
 
-  //List<String> manager;
-  List<dynamic> categoryNodeList; // Array di mappe
-
-  CategorySnippet({
+  CategoryTree({
     this.nodeName,
     this.nodeId,
     this.nodeLevel,
@@ -15,7 +14,7 @@ class CategorySnippet {
     this.categoryNodeList,
   });
 
-  CategorySnippet.fromState(CategorySnippet categoryNode) {
+  CategoryTree.fromState(CategoryTree categoryNode) {
     this.nodeName = categoryNode.nodeName;
     this.nodeId = categoryNode.nodeId;
     this.nodeLevel = categoryNode.nodeLevel;
@@ -23,13 +22,13 @@ class CategorySnippet {
     this.categoryNodeList = categoryNode.categoryNodeList;
   }
 
-  CategorySnippet copyWith(
+  CategoryTree copyWith(
       {String nodeName,
       String nodeId,
       int nodeLevel,
       int numberOfCategories,
       List<dynamic> categoryNodeList}) {
-    return CategorySnippet(
+    return CategoryTree(
       nodeName: nodeName ?? this.nodeName,
       nodeId: nodeId ?? this.nodeId,
       nodeLevel: nodeLevel ?? this.nodeLevel,
@@ -38,7 +37,7 @@ class CategorySnippet {
     );
   }
 
-  CategorySnippet.fromJson(Map<String, dynamic> json)
+  CategoryTree.fromJson(Map<String, dynamic> json)
       : nodeName = json['nodeName'],
         nodeId = json['nodeId'],
         nodeLevel = json['nodeLevel'],
@@ -53,12 +52,13 @@ class CategorySnippet {
         'categoryNodeList': categoryNodeList,
       };
 
-  CategorySnippet toEmpty() {
-    return CategorySnippet(
-        nodeName: "",
-        nodeId: "",
-        nodeLevel: 0,
-        numberOfCategories: 0,
-        categoryNodeList: null);
+  CategoryTree toEmpty() {
+    return CategoryTree(
+      nodeName: "",
+      nodeId: "",
+      nodeLevel: 0,
+      numberOfCategories: 0,
+      categoryNodeList: null,
+    );
   }
 }

@@ -116,7 +116,7 @@ class UI_ManageServiceState extends State<UI_ManageService> {
         /*onInit:  (store) => */
         builder: (context, snapshot) {
           if (canBuildCards == true) {
-            seekNumbercategory(snapshot.categorySnippet.categoryNodeList);
+            seekNumbercategory(snapshot.categoryTree.categoryNodeList);
             canBuildCards = false;
           }
           return WillPopScope(

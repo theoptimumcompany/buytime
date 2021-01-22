@@ -1,3 +1,4 @@
+import 'package:BuyTime/reblox/reducer/category_tree_reducer.dart';
 import 'package:BuyTime/utils/theme/buytime_theme.dart';
 import 'package:BuyTime/reblox/model/app_state.dart';
 import 'package:BuyTime/reblox/model/business/business_state.dart';
@@ -6,13 +7,9 @@ import 'package:BuyTime/reblox/reducer/business_list_reducer.dart';
 import 'package:BuyTime/reblox/reducer/business_reducer.dart';
 import 'package:BuyTime/UI/management/business/UI_C_manage_business.dart';
 import 'package:BuyTime/UI/management/category/UI_manage_category.dart';
-import 'package:BuyTime/reblox/reducer/category_snippet_reducer.dart';
 import 'package:BuyTime/reblox/reducer/pipeline_list_reducer.dart';
 import 'package:BuyTime/reusable/business/optimum_business_card_medium_manager.dart';
-import 'package:BuyTime/reusable/business/optimum_business_card_medium_user.dart';
 import 'package:BuyTime/UI/user/cart/UI_U_stripe_payment.dart';
-import 'package:BuyTime/services/business_service_epic.dart';
-import 'package:BuyTime/services/category_snippet_service_epic.dart';
 import 'package:BuyTime/UI/user/business/UI_U_business_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -198,9 +195,9 @@ class UI_C_BusinessListState extends State<UI_C_BusinessList> {
                                                   icon: Icon(Icons.category),
                                                   onPressed: () {
                                                     StoreProvider.of<AppState>(context).dispatch(new SetBusiness(snapshot.businessList.businessListState[index]));
-                                                    if (StoreProvider.of<AppState>(context).state.categorySnippet.categoryNodeList == null) {
+                                                    if (StoreProvider.of<AppState>(context).state.categoryTree.categoryNodeList == null) {
                                                       StoreProvider.of<AppState>(context)
-                                                          .dispatch(new CategorySnippetCreateIfNotExists(snapshot.businessList.businessListState[index].id_firestore, context));
+                                                          .dispatch(new CategoryTreeCreateIfNotExists(snapshot.businessList.businessListState[index].id_firestore, context));
                                                     }
 
                                                     Navigator.pushReplacement(
@@ -220,7 +217,7 @@ class UI_C_BusinessListState extends State<UI_C_BusinessList> {
                                                   icon: Icon(Icons.room_service),
                                                   onPressed: () {
                                                     StoreProvider.of<AppState>(context).dispatch(new SetBusiness(snapshot.businessList.businessListState[index]));
-                                                    StoreProvider.of<AppState>(context).dispatch(new CategorySnippetRequest());
+                                                    StoreProvider.of<AppState>(context).dispatch(new CategoryTreeRequest());
                                                     StoreProvider.of<AppState>(context).dispatch(new RequestListPipeline());
                                                     Navigator.pushReplacement(
                                                       context,

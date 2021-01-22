@@ -1,24 +1,21 @@
 import 'dart:convert';
 
 import 'package:BuyTime/reblox/model/app_state.dart';
-import 'package:BuyTime/reblox/model/category/category_snippet_state.dart';
 import 'package:BuyTime/reblox/model/category/category_state.dart';
+import 'package:BuyTime/reblox/model/category/tree/category_tree_state.dart';
 import 'package:BuyTime/reblox/model/object_state.dart';
-import 'package:BuyTime/reblox/reducer/business_reducer.dart';
-import 'package:BuyTime/reblox/reducer/category_snippet_list_reducer.dart';
-import 'package:BuyTime/reblox/reducer/category_snippet_reducer.dart';
-import 'package:BuyTime/reblox/reducer/category_reducer.dart';
+import 'package:BuyTime/reblox/reducer/category_tree_reducer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux_epics/redux_epics.dart';
 import 'package:rxdart/rxdart.dart';
 
-class CategorySnippetCreateIfNotExistsService implements EpicClass<AppState> {
+class CategoryTreeCreateIfNotExistsService implements EpicClass<AppState> {
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions
-        .whereType<CategorySnippetCreateIfNotExists>()
+        .whereType<CategoryTreeCreateIfNotExists>()
         .asyncMap((event) {
       print("CategoryNodeCreateIfNotExistsService CategoryNode exists?");
       CollectionReference collectionReference = Firestore.instance
@@ -34,7 +31,7 @@ class CategorySnippetCreateIfNotExistsService implements EpicClass<AppState> {
               .document(event.idFirestore)
               .collection('category_tree')
               .document();
-          CategorySnippet newCategoryNode = CategorySnippet(
+          CategoryTree newCategoryNode = CategoryTree(
               nodeName: "root",
               nodeId: doc.documentID,
               nodeLevel: 0,
@@ -53,35 +50,17 @@ class CategorySnippetCreateIfNotExistsService implements EpicClass<AppState> {
 class CategorySnippetCreateService implements EpicClass<AppState> {
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    return actions.whereType<CreateCategorySnippet>().asyncMap((event) {
+    return actions.whereType<CreateCategoryTree>().asyncMap((event) {
       String idBusiness = event.idBusiness;
     });
   }
 }
 
-class CategorySnippetListRequestService implements EpicClass<AppState> {
+
+class CategoryTreeRequestService implements EpicClass<AppState> {
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    return actions
-        .whereType<RequestListCategorySnippet>()
-        .asyncMap((event) async {
-      /*  var query = await Firestore.instance.collection("business").getDocuments();
-      print("categorySnippetListState firestore request");
-      List<CategorySnippet> categorySnippetListState = List<CategorySnippet>();
-      query.documents.forEach((element) {
-        CategorySnippet categorySnippet = CategorySnippet.fromJson(element.data);
-        categorySnippetListState.add(categorySnippet);
-      });
-
-      return new CategorySnippetListReturned(categorySnippetListState);*/
-    });
-  }
-}
-
-class CategorySnippetRequestService implements EpicClass<AppState> {
-  @override
-  Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    return actions.whereType<CategorySnippetRequest>().asyncMap((event) async {
+    return actions.whereType<CategoryTreeRequest>().asyncMap((event) async {
       if (store.state.business.id_firestore != null ||
           store.state.business.id_firestore != '') {
         var query = await FirebaseFirestore.instance
@@ -89,20 +68,20 @@ class CategorySnippetRequestService implements EpicClass<AppState> {
             .doc(store.state.business.id_firestore)
             .collection("category_tree")
             .get();
-        CategorySnippet categoryNode = new CategorySnippet();
+        CategoryTree categoryNode = new CategoryTree();
 
         query.docs.forEach((snapshot) {
-          categoryNode = CategorySnippet.fromJson(snapshot.data());
+          categoryNode = CategoryTree.fromJson(snapshot.data());
         });
         if (categoryNode != null) {
-          return new CategorySnippetRequestResponse(categoryNode);
+          return new CategoryTreeRequestResponse(categoryNode);
         }
       }
-    }).takeUntil(actions.whereType<UnlistenCategorySnippet>());
+    }).takeUntil(actions.whereType<UnlistenCategoryTree>());
   }
 }
 
-class CategorySnippetAddService implements EpicClass<AppState> {
+class CategoryTreeAddService implements EpicClass<AppState> {
   int updateLevel;
   int updateNumberOfCategories;
 
@@ -178,15 +157,15 @@ class CategorySnippetAddService implements EpicClass<AppState> {
 
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    return actions.whereType<AddCategorySnippet>().asyncMap((event) async {
-      updateLevel = store.state.categorySnippet.nodeLevel;
-      updateNumberOfCategories = store.state.categorySnippet.numberOfCategories;
+    return actions.whereType<AddCategoryTree>().asyncMap((event) async {
+      updateLevel = store.state.categoryTree.nodeLevel;
+      updateNumberOfCategories = store.state.categoryTree.numberOfCategories;
 
-      print("CategorySnippetService adding category snippet");
+      print("CategorySnippetService adding category tree");
       print(event.selectedParent);
       ObjectState selected = event.selectedParent;
-      List<dynamic> listNode = store.state.categorySnippet.categoryNodeList;
-      CategoryState category = store.state.category;
+      List<dynamic> listNode = store.state.categoryTree.categoryNodeList;
+      CategoryTree categoryTree = store.state.categoryTree;
       print("Lista Iniziale " + listNode.toString());
       print("Parent : " +
           selected.name +
@@ -198,7 +177,7 @@ class CategorySnippetAddService implements EpicClass<AppState> {
       print("*******");
       print(newlistNode);
       print("*******");
-      CategorySnippet newCategoryNode = CategorySnippet(
+      CategoryTree newCategoryNode = CategoryTree(
           nodeName: "root",
           nodeId: "root",
           nodeLevel: updateLevel,
@@ -207,34 +186,34 @@ class CategorySnippetAddService implements EpicClass<AppState> {
       print("dopo creazione category node");
       print(store.state.business.id_firestore);
 
-      var query = await Firestore.instance
+      var query = await FirebaseFirestore.instance
           .collection("business")
-          .document(store.state.business.id_firestore)
+          .doc(store.state.business.id_firestore)
           .collection("category_tree")
-          .getDocuments();
+          .get();
 
-      query.documents.forEach((document) {
-        document.reference.updateData(newCategoryNode.toJson()).then((value) {
+      query.docs.forEach((document) {
+        document.reference.update(newCategoryNode.toJson()).then((value) {
           print("Category Node Service should be updated online ");
-          return new UpdatedCategorySnippet(null);
+          return new UpdatedCategoryTree(null);
         });
         ;
       });
-    }).takeUntil(actions.whereType<UnlistenCategorySnippet>());
+    }).takeUntil(actions.whereType<UnlistenCategoryTree>());
   }
 }
 
-class CategorySnippetDeleteService implements EpicClass<AppState> {
+class CategoryTreeDeleteService implements EpicClass<AppState> {
   int updateLevel;
   int updateNumberOfCategories;
 
-  updateCategorySnippetLevel(List<dynamic> list) {
+  updateCategoryTreeLevel(List<dynamic> list) {
     for (int i = 0; i < list.length; i++) {
       updateLevel =
           updateLevel < list[i]['level'] ? list[i]['level'] : updateLevel;
 
       if (list[i]['nodeCategory'] != null) {
-        updateCategorySnippetLevel(list[i]['nodeCategory']);
+        updateCategoryTreeLevel(list[i]['nodeCategory']);
       }
     }
   }
@@ -289,18 +268,18 @@ class CategorySnippetDeleteService implements EpicClass<AppState> {
 
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    return actions.whereType<DeleteCategorySnippet>().asyncMap((event) async {
-      updateLevel = store.state.categorySnippet.nodeLevel;
-      updateNumberOfCategories = store.state.categorySnippet.numberOfCategories;
+    return actions.whereType<DeleteCategoryTree>().asyncMap((event) async {
+      updateLevel = store.state.categoryTree.nodeLevel;
+      updateNumberOfCategories = store.state.categoryTree.numberOfCategories;
 
       print("CategorySnippetService updating delete node");
       print("Nodo da cancellare " + event.selectedNodeId);
-      List<dynamic> listNode = store.state.categorySnippet.categoryNodeList;
+      List<dynamic> listNode = store.state.categoryTree.categoryNodeList;
       List<dynamic> newlistNode =
           deleteTree(listNode, event.selectedNodeId, store);
       updateLevel = 0;
-      updateCategorySnippetLevel(newlistNode);
-      CategorySnippet newCategoryNode = CategorySnippet(
+      updateCategoryTreeLevel(newlistNode);
+      CategoryTree newCategoryNode = CategoryTree(
           nodeName: "root",
           nodeId: "root",
           nodeLevel: updateLevel,
@@ -314,27 +293,27 @@ class CategorySnippetDeleteService implements EpicClass<AppState> {
       query.documents.forEach((document) {
         document.reference.updateData(newCategoryNode.toJson()).then((value) {
           print("Category Node Service should be delete online ");
-          return new DeletedCategorySnippet(null);
+          return new DeletedCategoryTree(null);
         });
       });
-    }).takeUntil(actions.whereType<UnlistenCategorySnippet>());
+    }).takeUntil(actions.whereType<UnlistenCategoryTree>());
   }
 }
 
-class CategorySnippetUpdateService implements EpicClass<AppState> {
+class CategoryTreeUpdateService implements EpicClass<AppState> {
   List<dynamic> nodeToSave = [];
 
   int updateLevel;
   int updateNumberOfCategories;
   int localLevel;
 
-  updateCategorySnippetLevel(List<dynamic> list) {
+  updateCategoryTreeLevel(List<dynamic> list) {
     for (int i = 0; i < list.length; i++) {
       updateLevel =
           updateLevel < list[i]['level'] ? list[i]['level'] : updateLevel;
 
       if (list[i]['nodeCategory'] != null) {
-        updateCategorySnippetLevel(list[i]['nodeCategory']);
+        updateCategoryTreeLevel(list[i]['nodeCategory']);
       }
     }
   }
@@ -422,15 +401,15 @@ class CategorySnippetUpdateService implements EpicClass<AppState> {
 
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    return actions.whereType<UpdateCategorySnippet>().asyncMap((event) async {
-      updateLevel = store.state.categorySnippet.nodeLevel;
-      updateNumberOfCategories = store.state.categorySnippet.numberOfCategories;
+    return actions.whereType<UpdateCategoryTree>().asyncMap((event) async {
+      updateLevel = store.state.categoryTree.nodeLevel;
+      updateNumberOfCategories = store.state.categoryTree.numberOfCategories;
 
       print("CategoryNodeService updating category tree");
       print(event.selectedParent);
       ObjectState selectedParent = event.selectedParent;
       print("Selected New Parent ID: " + selectedParent.id);
-      List<dynamic> listNode = store.state.categorySnippet.categoryNodeList;
+      List<dynamic> listNode = store.state.categoryTree.categoryNodeList;
       CategoryState category = store.state.category;
 
       List<dynamic> newlistNode =
@@ -439,9 +418,9 @@ class CategorySnippetUpdateService implements EpicClass<AppState> {
         newlistNode = addNodeToTree(newlistNode, selectedParent.id, store);
       }
       updateLevel = 0;
-      updateCategorySnippetLevel(newlistNode);
+      updateCategoryTreeLevel(newlistNode);
       nodeToSave = [];
-      CategorySnippet newCategoryNode = CategorySnippet(
+      CategoryTree newCategoryNode = CategoryTree(
           nodeName: "root",
           nodeId: "root",
           nodeLevel: updateLevel,
@@ -459,9 +438,9 @@ class CategorySnippetUpdateService implements EpicClass<AppState> {
       query.documents.forEach((document) {
         document.reference.updateData(newCategoryNode.toJson()).then((value) {
           print("Category Node Service should be updated online ");
-          return new UpdatedCategorySnippet(null);
+          return new UpdatedCategoryTree(null);
         });
       });
-    }).takeUntil(actions.whereType<UnlistenCategorySnippet>());
+    }).takeUntil(actions.whereType<UnlistenCategoryTree>());
   }
 }

@@ -5,10 +5,9 @@ import 'package:BuyTime/UI/model/manager_model.dart';
 import 'package:BuyTime/UI/model/menuItem_model.dart';
 import 'package:BuyTime/UI/model/service_model.dart';
 import 'package:BuyTime/reblox/model/app_state.dart';
-import 'package:BuyTime/reblox/model/category/category_list_state.dart';
 import 'package:BuyTime/reblox/model/category/category_state.dart';
 import 'package:BuyTime/reblox/reducer/category_list_reducer.dart';
-import 'package:BuyTime/reblox/reducer/category_snippet_reducer.dart';
+import 'package:BuyTime/reblox/reducer/category_tree_reducer.dart';
 import 'package:BuyTime/reusable/appbar/manager_buytime_appbar.dart';
 import 'package:BuyTime/reusable/menu/UI_M_business_list_drawer.dart';
 import 'package:BuyTime/utils/size_config.dart';
@@ -257,8 +256,8 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                             InkWell(
                               onTap: () {
                                 debugPrint('MANAGE Clicked!');
-                                if (StoreProvider.of<AppState>(context).state.categorySnippet.categoryNodeList == null) {
-                                  StoreProvider.of<AppState>(context).dispatch(new CategorySnippetCreateIfNotExists(snapshot.business.id_firestore, context));
+                                if (StoreProvider.of<AppState>(context).state.categoryTree.categoryNodeList == null) {
+                                  StoreProvider.of<AppState>(context).dispatch(new CategoryTreeCreateIfNotExists(snapshot.business.id_firestore, context));
                                 }
                                 Navigator.pushReplacement(
                                   context,

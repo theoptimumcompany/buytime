@@ -1,3 +1,4 @@
+import 'package:BuyTime/reblox/model/category/tree/category_tree_state.dart';
 import 'package:BuyTime/utils/theme/buytime_theme.dart';
 import 'package:BuyTime/UI/user/login/UI_U_Home.dart';
 import 'package:BuyTime/UI/user/login/UI_U_Login.dart';
@@ -6,8 +7,7 @@ import 'package:BuyTime/reblox/model/app_state.dart';
 import 'package:BuyTime/reblox/model/business/business_list_state.dart';
 import 'package:BuyTime/reblox/model/business/business_state.dart';
 import 'package:BuyTime/reblox/model/category/category_list_state.dart';
-import 'package:BuyTime/reblox/model/category/category_snippet_list_state.dart';
-import 'package:BuyTime/reblox/model/category/category_snippet_state.dart';
+import 'package:BuyTime/reblox/model/category/snippet/category_snippet_state.dart';
 import 'package:BuyTime/reblox/model/category/category_state.dart';
 import 'package:BuyTime/reblox/model/old/filter_search_state.dart';
 import 'package:BuyTime/reblox/model/object_state.dart';
@@ -57,12 +57,11 @@ void main() {
     CategoryDeleteService(),
     CategoryListRequestService(),
     CategoryRootListRequestService(),
-    CategorySnippetListRequestService(),
-    CategorySnippetRequestService(),
-    CategorySnippetCreateIfNotExistsService(),
-    CategorySnippetUpdateService(),
-    CategorySnippetAddService(),
-    CategorySnippetDeleteService(),
+    CategoryTreeRequestService(),
+    CategoryTreeCreateIfNotExistsService(),
+    CategoryTreeUpdateService(),
+    CategoryTreeAddService(),
+    CategoryTreeDeleteService(),
     StripePaymentAddPaymentMethod(),
     StripePaymentCardListRequest(),
     StripeDetachPaymentMethodRequest(),
@@ -87,6 +86,7 @@ void main() {
       manager: [],
       businessId: "",
       worker: [],
+      categorySnippet: CategorySnippet(),
     ),
     filterSearch: FilterSearchState(
         star: [false, false, false, false, false],
@@ -95,8 +95,8 @@ void main() {
         searchText: "",
         food: false,
         hotel: false),
-    categorySnippet: CategorySnippet(
-        nodeName: "", nodeId: "", nodeLevel: 0, numberOfCategories: 0, categoryNodeList: null),
+    categoryTree:
+        CategoryTree(nodeName: "", nodeId: "", nodeLevel: 0, numberOfCategories: 0, categoryNodeList: null),
     business: BusinessState(
       name: "",
       responsible_person_name: "",
@@ -149,8 +149,6 @@ void main() {
         error: ""),
     businessList: BusinessListState(businessListState: List<BusinessState>()),
     categoryList: CategoryListState(categoryListState: List<CategoryState>()),
-    categorySnippetListState:
-        CategorySnippetListState(categorySnippetListState: Map<String, CategorySnippet>()),
     serviceList: ServiceListState(serviceListState: List<ServiceState>()),
     pipelineList: PipelineList(pipelineList: List<Pipeline>()),
     user: UserState(
@@ -227,7 +225,6 @@ class BuyTime extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
 
     return StoreProvider<AppState>(
@@ -259,8 +256,8 @@ class MainRoute<T> extends MaterialPageRoute<T> {
       : super(builder: (_) => RouteAwareWidget(child: widget), settings: settings);
 
   @override
-  Widget buildTransitions(BuildContext context, Animation<double> animation,
-      Animation<double> secondaryAnimation, Widget child) {
+  Widget buildTransitions(
+      BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
     // Fades between routes. (If you don't want any animation,
     // just return child.)
     return FadeTransition(opacity: animation, child: child);
@@ -272,8 +269,8 @@ class FabRoute<T> extends MaterialPageRoute<T> {
       : super(builder: (_) => RouteAwareWidget(child: widget), settings: settings);
 
   @override
-  Widget buildTransitions(BuildContext context, Animation<double> animation,
-      Animation<double> secondaryAnimation, Widget child) {
+  Widget buildTransitions(
+      BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
     return SlideTransition(
         position: new Tween<Offset>(
           begin: const Offset(0.0, 1.0),

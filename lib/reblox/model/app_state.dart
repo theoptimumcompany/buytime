@@ -1,7 +1,6 @@
 import 'package:BuyTime/reblox/model/business/business_list_state.dart';
 import 'package:BuyTime/reblox/model/business/business_state.dart';
 import 'package:BuyTime/reblox/model/category/category_list_state.dart';
-import 'package:BuyTime/reblox/model/category/category_snippet_list_state.dart';
 import 'package:BuyTime/reblox/model/category/category_state.dart';
 import 'package:BuyTime/reblox/model/order/order_list_state.dart';
 import 'package:BuyTime/reblox/model/order/order_state.dart';
@@ -12,8 +11,7 @@ import 'package:BuyTime/reblox/model/service/service_state.dart';
 import 'package:BuyTime/reblox/model/stripe/stripe_state.dart';
 import 'package:BuyTime/reblox/model/user/user_state.dart';
 import 'package:flutter/foundation.dart';
-
-import 'category/category_snippet_state.dart';
+import 'category/tree/category_tree_state.dart';
 import 'old/filter_search_state.dart';
 
 class AppRoutes {
@@ -22,7 +20,6 @@ class AppRoutes {
   static const registration = "/history";
   static const orderDetail = "/orderDetail";
 }
-
 
 class AppState {
   FilterSearchState filterSearch;
@@ -34,8 +31,7 @@ class AppState {
   UserState user;
   CategoryState category;
   CategoryListState categoryList;
-  CategorySnippet categorySnippet;
-  CategorySnippetListState categorySnippetListState;
+  CategoryTree categoryTree;
   ServiceState serviceState;
   ServiceListState serviceList;
   Pipeline pipeline;
@@ -52,8 +48,7 @@ class AppState {
     @required this.user,
     @required this.category,
     @required this.categoryList,
-    @required this.categorySnippet,
-    @required this.categorySnippetListState,
+    @required this.categoryTree,
     @required this.serviceState,
     @required this.serviceList,
     @required this.pipeline,
@@ -71,8 +66,7 @@ class AppState {
     user = UserState();
     category = CategoryState();
     categoryList = CategoryListState();
-    categorySnippet = CategorySnippet();
-    categorySnippetListState = CategorySnippetListState();
+    categoryTree = CategoryTree();
     serviceState = ServiceState();
     serviceList = ServiceListState();
     pipeline = Pipeline();
@@ -89,14 +83,12 @@ class AppState {
       UserState user,
       CategoryState category,
       CategoryListState categoryList,
-      CategorySnippet categorySnippet,
-      CategorySnippetListState categorySnippetListState,
+      CategoryTree categoryTree,
       ServiceState serviceState,
       ServiceListState serviceList,
       Pipeline pipeline,
       PipelineList pipelineList,
-      List<String> route
-      }) {
+      List<String> route}) {
     this.filterSearch = filterSearch;
     this.business = business;
     this.order = order;
@@ -106,8 +98,7 @@ class AppState {
     this.user = user;
     this.category = category;
     this.categoryList = categoryList;
-    this.categorySnippet = categorySnippet;
-    this.categorySnippetListState = categorySnippetListState;
+    this.categoryTree = categoryTree;
     this.serviceState = serviceState;
     this.serviceList = serviceList;
     this.pipeline = pipeline;
@@ -125,8 +116,7 @@ class AppState {
     user = json['user'];
     category = json['category'];
     categoryList = json['categoryList'];
-    categorySnippet = json['categorySnippet'];
-    categorySnippetListState = json['categorySnippetListState'];
+    categoryTree = json['categoryTree'];
     serviceState = json['serviceState'];
     serviceList = json['serviceList'];
     pipeline = json['pipeline'];
@@ -144,8 +134,7 @@ class AppState {
         'user': user,
         'category': category,
         'categoryList': categoryList,
-        'categorySnippet': categorySnippet,
-        'categorySnippetListState': categorySnippetListState,
+        'categoryTree': categoryTree,
         'serviceState': serviceState,
         'serviceList': serviceList,
         'pipeline': pipeline,

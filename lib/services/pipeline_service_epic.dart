@@ -1,8 +1,5 @@
 import 'package:BuyTime/reblox/model/app_state.dart';
-import 'package:BuyTime/reblox/model/category/category_snippet_state.dart';
-import 'package:BuyTime/reblox/model/category/category_state.dart';
 import 'package:BuyTime/reblox/model/pipeline/pipeline.dart';
-import 'package:BuyTime/reblox/reducer/category_snippet_reducer.dart';
 import 'package:BuyTime/reblox/reducer/pipeline_list_reducer.dart';
 import 'package:BuyTime/reblox/reducer/pipeline_reducer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

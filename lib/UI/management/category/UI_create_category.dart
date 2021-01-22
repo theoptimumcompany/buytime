@@ -1,10 +1,11 @@
 import 'package:BuyTime/UI/management/category/UI_manage_category.dart';
 import 'package:BuyTime/reblox/model/app_state.dart';
-import 'package:BuyTime/reblox/model/category/category_snippet_state.dart';
+import 'package:BuyTime/reblox/model/category/snippet/category_snippet_state.dart';
 import 'package:BuyTime/reblox/model/category/category_state.dart';
+import 'package:BuyTime/reblox/model/category/tree/category_tree_state.dart';
 import 'package:BuyTime/reblox/model/object_state.dart';
-import 'package:BuyTime/reblox/reducer/category_snippet_reducer.dart';
 import 'package:BuyTime/reblox/reducer/category_reducer.dart';
+import 'package:BuyTime/reblox/reducer/category_tree_reducer.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -93,7 +94,7 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
   void buildDropDownMenuItemsParent(ObjectState item) {
     if (stopBuildDropDown == false) {
       stopBuildDropDown = true;
-      CategorySnippet categoryNode = StoreProvider.of<AppState>(context).state.categorySnippet;
+      CategoryTree categoryNode = StoreProvider.of<AppState>(context).state.categoryTree;
       List<DropdownMenuItem<ObjectState>> items = List();
 
       items.add(
@@ -437,7 +438,7 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
                         if (validateAndSave()) {
                           if (changeParent == false) {
                             print("CategoryCreate : Parent non Scelto");
-                            CategoryState categoryCreate = snapshot.category;
+                            CategoryState categoryCreate = snapshot.category != null ? snapshot.category : CategoryState().toEmpty();
                             ObjectState newCategoryParent = selectedDropValue;
                             print("Livello prima : " + snapshot.category.level.toString());
                             categoryCreate.parent = newCategoryParent;
@@ -446,10 +447,11 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
                             }
 
                             StoreProvider.of<AppState>(context).dispatch(new CreateCategory(categoryCreate));
-                            StoreProvider.of<AppState>(context).dispatch(new AddCategorySnippet(newCategoryParent));
+                            StoreProvider.of<AppState>(context).dispatch(new AddCategoryTree(newCategoryParent));
                           } else {
-                            StoreProvider.of<AppState>(context).dispatch(new CreateCategory(snapshot.category));
-                            StoreProvider.of<AppState>(context).dispatch(new AddCategorySnippet(newParent));
+                            CategoryState categoryCreate = snapshot.category != null ? snapshot.category : CategoryState().toEmpty();
+                            StoreProvider.of<AppState>(context).dispatch(new CreateCategory(categoryCreate));
+                            StoreProvider.of<AppState>(context).dispatch(new AddCategoryTree(newParent));
                           }
 
                           Future.delayed(const Duration(milliseconds: 500), () {
@@ -533,7 +535,7 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
                                           newParent = newValue;
                                           print("Drop Selezionato su onchangedrop : " + selectedDropValue.name);
                                           setNewCategoryParent(
-                                              selectedDropValue, snapshot.categorySnippet.categoryNodeList);
+                                              selectedDropValue, snapshot.categoryTree.categoryNodeList);
                                         });
                                       }),
                                 ),
