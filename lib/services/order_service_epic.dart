@@ -2,9 +2,10 @@ import 'dart:convert';
 
 import 'package:BuyTime/reblox/model/app_state.dart';
 import 'package:BuyTime/reblox/model/file/optimum_file_to_upload.dart';
-import 'package:BuyTime/reblox/model/object_state.dart';
+import 'package:BuyTime/reusable/snippet/generic.dart';
 import 'package:BuyTime/reblox/model/order/order_state.dart';
 import 'package:BuyTime/reblox/model/service/service_state.dart';
+import 'package:BuyTime/reblox/model/user/snippet/user_snippet_state.dart';
 import 'package:BuyTime/reblox/reducer/order_list_reducer.dart';
 import 'package:BuyTime/reblox/reducer/order_reducer.dart';
 import 'package:BuyTime/reblox/reducer/service_list_reducer.dart';
@@ -88,7 +89,7 @@ class OrderCreateService implements EpicClass<AppState> {
       OrderState orderState = event.orderState;
       // add needed data to the order state
 
-      orderState.user = ObjectState();
+      orderState.user = UserSnippet();
       orderState.user.id = store.state.user.uid;
       orderState.user.name = store.state.user.name;
       orderState.businessId = store.state.business.id_firestore;

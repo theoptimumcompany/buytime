@@ -4,7 +4,7 @@ import 'package:BuyTime/UI/management/business/UI_M_business.dart';
 import 'package:BuyTime/UI/management/old_design/UI_M_Tabs.dart';
 import 'package:BuyTime/reblox/model/app_state.dart';
 import 'package:BuyTime/reblox/model/business/business_state.dart';
-import 'package:BuyTime/reblox/model/object_state.dart';
+import 'package:BuyTime/reusable/snippet/generic.dart';
 import 'package:BuyTime/reblox/reducer/business_reducer.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -113,7 +113,7 @@ class UI_EditBusinessState extends State<UI_EditBusiness> {
   final GlobalKey<FormState> _formKeyCoordinateFieldEdit = GlobalKey<FormState>();
   final GlobalKey<FormState> _formKeyDescriptionFieldEdit = GlobalKey<FormState>();
 
-  List<ObjectState> reportList = [ObjectState(name: "Hotel"),ObjectState(name:"Spa"),ObjectState(name: "Restaurant")];
+  List<GenericState> reportList = [GenericState(name: "Hotel"),GenericState(name:"Spa"),GenericState(name: "Restaurant")];
 
   @override
   Widget build(BuildContext context) {
@@ -344,7 +344,7 @@ class UI_EditBusinessState extends State<UI_EditBusiness> {
                                 OptimumChip(
                                   chipList: reportList,
                                   selectedChoices: snapshot.business_type,
-                                  optimumChipListToDispatch: (List<ObjectState> selectedChoices) {
+                                  optimumChipListToDispatch: (List<GenericState> selectedChoices) {
                                     StoreProvider.of<AppState>(context).dispatch(SetBusinessType(selectedChoices));
                                   },
                                 ),

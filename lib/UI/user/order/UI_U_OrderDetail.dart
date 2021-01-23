@@ -62,7 +62,7 @@ class UI_U_OrderDetailState extends State<UI_U_OrderDetail> {
                   ColorFiltered(
                     colorFilter: ColorFilter.linearToSrgbGamma(),
                     child: Image.network(
-                      confirmedOrder.business?.business_thumbnail,
+                      confirmedOrder.business?.thumbnail,
                       height: media.height * 0.05,
                     ),
                   ),

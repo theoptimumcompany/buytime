@@ -5,10 +5,12 @@ import 'package:BuyTime/UI/management/business/UI_M_business.dart';
 import 'package:BuyTime/UI/management/old_design/UI_M_Tabs.dart';
 import 'package:BuyTime/UI/management/service/UI_manage_service.dart';
 import 'package:BuyTime/reblox/model/app_state.dart';
-import 'package:BuyTime/reblox/model/object_state.dart';
+import 'package:BuyTime/reblox/model/business/snippet/business_snippet_state.dart';
+import 'package:BuyTime/reusable/snippet/generic.dart';
 import 'package:BuyTime/reblox/model/order/order_state.dart';
 import 'package:BuyTime/reblox/model/order/order_entry.dart';
 import 'package:BuyTime/reblox/model/service/service_state.dart';
+import 'package:BuyTime/reblox/model/user/snippet/user_snippet_state.dart';
 import 'package:BuyTime/reblox/reducer/service_list_reducer.dart';
 import 'package:BuyTime/reblox/reducer/service_reducer.dart';
 import 'package:BuyTime/reusable/appbar/manager_buytime_appbar.dart';
@@ -23,7 +25,7 @@ class UI_M_ServiceList extends StatefulWidget {
 }
 
 class UI_M_ServiceListState extends State<UI_M_ServiceList> {
-  OrderState order = OrderState(itemList: List<OrderEntry>(), date: DateTime.now(), position: "", total: 0.0, business: ObjectState(), user: ObjectState(), businessId: "");
+  OrderState order = OrderState(itemList: List<OrderEntry>(), date: DateTime.now(), position: "", total: 0.0, business: BusinessSnippet().toEmpty(), user: UserSnippet().toEmpty(), businessId: "");
 
   var iconVisibility = Image.asset('assets/img/icon/service_visible.png');
   bool uploadServiceVisibility = false;

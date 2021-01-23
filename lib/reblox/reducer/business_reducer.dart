@@ -1,5 +1,5 @@
 import 'package:BuyTime/reblox/model/business/business_state.dart';
-import 'package:BuyTime/reblox/model/object_state.dart';
+import 'package:BuyTime/reusable/snippet/generic.dart';
 import 'package:BuyTime/reblox/model/file/optimum_file_to_upload.dart';
 import 'package:BuyTime/reusable/form/optimum_form_multi_photo.dart';
 
@@ -238,11 +238,11 @@ class SetBusinessLogo {
 }
 
 class SetBusinessType {
-  List<ObjectState> _business_type;
+  List<GenericState> _business_type;
 
   SetBusinessType(this._business_type);
 
-  List<ObjectState> get business_type => _business_type;
+  List<GenericState> get business_type => _business_type;
 }
 
 class SetBusinessDescription {
@@ -262,19 +262,19 @@ class SetBusinessIdFirestore {
 }
 
 class SetBusinessSalesman {
-  ObjectState _salesman;
+  GenericState _salesman;
 
   SetBusinessSalesman(this._salesman);
 
-  ObjectState get salesman => _salesman;
+  GenericState get salesman => _salesman;
 }
 
 class SetBusinessOwner {
-  ObjectState _owner;
+  GenericState _owner;
 
   SetBusinessOwner(this._owner);
 
-  ObjectState get owner => _owner;
+  GenericState get owner => _owner;
 }
 
 BusinessState businessReducer(BusinessState state, action) {

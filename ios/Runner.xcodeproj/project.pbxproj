@@ -396,7 +396,7 @@
 				CURRENT_PROJECT_VERSION = 1.0.40;
 				DEVELOPMENT_TEAM = GJL2PR3KKZ;
 				ENABLE_BITCODE = NO;
-				FLUTTER_ROOT = "";
+				FLUTTER_ROOT = /Users/theoptimumcompany/flutter/;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
@@ -542,7 +542,7 @@
 				CURRENT_PROJECT_VERSION = 1.0.40;
 				DEVELOPMENT_TEAM = GJL2PR3KKZ;
 				ENABLE_BITCODE = NO;
-				FLUTTER_ROOT = "";
+				FLUTTER_ROOT = /Users/theoptimumcompany/flutter/;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
@@ -578,7 +578,7 @@
 				CURRENT_PROJECT_VERSION = 1.0.40;
 				DEVELOPMENT_TEAM = GJL2PR3KKZ;
 				ENABLE_BITCODE = NO;
-				FLUTTER_ROOT = "";
+				FLUTTER_ROOT = /Users/theoptimumcompany/flutter/;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",

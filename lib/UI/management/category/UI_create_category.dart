@@ -1,19 +1,18 @@
 import 'package:BuyTime/UI/management/category/UI_manage_category.dart';
 import 'package:BuyTime/reblox/model/app_state.dart';
-import 'package:BuyTime/reblox/model/category/snippet/category_snippet_state.dart';
 import 'package:BuyTime/reblox/model/category/category_state.dart';
 import 'package:BuyTime/reblox/model/category/tree/category_tree_state.dart';
-import 'package:BuyTime/reblox/model/object_state.dart';
 import 'package:BuyTime/reblox/reducer/category_reducer.dart';
 import 'package:BuyTime/reblox/reducer/category_tree_reducer.dart';
+import 'package:BuyTime/reusable/snippet/manager.dart';
+import 'package:BuyTime/reusable/snippet/parent.dart';
+import 'package:BuyTime/reusable/snippet/worker.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:share/share.dart';
 import '../../../reusable/appbar/manager_buytime_appbar.dart';
-import '../../../utils/theme/buytime_theme.dart';
-import '../../../utils/theme/buytime_theme.dart';
 import '../../../utils/theme/buytime_theme.dart';
 
 class UI_CreateCategory extends StatefulWidget {
@@ -32,24 +31,24 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final GlobalKey<FormState> _formInviteKey = GlobalKey<FormState>();
 
-  ObjectState _dropdownParentCategory = ObjectState(level: 0, id: "no_parent", name: "No Parent");
+  Parent _dropdownParentCategory = Parent(level: 0, id: "no_parent", name: "No Parent");
 
-  List<DropdownMenuItem<ObjectState>> _dropdownMenuParentCategory = new List<DropdownMenuItem<ObjectState>>();
+  List<DropdownMenuItem<Parent>> _dropdownMenuParentCategory = new List<DropdownMenuItem<Parent>>();
 
   var size;
 
   String _selectedCategoryName = "";
-  ObjectState selectedDropValue;
-  ObjectState newParent;
+  Parent selectedDropValue;
+  Parent newParent;
   bool changeParent = false;
   bool stopBuildDropDown = false;
   String inviteMail = '';
 
   ///Managers List
-  List<ObjectState> managerList;
+  List<Manager> managerList;
 
   ///Workers List
-  List<ObjectState> workerList;
+  List<Worker> workerList;
 
   void initState() {
     super.initState();
@@ -80,9 +79,9 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
     return (!regex.hasMatch(value)) ? false : true;
   }
 
-  setNewCategoryParent(ObjectState contentSelectDrop, List<dynamic> list) {
+  setNewCategoryParent(Parent contentSelectDrop, List<dynamic> list) {
     if (list == null || list.length == 0) {
-      ObjectState parentInitial = ObjectState(level: 0, id: "no_parent", name: "No Parent");
+      Parent parentInitial = Parent(level: 0, id: "no_parent", name: "No Parent");
       StoreProvider.of<AppState>(context).dispatch(SetCategoryLevel(0));
       StoreProvider.of<AppState>(context).dispatch(SetCategoryParent(parentInitial));
     } else if (list != null && list.length > 0) {
@@ -91,11 +90,11 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
     }
   }
 
-  void buildDropDownMenuItemsParent(ObjectState item) {
+  void buildDropDownMenuItemsParent(Parent item) {
     if (stopBuildDropDown == false) {
       stopBuildDropDown = true;
       CategoryTree categoryNode = StoreProvider.of<AppState>(context).state.categoryTree;
-      List<DropdownMenuItem<ObjectState>> items = List();
+      List<DropdownMenuItem<Parent>> items = List();
 
       items.add(
         DropdownMenuItem(
@@ -115,20 +114,19 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
     }
   }
 
-  openTree(List<dynamic> list, List<DropdownMenuItem<ObjectState>> items) {
+  openTree(List<dynamic> list, List<DropdownMenuItem<Parent>> items) {
     for (int i = 0; i < list.length; i++) {
       if (list[i]['level'] < 4) {
-        ObjectState objectState =
-            ObjectState(name: list[i]['nodeName'].toString(), id: list[i]['nodeId'], level: list[i]['level']);
+        Parent parent = Parent(name: list[i]['nodeName'].toString(), id: list[i]['nodeId'], level: list[i]['level']);
         items.add(
           DropdownMenuItem(
             child: Padding(
               padding: EdgeInsets.only(
                 left: double.parse(list[i]["level"].toString()) * 12.0,
               ),
-              child: Text(objectState.name),
+              child: Text(parent.name),
             ),
-            value: objectState,
+            value: parent,
           ),
         );
       }
@@ -160,13 +158,14 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
                 onPressed: () async {
                   if (validateAndSaveInvite()) {
                     print("UI_create_category: Mail di Invito : " + inviteMail);
-                    ObjectState newObjectState = new ObjectState(mail: inviteMail);
                     switch (role) {
                       case 'Worker':
-                        StoreProvider.of<AppState>(context).dispatch(new AddCategoryWorker(newObjectState));
+                        Worker newWorker = new Worker(mail: inviteMail);
+                        StoreProvider.of<AppState>(context).dispatch(new AddCategoryWorker(newWorker));
                         break;
                       case 'Manager':
-                        StoreProvider.of<AppState>(context).dispatch(new AddCategoryManager(newObjectState));
+                        Manager newManager = new Manager(mail: inviteMail);
+                        StoreProvider.of<AppState>(context).dispatch(new AddCategoryManager(newManager));
                         break;
                     }
                     Uri link = await _createDynamicLink(false);
@@ -337,7 +336,7 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
     );
   }
 
-  ObjectState searchDropdownParent(var snapshot) {
+  Parent searchDropdownParent(var snapshot) {
     if (widget.empty == 'empty') {
       return _dropdownMenuParentCategory.first.value;
     }
@@ -438,8 +437,9 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
                         if (validateAndSave()) {
                           if (changeParent == false) {
                             print("CategoryCreate : Parent non Scelto");
-                            CategoryState categoryCreate = snapshot.category != null ? snapshot.category : CategoryState().toEmpty();
-                            ObjectState newCategoryParent = selectedDropValue;
+                            CategoryState categoryCreate =
+                                snapshot.category != null ? snapshot.category : CategoryState().toEmpty();
+                            Parent newCategoryParent = selectedDropValue;
                             print("Livello prima : " + snapshot.category.level.toString());
                             categoryCreate.parent = newCategoryParent;
                             if (categoryCreate.parent != _dropdownMenuParentCategory.first.value) {
@@ -449,7 +449,8 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
                             StoreProvider.of<AppState>(context).dispatch(new CreateCategory(categoryCreate));
                             StoreProvider.of<AppState>(context).dispatch(new AddCategoryTree(newCategoryParent));
                           } else {
-                            CategoryState categoryCreate = snapshot.category != null ? snapshot.category : CategoryState().toEmpty();
+                            CategoryState categoryCreate =
+                                snapshot.category != null ? snapshot.category : CategoryState().toEmpty();
                             StoreProvider.of<AppState>(context).dispatch(new CreateCategory(categoryCreate));
                             StoreProvider.of<AppState>(context).dispatch(new AddCategoryTree(newParent));
                           }
@@ -521,14 +522,14 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: DropdownButtonHideUnderline(
-                                  child: DropdownButtonFormField<ObjectState>(
+                                  child: DropdownButtonFormField<Parent>(
                                       value: selectedDropValue,
                                       items: _dropdownMenuParentCategory,
                                       decoration: InputDecoration(
                                           labelText: 'Parent Category',
                                           enabledBorder:
                                               UnderlineInputBorder(borderSide: BorderSide(color: Colors.white))),
-                                      onChanged: (ObjectState newValue) {
+                                      onChanged: (Parent newValue) {
                                         setState(() {
                                           changeParent = true;
                                           selectedDropValue = newValue;

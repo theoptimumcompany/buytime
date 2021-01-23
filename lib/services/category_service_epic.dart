@@ -4,8 +4,10 @@ import 'package:BuyTime/reblox/model/service/service_state.dart';
 import 'package:BuyTime/reblox/model/service/snippet/service_snippet_state.dart';
 import 'package:BuyTime/reblox/reducer/category_list_reducer.dart';
 import 'package:BuyTime/reblox/reducer/category_reducer.dart';
+import 'package:BuyTime/reusable/snippet/manager.dart';
+import 'package:BuyTime/reusable/snippet/worker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:BuyTime/reblox/model/object_state.dart';
+import 'package:BuyTime/reusable/snippet/generic.dart';
 import 'package:redux_epics/redux_epics.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -93,10 +95,10 @@ class CategoryInviteManagerService implements EpicClass<AppState> {
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<CategoryInviteManager>().asyncMap((event) async {
       ///In questa epic devo gestire invito del manager
-      ///Inserisco nella categoria il manager alla lista dei manager
+      ///Inserisco nella categoria il manager alla lista dei manager e nella lista mailManager
       ///In seguito partirà una cloud function che fa gli opportuni controlli sui permessi dell'utente che aggiunge la nuova mail, e scrive i permessi della mail aggiunta per quella categoria
 
-      ObjectState manager = event.manager;
+      Manager manager = event.manager;
       FirebaseFirestore.instance
           .collection("business")
           .doc(store.state.business.id_firestore)
@@ -105,9 +107,21 @@ class CategoryInviteManagerService implements EpicClass<AppState> {
           .update({
         "manager": FieldValue.arrayUnion([manager])
       }).then((value) {
-        print("Category Service updated Manager List with new manager");
-        return new UpdatedCategory(null);
+        print("Category Service added Manager to field manager");
       });
+
+      FirebaseFirestore.instance
+          .collection("business")
+          .doc(store.state.business.id_firestore)
+          .collection("category")
+          .doc(store.state.category.id)
+          .update({
+        "managerMailList": FieldValue.arrayUnion([manager.mail])
+      }).then((value) {
+        print("Category Service added manager's mail to field managerMailList");
+      });
+
+      return;
     });
   }
 }
@@ -116,14 +130,101 @@ class CategoryInviteWorkerService implements EpicClass<AppState> {
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<CategoryInviteWorker>().asyncMap((event) async {
-      // ObjectState worker = event.worker;
-      // FirebaseFirestore.instance.collection("business").doc(store.state.business.id_firestore).collection("category").doc(store.state.category.id).update({
-      //   "worker": FieldValue.arrayUnion([worker])
-      // }).then((value) {
-      //   print("Category Service should be updated online ");
-      //   return new UpdatedCategory(null);
-      // });
-    }).takeUntil(actions.whereType<UnlistenCategory>());
+      ///In questa epic devo gestire invito del manager
+      ///Inserisco nella categoria il manager alla lista dei manager e nella lista mailManager
+      ///In seguito partirà una cloud function che fa gli opportuni controlli sui permessi dell'utente che aggiunge la nuova mail, e scrive i permessi della mail aggiunta per quella categoria
+
+      Worker worker = event.worker;
+      FirebaseFirestore.instance
+          .collection("business")
+          .doc(store.state.business.id_firestore)
+          .collection("category")
+          .doc(store.state.category.id)
+          .update({
+        "worker": FieldValue.arrayUnion([worker])
+      }).then((value) {
+        print("Category Service added Worker to field worker");
+      });
+
+      FirebaseFirestore.instance
+          .collection("business")
+          .doc(store.state.business.id_firestore)
+          .collection("category")
+          .doc(store.state.category.id)
+          .update({
+        "workerMailList": FieldValue.arrayUnion([worker.mail])
+      }).then((value) {
+        print("Category Service added worker's mail to field workerMailList");
+      });
+
+      return;
+    });
+  }
+}
+
+class CategoryDeleteManagerService implements EpicClass<AppState> {
+  @override
+  Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
+    return actions.whereType<DeleteCategoryManager>().asyncMap((event) async {
+
+      Manager manager = event.manager;
+      FirebaseFirestore.instance
+          .collection("business")
+          .doc(store.state.business.id_firestore)
+          .collection("category")
+          .doc(store.state.category.id)
+          .update({
+        "manager": FieldValue.arrayRemove([manager])
+      }).then((value) {
+        print("Category Service deleted Manager to field manager");
+      });
+
+      FirebaseFirestore.instance
+          .collection("business")
+          .doc(store.state.business.id_firestore)
+          .collection("category")
+          .doc(store.state.category.id)
+          .update({
+        "managerMailList": FieldValue.arrayRemove([manager.mail])
+      }).then((value) {
+        print("Category Service deleted manager's mail to field managerMailList");
+      });
+
+      return;
+    });
+  }
+}
+
+class CategoryDeleteWorkerService implements EpicClass<AppState> {
+  @override
+  Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
+    return actions.whereType<DeleteCategoryWorker>().asyncMap((event) async {
+
+      Worker worker = event.worker;
+      FirebaseFirestore.instance
+          .collection("business")
+          .doc(store.state.business.id_firestore)
+          .collection("category")
+          .doc(store.state.category.id)
+          .update({
+        "worker": FieldValue.arrayRemove([worker])
+      }).then((value) {
+        print("Category Service deleted Worker to field worker");
+      });
+
+      FirebaseFirestore.instance
+          .collection("business")
+          .doc(store.state.business.id_firestore)
+          .collection("category")
+          .doc(store.state.category.id)
+          .update({
+        "workerMailList": FieldValue.arrayRemove([worker.mail])
+      }).then((value) {
+        print("Category Service deleted worker's mail to field workerMailList");
+      });
+
+      return;
+    });
   }
 }
 

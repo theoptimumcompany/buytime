@@ -43,16 +43,31 @@ class UserRequestService implements EpicClass<AppState> {
   }
 }
 
-class UserEditField implements EpicClass<AppState> {
+class UserEditDevice implements EpicClass<AppState> {
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    return actions.whereType<UpdateUserField>().asyncMap((event) {
-      print("UserService edit field : " + event.field.name);
-      List<String> idField = [event.field.id];
+    return actions.whereType<UpdateUserDevice>().asyncMap((event) {
+      print("UserService edit field : " + event.device.name);
+      List<String> idField = [event.device.id];
       DocumentReference docUser =
-          FirebaseFirestore.instance.collection('user').doc(event.field.user_uid);
+          FirebaseFirestore.instance.collection('user').doc(event.device.user_uid);
       docUser.update(<String, dynamic>{
-        event.field.name: FieldValue.arrayUnion(idField),
+        event.device.name: FieldValue.arrayUnion(idField),
+      });
+    });
+  }
+}
+
+class UserEditToken implements EpicClass<AppState> {
+  @override
+  Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
+    return actions.whereType<UpdateUserToken>().asyncMap((event) {
+      print("UserService edit token : " + event.token.name);
+      List<String> idField = [event.token.id];
+      DocumentReference docUser =
+      FirebaseFirestore.instance.collection('user').doc(event.token.user_uid);
+      docUser.update(<String, dynamic>{
+        event.token.name: FieldValue.arrayUnion(idField),
       });
     });
   }

@@ -1,16 +1,16 @@
 import 'package:BuyTime/reblox/model/app_state.dart';
 import 'package:BuyTime/reblox/model/business/business_state.dart';
-import 'package:BuyTime/reblox/model/object_state.dart';
+import 'package:BuyTime/reusable/snippet/generic.dart';
 import 'package:BuyTime/reblox/reducer/business_reducer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-typedef OptimumDropDownToDispatch = void Function(ObjectState);
+typedef OptimumDropDownToDispatch = void Function(GenericState);
 
 class OptimumDropdown extends StatefulWidget {
    OptimumDropDownToDispatch optimumDropdownToDispatch;
    dynamic value;
-   List<DropdownMenuItem<ObjectState>> items;
-   List<ObjectState> list;
+   List<DropdownMenuItem<GenericState>> items;
+   List<GenericState> list;
    OptimumDropdown({@required this.value, @required this.items, @required this.list, @required this.optimumDropdownToDispatch}){
     this.value = value;
     this.items = items;
@@ -25,15 +25,15 @@ class OptimumDropdown extends StatefulWidget {
 class _OptimumDropdownState extends State<OptimumDropdown> {
 
   OptimumDropDownToDispatch optimumDropdownToDispatch;
-  ObjectState value;
-  List<DropdownMenuItem<ObjectState>> items;
-  List<ObjectState> list;
+  GenericState value;
+  List<DropdownMenuItem<GenericState>> items;
+  List<GenericState> list;
 
   _OptimumDropdownState({this.value, this.items, this.list, this.optimumDropdownToDispatch});
 
-  List<DropdownMenuItem<ObjectState>> buildDropActions(List listItems) {
-    List<DropdownMenuItem<ObjectState>> items = List();
-    for (ObjectState listItem in listItems) {
+  List<DropdownMenuItem<GenericState>> buildDropActions(List listItems) {
+    List<DropdownMenuItem<GenericState>> items = List();
+    for (GenericState listItem in listItems) {
       items.add(
         DropdownMenuItem(
           child: Text(listItem.name),
@@ -54,7 +54,7 @@ class _OptimumDropdownState extends State<OptimumDropdown> {
         converter: (store) => store.state,
         builder: (context, snapshot) {
           return DropdownButtonHideUnderline(
-            child: DropdownButtonFormField<ObjectState>(
+            child: DropdownButtonFormField<GenericState>(
                 value: widget.value,
                 items: widget.items,
                 decoration: InputDecoration(labelText: '', enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white))),

@@ -4,7 +4,7 @@ import 'package:BuyTime/reblox/model/app_state.dart';
 import 'package:BuyTime/UI/management/business/UI_C_business_list.dart';
 import 'package:BuyTime/reblox/model/category/snippet/category_snippet_state.dart';
 import 'package:BuyTime/reblox/model/category/tree/category_tree_state.dart';
-import 'package:BuyTime/reblox/model/object_state.dart';
+import 'package:BuyTime/reusable/snippet/generic.dart';
 import 'package:BuyTime/reblox/model/pipeline/pipeline_list_state.dart';
 import 'package:BuyTime/reblox/reducer/service_reducer.dart';
 import 'package:BuyTime/reusable/form/optimum_chip.dart';
@@ -26,65 +26,65 @@ class UI_EditServiceState extends State<UI_EditService> {
   AssetImage assetImage = AssetImage('assets/img/image_placeholder.png');
   Image image;
   final ImagePicker imagePicker = ImagePicker();
-  List<ObjectState> categoryList = [
-    ObjectState(name: "Category 1"),
-    ObjectState(name: "Category 2"),
-    ObjectState(name: "Category 3")
+  List<GenericState> categoryList = [
+    GenericState(name: "Category 1"),
+    GenericState(name: "Category 2"),
+    GenericState(name: "Category 3")
   ];
-  List<ObjectState> pipelineListName = [
-    ObjectState(name: "Pipeline 1"),
-    ObjectState(name: "Pipeline 2"),
-    ObjectState(name: "Pipeline 3")
+  List<GenericState> pipelineListName = [
+    GenericState(name: "Pipeline 1"),
+    GenericState(name: "Pipeline 2"),
+    GenericState(name: "Pipeline 3")
   ];
-  List<ObjectState> _tags = [
-    ObjectState(name: "Tag 1"),
-    ObjectState(name: "Tag 2"),
-    ObjectState(name: "Tag 3")
+  List<GenericState> _tags = [
+    GenericState(name: "Tag 1"),
+    GenericState(name: "Tag 2"),
+    GenericState(name: "Tag 3")
   ];
-  List<ObjectState> _actions = [
-    ObjectState(name: "Action 1"),
-    ObjectState(name: "Action 2"),
-    ObjectState(name: "Action 3")
+  List<GenericState> _actions = [
+    GenericState(name: "Action 1"),
+    GenericState(name: "Action 2"),
+    GenericState(name: "Action 3")
   ];
-  List<ObjectState> _constraints = [
-    ObjectState(name: "Constraint 1"),
-    ObjectState(name: "Constraint 2"),
-    ObjectState(name: "Constraint 3")
+  List<GenericState> _constraints = [
+    GenericState(name: "Constraint 1"),
+    GenericState(name: "Constraint 2"),
+    GenericState(name: "Constraint 3")
   ];
-  List<ObjectState> _positions = [
-    ObjectState(name: "Position 1"),
-    ObjectState(name: "Position 2"),
-    ObjectState(name: "Position 3")
+  List<GenericState> _positions = [
+    GenericState(name: "Position 1"),
+    GenericState(name: "Position 2"),
+    GenericState(name: "Position 3")
   ];
-  List<ObjectState> _visibility = [
-    ObjectState(name: "Visible"),
-    ObjectState(name: "Shadow"),
-    ObjectState(name: "Invisible")
+  List<GenericState> _visibility = [
+    GenericState(name: "Visible"),
+    GenericState(name: "Shadow"),
+    GenericState(name: "Invisible")
   ];
 
-  List<DropdownMenuItem<ObjectState>> _dropActions;
-  ObjectState _selectedAction;
+  List<DropdownMenuItem<GenericState>> _dropActions;
+  GenericState _selectedAction;
 
-  List<DropdownMenuItem<ObjectState>> _dropTags;
-  ObjectState _selectedTag;
+  List<DropdownMenuItem<GenericState>> _dropTags;
+  GenericState _selectedTag;
 
-  List<DropdownMenuItem<ObjectState>> _dropConstraints;
-  ObjectState _selectedConstraint;
+  List<DropdownMenuItem<GenericState>> _dropConstraints;
+  GenericState _selectedConstraint;
 
-  List<DropdownMenuItem<ObjectState>> _dropPositions;
-  ObjectState _selectedPosition;
+  List<DropdownMenuItem<GenericState>> _dropPositions;
+  GenericState _selectedPosition;
 
-  List<DropdownMenuItem<ObjectState>> _dropVisibility;
-  ObjectState _selectedVisibility;
+  List<DropdownMenuItem<GenericState>> _dropVisibility;
+  GenericState _selectedVisibility;
 
   var size;
 
   void setPipelineList() {
     PipelineList pipelineList =
         StoreProvider.of<AppState>(context).state.pipelineList;
-    List<ObjectState> items = List();
+    List<GenericState> items = List();
     for (int i = 0; i < pipelineList.pipelineList.length; i++) {
-      items.add(ObjectState(
+      items.add(GenericState(
         name: pipelineList.pipelineList[i].name,
       ));
     }
@@ -94,7 +94,7 @@ class UI_EditServiceState extends State<UI_EditService> {
   void setCategoryList() {
     CategoryTree categoryNode =
         StoreProvider.of<AppState>(context).state.categoryTree;
-    List<ObjectState> items = List();
+    List<GenericState> items = List();
 
     if (categoryNode.categoryNodeList != null) {
       if (categoryNode.categoryNodeList.length != 0 &&
@@ -107,10 +107,10 @@ class UI_EditServiceState extends State<UI_EditService> {
     categoryList = items;
   }
 
-  openTree(List<dynamic> list, List<ObjectState> items) {
+  openTree(List<dynamic> list, List<GenericState> items) {
     for (int i = 0; i < list.length; i++) {
       items.add(
-        ObjectState(name: list[i]['nodeName']),
+        GenericState(name: list[i]['nodeName']),
       );
       if (list[i]['nodeCategory'] != null) {
         openTree(list[i]['nodeCategory'], items);
@@ -302,7 +302,7 @@ class UI_EditServiceState extends State<UI_EditService> {
                                 selectedChoices:
                                     snapshot.serviceState.categoryList,
                                 optimumChipListToDispatch:
-                                    (List<ObjectState> selectedChoices) {
+                                    (List<GenericState> selectedChoices) {
                                   StoreProvider.of<AppState>(context).dispatch(
                                       SetServiceCategory(selectedChoices));
                                 },
@@ -326,7 +326,7 @@ class UI_EditServiceState extends State<UI_EditService> {
                               items: _dropActions,
                               list: _actions,
                               optimumDropdownToDispatch:
-                                  (ObjectState selectedAction) {
+                                  (GenericState selectedAction) {
                                 //  StoreProvider.of<AppState>(context).dispatch(SetServicePipelineId(selectedChoices));
                               },
                             ),
@@ -348,7 +348,7 @@ class UI_EditServiceState extends State<UI_EditService> {
                                 selectedChoices:
                                     snapshot.serviceState.categoryList,
                                 optimumChipListToDispatch:
-                                    (List<ObjectState> selectedChoices) {
+                                    (List<GenericState> selectedChoices) {
                                   StoreProvider.of<AppState>(context).dispatch(
                                       SetServicePipeline(selectedChoices));
                                 },
@@ -372,7 +372,7 @@ class UI_EditServiceState extends State<UI_EditService> {
                               items: _dropTags,
                               list: _tags,
                               optimumDropdownToDispatch:
-                                  (ObjectState selectedTag) {
+                                  (GenericState selectedTag) {
                                 //  StoreProvider.of<AppState>(context).dispatch(SetServicePipelineId(selectedChoices));
                               },
                             ),
@@ -396,7 +396,7 @@ class UI_EditServiceState extends State<UI_EditService> {
                               items: _dropConstraints,
                               list: _constraints,
                               optimumDropdownToDispatch:
-                                  (ObjectState selectedConstraint) {
+                                  (GenericState selectedConstraint) {
                                 //  StoreProvider.of<AppState>(context).dispatch(SetServicePipelineId(selectedChoices));
                               },
                             ),
@@ -420,7 +420,7 @@ class UI_EditServiceState extends State<UI_EditService> {
                               items: _dropPositions,
                               list: _positions,
                               optimumDropdownToDispatch:
-                                  (ObjectState selectedPosition) {
+                                  (GenericState selectedPosition) {
                                 //  StoreProvider.of<AppState>(context).dispatch(SetServicePipelineId(selectedChoices));
                               },
                             ),
@@ -444,7 +444,7 @@ class UI_EditServiceState extends State<UI_EditService> {
                               items: _dropVisibility,
                               list: _visibility,
                               optimumDropdownToDispatch:
-                                  (ObjectState selectedVisibility) {
+                                  (GenericState selectedVisibility) {
                                   StoreProvider.of<AppState>(context).dispatch(SetServiceVisibility(selectedVisibility.name));
                               },
                             ),

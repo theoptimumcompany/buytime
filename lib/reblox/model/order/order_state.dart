@@ -1,6 +1,8 @@
-import 'package:BuyTime/reblox/model/object_state.dart';
+import 'package:BuyTime/reblox/model/business/snippet/business_snippet_state.dart';
+import 'package:BuyTime/reusable/snippet/generic.dart';
 import 'package:BuyTime/reblox/model/order/order_entry.dart';
 import 'package:BuyTime/reblox/model/service/service_state.dart';
+import 'package:BuyTime/reblox/model/user/snippet/user_snippet_state.dart';
 import 'package:flutter/cupertino.dart';
 
 class OrderState {
@@ -14,8 +16,8 @@ class OrderState {
   int amount = 0;
   String progress = "unpaid";
   bool addCardProgress = false;
-  ObjectState business;
-  ObjectState user;
+  BusinessSnippet business;
+  UserSnippet user;
   String businessId;
   String userId;
 
@@ -58,8 +60,8 @@ class OrderState {
         amount = json['amount'],
         businessId = json['businessId'],
         userId = json['userId'],
-        business = ObjectState.fromJson(json["business"]),
-        user = ObjectState.fromJson(json["user"]),
+        business = BusinessSnippet.fromJson(json["business"]),
+        user = UserSnippet.fromJson(json["user"]),
         total = json['total'].toDouble();
 
   OrderState.fromState(OrderState state) {
@@ -117,8 +119,8 @@ class OrderState {
     String addCardProgress,
     String businessId,
     String userId,
-    ObjectState business,
-    ObjectState user,
+    BusinessSnippet business,
+    UserSnippet user,
   }) {
     return OrderState(
       itemList: itemList ?? this.itemList,
@@ -152,8 +154,8 @@ class OrderState {
       addCardProgress: false,
       businessId: "",
       userId: "",
-      business: ObjectState(),
-      user: ObjectState(),
+      business: BusinessSnippet().toEmpty(),
+      user: UserSnippet().toEmpty(),
     );
   }
 

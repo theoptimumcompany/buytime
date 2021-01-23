@@ -1,5 +1,6 @@
 import 'package:BuyTime/reblox/model/category/tree/category_tree_state.dart';
-import 'package:BuyTime/reblox/model/object_state.dart';
+import 'package:BuyTime/reusable/snippet/generic.dart';
+import 'package:BuyTime/reusable/snippet/parent.dart';
 
 class CategoryTreeCreateIfNotExists {
   String _idFirestore;
@@ -37,19 +38,19 @@ class CategoryTreeRequestResponse {
 class UnlistenCategoryTree {}
 
 class UpdateCategoryTree {
-  ObjectState _selectedParent;
+  Parent _selectedParent;
 
   UpdateCategoryTree(this._selectedParent);
 
-  ObjectState get selectedParent => _selectedParent;
+  Parent get selectedParent => _selectedParent;
 }
 
 class AddCategoryTree {
-  ObjectState _selectedParent;
+  Parent _selectedParent;
 
   AddCategoryTree(this._selectedParent);
 
-  ObjectState get selectedParent => _selectedParent;
+  Parent get selectedParent => _selectedParent;
 }
 
 class DeleteCategoryTree {

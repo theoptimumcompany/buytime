@@ -1,18 +1,18 @@
 import 'package:BuyTime/reblox/model/app_state.dart';
 import 'package:BuyTime/reblox/model/business/business_state.dart';
-import 'package:BuyTime/reblox/model/object_state.dart';
+import 'package:BuyTime/reusable/snippet/generic.dart';
 import 'package:BuyTime/reblox/model/service/service_state.dart';
 import 'package:BuyTime/reblox/reducer/business_reducer.dart';
 import 'package:BuyTime/reblox/reducer/service_reducer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
-typedef OptimumChipListToDispatch = void Function(List<ObjectState>);
+typedef OptimumChipListToDispatch = void Function(List<GenericState>);
 
 class OptimumChip extends StatefulWidget {
   OptimumChipListToDispatch optimumChipListToDispatch;
-  List<ObjectState> chipList;
-  List<ObjectState> selectedChoices;
+  List<GenericState> chipList;
+  List<GenericState> selectedChoices;
 
   OptimumChip({@required this.chipList, this.selectedChoices, @required this.optimumChipListToDispatch}) {
     this.chipList = chipList;
@@ -25,9 +25,9 @@ class OptimumChip extends StatefulWidget {
 }
 
 class _OptimumChipState extends State<OptimumChip> {
-  List<ObjectState> selectedChoices;
+  List<GenericState> selectedChoices;
   OptimumChipListToDispatch optimumChipListToDispatch;
-  List<ObjectState> chipList;
+  List<GenericState> chipList;
 
   _OptimumChipState({this.chipList, this.selectedChoices, this.optimumChipListToDispatch});
 

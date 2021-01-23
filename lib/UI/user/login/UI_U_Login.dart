@@ -3,10 +3,12 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:BuyTime/UI/user/landing/UI_U_Landing.dart';
+import 'package:BuyTime/reusable/snippet/device.dart';
+import 'package:BuyTime/reusable/snippet/token.dart';
 import 'package:BuyTime/utils/b_cube_grid_spinner.dart';
 import 'package:BuyTime/utils/size_config.dart';
 import 'package:BuyTime/utils/theme/buytime_theme.dart';
-import 'package:BuyTime/reblox/model/object_state.dart';
+import 'package:BuyTime/reusable/snippet/generic.dart';
 import 'package:BuyTime/reblox/model/user/user_state.dart';
 import 'package:BuyTime/reblox/reducer/user_reducer.dart';
 import 'package:BuyTime/reusable/branded_button.dart';
@@ -228,10 +230,10 @@ class LoginState extends State<Login> {
 
       StoreProvider.of<AppState>(context)
           .dispatch(new LoggedUser(UserState.fromFirebaseUser(user, deviceId, serverToken)));
-      ObjectState field = ObjectState(name: "device", id: deviceId, user_uid: user.uid);
-      StoreProvider.of<AppState>(context).dispatch(new UpdateUserField(field));
-      ObjectState token = ObjectState(name: "token", id: serverToken, user_uid: user.uid);
-      StoreProvider.of<AppState>(context).dispatch(new UpdateUserField(token));
+      Device device = Device(name: "device", id: deviceId, user_uid: user.uid);
+      StoreProvider.of<AppState>(context).dispatch(new UpdateUserDevice(device));
+      Token token = Token(name: "token", id: serverToken, user_uid: user.uid);
+      StoreProvider.of<AppState>(context).dispatch(new UpdateUserToken(token));
       // return 'signInWithGoogle succeeded: $user';
       await pr.hide();
       return 1;
@@ -331,10 +333,10 @@ class LoginState extends State<Login> {
 
       StoreProvider.of<AppState>(context)
           .dispatch(new LoggedUser(UserState.fromFirebaseUser(user, deviceId, serverToken)));
-      ObjectState field = ObjectState(name: "device", id: deviceId, user_uid: user.uid);
-      StoreProvider.of<AppState>(context).dispatch(new UpdateUserField(field));
-      ObjectState token = ObjectState(name: "token", id: serverToken, user_uid: user.uid);
-      StoreProvider.of<AppState>(context).dispatch(new UpdateUserField(token));
+      Device device = Device(name: "device", id: deviceId, user_uid: user.uid);
+      StoreProvider.of<AppState>(context).dispatch(new UpdateUserDevice(device));
+      Token token = Token(name: "token", id: serverToken, user_uid: user.uid);
+      StoreProvider.of<AppState>(context).dispatch(new UpdateUserToken(token));
       // return 'signInWithGoogle succeeded: $user';
       await pr.hide();
       return 1;
@@ -405,12 +407,12 @@ class LoginState extends State<Login> {
       print("Device ID : " + deviceId);
 
       StoreProvider.of<AppState>(context).dispatch(new LoggedUser(UserState.fromFirebaseUser(facebookUserFromFirebase.user, deviceId, serverToken)));
-      ObjectState field =
-          ObjectState(name: "device", id: deviceId, user_uid: facebookUserFromFirebase.user.uid);
-      StoreProvider.of<AppState>(context).dispatch(new UpdateUserField(field));
-      ObjectState token =
-          ObjectState(name: "token", id: serverToken, user_uid: facebookUserFromFirebase.user.uid);
-      StoreProvider.of<AppState>(context).dispatch(new UpdateUserField(token));
+      Device device =
+          Device(name: "device", id: deviceId, user_uid: facebookUserFromFirebase.user.uid);
+      StoreProvider.of<AppState>(context).dispatch(new UpdateUserDevice(device));
+      Token token =
+          Token(name: "token", id: serverToken, user_uid: facebookUserFromFirebase.user.uid);
+      StoreProvider.of<AppState>(context).dispatch(new UpdateUserToken(token));
       return 1;
     } else
       await pr.hide();
@@ -968,10 +970,10 @@ class LoginState extends State<Login> {
 
       StoreProvider.of<AppState>(context)
           .dispatch(new LoggedUser(UserState.fromFirebaseUser(user, deviceId, serverToken)));
-      ObjectState field = ObjectState(name: "device", id: deviceId, user_uid: user.uid);
-      StoreProvider.of<AppState>(context).dispatch(new UpdateUserField(field));
-      ObjectState token = ObjectState(name: "token", id: serverToken, user_uid: user.uid);
-      StoreProvider.of<AppState>(context).dispatch(new UpdateUserField(token));
+      Device device = Device(name: "device", id: deviceId, user_uid: user.uid);
+      StoreProvider.of<AppState>(context).dispatch(new UpdateUserDevice(device));
+      Token token = Token(name: "token", id: serverToken, user_uid: user.uid);
+      StoreProvider.of<AppState>(context).dispatch(new UpdateUserToken(token));
       setState(() {
         _success = true;
         Navigator.of(context).pop();

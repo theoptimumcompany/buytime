@@ -1,7 +1,9 @@
 
 import 'package:BuyTime/reblox/model/business/business_state.dart';
-import 'package:BuyTime/reblox/model/object_state.dart';
+import 'package:BuyTime/reusable/snippet/generic.dart';
 import 'package:BuyTime/reblox/model/user/user_state.dart';
+import 'package:BuyTime/reusable/snippet/device.dart';
+import 'package:BuyTime/reusable/snippet/token.dart';
 
 class UserRequest {
   String _userStateId;
@@ -37,10 +39,16 @@ class LoggedUser {
   UserState get userState => _userState;
 }
 
-class UpdateUserField {
-  ObjectState _field;
-  UpdateUserField(this._field);
-  ObjectState get field => _field;
+class UpdateUserDevice {
+  Device _device;
+  UpdateUserDevice(this._device);
+  Device get device => _device;
+}
+
+class UpdateUserToken {
+  Token _token;
+  UpdateUserToken(this._token);
+  Token get token => _token;
 }
 
 class CreatedUser {

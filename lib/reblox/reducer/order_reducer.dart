@@ -1,6 +1,8 @@
+import 'package:BuyTime/reblox/model/business/snippet/business_snippet_state.dart';
 import 'package:BuyTime/reblox/model/order/order_entry.dart';
 import 'package:BuyTime/reblox/model/order/order_state.dart';
-import 'package:BuyTime/reblox/model/object_state.dart';
+import 'package:BuyTime/reusable/snippet/generic.dart';
+import 'package:BuyTime/reblox/model/user/snippet/user_snippet_state.dart';
 
 class SetOrder {
   OrderState _orderState;
@@ -92,16 +94,16 @@ class SetOrderProgress
 
 class SetOrderBusiness
 {
-  ObjectState _business;
+  BusinessSnippet _business;
   SetOrderBusiness(this._business);
-  ObjectState get business => _business;
+  BusinessSnippet get business => _business;
 }
 
 class SetOrderUser
 {
-  ObjectState _user;
+  UserSnippet _user;
   SetOrderUser(this._user);
-  ObjectState get user => _user;
+  UserSnippet get user => _user;
 }
 
 class AddingStripePaymentMethod

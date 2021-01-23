@@ -2,11 +2,14 @@ import 'package:BuyTime/UI/management/business/UI_M_business_list.dart';
 import 'package:BuyTime/UI/management/category/UI_manage_category.dart';
 import 'package:BuyTime/reblox/model/category/tree/category_tree_state.dart';
 import 'package:BuyTime/reblox/reducer/category_tree_reducer.dart';
+import 'package:BuyTime/reusable/snippet/manager.dart';
+import 'package:BuyTime/reusable/snippet/parent.dart';
+import 'package:BuyTime/reusable/snippet/worker.dart';
 import 'package:BuyTime/utils/theme/buytime_theme.dart';
 import 'package:BuyTime/reblox/model/app_state.dart';
 import 'package:BuyTime/UI/management/business/UI_C_business_list.dart';
 import 'package:BuyTime/reblox/model/category/snippet/category_snippet_state.dart';
-import 'package:BuyTime/reblox/model/object_state.dart';
+import 'package:BuyTime/reusable/snippet/generic.dart';
 import 'package:BuyTime/reblox/reducer/category_reducer.dart';
 import 'package:BuyTime/reusable/form/optimum_form_field.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
@@ -32,24 +35,24 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final GlobalKey<FormState> _formInviteKey = GlobalKey<FormState>();
 
-  ObjectState _dropdownParentCategory = ObjectState(level: 0, id: "no_parent", name: "No Parent");
+  Parent _dropdownParentCategory = Parent(level: 0, id: "no_parent", name: "No Parent");
 
-  List<DropdownMenuItem<ObjectState>> _dropdownMenuParentCategory = new List<DropdownMenuItem<ObjectState>>();
+  List<DropdownMenuItem<Parent>> _dropdownMenuParentCategory = new List<DropdownMenuItem<Parent>>();
 
   var size;
 
   String _selectedCategoryName = "";
-  ObjectState selectedParentCategory;
-  ObjectState parentValue;
+  Parent selectedParentCategory;
+  Parent parentValue;
   bool hasChild = false;
   bool stopBuildDropDown = false;
-  ObjectState selectedDropValue;
+  Parent selectedDropValue;
 
   ///Managers List
-  List<ObjectState> managerList;
+  List<Manager> managerList;
 
   ///Workers List
-  List<ObjectState> workerList;
+  List<Worker> workerList;
 
   /// Invite mail String
   String inviteMail = '';
@@ -67,9 +70,9 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
     }
   }
 
-  setNewCategoryParent(ObjectState contentSelectDrop, List<dynamic> list) {
+  setNewCategoryParent(Parent contentSelectDrop, List<dynamic> list) {
     if (list == null || list.length == 0) {
-      ObjectState parentInitial = ObjectState(level: 0, id: "no_parent", name: "No Parent");
+      Parent parentInitial = Parent(level: 0, id: "no_parent", name: "No Parent");
       StoreProvider.of<AppState>(context).dispatch(SetCategoryLevel(0));
       StoreProvider.of<AppState>(context).dispatch(SetCategoryParent(parentInitial));
     } else if (list != null && list.length > 0) {
@@ -78,11 +81,11 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
     }
   }
 
-  void buildDropDownMenuItemsParent(ObjectState item) {
+  void buildDropDownMenuItemsParent(Parent item) {
     if (stopBuildDropDown == false) {
       stopBuildDropDown = true;
       CategoryTree categoryNode = StoreProvider.of<AppState>(context).state.categoryTree;
-      List<DropdownMenuItem<ObjectState>> items = List();
+      List<DropdownMenuItem<Parent>> items = List();
 
       if (categoryNode.categoryNodeList != null) {
         if (categoryNode.categoryNodeList.length != 0 && categoryNode.categoryNodeList.length != null) {
@@ -127,13 +130,12 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
     }
   }
 
-  openTree(List<dynamic> list, List<DropdownMenuItem<ObjectState>> items) {
+  openTree(List<dynamic> list, List<DropdownMenuItem<Parent>> items) {
     for (int i = 0; i < list.length; i++) {
       if (list[i]['nodeId'] == StoreProvider.of<AppState>(context).state.category.parent &&
           StoreProvider.of<AppState>(context).state.category.parent != "no_parent") {
-        ObjectState objectState =
-            ObjectState(name: list[i]['nodeName'].toString(), id: list[i]['nodeId'], level: list[i]['level']);
-        parentValue = objectState;
+        Parent parent = Parent(name: list[i]['nodeName'].toString(), id: list[i]['nodeId'], level: list[i]['level']);
+        parentValue = parent;
       }
       if (list[i]['nodeId'] == StoreProvider.of<AppState>(context).state.category.id) {
         if (list[i]['nodeCategory'] != null && list[i]['nodeCategory'].length != 0) {
@@ -143,8 +145,8 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
         }
       }
       if (list[i]['nodeId'] != StoreProvider.of<AppState>(context).state.category.id) {
-        ObjectState objectState =
-            ObjectState(name: list[i]['nodeName'].toString(), id: list[i]['nodeId'], level: list[i]['level']);
+        Parent objectState =
+            Parent(name: list[i]['nodeName'].toString(), id: list[i]['nodeId'], level: list[i]['level']);
         items.add(
           DropdownMenuItem(
             child: Text(objectState.name),
@@ -191,12 +193,12 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
                 ///Controllo se invito manager o worker e lancio la opportuna dispatch
                 switch (role) {
                   case 'Manager':
-                    ObjectState newManager;
+                    Manager newManager;
                     newManager.mail = inviteMail;
-                        StoreProvider.of<AppState>(context).dispatch(new CategoryInviteManager(newManager));
+                    StoreProvider.of<AppState>(context).dispatch(new CategoryInviteManager(newManager));
                     break;
                   case 'Worker':
-                    ObjectState newWorker;
+                    Worker newWorker;
                     newWorker.mail = inviteMail;
                     StoreProvider.of<AppState>(context).dispatch(new CategoryInviteWorker(newWorker));
                     break;
@@ -357,7 +359,7 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
     return url;
   }
 
-  ObjectState searchDropdownParent(var snapshot) {
+  Parent searchDropdownParent(var snapshot) {
     if (widget.empty == 'empty' || snapshot.category.level == 0) {
       return _dropdownMenuParentCategory.first.value;
     }
@@ -391,15 +393,6 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
     return StoreConnector<AppState, AppState>(
         converter: (store) => store.state,
         builder: (context, snapshot) {
-          // ObjectState objectState = ObjectState(level: 0, id: "no_parent", name: "No Parent");
-          // parentValue = snapshot.category.parent.id == "no_parent" ? objectState : snapshot.category.parent;
-          // buildDropDownMenuItemsParent(_dropdownParentCategory);
-          // for (int i = 0; i < _dropdownMenuParentCategory.length; i++) {
-          //   if (parentValue.id == _dropdownMenuParentCategory[i].value.id) {
-          //     selectedParentCategory = _dropdownMenuParentCategory[i].value;
-          //   }
-          // }
-
           buildDropDownMenuItemsParent(_dropdownParentCategory);
           if (snapshot.category != null) {
             managerList = snapshot.category.manager;
@@ -456,11 +449,10 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
                         onPressed: () {
                           if (validateAndSave()) {
                             if (canMoveToParent) {
-                              ObjectState newCategoryParent = selectedParentCategory;
+                              Parent newCategoryParent = selectedParentCategory;
                               print("Aggiorno " + newCategoryParent.name);
                               StoreProvider.of<AppState>(context).dispatch(new UpdateCategory(snapshot.category));
-                              StoreProvider.of<AppState>(context)
-                                  .dispatch(new UpdateCategoryTree(newCategoryParent));
+                              StoreProvider.of<AppState>(context).dispatch(new UpdateCategoryTree(newCategoryParent));
 
                               Future.delayed(const Duration(milliseconds: 500), () {
                                 Navigator.pushReplacement(
@@ -498,8 +490,7 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
                             child: FloatingActionButton(
                               onPressed: () {
                                 print("CategoryEdit ::: Elimino nodo categoria dall'albero");
-                                StoreProvider.of<AppState>(context)
-                                    .dispatch(DeleteCategoryTree(snapshot.category.id));
+                                StoreProvider.of<AppState>(context).dispatch(DeleteCategoryTree(snapshot.category.id));
                                 print("CategoryEdit ::: Elimino categoria " + snapshot.category.id);
                                 StoreProvider.of<AppState>(context).dispatch(DeleteCategory(snapshot.category.id));
                                 Future.delayed(const Duration(milliseconds: 500), () {
@@ -573,7 +564,7 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: DropdownButtonHideUnderline(
-                              child: DropdownButtonFormField<ObjectState>(
+                              child: DropdownButtonFormField<Parent>(
                                   value: selectedParentCategory,
                                   items: _dropdownMenuParentCategory,
                                   decoration: InputDecoration(
@@ -680,12 +671,15 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
                                               //avatar: FlutterLogo(),
                                               onPressed: () {
                                                 print('Manager is pressed');
-
+                                                ///Vedere che fare quando si pigia il chip
                                                 setState(() {
                                                   //_selected = !_selected;
                                                 });
                                               },
                                               onDeleted: () {
+                                                Manager managerToDelete;
+                                                managerToDelete.mail = managerList[index].name;
+                                                StoreProvider.of<AppState>(context).dispatch(new DeleteCategoryManager(managerToDelete));
                                                 print('Manager is deleted');
                                               },
                                             ),
@@ -748,12 +742,15 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
                                             //avatar: FlutterLogo(),
                                             onPressed: () {
                                               print('Worker is pressed');
-
+                                              ///Vedere cosa fare se si pigia email
                                               setState(() {
                                                 //_selected = !_selected;
                                               });
                                             },
                                             onDeleted: () {
+                                              Worker workerToDelete;
+                                              workerToDelete.mail = workerList[index].name;
+                                              StoreProvider.of<AppState>(context).dispatch(new DeleteCategoryWorker(workerToDelete));
                                               print('Worker is deleted');
                                             },
                                           ),

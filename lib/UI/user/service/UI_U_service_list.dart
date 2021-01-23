@@ -3,11 +3,12 @@ import 'dart:core';
 import 'package:BuyTime/UI/user/business/UI_U_business_list.dart';
 import 'package:BuyTime/UI/user/cart/UI_U_cart.dart';
 import 'package:BuyTime/reblox/model/app_state.dart';
-import 'package:BuyTime/reblox/model/object_state.dart';
+import 'package:BuyTime/reblox/model/business/snippet/business_snippet_state.dart';
 import 'package:BuyTime/reblox/model/order/order_state.dart';
 import 'package:BuyTime/reblox/model/order/order_entry.dart';
 import 'package:BuyTime/reblox/model/service/service_list_state.dart';
 import 'package:BuyTime/reblox/model/service/service_state.dart';
+import 'package:BuyTime/reblox/model/user/snippet/user_snippet_state.dart';
 import 'package:BuyTime/reblox/reducer/order_reducer.dart';
 import 'package:BuyTime/reblox/reducer/service_list_reducer.dart';
 import 'package:BuyTime/reusable/appbar/user_buytime_appbar.dart';
@@ -30,7 +31,7 @@ class UI_U_ServiceList extends StatefulWidget {
 }
 
 class UI_U_ServiceListState extends State<UI_U_ServiceList> {
-  OrderState order = OrderState(itemList: List<OrderEntry>(), date: DateTime.now(), position: "", total: 0.0, business: ObjectState(), user: ObjectState(), businessId: "");
+  OrderState order = OrderState(itemList: List<OrderEntry>(), date: DateTime.now(), position: "", total: 0.0, business: BusinessSnippet().toEmpty(), user: UserSnippet().toEmpty(), businessId: "");
 
   @override
   void initState() {

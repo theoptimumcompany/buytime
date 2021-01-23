@@ -1,6 +1,6 @@
 import 'package:BuyTime/reblox/model/app_state.dart';
 import 'package:BuyTime/reblox/model/business/business_state.dart';
-import 'package:BuyTime/reblox/model/object_state.dart';
+import 'package:BuyTime/reusable/snippet/generic.dart';
 import 'package:BuyTime/reblox/model/file/optimum_file_to_upload.dart';
 import 'package:BuyTime/reblox/model/role/role.dart';
 import 'package:BuyTime/reblox/reducer/business_list_reducer.dart';
@@ -84,7 +84,7 @@ class BusinessRequestService implements EpicClass<AppState> {
           gallery: List<String>.from(snapshot.get('gallery')),
           wide_card_photo: snapshot.get('thumbnail'),
           logo: snapshot.get('logo'),
-          business_type: List<ObjectState>.from(snapshot.get('business_type')),
+          business_type: List<GenericState>.from(snapshot.get('business_type')),
           description: snapshot.get('description'),
           id_firestore: snapshot.get('id_firestore'),
           salesmanId: snapshot.get('salesmanId'),

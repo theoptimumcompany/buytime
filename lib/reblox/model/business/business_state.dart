@@ -1,4 +1,4 @@
-import 'package:BuyTime/reblox/model/object_state.dart';
+import 'package:BuyTime/reusable/snippet/generic.dart';
 import 'package:BuyTime/utils/theme/buytime_config.dart';
 import 'package:flutter/foundation.dart';
 
@@ -23,17 +23,17 @@ class BusinessState {
   List<String> gallery;
   String wide_card_photo;
   String logo;
-  List<ObjectState> business_type;
+  List<GenericState> business_type;
   String description;
   String id_firestore;
-  ObjectState salesman;
+  GenericState salesman;
   String salesmanId;
-  ObjectState owner;
+  GenericState owner;
   String ownerId;
   bool draft;
   List<OptimumFileToUpload> fileToUploadList;
 
-  List<dynamic> convertToJson(List<ObjectState> objectStateList) {
+  List<dynamic> convertToJson(List<GenericState> objectStateList) {
     List<dynamic> list = List<dynamic>();
     objectStateList.forEach((element) {
       list.add(element.toJson());
@@ -95,9 +95,9 @@ class BusinessState {
       business_type: [],
       description: "",
       id_firestore: "",
-      salesman: ObjectState(),
+      salesman: GenericState(),
       salesmanId: "",
-      owner: ObjectState(),
+      owner: GenericState(),
       ownerId: "",
       fileToUploadList: null,
     );
@@ -152,12 +152,12 @@ class BusinessState {
     List<String> gallery,
     String wide_card_photo,
     String logo,
-    List<ObjectState> business_type,
+    List<GenericState> business_type,
     String description,
     String id_firestore,
-    ObjectState salesman,
+    GenericState salesman,
     String salesmanId,
-    ObjectState owner,
+    GenericState owner,
     String ownerId,
     bool draft,
     List<OptimumFileToUpload> fileToUploadList,
@@ -212,12 +212,12 @@ class BusinessState {
     List<String> gallery,
     String wide_card_photo,
     String logo,
-    List<ObjectState> business_type,
+    List<GenericState> business_type,
     String description,
     String id_firestore,
-    ObjectState salesaman,
+    GenericState salesaman,
     String salesmanId,
-    ObjectState owner,
+    GenericState owner,
     String ownerId,
     bool draft,
     List<OptimumFileToUpload> fileToUploadList,
@@ -272,8 +272,8 @@ class BusinessState {
         gallery = List<String>.from(json['gallery']),
         wide_card_photo = json['wide_card_photo'],
         logo = json['logo'],
-        business_type = List<ObjectState>.from(json["business_type"].map((item) {
-          return new ObjectState(
+        business_type = List<GenericState>.from(json["business_type"].map((item) {
+          return new GenericState(
             name: item["name"] != null ? item["name"] : "",
             id: item["id"] != null ? item["id"] : "",
             // name: item["name"],
@@ -282,10 +282,10 @@ class BusinessState {
         })),
         description = json['description'],
         id_firestore = json['id_firestore'],
-        salesman = ObjectState.fromJson(json["salesman"]) ?? ObjectState.fromJson(json["salesman"]),
+        salesman = GenericState.fromJson(json["salesman"]) ?? GenericState.fromJson(json["salesman"]),
         salesmanId = json['salesmanId'],
         draft = json['draft'],
-        owner = ObjectState.fromJson(json["owner"]),
+        owner = GenericState.fromJson(json["owner"]),
         ownerId = json['ownerId'];
 
   Map<String, dynamic> toJson() => {

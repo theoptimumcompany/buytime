@@ -1,4 +1,4 @@
-import 'package:BuyTime/reblox/model/object_state.dart';
+import 'package:BuyTime/reusable/snippet/generic.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -12,16 +12,16 @@ class ServiceState {
   String image;
   String description;
   bool availability;
-  List<ObjectState> actionList;
-  List<ObjectState> categoryList;
-  List<ObjectState> externalCategoryList;
-  List<ObjectState> positionList;
+  List<GenericState> actionList;
+  List<GenericState> categoryList;
+  List<GenericState> externalCategoryList;
+  List<GenericState> positionList;
   String visibility;
-  List<ObjectState> constraintList;
-  List<ObjectState> tagList;
+  List<GenericState> constraintList;
+  List<GenericState> tagList;
   double price;
-  List<ObjectState> write_permission;
-  List<ObjectState> pipelineList;
+  List<GenericState> write_permission;
+  List<GenericState> pipelineList;
   List<OptimumFileToUpload> fileToUploadList;
 
   ServiceState({
@@ -96,16 +96,16 @@ class ServiceState {
       String thumbnail,
       String description,
       bool availability,
-      List<ObjectState> actionList,
-      List<ObjectState> categoryList,
-      List<ObjectState> externalCategoryList,
-      List<ObjectState> positionList,
+      List<GenericState> actionList,
+      List<GenericState> categoryList,
+      List<GenericState> externalCategoryList,
+      List<GenericState> positionList,
       String visibility,
-      List<ObjectState> constraintList,
-      List<ObjectState> tagList,
+      List<GenericState> constraintList,
+      List<GenericState> tagList,
       double price,
-      List<ObjectState> write_permission,
-      List<ObjectState> pipelineList,
+      List<GenericState> write_permission,
+      List<GenericState> pipelineList,
       List<OptimumFileToUpload> fileToUploadList,) {
     ServiceState(
       id: id ?? this.id,
@@ -136,16 +136,16 @@ class ServiceState {
       String thumbnail,
       String description,
       bool availability,
-      List<ObjectState> actionList,
-      List<ObjectState> categoryList,
-      List<ObjectState> externalCategoryList,
-      List<ObjectState> positionList,
+      List<GenericState> actionList,
+      List<GenericState> categoryList,
+      List<GenericState> externalCategoryList,
+      List<GenericState> positionList,
       String visibility,
-      List<ObjectState> constraintList,
-      List<ObjectState> tagList,
+      List<GenericState> constraintList,
+      List<GenericState> tagList,
       double price,
-      List<ObjectState> write_permission,
-      List<ObjectState> pipelineList,
+      List<GenericState> write_permission,
+      List<GenericState> pipelineList,
       List<OptimumFileToUpload> fileToUploadList}) {
     return ServiceState(
       id: id ?? this.id,
@@ -168,7 +168,7 @@ class ServiceState {
     );
   }
 
-  List<dynamic> convertToJson(List<ObjectState> objectStateList) {
+  List<dynamic> convertToJson(List<GenericState> objectStateList) {
     List<dynamic> list = List<dynamic>();
     objectStateList.forEach((element) {
       list.add(element.toJson());
@@ -184,52 +184,52 @@ class ServiceState {
         thumbnail = json['thumbnail'],
         description = json['description'],
         availability = json['availability'],
-        actionList = List<ObjectState>.from(json["actionList"].map((item) {
-          return new ObjectState(
+        actionList = List<GenericState>.from(json["actionList"].map((item) {
+          return new GenericState(
             name: item["name"],
             id: item["id"],
           );
         })),
-        categoryList = List<ObjectState>.from(json["categoryList"].map((item) {
-          return new ObjectState(
+        categoryList = List<GenericState>.from(json["categoryList"].map((item) {
+          return new GenericState(
             name: item["name"],
             id: item["id"],
           );
         })),
-        externalCategoryList = List<ObjectState>.from(json["externalCategoryList"].map((item) {
-          return new ObjectState(
+        externalCategoryList = List<GenericState>.from(json["externalCategoryList"].map((item) {
+          return new GenericState(
             name: item["name"],
             id: item["id"],
           );
         })),
-        positionList = List<ObjectState>.from(json["positionList"].map((item) {
-          return new ObjectState(
+        positionList = List<GenericState>.from(json["positionList"].map((item) {
+          return new GenericState(
             name: item["name"],
             id: item["id"],
           );
         })),
         visibility = json['visibility'],
-        constraintList = List<ObjectState>.from(json["constraintList"].map((item) {
-          return new ObjectState(
+        constraintList = List<GenericState>.from(json["constraintList"].map((item) {
+          return new GenericState(
             name: item["name"],
             id: item["id"],
           );
         })),
-        tagList = List<ObjectState>.from(json["tagList"].map((item) {
-          return new ObjectState(
+        tagList = List<GenericState>.from(json["tagList"].map((item) {
+          return new GenericState(
             name: item["name"],
             id: item["id"],
           );
         })),
         price = json['price'],
-        write_permission = List<ObjectState>.from(json["write_permission"].map((item) {
-          return new ObjectState(
+        write_permission = List<GenericState>.from(json["write_permission"].map((item) {
+          return new GenericState(
             name: item["name"],
             id: item["id"],
           );
         })),
-        pipelineList = List<ObjectState>.from(json["pipelineList"].map((item) {
-          return new ObjectState(
+        pipelineList = List<GenericState>.from(json["pipelineList"].map((item) {
+          return new GenericState(
             name: item["name"],
             id: item["id"],
           );

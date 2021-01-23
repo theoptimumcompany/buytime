@@ -4,11 +4,11 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:BuyTime/UI/user/landing/UI_U_Landing.dart';
+import 'package:BuyTime/reusable/snippet/device.dart';
+import 'package:BuyTime/reusable/snippet/token.dart';
 import 'package:BuyTime/utils/theme/buytime_theme.dart';
-import 'package:BuyTime/UI/user/UI_U_Tabs.dart';
 import 'package:BuyTime/UI/user/order/UI_U_OrderDetail.dart';
 import 'package:BuyTime/reblox/model/app_state.dart';
-import 'package:BuyTime/reblox/model/object_state.dart';
 import 'package:BuyTime/reblox/model/user/user_state.dart';
 import 'package:BuyTime/reblox/reducer/order_reducer.dart';
 import 'package:BuyTime/reblox/reducer/user_reducer.dart';
@@ -332,10 +332,10 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
         }
         print("Device ID : " + deviceId);
         StoreProvider.of<AppState>(context).dispatch(new LoggedUser(UserState.fromFirebaseUser(user, deviceId, serverToken)));
-        ObjectState field = ObjectState(name: "device", id: deviceId, user_uid: user.uid);
-        StoreProvider.of<AppState>(context).dispatch(new UpdateUserField(field));
-        ObjectState token = ObjectState(name: "token", id: serverToken, user_uid: user.uid);
-        StoreProvider.of<AppState>(context).dispatch(new UpdateUserField(token));
+        Device device = Device(name: "device", id: deviceId, user_uid: user.uid);
+        StoreProvider.of<AppState>(context).dispatch(new UpdateUserDevice(device));
+        Token token = Token(name: "token", id: serverToken, user_uid: user.uid);
+        StoreProvider.of<AppState>(context).dispatch(new UpdateUserToken(token));
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => Landing()),

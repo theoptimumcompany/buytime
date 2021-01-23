@@ -3,8 +3,9 @@ import 'dart:convert';
 import 'package:BuyTime/reblox/model/app_state.dart';
 import 'package:BuyTime/reblox/model/category/category_state.dart';
 import 'package:BuyTime/reblox/model/category/tree/category_tree_state.dart';
-import 'package:BuyTime/reblox/model/object_state.dart';
+import 'package:BuyTime/reusable/snippet/generic.dart';
 import 'package:BuyTime/reblox/reducer/category_tree_reducer.dart';
+import 'package:BuyTime/reusable/snippet/parent.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -163,7 +164,7 @@ class CategoryTreeAddService implements EpicClass<AppState> {
 
       print("CategorySnippetService adding category tree");
       print(event.selectedParent);
-      ObjectState selected = event.selectedParent;
+      Parent selected = event.selectedParent;
       List<dynamic> listNode = store.state.categoryTree.categoryNodeList;
       CategoryTree categoryTree = store.state.categoryTree;
       print("Lista Iniziale " + listNode.toString());
@@ -407,7 +408,7 @@ class CategoryTreeUpdateService implements EpicClass<AppState> {
 
       print("CategoryNodeService updating category tree");
       print(event.selectedParent);
-      ObjectState selectedParent = event.selectedParent;
+      Parent selectedParent = event.selectedParent;
       print("Selected New Parent ID: " + selectedParent.id);
       List<dynamic> listNode = store.state.categoryTree.categoryNodeList;
       CategoryState category = store.state.category;

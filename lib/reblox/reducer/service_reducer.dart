@@ -1,5 +1,5 @@
 import 'package:BuyTime/reblox/model/category/category_state.dart';
-import 'package:BuyTime/reblox/model/object_state.dart';
+import 'package:BuyTime/reusable/snippet/generic.dart';
 import 'package:BuyTime/reblox/model/file/optimum_file_to_upload.dart';
 import 'package:BuyTime/reblox/model/service/service_state.dart';
 
@@ -123,33 +123,33 @@ class SetServiceAvailability {
 }
 
 class SetServiceAction {
-  List<ObjectState> _actionList;
+  List<GenericState> _actionList;
   SetServiceAction(this._actionList);
-  List<ObjectState> get actionList => _actionList;
+  List<GenericState> get actionList => _actionList;
 }
 
 class SetServiceCategory {
-  List<ObjectState> _categoryList;
+  List<GenericState> _categoryList;
   SetServiceCategory(this._categoryList);
-  List<ObjectState> get categoryList => _categoryList;
+  List<GenericState> get categoryList => _categoryList;
 }
 
 class SetServicePipeline {
-  List<ObjectState> _pipelineList;
+  List<GenericState> _pipelineList;
   SetServicePipeline(this._pipelineList);
-  List<ObjectState> get pipelineList => _pipelineList;
+  List<GenericState> get pipelineList => _pipelineList;
 }
 
 class SetServiceExternalCategory {
-  List<ObjectState> _externalCategoryList;
+  List<GenericState> _externalCategoryList;
   SetServiceExternalCategory(this._externalCategoryList);
-  List<ObjectState> get externalCategoryList => _externalCategoryList;
+  List<GenericState> get externalCategoryList => _externalCategoryList;
 }
 
 class SetServicePosition {
-  List<ObjectState> _positionList;
+  List<GenericState> _positionList;
   SetServicePosition(this._positionList);
-  List<ObjectState> get positionList => _positionList;
+  List<GenericState> get positionList => _positionList;
 }
 
 class SetServiceVisibility {
@@ -159,15 +159,15 @@ class SetServiceVisibility {
 }
 
 class SetServiceConstraint {
-  List<ObjectState> _constraintList;
+  List<GenericState> _constraintList;
   SetServiceConstraint(this._constraintList);
-  List<ObjectState> get constraintList => _constraintList;
+  List<GenericState> get constraintList => _constraintList;
 }
 
 class SetServiceTag {
-  List<ObjectState> _tagList;
+  List<GenericState> _tagList;
   SetServiceTag(this._tagList);
-  List<ObjectState> get tagList => _tagList;
+  List<GenericState> get tagList => _tagList;
 }
 
 class SetServicePrice {
@@ -177,9 +177,9 @@ class SetServicePrice {
 }
 
 class SetServiceWritePermission {
-  List<ObjectState> _write_permission;
+  List<GenericState> _write_permission;
   SetServiceWritePermission(this._write_permission);
-  List<ObjectState> get write_permission => _write_permission;
+  List<GenericState> get write_permission => _write_permission;
 }
 
 ServiceState serviceReducer(ServiceState state, action) {
