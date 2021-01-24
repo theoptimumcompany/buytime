@@ -1,22 +1,18 @@
 class GenericState {
-  String name;
-  String surname;
+  String content;
   String id;
 
   GenericState({
-    this.name = "",
-    this.surname = "",
+    this.content = "",
     this.id = "",
   });
 
   GenericState.fromJson(Map<String, dynamic> json)
-      : name = json['name'],
-        surname = json['surname'],
+      : content = json['name'],
         id = json['id'];
 
   Map<String, dynamic> toJson() => {
-        'name': name,
-        'surname': surname,
+        'name': content,
         'id': id,
       };
 }

@@ -4,9 +4,9 @@ import 'package:BuyTime/reblox/model/category/category_state.dart';
 import 'package:BuyTime/reblox/model/category/tree/category_tree_state.dart';
 import 'package:BuyTime/reblox/reducer/category_reducer.dart';
 import 'package:BuyTime/reblox/reducer/category_tree_reducer.dart';
-import 'package:BuyTime/reusable/snippet/manager.dart';
-import 'package:BuyTime/reusable/snippet/parent.dart';
-import 'package:BuyTime/reusable/snippet/worker.dart';
+import 'package:BuyTime/reblox/model/snippet/manager.dart';
+import 'package:BuyTime/reblox/model/snippet/parent.dart';
+import 'package:BuyTime/reblox/model/snippet/worker.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -355,7 +355,7 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
         padding: const EdgeInsets.only(right: 10.0),
         child: InputChip(
           selected: false,
-          label: Text(item.name == "" || item.name == null ? item.mail : item.name),
+          label: Text(item.content == "" || item.content == null ? item.mail : item.content),
           //avatar: FlutterLogo(),
           onPressed: () async {
             Uri link = await _createDynamicLink(false);

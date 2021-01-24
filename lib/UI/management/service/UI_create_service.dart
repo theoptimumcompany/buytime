@@ -4,7 +4,7 @@ import 'package:BuyTime/reblox/model/app_state.dart';
 import 'package:BuyTime/UI/management/business/UI_C_business_list.dart';
 import 'package:BuyTime/reblox/model/category/snippet/category_snippet_state.dart';
 import 'package:BuyTime/reblox/model/category/tree/category_tree_state.dart';
-import 'package:BuyTime/reusable/snippet/generic.dart';
+import 'package:BuyTime/reblox/model/snippet/generic.dart';
 import 'package:BuyTime/reblox/model/pipeline/pipeline_list_state.dart';
 import 'package:BuyTime/reblox/model/service/service_state.dart';
 import 'package:BuyTime/reblox/reducer/service_reducer.dart';
@@ -27,13 +27,13 @@ class UI_CreateServiceState extends State<UI_CreateService> {
   AssetImage assetImage = AssetImage('assets/img/image_placeholder.png');
   Image image;
   final ImagePicker imagePicker = ImagePicker();
-  List<GenericState> categoryList = [GenericState(name: "Category 1"), GenericState(name: "Category 2"), GenericState(name: "Category 3")];
-  List<GenericState> pipelineListName = [GenericState(name: "Pipeline 1"), GenericState(name: "Pipeline 2"), GenericState(name: "Pipeline 3")];
-  List<GenericState> _tags = [GenericState(name: "Tag 1"), GenericState(name: "Tag 2"), GenericState(name: "Tag 3")];
-  List<GenericState> _actions = [GenericState(name: "Action 1"), GenericState(name: "Action 2"), GenericState(name: "Action 3")];
-  List<GenericState> _constraints = [GenericState(name: "Constraint 1"), GenericState(name: "Constraint 2"), GenericState(name: "Constraint 3")];
-  List<GenericState> _positions = [GenericState(name: "Position 1"), GenericState(name: "Position 2"), GenericState(name: "Position 3")];
-  List<GenericState> _visibility = [GenericState(name: "Visible"), GenericState(name: "Shadow"), GenericState(name: "Invisible")];
+  List<GenericState> categoryList = [GenericState(content: "Category 1"), GenericState(content: "Category 2"), GenericState(content: "Category 3")];
+  List<GenericState> pipelineListName = [GenericState(content: "Pipeline 1"), GenericState(content: "Pipeline 2"), GenericState(content: "Pipeline 3")];
+  List<GenericState> _tags = [GenericState(content: "Tag 1"), GenericState(content: "Tag 2"), GenericState(content: "Tag 3")];
+  List<GenericState> _actions = [GenericState(content: "Action 1"), GenericState(content: "Action 2"), GenericState(content: "Action 3")];
+  List<GenericState> _constraints = [GenericState(content: "Constraint 1"), GenericState(content: "Constraint 2"), GenericState(content: "Constraint 3")];
+  List<GenericState> _positions = [GenericState(content: "Position 1"), GenericState(content: "Position 2"), GenericState(content: "Position 3")];
+  List<GenericState> _visibility = [GenericState(content: "Visible"), GenericState(content: "Shadow"), GenericState(content: "Invisible")];
 
   List<DropdownMenuItem<GenericState>> _dropActions;
   GenericState _selectedAction;
@@ -57,7 +57,7 @@ class UI_CreateServiceState extends State<UI_CreateService> {
     List<GenericState> items = List();
     for (int i = 0; i < pipelineList.pipelineList.length; i++) {
       items.add(GenericState(
-        name: pipelineList.pipelineList[i].name,
+        content: pipelineList.pipelineList[i].name,
       ));
     }
     pipelineListName = items;
@@ -80,7 +80,7 @@ class UI_CreateServiceState extends State<UI_CreateService> {
   openTree(List<dynamic> list, List<GenericState> items) {
     for (int i = 0; i < list.length; i++) {
       items.add(
-        GenericState(name: list[i]['nodeName']),
+        GenericState(content: list[i]['nodeName']),
       );
       if (list[i]['nodeCategory'] != null) {
         openTree(list[i]['nodeCategory'], items);
@@ -335,7 +335,7 @@ class UI_CreateServiceState extends State<UI_CreateService> {
                               list: _visibility,
                               optimumDropdownToDispatch: (GenericState selectedVisibility) {
                                 _selectedVisibility = selectedVisibility;
-                                StoreProvider.of<AppState>(context).dispatch(SetServiceVisibility(selectedVisibility.name));
+                                StoreProvider.of<AppState>(context).dispatch(SetServiceVisibility(selectedVisibility.content));
                               },
                             ),
                           ),
@@ -346,7 +346,7 @@ class UI_CreateServiceState extends State<UI_CreateService> {
                       textColor: Colors.black,
                       onPressed: () {
                         ServiceState serviceState = snapshot.serviceState;
-                        _selectedVisibility == null ? serviceState.visibility = _visibility[0].name : serviceState.visibility = snapshot.serviceState.visibility;
+                        _selectedVisibility == null ? serviceState.visibility = _visibility[0].content : serviceState.visibility = snapshot.serviceState.visibility;
                         StoreProvider.of<AppState>(context).dispatch(new CreateService(serviceState, snapshot.business.id_firestore));
                         Navigator.pushReplacement(
                           context,

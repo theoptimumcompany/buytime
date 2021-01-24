@@ -1,4 +1,5 @@
-import 'package:BuyTime/reusable/snippet/generic.dart';
+import 'package:BuyTime/reblox/model/user/snippet/user_snippet_state.dart';
+import 'package:BuyTime/reblox/model/snippet/generic.dart';
 import 'package:flutter/foundation.dart';
 
 class BookingState {
@@ -10,11 +11,11 @@ class BookingState {
   DateTime start_date;
   DateTime end_date;
   String booking_code;
-  List<GenericState> user;
+  List<UserSnippet> user;
   String state; //TODO Change to Enum
   String wide_card_photo;
 
-  List<dynamic> convertToJson(List<GenericState> objectStateList) {
+  List<dynamic> convertToJson(List<UserSnippet> objectStateList) {
     List<dynamic> list = List<dynamic>();
     objectStateList.forEach((element) {
       list.add(element.toJson());
@@ -131,12 +132,10 @@ class BookingState {
         start_date = json['start_date'].toDate(),
         end_date = json['end_date'].toDate(),
         booking_code = json['booking_code'],
-        user = List<GenericState>.from(json["user"].map((item) {
-          return new GenericState(
+        user = List<UserSnippet>.from(json["user"].map((item) {
+          return new UserSnippet(
             name: item["name"] != null ? item["name"] : "",
             id: item["id"] != null ? item["id"] : "",
-            // name: item["name"],
-            // id: item["id"],
           );
         })),
         state = json['state'],

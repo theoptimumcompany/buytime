@@ -4,10 +4,10 @@ import 'package:BuyTime/reblox/model/service/service_state.dart';
 import 'package:BuyTime/reblox/model/service/snippet/service_snippet_state.dart';
 import 'package:BuyTime/reblox/reducer/category_list_reducer.dart';
 import 'package:BuyTime/reblox/reducer/category_reducer.dart';
-import 'package:BuyTime/reusable/snippet/manager.dart';
-import 'package:BuyTime/reusable/snippet/worker.dart';
+import 'package:BuyTime/reblox/model/snippet/manager.dart';
+import 'package:BuyTime/reblox/model/snippet/worker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:BuyTime/reusable/snippet/generic.dart';
+import 'package:BuyTime/reblox/model/snippet/generic.dart';
 import 'package:redux_epics/redux_epics.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -98,6 +98,7 @@ class CategoryInviteManagerService implements EpicClass<AppState> {
       ///Inserisco nella categoria il manager alla lista dei manager e nella lista mailManager
       ///In seguito partirà una cloud function che fa gli opportuni controlli sui permessi dell'utente che aggiunge la nuova mail, e scrive i permessi della mail aggiunta per quella categoria
 
+      print("Inizia elaborazione per inserire Oggetto Manager nel Database");
       Manager manager = event.manager;
       FirebaseFirestore.instance
           .collection("business")
@@ -105,10 +106,11 @@ class CategoryInviteManagerService implements EpicClass<AppState> {
           .collection("category")
           .doc(store.state.category.id)
           .update({
-        "manager": FieldValue.arrayUnion([manager])
+        "manager": FieldValue.arrayUnion([manager.toJson()])
       }).then((value) {
         print("Category Service added Manager to field manager");
       });
+
 
       FirebaseFirestore.instance
           .collection("business")
@@ -141,7 +143,7 @@ class CategoryInviteWorkerService implements EpicClass<AppState> {
           .collection("category")
           .doc(store.state.category.id)
           .update({
-        "worker": FieldValue.arrayUnion([worker])
+        "worker": FieldValue.arrayUnion([worker.toJson()])
       }).then((value) {
         print("Category Service added Worker to field worker");
       });

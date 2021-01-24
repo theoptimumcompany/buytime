@@ -1,4 +1,4 @@
-import 'package:BuyTime/reusable/snippet/generic.dart';
+import 'package:BuyTime/reblox/model/snippet/generic.dart';
 import 'package:BuyTime/reblox/model/stripe/stripe_card_response.dart';
 import 'package:BuyTime/reblox/model/stripe/stripe_state.dart';
 import 'package:BuyTime/UI/user/cart/UI_U_stripe_payment.dart';

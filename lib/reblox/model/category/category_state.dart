@@ -1,8 +1,8 @@
 import 'package:BuyTime/reblox/model/category/snippet/category_snippet_state.dart';
-import 'package:BuyTime/reusable/snippet/generic.dart';
-import 'package:BuyTime/reusable/snippet/manager.dart';
-import 'package:BuyTime/reusable/snippet/parent.dart';
-import 'package:BuyTime/reusable/snippet/worker.dart';
+import 'package:BuyTime/reblox/model/snippet/generic.dart';
+import 'package:BuyTime/reblox/model/snippet/manager.dart';
+import 'package:BuyTime/reblox/model/snippet/parent.dart';
+import 'package:BuyTime/reblox/model/snippet/worker.dart';
 
 class CategoryState {
   String name;
@@ -139,16 +139,20 @@ class CategoryState {
         parent = Parent.fromJson(json["parent"]),
         manager = List<Manager>.from(json["manager"].map((item) {
           return new Manager(
-            name: item["name"],
             id: item["id"],
+            mail: item["mail"],
+            name: item["name"],
+            surname: item["surname"],
           );
         })),
         managerMailList = List<String>.from(json['managerMailList']),
         businessId = json['businessId'],
         worker = List<Worker>.from(json["worker"].map((item) {
           return new Worker(
-            name: item["name"],
             id: item["id"],
+            mail: item["mail"],
+            name: item["name"],
+            surname: item["surname"],
           );
         })),
         workerMailList = List<String>.from(json['workerMailList']),

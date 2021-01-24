@@ -6,7 +6,7 @@ import 'package:BuyTime/UI/management/old_design/UI_M_Tabs.dart';
 import 'package:BuyTime/UI/management/service/UI_manage_service.dart';
 import 'package:BuyTime/reblox/model/app_state.dart';
 import 'package:BuyTime/reblox/model/business/snippet/business_snippet_state.dart';
-import 'package:BuyTime/reusable/snippet/generic.dart';
+import 'package:BuyTime/reblox/model/snippet/generic.dart';
 import 'package:BuyTime/reblox/model/order/order_state.dart';
 import 'package:BuyTime/reblox/model/order/order_entry.dart';
 import 'package:BuyTime/reblox/model/service/service_state.dart';

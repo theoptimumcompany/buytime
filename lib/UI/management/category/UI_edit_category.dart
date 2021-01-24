@@ -2,16 +2,17 @@ import 'package:BuyTime/UI/management/business/UI_M_business_list.dart';
 import 'package:BuyTime/UI/management/category/UI_manage_category.dart';
 import 'package:BuyTime/reblox/model/category/tree/category_tree_state.dart';
 import 'package:BuyTime/reblox/reducer/category_tree_reducer.dart';
-import 'package:BuyTime/reusable/snippet/manager.dart';
-import 'package:BuyTime/reusable/snippet/parent.dart';
-import 'package:BuyTime/reusable/snippet/worker.dart';
+import 'package:BuyTime/reblox/model/snippet/manager.dart';
+import 'package:BuyTime/reblox/model/snippet/parent.dart';
+import 'package:BuyTime/reblox/model/snippet/worker.dart';
 import 'package:BuyTime/utils/theme/buytime_theme.dart';
 import 'package:BuyTime/reblox/model/app_state.dart';
 import 'package:BuyTime/UI/management/business/UI_C_business_list.dart';
 import 'package:BuyTime/reblox/model/category/snippet/category_snippet_state.dart';
-import 'package:BuyTime/reusable/snippet/generic.dart';
+import 'package:BuyTime/reblox/model/snippet/generic.dart';
 import 'package:BuyTime/reblox/reducer/category_reducer.dart';
 import 'package:BuyTime/reusable/form/optimum_form_field.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -188,18 +189,18 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
           FlatButton(
             child: Text("Invite"),
             onPressed: () async {
+              print("Category Edit Mail to add : " + inviteMail);
+
               ///Avviare Spinner una volta pigiato invita, per attendere i controlli fatti dalla cloud function
               if (validateAndSaveInvite()) {
                 ///Controllo se invito manager o worker e lancio la opportuna dispatch
                 switch (role) {
                   case 'Manager':
-                    Manager newManager;
-                    newManager.mail = inviteMail;
+                    Manager newManager = Manager(id: "", name: "", surname: "", mail: inviteMail);
                     StoreProvider.of<AppState>(context).dispatch(new CategoryInviteManager(newManager));
                     break;
                   case 'Worker':
-                    Worker newWorker;
-                    newWorker.mail = inviteMail;
+                    Worker newWorker = Worker(id: "", name: "", surname: "", mail: inviteMail);
                     StoreProvider.of<AppState>(context).dispatch(new CategoryInviteWorker(newWorker));
                     break;
                 }
@@ -385,6 +386,105 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
     RegExp regex = new RegExp(pattern);
     return (!regex.hasMatch(value)) ? false : true;
+  }
+
+  List<Widget> listOfManagerChips(AppState snapshot) {
+    List<Widget> listOfWidget = new List();
+    listOfWidget.add(InputChip(
+      selected: false,
+      label: Text(
+        snapshot.business.owner.content,
+        style: TextStyle(
+          fontSize: 13.0,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+    ));
+
+    snapshot.business.salesman.content != null && snapshot.business.salesman.content != ''
+        ? listOfWidget.add(InputChip(
+            selected: false,
+            label: Text(
+              snapshot.business.salesman.content,
+              style: TextStyle(
+                fontSize: 13.0,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ))
+        : listOfWidget.add(Container());
+
+    if (managerList.length > 0 && managerList != null) {
+      for (int i = 0; i < managerList.length; i++) {
+        listOfWidget.add(InputChip(
+          selected: false,
+          label: Text(
+            managerList[i].mail,
+            style: TextStyle(
+              fontSize: 13.0,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          //avatar: FlutterLogo(),
+          onPressed: () {
+            print('Manager is pressed');
+
+            ///Vedere che fare quando si pigia il chip
+            setState(() {
+              //_selected = !_selected;
+            });
+          },
+          onDeleted: () {
+            Manager managerToDelete;
+            managerToDelete.mail = managerList[i].mail;
+            StoreProvider.of<AppState>(context).dispatch(new DeleteCategoryManager(managerToDelete));
+            print('Manager is deleted');
+          },
+        ));
+      }
+    } else {
+      listOfWidget.add(Container());
+    }
+    return listOfWidget;
+  }
+
+  List<Widget> listOfWorkerChips(AppState snapshot) {
+    List<Widget> listOfWidget = new List();
+
+    if (workerList.length > 0 && workerList != null) {
+      for (int i = 0; i < workerList.length; i++) {
+        listOfWidget.add(InputChip(
+          selected: false,
+          label: Text(
+            workerList[i].mail,
+            style: TextStyle(
+              fontSize: 13.0,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          //avatar: FlutterLogo(),
+          onPressed: () {
+            print('Worker is pressed');
+
+            ///Vedere cosa fare se si pigia email
+            setState(() {
+              //_selected = !_selected;
+            });
+          },
+          onDeleted: () {
+            Worker workerToDelete;
+            workerToDelete.mail = workerList[i].mail;
+            StoreProvider.of<AppState>(context).dispatch(new DeleteCategoryWorker(workerToDelete));
+            print('Worker is deleted');
+          },
+        ));
+      }
+    } else {
+      listOfWidget.add(Container(
+        child: Text("Non ci sono lavoratori assegnati a questa categoria."),
+      ));
+    }
+    return listOfWidget;
   }
 
   @override
@@ -638,56 +738,14 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
                                 ),
                               ],
                             ),
-                            Wrap(
-                              alignment: WrapAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 10.0),
-                                  child: InputChip(
-                                    selected: false,
-                                    label: Text(snapshot.business.owner.name + " " + snapshot.business.owner.surname),
-                                  ),
-                                ),
-                                snapshot.business.salesman.name != null && snapshot.business.salesman.name != ''
-                                    ? Padding(
-                                        padding: const EdgeInsets.only(right: 10.0),
-                                        child: InputChip(
-                                          selected: false,
-                                          label: Text(snapshot.business.salesman.name +
-                                              " " +
-                                              snapshot.business.salesman.surname),
-                                        ),
-                                      )
-                                    : Container(),
-                                managerList.length > 1 && managerList != null
-                                    ? List.generate(
-                                        managerList.length,
-                                        (index) {
-                                          return Padding(
-                                            padding: const EdgeInsets.only(right: 10.0),
-                                            child: InputChip(
-                                              selected: false,
-                                              label: Text(managerList[index].name),
-                                              //avatar: FlutterLogo(),
-                                              onPressed: () {
-                                                print('Manager is pressed');
-                                                ///Vedere che fare quando si pigia il chip
-                                                setState(() {
-                                                  //_selected = !_selected;
-                                                });
-                                              },
-                                              onDeleted: () {
-                                                Manager managerToDelete;
-                                                managerToDelete.mail = managerList[index].name;
-                                                StoreProvider.of<AppState>(context).dispatch(new DeleteCategoryManager(managerToDelete));
-                                                print('Manager is deleted');
-                                              },
-                                            ),
-                                          );
-                                        },
-                                      )
-                                    : Container()
-                              ],
+                            Container(
+                              width: double.infinity,
+                              child: Wrap(
+                                direction: Axis.horizontal,
+                                alignment: WrapAlignment.start,
+                                spacing: 5.0,
+                                children: listOfManagerChips(snapshot),
+                              ),
                             ),
                           ],
                         ),
@@ -728,42 +786,15 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
                                 ),
                               ],
                             ),
-                            workerList.length > 1 && workerList != null
-                                ? Wrap(
-                                    alignment: WrapAlignment.start,
-                                    children: List.generate(
-                                      workerList.length,
-                                      (index) {
-                                        return Padding(
-                                          padding: const EdgeInsets.only(right: 10.0),
-                                          child: InputChip(
-                                            selected: false,
-                                            label: Text(workerList[index].name),
-                                            //avatar: FlutterLogo(),
-                                            onPressed: () {
-                                              print('Worker is pressed');
-                                              ///Vedere cosa fare se si pigia email
-                                              setState(() {
-                                                //_selected = !_selected;
-                                              });
-                                            },
-                                            onDeleted: () {
-                                              Worker workerToDelete;
-                                              workerToDelete.mail = workerList[index].name;
-                                              StoreProvider.of<AppState>(context).dispatch(new DeleteCategoryWorker(workerToDelete));
-                                              print('Worker is deleted');
-                                            },
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  )
-                                : Padding(
-                                    padding: const EdgeInsets.all(10.0),
-                                    child: Container(
-                                      child: Text("Non ci sono lavoratori assegnati a questa categoria."),
-                                    ),
-                                  )
+                            Container(
+                              width: double.infinity,
+                              child: Wrap(
+                                direction: Axis.horizontal,
+                                alignment: WrapAlignment.start,
+                                spacing: 5.0,
+                                children: listOfWorkerChips(snapshot),
+                              ),
+                            )
                           ],
                         ),
                       ),

@@ -3,7 +3,7 @@ import 'package:BuyTime/UI/management/business/UI_M_business_list.dart';
 import 'package:BuyTime/UI/management/old_design/UI_M_Tabs.dart';
 import 'package:BuyTime/reblox/model/app_state.dart';
 import 'package:BuyTime/reblox/model/business/business_state.dart';
-import 'package:BuyTime/reusable/snippet/generic.dart';
+import 'package:BuyTime/reblox/model/snippet/generic.dart';
 import 'package:BuyTime/reblox/reducer/business_reducer.dart';
 import 'package:BuyTime/reusable/form/optimum_form_field.dart';
 import 'package:BuyTime/reusable/form/optimum_form_multi_photo.dart' if (dart.library.html) 'package:BuyTime/reusable/form/optimum_form_multi_photo_web.dart';
@@ -25,7 +25,7 @@ class UI_CreateBusinessState extends State<UI_CreateBusiness> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _autoValidate = false;
 
-  List<GenericState> reportList = [GenericState(name: "Hotel"),GenericState(name:"Spa"),GenericState(name: "Restaurant")];
+  List<GenericState> reportList = [GenericState(content: "Hotel"),GenericState(content:"Spa"),GenericState(content: "Restaurant")];
 
   next() {
     currentStep + 1 != steps ? goTo(currentStep + 1) : setState(() => complete = true);

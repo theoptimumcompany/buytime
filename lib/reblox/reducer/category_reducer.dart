@@ -1,8 +1,8 @@
 import 'package:BuyTime/reblox/model/category/category_state.dart';
-import 'package:BuyTime/reusable/snippet/generic.dart';
-import 'package:BuyTime/reusable/snippet/manager.dart';
-import 'package:BuyTime/reusable/snippet/parent.dart';
-import 'package:BuyTime/reusable/snippet/worker.dart';
+import 'package:BuyTime/reblox/model/snippet/generic.dart';
+import 'package:BuyTime/reblox/model/snippet/manager.dart';
+import 'package:BuyTime/reblox/model/snippet/parent.dart';
+import 'package:BuyTime/reblox/model/snippet/worker.dart';
 
 class CategoryRequest {
   String _id;

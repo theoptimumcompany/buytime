@@ -1,9 +1,9 @@
 
 import 'package:BuyTime/reblox/model/business/business_state.dart';
-import 'package:BuyTime/reusable/snippet/generic.dart';
+import 'package:BuyTime/reblox/model/snippet/generic.dart';
 import 'package:BuyTime/reblox/model/user/user_state.dart';
-import 'package:BuyTime/reusable/snippet/device.dart';
-import 'package:BuyTime/reusable/snippet/token.dart';
+import 'package:BuyTime/reblox/model/snippet/device.dart';
+import 'package:BuyTime/reblox/model/snippet/token.dart';
 
 class UserRequest {
   String _userStateId;

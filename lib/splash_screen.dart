@@ -4,8 +4,8 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:BuyTime/UI/user/landing/UI_U_Landing.dart';
-import 'package:BuyTime/reusable/snippet/device.dart';
-import 'package:BuyTime/reusable/snippet/token.dart';
+import 'package:BuyTime/reblox/model/snippet/device.dart';
+import 'package:BuyTime/reblox/model/snippet/token.dart';
 import 'package:BuyTime/utils/theme/buytime_theme.dart';
 import 'package:BuyTime/UI/user/order/UI_U_OrderDetail.dart';
 import 'package:BuyTime/reblox/model/app_state.dart';

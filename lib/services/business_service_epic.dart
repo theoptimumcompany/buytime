@@ -1,6 +1,6 @@
 import 'package:BuyTime/reblox/model/app_state.dart';
 import 'package:BuyTime/reblox/model/business/business_state.dart';
-import 'package:BuyTime/reusable/snippet/generic.dart';
+import 'package:BuyTime/reblox/model/snippet/generic.dart';
 import 'package:BuyTime/reblox/model/file/optimum_file_to_upload.dart';
 import 'package:BuyTime/reblox/model/role/role.dart';
 import 'package:BuyTime/reblox/reducer/business_list_reducer.dart';

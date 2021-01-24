@@ -1,5 +1,5 @@
 import 'package:BuyTime/reblox/model/category/category_state.dart';
-import 'package:BuyTime/reusable/snippet/generic.dart';
+import 'package:BuyTime/reblox/model/snippet/generic.dart';
 import 'package:BuyTime/reblox/model/file/optimum_file_to_upload.dart';
 import 'package:BuyTime/reblox/model/service/service_state.dart';
 

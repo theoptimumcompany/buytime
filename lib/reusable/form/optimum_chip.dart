@@ -1,6 +1,6 @@
 import 'package:BuyTime/reblox/model/app_state.dart';
 import 'package:BuyTime/reblox/model/business/business_state.dart';
-import 'package:BuyTime/reusable/snippet/generic.dart';
+import 'package:BuyTime/reblox/model/snippet/generic.dart';
 import 'package:BuyTime/reblox/model/service/service_state.dart';
 import 'package:BuyTime/reblox/reducer/business_reducer.dart';
 import 'package:BuyTime/reblox/reducer/service_reducer.dart';
@@ -37,22 +37,22 @@ class _OptimumChipState extends State<OptimumChip> {
       choices.add(Container(
         padding: const EdgeInsets.all(2.0),
         child: ChoiceChip(
-          label: Text(item.name),
-          selected: selectedChoices.any((element) => element.name == item.name),
+          label: Text(item.content),
+          selected: selectedChoices.any((element) => element.content == item.content),
           selectedColor: Theme.of(context).accentColor,
-          labelStyle: TextStyle(color: selectedChoices.any((element) => element.name == item.name) ? Colors.black : Colors.white),
+          labelStyle: TextStyle(color: selectedChoices.any((element) => element.content == item.content) ? Colors.black : Colors.white),
           onSelected: (selected) {
 
             setState(() {
-              if (selectedChoices.any((element) => element.name == item.name)) {
-                selectedChoices.removeWhere((element) => element.name == item.name);
+              if (selectedChoices.any((element) => element.content == item.content)) {
+                selectedChoices.removeWhere((element) => element.content == item.content);
               } else {
                 selectedChoices.add(item);
               }
             });
 
             selectedChoices.forEach((element) {
-              print(element.name);
+              print(element.content);
             });
             optimumChipListToDispatch(selectedChoices);
           },

@@ -1,6 +1,6 @@
 import 'package:BuyTime/reblox/model/business/snippet/business_snippet_state.dart';
 import 'package:BuyTime/reblox/model/category/tree/category_tree_state.dart';
-import 'package:BuyTime/reusable/snippet/parent.dart';
+import 'package:BuyTime/reblox/model/snippet/parent.dart';
 import 'package:BuyTime/utils/theme/buytime_theme.dart';
 import 'package:BuyTime/UI/user/login/UI_U_Home.dart';
 import 'package:BuyTime/UI/user/login/UI_U_Login.dart';
@@ -12,7 +12,7 @@ import 'package:BuyTime/reblox/model/category/category_list_state.dart';
 import 'package:BuyTime/reblox/model/category/snippet/category_snippet_state.dart';
 import 'package:BuyTime/reblox/model/category/category_state.dart';
 import 'package:BuyTime/reblox/model/old/filter_search_state.dart';
-import 'package:BuyTime/reusable/snippet/generic.dart';
+import 'package:BuyTime/reblox/model/snippet/generic.dart';
 import 'package:BuyTime/reblox/model/order/order_entry.dart';
 import 'package:BuyTime/reblox/model/order/order_list_state.dart';
 import 'package:BuyTime/reblox/model/order/order_state.dart';

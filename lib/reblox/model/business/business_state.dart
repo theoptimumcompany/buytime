@@ -1,4 +1,4 @@
-import 'package:BuyTime/reusable/snippet/generic.dart';
+import 'package:BuyTime/reblox/model/snippet/generic.dart';
 import 'package:BuyTime/utils/theme/buytime_config.dart';
 import 'package:flutter/foundation.dart';
 
@@ -274,7 +274,7 @@ class BusinessState {
         logo = json['logo'],
         business_type = List<GenericState>.from(json["business_type"].map((item) {
           return new GenericState(
-            name: item["name"] != null ? item["name"] : "",
+            content: item["name"] != null ? item["name"] : "",
             id: item["id"] != null ? item["id"] : "",
             // name: item["name"],
             // id: item["id"],

@@ -1,10 +1,10 @@
 import 'dart:io';
 import 'package:BuyTime/UI/user/landing/UI_U_Landing.dart';
-import 'package:BuyTime/reusable/snippet/device.dart';
-import 'package:BuyTime/reusable/snippet/token.dart';
+import 'package:BuyTime/reblox/model/snippet/device.dart';
+import 'package:BuyTime/reblox/model/snippet/token.dart';
 import 'package:BuyTime/utils/theme/buytime_theme.dart';
 import 'package:BuyTime/reblox/model/app_state.dart';
-import 'package:BuyTime/reusable/snippet/generic.dart';
+import 'package:BuyTime/reblox/model/snippet/generic.dart';
 import 'package:BuyTime/reblox/model/user/user_state.dart';
 import 'package:BuyTime/reblox/reducer/user_reducer.dart';
 import 'package:BuyTime/reusable/branded_button.dart';
