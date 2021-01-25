@@ -137,8 +137,9 @@ class OptimumFormMultiPhotoState extends State<OptimumFormMultiPhoto> {
      }else{
        debugPrint('optimum_from_multi_photo: crop');
        croppedFile = await ImageCropper.cropImage(
+         aspectRatio: cropAspectRatioPreset == CropAspectRatioPreset.square ? CropAspectRatio(ratioX: 1, ratioY: 1) : CropAspectRatio(ratioX: 16, ratioY: 9),
            sourcePath: pickedFile.path,
-           aspectRatioPresets: Platform.isAndroid
+           /*aspectRatioPresets: Platform.isAndroid
                ? [
              CropAspectRatioPreset.square,
              CropAspectRatioPreset.ratio3x2,
@@ -147,15 +148,15 @@ class OptimumFormMultiPhotoState extends State<OptimumFormMultiPhoto> {
              CropAspectRatioPreset.ratio16x9
            ]
                : [
-             CropAspectRatioPreset.original,
+             //CropAspectRatioPreset.original,
              CropAspectRatioPreset.square,
-             CropAspectRatioPreset.ratio3x2,
-             CropAspectRatioPreset.ratio4x3,
-             CropAspectRatioPreset.ratio5x3,
-             CropAspectRatioPreset.ratio5x4,
-             CropAspectRatioPreset.ratio7x5,
+             //CropAspectRatioPreset.ratio3x2,
+             //CropAspectRatioPreset.ratio4x3,
+             //CropAspectRatioPreset.ratio5x3,
+             //CropAspectRatioPreset.ratio5x4,
+             //CropAspectRatioPreset.ratio7x5,
              CropAspectRatioPreset.ratio16x9
-           ],
+           ],*/
            androidUiSettings: AndroidUiSettings(
                toolbarTitle: 'Crop your Image',
                toolbarColor: BuytimeTheme.UserPrimary,
@@ -165,7 +166,13 @@ class OptimumFormMultiPhotoState extends State<OptimumFormMultiPhoto> {
              hideBottomControls: true
            ),
            iosUiSettings: IOSUiSettings(
-             title: 'Cropper',
+             title: 'Crop your Image',
+             hidesNavigationBar: true,
+             rotateButtonsHidden: true,
+             resetButtonHidden: true,
+             aspectRatioLockEnabled: false,
+             rotateClockwiseButtonHidden: true,
+             aspectRatioPickerButtonHidden: true
            ));
      }
    }
