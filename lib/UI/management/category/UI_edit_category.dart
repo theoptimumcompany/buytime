@@ -206,6 +206,7 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
                 }
                 Uri link = await _createDynamicLink(false);
                 Share.share('check out Buytime App at $link', subject: 'Take your Time!');
+                Navigator.of(context).pop();
               }
             },
           )
@@ -435,8 +436,8 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
             });
           },
           onDeleted: () {
-            Manager managerToDelete;
-            managerToDelete.mail = managerList[i].mail;
+            Manager managerToDelete = Manager(id: "", name: "", surname: "", mail: managerList[i].mail);
+            print("Mail di invito Manager da eliminare : " + managerList[i].mail);
             StoreProvider.of<AppState>(context).dispatch(new DeleteCategoryManager(managerToDelete));
             print('Manager is deleted');
           },
@@ -448,7 +449,12 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
     return listOfWidget;
   }
 
-  List<Widget> listOfWorkerChips(AppState snapshot) {
+  List<Widget> listEmptyWidget(){
+    List<Widget> listOfWidget = new List();
+    listOfWidget.add(Container(child: Text("Sono vuoto"),));
+  }
+
+  List<Widget> listOfWorkerChips() {
     List<Widget> listOfWidget = new List();
 
     if (workerList.length > 0 && workerList != null) {
@@ -462,26 +468,26 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
               fontWeight: FontWeight.w500,
             ),
           ),
-          //avatar: FlutterLogo(),
           onPressed: () {
             print('Worker is pressed');
-
-            ///Vedere cosa fare se si pigia email
             setState(() {
               //_selected = !_selected;
             });
           },
           onDeleted: () {
-            Worker workerToDelete;
-            workerToDelete.mail = workerList[i].mail;
+            Worker workerToDelete = Worker(id: "", name: "", surname: "", mail: workerList[i].mail);
+            print("Mail di invito Worker da eliminare : " + workerList[i].mail);
             StoreProvider.of<AppState>(context).dispatch(new DeleteCategoryWorker(workerToDelete));
             print('Worker is deleted');
           },
         ));
       }
     } else {
-      listOfWidget.add(Container(
-        child: Text("Non ci sono lavoratori assegnati a questa categoria."),
+      listOfWidget.add(Padding(
+        padding: EdgeInsets.all(20),
+        child: Container(
+          child: Text("Non ci sono lavoratori assegnati a questa categoria."),
+        ),
       ));
     }
     return listOfWidget;
@@ -792,7 +798,7 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
                                 direction: Axis.horizontal,
                                 alignment: WrapAlignment.start,
                                 spacing: 5.0,
-                                children: listOfWorkerChips(snapshot),
+                                children: listOfWorkerChips(),
                               ),
                             )
                           ],

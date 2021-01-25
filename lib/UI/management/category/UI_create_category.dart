@@ -4,16 +4,11 @@ import 'package:BuyTime/reblox/model/category/category_state.dart';
 import 'package:BuyTime/reblox/model/category/tree/category_tree_state.dart';
 import 'package:BuyTime/reblox/reducer/category_reducer.dart';
 import 'package:BuyTime/reblox/reducer/category_tree_reducer.dart';
-import 'package:BuyTime/reblox/model/snippet/manager.dart';
 import 'package:BuyTime/reblox/model/snippet/parent.dart';
-import 'package:BuyTime/reblox/model/snippet/worker.dart';
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:share/share.dart';
 import '../../../reusable/appbar/manager_buytime_appbar.dart';
-import '../../../utils/theme/buytime_theme.dart';
 
 class UI_CreateCategory extends StatefulWidget {
   final String title = 'Categories';
@@ -43,12 +38,6 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
   bool changeParent = false;
   bool stopBuildDropDown = false;
   String inviteMail = '';
-
-  ///Managers List
-  List<Manager> managerList;
-
-  ///Workers List
-  List<Worker> workerList;
 
   void initState() {
     super.initState();
@@ -138,197 +127,6 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
     return items;
   }
 
-  void sendInvitationMailDialog(context, String role) {
-    var height = MediaQuery.of(context).size.height;
-    double wrap_width_text = MediaQuery.of(context).size.width * 0.6;
-    showDialog(
-      context: context,
-      builder: (_) => new AlertDialog(
-        actions: <Widget>[
-          Row(
-            children: [
-              FlatButton(
-                child: Text("Cancel"),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              FlatButton(
-                child: Text("Invite"),
-                onPressed: () async {
-                  if (validateAndSaveInvite()) {
-                    print("UI_create_category: Mail di Invito : " + inviteMail);
-                    switch (role) {
-                      case 'Worker':
-                        Worker newWorker = new Worker(mail: inviteMail);
-                        StoreProvider.of<AppState>(context).dispatch(new AddCategoryWorker(newWorker));
-                        break;
-                      case 'Manager':
-                        Manager newManager = new Manager(mail: inviteMail);
-                        StoreProvider.of<AppState>(context).dispatch(new AddCategoryManager(newManager));
-                        break;
-                    }
-                    Uri link = await _createDynamicLink(false);
-                    Share.share('Enter in Buytime App at $link and use $inviteMail to login!',
-                        subject: 'Take your Time!');
-                    Navigator.of(context).pop();
-                  }
-                },
-              )
-            ],
-          ),
-        ],
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
-        content: Container(
-          height: height * 0.28,
-          child: new Column(
-            children: <Widget>[
-              Container(
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 5.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Container(
-                        child: Text(
-                          "Invite a $role",
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                            color: BuytimeTheme.TextDark,
-                            fontSize: height * 0.024,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Container(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 10.0, left: 5.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Container(
-                        width: wrap_width_text,
-                        child: Text(
-                          "Type a $role email below. They will receive an email invite to install the application and join the business",
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                            color: BuytimeTheme.TextDark,
-                            fontSize: height * 0.018,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 30.0),
-                child: Container(
-                  decoration:
-                      BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
-                  child: Form(
-                      key: _formInviteKey,
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 10.0, right: 10.0),
-                        child: Container(
-                          child: TextFormField(
-                            keyboardType: TextInputType.emailAddress,
-                            autofocus: true,
-                            validator: (value) => value.isEmpty
-                                ? 'Email cannot be blank'
-                                : validateEmail(value)
-                                    ? null
-                                    : 'Not a valid email',
-                            onChanged: (value) {
-                              setState(() {
-                                inviteMail = value;
-                              });
-                            },
-                            onSaved: (value) {
-                              setState(() {
-                                inviteMail = value;
-                              });
-                            },
-                            decoration: InputDecoration(
-                              labelText: 'Email address',
-                              border: InputBorder.none,
-                              focusedBorder: InputBorder.none,
-                              enabledBorder: InputBorder.none,
-                              errorBorder: InputBorder.none,
-                              disabledBorder: InputBorder.none,
-                            ),
-                          ),
-                        ),
-                      )),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  void _modalAddPerson(context) {
-    showModalBottomSheet(
-        elevation: 3,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        context: context,
-        builder: (BuildContext bc) {
-          return Container(
-            child: new Wrap(
-              children: <Widget>[
-                new ListTile(
-                    title: new Text('Add Manager'),
-                    onTap: () => {
-                          Navigator.of(context).pop(),
-                          sendInvitationMailDialog(context, 'Manager'),
-                        }),
-                new ListTile(
-                  title: new Text('Add Worker'),
-                  onTap: () => {Navigator.of(context).pop(), sendInvitationMailDialog(context, 'Worker')},
-                ),
-              ],
-            ),
-          );
-        });
-  }
-
-  Future<Uri> _createDynamicLink(bool short) async {
-    final DynamicLinkParameters parameters = DynamicLinkParameters(
-      uriPrefix: 'https://buytime.page.link',
-      link: Uri.parse('https://beta.itunes.apple.com/v1/app/1508552491'),
-      androidParameters: AndroidParameters(
-        packageName: 'com.theoptimumcompany.buytime',
-        minimumVersion: 1,
-      ),
-      dynamicLinkParametersOptions: DynamicLinkParametersOptions(
-        shortDynamicLinkPathLength: ShortDynamicLinkPathLength.short,
-      ),
-      iosParameters: IosParameters(
-        bundleId: 'com.theoptimumcompany.buytime',
-        minimumVersion: '1',
-        appStoreId: '1508552491',
-      ),
-    );
-
-    Uri url;
-    if (short) {
-      final ShortDynamicLink shortLink = await parameters.buildShortLink();
-      url = shortLink.shortUrl;
-    } else {
-      url = await parameters.buildUrl();
-    }
-    return url;
-  }
-
   Future<bool> _onWillPop() {
     Navigator.pushReplacement(
       context,
@@ -348,31 +146,6 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
     }
   }
 
-  _buildChipList(var list, String type) {
-    List<Widget> choices = List();
-    list.forEach((item) {
-      choices.add(Padding(
-        padding: const EdgeInsets.only(right: 10.0),
-        child: InputChip(
-          selected: false,
-          label: Text(item.content == "" || item.content == null ? item.mail : item.content),
-          //avatar: FlutterLogo(),
-          onPressed: () async {
-            Uri link = await _createDynamicLink(false);
-            Share.share('Enter in Buytime App at $link and use ' + item.mail + ' to login!',
-                subject: 'Take your Time!');
-          },
-          onDeleted: () {
-            type == "manager"
-                ? StoreProvider.of<AppState>(context).dispatch(new DeleteCategoryManager(item.mail))
-                : StoreProvider.of<AppState>(context).dispatch(new DeleteCategoryWorker(item.mail));
-          },
-        ),
-      ));
-    });
-    return choices;
-  }
-
   @override
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
@@ -382,8 +155,6 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
           buildDropDownMenuItemsParent(_dropdownParentCategory);
 
           if (snapshot.category != null) {
-            managerList = snapshot.category.manager;
-            workerList = snapshot.category.worker;
             selectedDropValue = searchDropdownParent(snapshot);
           }
 
@@ -470,14 +241,6 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
                   ),
                 ],
               ),
-              // floatingActionButton: FloatingActionButton(
-              //   onPressed: () {
-              //     print("add worker/manager");
-              //     _modalAddPerson(context);
-              //   },
-              //   child: Icon(Icons.add),
-              //   backgroundColor: BuytimeTheme.Secondary,
-              // ),
               body: Column(
                 children: [
                   Padding(
@@ -547,126 +310,6 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
                       ],
                     ),
                   ),
-                  // Container(
-                  //   width: double.infinity,
-                  //   decoration: BoxDecoration(
-                  //     border: Border(
-                  //       top: BorderSide(
-                  //         color: BuytimeTheme.DividerGrey,
-                  //         width: 4.0,
-                  //       ),
-                  //       bottom: BorderSide(
-                  //         color: BuytimeTheme.DividerGrey,
-                  //         width: 2.0,
-                  //       ),
-                  //     ),
-                  //   ),
-                  //   child: Padding(
-                  //     padding: const EdgeInsets.all(20.0),
-                  //     child: Column(
-                  //       children: [
-                  //         Row(
-                  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //           children: [
-                  //             Row(
-                  //               children: [
-                  //                 Container(
-                  //                   child: Icon(
-                  //                     Icons.account_balance_rounded,
-                  //                     size: 24,
-                  //                   ),
-                  //                 ),
-                  //                 Container(
-                  //                   child: Padding(
-                  //                     padding: const EdgeInsets.only(left: 5.0),
-                  //                     child: Text(
-                  //                       "Managers",
-                  //                       textAlign: TextAlign.start,
-                  //                       style: TextStyle(
-                  //                         color: BuytimeTheme.TextDark,
-                  //                         fontSize: media.height * 0.023,
-                  //                         fontWeight: FontWeight.w500,
-                  //                       ),
-                  //                     ),
-                  //                   ),
-                  //                 ),
-                  //               ],
-                  //             ),
-                  //           ],
-                  //         ),
-                  //         Wrap(
-                  //           alignment: WrapAlignment.start,
-                  //           children: [
-                  //             Padding(
-                  //               padding: const EdgeInsets.only(right: 10.0),
-                  //               child: InputChip(
-                  //                 selected: false,
-                  //                 label: Text(snapshot.business.owner.name + " " + snapshot.business.owner.surname),
-                  //               ),
-                  //             ),
-                  //             snapshot.business.salesman.name != null && snapshot.business.salesman.name != ''
-                  //                 ? Padding(
-                  //                     padding: const EdgeInsets.only(right: 10.0),
-                  //                     child: InputChip(
-                  //                       selected: false,
-                  //                       label: Text(snapshot.business.salesman.name + " " + snapshot.business.salesman.surname),
-                  //                     ),
-                  //                   )
-                  //                 : Container(),
-                  //             managerList.length > 0 && managerList != null ? Wrap(children: _buildChipList(managerList, "manager")) : Container()
-                  //           ],
-                  //         ),
-                  //       ],
-                  //     ),
-                  //   ),
-                  // ),
-                  // Container(
-                  //   width: double.infinity,
-                  //   child: Padding(
-                  //     padding: const EdgeInsets.all(20.0),
-                  //     child: Column(
-                  //       children: [
-                  //         Row(
-                  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //           children: [
-                  //             Row(
-                  //               children: [
-                  //                 Container(
-                  //                   child: Icon(
-                  //                     Icons.room_service,
-                  //                     size: 24,
-                  //                   ),
-                  //                 ),
-                  //                 Container(
-                  //                   child: Padding(
-                  //                     padding: const EdgeInsets.only(left: 5.0),
-                  //                     child: Text(
-                  //                       "Workers",
-                  //                       textAlign: TextAlign.start,
-                  //                       style: TextStyle(
-                  //                         color: BuytimeTheme.TextDark,
-                  //                         fontSize: media.height * 0.023,
-                  //                         fontWeight: FontWeight.w500,
-                  //                       ),
-                  //                     ),
-                  //                   ),
-                  //                 ),
-                  //               ],
-                  //             ),
-                  //           ],
-                  //         ),
-                  //         workerList.length > 0 && workerList != null
-                  //             ? Wrap(alignment: WrapAlignment.start, children: _buildChipList(workerList, "worker"))
-                  //             : Padding(
-                  //                 padding: const EdgeInsets.all(10.0),
-                  //                 child: Container(
-                  //                   child: Text("Non ci sono lavoratori assegnati a questa categoria."),
-                  //                 ),
-                  //               )
-                  //       ],
-                  //     ),
-                  //   ),
-                  // ),
                 ],
               ),
             ),

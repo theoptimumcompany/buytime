@@ -176,7 +176,7 @@ class CategoryDeleteManagerService implements EpicClass<AppState> {
           .collection("category")
           .doc(store.state.category.id)
           .update({
-        "manager": FieldValue.arrayRemove([manager])
+        "manager": FieldValue.arrayRemove([manager.toJson()])
       }).then((value) {
         print("Category Service deleted Manager to field manager");
       });
@@ -209,7 +209,7 @@ class CategoryDeleteWorkerService implements EpicClass<AppState> {
           .collection("category")
           .doc(store.state.category.id)
           .update({
-        "worker": FieldValue.arrayRemove([worker])
+        "worker": FieldValue.arrayRemove([worker.toJson()])
       }).then((value) {
         print("Category Service deleted Worker to field worker");
       });

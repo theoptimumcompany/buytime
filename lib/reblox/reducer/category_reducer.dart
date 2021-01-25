@@ -164,28 +164,12 @@ class SetCategoryParent {
   Parent get parent => _parent;
 }
 
-class AddCategoryManager {
-  Manager _manager;
-
-  AddCategoryManager(this._manager);
-
-  Manager get manager => _manager;
-}
-
 class DeleteCategoryManager {
   Manager _manager;
 
   DeleteCategoryManager(this._manager);
 
   Manager get manager => _manager;
-}
-
-class AddCategoryWorker {
-  Worker _worker;
-
-  AddCategoryWorker(this._worker);
-
-  Worker get worker => _worker;
 }
 
 class DeleteCategoryWorker {
@@ -227,7 +211,7 @@ CategoryState categoryReducer(CategoryState state, action) {
     categoryState.parent = action.parent;
     return categoryState;
   }
-  if (action is AddCategoryManager) {
+  if (action is CategoryInviteManager) {
     categoryState.manager.add(action.manager);
     return categoryState;
   }
@@ -235,7 +219,7 @@ CategoryState categoryReducer(CategoryState state, action) {
     categoryState.manager.removeWhere((element) => element.mail == action.manager.mail);
     return categoryState;
   }
-  if (action is AddCategoryWorker) {
+  if (action is CategoryInviteWorker) {
     categoryState.worker.add(action.worker);
     return categoryState;
   }
