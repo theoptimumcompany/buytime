@@ -21,7 +21,7 @@ class _InviteGuestFormState extends State<InviteGuestForm> {
   @override
   void initState() {
     super.initState();
-    state = new BookingState(business_id: null, business_name: null, business_address: null, guest_number_booked_for: null, start_date: null, end_date: null, booking_code: null, user: null, state: null, wide_card_photo: null);
+    state = new BookingState(business_id: null, business_name: null, business_address: null, guest_number_booked_for: null, start_date: null, end_date: null, booking_code: null, user: null, state: null, wide: null);
   }
 
 

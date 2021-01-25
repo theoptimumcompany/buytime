@@ -12,6 +12,7 @@ import 'package:BuyTime/reusable/form/optimum_dropdown.dart';
 import 'package:BuyTime/reusable/form/optimum_form_multi_photo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
 class UI_EditService extends StatefulWidget {
@@ -187,6 +188,7 @@ class UI_EditServiceState extends State<UI_EditService> {
                       maxWidth: (media.width * 0.9).toInt(),
                       minHeight: 200,
                       minWidth: 600,
+                      cropAspectRatioPreset: CropAspectRatioPreset.square,
                       image: snapshot.serviceState == null ||
                               snapshot.serviceState.thumbnail == null ||
                               snapshot.serviceState.thumbnail.isEmpty

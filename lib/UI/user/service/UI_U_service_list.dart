@@ -113,7 +113,7 @@ class UI_U_ServiceListState extends State<UI_U_ServiceList> {
                                       crossAxisCount: 1,
                                       childAspectRatio: 4.3,
                                       children: List.generate(serviceList.length, (index) {
-                                        print("Numero " + serviceList.length.toString());
+                                        print("UI_U_service_list Numero " + serviceList.length.toString());
                                         return serviceList[index].visibility == 'Visible'
                                             ? OptimumServiceCardMedium(
                                                 rightWidget1: Column(

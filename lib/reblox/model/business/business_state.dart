@@ -21,7 +21,7 @@ class BusinessState {
   String coordinate;
   String profile;
   List<String> gallery;
-  String wide_card_photo;
+  String wide;
   String logo;
   List<GenericState> business_type;
   String description;
@@ -58,7 +58,7 @@ class BusinessState {
     @required this.coordinate,
     @required this.profile,
     @required this.gallery,
-    @required this.wide_card_photo,
+    @required this.wide,
     @required this.logo,
     @required this.draft,
     @required this.business_type,
@@ -89,7 +89,7 @@ class BusinessState {
       municipality: "",
       profile: "",
       gallery: [""],
-      wide_card_photo: "",
+      wide: "",
       logo: "",
       draft: true,
       business_type: [],
@@ -120,7 +120,7 @@ class BusinessState {
     this.coordinate = state.coordinate;
     this.profile = state.profile;
     this.gallery = state.gallery;
-    this.wide_card_photo = state.wide_card_photo;
+    this.wide = state.wide;
     this.logo = state.logo;
     this.business_type = state.business_type;
     this.description = state.description;
@@ -150,7 +150,7 @@ class BusinessState {
     String coordinate,
     String profile,
     List<String> gallery,
-    String wide_card_photo,
+    String wide,
     String logo,
     List<GenericState> business_type,
     String description,
@@ -179,7 +179,7 @@ class BusinessState {
       coordinate: coordinate ?? this.coordinate,
       profile: profile ?? this.profile,
       gallery: gallery ?? this.gallery,
-      wide_card_photo: wide_card_photo ?? this.wide_card_photo,
+      wide: wide ?? this.wide,
       logo: logo ?? this.logo,
       business_type: business_type ?? this.business_type,
       description: description ?? this.description,
@@ -210,7 +210,7 @@ class BusinessState {
     String coordinate,
     String profile,
     List<String> gallery,
-    String wide_card_photo,
+    String wide,
     String logo,
     List<GenericState> business_type,
     String description,
@@ -239,7 +239,7 @@ class BusinessState {
       coordinate: coordinate ?? this.coordinate,
       profile: profile ?? this.profile,
       gallery: gallery ?? this.gallery,
-      wide_card_photo: wide_card_photo ?? this.wide_card_photo,
+      wide: wide ?? this.wide,
       logo: logo ?? this.logo,
       business_type: business_type ?? this.business_type,
       description: description ?? this.description,
@@ -270,7 +270,7 @@ class BusinessState {
         coordinate = json['coordinate'],
         profile = json['profile'],
         gallery = List<String>.from(json['gallery']),
-        wide_card_photo = json['wide_card_photo'],
+        wide = json['wide'],
         logo = json['logo'],
         business_type = List<GenericState>.from(json["business_type"].map((item) {
           return new GenericState(
@@ -305,7 +305,7 @@ class BusinessState {
         'coordinate': coordinate,
         'profile': profile,
         'gallery': gallery,
-        'wide_card_photo': wide_card_photo,
+        'wide': wide,
         'logo': logo,
         'business_type': convertToJson(business_type),
         'description': description,

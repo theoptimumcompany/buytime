@@ -102,7 +102,7 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                         margin: EdgeInsets.all(SizeConfig.safeBlockVertical * 1.5),
                         decoration: BoxDecoration(
                             image: DecorationImage(
-                                image: AssetImage(state.wide_card_photo ?? 'assets/img/placeholder.png'),
+                                image: AssetImage(state.wide ?? 'assets/img/placeholder.png'),
                               fit: BoxFit.contain
                             )
                         ),

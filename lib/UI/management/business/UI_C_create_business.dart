@@ -10,6 +10,7 @@ import 'package:BuyTime/reusable/form/optimum_form_multi_photo.dart' if (dart.li
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:image_cropper/image_cropper.dart';
 import '../../../reusable/form/optimum_chip.dart';
 
 class UI_CreateBusiness extends StatefulWidget {
@@ -49,7 +50,7 @@ class UI_CreateBusinessState extends State<UI_CreateBusiness> {
   void uploadFirestore(snapshot) {
     upload(File(snapshot.profile), 'profile', snapshot.id_firestore);
     upload(File(snapshot.logo), 'logo', snapshot.id_firestore);
-    upload(File(snapshot.wide_card_photo), 'wide', snapshot.id_firestore);
+    upload(File(snapshot.wide), 'wide', snapshot.id_firestore);
     for (int i = 0; i < snapshot.gallery.lenght; i++) {
       upload(File(snapshot.gallery[i]), 'gallery', snapshot.id_firestore);
     }
@@ -342,12 +343,13 @@ class UI_CreateBusinessState extends State<UI_CreateBusiness> {
                             maxWidth: 800,
                             minHeight: 200,
                             minWidth: 600,
+                            cropAspectRatioPreset: CropAspectRatioPreset.square,
                             onFilePicked: (fileToUpload) {
                                 fileToUpload.remoteFolder = "business/" + businessName + "/logo";
                                 StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInBusiness(fileToUpload, fileToUpload.state, 0));
                             },
                           ),
-                          //Business Thumbnail
+                          //Business Wide
                           OptimumFormMultiPhoto(
                             text: "Wide",
                             remotePath: "business/" + businessName + "/wide",
@@ -356,6 +358,7 @@ class UI_CreateBusinessState extends State<UI_CreateBusiness> {
                             maxWidth: 800,
                             minHeight: 200,
                             minWidth: 600,
+                            cropAspectRatioPreset: CropAspectRatioPreset.ratio16x9,
                             onFilePicked: (fileToUpload) {
                               fileToUpload.remoteFolder = "business/" + businessName + "/wide";
                               StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInBusiness(fileToUpload, fileToUpload.state, 1));
@@ -370,6 +373,7 @@ class UI_CreateBusinessState extends State<UI_CreateBusiness> {
                             maxWidth: 800,
                             minHeight: 200,
                             minWidth: 600,
+                            cropAspectRatioPreset: CropAspectRatioPreset.square,
                             onFilePicked: (fileToUpload) {
                               fileToUpload.remoteFolder = "business/" + businessName + "/profile";
                               StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInBusiness(fileToUpload, fileToUpload.state, 2));
@@ -384,6 +388,7 @@ class UI_CreateBusinessState extends State<UI_CreateBusiness> {
                             maxWidth: 800,
                             minHeight: 200,
                             minWidth: 600,
+                            cropAspectRatioPreset: CropAspectRatioPreset.square,
                             onFilePicked: (fileToUpload) {
                               fileToUpload.remoteFolder = "business/" + businessName + "/gallery";
                               StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInBusiness(fileToUpload, fileToUpload.state, 3));

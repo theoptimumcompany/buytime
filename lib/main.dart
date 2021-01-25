@@ -119,7 +119,7 @@ void main() {
       municipality: "",
       profile: "",
       gallery: [""],
-      wide_card_photo: "",
+      wide: "",
       logo: "",
       business_type: [],
       description: "",

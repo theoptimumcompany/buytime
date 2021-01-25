@@ -1,10 +1,6 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:math';
 import 'dart:ui' as ui;
-
-import 'package:BuyTime/UI/user/business/UI_U_business_list.dart';
-import 'package:BuyTime/reblox/model/app_state.dart';
 import 'package:BuyTime/reblox/model/file/optimum_file_to_upload.dart';
 import 'package:BuyTime/utils/size_config.dart';
 import 'package:BuyTime/utils/theme/buytime_theme.dart';
@@ -28,6 +24,7 @@ class OptimumFormMultiPhoto extends StatefulWidget {
   final int maxHeight;
   final int minHeight;
   final Image image;
+  final CropAspectRatioPreset cropAspectRatioPreset;
 
   OptimumFormMultiPhoto(
       {@required this.text,
@@ -38,7 +35,9 @@ class OptimumFormMultiPhoto extends StatefulWidget {
       @required this.maxWidth,
       @required this.minHeight,
       @required this.minWidth,
-      this.image});
+      @required this.cropAspectRatioPreset,
+      this.image
+      });
 
   @override
   State<StatefulWidget> createState() => OptimumFormMultiPhotoState(
@@ -50,6 +49,7 @@ class OptimumFormMultiPhoto extends StatefulWidget {
       maxWidth: maxWidth,
       minWidth: minWidth,
       minHeight: minHeight,
+      cropAspectRatioPreset: cropAspectRatioPreset,
       image: image
   );
 }
@@ -69,6 +69,7 @@ class OptimumFormMultiPhotoState extends State<OptimumFormMultiPhoto> {
   final int minWidth;
   final int maxHeight;
   final int minHeight;
+  final CropAspectRatioPreset cropAspectRatioPreset;
   final OnFilePickedCallback onFilePicked;
   var size;
   Image image;
@@ -80,7 +81,7 @@ class OptimumFormMultiPhotoState extends State<OptimumFormMultiPhoto> {
   bool underReqSize = false;
 
   OptimumFormMultiPhotoState(
-      {this.text, this.onFilePicked, this.remotePath, this.maxPhoto, this.maxWidth, this.minWidth, this.maxHeight, this.minHeight, this.image});
+      {this.text, this.onFilePicked, this.remotePath, this.maxPhoto, this.maxWidth, this.minWidth, this.maxHeight, this.minHeight, this.cropAspectRatioPreset,  this.image});
 
   Future<PickedFile> getImage() async {
     var status = await Permission.camera.status;
@@ -159,7 +160,7 @@ class OptimumFormMultiPhotoState extends State<OptimumFormMultiPhoto> {
                toolbarTitle: 'Crop your Image',
                toolbarColor: BuytimeTheme.UserPrimary,
                toolbarWidgetColor: BuytimeTheme.TextWhite,
-               initAspectRatio: CropAspectRatioPreset.square,
+               initAspectRatio: cropAspectRatioPreset,
                lockAspectRatio: true,
              hideBottomControls: true
            ),

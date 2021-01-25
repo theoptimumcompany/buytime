@@ -221,12 +221,12 @@ class SetBusinessGallery {
   List<String> get gallery => _gallery;
 }
 
-class SetBusinessThumbnail {
-  String _thumbnail;
+class SetBusinessWide {
+  String _wide;
 
-  SetBusinessThumbnail(this._thumbnail);
+  SetBusinessWide(this._wide);
 
-  String get thumbnail => _thumbnail;
+  String get wide => _wide;
 }
 
 class SetBusinessLogo {
@@ -339,8 +339,8 @@ BusinessState businessReducer(BusinessState state, action) {
     businessState.gallery = action.gallery;
     return businessState;
   }
-  if (action is SetBusinessThumbnail) {
-    businessState.wide_card_photo = action.thumbnail;
+  if (action is SetBusinessWide) {
+    businessState.wide = action.wide;
     return businessState;
   }
   if (action is SetBusinessLogo) {

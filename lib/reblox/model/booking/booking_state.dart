@@ -13,7 +13,7 @@ class BookingState {
   String booking_code;
   List<UserSnippet> user;
   String state; //TODO Change to Enum
-  String wide_card_photo;
+  String wide;
 
   List<dynamic> convertToJson(List<UserSnippet> objectStateList) {
     List<dynamic> list = List<dynamic>();
@@ -34,7 +34,7 @@ class BookingState {
     @required this.booking_code,
     @required this.user,
     @required this.state,
-    @required this.wide_card_photo,
+    @required this.wide,
   });
 
   BookingState toEmpty() {
@@ -49,7 +49,7 @@ class BookingState {
       booking_code: "",
       user: [],
       state: "",
-      wide_card_photo: "",
+      wide: "",
     );
   }
 
@@ -64,7 +64,7 @@ class BookingState {
     this.booking_code = state.booking_code;
     this.user = state.user;
     this.state = state.state;
-    this.wide_card_photo = state.wide_card_photo;
+    this.wide = state.wide;
   }
 
   companyStateFieldUpdate(
@@ -78,7 +78,7 @@ class BookingState {
     String booking_code,
     List<GenericState> user,
     String state,
-    String wide_card_photo,
+    String wide,
   ) {
     BookingState(
       business_id: business_id ?? this.business_id,
@@ -91,7 +91,7 @@ class BookingState {
       booking_code: booking_code ?? this.booking_code,
       user: user ?? this.user,
       state: state ?? this.state,
-      wide_card_photo: wide_card_photo ?? this.wide_card_photo,
+      wide: wide ?? this.wide,
     );
   }
 
@@ -106,7 +106,7 @@ class BookingState {
     String booking_code,
     List<GenericState> user,
     String state,
-    String wide_card_photo,
+    String wide,
   }) {
     return BookingState(
       business_id: business_id ?? this.business_id,
@@ -119,7 +119,7 @@ class BookingState {
       booking_code: booking_code ?? this.booking_code,
       user: user ?? this.user,
       state: state ?? this.state,
-      wide_card_photo: wide_card_photo ?? this.wide_card_photo,
+      wide: wide ?? this.wide,
     );
   }
 
@@ -139,7 +139,7 @@ class BookingState {
           );
         })),
         state = json['state'],
-        wide_card_photo = json['wide_card_photo'];
+        wide = json['wide'];
 
   Map<String, dynamic> toJson() => {
         'business_id': business_id,
@@ -152,6 +152,6 @@ class BookingState {
         'booking_code': booking_code,
         'user': convertToJson(user),
         'state': state,
-        'wide_card_photo': wide_card_photo
+        'wide': wide
       };
 }

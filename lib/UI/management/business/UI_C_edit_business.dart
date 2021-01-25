@@ -9,6 +9,7 @@ import 'package:BuyTime/reblox/reducer/business_reducer.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:image_cropper/image_cropper.dart';
 
 import 'UI_C_business_list.dart';
 import '../../../reusable/form/optimum_chip.dart';
@@ -81,7 +82,7 @@ class UI_EditBusinessState extends State<UI_EditBusiness> {
   void uploadFirestore(snapshot) {
     upload(File(snapshot.profile), 'profile', snapshot.id_firestore);
     upload(File(snapshot.logo), 'logo', snapshot.id_firestore);
-    upload(File(snapshot.wide_card_photo), 'wide', snapshot.id_firestore);
+    upload(File(snapshot.wide), 'wide', snapshot.id_firestore);
     for (int i = 0; i < snapshot.gallery.lenght; i++) {
       upload(File(snapshot.gallery[i]), 'gallery', snapshot.id_firestore);
     }
@@ -360,6 +361,7 @@ class UI_EditBusinessState extends State<UI_EditBusiness> {
                             maxWidth: 800,
                             minHeight: 200,
                             minWidth: 600,
+                            cropAspectRatioPreset: CropAspectRatioPreset.square,
                             image: snapshot.logo == null || snapshot.logo.isEmpty ? null : Image.network(snapshot.logo, width: media.width * 0.3),
                             onFilePicked: (fileToUpload) {
                               fileToUpload.remoteFolder = "business/" + businessName + "/logo";
@@ -375,7 +377,8 @@ class UI_EditBusinessState extends State<UI_EditBusiness> {
                             maxWidth: 800,
                             minHeight: 200,
                             minWidth: 600,
-                            image: snapshot.wide_card_photo == null || snapshot.wide_card_photo.isEmpty ? null : Image.network(snapshot.wide_card_photo, width: media.width * 0.3),
+                            cropAspectRatioPreset: CropAspectRatioPreset.ratio16x9,
+                            image: snapshot.wide == null || snapshot.wide.isEmpty ? null : Image.network(snapshot.wide, width: media.width * 0.3),
                             onFilePicked: (fileToUpload) {
                               fileToUpload.remoteFolder = "business/" + businessName + "/wide";
                               StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInBusiness(fileToUpload, fileToUpload.state, 1));
@@ -390,6 +393,7 @@ class UI_EditBusinessState extends State<UI_EditBusiness> {
                             maxWidth: 800,
                             minHeight: 200,
                             minWidth: 600,
+                            cropAspectRatioPreset: CropAspectRatioPreset.square,
                             image: snapshot.profile == null || snapshot.profile.isEmpty ? null : Image.network(snapshot.profile, width: media.width * 0.3),
                             onFilePicked: (fileToUpload) {
                               fileToUpload.remoteFolder = "business/" + businessName + "/profile";
@@ -405,6 +409,7 @@ class UI_EditBusinessState extends State<UI_EditBusiness> {
                             maxWidth: 800,
                             minHeight: 200,
                             minWidth: 600,
+                            cropAspectRatioPreset: CropAspectRatioPreset.square,
                             image: snapshot.gallery == null || snapshot.gallery.length == 0 || snapshot.gallery.isEmpty ? null :Image.network(snapshot.gallery[0], width: media.width * 0.3),
                             onFilePicked: (fileToUpload) {
                               fileToUpload.remoteFolder = "business/" + businessName + "/gallery";

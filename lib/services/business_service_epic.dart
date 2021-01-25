@@ -82,7 +82,7 @@ class BusinessRequestService implements EpicClass<AppState> {
           coordinate: snapshot.get('coordinate'),
           profile: snapshot.get('profile'),
           gallery: List<String>.from(snapshot.get('gallery')),
-          wide_card_photo: snapshot.get('thumbnail'),
+          wide: snapshot.get('wide'),
           logo: snapshot.get('logo'),
           business_type: List<GenericState>.from(snapshot.get('business_type')),
           description: snapshot.get('description'),
@@ -107,8 +107,8 @@ Future<BusinessState> uploadFiles(
       (fileToUpload) => uploadToFirebaseStorage(fileToUpload).then((fileUrl) {
             if (fileToUpload.remoteFolder.contains("logo")) {
               businessState.logo = fileUrl.toString();
-            } else if (fileToUpload.remoteFolder.contains("thumbnail")) {
-              businessState.wide_card_photo = fileUrl.toString();
+            } else if (fileToUpload.remoteFolder.contains("wide")) {
+              businessState.wide = fileUrl.toString();
             } else if (fileToUpload.remoteFolder.contains("profile")) {
               businessState.profile = fileUrl.toString();
             } else if (fileToUpload.remoteFolder.contains("gallery")) {

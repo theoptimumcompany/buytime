@@ -13,6 +13,7 @@ import 'package:BuyTime/reusable/form/optimum_dropdown.dart';
 import 'package:BuyTime/reusable/form/optimum_form_multi_photo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
 class UI_CreateService extends StatefulWidget {
@@ -124,6 +125,7 @@ class UI_CreateServiceState extends State<UI_CreateService> {
                       maxWidth: (media.width * 0.9).toInt(),
                       minHeight: 200,
                       minWidth: 600,
+                      cropAspectRatioPreset: CropAspectRatioPreset.square,
                       onFilePicked: (fileToUpload) {
                         print("UI_create_service - callback!");
                         StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInService(fileToUpload));
