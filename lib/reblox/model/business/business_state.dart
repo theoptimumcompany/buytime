@@ -278,7 +278,7 @@ class BusinessState {
         coordinate = json['coordinate'],
         profile = json['profile'],
         gallery = List<String>.from(json['gallery']),
-        hasAccess = List<String>.from(json['hasAccess']),
+        hasAccess = json.containsKey('hasAccess') ? List<String>.from(json['hasAccess']) : [],
         wide = json['wide'],
         logo = json['logo'],
         business_type = List<GenericState>.from(json["business_type"].map((item) {

@@ -24,7 +24,6 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
-import '../UI_U_Tabs.dart';
 import 'dart:convert';
 import 'dart:math';
 import 'package:crypto/crypto.dart';
@@ -240,7 +239,7 @@ class RegistrationState extends State<Registration> {
           isLoggedIn = true;
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => UI_U_Tabs()),
+            MaterialPageRoute(builder: (context) => Landing()),
           );
         });
       } else {}
@@ -349,7 +348,7 @@ class RegistrationState extends State<Registration> {
           isLoggedIn = true;
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => UI_U_Tabs()),
+            MaterialPageRoute(builder: (context) => Landing()),
           );
         });
       } else {}
@@ -894,7 +893,7 @@ class RegistrationState extends State<Registration> {
         _userEmail = user.email;
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => UI_U_Tabs()),
+          MaterialPageRoute(builder: (context) => Landing()),
         );
       });
     } else {

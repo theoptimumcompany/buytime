@@ -306,13 +306,14 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                         ],
                       ),
                     ),
-                    categoryStateList.length > 0
-                        ?
+
 
                         ///Categories list & Invite user
                         Expanded(
                             child: Stack(
                               children: [
+                                categoryStateList.length > 0
+                                    ?
                                 ///Categories list
                                 Positioned.fill(
                                   child: Align(
@@ -341,9 +342,13 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                                       ]),
                                     ),
                                   ),
+                                ) : Container(
+                                  height: SizeConfig.screenHeight * 0.1,
+                                  child: Center(
+                                    child: Text("Non ci sono categorie attive!"),
+                                  ),
                                 ),
 
-                                ///Invite user
                                 Positioned.fill(
                                   child: Align(
                                     alignment: Alignment.bottomCenter,
@@ -426,13 +431,10 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                                 )
                               ],
                             ),
-                          )
-                        : Container(
-                            height: SizeConfig.screenHeight * 0.1,
-                            child: Center(
-                              child: Text("Non ci sono categorie attive!"),
-                            ),
-                          )
+                          ),
+
+                    ///Invite user
+
                   ],
                 ),
               ),
