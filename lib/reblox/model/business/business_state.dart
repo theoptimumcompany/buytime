@@ -21,6 +21,7 @@ class BusinessState {
   String coordinate;
   String profile;
   List<String> gallery;
+  List<String> hasAccess;
   String wide;
   String logo;
   List<GenericState> business_type;
@@ -58,6 +59,7 @@ class BusinessState {
     @required this.coordinate,
     @required this.profile,
     @required this.gallery,
+    this.hasAccess,
     @required this.wide,
     @required this.logo,
     @required this.draft,
@@ -89,6 +91,7 @@ class BusinessState {
       municipality: "",
       profile: "",
       gallery: [""],
+      hasAccess: [""],
       wide: "",
       logo: "",
       draft: true,
@@ -120,6 +123,7 @@ class BusinessState {
     this.coordinate = state.coordinate;
     this.profile = state.profile;
     this.gallery = state.gallery;
+    this.hasAccess = state.hasAccess;
     this.wide = state.wide;
     this.logo = state.logo;
     this.business_type = state.business_type;
@@ -150,6 +154,7 @@ class BusinessState {
     String coordinate,
     String profile,
     List<String> gallery,
+    List<String> hasAccess,
     String wide,
     String logo,
     List<GenericState> business_type,
@@ -179,6 +184,7 @@ class BusinessState {
       coordinate: coordinate ?? this.coordinate,
       profile: profile ?? this.profile,
       gallery: gallery ?? this.gallery,
+      hasAccess: hasAccess ?? this.hasAccess,
       wide: wide ?? this.wide,
       logo: logo ?? this.logo,
       business_type: business_type ?? this.business_type,
@@ -210,6 +216,7 @@ class BusinessState {
     String coordinate,
     String profile,
     List<String> gallery,
+    List<String> hasAccess,
     String wide,
     String logo,
     List<GenericState> business_type,
@@ -239,6 +246,7 @@ class BusinessState {
       coordinate: coordinate ?? this.coordinate,
       profile: profile ?? this.profile,
       gallery: gallery ?? this.gallery,
+      hasAccess: hasAccess ?? this.hasAccess,
       wide: wide ?? this.wide,
       logo: logo ?? this.logo,
       business_type: business_type ?? this.business_type,
@@ -270,6 +278,7 @@ class BusinessState {
         coordinate = json['coordinate'],
         profile = json['profile'],
         gallery = List<String>.from(json['gallery']),
+        hasAccess = List<String>.from(json['hasAccess']),
         wide = json['wide'],
         logo = json['logo'],
         business_type = List<GenericState>.from(json["business_type"].map((item) {
@@ -305,6 +314,7 @@ class BusinessState {
         'coordinate': coordinate,
         'profile': profile,
         'gallery': gallery,
+        'hasAccess': hasAccess,
         'wide': wide,
         'logo': logo,
         'business_type': convertToJson(business_type),

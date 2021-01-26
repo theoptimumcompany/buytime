@@ -119,6 +119,7 @@ void main() {
       municipality: "",
       profile: "",
       gallery: [""],
+      hasAccess: [""],
       wide: "",
       logo: "",
       business_type: [],

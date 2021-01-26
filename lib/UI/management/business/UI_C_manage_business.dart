@@ -11,7 +11,6 @@ import 'package:BuyTime/reusable/appbar/user_buytime_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
-import 'UI_C_business_list.dart';
 
 class UI_ManageBusiness extends StatefulWidget {
   UI_ManageBusiness(int indexBusiness) {
