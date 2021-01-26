@@ -118,12 +118,12 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   // Replace with server token from firebase console settings.
   String serverToken =
       'AAAA6xUtyfE:APA91bGHhEzVUY9fnj4FbTXJX57qcgF-8GBrfBbGIa8kEpEIdsXRgQxbtsvbhL-w-_MQYKIj0XVlSaDSf2s6O3D3SM3o-z_AZnHQwBNLiw1ygyZOuVAKa5YmXeu6Da9eBqRD9uwFHSPi';
-  final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
+
 
   static final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
   Map<String, dynamic> _deviceData = <String, dynamic>{};
 
-  Future<Map<String, dynamic>> sendAndRetrieveMessage() async {
+  Future<Map<String, dynamic>> sendAndRetrieveMessage(FirebaseMessaging firebaseMessaging) async {
     await firebaseMessaging.requestPermission(sound: true, badge: true, alert: true, provisional: false);
 
     await http.post(
@@ -172,9 +172,10 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   void initState() {
     super.initState();
     Firebase.initializeApp().then((value) {
+      final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
       if (!kIsWeb) {
         //TODO: TEST Funzionamento notifiche dopo upgrade pacchetto firebase_messaging
-        FirebaseMessaging.instance.requestPermission();
+        firebaseMessaging.requestPermission();
         FirebaseMessaging.onMessage.first.then((message) => () {
               print("onMessage: $message");
               var data = message.data['data'] ?? message;
@@ -205,15 +206,18 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
           serverToken = token;
         });
       }
+
+      firebaseMessaging.onTokenRefresh.listen((newToken) {
+        // Save newToken
+        serverToken = newToken;
+      });
+
       Timer(Duration(seconds: 1), () => check_logged());
     }).catchError((onError) {
       print("error on firebase application start: " + onError.toString());
     });
 
-    FirebaseMessaging.instance.onTokenRefresh.listen((newToken) {
-      // Save newToken
-      serverToken = newToken;
-    });
+
 
     initPlatformState();
   }
