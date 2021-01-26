@@ -1,10 +1,10 @@
 import 'dart:io';
 
-import 'package:BuyTime/UI/management/business/UI_M_business.dart';
-import 'package:BuyTime/reblox/model/app_state.dart';
-import 'package:BuyTime/reblox/model/business/business_state.dart';
-import 'package:BuyTime/reblox/model/snippet/generic.dart';
-import 'package:BuyTime/reblox/reducer/business_reducer.dart';
+import 'package:Buytime/UI/management/business/UI_M_business.dart';
+import 'package:Buytime/reblox/model/app_state.dart';
+import 'package:Buytime/reblox/model/business/business_state.dart';
+import 'package:Buytime/reblox/model/snippet/generic.dart';
+import 'package:Buytime/reblox/reducer/business_reducer.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -12,7 +12,7 @@ import 'package:image_cropper/image_cropper.dart';
 
 import '../../../reusable/form/optimum_chip.dart';
 import '../../../reusable/form/optimum_form_field.dart';
-import 'package:BuyTime/reusable/form/optimum_form_multi_photo.dart' if (dart.library.html) 'package:BuyTime/reusable/form/optimum_form_multi_photo_web.dart';
+import 'package:Buytime/reusable/form/optimum_form_multi_photo.dart' if (dart.library.html) 'package:Buytime/reusable/form/optimum_form_multi_photo_web.dart';
 
 class UI_EditBusiness extends StatefulWidget {
   @override

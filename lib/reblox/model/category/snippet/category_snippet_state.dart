@@ -1,4 +1,4 @@
-import 'package:BuyTime/reblox/model/service/snippet/service_snippet_state.dart';
+import 'package:Buytime/reblox/model/service/snippet/service_snippet_state.dart';
 
 class CategorySnippet {
   String id;

@@ -1,10 +1,10 @@
 import 'dart:async';
 
-import 'package:BuyTime/UI/user/booking/UI_U_BookingPage.dart';
-import 'package:BuyTime/reblox/model/booking/booking_state.dart';
-import 'package:BuyTime/utils/b_cube_grid_spinner.dart';
-import 'package:BuyTime/utils/size_config.dart';
-import 'package:BuyTime/utils/theme/buytime_theme.dart';
+import 'package:Buytime/UI/user/booking/UI_U_BookingPage.dart';
+import 'package:Buytime/reblox/model/booking/booking_state.dart';
+import 'package:Buytime/utils/b_cube_grid_spinner.dart';
+import 'package:Buytime/utils/size_config.dart';
+import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 

@@ -1,14 +1,14 @@
-import 'package:BuyTime/reusable/appbar/container_shape_bottom_circle.dart';
-import 'package:BuyTime/splash_screen.dart';
+import 'package:Buytime/reusable/appbar/container_shape_bottom_circle.dart';
+import 'package:Buytime/splash_screen.dart';
 import 'package:flutter/material.dart';
 
-class BuyTimeAppbarUser extends StatelessWidget implements PreferredSizeWidget {
+class BuytimeAppbarUser extends StatelessWidget implements PreferredSizeWidget {
   List<Widget> children = [];
   final double _preferredHeight = 70.0;
   double width;
   double height;
 
-  BuyTimeAppbarUser({
+  BuytimeAppbarUser({
     @required this.children,
     @required this.width,
     @required this.height,

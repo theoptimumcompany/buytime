@@ -1,4 +1,4 @@
-import 'package:BuyTime/reblox/model/file/optimum_file_to_upload.dart';
+import 'package:Buytime/reblox/model/file/optimum_file_to_upload.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_web_image_picker/flutter_web_image_picker.dart';
 import 'package:path/path.dart' as path;

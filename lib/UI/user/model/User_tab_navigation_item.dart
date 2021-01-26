@@ -1,7 +1,7 @@
-import 'package:BuyTime/UI/user/about_us/UI_U_About_Us.dart';
-import 'package:BuyTime/UI/user/business/UI_U_business_list.dart';
-import 'package:BuyTime/UI/user/order/UI_U_OrderHistory.dart';
-import 'package:BuyTime/UI/user/service/UI_U_service_list.dart';
+import 'package:Buytime/UI/user/about_us/UI_U_About_Us.dart';
+import 'package:Buytime/UI/user/business/UI_U_business_list.dart';
+import 'package:Buytime/UI/user/order/UI_U_OrderHistory.dart';
+import 'package:Buytime/UI/user/service/UI_U_service_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 

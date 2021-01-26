@@ -1,4 +1,4 @@
-import 'package:BuyTime/reblox/model/category/category_state.dart';
+import 'package:Buytime/reblox/model/category/category_state.dart';
 import 'package:flutter/foundation.dart';
 
 class CategoryListState {

@@ -1,4 +1,4 @@
-import 'package:BuyTime/reblox/model/role/role.dart';
+import 'package:Buytime/reblox/model/role/role.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class UserState {

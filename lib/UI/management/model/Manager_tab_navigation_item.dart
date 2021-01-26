@@ -1,5 +1,5 @@
-import 'package:BuyTime/UI/management/old_design/UI_M_business_list.dart';
-import 'package:BuyTime/UI/management/order/UI_M_OrderHistory.dart';
+import 'package:Buytime/UI/management/old_design/UI_M_business_list.dart';
+import 'package:Buytime/UI/management/order/UI_M_OrderHistory.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 

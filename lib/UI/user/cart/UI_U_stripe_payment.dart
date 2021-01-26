@@ -1,11 +1,11 @@
 import 'dart:convert';
-import 'package:BuyTime/UI/user/order/UI_U_OrderDetail.dart';
-import 'package:BuyTime/reblox/model/app_state.dart';
-import 'package:BuyTime/reblox/reducer/order_reducer.dart';
-import 'package:BuyTime/reblox/reducer/stripe_payment_reducer.dart';
-import 'package:BuyTime/utils/globals.dart';
-import 'package:BuyTime/reusable/order/order_total.dart';
-import 'package:BuyTime/reusable/stripe/optimum_credit_card_button.dart';
+import 'package:Buytime/UI/user/order/UI_U_OrderDetail.dart';
+import 'package:Buytime/reblox/model/app_state.dart';
+import 'package:Buytime/reblox/reducer/order_reducer.dart';
+import 'package:Buytime/reblox/reducer/stripe_payment_reducer.dart';
+import 'package:Buytime/utils/globals.dart';
+import 'package:Buytime/reusable/order/order_total.dart';
+import 'package:Buytime/reusable/stripe/optimum_credit_card_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:http/http.dart' as http;

@@ -1,7 +1,7 @@
-import 'package:BuyTime/reblox/model/snippet/generic.dart';
-import 'package:BuyTime/reblox/model/stripe/stripe_card_response.dart';
-import 'package:BuyTime/reblox/model/stripe/stripe_state.dart';
-import 'package:BuyTime/UI/user/cart/UI_U_stripe_payment.dart';
+import 'package:Buytime/reblox/model/snippet/generic.dart';
+import 'package:Buytime/reblox/model/stripe/stripe_card_response.dart';
+import 'package:Buytime/reblox/model/stripe/stripe_state.dart';
+import 'package:Buytime/UI/user/cart/UI_U_stripe_payment.dart';
 
 class SetStripeState {
   StripeState _stripeState;

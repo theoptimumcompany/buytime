@@ -1,5 +1,5 @@
-import 'package:BuyTime/reblox/model/app_state.dart';
-import 'package:BuyTime/reusable/appbar/user_buytime_appbar.dart';
+import 'package:Buytime/reblox/model/app_state.dart';
+import 'package:Buytime/reusable/appbar/user_buytime_appbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';

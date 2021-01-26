@@ -1,5 +1,5 @@
-import 'package:BuyTime/reblox/model/pipeline/pipeline.dart';
-import 'package:BuyTime/reblox/model/pipeline/pipeline_list_state.dart';
+import 'package:Buytime/reblox/model/pipeline/pipeline.dart';
+import 'package:Buytime/reblox/model/pipeline/pipeline_list_state.dart';
 
 class RequestListPipeline {
   Pipeline _pipeline;

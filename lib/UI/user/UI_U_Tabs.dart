@@ -1,8 +1,8 @@
-import 'package:BuyTime/UI/user/model/User_tab_navigation_item.dart';
-import 'package:BuyTime/reblox/model/app_state.dart';
-import 'package:BuyTime/reblox/model/role/role.dart';
-import 'package:BuyTime/reusable/appbar/user_buytime_appbar.dart';
-import 'package:BuyTime/reusable/menu/UI_menu_drawer.dart';
+import 'package:Buytime/UI/user/model/User_tab_navigation_item.dart';
+import 'package:Buytime/reblox/model/app_state.dart';
+import 'package:Buytime/reblox/model/role/role.dart';
+import 'package:Buytime/reusable/appbar/user_buytime_appbar.dart';
+import 'package:Buytime/reusable/menu/UI_menu_drawer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -40,7 +40,7 @@ class UI_U_TabsState extends State<UI_U_Tabs> {
           return Scaffold(
             drawerEnableOpenDragGesture: false,
             key: _drawerKeyTabs,
-            appBar: BuyTimeAppbarUser(
+            appBar: BuytimeAppbarUser(
               children: [
                 (IconButton(
                   icon: Icon(

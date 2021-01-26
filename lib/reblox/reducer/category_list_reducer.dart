@@ -1,7 +1,7 @@
 
 
-import 'package:BuyTime/reblox/model/category/category_list_state.dart';
-import 'package:BuyTime/reblox/model/category/category_state.dart';
+import 'package:Buytime/reblox/model/category/category_list_state.dart';
+import 'package:Buytime/reblox/model/category/category_state.dart';
 
 class RequestListCategory {
   String _businessId;

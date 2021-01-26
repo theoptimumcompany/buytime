@@ -1,21 +1,21 @@
 import 'dart:convert';
 
-import 'package:BuyTime/reblox/model/app_state.dart';
-import 'package:BuyTime/reblox/model/file/optimum_file_to_upload.dart';
-import 'package:BuyTime/reblox/model/snippet/generic.dart';
-import 'package:BuyTime/reblox/model/order/order_state.dart';
-import 'package:BuyTime/reblox/model/service/service_state.dart';
-import 'package:BuyTime/reblox/model/user/snippet/user_snippet_state.dart';
-import 'package:BuyTime/reblox/reducer/order_list_reducer.dart';
-import 'package:BuyTime/reblox/reducer/order_reducer.dart';
-import 'package:BuyTime/reblox/reducer/service_list_reducer.dart';
-import 'package:BuyTime/reblox/reducer/service_reducer.dart';
+import 'package:Buytime/reblox/model/app_state.dart';
+import 'package:Buytime/reblox/model/file/optimum_file_to_upload.dart';
+import 'package:Buytime/reblox/model/snippet/generic.dart';
+import 'package:Buytime/reblox/model/order/order_state.dart';
+import 'package:Buytime/reblox/model/service/service_state.dart';
+import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
+import 'package:Buytime/reblox/reducer/order_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/order_reducer.dart';
+import 'package:Buytime/reblox/reducer/service_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/service_reducer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_redux_navigation/flutter_redux_navigation.dart';
 import 'package:redux_epics/redux_epics.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:http/http.dart' as http;
-import 'package:BuyTime/services/file_upload_service.dart' if (dart.library.html) 'package:BuyTime/services/file_upload_service_web.dart';
+import 'package:Buytime/services/file_upload_service.dart' if (dart.library.html) 'package:Buytime/services/file_upload_service_web.dart';
 import 'package:stripe_sdk/stripe_sdk.dart';
 import 'package:url_launcher/url_launcher.dart';
 

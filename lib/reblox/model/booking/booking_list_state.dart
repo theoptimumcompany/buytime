@@ -1,4 +1,4 @@
-import 'package:BuyTime/reblox/model/booking/booking_state.dart';
+import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:flutter/foundation.dart';
 
 

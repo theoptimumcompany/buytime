@@ -1,4 +1,4 @@
-import 'package:BuyTime/reblox/model/old/filter_search_state.dart';
+import 'package:Buytime/reblox/model/old/filter_search_state.dart';
 
 class SetStars {
   List<bool> _star = [false, false, false, false, false];

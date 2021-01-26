@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:BuyTime/reblox/model/file/optimum_file_to_upload.dart';
+import 'package:Buytime/reblox/model/file/optimum_file_to_upload.dart';
 import 'package:firebase/firebase.dart' as fb;
 import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';

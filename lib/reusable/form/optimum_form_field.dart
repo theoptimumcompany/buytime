@@ -1,6 +1,6 @@
-import 'package:BuyTime/reblox/model/app_state.dart';
-import 'package:BuyTime/reblox/model/business/business_state.dart';
-import 'package:BuyTime/reblox/reducer/business_reducer.dart';
+import 'package:Buytime/reblox/model/app_state.dart';
+import 'package:Buytime/reblox/model/business/business_state.dart';
+import 'package:Buytime/reblox/reducer/business_reducer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 

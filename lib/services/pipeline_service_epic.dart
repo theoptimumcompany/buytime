@@ -1,7 +1,7 @@
-import 'package:BuyTime/reblox/model/app_state.dart';
-import 'package:BuyTime/reblox/model/pipeline/pipeline.dart';
-import 'package:BuyTime/reblox/reducer/pipeline_list_reducer.dart';
-import 'package:BuyTime/reblox/reducer/pipeline_reducer.dart';
+import 'package:Buytime/reblox/model/app_state.dart';
+import 'package:Buytime/reblox/model/pipeline/pipeline.dart';
+import 'package:Buytime/reblox/reducer/pipeline_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/pipeline_reducer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:redux_epics/redux_epics.dart';
 import 'package:rxdart/rxdart.dart';

@@ -1,14 +1,14 @@
-import 'package:BuyTime/utils/theme/buytime_theme.dart';
-import 'package:BuyTime/UI/user/service/UI_U_service_list.dart';
-import 'package:BuyTime/reblox/model/app_state.dart';
-import 'package:BuyTime/reblox/model/order/order_state.dart';
-import 'package:BuyTime/reblox/reducer/order_list_reducer.dart';
-import 'package:BuyTime/reblox/reducer/order_reducer.dart';
-import 'package:BuyTime/reusable/appbar/user_buytime_appbar.dart';
-import 'package:BuyTime/utils/globals.dart';
-import 'package:BuyTime/reusable/order/optimum_order_item_card_medium.dart';
-import 'package:BuyTime/reusable/order/order_total.dart';
-import 'package:BuyTime/UI/user/cart/UI_U_stripe_payment.dart';
+import 'package:Buytime/utils/theme/buytime_theme.dart';
+import 'package:Buytime/UI/user/service/UI_U_service_list.dart';
+import 'package:Buytime/reblox/model/app_state.dart';
+import 'package:Buytime/reblox/model/order/order_state.dart';
+import 'package:Buytime/reblox/reducer/order_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/order_reducer.dart';
+import 'package:Buytime/reusable/appbar/user_buytime_appbar.dart';
+import 'package:Buytime/utils/globals.dart';
+import 'package:Buytime/reusable/order/optimum_order_item_card_medium.dart';
+import 'package:Buytime/reusable/order/order_total.dart';
+import 'package:Buytime/UI/user/cart/UI_U_stripe_payment.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -59,7 +59,7 @@ class UI_U_CartState extends State<UI_U_Cart> {
             builder: (context, snapshot) {
               return Scaffold(
                   resizeToAvoidBottomInset: false,
-                  appBar: BuyTimeAppbarUser(
+                  appBar: BuytimeAppbarUser(
                     width: media.width,
                     children: [
                       IconButton(

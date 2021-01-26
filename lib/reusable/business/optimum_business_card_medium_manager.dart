@@ -1,4 +1,4 @@
-import 'package:BuyTime/reblox/model/business/business_state.dart';
+import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:flutter/material.dart';
 
 typedef OptimumBusinessCardMediumManagerCallback = void Function(BusinessState);

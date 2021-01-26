@@ -1,12 +1,12 @@
 import 'dart:async';
 
-import 'package:BuyTime/UI/user/booking/UI_U_BookingPage.dart';
-import 'package:BuyTime/reusable/custom_bottom_button_widget.dart';
-import 'package:BuyTime/reusable/past_booking_card_widget.dart';
-import 'package:BuyTime/utils/b_cube_grid_spinner.dart';
-import 'package:BuyTime/utils/size_config.dart';
-import 'package:BuyTime/utils/theme/buytime_config.dart';
-import 'package:BuyTime/utils/theme/buytime_theme.dart';
+import 'package:Buytime/UI/user/booking/UI_U_BookingPage.dart';
+import 'package:Buytime/reusable/custom_bottom_button_widget.dart';
+import 'package:Buytime/reusable/past_booking_card_widget.dart';
+import 'package:Buytime/utils/b_cube_grid_spinner.dart';
+import 'package:Buytime/utils/size_config.dart';
+import 'package:Buytime/utils/theme/buytime_config.dart';
+import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';

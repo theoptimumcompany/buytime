@@ -1,4 +1,4 @@
-import 'package:BuyTime/reblox/model/pipeline/pipeline.dart';
+import 'package:Buytime/reblox/model/pipeline/pipeline.dart';
 
 class PipelineCreatedResponse {
   Pipeline _pipeline;

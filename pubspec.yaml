@@ -1,5 +1,5 @@
-name: BuyTime
-description: A new Flutter project.
+name: Buytime
+description: Give you a star!
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -14,7 +14,7 @@ description: A new Flutter project.
 version: 2.1.15
 
 environment:
-  sdk: ">=2.2.2 <3.0.0"
+  sdk: ">=2.10.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -48,7 +48,7 @@ dependencies:
   uuid: ^2.2.2
   crop: any
   mime: ^0.9.7
-  flutter_svg: ^0.19.2+1
+  flutter_svg: ^0.17.4
   badges: ^1.1.6
   url_launcher: ^5.7.2
   stripe_payment: ^1.0.9

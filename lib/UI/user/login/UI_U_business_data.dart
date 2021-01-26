@@ -1,4 +1,4 @@
-import 'package:BuyTime/reusable/back_button_blue.dart';
+import 'package:Buytime/reusable/back_button_blue.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'UI_U_TermsAndConditions.dart';

@@ -1,7 +1,7 @@
-import 'package:BuyTime/reblox/model/app_state.dart';
-import 'package:BuyTime/reblox/model/stripe/stripe_card_response.dart';
-import 'package:BuyTime/reblox/reducer/order_reducer.dart';
-import 'package:BuyTime/reblox/reducer/stripe_payment_reducer.dart';
+import 'package:Buytime/reblox/model/app_state.dart';
+import 'package:Buytime/reblox/model/stripe/stripe_card_response.dart';
+import 'package:Buytime/reblox/reducer/order_reducer.dart';
+import 'package:Buytime/reblox/reducer/stripe_payment_reducer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:redux_epics/redux_epics.dart';
 import 'package:rxdart/rxdart.dart';

@@ -1,12 +1,12 @@
-import 'package:BuyTime/reblox/model/app_state.dart';
-import 'package:BuyTime/reblox/model/file/optimum_file_to_upload.dart';
-import 'package:BuyTime/reblox/model/service/service_state.dart';
-import 'package:BuyTime/reblox/reducer/service_list_reducer.dart';
-import 'package:BuyTime/reblox/reducer/service_reducer.dart';
+import 'package:Buytime/reblox/model/app_state.dart';
+import 'package:Buytime/reblox/model/file/optimum_file_to_upload.dart';
+import 'package:Buytime/reblox/model/service/service_state.dart';
+import 'package:Buytime/reblox/reducer/service_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/service_reducer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:redux_epics/redux_epics.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:BuyTime/services/file_upload_service.dart' if (dart.library.html) 'package:BuyTime/services/file_upload_service_web.dart';
+import 'package:Buytime/services/file_upload_service.dart' if (dart.library.html) 'package:Buytime/services/file_upload_service_web.dart';
 
 class ServiceListRequestService implements EpicClass<AppState> {
   @override

@@ -1,19 +1,19 @@
 import 'dart:async';
 import 'dart:core';
 
-import 'package:BuyTime/UI/management/business/UI_M_business.dart';
-import 'package:BuyTime/UI/management/service/UI_manage_service.dart';
-import 'package:BuyTime/reblox/model/app_state.dart';
-import 'package:BuyTime/reblox/model/business/snippet/business_snippet_state.dart';
-import 'package:BuyTime/reblox/model/snippet/generic.dart';
-import 'package:BuyTime/reblox/model/order/order_state.dart';
-import 'package:BuyTime/reblox/model/order/order_entry.dart';
-import 'package:BuyTime/reblox/model/service/service_state.dart';
-import 'package:BuyTime/reblox/model/user/snippet/user_snippet_state.dart';
-import 'package:BuyTime/reblox/reducer/service_list_reducer.dart';
-import 'package:BuyTime/reblox/reducer/service_reducer.dart';
-import 'package:BuyTime/reusable/appbar/manager_buytime_appbar.dart';
-import 'package:BuyTime/reusable/service/optimum_service_card_medium.dart';
+import 'package:Buytime/UI/management/business/UI_M_business.dart';
+import 'package:Buytime/UI/management/service/UI_manage_service.dart';
+import 'package:Buytime/reblox/model/app_state.dart';
+import 'package:Buytime/reblox/model/business/snippet/business_snippet_state.dart';
+import 'package:Buytime/reblox/model/snippet/generic.dart';
+import 'package:Buytime/reblox/model/order/order_state.dart';
+import 'package:Buytime/reblox/model/order/order_entry.dart';
+import 'package:Buytime/reblox/model/service/service_state.dart';
+import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
+import 'package:Buytime/reblox/reducer/service_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/service_reducer.dart';
+import 'package:Buytime/reusable/appbar/manager_buytime_appbar.dart';
+import 'package:Buytime/reusable/service/optimum_service_card_medium.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -54,7 +54,7 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
               onWillPop: _onWillPop,
               child: Scaffold(
                 resizeToAvoidBottomInset: false,
-                appBar: BuyTimeAppbarManager(
+                appBar: BuytimeAppbarManager(
                   width: media.width,
                   children: [
                     IconButton(

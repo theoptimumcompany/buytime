@@ -1,8 +1,8 @@
-import 'package:BuyTime/reblox/model/category/snippet/category_snippet_state.dart';
-import 'package:BuyTime/reblox/model/snippet/generic.dart';
-import 'package:BuyTime/reblox/model/snippet/manager.dart';
-import 'package:BuyTime/reblox/model/snippet/parent.dart';
-import 'package:BuyTime/reblox/model/snippet/worker.dart';
+import 'package:Buytime/reblox/model/category/snippet/category_snippet_state.dart';
+import 'package:Buytime/reblox/model/snippet/generic.dart';
+import 'package:Buytime/reblox/model/snippet/manager.dart';
+import 'package:Buytime/reblox/model/snippet/parent.dart';
+import 'package:Buytime/reblox/model/snippet/worker.dart';
 
 class CategoryState {
   String name;

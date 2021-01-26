@@ -1,6 +1,6 @@
-import 'package:BuyTime/reblox/model/app_state.dart';
-import 'package:BuyTime/reblox/model/user/user_state.dart';
-import 'package:BuyTime/reblox/reducer/user_reducer.dart';
+import 'package:Buytime/reblox/model/app_state.dart';
+import 'package:Buytime/reblox/model/user/user_state.dart';
+import 'package:Buytime/reblox/reducer/user_reducer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:redux_epics/redux_epics.dart';
 import 'package:rxdart/rxdart.dart';

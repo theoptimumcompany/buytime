@@ -1,5 +1,5 @@
-import 'package:BuyTime/reblox/model/user/snippet/user_snippet_state.dart';
-import 'package:BuyTime/reblox/model/snippet/generic.dart';
+import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
+import 'package:Buytime/reblox/model/snippet/generic.dart';
 import 'package:flutter/foundation.dart';
 
 class BookingState {

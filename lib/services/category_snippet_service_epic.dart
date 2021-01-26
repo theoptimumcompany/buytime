@@ -1,11 +1,11 @@
 import 'dart:convert';
 
-import 'package:BuyTime/reblox/model/app_state.dart';
-import 'package:BuyTime/reblox/model/category/category_state.dart';
-import 'package:BuyTime/reblox/model/category/tree/category_tree_state.dart';
-import 'package:BuyTime/reblox/model/snippet/generic.dart';
-import 'package:BuyTime/reblox/reducer/category_tree_reducer.dart';
-import 'package:BuyTime/reblox/model/snippet/parent.dart';
+import 'package:Buytime/reblox/model/app_state.dart';
+import 'package:Buytime/reblox/model/category/category_state.dart';
+import 'package:Buytime/reblox/model/category/tree/category_tree_state.dart';
+import 'package:Buytime/reblox/model/snippet/generic.dart';
+import 'package:Buytime/reblox/reducer/category_tree_reducer.dart';
+import 'package:Buytime/reblox/model/snippet/parent.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_redux/flutter_redux.dart';

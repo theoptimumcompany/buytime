@@ -1,8 +1,8 @@
-import 'package:BuyTime/reblox/model/app_state.dart';
-import 'package:BuyTime/reblox/model/snippet/generic.dart';
-import 'package:BuyTime/reblox/model/order/order_entry.dart';
-import 'package:BuyTime/reblox/model/order/order_state.dart';
-import 'package:BuyTime/reblox/model/service/service_state.dart';
+import 'package:Buytime/reblox/model/app_state.dart';
+import 'package:Buytime/reblox/model/snippet/generic.dart';
+import 'package:Buytime/reblox/model/order/order_entry.dart';
+import 'package:Buytime/reblox/model/order/order_state.dart';
+import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';

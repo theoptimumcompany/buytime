@@ -1,4 +1,4 @@
-import 'package:BuyTime/reblox/model/snippet/generic.dart';
+import 'package:Buytime/reblox/model/snippet/generic.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 

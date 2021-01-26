@@ -1,8 +1,8 @@
-import 'package:BuyTime/splash_screen.dart';
+import 'package:Buytime/splash_screen.dart';
 import 'package:flutter/material.dart';
 
-class BuyTimeSpinner extends StatelessWidget {
-  const BuyTimeSpinner({
+class BuytimeSpinner extends StatelessWidget {
+  const BuytimeSpinner({
     Key key,
     @required this.spinnerX,
     @required this.spinnerY,

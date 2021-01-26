@@ -2,12 +2,12 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 
-import 'package:BuyTime/utils/theme/buytime_theme.dart';
-import 'package:BuyTime/UI/user/login/UI_U_TermsAndConditions.dart';
-import 'package:BuyTime/UI/user/login/UI_U_ToS_TermsConditons.dart';
-import 'package:BuyTime/UI/user/login/UI_U_Login.dart';
-import 'package:BuyTime/UI/user/login/UI_U_Registration.dart';
-import 'package:BuyTime/utils/size_config.dart';
+import 'package:Buytime/utils/theme/buytime_theme.dart';
+import 'package:Buytime/UI/user/login/UI_U_TermsAndConditions.dart';
+import 'package:Buytime/UI/user/login/UI_U_ToS_TermsConditons.dart';
+import 'package:Buytime/UI/user/login/UI_U_Login.dart';
+import 'package:Buytime/UI/user/login/UI_U_Registration.dart';
+import 'package:Buytime/utils/size_config.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';

@@ -1,6 +1,6 @@
 import 'dart:async';
-import 'package:BuyTime/utils/theme/buytime_theme.dart';
-import 'package:BuyTime/utils/size_config.dart';
+import 'package:Buytime/utils/theme/buytime_theme.dart';
+import 'package:Buytime/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';

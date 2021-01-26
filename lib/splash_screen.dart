@@ -3,17 +3,17 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
 
-import 'package:BuyTime/UI/user/landing/UI_U_Landing.dart';
-import 'package:BuyTime/reblox/model/snippet/device.dart';
-import 'package:BuyTime/reblox/model/snippet/token.dart';
-import 'package:BuyTime/utils/theme/buytime_theme.dart';
-import 'package:BuyTime/UI/user/order/UI_U_OrderDetail.dart';
-import 'package:BuyTime/reblox/model/app_state.dart';
-import 'package:BuyTime/reblox/model/user/user_state.dart';
-import 'package:BuyTime/reblox/reducer/order_reducer.dart';
-import 'package:BuyTime/reblox/reducer/user_reducer.dart';
-import 'package:BuyTime/UI/user/login/UI_U_Home.dart';
-import 'package:BuyTime/reusable/buytime_widget.dart';
+import 'package:Buytime/UI/user/landing/UI_U_Landing.dart';
+import 'package:Buytime/reblox/model/snippet/device.dart';
+import 'package:Buytime/reblox/model/snippet/token.dart';
+import 'package:Buytime/utils/theme/buytime_theme.dart';
+import 'package:Buytime/UI/user/order/UI_U_OrderDetail.dart';
+import 'package:Buytime/reblox/model/app_state.dart';
+import 'package:Buytime/reblox/model/user/user_state.dart';
+import 'package:Buytime/reblox/reducer/order_reducer.dart';
+import 'package:Buytime/reblox/reducer/user_reducer.dart';
+import 'package:Buytime/UI/user/login/UI_U_Home.dart';
+import 'package:Buytime/reusable/buytime_widget.dart';
 import 'package:device_info/device_info.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -118,15 +118,13 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   // Replace with server token from firebase console settings.
   String serverToken =
       'AAAA6xUtyfE:APA91bGHhEzVUY9fnj4FbTXJX57qcgF-8GBrfBbGIa8kEpEIdsXRgQxbtsvbhL-w-_MQYKIj0XVlSaDSf2s6O3D3SM3o-z_AZnHQwBNLiw1ygyZOuVAKa5YmXeu6Da9eBqRD9uwFHSPi';
-  final FirebaseMessaging firebaseMessaging = FirebaseMessaging();
+  final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
 
   static final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
   Map<String, dynamic> _deviceData = <String, dynamic>{};
 
   Future<Map<String, dynamic>> sendAndRetrieveMessage() async {
-    await firebaseMessaging.requestNotificationPermissions(
-      const IosNotificationSettings(sound: true, badge: true, alert: true, provisional: false),
-    );
+    await firebaseMessaging.requestPermission(sound: true, badge: true, alert: true, provisional: false);
 
     await http.post(
       'https://fcm.googleapis.com/fcm/send',
@@ -138,11 +136,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
         <String, dynamic>{
           'notification': <String, dynamic>{'body': 'this is a body', 'title': 'this is a title'},
           'priority': 'high',
-          'data': <String, dynamic>{
-            'click_action': 'FLUTTER_NOTIFICATION_CLICK',
-            'id': '1',
-            'status': 'done'
-          },
+          'data': <String, dynamic>{'click_action': 'FLUTTER_NOTIFICATION_CLICK', 'id': '1', 'status': 'done'},
           'to': await firebaseMessaging.getToken(),
         },
       ),
@@ -159,16 +153,16 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     return completer.future;
   }
 
-  static Future<dynamic> myBackgroundMessageHandler(Map<String, dynamic> message) {
-    if (message.containsKey('data')) {
+  Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+    if (message.data.containsKey('data')) {
       // Handle data message
-      final dynamic data = message['data'];
+      final dynamic data = message.data['data'];
       print("Data");
     }
 
-    if (message.containsKey('notification')) {
+    if (message.data.containsKey('notification')) {
       // Handle notification message
-      final dynamic notification = message['notification'];
+      final dynamic notification = message.data['notification'];
     }
 
     // Or do other work.
@@ -179,47 +173,32 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     super.initState();
     Firebase.initializeApp().then((value) {
       if (!kIsWeb) {
+        //TODO: TEST Funzionamento notifiche dopo upgrade pacchetto firebase_messaging
         FirebaseMessaging.instance.requestPermission();
-        FirebaseMessaging.onMessage.first.then((message) => {
-        print("onMessage: $message");
-            var data = message['data'] ?? message;
-            String orderId = data['orderId'];
-            await StoreProvider.of<AppState>(context).dispatch(new OrderRequest(orderId));
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => UI_U_OrderDetail()),
-        );
-        });
-      FirebaseMessaging.onBackgroundMessage(myBackgroundMessageHandler);
+        FirebaseMessaging.onMessage.first.then((message) => () {
+              print("onMessage: $message");
+              var data = message.data['data'] ?? message;
+              String orderId = data['orderId'];
+              StoreProvider.of<AppState>(context).dispatch(new OrderRequest(orderId));
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => UI_U_OrderDetail()),
+              );
+            });
 
-        firebaseMessaging.configure(
-          onBackgroundMessage: myBackgroundMessageHandler,
-          onLaunch: (Map<String, dynamic> message) async {
-            print("onLaunch: $message");
-            var data = message['data'] ?? message;
-            String orderId = data['orderId'];
-            await StoreProvider.of<AppState>(context).dispatch(new OrderRequest(orderId));
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => UI_U_OrderDetail()),
-            );
-          },
-          onResume: (Map<String, dynamic> message) async {
-            print("onResume: $message");
-            var data = message['data'] ?? message;
-            String orderId = data['orderId'];
-            await StoreProvider.of<AppState>(context).dispatch(new OrderRequest(orderId));
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => UI_U_OrderDetail()),
-            );
-          },
-        );
-        firebaseMessaging.requestNotificationPermissions(const IosNotificationSettings(
-            sound: true, badge: true, alert: true, provisional: true));
-        firebaseMessaging.onIosSettingsRegistered.listen((IosNotificationSettings settings) {
-          print("Settings registered: $settings");
+        FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+        FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+          var data = message.data['data'] ?? message;
+          String orderId = data['orderId'];
+          StoreProvider.of<AppState>(context).dispatch(new OrderRequest(orderId));
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => UI_U_OrderDetail()),
+          );
         });
+
+        firebaseMessaging.requestPermission(sound: true, badge: true, alert: true, provisional: true);
+
         firebaseMessaging.getToken().then((String token) {
           assert(token != null);
           print("Token " + token);
@@ -231,7 +210,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
       print("error on firebase application start: " + onError.toString());
     });
 
-    FirebaseMessaging().onTokenRefresh.listen((newToken) {
+    FirebaseMessaging.instance.onTokenRefresh.listen((newToken) {
       // Save newToken
       serverToken = newToken;
     });
@@ -333,7 +312,8 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
           }
         }
         print("Device ID : " + deviceId);
-        StoreProvider.of<AppState>(context).dispatch(new LoggedUser(UserState.fromFirebaseUser(user, deviceId, serverToken)));
+        StoreProvider.of<AppState>(context)
+            .dispatch(new LoggedUser(UserState.fromFirebaseUser(user, deviceId, serverToken)));
         Device device = Device(name: "device", id: deviceId, user_uid: user.uid);
         StoreProvider.of<AppState>(context).dispatch(new UpdateUserDevice(device));
         Token token = Token(name: "token", id: serverToken, user_uid: user.uid);
@@ -370,13 +350,15 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: Color(0xFF207CC3),
-      body: Center(child: new Image.asset('assets/img/brand/logo_b.png', width: 200, height: 200),
+      body: Center(
+        child: new Image.asset('assets/img/brand/logo_b.png', width: 200, height: 200),
       ),
     );
-      /*Scaffold(
+    /*Scaffold(
       // body: OldSplashScreen(spinnerX: spinnerX, spinnerY: spinnerY, arrowAnimationController: _arrowAnimationController, arrowAnimation: _arrowAnimation),
       body: ,
-    )*/;
+    )*/
+    ;
   }
 }
 
@@ -416,11 +398,8 @@ class OldSplashScreen extends StatelessWidget {
                     padding: EdgeInsets.only(top: 10.0),
                   ),
                   Text(
-                    "BuyTime",
-                    style: TextStyle(
-                        color: BuytimeTheme.UserPrimary,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 24.0),
+                    "Buytime",
+                    style: TextStyle(color: BuytimeTheme.UserPrimary, fontWeight: FontWeight.bold, fontSize: 24.0),
                   )
                 ],
               ),
@@ -428,7 +407,7 @@ class OldSplashScreen extends StatelessWidget {
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                BuyTimeSpinner(
+                BuytimeSpinner(
                     spinnerX: spinnerX,
                     spinnerY: spinnerY,
                     arrowAnimationController: _arrowAnimationController,
@@ -441,8 +420,7 @@ class OldSplashScreen extends StatelessWidget {
                   "Some Time to Buy",
                   softWrap: true,
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 18.0, color: BuytimeTheme.UserPrimary),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0, color: BuytimeTheme.UserPrimary),
                 )
               ],
             )

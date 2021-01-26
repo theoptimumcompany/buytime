@@ -1,4 +1,4 @@
-import 'package:BuyTime/reblox/model/service/service_state.dart';
+import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:flutter/foundation.dart';
 
 class ServiceListState {

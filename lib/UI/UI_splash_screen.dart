@@ -1,6 +1,6 @@
 library ui_splash_screen_widget;
 
-import 'package:BuyTime/utils/theme/buytime_theme.dart';
+import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';

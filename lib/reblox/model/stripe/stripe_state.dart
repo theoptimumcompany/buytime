@@ -1,6 +1,6 @@
 
-import 'package:BuyTime/reblox/model/service/service_state.dart';
-import 'package:BuyTime/reblox/model/stripe/stripe_card_response.dart';
+import 'package:Buytime/reblox/model/service/service_state.dart';
+import 'package:Buytime/reblox/model/stripe/stripe_card_response.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:stripe_sdk/stripe_sdk_ui.dart';
 

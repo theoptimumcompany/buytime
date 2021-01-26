@@ -1,9 +1,6 @@
-import 'package:BuyTime/UI/user/service/UI_U_ServiceDetails.dart';
-import 'package:BuyTime/reblox/model/app_state.dart';
-import 'package:BuyTime/reblox/model/snippet/generic.dart';
-import 'package:BuyTime/reblox/model/service/service_state.dart';
+import 'package:Buytime/UI/user/service/UI_U_ServiceDetails.dart';
+import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_redux/flutter_redux.dart';
 
 typedef OptimumServiceCardMediumCallback = void Function(ServiceState);
 

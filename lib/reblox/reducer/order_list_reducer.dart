@@ -1,5 +1,5 @@
-import 'package:BuyTime/reblox/model/order/order_list_state.dart';
-import 'package:BuyTime/reblox/model/order/order_state.dart';
+import 'package:Buytime/reblox/model/order/order_list_state.dart';
+import 'package:Buytime/reblox/model/order/order_state.dart';
 
 
 class OrderListRequest {

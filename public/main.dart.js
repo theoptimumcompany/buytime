@@ -38328,7 +38328,7 @@ $0:function(){K.ce(this.a,!1).dt(0)},
 $S:0}
 F.GE.prototype={
 C:function(a,b){var s=$.aBH(),r=H.a([$.aqr()],t.wH),q=X.ask(null,"Roboto",C.b0)
-return new O.tP(this.c,S.a39(!1,new G.AU(null),s,r,new F.Wm(this),P.a7(["/home",new F.Wn(),"/login",new F.Wo(),"/registration",new F.Wp(),"/orderDetail",new F.Wq()],t.X,t.NS),q,"BuyTime"),null,t.Fq)}}
+return new O.tP(this.c,S.a39(!1,new G.AU(null),s,r,new F.Wm(this),P.a7(["/home",new F.Wn(),"/login",new F.Wo(),"/registration",new F.Wp(),"/orderDetail",new F.Wq()],t.X,t.NS),q,"Buytime"),null,t.Fq)}}
 F.Wm.prototype={
 $1:function(a){var s
 switch(a.a){case"/orderDetail":s=F.aHm(new L.fL(null),a,t.z)

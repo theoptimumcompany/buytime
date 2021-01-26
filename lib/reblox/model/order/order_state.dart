@@ -1,8 +1,8 @@
-import 'package:BuyTime/reblox/model/business/snippet/business_snippet_state.dart';
-import 'package:BuyTime/reblox/model/snippet/generic.dart';
-import 'package:BuyTime/reblox/model/order/order_entry.dart';
-import 'package:BuyTime/reblox/model/service/service_state.dart';
-import 'package:BuyTime/reblox/model/user/snippet/user_snippet_state.dart';
+import 'package:Buytime/reblox/model/business/snippet/business_snippet_state.dart';
+import 'package:Buytime/reblox/model/snippet/generic.dart';
+import 'package:Buytime/reblox/model/order/order_entry.dart';
+import 'package:Buytime/reblox/model/service/service_state.dart';
+import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
 import 'package:flutter/cupertino.dart';
 
 class OrderState {

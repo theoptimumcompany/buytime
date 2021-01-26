@@ -1,5 +1,5 @@
-import 'package:BuyTime/reblox/model/service/service_list_state.dart';
-import 'package:BuyTime/reblox/model/service/service_state.dart';
+import 'package:Buytime/reblox/model/service/service_list_state.dart';
+import 'package:Buytime/reblox/model/service/service_state.dart';
 
 class ServiceListRequest {
   String _businessId;

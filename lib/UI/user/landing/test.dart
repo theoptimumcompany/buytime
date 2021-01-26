@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:BuyTime/utils/b_cube_grid_spinner.dart';
-import 'package:BuyTime/utils/size_config.dart';
+import 'package:Buytime/utils/b_cube_grid_spinner.dart';
+import 'package:Buytime/utils/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
 

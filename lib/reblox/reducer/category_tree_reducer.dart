@@ -1,6 +1,6 @@
-import 'package:BuyTime/reblox/model/category/tree/category_tree_state.dart';
-import 'package:BuyTime/reblox/model/snippet/generic.dart';
-import 'package:BuyTime/reblox/model/snippet/parent.dart';
+import 'package:Buytime/reblox/model/category/tree/category_tree_state.dart';
+import 'package:Buytime/reblox/model/snippet/generic.dart';
+import 'package:Buytime/reblox/model/snippet/parent.dart';
 
 class CategoryTreeCreateIfNotExists {
   String _idFirestore;

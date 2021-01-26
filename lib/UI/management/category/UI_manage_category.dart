@@ -1,10 +1,10 @@
-import 'package:BuyTime/UI/management/business/UI_M_business.dart';
-import 'package:BuyTime/UI/management/category/UI_edit_category.dart';
-import 'package:BuyTime/reblox/model/app_state.dart';
-import 'package:BuyTime/UI/management/category/UI_create_category.dart';
-import 'package:BuyTime/reblox/reducer/category_reducer.dart';
-import 'package:BuyTime/reblox/reducer/category_tree_reducer.dart';
-import 'package:BuyTime/reusable/appbar/manager_buytime_appbar.dart';
+import 'package:Buytime/UI/management/business/UI_M_business.dart';
+import 'package:Buytime/UI/management/category/UI_edit_category.dart';
+import 'package:Buytime/reblox/model/app_state.dart';
+import 'package:Buytime/UI/management/category/UI_create_category.dart';
+import 'package:Buytime/reblox/reducer/category_reducer.dart';
+import 'package:Buytime/reblox/reducer/category_tree_reducer.dart';
+import 'package:Buytime/reusable/appbar/manager_buytime_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -378,7 +378,7 @@ class UI_ManageCategoryState extends State<UI_ManageCategory> {
             },
             child: Scaffold(
               key: widget._keyScaffoldCategory,
-              appBar: BuyTimeAppbarManager(
+              appBar: BuytimeAppbarManager(
                 children: [
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),

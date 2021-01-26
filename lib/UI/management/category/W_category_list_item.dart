@@ -1,5 +1,5 @@
-import 'package:BuyTime/reblox/model/category/category_state.dart';
-import 'package:BuyTime/utils/size_config.dart';
+import 'package:Buytime/reblox/model/category/category_state.dart';
+import 'package:Buytime/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

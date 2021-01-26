@@ -1,12 +1,12 @@
-import 'package:BuyTime/UI/management/business/UI_M_business.dart';
-import 'package:BuyTime/UI/management/business/UI_M_business_list.dart';
-import 'package:BuyTime/UI/management/business/UI_C_create_business.dart';
-import 'package:BuyTime/UI/management/business/UI_C_edit_business.dart';
-import 'package:BuyTime/utils/theme/buytime_theme.dart';
-import 'package:BuyTime/UI/user/business/UI_U_business_list.dart';
-import 'package:BuyTime/reblox/model/app_state.dart';
-import 'package:BuyTime/reusable/appbar/manager_buytime_appbar.dart';
-import 'package:BuyTime/reusable/appbar/user_buytime_appbar.dart';
+import 'package:Buytime/UI/management/business/UI_M_business.dart';
+import 'package:Buytime/UI/management/business/UI_M_business_list.dart';
+import 'package:Buytime/UI/management/business/UI_C_create_business.dart';
+import 'package:Buytime/UI/management/business/UI_C_edit_business.dart';
+import 'package:Buytime/utils/theme/buytime_theme.dart';
+import 'package:Buytime/UI/user/business/UI_U_business_list.dart';
+import 'package:Buytime/reblox/model/app_state.dart';
+import 'package:Buytime/reusable/appbar/manager_buytime_appbar.dart';
+import 'package:Buytime/reusable/appbar/user_buytime_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -36,7 +36,7 @@ class UI_ManageBusinessState extends State<UI_ManageBusiness> {
         return false;
       },
       child: Scaffold(
-          appBar: BuyTimeAppbarManager(
+          appBar: BuytimeAppbarManager(
             width: media.width,
             children: [
               IconButton(

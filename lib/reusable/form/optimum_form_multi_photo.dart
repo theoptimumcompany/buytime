@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:ui' as ui;
-import 'package:BuyTime/reblox/model/file/optimum_file_to_upload.dart';
-import 'package:BuyTime/utils/size_config.dart';
-import 'package:BuyTime/utils/theme/buytime_theme.dart';
+import 'package:Buytime/reblox/model/file/optimum_file_to_upload.dart';
+import 'package:Buytime/utils/size_config.dart';
+import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:image_cropper/image_cropper.dart';
 import 'package:path/path.dart' as path;

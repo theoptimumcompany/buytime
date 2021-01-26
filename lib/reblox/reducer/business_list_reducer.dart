@@ -1,7 +1,7 @@
 
-import 'package:BuyTime/reblox/model/business/business_list_state.dart';
-import 'package:BuyTime/reblox/model/business/business_state.dart';
-import 'package:BuyTime/reblox/model/role/role.dart';
+import 'package:Buytime/reblox/model/business/business_list_state.dart';
+import 'package:Buytime/reblox/model/business/business_state.dart';
+import 'package:Buytime/reblox/model/role/role.dart';
 
 class BusinessListRequest {
   String _userId;

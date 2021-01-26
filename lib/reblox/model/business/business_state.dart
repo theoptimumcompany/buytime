@@ -1,5 +1,5 @@
-import 'package:BuyTime/reblox/model/snippet/generic.dart';
-import 'package:BuyTime/utils/theme/buytime_config.dart';
+import 'package:Buytime/reblox/model/snippet/generic.dart';
+import 'package:Buytime/utils/theme/buytime_config.dart';
 import 'package:flutter/foundation.dart';
 
 import '../file/optimum_file_to_upload.dart';

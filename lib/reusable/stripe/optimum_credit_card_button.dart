@@ -1,4 +1,4 @@
-import 'package:BuyTime/reblox/model/stripe/stripe_card_response.dart';
+import 'package:Buytime/reblox/model/stripe/stripe_card_response.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
