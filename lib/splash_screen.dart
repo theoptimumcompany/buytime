@@ -150,11 +150,11 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
 
     final Completer<Map<String, dynamic>> completer = Completer<Map<String, dynamic>>();
 
-    firebaseMessaging.configure(
-      onMessage: (Map<String, dynamic> message) async {
-        completer.complete(message);
-      },
-    );
+    // firebaseMessaging.configure(
+    //   onMessage: (Map<String, dynamic> message) async {
+    //     completer.complete(message);
+    //   },
+    // );
 
     return completer.future;
   }
@@ -179,18 +179,20 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     super.initState();
     Firebase.initializeApp().then((value) {
       if (!kIsWeb) {
-        firebaseMessaging.requestNotificationPermissions();
-        firebaseMessaging.configure(
-          onMessage: (Map<String, dynamic> message) async {
-            print("onMessage: $message");
+        FirebaseMessaging.instance.requestPermission();
+        FirebaseMessaging.onMessage.first.then((message) => {
+        print("onMessage: $message");
             var data = message['data'] ?? message;
             String orderId = data['orderId'];
             await StoreProvider.of<AppState>(context).dispatch(new OrderRequest(orderId));
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => UI_U_OrderDetail()),
-            );
-          },
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => UI_U_OrderDetail()),
+        );
+        });
+      FirebaseMessaging.onBackgroundMessage(myBackgroundMessageHandler);
+
+        firebaseMessaging.configure(
           onBackgroundMessage: myBackgroundMessageHandler,
           onLaunch: (Map<String, dynamic> message) async {
             print("onLaunch: $message");

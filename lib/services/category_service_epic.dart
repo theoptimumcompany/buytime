@@ -8,6 +8,7 @@ import 'package:BuyTime/reblox/model/snippet/manager.dart';
 import 'package:BuyTime/reblox/model/snippet/worker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:BuyTime/reblox/model/snippet/generic.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:redux_epics/redux_epics.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -16,18 +17,18 @@ class CategoryListRequestService implements EpicClass<AppState> {
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     print("CategoryListService catched action");
     return actions.whereType<RequestListCategory>().asyncMap((event) {
-      return Firestore.instance
+      return FirebaseFirestore.instance
           .collection("business")
-          .document(event.businessId)
+          .doc(event.businessId)
           .collection("category")
-          .getDocuments()
+          .get()
           .then((QuerySnapshot snapshot) {
         print("CategoryListService firestore request");
         List<CategoryState> categoryStateList = List<CategoryState>();
-        snapshot.documents.forEach((element) {
+        snapshot.docs.forEach((element) {
           CategoryState categoryState = CategoryState.fromJson(element.data());
           categoryState.businessId = event.businessId;
-          categoryState.id = element.documentID;
+          categoryState.id = element.id;
           categoryStateList.add(categoryState);
         });
         print(categoryStateList.length);
@@ -254,7 +255,7 @@ class CategoryCreateService implements EpicClass<AppState> {
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<CreateCategory>().asyncMap((event) {
       CategoryState categoryState = event.categoryState;
-      DocumentReference docReference = Firestore.instance
+      DocumentReference docReference = FirebaseFirestore.instance
           .collection('business')
           .doc(store.state.business.id_firestore)
           .collection('category')
@@ -265,7 +266,7 @@ class CategoryCreateService implements EpicClass<AppState> {
       ServiceSnippet serviceState = ServiceSnippet().toEmpty();
       categoryState.categorySnippet.mostSoldService = serviceState;
       return docReference.set(categoryState.toJson()).then((value) {
-        print("CategoryService has created new category " + docReference.documentID);
+        print("CategoryService has created new category " + docReference.id);
 
         return new CreatedCategory(categoryState);
       }).catchError((error) {

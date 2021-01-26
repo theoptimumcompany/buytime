@@ -14,7 +14,7 @@ class PipelineListRequestService implements EpicClass<AppState> {
     return actions.whereType<RequestListPipeline>().asyncMap((event) async {
 
       List<Pipeline> pipelineList = List<Pipeline>();
-      return Firestore.instance.collection("pipeline").getDocuments().then((QuerySnapshot snapshot) {
+      return FirebaseFirestore.instance.collection("pipeline").get().then((QuerySnapshot snapshot) {
         print("PipelineListService firestore request");
         snapshot.docs.forEach((element) {
           Pipeline pipeline = Pipeline.fromJson(element.data());

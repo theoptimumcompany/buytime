@@ -12,18 +12,12 @@ import 'package:BuyTime/reblox/model/user/snippet/user_snippet_state.dart';
 import 'package:BuyTime/reblox/reducer/order_reducer.dart';
 import 'package:BuyTime/reblox/reducer/service_list_reducer.dart';
 import 'package:BuyTime/reusable/appbar/user_buytime_appbar.dart';
-import 'package:BuyTime/reusable/easy_check_in.dart';
 import 'package:BuyTime/utils/globals.dart';
-import 'package:BuyTime/reusable/menu/UI_menu_drawer.dart';
 import 'package:BuyTime/reusable/service/optimum_service_card_medium.dart';
-import 'package:BuyTime/services/service_service_epic.dart';
 import 'package:badges/badges.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:location/location.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class UI_U_ServiceList extends StatefulWidget {
   @override

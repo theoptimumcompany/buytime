@@ -1,9 +1,5 @@
-import 'dart:async';
-import 'package:BuyTime/UI/user/model/User_tab_navigation_item.dart';
 import 'package:BuyTime/reblox/model/app_state.dart';
 import 'package:BuyTime/reusable/appbar/manager_buytime_appbar.dart';
-import 'package:BuyTime/reusable/appbar/user_buytime_appbar.dart';
-import 'package:BuyTime/reusable/easy_check_in.dart';
 import 'package:BuyTime/reusable/menu/UI_menu_drawer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -11,8 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:location/location.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../model/Manager_tab_navigation_item.dart';
 

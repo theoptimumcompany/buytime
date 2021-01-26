@@ -1,24 +1,13 @@
-import 'dart:async';
 import 'package:BuyTime/UI/user/service/UI_U_service_list.dart';
 import 'package:BuyTime/reblox/model/app_state.dart';
-import 'package:BuyTime/reblox/model/business/business_list_state.dart';
 import 'package:BuyTime/reblox/model/business/business_state.dart';
 import 'package:BuyTime/reblox/reducer/app_reducer.dart';
 import 'package:BuyTime/reblox/reducer/business_list_reducer.dart';
 import 'package:BuyTime/reblox/reducer/business_reducer.dart';
 import 'package:BuyTime/reusable/business/optimum_business_card_medium_user.dart';
-import 'package:BuyTime/reusable/appbar/user_buytime_appbar.dart';
-import 'package:BuyTime/reusable/easy_check_in.dart';
-import 'package:BuyTime/reusable/menu/UI_menu_drawer.dart';
-import 'package:BuyTime/reusable/service/optimum_service_card_medium.dart';
-import 'package:BuyTime/services/business_service_epic.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:location/location.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 
 class Struttura {

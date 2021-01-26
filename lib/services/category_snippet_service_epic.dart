@@ -19,26 +19,26 @@ class CategoryTreeCreateIfNotExistsService implements EpicClass<AppState> {
         .whereType<CategoryTreeCreateIfNotExists>()
         .asyncMap((event) {
       print("CategoryNodeCreateIfNotExistsService CategoryNode exists?");
-      CollectionReference collectionReference = Firestore.instance
+      CollectionReference collectionReference = FirebaseFirestore.instance
           .collection("business")
-          .document(store.state.business.id_firestore)
+          .doc(store.state.business.id_firestore)
           .collection("category_tree");
-      collectionReference.getDocuments().then((value) {
+      collectionReference.get().then((value) {
         print(
             "CategoryNodeCreateIfNotExistsService CategoryNode DOES NOT exists!");
         if (value.docs.length == 0) {
-          DocumentReference doc = Firestore.instance
+          DocumentReference doc = FirebaseFirestore.instance
               .collection('business')
-              .document(event.idFirestore)
+              .doc(event.idFirestore)
               .collection('category_tree')
-              .document();
+              .doc();
           CategoryTree newCategoryNode = CategoryTree(
               nodeName: "root",
-              nodeId: doc.documentID,
+              nodeId: doc.id,
               nodeLevel: 0,
               numberOfCategories: 0,
               categoryNodeList: null);
-          doc.setData(newCategoryNode.toJson());
+          doc.set(newCategoryNode.toJson());
           return;
         } else {
           return;
@@ -286,13 +286,13 @@ class CategoryTreeDeleteService implements EpicClass<AppState> {
           nodeLevel: updateLevel,
           numberOfCategories: updateNumberOfCategories,
           categoryNodeList: newlistNode);
-      var query = await Firestore.instance
+      var query = await FirebaseFirestore.instance
           .collection("business")
-          .document(store.state.business.id_firestore)
+          .doc(store.state.business.id_firestore)
           .collection("category_tree")
-          .getDocuments();
-      query.documents.forEach((document) {
-        document.reference.updateData(newCategoryNode.toJson()).then((value) {
+          .get();
+      query.docs.forEach((document) {
+        document.reference.update(newCategoryNode.toJson()).then((value) {
           print("Category Node Service should be delete online ");
           return new DeletedCategoryTree(null);
         });
@@ -430,14 +430,14 @@ class CategoryTreeUpdateService implements EpicClass<AppState> {
       print("dopo creazione category node");
       print(store.state.business.id_firestore);
 
-      var query = await Firestore.instance
+      var query = await FirebaseFirestore.instance
           .collection("business")
-          .document(store.state.business.id_firestore)
+          .doc(store.state.business.id_firestore)
           .collection("category_tree")
-          .getDocuments();
+          .get();
 
-      query.documents.forEach((document) {
-        document.reference.updateData(newCategoryNode.toJson()).then((value) {
+      query.docs.forEach((document) {
+        document.reference.update(newCategoryNode.toJson()).then((value) {
           print("Category Node Service should be updated online ");
           return new UpdatedCategoryTree(null);
         });

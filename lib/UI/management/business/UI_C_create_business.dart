@@ -56,11 +56,11 @@ class UI_CreateBusinessState extends State<UI_CreateBusiness> {
   }
 
   Future<void> upload(File file, String label, String id_firestore) async {
-    StorageReference storageReference;
+    Reference storageReference;
 
     storageReference = FirebaseStorage.instance.ref().child("Business/" + id_firestore + "/" + label + "/");
-    final StorageUploadTask uploadTask = storageReference.putFile(file);
-    final StorageTaskSnapshot downloadUrl = (await uploadTask.onComplete);
+    final UploadTask uploadTask = storageReference.putFile(file);
+    final TaskSnapshot downloadUrl = (await uploadTask); // TODO check for radioactivity
     final String url = (await downloadUrl.ref.getDownloadURL());
     print("URL is $url");
   }
