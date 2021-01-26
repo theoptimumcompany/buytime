@@ -34,7 +34,7 @@ dependencies:
   flutter_redux: ^0.7.0
   redux_epics: 0.14.0
   rxdart: ^0.24.0
-  permission_handler: 5.0.1+1
+  permission_handler: ^5.0.1+1
   image_picker: ^0.6.7+21
   image_picker_for_web: ^0.1.0+2
   firebase_dynamic_links: ^0.7.0+1
@@ -48,7 +48,7 @@ dependencies:
   uuid: ^2.2.2
   crop: any
   mime: ^0.9.7
-  flutter_svg: ^0.17.4
+  flutter_svg: ^0.19.2+1
   badges: ^1.1.6
   url_launcher: ^5.7.2
   stripe_payment: ^1.0.9
