@@ -1,4 +1,3 @@
-import 'package:Buytime/UI/management/business/UI_M_business_list.dart';
 import 'package:Buytime/UI/management/category/UI_manage_category.dart';
 import 'package:Buytime/reblox/model/category/tree/category_tree_state.dart';
 import 'package:Buytime/reblox/reducer/category_tree_reducer.dart';
@@ -7,11 +6,7 @@ import 'package:Buytime/reblox/model/snippet/parent.dart';
 import 'package:Buytime/reblox/model/snippet/worker.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
-import 'package:Buytime/reblox/model/category/snippet/category_snippet_state.dart';
-import 'package:Buytime/reblox/model/snippet/generic.dart';
 import 'package:Buytime/reblox/reducer/category_reducer.dart';
-import 'package:Buytime/reusable/form/optimum_form_field.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -593,6 +588,7 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
                         ? Padding(
                             padding: const EdgeInsets.only(left: 25.0),
                             child: FloatingActionButton(
+                              heroTag: "DeleteCategoryFloatingButton",
                               onPressed: () {
                                 print("CategoryEdit ::: Elimino nodo categoria dall'albero");
                                 StoreProvider.of<AppState>(context).dispatch(DeleteCategoryTree(snapshot.category.id));
@@ -617,6 +613,7 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
                   Align(
                     alignment: Alignment.bottomRight,
                     child: FloatingActionButton(
+                      heroTag: "InviteManagerOrWorkerFloatingButton",
                       onPressed: () {
                         print("add worker/manager");
                         _modalAddPerson(context);
