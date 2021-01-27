@@ -32,7 +32,7 @@ class UI_EditCategory extends StatefulWidget {
 }
 
 class UI_EditCategoryState extends State<UI_EditCategory> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>(); // TODO hero kacchan fix duplicates all mightaaa "There are multiple heroes that share the same tag within a subtree."
   final GlobalKey<FormState> _formInviteKey = GlobalKey<FormState>();
 
   Parent _dropdownParentCategory = Parent(level: 0, id: "no_parent", name: "No Parent");

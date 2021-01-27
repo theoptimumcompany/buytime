@@ -153,7 +153,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     return completer.future;
   }
 
-  Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+ static Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     if (message.data.containsKey('data')) {
       // Handle data message
       final dynamic data = message.data['data'];
