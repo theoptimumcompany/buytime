@@ -8,11 +8,9 @@ import 'package:Buytime/reblox/model/snippet/token.dart';
 import 'package:Buytime/utils/b_cube_grid_spinner.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
-import 'package:Buytime/reblox/model/snippet/generic.dart';
 import 'package:Buytime/reblox/model/user/user_state.dart';
 import 'package:Buytime/reblox/reducer/user_reducer.dart';
 import 'package:Buytime/reusable/branded_button.dart';
-import 'package:Buytime/reusable/error_dialog.dart';
 import 'package:crypto/crypto.dart';
 import 'package:device_info/device_info.dart';
 import 'package:email_validator/email_validator.dart';
@@ -22,15 +20,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/services.dart';
-import 'package:flutter_autofill/flutter_autofill.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
-
 import '../../../reblox/model/app_state.dart';
-import '../UI_U_Tabs.dart';
+
 
 class Login extends StatefulWidget {
   final String title = 'Login';
@@ -712,15 +708,7 @@ class LoginState extends State<Login> {
                                         ///Email address
                                         Container(
                                           margin: EdgeInsets.only(top: 10.0),
-                                          child: Autofill(
-                                              onAutofilled: (val) {
-                                                // set value in controller & cursor position after auto-filled value
-                                                _emailController.value = TextEditingValue(text: val, selection: TextSelection.fromPosition(TextPosition(offset: val.length)));
-                                              },
-                                              autofillHints: [FlutterAutofill.AUTOFILL_HINT_EMAIL_ADDRESS],
-                                              autofillType: FlutterAutofill.AUTOFILL_TYPE_TEXT,
-                                            textController: _emailController,
-                                            child: TextFormField(
+                                          child: TextFormField(
                                               controller: _emailController,
                                               textAlign: TextAlign.start,
                                               keyboardType: TextInputType.emailAddress,
@@ -762,7 +750,7 @@ class LoginState extends State<Login> {
                                                 return null;
                                               },
                                             )
-                                          ),
+
                                         ),
                                         ///Password
                                         Container(
@@ -849,7 +837,6 @@ class LoginState extends State<Login> {
                                           children: [
                                             FloatingActionButton(
                                               onPressed: () async {
-                                                await FlutterAutofill.commit();
                                                 if (_formKey.currentState.validate() && !_isRequestFlying) {
                                                   _signInWithEmailAndPassword();
                                                 }

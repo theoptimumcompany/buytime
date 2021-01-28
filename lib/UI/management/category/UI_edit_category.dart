@@ -45,10 +45,10 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
 
   ///Managers List
   List<Manager> managerList;
-
+  List<String> managerMailList;
   ///Workers List
   List<Worker> workerList;
-
+  List<String> workerMailList;
   /// Invite mail String
   String inviteMail = '';
 
@@ -265,11 +265,13 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
                         child: Container(
                           child: TextFormField(
                             autofocus: true,
-                            validator: (value) => value.isEmpty
+                            keyboardType: TextInputType.emailAddress,
+                            validator: (value) =>
+                            value.isEmpty
                                 ? 'Email cannot be blank'
                                 : validateEmail(value)
-                                    ? null
-                                    : 'Not a valid email',
+                                ? duplicateMail(role, value) ? 'Esiste già questa mail per un $role' : null
+                                : 'Not a valid email',
                             onChanged: (value) {
                               setState(() {
                                 inviteMail = value;
@@ -381,6 +383,17 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
     RegExp regex = new RegExp(pattern);
     return (!regex.hasMatch(value)) ? false : true;
+  }
+
+  bool duplicateMail(String role, String value) {
+    switch (role) {
+      case 'Manager':
+        return managerMailList.contains(value)?  true :  false;
+        break;
+      case 'Worker':
+        return workerMailList.contains(value)?  true :  false;
+        break;
+    }
   }
 
   List<Widget> listOfManagerChips(AppState snapshot) {
@@ -496,7 +509,9 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
           buildDropDownMenuItemsParent(_dropdownParentCategory);
           if (snapshot.category != null) {
             managerList = snapshot.category.manager;
+            managerMailList = snapshot.category.managerMailList;
             workerList = snapshot.category.worker;
+            workerMailList = snapshot.category.workerMailList;
             selectedParentCategory = searchDropdownParent(snapshot);
           }
 
@@ -642,6 +657,7 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
                                 child: TextFormField(
                                   validator: (value) => value.isEmpty ? 'Category name cannot be blank' : null,
                                   initialValue: snapshot.category.name,
+                                  keyboardType: TextInputType.name,
                                   onChanged: (value) {
                                     _selectedCategoryName = value;
                                     StoreProvider.of<AppState>(context)
