@@ -54,8 +54,8 @@ class CategorySnippet {
   }
 
   CategorySnippet.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
-        name = json['name'],
+      : id = json.containsKey('id') ? json['id'] : '',
+        name = json.containsKey('name') ? json['name'] : '',
         numberOfServices = json['numberOfServices'],
         mostSoldService = ServiceSnippet.fromJson(json["mostSoldService"]),
         numberOfSubCategories = json['numberOfSubCategories'],

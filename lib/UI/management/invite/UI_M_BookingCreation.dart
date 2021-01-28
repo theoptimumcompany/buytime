@@ -9,8 +9,10 @@ import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-
+import 'package:Buytime/reblox/reducer/booking_reducer.dart';
+import 'package:intl/intl.dart';
 import 'UI_M_BookingDetails.dart';
+import 'package:date_range_picker/date_range_picker.dart' as DateRagePicker;
 
 // ignore: must_be_immutable
 class BookingCreation extends StatefulWidget {
@@ -29,14 +31,17 @@ class _BookingCreationState extends State<BookingCreation> {
 
   ///Text controller
   final TextEditingController _emailToInviteController = TextEditingController();
-  final TextEditingController _name = TextEditingController();
-  final TextEditingController _surname = TextEditingController();
-  final TextEditingController _checkIn = TextEditingController();
-  final TextEditingController _checkOut = TextEditingController();
-  final TextEditingController _numberOfGuests = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _surnameController = TextEditingController();
+  final TextEditingController _checkInController = TextEditingController();
+  final TextEditingController _checkOutController = TextEditingController();
+  final TextEditingController _numberOfGuestsController = TextEditingController();
 
   ///Booking code
   String bookingCode;
+
+  DateTime checkIn = DateTime.now();
+  DateTime checkOut = DateTime.now();
 
   @override
   void initState() {
@@ -48,21 +53,48 @@ class _BookingCreationState extends State<BookingCreation> {
   ///Drawer Key
   final GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
 
-  BookingState bookingState = new BookingState(
-      business_id: null,
-      business_name: null,
-      business_address: null,
-      guest_number_booked_for: null,
-      start_date: null,
-      end_date: null,
-      booking_code: null,
-      user: null,
-      state: null,
-      wide: null
-  );
+  BookingState bookingState = BookingState().toEmpty();
+
+
+  Future<void> _selectDate(BuildContext context, TextEditingController controller, DateTime cIn, DateTime cOut) async {
+    /*final DateTime picked = await showDatePicker(
+      context: context,
+      initialDate: dateTime, // Refer step 1
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2025),
+    );
+    if (picked != null){
+      setState(() {
+        controller.text = DateFormat('dd/MM/yyyy').format(picked);
+      });
+      return picked;
+    }*/
+    final List<DateTime> picked = await DateRagePicker.showDatePicker(
+        context: context,
+        initialFirstDate: cIn,
+        initialLastDate: cOut,
+        firstDate: new DateTime(DateTime.now().year,DateTime.now().month, DateTime.now().day),
+        lastDate: new DateTime(2025)
+    );
+    if (picked != null && picked.length == 2) {
+      print(picked);
+      _checkInController.text = DateFormat('dd/MM/yyyy').format(picked.first);
+      _checkOutController.text = DateFormat('dd/MM/yyyy').format(picked.last);
+      setState(() {
+        checkIn = picked.first;
+        checkOut = picked.last;
+      });
+    }
+    return null;
+  }
+
+  bool checkOutCheck = false;
 
   @override
   Widget build(BuildContext context) {
+
+    FocusScopeNode currentFocus = FocusScope.of(context);
+
     var media = MediaQuery.of(context).size;
 
     ///Init sizeConfig
@@ -71,7 +103,7 @@ class _BookingCreationState extends State<BookingCreation> {
     return StoreConnector<AppState, AppState>(
       converter: (store) => store.state,
       onInit: (store) => {
-        print("On Init Business : Request List of Root Categories"),
+        print("UI_M_BookingCreation: Request List of Root Categories"),
         store.dispatch(BusinessRequestService()),
       },
       builder: (context, snapshot) {
@@ -227,7 +259,7 @@ class _BookingCreationState extends State<BookingCreation> {
                                       child: Container(
                                           margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
                                           child: TextFormField(
-                                            controller: _name,
+                                            controller: _nameController,
                                             textAlign: TextAlign.start,
                                             decoration: InputDecoration(
                                               filled: true,
@@ -268,7 +300,7 @@ class _BookingCreationState extends State<BookingCreation> {
                                       child: Container(
                                           margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
                                           child: TextFormField(
-                                            controller: _surname,
+                                            controller: _surnameController,
                                             textAlign: TextAlign.start,
                                             decoration: InputDecoration(
                                               filled: true,
@@ -314,91 +346,103 @@ class _BookingCreationState extends State<BookingCreation> {
                                             children: [
                                               ///Check In
                                               Expanded(
-                                                child: TextFormField(
-                                                  controller: _checkIn,
-                                                  textAlign: TextAlign.start,
-                                                  decoration: InputDecoration(
-                                                      filled: true,
-                                                      fillColor: BuytimeTheme.DividerGrey,
-                                                      enabledBorder: OutlineInputBorder(
-                                                          borderSide: BorderSide(color: Color(0xffe0e0e0)),
-                                                          borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                                  child:  GestureDetector(
+                                                    onTap: ()async{
+                                                      await _selectDate(context, _checkInController, checkIn, checkOut);
+                                                    },
+                                                    child: TextFormField(
+                                                      enabled: false,
+                                                      controller: _checkInController,
+                                                      textAlign: TextAlign.start,
+                                                      keyboardType: TextInputType.datetime,
+                                                      decoration: InputDecoration(
+                                                          filled: true,
+                                                          fillColor: BuytimeTheme.DividerGrey,
+                                                          enabledBorder: OutlineInputBorder(
+                                                              borderSide: BorderSide(color: Color(0xffe0e0e0)),
+                                                              borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                                          ),
+                                                          focusedBorder: OutlineInputBorder(
+                                                              borderSide: BorderSide(color: Color(0xff666666)),
+                                                              borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                                          ),
+                                                          labelText: 'Check-in',
+                                                          //hintText: "email *",
+                                                          //hintStyle: TextStyle(color: Color(0xff666666)),
+                                                          labelStyle: TextStyle(
+                                                            fontFamily: BuytimeTheme.FontFamily,
+                                                            color: Color(0xff666666),
+                                                            fontWeight: FontWeight.w400,
+                                                          ),
+                                                          suffixIcon: Icon(
+                                                              Icons.calendar_today
+                                                          )
                                                       ),
-                                                      focusedBorder: OutlineInputBorder(
-                                                          borderSide: BorderSide(color: Color(0xff666666)),
-                                                          borderRadius: BorderRadius.all(Radius.circular(10.0))
-                                                      ),
-                                                      labelText: 'Check-in',
-                                                      //hintText: "email *",
-                                                      //hintStyle: TextStyle(color: Color(0xff666666)),
-                                                      labelStyle: TextStyle(
+                                                      style: TextStyle(
                                                         fontFamily: BuytimeTheme.FontFamily,
                                                         color: Color(0xff666666),
-                                                        fontWeight: FontWeight.w400,
+                                                        fontWeight: FontWeight.w800,
                                                       ),
-                                                      suffixIcon: Icon(
-                                                          Icons.calendar_today
-                                                      )
-                                                  ),
-                                                  style: TextStyle(
-                                                    fontFamily: BuytimeTheme.FontFamily,
-                                                    color: Color(0xff666666),
-                                                    fontWeight: FontWeight.w800,
-                                                  ),
-                                                  validator: (String value) {
-                                                    if (value.isEmpty) {
-                                                      return 'Please enter a date';
-                                                    }
-                                                    return null;
-                                                  },
-                                                ),
-                                              ),
+                                                      validator: (String value) {
+                                                        if (value.isEmpty) {
+                                                          return 'Please enter a valid interval of dates';
+                                                        }
+                                                        return null;
+                                                      },
+                                                    ),
+                                                  )),
                                               Container(
                                                 margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 1, right: SizeConfig.blockSizeHorizontal * 1),
 
                                               ),
                                               ///Check Out
                                               Expanded(
-                                                child: TextFormField(
-                                                  controller: _checkOut,
-                                                  textAlign: TextAlign.start,
-                                                  keyboardType: TextInputType.emailAddress,
-                                                  autofillHints: [AutofillHints.email],
-                                                  decoration: InputDecoration(
-                                                      filled: true,
-                                                      fillColor: BuytimeTheme.DividerGrey,
-                                                      enabledBorder: OutlineInputBorder(
-                                                          borderSide: BorderSide(color: Color(0xffe0e0e0)),
-                                                          borderRadius: BorderRadius.all(Radius.circular(10.0))
-                                                      ),
-                                                      focusedBorder: OutlineInputBorder(
-                                                          borderSide: BorderSide(color: Color(0xff666666)),
-                                                          borderRadius: BorderRadius.all(Radius.circular(10.0))
-                                                      ),
-                                                      labelText: 'Check-out',
-                                                      //hintText: "email *",
-                                                      //hintStyle: TextStyle(color: Color(0xff666666)),
-                                                      labelStyle: TextStyle(
-                                                        fontFamily: BuytimeTheme.FontFamily,
-                                                        color: Color(0xff666666),
-                                                        fontWeight: FontWeight.w400,
-                                                      ),
-                                                      suffixIcon: Icon(
-                                                          Icons.calendar_today
-                                                      )
-                                                  ),
-                                                  style: TextStyle(
-                                                    fontFamily: BuytimeTheme.FontFamily,
-                                                    color: Color(0xff666666),
-                                                    fontWeight: FontWeight.w800,
-                                                  ),
-                                                  validator: (String value) {
-                                                    if (value.isEmpty) {
-                                                      return 'Please enter a date';
-                                                    }
-                                                    return null;
+                                                child: GestureDetector(
+                                                  onTap: () async{
+                                                     await _selectDate(context, _checkOutController, checkIn, checkOut);
                                                   },
-                                                ),
+                                                  child: TextFormField(
+                                                    enabled: false,
+                                                    controller: _checkOutController,
+                                                    textAlign: TextAlign.start,
+                                                    keyboardType: TextInputType.datetime,
+                                                    decoration: InputDecoration(
+                                                        filled: true,
+                                                        fillColor: BuytimeTheme.DividerGrey,
+                                                        enabledBorder: OutlineInputBorder(
+                                                            borderSide: BorderSide(color: Color(0xffe0e0e0)),
+                                                            borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                                        ),
+                                                        focusedBorder: OutlineInputBorder(
+                                                            borderSide: BorderSide(color: Color(0xff666666)),
+                                                            borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                                        ),
+                                                        labelText: 'Check-out',
+                                                        //hintText: "email *",
+                                                        //hintStyle: TextStyle(color: Color(0xff666666)),
+                                                        labelStyle: TextStyle(
+                                                          fontFamily: BuytimeTheme.FontFamily,
+                                                          color: Color(0xff666666),
+                                                          fontWeight: FontWeight.w400,
+                                                        ),
+                                                        suffixIcon: Icon(
+                                                            Icons.calendar_today
+                                                        )
+                                                    ),
+                                                    style: TextStyle(
+                                                      fontFamily: BuytimeTheme.FontFamily,
+                                                      color: Color(0xff666666),
+                                                      fontWeight: FontWeight.w800,
+                                                    ),
+                                                    validator: (String value) {
+                                                      debugPrint('${checkIn.compareTo(checkOut)}');
+                                                      if (value.isEmpty || checkIn.compareTo(checkOut) > 0) {
+                                                        return 'Please enter a valid interval of dates';
+                                                      }
+                                                      return null;
+                                                    },
+                                                  ),
+                                                )
                                               )
                                             ],
                                           )
@@ -409,7 +453,7 @@ class _BookingCreationState extends State<BookingCreation> {
                                       child: Container(
                                           margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
                                           child: TextFormField(
-                                            controller: _numberOfGuests,
+                                            controller: _numberOfGuestsController,
                                             textAlign: TextAlign.start,
                                             decoration: InputDecoration(
                                               filled: true,
@@ -460,19 +504,19 @@ class _BookingCreationState extends State<BookingCreation> {
                                             bookingState.booking_code = bookingCode ?? '000000';
                                             bookingState.business_id = businessState.id_firestore;
                                             bookingState.business_name = businessState.name;
-                                            bookingState.guest_number_booked_for = int.parse(_numberOfGuests.text) ?? 0;
+                                            bookingState.guest_number_booked_for = int.parse(_numberOfGuestsController.text) ?? 0;
 
                                             UserSnippet currentUser = UserSnippet(
-                                              name: _name.text,
-                                              surname: _surname.text
+                                                name: _nameController.text,
+                                                surname: _surnameController.text,
+                                                email: _emailToInviteController.text
                                             );
-                                            if(bookingState.user == null){
-                                              List<UserSnippet> tmp = [currentUser];
-                                              bookingState.user = tmp;
-                                            }else
-                                              bookingState.user.add(currentUser);
+
+                                            bookingState.user.add(currentUser);
 
                                             bookingState.wide = businessState.wide;
+
+                                            StoreProvider.of<AppState>(context).dispatch(AddBooking(bookingState));
 
                                             Navigator.push(context, MaterialPageRoute(builder: (context) => BookingDetails(bookingState: bookingState)));
 

@@ -1,5 +1,6 @@
 import 'package:Buytime/reblox/model/business/business_list_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
+import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/model/category/category_list_state.dart';
 import 'package:Buytime/reblox/model/category/category_state.dart';
 import 'package:Buytime/reblox/model/order/order_list_state.dart';
@@ -24,6 +25,7 @@ class AppRoutes {
 class AppState {
   FilterSearchState filterSearch;
   BusinessState business;
+  BookingState booking;
   BusinessListState businessList;
   OrderState order;
   OrderListState orderList;
@@ -41,6 +43,7 @@ class AppState {
   AppState({
     @required this.filterSearch,
     @required this.business,
+    @required this.booking,
     @required this.order,
     @required this.orderList,
     @required this.stripe,
@@ -59,6 +62,7 @@ class AppState {
   AppState.initialState() {
     filterSearch = FilterSearchState();
     business = BusinessState();
+    booking = BookingState();
     order = OrderState();
     stripe = StripeState();
     orderList = OrderListState();
@@ -76,6 +80,7 @@ class AppState {
   AppState.copyWith(
       {FilterSearchState filterSearch,
       BusinessState business,
+      BookingState booking,
       OrderState order,
       OrderListState orderList,
       StripeState stripe,
@@ -91,6 +96,7 @@ class AppState {
       List<String> route}) {
     this.filterSearch = filterSearch;
     this.business = business;
+    this.booking = booking;
     this.order = order;
     this.orderList = orderList;
     this.stripe = stripe;
@@ -109,6 +115,7 @@ class AppState {
   AppState.fromJson(Map json) {
     filterSearch = json['filterSearch'];
     business = json['business'];
+    booking = json['booking'];
     order = json['order'];
     orderList = json['orderList'];
     stripe = json['stripe'];
@@ -127,6 +134,7 @@ class AppState {
   Map toJson() => {
         'filterSearch': filterSearch,
         'business': business,
+        'booking': booking,
         'order': order,
         'orderList': orderList,
         'stripe': stripe,
