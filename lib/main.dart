@@ -42,6 +42,7 @@ import 'package:flutter_redux_navigation/flutter_redux_navigation.dart';
 import 'package:redux/redux.dart';
 import 'package:redux_epics/redux_epics.dart';
 import 'reblox/navigation/navigation_reducer.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() {
   final epics = combineEpics<AppState>([

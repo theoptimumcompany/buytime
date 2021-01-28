@@ -19,6 +19,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations: # Add this line
+    sdk: flutter
   google_sign_in: ^4.5.9
   flutter_facebook_login: ^3.0.0
   cloud_firestore: ^0.16.0

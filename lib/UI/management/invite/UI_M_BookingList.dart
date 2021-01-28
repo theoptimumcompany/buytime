@@ -1,14 +1,12 @@
-import 'package:BuyTime/UI/management/invite/UI_M_BookingCreation.dart';
-import 'package:BuyTime/reblox/model/app_state.dart';
-import 'package:BuyTime/reblox/model/booking/booking_state.dart';
-import 'package:BuyTime/reblox/model/category/category_state.dart';
-import 'package:BuyTime/reblox/reducer/category_list_reducer.dart';
-import 'package:BuyTime/reusable/custom_bottom_button_widget.dart';
-import 'package:BuyTime/reusable/menu/UI_M_business_list_drawer.dart';
-import 'package:BuyTime/utils/size_config.dart';
-import 'package:BuyTime/utils/theme/buytime_theme.dart';
+import 'package:Buytime/reblox/model/booking/booking_state.dart';
+import 'package:Buytime/reusable/custom_bottom_button_widget.dart';
+import 'package:Buytime/reusable/menu/UI_M_business_list_drawer.dart';
+import 'package:Buytime/utils/size_config.dart';
+import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+
+import 'UI_M_BookingCreation.dart';
 
 // ignore: must_be_immutable
 class BookingList extends StatefulWidget {

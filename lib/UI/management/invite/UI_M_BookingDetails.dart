@@ -1,7 +1,7 @@
-import 'package:BuyTime/reblox/model/booking/booking_state.dart';
-import 'package:BuyTime/reusable/menu/UI_M_business_list_drawer.dart';
-import 'package:BuyTime/utils/size_config.dart';
-import 'package:BuyTime/utils/theme/buytime_theme.dart';
+import 'package:Buytime/reblox/model/booking/booking_state.dart';
+import 'package:Buytime/reusable/menu/UI_M_business_list_drawer.dart';
+import 'package:Buytime/utils/size_config.dart';
+import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 

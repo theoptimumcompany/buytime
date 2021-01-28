@@ -1,19 +1,17 @@
-import 'package:BuyTime/UI/management/category/UI_manage_category.dart';
-import 'package:BuyTime/UI/management/category/W_category_list_item.dart';
-import 'package:BuyTime/UI/management/invite/UI_M_BookingList.dart';
-import 'package:BuyTime/UI/management/service/UI_M_service_list.dart';
-import 'package:BuyTime/UI/model/manager_model.dart';
-import 'package:BuyTime/UI/model/menuItem_model.dart';
-import 'package:BuyTime/UI/model/service_model.dart';
-import 'package:BuyTime/reblox/model/app_state.dart';
-import 'package:BuyTime/reblox/model/booking/booking_state.dart';
-import 'package:BuyTime/reblox/model/category/category_state.dart';
-import 'package:BuyTime/reblox/reducer/category_list_reducer.dart';
-import 'package:BuyTime/reblox/reducer/category_tree_reducer.dart';
-import 'package:BuyTime/reusable/appbar/manager_buytime_appbar.dart';
-import 'package:BuyTime/reusable/menu/UI_M_business_list_drawer.dart';
-import 'package:BuyTime/utils/size_config.dart';
-import 'package:BuyTime/utils/utils.dart';
+import 'package:Buytime/reusable/appbar/manager_buytime_appbar.dart';
+import 'package:Buytime/UI/management/category/UI_manage_category.dart';
+import 'package:Buytime/UI/management/category/W_category_list_item.dart';
+import 'package:Buytime/UI/management/invite/UI_M_BookingList.dart';
+import 'package:Buytime/UI/management/service/UI_M_service_list.dart';
+import 'package:Buytime/UI/model/manager_model.dart';
+import 'package:Buytime/UI/model/service_model.dart';
+import 'package:Buytime/reblox/model/app_state.dart';
+import 'package:Buytime/reblox/model/booking/booking_state.dart';
+import 'package:Buytime/reblox/model/category/category_state.dart';
+import 'package:Buytime/reblox/reducer/category_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/category_tree_reducer.dart';
+import 'package:Buytime/reusable/menu/UI_M_business_list_drawer.dart';
+import 'package:Buytime/utils/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:share/share.dart';
@@ -64,7 +62,7 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
             drawerEnableOpenDragGesture: false,
             key: _drawerKey,
             ///Appbar
-            appBar: BuyTimeAppbarManager(
+            appBar: BuytimeAppbarManager(
               children: [
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
