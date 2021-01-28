@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 class CustomBottomButtonWidget extends StatefulWidget {
 
-  String topString;
+  Widget topString;
   String bottomString;
   Icon icon;
   CustomBottomButtonWidget(this.topString, this.bottomString, this.icon);
@@ -31,15 +31,7 @@ class _CustomBottomButtonWidgetState extends State<CustomBottomButtonWidget> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      child: Text(
-                        widget.topString,
-                        style: TextStyle(
-                            fontFamily: BuytimeTheme.FontFamily,
-                            color: Colors.black.withOpacity(.7),
-                            fontWeight: FontWeight.w800,
-                            fontSize: 18
-                        ),
-                      ),
+                      child: widget.topString,
                     ),
                     widget.bottomString.isNotEmpty ? Container(
                       child: Text(

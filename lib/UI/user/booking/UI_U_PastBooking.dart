@@ -200,7 +200,15 @@ class _PastBookingState extends State<PastBooking> {
                               }
                             },
                             child: CustomBottomButtonWidget(
-                                'Contact Us',
+                                Text(
+                                  'Contact Us',
+                                  style: TextStyle(
+                                      fontFamily: BuytimeTheme.FontFamily,
+                                      color: Colors.black.withOpacity(.7),
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 16
+                                  ),
+                                ),
                                 'Have any question?',
                                 Icon(
                                   Icons.call,

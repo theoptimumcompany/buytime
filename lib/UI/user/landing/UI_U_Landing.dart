@@ -257,7 +257,15 @@ class LandingState extends State<Landing> {
                                                 );
                                               },
                                               child: CustomBottomButtonWidget(
-                                                  'Go to Business managment',
+                                                  Text(
+                                                    'Go to Business managment',
+                                                    style: TextStyle(
+                                                        fontFamily: BuytimeTheme.FontFamily,
+                                                        color: Colors.black.withOpacity(.7),
+                                                        fontWeight: FontWeight.w500,
+                                                        fontSize: 16
+                                                    ),
+                                                  ),
                                                   '',
                                                   Icon(
                                                     Icons.business_center,
@@ -286,7 +294,15 @@ class LandingState extends State<Landing> {
                                                 }
                                               },
                                               child: CustomBottomButtonWidget(
-                                                  'Contact Us',
+                                                  Text(
+                                                    'Contact Us',
+                                                    style: TextStyle(
+                                                        fontFamily: BuytimeTheme.FontFamily,
+                                                        color: Colors.black.withOpacity(.7),
+                                                        fontWeight: FontWeight.w500,
+                                                        fontSize: 16
+                                                    ),
+                                                  ),
                                                   'Have any question?',
                                                   Icon(
                                                     Icons.call,
@@ -343,7 +359,15 @@ class LandingState extends State<Landing> {
                                                   });
                                                 },
                                                 child: CustomBottomButtonWidget(
-                                                    'Log out',
+                                                    Text(
+                                                      'Log out',
+                                                      style: TextStyle(
+                                                          fontFamily: BuytimeTheme.FontFamily,
+                                                          color: Colors.black.withOpacity(.7),
+                                                          fontWeight: FontWeight.w500,
+                                                          fontSize: 16
+                                                      ),
+                                                    ),
                                                     '',
                                                     Icon(
                                                       Icons.logout,
