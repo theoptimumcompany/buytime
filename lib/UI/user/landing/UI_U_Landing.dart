@@ -27,12 +27,14 @@ import 'package:Buytime/reblox/reducer/user_reducer.dart';
 import 'package:Buytime/reusable/custom_bottom_button_widget.dart';
 import 'package:Buytime/reusable/landing_card_widget.dart';
 import 'package:Buytime/reusable/menu/UI_M_business_list_drawer.dart';
+import 'package:Buytime/services/dynamic_links_service.dart';
 import 'package:Buytime/utils/globals.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:animations/animations.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -48,12 +50,15 @@ class Landing extends StatefulWidget {
 class LandingState extends State<Landing> {
   List<LandingCardWidget> cards = new List();
 
+  final DynamicLinkService _dynamicLinkService = DynamicLinkService();
+
   @override
   void initState() {
     super.initState();
     cards.add(LandingCardWidget('Enter booking code', 'Start your journey', 'assets/img/booking_code.png', null));
     cards.add(LandingCardWidget('About Buytime', 'Discover our network', 'assets/img/beach_girl.png', null));
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -104,7 +109,6 @@ class LandingState extends State<Landing> {
                                               fontSize: SizeConfig.safeBlockHorizontal * 7.5),
                                         )),
                                   ),
-
                                   ///Share icon
                                   Expanded(
                                     flex: 1,
@@ -112,13 +116,15 @@ class LandingState extends State<Landing> {
                                       alignment: Alignment.topRight,
                                       margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, right: SizeConfig.safeBlockHorizontal * 4),
                                       child: IconButton(
-                                        onPressed: () {
+                                        onPressed: () async{
                                           final RenderBox box = context.findRenderObject();
-                                          Share.share('Share', subject:
+                                          Uri link = await _dynamicLinkService.createDynamicLink('prova');
+                                          Share.share('check out Buytime App at $link', subject: 'Take your Time!', sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
+                                         /* Share.share('Share', subject:
                                           Platform.isAndroid ?
                                               'https://play.google.com/store/apps/details?id=com.theoptimumcompany.buytime' :
                                           'Test'
-                                              , sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
+                                              , sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);*/
                                         },
                                         icon: Icon(
                                           Icons.share,

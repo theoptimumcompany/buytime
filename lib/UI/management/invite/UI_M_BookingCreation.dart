@@ -2,6 +2,7 @@ import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
+import 'package:Buytime/reblox/reducer/booking_reducer.dart';
 import 'package:Buytime/reusable/menu/UI_M_business_list_drawer.dart';
 import 'package:Buytime/services/business_service_epic.dart';
 import 'package:Buytime/utils/size_config.dart';
@@ -9,7 +10,6 @@ import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:Buytime/reblox/reducer/booking_reducer.dart';
 import 'package:intl/intl.dart';
 import 'UI_M_BookingDetails.dart';
 
@@ -36,8 +36,6 @@ class _BookingCreationState extends State<BookingCreation> {
   final TextEditingController _checkOutController = TextEditingController();
   final TextEditingController _numberOfGuestsController = TextEditingController();
 
-  ///Booking code
-  String bookingCode;
 
   DateTime checkIn = DateTime.now();
   DateTime checkOut = DateTime.now();
@@ -45,8 +43,6 @@ class _BookingCreationState extends State<BookingCreation> {
   @override
   void initState() {
     super.initState();
-
-    bookingCode = 'AB3CD6';
   }
 
   ///Drawer Key
@@ -56,18 +52,6 @@ class _BookingCreationState extends State<BookingCreation> {
 
 
   Future<void> _selectDate(BuildContext context, TextEditingController controller, DateTime cIn, DateTime cOut) async {
-    /*final DateTime picked = await showDatePicker(
-      context: context,
-      initialDate: dateTime, // Refer step 1
-      firstDate: DateTime.now(),
-      lastDate: DateTime(2025),
-    );
-    if (picked != null){
-      setState(() {
-        controller.text = DateFormat('dd/MM/yyyy').format(picked);
-      });
-      return picked;
-    }*/
     final DateTimeRange picked = await showDateRangePicker(
         context: context,
         initialDateRange: DateTimeRange(start: cIn, end: cOut),
@@ -87,6 +71,12 @@ class _BookingCreationState extends State<BookingCreation> {
   }
 
   bool checkOutCheck = false;
+
+  bool validateDates(){
+    if(_checkInController.text.isEmpty || _checkOutController.text.isEmpty || checkIn.compareTo(checkOut) > 0)
+      return false;
+    return true;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -168,39 +158,39 @@ class _BookingCreationState extends State<BookingCreation> {
                                       child:  Row(
                                         crossAxisAlignment: CrossAxisAlignment.end,
                                         children: [
-                                          Expanded(
-                                            flex: 2,
-                                            child: Container(
-                                              child: Text(
-                                                'Booking id',
-                                                style: TextStyle(
-                                                    fontFamily: BuytimeTheme.FontFamily,
-                                                    color: BuytimeTheme.TextDark,
-                                                    fontWeight: FontWeight.w500,
-                                                    fontSize: 18
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          Expanded(
-                                            flex: 3,
-                                            child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.start,
-                                              children: [
-                                                Container(
-                                                  child: Text(
-                                                    bookingCode,
-                                                    style: TextStyle(
-                                                        fontFamily: BuytimeTheme.FontFamily,
-                                                        color: BuytimeTheme.TextDark,
-                                                        fontWeight: FontWeight.bold,
-                                                        fontSize: 26
-                                                    ),
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                          )
+                                          // Expanded( // this is generated during booking creation for the database so it is shown AFTER the booking is created.
+                                          //   flex: 2,
+                                          //   child: Container(
+                                          //     child: Text(
+                                          //       'Booking id',
+                                          //       style: TextStyle(
+                                          //           fontFamily: BuytimeTheme.FontFamily,
+                                          //           color: BuytimeTheme.TextDark,
+                                          //           fontWeight: FontWeight.w500,
+                                          //           fontSize: 18
+                                          //       ),
+                                          //     ),
+                                          //   ),
+                                          // ),
+                                          // Expanded(  // this is generated during booking creation for the database so it is shown AFTER the booking is created.
+                                          //   flex: 3,
+                                          //   child: Row(
+                                          //     mainAxisAlignment: MainAxisAlignment.start,
+                                          //     children: [
+                                          //       Container(
+                                          //         child: Text(
+                                          //           bookingCode,
+                                          //           style: TextStyle(
+                                          //               fontFamily: BuytimeTheme.FontFamily,
+                                          //               color: BuytimeTheme.TextDark,
+                                          //               fontWeight: FontWeight.bold,
+                                          //               fontSize: 26
+                                          //           ),
+                                          //         ),
+                                          //       )
+                                          //     ],
+                                          //   ),
+                                          // )
                                         ],
                                       ),
                                     ),
@@ -498,8 +488,6 @@ class _BookingCreationState extends State<BookingCreation> {
                                       child: RaisedButton(
                                         onPressed: () {
                                           if (_formKey.currentState.validate()) {
-
-                                            bookingState.booking_code = bookingCode ?? '000000';
                                             bookingState.business_id = businessState.id_firestore;
                                             bookingState.business_name = businessState.name;
                                             bookingState.guest_number_booked_for = int.parse(_numberOfGuestsController.text) ?? 0;
@@ -514,7 +502,7 @@ class _BookingCreationState extends State<BookingCreation> {
 
                                             bookingState.wide = businessState.wide;
 
-                                            StoreProvider.of<AppState>(context).dispatch(AddBooking(bookingState));
+                                            StoreProvider.of<AppState>(context).dispatch(CreateBookingRequest(bookingState));
 
                                             Navigator.push(context, MaterialPageRoute(builder: (context) => BookingDetails(bookingState: bookingState)));
 

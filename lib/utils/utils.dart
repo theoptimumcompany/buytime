@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 class Utils {
@@ -5,6 +7,17 @@ class Utils {
     painter: ShapesPainter(),
     child: Container(height: 20),
   );
+
+  static String getRandomBookingCode(int strlen) {
+    var chars       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    Random rnd = new Random(new DateTime.now().millisecondsSinceEpoch);
+    String result = "";
+    for (var i = 0; i < strlen; i++) {
+      result += chars[rnd.nextInt(chars.length)];
+    }
+    return result;
+  }
+
 }
 
 class ShapesPainter extends CustomPainter {
