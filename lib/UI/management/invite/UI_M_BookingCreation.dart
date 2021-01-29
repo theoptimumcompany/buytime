@@ -69,20 +69,19 @@ class _BookingCreationState extends State<BookingCreation> {
       });
       return picked;
     }*/
-    final List<DateTime> picked = await DateRagePicker.showDatePicker(
+    final DateTimeRange picked = await showDateRangePicker(
         context: context,
-        initialFirstDate: cIn,
-        initialLastDate: cOut,
+        initialDateRange: DateTimeRange(start: cIn, end: cOut),
         firstDate: new DateTime(DateTime.now().year,DateTime.now().month, DateTime.now().day),
         lastDate: new DateTime(2025)
     );
-    if (picked != null && picked.length == 2) {
+    if (picked != null && picked.start != null && picked.end != null) {
       print(picked);
-      _checkInController.text = DateFormat('dd/MM/yyyy').format(picked.first);
-      _checkOutController.text = DateFormat('dd/MM/yyyy').format(picked.last);
+      _checkInController.text = DateFormat('dd/MM/yyyy').format(picked.start);
+      _checkOutController.text = DateFormat('dd/MM/yyyy').format(picked.end);
       setState(() {
-        checkIn = picked.first;
-        checkOut = picked.last;
+        checkIn = picked.start;
+        checkOut = picked.end;
       });
     }
     return null;
