@@ -4,6 +4,7 @@ import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 // ignore: must_be_immutable
 class BookingDetails extends StatefulWidget {
@@ -22,9 +23,12 @@ class _BookingDetailsState extends State<BookingDetails> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   ///Text controller
-  final TextEditingController _checkIn = TextEditingController();
-  final TextEditingController _checkOut = TextEditingController();
-  final TextEditingController _numberOfGuests = TextEditingController();
+  final TextEditingController _checkInController = TextEditingController();
+  final TextEditingController _checkOutController = TextEditingController();
+  final TextEditingController _numberOfGuestsController = TextEditingController();
+
+  String fullName = '';
+  String email = '';
 
   ///Booking code
   String bookingCode;
@@ -37,9 +41,11 @@ class _BookingDetailsState extends State<BookingDetails> {
 
     bookingState = widget.bookingState;
 
-    _checkIn.text = bookingState.start_date.toString() ?? '';
-    _checkOut.text = bookingState.end_date.toString() ?? '';
-    _numberOfGuests.text = bookingState.guest_number_booked_for.toString() ?? '';
+    fullName = '${bookingState.user.first.name} ${bookingState.user.first.surname}';
+    email = bookingState.user.first.email;
+    _checkInController.text = DateFormat('dd/MM/yyyy').format(bookingState.start_date);
+    _checkOutController.text = DateFormat('dd/MM/yyyy').format(bookingState.end_date);
+    _numberOfGuestsController.text = bookingState.guest_number_booked_for.toString() ?? '';
   }
 
   final GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
@@ -103,8 +109,9 @@ class _BookingDetailsState extends State<BookingDetails> {
                           ),
                           ///Booking Code & Email & Name & Surname & Check In & Check Out & Number Of Guests
                           Container(
-                            height: SizeConfig.safeBlockVertical * 70,
+                            height: SizeConfig.safeBlockVertical * 55,
                             child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 ///Booking code
                                 Container(
@@ -148,6 +155,74 @@ class _BookingDetailsState extends State<BookingDetails> {
                                     ],
                                   ),
                                 ),
+                                ///Full Name
+                                Expanded(
+                                  child: Container(
+                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 4, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          child: Text(
+                                            'Full Name',
+                                            style: TextStyle(
+                                                fontFamily: BuytimeTheme.FontFamily,
+                                                color: BuytimeTheme.DividerGrey,
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 18
+                                            ),
+                                          ),
+                                        ),
+                                        Container(
+                                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
+                                          child: Text(
+                                            fullName,
+                                            style: TextStyle(
+                                                fontFamily: BuytimeTheme.FontFamily,
+                                                color: BuytimeTheme.TextDark,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 18
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                ///Email
+                                Expanded(
+                                  child: Container(
+                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 4, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          child: Text(
+                                            'Email',
+                                            style: TextStyle(
+                                                fontFamily: BuytimeTheme.FontFamily,
+                                                color: BuytimeTheme.DividerGrey,
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 18
+                                            ),
+                                          ),
+                                        ),
+                                        Container(
+                                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
+                                          child: Text(
+                                            email,
+                                            style: TextStyle(
+                                                fontFamily: BuytimeTheme.FontFamily,
+                                                color: BuytimeTheme.TextDark,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 18
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
                                 ///Check In & Check Out
                                 Expanded(
                                   child: Container(
@@ -158,91 +233,103 @@ class _BookingDetailsState extends State<BookingDetails> {
                                         children: [
                                           ///Check In
                                           Expanded(
-                                            child: TextFormField(
-                                              controller: _checkIn,
-                                              textAlign: TextAlign.start,
-                                              decoration: InputDecoration(
-                                                  filled: true,
-                                                  fillColor: BuytimeTheme.DividerGrey,
-                                                  enabledBorder: OutlineInputBorder(
-                                                      borderSide: BorderSide(color: Color(0xffe0e0e0)),
-                                                      borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                              child:  GestureDetector(
+                                                onTap: ()async{
+                                                  //await _selectDate(context, _checkInController, checkIn, checkOut);
+                                                },
+                                                child: TextFormField(
+                                                  enabled: false,
+                                                  controller: _checkInController,
+                                                  textAlign: TextAlign.start,
+                                                  keyboardType: TextInputType.datetime,
+                                                  decoration: InputDecoration(
+                                                      filled: true,
+                                                      fillColor: BuytimeTheme.DividerGrey,
+                                                      enabledBorder: OutlineInputBorder(
+                                                          borderSide: BorderSide(color: Color(0xffe0e0e0)),
+                                                          borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                                      ),
+                                                      focusedBorder: OutlineInputBorder(
+                                                          borderSide: BorderSide(color: Color(0xff666666)),
+                                                          borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                                      ),
+                                                      labelText: 'Check-in',
+                                                      //hintText: "email *",
+                                                      //hintStyle: TextStyle(color: Color(0xff666666)),
+                                                      labelStyle: TextStyle(
+                                                        fontFamily: BuytimeTheme.FontFamily,
+                                                        color: Color(0xff666666),
+                                                        fontWeight: FontWeight.w400,
+                                                      ),
+                                                      suffixIcon: Icon(
+                                                          Icons.calendar_today
+                                                      )
                                                   ),
-                                                  focusedBorder: OutlineInputBorder(
-                                                      borderSide: BorderSide(color: Color(0xff666666)),
-                                                      borderRadius: BorderRadius.all(Radius.circular(10.0))
-                                                  ),
-                                                  labelText: 'Check-in',
-                                                  //hintText: "email *",
-                                                  //hintStyle: TextStyle(color: Color(0xff666666)),
-                                                  labelStyle: TextStyle(
+                                                  style: TextStyle(
                                                     fontFamily: BuytimeTheme.FontFamily,
                                                     color: Color(0xff666666),
-                                                    fontWeight: FontWeight.w400,
+                                                    fontWeight: FontWeight.w800,
                                                   ),
-                                                  suffixIcon: Icon(
-                                                      Icons.calendar_today
-                                                  )
-                                              ),
-                                              style: TextStyle(
-                                                fontFamily: BuytimeTheme.FontFamily,
-                                                color: Color(0xff666666),
-                                                fontWeight: FontWeight.w800,
-                                              ),
-                                              validator: (String value) {
-                                                if (value.isEmpty) {
-                                                  return 'Please enter a date';
-                                                }
-                                                return null;
-                                              },
-                                            ),
-                                          ),
+                                                  /*validator: (String value) {
+                                                    if (value.isEmpty) {
+                                                      return 'Please enter a valid interval of dates';
+                                                    }
+                                                    return null;
+                                                  },*/
+                                                ),
+                                              )),
                                           Container(
                                             margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 1, right: SizeConfig.blockSizeHorizontal * 1),
 
                                           ),
                                           ///Check Out
                                           Expanded(
-                                            child: TextFormField(
-                                              controller: _checkOut,
-                                              textAlign: TextAlign.start,
-                                              keyboardType: TextInputType.emailAddress,
-                                              autofillHints: [AutofillHints.email],
-                                              decoration: InputDecoration(
-                                                  filled: true,
-                                                  fillColor: BuytimeTheme.DividerGrey,
-                                                  enabledBorder: OutlineInputBorder(
-                                                      borderSide: BorderSide(color: Color(0xffe0e0e0)),
-                                                      borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                              child: GestureDetector(
+                                                onTap: () async{
+                                                  //await _selectDate(context, _checkOutController, checkIn, checkOut);
+                                                },
+                                                child: TextFormField(
+                                                  enabled: false,
+                                                  controller: _checkOutController,
+                                                  textAlign: TextAlign.start,
+                                                  keyboardType: TextInputType.datetime,
+                                                  decoration: InputDecoration(
+                                                      filled: true,
+                                                      fillColor: BuytimeTheme.DividerGrey,
+                                                      enabledBorder: OutlineInputBorder(
+                                                          borderSide: BorderSide(color: Color(0xffe0e0e0)),
+                                                          borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                                      ),
+                                                      focusedBorder: OutlineInputBorder(
+                                                          borderSide: BorderSide(color: Color(0xff666666)),
+                                                          borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                                      ),
+                                                      labelText: 'Check-out',
+                                                      //hintText: "email *",
+                                                      //hintStyle: TextStyle(color: Color(0xff666666)),
+                                                      labelStyle: TextStyle(
+                                                        fontFamily: BuytimeTheme.FontFamily,
+                                                        color: Color(0xff666666),
+                                                        fontWeight: FontWeight.w400,
+                                                      ),
+                                                      suffixIcon: Icon(
+                                                          Icons.calendar_today
+                                                      )
                                                   ),
-                                                  focusedBorder: OutlineInputBorder(
-                                                      borderSide: BorderSide(color: Color(0xff666666)),
-                                                      borderRadius: BorderRadius.all(Radius.circular(10.0))
-                                                  ),
-                                                  labelText: 'Check-out',
-                                                  //hintText: "email *",
-                                                  //hintStyle: TextStyle(color: Color(0xff666666)),
-                                                  labelStyle: TextStyle(
+                                                  style: TextStyle(
                                                     fontFamily: BuytimeTheme.FontFamily,
                                                     color: Color(0xff666666),
-                                                    fontWeight: FontWeight.w400,
+                                                    fontWeight: FontWeight.w800,
                                                   ),
-                                                  suffixIcon: Icon(
-                                                      Icons.calendar_today
-                                                  )
-                                              ),
-                                              style: TextStyle(
-                                                fontFamily: BuytimeTheme.FontFamily,
-                                                color: Color(0xff666666),
-                                                fontWeight: FontWeight.w800,
-                                              ),
-                                              validator: (String value) {
-                                                if (value.isEmpty) {
-                                                  return 'Please enter a date';
-                                                }
-                                                return null;
-                                              },
-                                            ),
+                                                  /*validator: (String value) {
+                                                    debugPrint('${checkIn.compareTo(checkOut)}');
+                                                    if (value.isEmpty || checkIn.compareTo(checkOut) > 0) {
+                                                      return 'Please enter a valid interval of dates';
+                                                    }
+                                                    return null;
+                                                  },*/
+                                                ),
+                                              )
                                           )
                                         ],
                                       )
@@ -253,7 +340,8 @@ class _BookingDetailsState extends State<BookingDetails> {
                                   child: Container(
                                       margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
                                       child: TextFormField(
-                                        controller: _numberOfGuests,
+                                        enabled: false,
+                                        controller: _numberOfGuestsController,
                                         textAlign: TextAlign.start,
                                         decoration: InputDecoration(
                                           filled: true,

@@ -2,6 +2,7 @@ import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
+import 'package:Buytime/reblox/reducer/booking_reducer.dart';
 import 'package:Buytime/reusable/menu/UI_M_business_list_drawer.dart';
 import 'package:Buytime/services/business_service_epic.dart';
 import 'package:Buytime/utils/size_config.dart';
@@ -9,7 +10,6 @@ import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:Buytime/reblox/reducer/booking_reducer.dart';
 import 'package:intl/intl.dart';
 import 'UI_M_BookingDetails.dart';
 
@@ -71,6 +71,12 @@ class _BookingCreationState extends State<BookingCreation> {
   }
 
   bool checkOutCheck = false;
+
+  bool validateDates(){
+    if(_checkInController.text.isEmpty || _checkOutController.text.isEmpty || checkIn.compareTo(checkOut) > 0)
+      return false;
+    return true;
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -6,6 +6,7 @@ import 'dart:ui';
 import 'package:Buytime/UI/user/landing/UI_U_Landing.dart';
 import 'package:Buytime/reblox/model/snippet/device.dart';
 import 'package:Buytime/reblox/model/snippet/token.dart';
+import 'package:Buytime/services/dynamic_links_service.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/UI/user/order/UI_U_OrderDetail.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
@@ -24,96 +25,94 @@ import 'package:flutter/services.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:http/http.dart' as http;
 
-class Tock extends CustomPainter {
-  final Paint tock;
-
-  Tock() : tock = new Paint() {
-    tock.color = BuytimeTheme.Secondary;
-    tock.style = PaintingStyle.fill;
-  }
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final radius = size.width / 2;
-
-    canvas.translate(radius, radius);
-
-    Path path = new Path();
-
-    //Qui se si vuole si gestisce la testa della lancetta
-
-    /* path.moveTo(0.0, -radius + 15.0);
-    path.quadraticBezierTo(-3.5, -radius + 25.0, -15.0, -radius + radius / 4);
-    path.quadraticBezierTo(
-        -20.0, -radius + radius / 3, -7.5, -radius + radius / 3);
-    path.lineTo(0.0, -radius + radius / 4);
-    path.lineTo(7.5, -radius + radius / 3);
-    path.quadraticBezierTo(
-        20.0, -radius + radius / 3, 15.0, -radius + radius / 4);
-    path.quadraticBezierTo(3.5, -radius + 25.0, 0.0, -radius + 15.0); */
-
-    //Braccio lancetta
-    path.moveTo(-1.0, -radius + radius / 4);
-    path.lineTo(-5.0, -radius + radius / 2);
-    path.lineTo(-2.0, 0.0);
-    path.lineTo(2.0, 0.0);
-    path.lineTo(5.0, -radius + radius / 2);
-    path.lineTo(1.0, -radius);
-    path.close();
-
-    canvas.drawPath(path, tock);
-    canvas.drawShadow(path, Colors.black, 2.0, false);
-  }
-
-  @override
-  bool shouldRepaint(Tock oldDelegate) {
-    return true;
-  }
-}
-
-class CirclePainter extends CustomPainter {
-  var wavePaint = Paint()
-    ..color = Colors.blue
-    ..style = PaintingStyle.stroke
-    ..strokeWidth = 6.0
-    ..isAntiAlias = true;
-  var clock = Paint()
-    ..color = Colors.orangeAccent
-    ..style = PaintingStyle.stroke
-    ..strokeWidth = 6.0
-    ..isAntiAlias = true;
-  var point_paint = Paint()
-    ..color = Colors.blue
-    ..strokeWidth = 4
-    ..strokeCap = StrokeCap.round;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final radius = size.width / 2;
-
-    final pointMode = PointMode.points;
-    final points = [
-      Offset(size.width / 2.0, size.height / 2.0),
-    ];
-
-    double centerX = size.width / 2.0;
-    double centerY = size.height / 2.0;
-    canvas.drawCircle(Offset(centerX, centerY), 60.0, wavePaint);
-  }
-
-  bool shouldRepaint(CirclePainter oldDelegate) {
-    return false;
-  }
-}
-
 class SplashScreen extends StatefulWidget {
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
-  Animation _arrowAnimation;
-  AnimationController _arrowAnimationController;
+class _SplashScreenState extends State<SplashScreen>{
+
+  final DynamicLinkService _dynamicLinkService = DynamicLinkService();
+Timer _timerLink;
+
+@override
+void initState() {
+  super.initState();
+
+  Firebase.initializeApp().then((value) {
+    final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
+    if (!kIsWeb) {
+      //TODO: TEST Funzionamento notifiche dopo upgrade pacchetto firebase_messaging
+      firebaseMessaging.requestPermission();
+      FirebaseMessaging.onMessage.first.then((message) => () {
+        print("onMessage: $message");
+        var data = message.data['data'] ?? message;
+        String orderId = data['orderId'];
+        StoreProvider.of<AppState>(context).dispatch(new OrderRequest(orderId));
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => UI_U_OrderDetail()),
+        );
+      });
+
+      FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+      FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+        var data = message.data['data'] ?? message;
+        String orderId = data['orderId'];
+        StoreProvider.of<AppState>(context).dispatch(new OrderRequest(orderId));
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => UI_U_OrderDetail()),
+        );
+      });
+
+      firebaseMessaging.requestPermission(sound: true, badge: true, alert: true, provisional: true);
+
+      firebaseMessaging.getToken().then((String token) {
+        assert(token != null);
+        print("Token " + token);
+        serverToken = token;
+      });
+    }
+
+    firebaseMessaging.onTokenRefresh.listen((newToken) {
+      // Save newToken
+      serverToken = newToken;
+    });
+
+    Timer(Duration(seconds: 1), () => check_logged());
+  }).catchError((onError) {
+    print("error on firebase application start: " + onError.toString());
+  });
+
+
+
+  initPlatformState();
+
+  Future.delayed(Duration(seconds: 5));
+  _dynamicLinkService.retrieveDynamicLink(context);
+}
+
+@override
+void didChangeAppLifecycleState(AppLifecycleState state) {
+  if (state == AppLifecycleState.resumed) {
+    _timerLink = new Timer(
+      const Duration(milliseconds: 1000),
+          () {
+        _dynamicLinkService.retrieveDynamicLink(context);
+      },
+    );
+  }
+}
+
+@override
+void dispose() {
+  if (_timerLink != null) {
+    _timerLink.cancel();
+  }
+  super.dispose();
+
+}
 
   // Replace with server token from firebase console settings.
   String serverToken =
@@ -168,59 +167,6 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     // Or do other work.
   }
 
-  @override
-  void initState() {
-    super.initState();
-    Firebase.initializeApp().then((value) {
-      final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
-      if (!kIsWeb) {
-        //TODO: TEST Funzionamento notifiche dopo upgrade pacchetto firebase_messaging
-        firebaseMessaging.requestPermission();
-        FirebaseMessaging.onMessage.first.then((message) => () {
-              print("onMessage: $message");
-              var data = message.data['data'] ?? message;
-              String orderId = data['orderId'];
-              StoreProvider.of<AppState>(context).dispatch(new OrderRequest(orderId));
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => UI_U_OrderDetail()),
-              );
-            });
-
-        FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-        FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-          var data = message.data['data'] ?? message;
-          String orderId = data['orderId'];
-          StoreProvider.of<AppState>(context).dispatch(new OrderRequest(orderId));
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => UI_U_OrderDetail()),
-          );
-        });
-
-        firebaseMessaging.requestPermission(sound: true, badge: true, alert: true, provisional: true);
-
-        firebaseMessaging.getToken().then((String token) {
-          assert(token != null);
-          print("Token " + token);
-          serverToken = token;
-        });
-      }
-
-      firebaseMessaging.onTokenRefresh.listen((newToken) {
-        // Save newToken
-        serverToken = newToken;
-      });
-
-      Timer(Duration(seconds: 1), () => check_logged());
-    }).catchError((onError) {
-      print("error on firebase application start: " + onError.toString());
-    });
-
-
-
-    initPlatformState();
-  }
 
   Future<void> initPlatformState() async {
     Map<String, dynamic> deviceData;
@@ -340,11 +286,6 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     }
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-    _arrowAnimationController?.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -411,11 +352,11 @@ class OldSplashScreen extends StatelessWidget {
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                BuytimeSpinner(
+                /*BuytimeSpinner(
                     spinnerX: spinnerX,
                     spinnerY: spinnerY,
                     arrowAnimationController: _arrowAnimationController,
-                    arrowAnimation: _arrowAnimation),
+                    arrowAnimation: _arrowAnimation),*/
                 Padding(
                   padding: EdgeInsets.only(top: 30.0),
                 ),

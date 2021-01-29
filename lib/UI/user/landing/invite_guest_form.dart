@@ -9,7 +9,8 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class InviteGuestForm extends StatefulWidget {
 
-
+  /*String id;
+  InviteGuestForm(this.id);*/
   @override
   _InviteGuestFormState createState() => _InviteGuestFormState();
 }
@@ -21,6 +22,7 @@ class _InviteGuestFormState extends State<InviteGuestForm> {
   @override
   void initState() {
     super.initState();
+    //bookingCodeController.text = widget.id;
     state = new BookingState(business_id: null, business_name: null, business_address: null, guest_number_booked_for: null, start_date: null, end_date: null, booking_code: null, user: null, state: null, wide: null);
   }
 
