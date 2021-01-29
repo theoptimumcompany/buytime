@@ -300,7 +300,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
       if (user != null) {
         // Sign out with google
         // Loggato e lo mando alla View Principale
-        print("Ecco l'utente ----->>> " + user.email);
+        print("Ecco l'utente ----->>> " + user.email + ' id: ' + user.uid);
         String deviceId = "web";
         if (!kIsWeb) {
           try {
