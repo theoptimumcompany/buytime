@@ -12,7 +12,6 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:Buytime/reblox/reducer/booking_reducer.dart';
 import 'package:intl/intl.dart';
 import 'UI_M_BookingDetails.dart';
-import 'package:date_range_picker/date_range_picker.dart' as DateRagePicker;
 
 // ignore: must_be_immutable
 class BookingCreation extends StatefulWidget {

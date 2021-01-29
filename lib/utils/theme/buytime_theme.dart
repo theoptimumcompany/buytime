@@ -25,7 +25,7 @@ class BuytimeTheme {
   static const Color BackgroundWhite = Color.fromARGB(255, 255, 255, 255);
   static const Color BackgroundCerulean = Color.fromARGB(255, 119, 148, 170);
   static const Color BackgroundLightGrey = Color.fromARGB(255, 237, 237, 237);
-  static const Color DividerGrey = Color.fromARGB(255, 196, 196, 196);
+  static const Color DividerGrey = Color.fromARGB(255, 237, 237, 237);
   static const Color ManagerPrimary = Color.fromARGB(255, 0, 103, 145);
   static const Color Secondary = Color.fromARGB(255, 253, 192, 47);
   static const Color AccentRed = Color.fromARGB(255, 255, 99, 99);

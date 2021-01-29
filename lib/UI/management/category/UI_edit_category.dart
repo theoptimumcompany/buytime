@@ -27,7 +27,8 @@ class UI_EditCategory extends StatefulWidget {
 }
 
 class UI_EditCategoryState extends State<UI_EditCategory> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>(); // TODO hero kacchan fix duplicates all mightaaa "There are multiple heroes that share the same tag within a subtree."
+  final GlobalKey<FormState> _formKey = GlobalKey<
+      FormState>(); // TODO hero kacchan fix duplicates all mightaaa "There are multiple heroes that share the same tag within a subtree."
   final GlobalKey<FormState> _formInviteKey = GlobalKey<FormState>();
 
   Parent _dropdownParentCategory = Parent(level: 0, id: "no_parent", name: "No Parent");
@@ -46,9 +47,11 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
   ///Managers List
   List<Manager> managerList;
   List<String> managerMailList;
+
   ///Workers List
   List<Worker> workerList;
   List<String> workerMailList;
+
   /// Invite mail String
   String inviteMail = '';
 
@@ -266,12 +269,13 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
                           child: TextFormField(
                             autofocus: true,
                             keyboardType: TextInputType.emailAddress,
-                            validator: (value) =>
-                            value.isEmpty
+                            validator: (value) => value.isEmpty
                                 ? 'Email cannot be blank'
                                 : validateEmail(value)
-                                ? duplicateMail(role, value) ? 'Esiste già questa mail per un $role' : null
-                                : 'Not a valid email',
+                                    ? duplicateMail(role, value)
+                                        ? 'Esiste già questa mail per un $role'
+                                        : null
+                                    : 'Not a valid email',
                             onChanged: (value) {
                               setState(() {
                                 inviteMail = value;
@@ -388,10 +392,10 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
   bool duplicateMail(String role, String value) {
     switch (role) {
       case 'Manager':
-        return managerMailList.contains(value)?  true :  false;
+        return managerMailList.contains(value) ? true : false;
         break;
       case 'Worker':
-        return workerMailList.contains(value)?  true :  false;
+        return workerMailList.contains(value) ? true : false;
         break;
     }
   }
@@ -456,9 +460,11 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
     return listOfWidget;
   }
 
-  List<Widget> listEmptyWidget(){
+  List<Widget> listEmptyWidget() {
     List<Widget> listOfWidget = new List();
-    listOfWidget.add(Container(child: Text("Sono vuoto"),));
+    listOfWidget.add(Container(
+      child: Text("Sono vuoto"),
+    ));
   }
 
   List<Widget> listOfWorkerChips() {
@@ -595,52 +601,16 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
                   ),
                 ],
               ),
-              floatingActionButton: Stack(
-                children: <Widget>[
-                  Align(
-                    alignment: Alignment.bottomLeft,
-                    child: !hasChild
-                        ? Padding(
-                            padding: const EdgeInsets.only(left: 25.0),
-                            child: FloatingActionButton(
-                              heroTag: "DeleteCategoryFloatingButton",
-                              onPressed: () {
-                                print("CategoryEdit ::: Elimino nodo categoria dall'albero");
-                                StoreProvider.of<AppState>(context).dispatch(DeleteCategoryTree(snapshot.category.id));
-                                print("CategoryEdit ::: Elimino categoria " + snapshot.category.id);
-                                StoreProvider.of<AppState>(context).dispatch(DeleteCategory(snapshot.category.id));
-                                Future.delayed(const Duration(milliseconds: 500), () {
-                                  Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => UI_ManageCategory(deleted: true)),
-                                  );
-                                });
-                              },
-                              child: Icon(
-                                Icons.delete,
-                                color: Colors.black,
-                              ),
-                              backgroundColor: Colors.red,
-                            ),
-                          )
-                        : Container(),
-                  ),
-                  Align(
-                    alignment: Alignment.bottomRight,
-                    child: FloatingActionButton(
-                      heroTag: "InviteManagerOrWorkerFloatingButton",
-                      onPressed: () {
-                        print("add worker/manager");
-                        _modalAddPerson(context);
-                      },
-                      child: Icon(Icons.add),
-                      backgroundColor: BuytimeTheme.Secondary,
-                    ),
-                  ),
-                ],
+              floatingActionButton: FloatingActionButton(
+                onPressed: () {
+                  print("add worker/manager");
+                  _modalAddPerson(context);
+                },
+                child: Icon(Icons.add),
+                backgroundColor: BuytimeTheme.Secondary,
               ),
               body: Padding(
-                padding: EdgeInsets.all(10.0),
+                padding: EdgeInsets.only(top: 10.0),
                 child: Column(
                   children: <Widget>[
                     Padding(
@@ -673,14 +643,14 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+                      padding: const EdgeInsets.only(top: 10.0, bottom: 25.0),
                       child: Center(
                         child: Container(
                           width: media.width * 0.9,
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
                           child: Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: const EdgeInsets.all(6.0),
                             child: DropdownButtonHideUnderline(
                               child: DropdownButtonFormField<Parent>(
                                   value: selectedParentCategory,
@@ -709,113 +679,189 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
                         ),
                       ),
                     ),
-                    Container(
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        border: Border(
-                          top: BorderSide(
-                            color: BuytimeTheme.DividerGrey,
-                            width: 4.0,
-                          ),
-                          bottom: BorderSide(
-                            color: BuytimeTheme.DividerGrey,
-                            width: 2.0,
-                          ),
-                        ),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: [
-                                    Container(
-                                      child: Icon(
-                                        Icons.account_balance_rounded,
-                                        size: 24,
-                                      ),
+
+
+
+           Container(
+                         
+                          child: Column(
+                            children: <Widget>[
+                              Container(
+                                height: media.height * 0.1,
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  border: Border(
+                                    top: BorderSide(
+                                      color: BuytimeTheme.DividerGrey,
+                                      width: 16.0,
                                     ),
-                                    Container(
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(left: 5.0),
-                                        child: Text(
-                                          "Managers",
-                                          textAlign: TextAlign.start,
-                                          style: TextStyle(
-                                            color: BuytimeTheme.TextDark,
-                                            fontSize: media.height * 0.023,
-                                            fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(20.0),
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Container(
+                                                child: Icon(
+                                                  Icons.account_balance_rounded,
+                                                  size: 24,
+                                                ),
+                                              ),
+                                              Container(
+                                                child: Padding(
+                                                  padding: const EdgeInsets.only(left: 5.0),
+                                                  child: Text(
+                                                    "Managers",
+                                                    textAlign: TextAlign.start,
+                                                    style: TextStyle(
+                                                      color: BuytimeTheme.TextDark,
+                                                      fontSize: media.height * 0.023,
+                                                      fontWeight: FontWeight.w500,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                      SingleChildScrollView(
+                                        child: Container(
+
+                                          width: double.infinity,
+                                          child: Wrap(
+                                            direction: Axis.horizontal,
+                                            alignment: WrapAlignment.start,
+                                            spacing: 5.0,
+                                            children: listOfManagerChips(snapshot),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                              ],
-                            ),
-                            Container(
-                              width: double.infinity,
-                              child: Wrap(
-                                direction: Axis.horizontal,
-                                alignment: WrapAlignment.start,
-                                spacing: 5.0,
-                                children: listOfManagerChips(snapshot),
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Container(
-                      width: double.infinity,
-                      child: Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: [
-                                    Container(
-                                      child: Icon(
-                                        Icons.room_service,
-                                        size: 24,
+                              Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 10.0),
+                                child: Container(
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                    border: Border(
+                                      top: BorderSide(
+                                        color: BuytimeTheme.DividerGrey,
+                                        width: 4.0,
                                       ),
                                     ),
-                                    Container(
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(left: 5.0),
-                                        child: Text(
-                                          "Workers",
-                                          textAlign: TextAlign.start,
-                                          style: TextStyle(
-                                            color: BuytimeTheme.TextDark,
-                                            fontSize: media.height * 0.023,
-                                            fontWeight: FontWeight.w500,
-                                          ),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 15.0, top: 20.0),
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Container(
+                                                  child: Icon(
+                                                    Icons.room_service,
+                                                    size: 24,
+                                                  ),
+                                                ),
+                                                Container(
+                                                  child: Padding(
+                                                    padding: const EdgeInsets.only(left: 5.0),
+                                                    child: Text(
+                                                      "Workers",
+                                                      textAlign: TextAlign.start,
+                                                      style: TextStyle(
+                                                        color: BuytimeTheme.TextDark,
+                                                        fontSize: media.height * 0.023,
+                                                        fontWeight: FontWeight.w500,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
                                         ),
-                                      ),
+                                        Container(
+                                          width: double.infinity,
+                                          child: Wrap(
+                                            direction: Axis.horizontal,
+                                            alignment: WrapAlignment.start,
+                                            spacing: 5.0,
+                                            children: listOfWorkerChips(),
+                                          ),
+                                        )
+                                      ],
                                     ),
-                                  ],
+                                  ),
                                 ),
+                              ),
+                              // Expanded(
+                              //   child: Container(
+                              //     color: Colors.red,
+                              //   ),
+                              // ),
+                              // Text("Footer"),
+                            ],
+                          ),
+                        ),
+
+
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20.0),
+                      child: Container(
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            border: Border(
+                              top: BorderSide(
+                                color: BuytimeTheme.DividerGrey,
+                                width: 16.0,
+                              ),
+                            ),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(20.0),
+                            child: Row(
+                              children: [
+                                Container(),
                               ],
                             ),
-                            Container(
-                              width: double.infinity,
-                              child: Wrap(
-                                direction: Axis.horizontal,
-                                alignment: WrapAlignment.start,
-                                spacing: 5.0,
-                                children: listOfWorkerChips(),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
+
+                            // !hasChild
+                            //     ? Padding(
+                            //   padding: const EdgeInsets.only(left: 25.0),
+                            //   child: FloatingActionButton(
+                            //     heroTag: "DeleteCategoryFloatingButton",
+                            //     onPressed: () {
+                            //       print("CategoryEdit ::: Elimino nodo categoria dall'albero");
+                            //       StoreProvider.of<AppState>(context).dispatch(DeleteCategoryTree(snapshot.category.id));
+                            //       print("CategoryEdit ::: Elimino categoria " + snapshot.category.id);
+                            //       StoreProvider.of<AppState>(context).dispatch(DeleteCategory(snapshot.category.id));
+                            //       Future.delayed(const Duration(milliseconds: 500), () {
+                            //         Navigator.pushReplacement(
+                            //           context,
+                            //           MaterialPageRoute(builder: (context) => UI_ManageCategory(deleted: true)),
+                            //         );
+                            //       });
+                            //     },
+                            //     child: Icon(
+                            //       Icons.delete,
+                            //       color: Colors.black,
+                            //     ),
+                            //     backgroundColor: Colors.red,
+                            //   ),
+                            // )
+                            //     : Container(),
+                          )),
                     ),
                   ],
                 ),
