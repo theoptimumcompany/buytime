@@ -3,7 +3,9 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:Buytime/UI/user/UI_U_Tabs.dart';
 import 'package:Buytime/UI/user/landing/UI_U_Landing.dart';
+import 'package:Buytime/UI/user/landing/invite_guest_form.dart';
 import 'package:Buytime/reblox/model/snippet/device.dart';
 import 'package:Buytime/reblox/model/snippet/token.dart';
 import 'package:Buytime/services/dynamic_links_service.dart';
@@ -17,6 +19,7 @@ import 'package:Buytime/UI/user/login/UI_U_Home.dart';
 import 'package:Buytime/reusable/buytime_widget.dart';
 import 'package:device_info/device_info.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -30,94 +33,112 @@ class SplashScreen extends StatefulWidget {
   _SplashScreenState createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen>{
+class _SplashScreenState extends State<SplashScreen> {
+  Timer _timerLink;
 
-  final DynamicLinkService _dynamicLinkService = DynamicLinkService();
-Timer _timerLink;
+  @override
+  void initState() {
+    super.initState();
+    initDynamicLinks();
 
-@override
-void initState() {
-  super.initState();
+    //DynamicLinkService().retrieveDynamicLink(context);
 
-  Firebase.initializeApp().then((value) {
-    final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
-    if (!kIsWeb) {
-      //TODO: TEST Funzionamento notifiche dopo upgrade pacchetto firebase_messaging
-      firebaseMessaging.requestPermission();
-      FirebaseMessaging.onMessage.first.then((message) => () {
-        print("onMessage: $message");
-        var data = message.data['data'] ?? message;
-        String orderId = data['orderId'];
-        StoreProvider.of<AppState>(context).dispatch(new OrderRequest(orderId));
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => UI_U_OrderDetail()),
-        );
+    Firebase.initializeApp().then((value) {
+      final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
+      if (!kIsWeb) {
+        //TODO: TEST Funzionamento notifiche dopo upgrade pacchetto firebase_messaging
+        firebaseMessaging.requestPermission();
+        FirebaseMessaging.onMessage.first.then((message) => () {
+              print("onMessage: $message");
+              var data = message.data['data'] ?? message;
+              String orderId = data['orderId'];
+              StoreProvider.of<AppState>(context).dispatch(new OrderRequest(orderId));
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => UI_U_OrderDetail()),
+              );
+            });
+
+        FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+        FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+          var data = message.data['data'] ?? message;
+          String orderId = data['orderId'];
+          StoreProvider.of<AppState>(context).dispatch(new OrderRequest(orderId));
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => UI_U_OrderDetail()),
+          );
+        });
+
+        firebaseMessaging.requestPermission(sound: true, badge: true, alert: true, provisional: true);
+
+        firebaseMessaging.getToken().then((String token) {
+          assert(token != null);
+          print("Token " + token);
+          serverToken = token;
+        });
+      }
+
+      firebaseMessaging.onTokenRefresh.listen((newToken) {
+        // Save newToken
+        serverToken = newToken;
       });
 
-      FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-      FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-        var data = message.data['data'] ?? message;
-        String orderId = data['orderId'];
-        StoreProvider.of<AppState>(context).dispatch(new OrderRequest(orderId));
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => UI_U_OrderDetail()),
-        );
-      });
-
-      firebaseMessaging.requestPermission(sound: true, badge: true, alert: true, provisional: true);
-
-      firebaseMessaging.getToken().then((String token) {
-        assert(token != null);
-        print("Token " + token);
-        serverToken = token;
-      });
-    }
-
-    firebaseMessaging.onTokenRefresh.listen((newToken) {
-      // Save newToken
-      serverToken = newToken;
+      Timer(Duration(seconds: 1), () => check_logged());
+    }).catchError((onError) {
+      print("error on firebase application start: " + onError.toString());
     });
 
-    Timer(Duration(seconds: 1), () => check_logged());
-  }).catchError((onError) {
-    print("error on firebase application start: " + onError.toString());
-  });
-
-
-
-  initPlatformState();
-
-  Future.delayed(Duration(seconds: 5));
-  _dynamicLinkService.retrieveDynamicLink(context);
-}
-
-@override
-void didChangeAppLifecycleState(AppLifecycleState state) {
-  if (state == AppLifecycleState.resumed) {
-    _timerLink = new Timer(
-      const Duration(milliseconds: 1000),
-          () {
-        _dynamicLinkService.retrieveDynamicLink(context);
-      },
-    );
+    initPlatformState();
   }
-}
 
-@override
-void dispose() {
-  if (_timerLink != null) {
-    _timerLink.cancel();
+  void initDynamicLinks() async {
+    print("Dentro initial dynamic");
+    FirebaseDynamicLinks.instance.onLink(onSuccess: (PendingDynamicLinkData dynamicLink) async {
+      final Uri deepLink = dynamicLink?.link;
+
+      if (deepLink != null) {
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) => InviteGuestForm()));
+      }
+    }, onError: (OnLinkErrorException e) async {
+      print('onLinkError');
+      print(e.message);
+    });
+
+    await Future.delayed(Duration(seconds: 2)); ///Serve un delay che altrimenti getInitialLink torna NULL
+    final PendingDynamicLinkData data = await FirebaseDynamicLinks.instance.getInitialLink();
+    final Uri deepLink = data?.link;
+
+    if (deepLink != null) {
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => UI_U_Tabs()));
+    }
   }
-  super.dispose();
 
-}
+  // @override
+  // void didChangeAppLifecycleState(AppLifecycleState state) {
+  //   if (state == AppLifecycleState.resumed) {
+  //     print("Resume");
+  //     _timerLink = new Timer(
+  //       const Duration(milliseconds: 1000),
+  //       () {
+  //         initDynamicLinks();
+  //        // DynamicLinkService().retrieveDynamicLink(context);
+  //       },
+  //     );
+  //   }
+  // }
+
+  // @override
+  // void dispose() {
+  //   if (_timerLink != null) {
+  //     _timerLink.cancel();
+  //   }
+  //   super.dispose();
+  // }
 
   // Replace with server token from firebase console settings.
   String serverToken =
       'AAAA6xUtyfE:APA91bGHhEzVUY9fnj4FbTXJX57qcgF-8GBrfBbGIa8kEpEIdsXRgQxbtsvbhL-w-_MQYKIj0XVlSaDSf2s6O3D3SM3o-z_AZnHQwBNLiw1ygyZOuVAKa5YmXeu6Da9eBqRD9uwFHSPi';
-
 
   static final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
   Map<String, dynamic> _deviceData = <String, dynamic>{};
@@ -152,7 +173,7 @@ void dispose() {
     return completer.future;
   }
 
- static Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  static Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     if (message.data.containsKey('data')) {
       // Handle data message
       final dynamic data = message.data['data'];
@@ -166,7 +187,6 @@ void dispose() {
 
     // Or do other work.
   }
-
 
   Future<void> initPlatformState() async {
     Map<String, dynamic> deviceData;
@@ -285,7 +305,6 @@ void dispose() {
       );
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
