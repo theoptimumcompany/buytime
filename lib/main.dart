@@ -1,6 +1,8 @@
 import 'package:Buytime/reblox/model/business/snippet/business_snippet_state.dart';
+import 'package:Buytime/reblox/model/category/invitation/category_invite_state.dart';
 import 'package:Buytime/reblox/model/category/tree/category_tree_state.dart';
 import 'package:Buytime/reblox/model/snippet/parent.dart';
+import 'package:Buytime/services/category_invite_service_epic.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/UI/user/login/UI_U_Home.dart';
 import 'package:Buytime/UI/user/login/UI_U_Login.dart';
@@ -57,6 +59,8 @@ void main() {
     UserEditDevice(),
     UserEditToken(),
     CategoryRequestService(),
+    CategoryInviteCreateService(),
+    CategoryInviteRequestService(),
     CategoryInviteManagerService(),
     CategoryDeleteManagerService(),
     CategoryInviteWorkerService(),
@@ -87,6 +91,7 @@ void main() {
   ]);
   final _initialState = AppState(
     category: CategoryState().toEmpty(),
+    categoryInvite: CategoryInviteState().toEmpty(),
     filterSearch: FilterSearchState().toEmpty(),
     categoryTree: CategoryTree().toEmpty(),
     business: BusinessState().toEmpty(),
