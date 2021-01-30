@@ -50,8 +50,6 @@ class Landing extends StatefulWidget {
 class LandingState extends State<Landing> {
   List<LandingCardWidget> cards = new List();
 
-  final DynamicLinkService _dynamicLinkService = DynamicLinkService();
-
   @override
   void initState() {
     super.initState();
@@ -118,7 +116,7 @@ class LandingState extends State<Landing> {
                                       child: IconButton(
                                         onPressed: () async{
                                           final RenderBox box = context.findRenderObject();
-                                          Uri link = await _dynamicLinkService.createDynamicLink('prova');
+                                          Uri link = await DynamicLinkService().createDynamicLink('prova');
                                           Share.share('check out Buytime App at $link', subject: 'Take your Time!', sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
                                          /* Share.share('Share', subject:
                                           Platform.isAndroid ?

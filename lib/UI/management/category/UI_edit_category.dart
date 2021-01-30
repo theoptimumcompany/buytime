@@ -4,6 +4,7 @@ import 'package:Buytime/reblox/reducer/category_tree_reducer.dart';
 import 'package:Buytime/reblox/model/snippet/manager.dart';
 import 'package:Buytime/reblox/model/snippet/parent.dart';
 import 'package:Buytime/reblox/model/snippet/worker.dart';
+import 'package:Buytime/services/dynamic_links_service.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/reducer/category_reducer.dart';
@@ -201,8 +202,10 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
                     StoreProvider.of<AppState>(context).dispatch(new CategoryInviteWorker(newWorker));
                     break;
                 }
-                Uri link = await _createDynamicLink(false);
-                Share.share('check out Buytime App at $link', subject: 'Take your Time!');
+                final RenderBox box = context.findRenderObject();
+                Uri link = await DynamicLinkService().createDynamicLink('category_invite');
+                Share.share('check out Buytime App at $link',
+                    subject: 'Take your Time!', sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
                 Navigator.of(context).pop();
               }
             },
@@ -333,34 +336,6 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
         });
   }
 
-  Future<Uri> _createDynamicLink(bool short) async {
-    final DynamicLinkParameters parameters = DynamicLinkParameters(
-      uriPrefix: 'https://buytime.page.link',
-      link: Uri.parse('https://beta.itunes.apple.com/v1/app/1508552491'),
-      androidParameters: AndroidParameters(
-        packageName: 'com.theoptimumcompany.buytime',
-        minimumVersion: 1,
-      ),
-      dynamicLinkParametersOptions: DynamicLinkParametersOptions(
-        shortDynamicLinkPathLength: ShortDynamicLinkPathLength.short,
-      ),
-      iosParameters: IosParameters(
-        bundleId: 'com.theoptimumcompany.buytime',
-        minimumVersion: '1',
-        appStoreId: '1508552491',
-      ),
-    );
-
-    Uri url;
-    if (short) {
-      final ShortDynamicLink shortLink = await parameters.buildShortLink();
-      url = shortLink.shortUrl;
-    } else {
-      url = await parameters.buildUrl();
-    }
-    return url;
-  }
-
   Parent searchDropdownParent(var snapshot) {
     if (widget.empty == 'empty' || snapshot.category.level == 0) {
       return _dropdownMenuParentCategory.first.value;
@@ -414,49 +389,21 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
     ));
 
     snapshot.business.salesman.content != null && snapshot.business.salesman.content != ''
-        ? listOfWidget.add(InputChip(
-            selected: false,
-            label: Text(
-              snapshot.business.salesman.content,
-              style: TextStyle(
-                fontSize: 13.0,
-                fontWeight: FontWeight.w500,
+        ? listOfWidget.add(Padding(
+            padding: const EdgeInsets.only(left: 5.0),
+            child: InputChip(
+              selected: false,
+              label: Text(
+                snapshot.business.salesman.content,
+                style: TextStyle(
+                  fontSize: 13.0,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
           ))
         : listOfWidget.add(Container());
 
-    if (managerList.length > 0 && managerList != null) {
-      for (int i = 0; i < managerList.length; i++) {
-        listOfWidget.add(InputChip(
-          selected: false,
-          label: Text(
-            managerList[i].mail,
-            style: TextStyle(
-              fontSize: 13.0,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          //avatar: FlutterLogo(),
-          onPressed: () {
-            print('Manager is pressed');
-
-            ///Vedere che fare quando si pigia il chip
-            setState(() {
-              //_selected = !_selected;
-            });
-          },
-          onDeleted: () {
-            Manager managerToDelete = Manager(id: "", name: "", surname: "", mail: managerList[i].mail);
-            print("Mail di invito Manager da eliminare : " + managerList[i].mail);
-            StoreProvider.of<AppState>(context).dispatch(new DeleteCategoryManager(managerToDelete));
-            print('Manager is deleted');
-          },
-        ));
-      }
-    } else {
-      listOfWidget.add(Container());
-    }
     return listOfWidget;
   }
 
@@ -679,145 +626,206 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
                         ),
                       ),
                     ),
-
-
-
-           Container(
-                         
-                          child: Column(
-                            children: <Widget>[
-                              Container(
-                                height: media.height * 0.1,
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                  border: Border(
-                                    top: BorderSide(
-                                      color: BuytimeTheme.DividerGrey,
-                                      width: 16.0,
-                                    ),
-                                  ),
+                    Container(
+                      child: Column(
+                        children: <Widget>[
+                          Container(
+                           // height: media.height * 0.266,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              border: Border(
+                                top: BorderSide(
+                                  color: BuytimeTheme.DividerGrey,
+                                  width: 16.0,
                                 ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(20.0),
-                                  child: Column(
+                              ),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 10.0, left: 20.0, right: 20.0),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Row(
-                                            children: [
-                                              Container(
-                                                child: Icon(
-                                                  Icons.account_balance_rounded,
-                                                  size: 24,
+                                          Container(
+                                            child: Icon(
+                                              Icons.account_balance_rounded,
+                                              size: 24,
+                                            ),
+                                          ),
+                                          Container(
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(left: 5.0),
+                                              child: Text(
+                                                "Managers",
+                                                textAlign: TextAlign.start,
+                                                style: TextStyle(
+                                                  color: BuytimeTheme.TextDark,
+                                                  fontSize: media.height * 0.023,
+                                                  fontWeight: FontWeight.w500,
                                                 ),
                                               ),
-                                              Container(
-                                                child: Padding(
-                                                  padding: const EdgeInsets.only(left: 5.0),
-                                                  child: Text(
-                                                    "Managers",
-                                                    textAlign: TextAlign.start,
-                                                    style: TextStyle(
-                                                      color: BuytimeTheme.TextDark,
-                                                      fontSize: media.height * 0.023,
-                                                      fontWeight: FontWeight.w500,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
+                                            ),
                                           ),
                                         ],
                                       ),
-                                      SingleChildScrollView(
-                                        child: Container(
-
-                                          width: double.infinity,
-                                          child: Wrap(
-                                            direction: Axis.horizontal,
-                                            alignment: WrapAlignment.start,
-                                            spacing: 5.0,
-                                            children: listOfManagerChips(snapshot),
-                                          ),
-                                        ),
-                                      ),
                                     ],
                                   ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 10.0),
-                                child: Container(
-                                  width: double.infinity,
-                                  decoration: BoxDecoration(
-                                    border: Border(
-                                      top: BorderSide(
-                                        color: BuytimeTheme.DividerGrey,
-                                        width: 4.0,
-                                      ),
+                                  Container(
+                                    width: double.infinity,
+                                    child: Row(
+                                      children: listOfManagerChips(snapshot),
                                     ),
                                   ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(left: 15.0, top: 20.0),
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Row(
-                                              children: [
-                                                Container(
-                                                  child: Icon(
-                                                    Icons.room_service,
-                                                    size: 24,
-                                                  ),
-                                                ),
-                                                Container(
-                                                  child: Padding(
-                                                    padding: const EdgeInsets.only(left: 5.0),
-                                                    child: Text(
-                                                      "Workers",
-                                                      textAlign: TextAlign.start,
+                                  (managerList.length > 0 && managerList != null)
+                                      ? Container(
+                                          height: media.height * 0.15,
+                                          child: ListView.builder(
+                                            itemCount: managerList.length,
+                                            itemBuilder: (context, i) {
+                                              return Row(
+                                                children: [
+                                                  InputChip(
+                                                    selected: false,
+                                                    label: Text(
+                                                      managerList[i].mail,
                                                       style: TextStyle(
-                                                        color: BuytimeTheme.TextDark,
-                                                        fontSize: media.height * 0.023,
+                                                        fontSize: 13.0,
                                                         fontWeight: FontWeight.w500,
                                                       ),
                                                     ),
+                                                    //avatar: FlutterLogo(),
+                                                    onPressed: () {
+                                                      print('Manager is pressed');
+
+                                                      ///Vedere che fare quando si pigia il chip
+                                                      setState(() {
+                                                        //_selected = !_selected;
+                                                      });
+                                                    },
+                                                    onDeleted: () {
+                                                      Manager managerToDelete = Manager(
+                                                          id: "", name: "", surname: "", mail: managerList[i].mail);
+                                                      print("Mail di invito Manager da eliminare : " +
+                                                          managerList[i].mail);
+                                                      StoreProvider.of<AppState>(context)
+                                                          .dispatch(new DeleteCategoryManager(managerToDelete));
+                                                      print('Manager is deleted');
+                                                    },
                                                   ),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                        Container(
-                                          width: double.infinity,
-                                          child: Wrap(
-                                            direction: Axis.horizontal,
-                                            alignment: WrapAlignment.start,
-                                            spacing: 5.0,
-                                            children: listOfWorkerChips(),
+                                                ],
+                                              );
+                                            },
                                           ),
                                         )
-                                      ],
-                                    ),
+                                      : Container()
+                                ],
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10.0, left: 10.0, right: 10.0),
+                            child: Container(
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                border: Border(
+                                  top: BorderSide(
+                                    color: BuytimeTheme.DividerGrey,
+                                    width: 4.0,
                                   ),
                                 ),
                               ),
-                              // Expanded(
-                              //   child: Container(
-                              //     color: Colors.red,
-                              //   ),
-                              // ),
-                              // Text("Footer"),
-                            ],
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 15.0, top: 10.0),
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Container(
+                                              child: Icon(
+                                                Icons.room_service,
+                                                size: 24,
+                                              ),
+                                            ),
+                                            Container(
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(left: 5.0),
+                                                child: Text(
+                                                  "Workers",
+                                                  textAlign: TextAlign.start,
+                                                  style: TextStyle(
+                                                    color: BuytimeTheme.TextDark,
+                                                    fontSize: media.height * 0.023,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                    (workerList.length > 0 && workerList != null)
+                                        ? Container(
+                                            height: media.height * 0.15,
+                                            child: ListView.builder(
+                                              itemCount: workerList.length,
+                                              itemBuilder: (context, i) {
+                                                return Row(
+                                                  children: [
+                                                    InputChip(
+                                                      selected: false,
+                                                      label: Text(
+                                                        workerList[i].mail,
+                                                        style: TextStyle(
+                                                          fontSize: 13.0,
+                                                          fontWeight: FontWeight.w500,
+                                                        ),
+                                                      ),
+                                                      onPressed: () {
+                                                        print('Worker is pressed');
+
+                                                        ///Vedere che fare quando si pigia il chip
+                                                        setState(() {
+                                                          //_selected = !_selected;
+                                                        });
+                                                      },
+                                                      onDeleted: () {
+                                                        Worker workerToDelete = Worker(
+                                                            id: "", name: "", surname: "", mail: workerList[i].mail);
+                                                        print("Mail di invito Worker da eliminare : " +
+                                                            workerList[i].mail);
+                                                        StoreProvider.of<AppState>(context)
+                                                            .dispatch(new DeleteCategoryWorker(workerToDelete));
+                                                        print('Worker is deleted');
+                                                      },
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            ),
+                                          )
+                                        : Padding(
+                                            padding: EdgeInsets.only(top: 10, bottom: 10),
+                                            child: Row(
+                                              children: [Text("Non ci sono lavoratori assegnati a questa categoria.")],
+                                            ),
+                                          ),
+                                  ],
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
-
-
+                        ],
+                      ),
+                    ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 20.0),
+                      padding: const EdgeInsets.only(top: 10.0),
                       child: Container(
                           width: double.infinity,
                           decoration: BoxDecoration(
@@ -832,35 +840,52 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
                             padding: const EdgeInsets.all(20.0),
                             child: Row(
                               children: [
-                                Container(),
+                                !hasChild
+                                    ? GestureDetector(
+                                        behavior: HitTestBehavior.opaque,
+                                        onTap: () {
+                                          print("CategoryEdit ::: Elimino nodo categoria dall'albero");
+                                          StoreProvider.of<AppState>(context)
+                                              .dispatch(DeleteCategoryTree(snapshot.category.id));
+                                          print("CategoryEdit ::: Elimino categoria " + snapshot.category.id);
+                                          StoreProvider.of<AppState>(context)
+                                              .dispatch(DeleteCategory(snapshot.category.id));
+                                          Future.delayed(const Duration(milliseconds: 500), () {
+                                            Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(builder: (context) => UI_ManageCategory(deleted: true)),
+                                            );
+                                          });
+                                        },
+                                        child: Row(
+                                          children: [
+                                            Container(
+                                              child: Icon(
+                                                Icons.delete,
+                                                size: 25,
+                                                color: BuytimeTheme.AccentRed,
+                                              ),
+                                            ),
+                                            Container(
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(left: 10.0),
+                                                child: Text(
+                                                  "Delete Category",
+                                                  textAlign: TextAlign.start,
+                                                  style: TextStyle(
+                                                    color: BuytimeTheme.AccentRed,
+                                                    fontSize: 18,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                    : Container(),
                               ],
                             ),
-
-                            // !hasChild
-                            //     ? Padding(
-                            //   padding: const EdgeInsets.only(left: 25.0),
-                            //   child: FloatingActionButton(
-                            //     heroTag: "DeleteCategoryFloatingButton",
-                            //     onPressed: () {
-                            //       print("CategoryEdit ::: Elimino nodo categoria dall'albero");
-                            //       StoreProvider.of<AppState>(context).dispatch(DeleteCategoryTree(snapshot.category.id));
-                            //       print("CategoryEdit ::: Elimino categoria " + snapshot.category.id);
-                            //       StoreProvider.of<AppState>(context).dispatch(DeleteCategory(snapshot.category.id));
-                            //       Future.delayed(const Duration(milliseconds: 500), () {
-                            //         Navigator.pushReplacement(
-                            //           context,
-                            //           MaterialPageRoute(builder: (context) => UI_ManageCategory(deleted: true)),
-                            //         );
-                            //       });
-                            //     },
-                            //     child: Icon(
-                            //       Icons.delete,
-                            //       color: Colors.black,
-                            //     ),
-                            //     backgroundColor: Colors.red,
-                            //   ),
-                            // )
-                            //     : Container(),
                           )),
                     ),
                   ],

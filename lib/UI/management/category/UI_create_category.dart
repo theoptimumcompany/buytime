@@ -216,6 +216,9 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
                             if (categoryCreate.parent != _dropdownMenuParentCategory.first.value) {
                               categoryCreate.level = newCategoryParent.level + 1;
                             }
+                            else{
+                              categoryCreate.level = 0;
+                            }
 
                             StoreProvider.of<AppState>(context).dispatch(new CreateCategory(categoryCreate));
                             StoreProvider.of<AppState>(context).dispatch(new AddCategoryTree(newCategoryParent));
