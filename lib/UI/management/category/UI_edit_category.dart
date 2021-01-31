@@ -1,10 +1,11 @@
 import 'package:Buytime/UI/management/category/UI_manage_category.dart';
+import 'package:Buytime/reblox/model/category/invitation/category_invite_state.dart';
 import 'package:Buytime/reblox/model/category/tree/category_tree_state.dart';
+import 'package:Buytime/reblox/reducer/category_invite_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_tree_reducer.dart';
 import 'package:Buytime/reblox/model/snippet/manager.dart';
 import 'package:Buytime/reblox/model/snippet/parent.dart';
 import 'package:Buytime/reblox/model/snippet/worker.dart';
-import 'package:Buytime/services/dynamic_links_service.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/reducer/category_reducer.dart';
@@ -28,8 +29,7 @@ class UI_EditCategory extends StatefulWidget {
 }
 
 class UI_EditCategoryState extends State<UI_EditCategory> {
-  final GlobalKey<FormState> _formKey = GlobalKey<
-      FormState>(); // TODO hero kacchan fix duplicates all mightaaa "There are multiple heroes that share the same tag within a subtree."
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>(); // TODO hero kacchan fix duplicates all mightaaa "There are multiple heroes that share the same tag within a subtree."
   final GlobalKey<FormState> _formInviteKey = GlobalKey<FormState>();
 
   Parent _dropdownParentCategory = Parent(level: 0, id: "no_parent", name: "No Parent");
@@ -131,8 +131,7 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
 
   openTree(List<dynamic> list, List<DropdownMenuItem<Parent>> items) {
     for (int i = 0; i < list.length; i++) {
-      if (list[i]['nodeId'] == StoreProvider.of<AppState>(context).state.category.parent &&
-          StoreProvider.of<AppState>(context).state.category.parent != "no_parent") {
+      if (list[i]['nodeId'] == StoreProvider.of<AppState>(context).state.category.parent && StoreProvider.of<AppState>(context).state.category.parent != "no_parent") {
         Parent parent = Parent(name: list[i]['nodeName'].toString(), id: list[i]['nodeId'], level: list[i]['level']);
         parentValue = parent;
       }
@@ -144,8 +143,7 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
         }
       }
       if (list[i]['nodeId'] != StoreProvider.of<AppState>(context).state.category.id) {
-        Parent objectState =
-            Parent(name: list[i]['nodeName'].toString(), id: list[i]['nodeId'], level: list[i]['level']);
+        Parent objectState = Parent(name: list[i]['nodeName'].toString(), id: list[i]['nodeId'], level: list[i]['level']);
         items.add(
           DropdownMenuItem(
             child: Text(objectState.name),
@@ -166,6 +164,25 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
       context,
       MaterialPageRoute(builder: (context) => UI_ManageCategory()),
     );
+  }
+
+  Future<Uri> createDynamicLink(String id) async {
+    final DynamicLinkParameters parameters = DynamicLinkParameters(
+      uriPrefix: 'https://buytime.page.link',
+      link: Uri.parse('https://buytime.page.link/categoryInvite/?categoryInvite=$id'),
+      androidParameters: AndroidParameters(
+        packageName: 'com.theoptimumcompany.buytime',
+        minimumVersion: 1,
+      ),
+      iosParameters: IosParameters(
+        bundleId: 'com.theoptimumcompany.buytime',
+        minimumVersion: '1',
+        appStoreId: '1508552491',
+      ),
+    );
+    var dynamicUrl = await parameters.buildUrl();
+    print("Link dinamico creato " + dynamicUrl.toString());
+    return dynamicUrl;
   }
 
   void sendInvitationMailDialog(context, String role) {
@@ -191,21 +208,29 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
 
               ///Avviare Spinner una volta pigiato invita, per attendere i controlli fatti dalla cloud function
               if (validateAndSaveInvite()) {
+                Uri link = await createDynamicLink(StoreProvider.of<AppState>(context).state.category.id);
                 ///Controllo se invito manager o worker e lancio la opportuna dispatch
+                CategoryInviteState categoryInvite = CategoryInviteState().toEmpty();
                 switch (role) {
                   case 'Manager':
                     Manager newManager = Manager(id: "", name: "", surname: "", mail: inviteMail);
-                    StoreProvider.of<AppState>(context).dispatch(new CategoryInviteManager(newManager));
+                    categoryInvite.role = role;
+                    categoryInvite.link = link.toString();
+                    categoryInvite.mail = inviteMail;
+                    StoreProvider.of<AppState>(context).dispatch(CreateCategoryInvite(categoryInvite));
+                    StoreProvider.of<AppState>(context).dispatch(CategoryInviteManager(newManager));
                     break;
                   case 'Worker':
                     Worker newWorker = Worker(id: "", name: "", surname: "", mail: inviteMail);
-                    StoreProvider.of<AppState>(context).dispatch(new CategoryInviteWorker(newWorker));
+                    categoryInvite.role = role;
+                    categoryInvite.link = link.toString();
+                    categoryInvite.mail = inviteMail;
+                    StoreProvider.of<AppState>(context).dispatch(CreateCategoryInvite(categoryInvite));
+                    StoreProvider.of<AppState>(context).dispatch(CategoryInviteWorker(newWorker));
                     break;
                 }
                 final RenderBox box = context.findRenderObject();
-                Uri link = await DynamicLinkService().createDynamicLink('category_invite');
-                Share.share('check out Buytime App at $link',
-                    subject: 'Take your Time!', sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
+                Share.share('check out Buytime App at $link', subject: 'Take your Time!', sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
                 Navigator.of(context).pop();
               }
             },
@@ -262,8 +287,7 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
               Padding(
                 padding: const EdgeInsets.only(top: 30.0),
                 child: Container(
-                  decoration:
-                      BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
+                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
                   child: Form(
                       key: _formInviteKey,
                       child: Padding(
@@ -358,8 +382,7 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
   }
 
   bool validateEmail(String value) {
-    Pattern pattern =
-        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+    Pattern pattern = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
     RegExp regex = new RegExp(pattern);
     return (!regex.hasMatch(value)) ? false : true;
   }
@@ -412,45 +435,6 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
     listOfWidget.add(Container(
       child: Text("Sono vuoto"),
     ));
-  }
-
-  List<Widget> listOfWorkerChips() {
-    List<Widget> listOfWidget = new List();
-
-    if (workerList.length > 0 && workerList != null) {
-      for (int i = 0; i < workerList.length; i++) {
-        listOfWidget.add(InputChip(
-          selected: false,
-          label: Text(
-            workerList[i].mail,
-            style: TextStyle(
-              fontSize: 13.0,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          onPressed: () {
-            print('Worker is pressed');
-            setState(() {
-              //_selected = !_selected;
-            });
-          },
-          onDeleted: () {
-            Worker workerToDelete = Worker(id: "", name: "", surname: "", mail: workerList[i].mail);
-            print("Mail di invito Worker da eliminare : " + workerList[i].mail);
-            StoreProvider.of<AppState>(context).dispatch(new DeleteCategoryWorker(workerToDelete));
-            print('Worker is deleted');
-          },
-        ));
-      }
-    } else {
-      listOfWidget.add(Padding(
-        padding: EdgeInsets.all(20),
-        child: Container(
-          child: Text("Non ci sono lavoratori assegnati a questa categoria."),
-        ),
-      ));
-    }
-    return listOfWidget;
   }
 
   @override
@@ -565,8 +549,7 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
                       child: Center(
                         child: Container(
                           width: media.width * 0.9,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
+                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
                           child: Form(
                               key: _formKey,
                               child: Padding(
@@ -577,8 +560,7 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
                                   keyboardType: TextInputType.name,
                                   onChanged: (value) {
                                     _selectedCategoryName = value;
-                                    StoreProvider.of<AppState>(context)
-                                        .dispatch(SetCategoryName(_selectedCategoryName));
+                                    StoreProvider.of<AppState>(context).dispatch(SetCategoryName(_selectedCategoryName));
                                   },
                                   onSaved: (value) {
                                     _selectedCategoryName = value;
@@ -594,24 +576,19 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
                       child: Center(
                         child: Container(
                           width: media.width * 0.9,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
+                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
                           child: Padding(
                             padding: const EdgeInsets.all(6.0),
                             child: DropdownButtonHideUnderline(
                               child: DropdownButtonFormField<Parent>(
                                   value: selectedParentCategory,
                                   items: _dropdownMenuParentCategory,
-                                  decoration: InputDecoration(
-                                      labelText: 'Parent Category',
-                                      enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white))),
+                                  decoration: InputDecoration(labelText: 'Parent Category', enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white))),
                                   onChanged: (value) {
                                     setState(() {
                                       selectedParentCategory = value;
-                                      checkNumberLevelToMove(
-                                          snapshot.categoryTree.categoryNodeList, snapshot.category.id);
-                                      setNewCategoryParent(
-                                          selectedParentCategory, snapshot.categoryTree.categoryNodeList);
+                                      checkNumberLevelToMove(snapshot.categoryTree.categoryNodeList, snapshot.category.id);
+                                      setNewCategoryParent(selectedParentCategory, snapshot.categoryTree.categoryNodeList);
                                       if (selectedParentCategory.level + numberLevel < 6) {
                                         canMoveToParent = true;
                                         numberLevel = 0;
@@ -630,7 +607,7 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
                       child: Column(
                         children: <Widget>[
                           Container(
-                           // height: media.height * 0.266,
+                            // height: media.height * 0.266,
                             width: double.infinity,
                             decoration: BoxDecoration(
                               border: Border(
@@ -706,12 +683,14 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
                                                       });
                                                     },
                                                     onDeleted: () {
-                                                      Manager managerToDelete = Manager(
-                                                          id: "", name: "", surname: "", mail: managerList[i].mail);
-                                                      print("Mail di invito Manager da eliminare : " +
-                                                          managerList[i].mail);
-                                                      StoreProvider.of<AppState>(context)
-                                                          .dispatch(new DeleteCategoryManager(managerToDelete));
+                                                      Manager managerToDelete = Manager(id: "", name: "", surname: "", mail: managerList[i].mail);
+                                                      print("Mail di invito Manager da eliminare : " + managerList[i].mail);
+                                                      CategoryInviteState categoryInviteState = CategoryInviteState().toEmpty();
+                                                      categoryInviteState.role = "Manager";
+                                                      categoryInviteState.id_category = snapshot.category.id;
+                                                      categoryInviteState.mail = managerList[i].mail;
+                                                      StoreProvider.of<AppState>(context).dispatch(DeleteCategoryInvite(categoryInviteState));
+                                                      StoreProvider.of<AppState>(context).dispatch(new DeleteCategoryManager(managerToDelete));
                                                       print('Manager is deleted');
                                                     },
                                                   ),
@@ -796,12 +775,14 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
                                                         });
                                                       },
                                                       onDeleted: () {
-                                                        Worker workerToDelete = Worker(
-                                                            id: "", name: "", surname: "", mail: workerList[i].mail);
-                                                        print("Mail di invito Worker da eliminare : " +
-                                                            workerList[i].mail);
-                                                        StoreProvider.of<AppState>(context)
-                                                            .dispatch(new DeleteCategoryWorker(workerToDelete));
+                                                        Worker workerToDelete = Worker(id: "", name: "", surname: "", mail: workerList[i].mail);
+                                                        print("Mail di invito Worker da eliminare : " + workerList[i].mail);
+                                                        CategoryInviteState categoryInviteState = CategoryInviteState().toEmpty();
+                                                        categoryInviteState.role = "Worker";
+                                                        categoryInviteState.id_category = snapshot.category.id;
+                                                        categoryInviteState.mail = workerList[i].mail;
+                                                        StoreProvider.of<AppState>(context).dispatch(DeleteCategoryInvite(categoryInviteState));
+                                                        StoreProvider.of<AppState>(context).dispatch(new DeleteCategoryWorker(workerToDelete));
                                                         print('Worker is deleted');
                                                       },
                                                     ),
@@ -845,11 +826,9 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
                                         behavior: HitTestBehavior.opaque,
                                         onTap: () {
                                           print("CategoryEdit ::: Elimino nodo categoria dall'albero");
-                                          StoreProvider.of<AppState>(context)
-                                              .dispatch(DeleteCategoryTree(snapshot.category.id));
+                                          StoreProvider.of<AppState>(context).dispatch(DeleteCategoryTree(snapshot.category.id));
                                           print("CategoryEdit ::: Elimino categoria " + snapshot.category.id);
-                                          StoreProvider.of<AppState>(context)
-                                              .dispatch(DeleteCategory(snapshot.category.id));
+                                          StoreProvider.of<AppState>(context).dispatch(DeleteCategory(snapshot.category.id));
                                           Future.delayed(const Duration(milliseconds: 500), () {
                                             Navigator.pushReplacement(
                                               context,

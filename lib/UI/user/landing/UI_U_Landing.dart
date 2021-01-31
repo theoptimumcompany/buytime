@@ -1,12 +1,9 @@
 import 'dart:core';
-import 'dart:io';
+
 import 'package:Buytime/UI/management/business/UI_M_business_list.dart';
 import 'package:Buytime/UI/user/UI_U_Tabs.dart';
 import 'package:Buytime/UI/user/booking/UI_U_PastBooking.dart';
-import 'package:Buytime/UI/user/business/UI_U_business_list.dart';
-import 'package:Buytime/UI/user/booking/UI_U_PastBooking.dart';
 import 'package:Buytime/UI/user/landing/invite_guest_form.dart';
-import 'package:Buytime/UI/user/landing/test.dart';
 import 'package:Buytime/UI/user/login/UI_U_Home.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/role/role.dart';
@@ -27,7 +24,6 @@ import 'package:Buytime/reblox/reducer/user_reducer.dart';
 import 'package:Buytime/reusable/custom_bottom_button_widget.dart';
 import 'package:Buytime/reusable/landing_card_widget.dart';
 import 'package:Buytime/reusable/menu/UI_M_business_list_drawer.dart';
-import 'package:Buytime/services/dynamic_links_service.dart';
 import 'package:Buytime/utils/globals.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_config.dart';
@@ -57,6 +53,24 @@ class LandingState extends State<Landing> {
     cards.add(LandingCardWidget('About Buytime', 'Discover our network', 'assets/img/beach_girl.png', null));
   }
 
+  Future<Uri> createDynamicLink(String id) async {
+    final DynamicLinkParameters parameters = DynamicLinkParameters(
+      uriPrefix: 'https://buytime.page.link',
+      link: Uri.parse('https://buytime.page.link/booking/?booking=$id'),
+      androidParameters: AndroidParameters(
+        packageName: 'com.theoptimumcompany.buytime',
+        minimumVersion: 1,
+      ),
+      iosParameters: IosParameters(
+        bundleId: 'com.theoptimumcompany.buytime',
+        minimumVersion: '1',
+        appStoreId: '1508552491',
+      ),
+    );
+    var dynamicUrl = await parameters.buildUrl();
+    print("Link dinamico creato " + dynamicUrl.toString());
+    return dynamicUrl;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -116,7 +130,7 @@ class LandingState extends State<Landing> {
                                       child: IconButton(
                                         onPressed: () async{
                                           final RenderBox box = context.findRenderObject();
-                                          Uri link = await DynamicLinkService().createDynamicLink('prova');
+                                          Uri link = await createDynamicLink('prova');
                                           Share.share('check out Buytime App at $link', subject: 'Take your Time!', sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
                                          /* Share.share('Share', subject:
                                           Platform.isAndroid ?

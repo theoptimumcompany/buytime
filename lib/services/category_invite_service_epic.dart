@@ -91,14 +91,20 @@ class CategoryInviteCreateService implements EpicClass<AppState> {
 class CategoryInviteDeleteService implements EpicClass<AppState> {
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    return actions.whereType<DeleteCategoryInvite>().asyncMap((event) {
-      // String idCategoryToDelete = event.idCategory;
-      // return FirebaseFirestore.instance
-      //     .collection('business')
-      //     .doc(store.state.business.id_firestore)
-      //     .collection('category')
-      //     .doc(idCategoryToDelete)
-      //     .delete();
+    return actions.whereType<DeleteCategoryInvite>().asyncMap((event) async {
+      CategoryInviteState categoryInviteState = event.categoryInviteState;
+      CollectionReference categoryInvitationRef = FirebaseFirestore.instance.collection("categoryInvitation");
+      Query query = categoryInvitationRef.where("mail", isEqualTo: categoryInviteState.mail);
+      query = query.where("role", isEqualTo: categoryInviteState.role);
+      query = query.where("id_category", isEqualTo: categoryInviteState.id_category);
+
+      return await query.get().then((value){
+        value.docs.forEach((element) {
+          FirebaseFirestore.instance.collection("categoryInvitation").doc(element.id).delete().then((value){
+            print("CategoryInviteService has deleted invite " + element.id);
+          });
+        });
+      });
     });
   }
 }

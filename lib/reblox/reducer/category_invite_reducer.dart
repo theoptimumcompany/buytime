@@ -43,19 +43,19 @@ class CreatedCategoryInvite {
 }
 
 class DeleteCategoryInvite {
-  String _id;
+  CategoryInviteState _categoryInviteState;
 
-  DeleteCategoryInvite(this._id);
+  DeleteCategoryInvite(this._categoryInviteState);
 
-  String get id => _id;
+  CategoryInviteState get categoryInviteState => _categoryInviteState;
 }
 
 class DeletedCategoryInvite {
-  String _id;
+  CategoryInviteState _categoryInviteState;
 
-  DeletedCategoryInvite(this._id);
+  DeletedCategoryInvite(this._categoryInviteState);
 
-  String get id => _id;
+  CategoryInviteState get categoryInviteState => _categoryInviteState;
 }
 
 

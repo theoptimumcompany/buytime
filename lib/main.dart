@@ -60,6 +60,7 @@ void main() {
     UserEditToken(),
     CategoryRequestService(),
     CategoryInviteCreateService(),
+    CategoryInviteDeleteService(),
     CategoryInviteRequestService(),
     CategoryInviteManagerService(),
     CategoryDeleteManagerService(),

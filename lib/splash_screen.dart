@@ -5,10 +5,8 @@ import 'dart:ui';
 
 import 'package:Buytime/UI/user/UI_U_Tabs.dart';
 import 'package:Buytime/UI/user/landing/UI_U_Landing.dart';
-import 'package:Buytime/UI/user/landing/invite_guest_form.dart';
 import 'package:Buytime/reblox/model/snippet/device.dart';
 import 'package:Buytime/reblox/model/snippet/token.dart';
-import 'package:Buytime/services/dynamic_links_service.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/UI/user/order/UI_U_OrderDetail.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
@@ -16,7 +14,6 @@ import 'package:Buytime/reblox/model/user/user_state.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reblox/reducer/user_reducer.dart';
 import 'package:Buytime/UI/user/login/UI_U_Home.dart';
-import 'package:Buytime/reusable/buytime_widget.dart';
 import 'package:device_info/device_info.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
@@ -102,14 +99,21 @@ class _SplashScreenState extends State<SplashScreen> {
           String id = deepLink.queryParameters['booking'];
           debugPrint('splash_screen: booking: $id');
           Navigator.of(context).push(MaterialPageRoute(builder: (context) => UI_U_Tabs()));
-          }
+        }
+        else if (deepLink.queryParameters.containsKey('categoryInvite')) {
+          String id = deepLink.queryParameters['categoryInvite'];
+          debugPrint('splash_screen: categoryInvite: $id');
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) => UI_U_Tabs()));
+        }
       }
     }, onError: (OnLinkErrorException e) async {
       print('onLinkError');
       print(e.message);
     });
 
-    await Future.delayed(Duration(seconds: 2)); ///Serve un delay che altrimenti getInitialLink torna NULL
+    await Future.delayed(Duration(seconds: 2));
+
+    ///Serve un delay che altrimenti getInitialLink torna NULL
     final PendingDynamicLinkData data = await FirebaseDynamicLinks.instance.getInitialLink();
     final Uri deepLink = data?.link;
 
@@ -119,34 +123,16 @@ class _SplashScreenState extends State<SplashScreen> {
         debugPrint('splash_screen: booking: $id');
         Navigator.of(context).push(MaterialPageRoute(builder: (context) => UI_U_Tabs()));
       }
+      else if (deepLink.queryParameters.containsKey('categoryInvite')) {
+        String id = deepLink.queryParameters['categoryInvite'];
+        debugPrint('splash_screen: categoryInvite: $id');
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) => UI_U_Tabs()));
+      }
     }
   }
 
-  // @override
-  // void didChangeAppLifecycleState(AppLifecycleState state) {
-  //   if (state == AppLifecycleState.resumed) {
-  //     print("Resume");
-  //     _timerLink = new Timer(
-  //       const Duration(milliseconds: 1000),
-  //       () {
-  //         initDynamicLinks();
-  //        // DynamicLinkService().retrieveDynamicLink(context);
-  //       },
-  //     );
-  //   }
-  // }
-
-  // @override
-  // void dispose() {
-  //   if (_timerLink != null) {
-  //     _timerLink.cancel();
-  //   }
-  //   super.dispose();
-  // }
-
-  // Replace with server token from firebase console settings.
-  String serverToken =
-      'AAAA6xUtyfE:APA91bGHhEzVUY9fnj4FbTXJX57qcgF-8GBrfBbGIa8kEpEIdsXRgQxbtsvbhL-w-_MQYKIj0XVlSaDSf2s6O3D3SM3o-z_AZnHQwBNLiw1ygyZOuVAKa5YmXeu6Da9eBqRD9uwFHSPi';
+  /// Replace with server token from firebase console settings.
+  String serverToken = 'AAAA6xUtyfE:APA91bGHhEzVUY9fnj4FbTXJX57qcgF-8GBrfBbGIa8kEpEIdsXRgQxbtsvbhL-w-_MQYKIj0XVlSaDSf2s6O3D3SM3o-z_AZnHQwBNLiw1ygyZOuVAKa5YmXeu6Da9eBqRD9uwFHSPi';
 
   static final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
   Map<String, dynamic> _deviceData = <String, dynamic>{};
@@ -267,9 +253,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void check_logged() async {
-    if (auth.FirebaseAuth != null &&
-        auth.FirebaseAuth.instance != null &&
-        auth.FirebaseAuth.instance.currentUser != null) {
+    if (auth.FirebaseAuth != null && auth.FirebaseAuth.instance != null && auth.FirebaseAuth.instance.currentUser != null) {
       auth.User user = auth.FirebaseAuth.instance.currentUser;
       if (user != null) {
         // Sign out with google
@@ -290,8 +274,7 @@ class _SplashScreenState extends State<SplashScreen> {
           }
         }
         print("Device ID : " + deviceId);
-        StoreProvider.of<AppState>(context)
-            .dispatch(new LoggedUser(UserState.fromFirebaseUser(user, deviceId, serverToken)));
+        StoreProvider.of<AppState>(context).dispatch(new LoggedUser(UserState.fromFirebaseUser(user, deviceId, serverToken)));
         Device device = Device(name: "device", id: deviceId, user_uid: user.uid);
         StoreProvider.of<AppState>(context).dispatch(new UpdateUserDevice(device));
         Token token = Token(name: "token", id: serverToken, user_uid: user.uid);
