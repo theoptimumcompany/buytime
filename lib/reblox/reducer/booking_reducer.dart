@@ -24,6 +24,22 @@ class DeleteBooking {
   BookingState get bookingState => _bookingState;
 }
 
+class SendRequestBooking {
+  String _sendRequestBooking;
+
+  SendRequestBooking(this._sendRequestBooking);
+
+  String get sendRequestBooking => _sendRequestBooking;
+}
+
+class ClosedRequestBooking {
+  String _closedRequestBooking;
+
+  ClosedRequestBooking(this._closedRequestBooking);
+
+  String get closedRequestBooking => _closedRequestBooking;
+}
+
 
 BookingState bookingReducer(BookingState state, action) {
   BookingState bookingState = new BookingState.fromState(state);

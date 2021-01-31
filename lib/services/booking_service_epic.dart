@@ -39,6 +39,6 @@ class BookingCreateRequestService implements EpicClass<AppState> {
         // example: return new ErrorInBookingCreation(event.bookingState);
       }
       return new AddBooking(event.bookingState);
-    });
+    }).expand((element) => [ClosedRequestBooking('Request success')]);
   }
 }

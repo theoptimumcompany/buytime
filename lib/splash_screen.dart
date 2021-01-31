@@ -98,7 +98,11 @@ class _SplashScreenState extends State<SplashScreen> {
       final Uri deepLink = dynamicLink?.link;
 
       if (deepLink != null) {
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) => InviteGuestForm()));
+        if (deepLink.queryParameters.containsKey('booking')) {
+          String id = deepLink.queryParameters['booking'];
+          debugPrint('splash_screen: booking: $id');
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) => UI_U_Tabs()));
+          }
       }
     }, onError: (OnLinkErrorException e) async {
       print('onLinkError');
@@ -110,7 +114,11 @@ class _SplashScreenState extends State<SplashScreen> {
     final Uri deepLink = data?.link;
 
     if (deepLink != null) {
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) => UI_U_Tabs()));
+      if (deepLink.queryParameters.containsKey('booking')) {
+        String id = deepLink.queryParameters['booking'];
+        debugPrint('splash_screen: booking: $id');
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) => UI_U_Tabs()));
+      }
     }
   }
 
