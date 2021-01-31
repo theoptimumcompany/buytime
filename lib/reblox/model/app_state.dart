@@ -3,6 +3,7 @@ import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/model/category/category_list_state.dart';
 import 'package:Buytime/reblox/model/category/category_state.dart';
+import 'package:Buytime/reblox/model/category/invitation/category_invite_state.dart';
 import 'package:Buytime/reblox/model/order/order_list_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/pipeline/pipeline.dart';
@@ -32,6 +33,7 @@ class AppState {
   StripeState stripe;
   UserState user;
   CategoryState category;
+  CategoryInviteState categoryInvite;
   CategoryListState categoryList;
   CategoryTree categoryTree;
   ServiceState serviceState;
@@ -50,6 +52,7 @@ class AppState {
     @required this.businessList,
     @required this.user,
     @required this.category,
+    @required this.categoryInvite,
     @required this.categoryList,
     @required this.categoryTree,
     @required this.serviceState,
@@ -69,6 +72,7 @@ class AppState {
     businessList = BusinessListState();
     user = UserState();
     category = CategoryState();
+    categoryInvite = CategoryInviteState();
     categoryList = CategoryListState();
     categoryTree = CategoryTree();
     serviceState = ServiceState();
@@ -87,6 +91,7 @@ class AppState {
       BusinessListState businessList,
       UserState user,
       CategoryState category,
+      CategoryInviteState categoryInvite,
       CategoryListState categoryList,
       CategoryTree categoryTree,
       ServiceState serviceState,
@@ -103,6 +108,7 @@ class AppState {
     this.businessList = businessList;
     this.user = user;
     this.category = category;
+    this.categoryInvite = categoryInvite;
     this.categoryList = categoryList;
     this.categoryTree = categoryTree;
     this.serviceState = serviceState;
@@ -122,6 +128,7 @@ class AppState {
     businessList = json['businessList'];
     user = json['user'];
     category = json['category'];
+    categoryInvite = json['categoryInvite'];
     categoryList = json['categoryList'];
     categoryTree = json['categoryTree'];
     serviceState = json['serviceState'];
@@ -141,6 +148,7 @@ class AppState {
         'businessList': businessList,
         'user': user,
         'category': category,
+        'categoryInvite': categoryInvite,
         'categoryList': categoryList,
         'categoryTree': categoryTree,
         'serviceState': serviceState,
