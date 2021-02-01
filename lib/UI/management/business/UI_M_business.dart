@@ -147,7 +147,7 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                                             ///Welcome message 'Hi ...'
                                             Container(
                                               child: Text(
-                                                'Hi ',
+                                                'Hi ' + snapshot.user.name,
                                                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25, color: Colors.black.withOpacity(0.7)),
                                               ),
                                             ),
