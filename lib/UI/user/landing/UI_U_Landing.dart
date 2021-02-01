@@ -30,7 +30,6 @@ import 'package:Buytime/utils/theme/buytime_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:animations/animations.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -51,25 +50,6 @@ class LandingState extends State<Landing> {
     super.initState();
     cards.add(LandingCardWidget('Enter booking code', 'Start your journey', 'assets/img/booking_code.png', null));
     cards.add(LandingCardWidget('About Buytime', 'Discover our network', 'assets/img/beach_girl.png', null));
-  }
-
-  Future<Uri> createDynamicLink(String id) async {
-    final DynamicLinkParameters parameters = DynamicLinkParameters(
-      uriPrefix: 'https://buytime.page.link',
-      link: Uri.parse('https://buytime.page.link/booking/?booking=$id'),
-      androidParameters: AndroidParameters(
-        packageName: 'com.theoptimumcompany.buytime',
-        minimumVersion: 1,
-      ),
-      iosParameters: IosParameters(
-        bundleId: 'com.theoptimumcompany.buytime',
-        minimumVersion: '1',
-        appStoreId: '1508552491',
-      ),
-    );
-    var dynamicUrl = await parameters.buildUrl();
-    print("Link dinamico creato " + dynamicUrl.toString());
-    return dynamicUrl;
   }
 
   @override
@@ -129,10 +109,10 @@ class LandingState extends State<Landing> {
                                       margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, right: SizeConfig.safeBlockHorizontal * 4),
                                       child: IconButton(
                                         onPressed: () async{
-                                          final RenderBox box = context.findRenderObject();
+                                          /*final RenderBox box = context.findRenderObject();
                                           Uri link = await createDynamicLink('prova');
                                           Share.share('check out Buytime App at $link', subject: 'Take your Time!', sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
-                                         /* Share.share('Share', subject:
+                                          Share.share('Share', subject:
                                           Platform.isAndroid ?
                                               'https://play.google.com/store/apps/details?id=com.theoptimumcompany.buytime' :
                                           'Test'

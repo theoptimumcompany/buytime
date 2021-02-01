@@ -21,6 +21,7 @@ class AppRoutes {
   static const login = "/login";
   static const registration = "/history";
   static const orderDetail = "/orderDetail";
+  static const bookingDetails = "/bookingDetails";
 }
 
 class AppState {

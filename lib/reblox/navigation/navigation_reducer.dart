@@ -1,4 +1,7 @@
+import 'package:Buytime/main.dart';
+import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:redux/redux.dart';
+import 'package:redux_epics/redux_epics.dart';
 
 final navigationReducer = combineReducers<List<String>>([
   TypedReducer<List<String>, NavigateReplaceAction>(_navigateReplace),
@@ -6,6 +9,21 @@ final navigationReducer = combineReducers<List<String>>([
   TypedReducer<List<String>, NavigatePopAction>(_navigatePop),
 ]);
 
+List<String> _navigateReplace(
+    List<String> route, NavigateReplaceAction action) =>
+    [action.routeName];
+
+List<String> _navigatePush(List<String> route, NavigatePushAction action) {
+  var result = List<String>.from(route);
+  result.add(action.routeName);
+  return result;
+}
+
+List<String> _navigatePop(List<String> route, NavigatePopAction action) {
+  var result = List<String>.from(route);
+  result.removeLast();
+  return result;
+}
 
 class NavigateReplaceAction {
   final String routeName;
@@ -35,21 +53,4 @@ class NavigatePopAction {
   String toString() {
     return 'NavigatePopAction';
   }
-}
-
-
-List<String> _navigateReplace(
-    List<String> route, NavigateReplaceAction action) =>
-    [action.routeName];
-
-List<String> _navigatePush(List<String> route, NavigatePushAction action) {
-  var result = List<String>.from(route);
-  result.add(action.routeName);
-  return result;
-}
-
-List<String> _navigatePop(List<String> route, NavigatePopAction action) {
-  var result = List<String>.from(route);
-  result.removeLast();
-  return result;
 }

@@ -1,33 +1,25 @@
-import 'package:Buytime/reblox/model/business/snippet/business_snippet_state.dart';
+import 'package:Buytime/UI/management/invite/UI_M_BookingDetails.dart';
 import 'package:Buytime/reblox/model/category/invitation/category_invite_state.dart';
 import 'package:Buytime/reblox/model/category/tree/category_tree_state.dart';
-import 'package:Buytime/reblox/model/snippet/parent.dart';
 import 'package:Buytime/services/category_invite_service_epic.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/UI/user/login/UI_U_Home.dart';
-import 'package:Buytime/UI/user/login/UI_U_Login.dart';
-import 'package:Buytime/UI/user/order/UI_U_OrderDetail.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/business/business_list_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/model/category/category_list_state.dart';
-import 'package:Buytime/reblox/model/category/snippet/category_snippet_state.dart';
 import 'package:Buytime/reblox/model/category/category_state.dart';
 import 'package:Buytime/reblox/model/old/filter_search_state.dart';
-import 'package:Buytime/reblox/model/snippet/generic.dart';
-import 'package:Buytime/reblox/model/order/order_entry.dart';
 import 'package:Buytime/reblox/model/order/order_list_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/pipeline/pipeline.dart';
 import 'package:Buytime/reblox/model/pipeline/pipeline_list_state.dart';
 import 'package:Buytime/reblox/model/service/service_list_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
-import 'package:Buytime/reblox/model/stripe/stripe_card_response.dart';
 import 'package:Buytime/reblox/model/stripe/stripe_state.dart';
 import 'package:Buytime/reblox/model/user/user_state.dart';
 import 'package:Buytime/reblox/reducer/app_reducer.dart';
 import 'package:Buytime/reblox/navigation/route_aware_widget.dart';
-import 'package:Buytime/UI/user/login/UI_U_Registration.dart';
 import 'package:Buytime/services/business_service_epic.dart';
 import 'package:Buytime/services/category_snippet_service_epic.dart';
 import 'package:Buytime/services/category_service_epic.dart';
@@ -43,12 +35,12 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_redux_navigation/flutter_redux_navigation.dart';
 import 'package:redux/redux.dart';
 import 'package:redux_epics/redux_epics.dart';
-import 'reblox/navigation/navigation_reducer.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/services/booking_service_epic.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:Buytime/reblox/navigation/navigation_middleware.dart';
 
 void main() {
+
   final epics = combineEpics<AppState>([
     BusinessRequestService(),
     BusinessUpdateService(),
@@ -90,6 +82,7 @@ void main() {
     OrderUpdateService(),
     OrderCreateService(),
   ]);
+
   final _initialState = AppState(
     category: CategoryState().toEmpty(),
     categoryInvite: CategoryInviteState().toEmpty(),
@@ -111,12 +104,7 @@ void main() {
   final store = new Store<AppState>(
     appReducer,
     initialState: _initialState,
-    middleware: [
-      EpicMiddleware<AppState>(epics),
-      TypedMiddleware<AppState, NavigateReplaceAction>(_navigateReplace),
-      TypedMiddleware<AppState, NavigatePushAction>(_navigate),
-      TypedMiddleware<AppState, NavigatePopAction>(_navigatePop),
-    ],
+    middleware: createNavigationMiddleware(epics),
   );
 
   // Ensure that plugin services are initialized so that `availableCameras()`
@@ -133,8 +121,10 @@ class Buytime extends StatelessWidget {
 
   MaterialPageRoute _getRoute(RouteSettings settings) {
     switch (settings.name) {
-      case AppRoutes.orderDetail:
-        return MainRoute(UI_U_OrderDetail(), settings: settings);
+      case AppRoutes.home:
+        return MainRoute(Home(), settings: settings);
+      case AppRoutes.bookingDetails:
+        return FabRoute(BookingDetails(), settings: settings);
     }
   }
 
@@ -145,20 +135,22 @@ class Buytime extends StatelessWidget {
     return StoreProvider<AppState>(
       store: store,
       child: MaterialApp(
-        navigatorKey: NavigatorHolder.navigatorKey,
+        navigatorKey: navigatorKey,
         navigatorObservers: [routeObserver],
         onGenerateRoute: (RouteSettings settings) => _getRoute(settings),
         title: 'Buytime',
         debugShowCheckedModeBanner: false,
         theme: BuytimeTheme().userTheme,
         home: SplashScreen(),
-        routes: <String, WidgetBuilder>{
+        /*routes: <String, WidgetBuilder>{
           // Set routes for using the Navigator.
-          '/home': (BuildContext context) => new Home(),
-          '/login': (BuildContext context) => new Login(),
-          '/registration': (BuildContext context) => new Registration(),
-          '/orderDetail': (BuildContext context) => new UI_U_OrderDetail(),
-        },
+          '/home': (BuildContext context) => Home(),
+          '/login': (BuildContext context) => Login(),
+          '/registration': (BuildContext context) => Registration(),
+          '/orderDetail': (BuildContext context) => UI_U_OrderDetail(),
+          '/tabs': (BuildContext context) => UI_U_Tabs(),
+          '/bookingDetails': (BuildContext context) => BookingDetails(),
+        },*/
       ),
     );
   }
@@ -195,29 +187,4 @@ class FabRoute<T> extends MaterialPageRoute<T> {
   }
 }
 
-_navigateReplace(Store<AppState> store, action, NextDispatcher next) {
-  final routeName = (action as NavigateReplaceAction).routeName;
-  if (store.state.route.last != routeName) {
-    navigatorKey.currentState.pushReplacementNamed(routeName);
-  }
-  next(action); //This need to be after name checks
-}
 
-_navigatePop(Store<AppState> store, action, NextDispatcher next) {
-  if (action is NavigatePopAction && navigatorKey.currentState.canPop()) {
-    navigatorKey.currentState.pop();
-  } else if (action is NavigatePushAction) {
-    if (store.state.route.last != action.routeName) {
-      navigatorKey.currentState.pushNamed(action.routeName);
-    }
-  }
-  next(action); //This need to be after name checks
-}
-
-_navigate(Store<AppState> store, action, NextDispatcher next) {
-  final routeName = (action as NavigatePushAction).routeName;
-  if (store.state.route.last != routeName) {
-    navigatorKey.currentState.pushNamed(routeName);
-  }
-  next(action); //This need to be after name checks
-}

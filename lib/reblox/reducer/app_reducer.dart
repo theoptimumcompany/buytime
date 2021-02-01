@@ -15,6 +15,7 @@ import 'package:Buytime/reblox/model/service/service_list_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/model/stripe/stripe_state.dart';
 import 'package:Buytime/reblox/model/user/user_state.dart';
+import 'package:Buytime/reblox/navigation/navigation_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_invite_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_list_reducer.dart';
@@ -73,6 +74,7 @@ AppState appReducer(AppState state, dynamic action) {
     serviceList: serviceListState,
     pipeline: pipeline,
     pipelineList: pipelineList,
+    route: navigationReducer(state.route, action)
   );
 
   if (action is ClickOnBusinessState) { // reset the store before going to the service list

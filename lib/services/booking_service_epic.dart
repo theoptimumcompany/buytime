@@ -1,11 +1,16 @@
 import 'package:Buytime/reblox/model/app_state.dart';
+import 'package:Buytime/reblox/model/booking/booking_state.dart';
+import 'package:Buytime/reblox/navigation/navigation_reducer.dart';
 import 'package:Buytime/reblox/reducer/booking_reducer.dart';
 import 'package:Buytime/utils/utils.dart';
 import 'package:redux_epics/redux_epics.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+String bookingId = '';
+
 class BookingCreateRequestService implements EpicClass<AppState> {
+  BookingState bookingState;
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<CreateBookingRequest>().asyncMap((event) async {
@@ -23,9 +28,9 @@ class BookingCreateRequestService implements EpicClass<AppState> {
         if (bookingCodeCollision.size > 0) {
           print('generateBookingCode code collision happening for code: ' + randomBookingCodeCandidate);
         } else {
-            // the candidate is ok, we can break and use it
-            foundRandomCode = true;
-            break;
+          // the candidate is ok, we can break and use it
+          foundRandomCode = true;
+          break;
         }
       }
       if (foundRandomCode) {
@@ -33,12 +38,35 @@ class BookingCreateRequestService implements EpicClass<AppState> {
         event.bookingState.booking_code = randomBookingCodeCandidate;
         // create a booking
         var addingReturn = await FirebaseFirestore.instance.collection("booking").add(event.bookingState.toJson());
+        bookingId = addingReturn.id;
         print('BookingServiceEpic: $addingReturn');
       } else {
         // TODO notify the user something went wrong and he has to try again.
         // example: return new ErrorInBookingCreation(event.bookingState);
       }
-      return new AddBooking(event.bookingState);
-    }).expand((element) => [ClosedRequestBooking('Request success')]);
+      bookingState = event.bookingState;
+    }).expand((element) => [AddBooking(bookingState), ClosedRequestBooking('Request success'), NavigatePushAction(AppRoutes.bookingDetails)]);
+  }
+}
+
+class BookingRequestService implements EpicClass<AppState> {
+  @override
+  Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
+    return actions.whereType<BookingRequest>().asyncMap((event) async{
+      print("BookingService document id:" + event.bookingId);
+
+      DocumentSnapshot query = await FirebaseFirestore.instance
+          .collection("booking")
+          .doc(event.bookingId)
+          .get();
+
+      //print("BusinessService firestore listener:" + snapshot.get('name'));
+
+      BookingState bookingState = new BookingState();
+
+      bookingState = BookingState.fromJson(query.data());
+
+      return new BookingRequestResponse(bookingState);
+    });
   }
 }

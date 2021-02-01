@@ -12,7 +12,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
-import 'UI_M_BookingDetails.dart';
+
+
 
 // ignore: must_be_immutable
 class BookingCreation extends StatefulWidget {
@@ -53,7 +54,6 @@ class _BookingCreationState extends State<BookingCreation> {
 
   BookingState bookingState = BookingState().toEmpty();
 
-
   Future<void> _selectDate(BuildContext context, TextEditingController controller, DateTime cIn, DateTime cOut) async {
     final DateTimeRange picked = await showDateRangePicker(
         context: context,
@@ -93,10 +93,6 @@ class _BookingCreationState extends State<BookingCreation> {
 
     return StoreConnector<AppState, AppState>(
       converter: (store) => store.state,
-      onInit: (store) => {
-        print("UI_M_BookingCreation: Request List of Root Categories"),
-        store.dispatch(BusinessRequestService()),
-      },
       builder: (context, snapshot) {
         BusinessState businessState = snapshot.business;
         return WillPopScope(
@@ -487,7 +483,7 @@ class _BookingCreationState extends State<BookingCreation> {
                                           ],
                                         ),
                                       ),
-                                      ///Send Invite
+                                      ///Create Invite
                                       Row(
                                         mainAxisAlignment: MainAxisAlignment.center,
                                         children: [
@@ -529,7 +525,7 @@ class _BookingCreationState extends State<BookingCreation> {
                                                   borderRadius: new BorderRadius.circular(5),
                                                 ),
                                                 child: Text(
-                                                  "SEND INVITE",
+                                                  "CREATE INVITE",
                                                   style: TextStyle(
                                                       fontSize: 18,
                                                       fontFamily: 'Roboto',
@@ -587,4 +583,5 @@ class _BookingCreationState extends State<BookingCreation> {
       },
     );
   }
+
 }

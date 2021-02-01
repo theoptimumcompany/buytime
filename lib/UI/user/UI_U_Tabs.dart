@@ -10,7 +10,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_svg/svg.dart';
 
 class UI_U_Tabs extends StatefulWidget {
-  final String title = 'Tabs';
+  final String title = '/tabs';
 
   @override
   State<StatefulWidget> createState() => UI_U_TabsState();

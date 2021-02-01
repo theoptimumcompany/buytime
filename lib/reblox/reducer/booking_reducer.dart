@@ -1,4 +1,5 @@
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
+import 'package:flutter/material.dart';
 
 class AddBooking {
   BookingState _bookingState;
@@ -8,10 +9,26 @@ class AddBooking {
   BookingState get bookingState => _bookingState;
 }
 
+class BookingRequest {
+  String _bookingId;
+
+  BookingRequest(this._bookingId);
+
+  String get bookingId => _bookingId;
+}
+
 class CreateBookingRequest {
   BookingState _bookingState;
 
   CreateBookingRequest(this._bookingState);
+
+  BookingState get bookingState => _bookingState;
+}
+
+class BookingRequestResponse {
+  BookingState _bookingState;
+
+  BookingRequestResponse(this._bookingState);
 
   BookingState get bookingState => _bookingState;
 }
@@ -46,8 +63,10 @@ BookingState bookingReducer(BookingState state, action) {
   
   if (action is AddBooking) {
     bookingState = action.bookingState.copyWith();
+    debugPrint('booking_reducer: ${bookingState.user.first.name}');
     return bookingState;
   }
+
   if (action is DeleteBooking) {
     bookingState = BookingState().toEmpty();
     return bookingState;
