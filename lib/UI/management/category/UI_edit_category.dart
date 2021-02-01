@@ -34,7 +34,7 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
 
   Parent _dropdownParentCategory = Parent(level: 0, id: "no_parent", name: "No Parent");
 
-  List<DropdownMenuItem<Parent>> _dropdownMenuParentCategory = new List<DropdownMenuItem<Parent>>();
+  List<DropdownMenuItem<Parent>> _dropdownMenuParentCategory = [];
 
   var size;
 
@@ -95,7 +95,10 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
       items.insert(
         0,
         DropdownMenuItem(
-          child: Text(item.name),
+          child: Text(
+            item.name,
+            overflow: TextOverflow.ellipsis,
+          ),
           value: item,
         ),
       );
@@ -209,6 +212,7 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
               ///Avviare Spinner una volta pigiato invita, per attendere i controlli fatti dalla cloud function
               if (validateAndSaveInvite()) {
                 Uri link = await createDynamicLink(StoreProvider.of<AppState>(context).state.category.id);
+
                 ///Controllo se invito manager o worker e lancio la opportuna dispatch
                 CategoryInviteState categoryInvite = CategoryInviteState().toEmpty();
                 switch (role) {
@@ -475,16 +479,19 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
                       },
                     ),
                   ),
-                  Container(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 0.0),
-                      child: Text(
-                        "Edit " + snapshot.category.name,
-                        textAlign: TextAlign.start,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: media.height * 0.028,
-                          fontWeight: FontWeight.w400,
+                  Flexible(
+                    child: Container(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 0.0),
+                        child: Text(
+                          "Edit " + snapshot.category.name,
+                          textAlign: TextAlign.start,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: media.height * 0.028,
+                            fontWeight: FontWeight.w400,
+                          ),
                         ),
                       ),
                     ),
@@ -581,6 +588,7 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
                             padding: const EdgeInsets.all(6.0),
                             child: DropdownButtonHideUnderline(
                               child: DropdownButtonFormField<Parent>(
+                                  isExpanded: true,
                                   value: selectedParentCategory,
                                   items: _dropdownMenuParentCategory,
                                   decoration: InputDecoration(labelText: 'Parent Category', enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white))),

@@ -62,8 +62,7 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
   }
 
   bool validateEmail(String value) {
-    Pattern pattern =
-        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+    Pattern pattern = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
     RegExp regex = new RegExp(pattern);
     return (!regex.hasMatch(value)) ? false : true;
   }
@@ -87,7 +86,10 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
 
       items.add(
         DropdownMenuItem(
-          child: Text(item.name),
+          child: Text(
+            item.name,
+            overflow: TextOverflow.ellipsis,
+          ),
           value: item,
         ),
       );
@@ -208,23 +210,20 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
                         if (validateAndSave()) {
                           if (changeParent == false) {
                             print("CategoryCreate : Parent non Scelto");
-                            CategoryState categoryCreate =
-                                snapshot.category != null ? snapshot.category : CategoryState().toEmpty();
+                            CategoryState categoryCreate = snapshot.category != null ? snapshot.category : CategoryState().toEmpty();
                             Parent newCategoryParent = selectedDropValue;
                             print("Livello prima : " + snapshot.category.level.toString());
                             categoryCreate.parent = newCategoryParent;
                             if (categoryCreate.parent != _dropdownMenuParentCategory.first.value) {
                               categoryCreate.level = newCategoryParent.level + 1;
-                            }
-                            else{
+                            } else {
                               categoryCreate.level = 0;
                             }
 
                             StoreProvider.of<AppState>(context).dispatch(new CreateCategory(categoryCreate));
                             StoreProvider.of<AppState>(context).dispatch(new AddCategoryTree(newCategoryParent));
                           } else {
-                            CategoryState categoryCreate =
-                                snapshot.category != null ? snapshot.category : CategoryState().toEmpty();
+                            CategoryState categoryCreate = snapshot.category != null ? snapshot.category : CategoryState().toEmpty();
                             StoreProvider.of<AppState>(context).dispatch(new CreateCategory(categoryCreate));
                             StoreProvider.of<AppState>(context).dispatch(new AddCategoryTree(newParent));
                           }
@@ -255,8 +254,7 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
                           child: Center(
                             child: Container(
                               width: media.width * 0.9,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
+                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
                               child: Form(
                                   key: _formKey,
                                   child: Padding(
@@ -266,8 +264,7 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
                                       initialValue: _selectedCategoryName,
                                       onChanged: (value) {
                                         _selectedCategoryName = value;
-                                        StoreProvider.of<AppState>(context)
-                                            .dispatch(SetCategoryName(_selectedCategoryName));
+                                        StoreProvider.of<AppState>(context).dispatch(SetCategoryName(_selectedCategoryName));
                                       },
                                       onSaved: (value) {
                                         _selectedCategoryName = value;
@@ -283,26 +280,22 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
                           child: Center(
                             child: Container(
                               width: media.width * 0.9,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
+                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: DropdownButtonHideUnderline(
                                   child: DropdownButtonFormField<Parent>(
+                                      isExpanded: true,
                                       value: selectedDropValue,
                                       items: _dropdownMenuParentCategory,
-                                      decoration: InputDecoration(
-                                          labelText: 'Parent Category',
-                                          enabledBorder:
-                                              UnderlineInputBorder(borderSide: BorderSide(color: Colors.white))),
+                                      decoration: InputDecoration(labelText: 'Parent Category', enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white))),
                                       onChanged: (Parent newValue) {
                                         setState(() {
                                           changeParent = true;
                                           selectedDropValue = newValue;
                                           newParent = newValue;
                                           print("Drop Selezionato su onchangedrop : " + selectedDropValue.name);
-                                          setNewCategoryParent(
-                                              selectedDropValue, snapshot.categoryTree.categoryNodeList);
+                                          setNewCategoryParent(selectedDropValue, snapshot.categoryTree.categoryNodeList);
                                         });
                                       }),
                                 ),
