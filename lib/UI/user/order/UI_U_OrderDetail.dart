@@ -1,11 +1,10 @@
-import 'package:Buytime/UI/user/service/UI_U_service_list.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reusable/appbar/user_buytime_appbar.dart';
 import 'package:Buytime/utils/globals.dart';
 import 'package:Buytime/reusable/order/optimum_order_item_card_medium.dart';
-import 'package:Buytime/UI/user/cart/UI_U_stripe_payment.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -78,7 +77,7 @@ class UI_U_OrderDetailState extends State<UI_U_OrderDetail> {
                   Padding(
                     padding: const EdgeInsets.only(top: 30.0, left: 10.0,bottom: 5.0),
                     child: Text(
-                      "Ordine confermato",
+                      AppLocalizations.of(context).orderConfirmed,
                       textAlign: TextAlign.start,
                       style: TextStyle(
                         fontSize: media.height * 0.035,
@@ -89,7 +88,7 @@ class UI_U_OrderDetailState extends State<UI_U_OrderDetail> {
                   Padding(
                     padding: const EdgeInsets.only(left: 10.0),
                     child: Text(
-                      formattedDate.split(" ")[0].toString() + " alle " + formattedDate.split(" ")[1].toString(),
+                      formattedDate.split(" ")[0].toString() + AppLocalizations.of(context).at + formattedDate.split(" ")[1].toString(),
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         fontWeight: FontWeight.w700,
@@ -127,14 +126,14 @@ class UI_U_OrderDetailState extends State<UI_U_OrderDetail> {
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
                                               Text(
-                                                "Totale: € " + confirmedOrder.total.toStringAsFixed(2),
+                                                AppLocalizations.of(context).total + confirmedOrder.total.toStringAsFixed(2),
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.w700,
                                                   fontSize: media.height * 0.026,
                                                 ),
                                               ),
                                               Text(
-                                                "IVA: € " + (confirmedOrder.total != null ? (confirmedOrder.total * 0.25).toStringAsFixed(2) : "0"),
+                                                AppLocalizations.of(context).tax + (confirmedOrder.total != null ? (confirmedOrder.total * 0.25).toStringAsFixed(2) : "0"),
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.w400,
                                                   fontSize: media.height * 0.020,
@@ -152,7 +151,7 @@ class UI_U_OrderDetailState extends State<UI_U_OrderDetail> {
                     child: Padding(
                       padding: const EdgeInsets.only(top: 30.0, left: 10.0),
                       child: Text(
-                        "Grazie per il tuo ordine presso " + confirmedOrder.business?.name + "!",
+                        AppLocalizations.of(context).thanksOrder + confirmedOrder.business?.name + "!",
                         textAlign: TextAlign.start,
                         style: TextStyle(
                           fontSize: media.height * 0.035,

@@ -1,6 +1,5 @@
-
 import 'dart:async';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/utils/b_cube_grid_spinner.dart';
 import 'package:Buytime/utils/size_config.dart';
@@ -114,7 +113,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                       Container(
                         margin: EdgeInsets.only(top:  SizeConfig.safeBlockVertical * 2.5),
                         child: Text(
-                          serviceState.name ?? 'ServiceName',
+                          serviceState.name ?? AppLocalizations.of(context).serviceName,
                           style: TextStyle(
                               fontFamily: BuytimeTheme.FontFamily,
                               color: Colors.black,
@@ -126,7 +125,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                       ///Service Name Text
                       Container(
                         child: Text(
-                          serviceState.name ?? 'ServiceName',
+                          serviceState.name ?? AppLocalizations.of(context).serviceName,
                           style: TextStyle(
                               fontFamily: BuytimeTheme.FontFamily,
                               color: Colors.grey,
@@ -138,7 +137,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                       ///Amount
                       Container(
                         child: Text(
-                          serviceState.price != null ? '€ ${serviceState.price}' : '€ 99/ Hour',
+                          serviceState.price != null ? '€ ${serviceState.price}' : '€ 99/ ' + AppLocalizations.of(context).hour,
                           style: TextStyle(
                               fontFamily: BuytimeTheme.FontFamily,
                               color: Colors.grey,
@@ -202,7 +201,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                               borderRadius: new BorderRadius.circular(5),
                             ),
                             child: Text(
-                              "ADD TO CART",
+                              AppLocalizations.of(context).addToCart,
                               style: TextStyle(
                                 fontSize: 18,
                                 fontFamily: 'Roboto',

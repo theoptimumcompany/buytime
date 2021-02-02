@@ -2,7 +2,7 @@ import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/UI/user/service/UI_U_service_list.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
-import 'package:Buytime/reblox/reducer/order_list_reducer.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reusable/appbar/user_buytime_appbar.dart';
 import 'package:Buytime/utils/globals.dart';
@@ -88,7 +88,7 @@ class UI_U_CartState extends State<UI_U_Cart> {
                       Padding(
                         padding: const EdgeInsets.only(top: 30.0, left: 10.0),
                         child: Text(
-                          "Ordine presso " + StoreProvider.of<AppState>(context).state.business.name,
+                          AppLocalizations.of(context).orderIn + StoreProvider.of<AppState>(context).state.business.name,
                           textAlign: TextAlign.start,
                           style: TextStyle(
                             fontSize: media.height * 0.025,
@@ -122,7 +122,7 @@ class UI_U_CartState extends State<UI_U_Cart> {
                                                 IconButton(
                                                   icon: Icon(
                                                     Icons.remove_shopping_cart,
-                                                    color: BuytimeTheme.IconGrey,
+                                                    color: BuytimeTheme.SymbolGrey,
                                                   ),
                                                   onPressed: () {
                                                     deleteItem(snapshot, index);
@@ -159,7 +159,7 @@ class UI_U_CartState extends State<UI_U_Cart> {
                                       padding: const EdgeInsets.all(8.0),
                                       child: Row(
                                         mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [Icon(Icons.credit_card, color: Colors.white), SizedBox(width: 10.0), Text("ORDINA E PAGA", style: TextStyle(color: Colors.white))],
+                                        children: [Icon(Icons.credit_card, color: Colors.white), SizedBox(width: 10.0), Text(AppLocalizations.of(context).orderAndPay, style: TextStyle(color: Colors.white))],
                                       ),
                                     ),
                                   ),

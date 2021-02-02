@@ -3,7 +3,6 @@ import 'package:Buytime/UI/user/order/UI_U_OrderDetail.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reblox/reducer/stripe_payment_reducer.dart';
-import 'package:Buytime/utils/globals.dart';
 import 'package:Buytime/reusable/order/order_total.dart';
 import 'package:Buytime/reusable/stripe/optimum_credit_card_button.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +11,7 @@ import 'package:http/http.dart' as http;
 import 'package:stripe_sdk/stripe_sdk.dart';
 import 'package:stripe_sdk/stripe_sdk_ui.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // TODO separate service and UI
 class UI_U_StripePayment extends StatefulWidget {
@@ -43,7 +43,7 @@ class _UI_U_StripePaymentState extends State<UI_U_StripePayment> {
     var media = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: Text("Scelta metodo di pagamento"),
+        title: Text(AppLocalizations.of(context).choosePaymentMethod),
       ),
       body: new SingleChildScrollView(
         child: new GestureDetector(
@@ -90,7 +90,7 @@ class _UI_U_StripePaymentState extends State<UI_U_StripePayment> {
                           padding: const EdgeInsets.only(top:20.0),
                           child: Column(
                             children: [
-                              Text("Pagamento in corso"),
+                              Text(AppLocalizations.of(context).processingPayment),
                               SizedBox(height: 8.0,),
                               CircularProgressIndicator(),
                             ],
@@ -111,7 +111,7 @@ class _UI_U_StripePaymentState extends State<UI_U_StripePayment> {
                                       child: Padding(
                                         padding: const EdgeInsets.only(left: 20.0),
                                         child: Text(
-                                          "Paga con:",
+                                          AppLocalizations.of(context).payWith,
                                           style: TextStyle(fontSize: 25.0),
                                         ),
                                       ),
@@ -129,7 +129,7 @@ class _UI_U_StripePaymentState extends State<UI_U_StripePayment> {
                                       },
                                     ),
                                     snapshot?.stripe?.error == "error" ? // no
-                                        Text("an error has occurred, try again later") :
+                                        Text(AppLocalizations.of(context).anErrorOccurredTryLater) :
                                         SizedBox()
                                   ],
                                 ),
@@ -164,8 +164,8 @@ class _UI_U_StripePaymentState extends State<UI_U_StripePayment> {
 
                                               },
                                               child: snapshot?.stripe?.stripeCard?.last4 == null && !snapshot?.order?.addCardProgress ? // no
-                                              AddCardButton(media, "Aggiungi carta di credito", Color.fromRGBO(1, 175, 81, 1.0)) :
-                                              Text("caricamento..."),
+                                              AddCardButton(media, AppLocalizations.of(context).addCreditCard, Color.fromRGBO(1, 175, 81, 1.0)) :
+                                              Text(AppLocalizations.of(context).loading),
                                             ),
 
                                           ],
@@ -215,15 +215,15 @@ class _UI_U_StripePaymentState extends State<UI_U_StripePayment> {
     final String customerEmail = getCustomerEmail();
 
     if (!stripeCard.validateCVC()) {
-      showAlertDialog(context, "Error", "CVC not valid.");
+      showAlertDialog(context, AppLocalizations.of(context).error, AppLocalizations.of(context).cvcNotValid);
       return;
     }
     if (!stripeCard.validateDate()) {
-      showAlertDialog(context, "Errore", "Date not valid.");
+      showAlertDialog(context, AppLocalizations.of(context).error, AppLocalizations.of(context).dateNotValid);
       return;
     }
     if (!stripeCard.validateNumber()) {
-      showAlertDialog(context, "Error", "Number not valid.");
+      showAlertDialog(context, AppLocalizations.of(context).error, AppLocalizations.of(context).numberNotValid);
       return;
     }
 
@@ -236,15 +236,15 @@ class _UI_U_StripePaymentState extends State<UI_U_StripePayment> {
       paymentIntentRes = await confirmPayment3DSecure(clientSecret, paymentMethodId);
 
     if (paymentIntentRes['status'] != 'succeeded') {
-      showAlertDialog(context, "Warning", "Canceled Transaction.");
+      showAlertDialog(context, AppLocalizations.of(context).warning, AppLocalizations.of(context).canceledTransaction);
       return;
     }
 
     if (paymentIntentRes['status'] == 'succeeded') {
-      showAlertDialog(context, "Success", "Thanks for buying!");
+      showAlertDialog(context, AppLocalizations.of(context).success, AppLocalizations.of(context).thanksForBuying);
       return;
     }
-    showAlertDialog(context, "Warning", "Transaction rejected.\nSomething went wrong");
+    showAlertDialog(context, AppLocalizations.of(context).warning, AppLocalizations.of(context).transactionRejected);
   }
 
   void addPaymentMethod(context) async {
@@ -252,15 +252,15 @@ class _UI_U_StripePaymentState extends State<UI_U_StripePayment> {
     final String customerEmail = getCustomerEmail();
 
     if (!stripeCard.validateCVC()) {
-      showAlertDialog(context, "Error", "CVC not valid.");
+      showAlertDialog(context, AppLocalizations.of(context).error, AppLocalizations.of(context).cvcNotValid);
       return;
     }
     if (!stripeCard.validateDate()) {
-      showAlertDialog(context, "Errore", "Date not valid.");
+      showAlertDialog(context, AppLocalizations.of(context).error, AppLocalizations.of(context).dateNotValid);
       return;
     }
     if (!stripeCard.validateNumber()) {
-      showAlertDialog(context, "Error", "Number not valid.");
+      showAlertDialog(context, AppLocalizations.of(context).error, AppLocalizations.of(context).numberNotValid);
       return;
     }
 
@@ -277,15 +277,15 @@ class _UI_U_StripePaymentState extends State<UI_U_StripePayment> {
     final String customerEmail = getCustomerEmail();
 
     if (!stripeCard.validateCVC()) {
-      showAlertDialog(context, "Error", "CVC not valid.");
+      showAlertDialog(context, AppLocalizations.of(context).error, AppLocalizations.of(context).cvcNotValid);
       return;
     }
     if (!stripeCard.validateDate()) {
-      showAlertDialog(context, "Errore", "Date not valid.");
+      showAlertDialog(context, AppLocalizations.of(context).error, AppLocalizations.of(context).dateNotValid);
       return;
     }
     if (!stripeCard.validateNumber()) {
-      showAlertDialog(context, "Error", "Number not valid.");
+      showAlertDialog(context, AppLocalizations.of(context).error, AppLocalizations.of(context).numberNotValid);
       return;
     }
     // TODO take remotes requests away from this file.
@@ -323,7 +323,7 @@ class _UI_U_StripePaymentState extends State<UI_U_StripePayment> {
           content: Text(message),
           actions: [
             FlatButton(
-              child: Text("OK"),
+              child: Text(AppLocalizations.of(context).ok),
               onPressed: () => Navigator.of(context).pop(), // dismiss dialog
             ),
           ],
@@ -350,7 +350,7 @@ class _UI_U_StripePaymentState extends State<UI_U_StripePayment> {
       //paymentIntentRes = await stripe.api.retrievePaymentIntent(clientSecret);
     } catch (e) {
       print("ERROR_CreatePaymentIntentAndSubmit: $e");
-      showAlertDialog(context, "Error", "Something went wrong.");
+      showAlertDialog(context, AppLocalizations.of(context).error, AppLocalizations.of(context).somethingWentWrong);
     }
     return paymentIntentRes;
   }
@@ -378,7 +378,7 @@ class _UI_U_StripePaymentState extends State<UI_U_StripePayment> {
       paymentIntentRes_3dSecure = await stripe.api.retrievePaymentIntent(clientSecret);
     } catch (e) {
       print("ERROR_ConfirmPayment3DSecure: $e");
-      showAlertDialog(context, "Error", "Something went wrong.");
+      showAlertDialog(context, AppLocalizations.of(context).error, AppLocalizations.of(context).somethingWentWrong);
     }
     return paymentIntentRes_3dSecure;
   }

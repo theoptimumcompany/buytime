@@ -3,6 +3,7 @@ import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/reducer/business_reducer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 typedef OnSaveOrChangedCallback = void Function(String value);
 
@@ -64,14 +65,14 @@ class OptimumFormFieldState extends State<OptimumFormField> {
 
   String validate(String value) {
     if (value.length < minLength) {
-        return 'Name must be more than ' + minLength.toString() + ' characters';
+        return AppLocalizations.of(context).nameMustBeMore + minLength.toString() + AppLocalizations.of(context).characters;
     }
     if (widget.typeOfValidate == "email") {
       Pattern pattern =
           r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
       RegExp regex = new RegExp(pattern);
       if (!regex.hasMatch(value)) {
-        return 'Enter Valid Email';
+        return AppLocalizations.of(context).enterValidEmail;
       }
     }
     return null;

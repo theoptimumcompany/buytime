@@ -4,6 +4,7 @@ import 'package:Buytime/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class TosTermsConditons extends StatefulWidget {
 
@@ -101,7 +102,7 @@ class _TosTermsConditonsState extends State<TosTermsConditons> with WidgetsBindi
                               child: Padding(
                                 padding: const EdgeInsets.symmetric(horizontal: 12.0),
                                 child: Text(
-                                  "Buytime",
+                                  AppLocalizations.of(context).buytime,
                                   style: TextStyle(
                                       fontFamily: 'Roboto',
                                       fontSize: SizeConfig.safeBlockVertical * 5,

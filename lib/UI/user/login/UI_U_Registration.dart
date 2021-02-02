@@ -4,11 +4,10 @@ import 'package:Buytime/reblox/model/snippet/device.dart';
 import 'package:Buytime/reblox/model/snippet/token.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
-import 'package:Buytime/reblox/model/snippet/generic.dart';
 import 'package:Buytime/reblox/model/user/user_state.dart';
 import 'package:Buytime/reblox/reducer/user_reducer.dart';
 import 'package:Buytime/reusable/branded_button.dart';
-import 'package:Buytime/reusable/error_dialog.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:device_info/device_info.dart';
 import 'package:email_validator/email_validator.dart';
@@ -176,7 +175,7 @@ class RegistrationState extends State<Registration> {
 
       ProgressDialog pr = new ProgressDialog(context);
       pr.style(
-          message: 'Authentication ...',
+          message: AppLocalizations.of(context).authentication,
           borderRadius: 10.0,
           backgroundColor: BuytimeTheme.BackgroundWhite,
           progressWidget: CircularProgressIndicator(),
@@ -290,7 +289,7 @@ class RegistrationState extends State<Registration> {
     if (oauthCredential != null) {
       ProgressDialog pr = new ProgressDialog(context);
       pr.style(
-          message: 'Authentication ...',
+          message: AppLocalizations.of(context).authentication,
           borderRadius: 10.0,
           backgroundColor: Colors.white,
           progressWidget: CircularProgressIndicator(),
@@ -363,7 +362,7 @@ class RegistrationState extends State<Registration> {
 
       ProgressDialog pr = new ProgressDialog(context);
       pr.style(
-          message: 'Authentication ...',
+          message: AppLocalizations.of(context).authentication,
           borderRadius: 10.0,
           backgroundColor: BuytimeTheme.BackgroundWhite,
           progressWidget: CircularProgressIndicator(),
@@ -428,6 +427,7 @@ class RegistrationState extends State<Registration> {
     return facebookLoginResult;
   }
 
+  // TODO add context to translate
   ///Validation
   void checkFormValidation() {
     setState(() {
@@ -526,7 +526,7 @@ class RegistrationState extends State<Registration> {
                                             Container(
                                               margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 5),
                                               child: Text(
-                                                'Please Sign in:',
+                                                AppLocalizations.of(context).createYourAccount,
                                                 style: TextStyle(
                                                     fontFamily: BuytimeTheme.FontFamily,
                                                     color: Colors.black,
@@ -556,7 +556,7 @@ class RegistrationState extends State<Registration> {
                                               errorBorder: OutlineInputBorder(
                                                   borderSide: BorderSide(color: Colors.redAccent),
                                                   borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                              labelText: 'Email address',
+                                              labelText: AppLocalizations.of(context).emailAddress,
                                               //hintText: "email *",
                                               //hintStyle: TextStyle(color: Color(0xff666666)),
                                               labelStyle: TextStyle(
@@ -600,7 +600,7 @@ class RegistrationState extends State<Registration> {
                                                 errorBorder: OutlineInputBorder(
                                                     borderSide: BorderSide(color: Colors.redAccent),
                                                     borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                                labelText: 'Password',
+                                                labelText: AppLocalizations.of(context).password,
                                                 //hintText: "email *",
                                                 //hintStyle: TextStyle(color: Color(0xff666666)),
                                                 labelStyle: TextStyle(
@@ -665,7 +665,7 @@ class RegistrationState extends State<Registration> {
                                             Container(
                                               margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 5),
                                               child: Text(
-                                                'Please Sign in:',
+                                                AppLocalizations.of(context).pleaseSignIn,
                                                 style: TextStyle(
                                                     fontFamily: BuytimeTheme.FontFamily,
                                                     color: Colors.black,
@@ -694,7 +694,7 @@ class RegistrationState extends State<Registration> {
                                               errorBorder: OutlineInputBorder(
                                                   borderSide: BorderSide(color: Colors.redAccent),
                                                   borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                              labelText: 'Email address',
+                                              labelText: AppLocalizations.of(context).emailAddress,
                                               //hintText: "email *",
                                               //hintStyle: TextStyle(color: Color(0xff666666)),
                                               labelStyle: TextStyle(
@@ -737,7 +737,7 @@ class RegistrationState extends State<Registration> {
                                                 errorBorder: OutlineInputBorder(
                                                     borderSide: BorderSide(color: Colors.redAccent),
                                                     borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                                labelText: 'Password',
+                                                labelText: AppLocalizations.of(context).password,
                                                 //hintText: "email *",
                                                 //hintStyle: TextStyle(color: Color(0xff666666)),
                                                 labelStyle: TextStyle(
@@ -832,10 +832,9 @@ class RegistrationState extends State<Registration> {
                       child: Container(
                         color: Color(0xff7694aa),
                         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                          BrandedButton("assets/img/google_logo.png", 'Sign up with Google', initiateGoogleSignIn),
-                          BrandedButton("assets/img/apple_logo.png", 'Sign up with Apple', initiateAppleSignIn),
-                          BrandedButton(
-                              "assets/img/facebook_logo.png", 'Sign up with Facebook', initiateFacebookSignIn),
+                          BrandedButton("assets/img/google_logo.png", AppLocalizations.of(context).signGoogle, initiateGoogleSignIn),
+                          BrandedButton("assets/img/apple_logo.png", AppLocalizations.of(context).signApple, initiateAppleSignIn),
+                          BrandedButton("assets/img/facebook_logo.png", AppLocalizations.of(context).signFacebook, initiateFacebookSignIn),
                         ]),
                       ),
                     )

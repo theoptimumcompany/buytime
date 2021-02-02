@@ -15,7 +15,7 @@ class UserTabNavigationItem {
     @required this.title,
     @required this.icon,
   });
-
+// TODO add context to translate
   static List<UserTabNavigationItem> get items => [
     UserTabNavigationItem(
       page: UI_U_BusinessList(),

@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../model/Manager_tab_navigation_item.dart';
 
@@ -55,7 +56,7 @@ class UI_M_TabsState extends State<UI_M_Tabs> {
                               color: Colors.white,
                               size: 40.0,
                             ),
-                            tooltip: 'Show menu',
+                            tooltip: AppLocalizations.of(context).showMenu,
                             onPressed: () {
                               _drawerKeyTabs.currentState.openDrawer();
                             },

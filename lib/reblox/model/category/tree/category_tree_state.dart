@@ -2,6 +2,7 @@
 class CategoryTree {
   String nodeName;
   String nodeId;
+  String categoryRootId;
   int nodeLevel;
   int numberOfCategories;
   List<dynamic> categoryNodeList; // Array di mappe che costruisce l'albero delle categorie
@@ -9,6 +10,7 @@ class CategoryTree {
   CategoryTree({
     this.nodeName,
     this.nodeId,
+    this.categoryRootId,
     this.nodeLevel,
     this.numberOfCategories,
     this.categoryNodeList,
@@ -17,6 +19,7 @@ class CategoryTree {
   CategoryTree.fromState(CategoryTree categoryNode) {
     this.nodeName = categoryNode.nodeName;
     this.nodeId = categoryNode.nodeId;
+    this.categoryRootId = categoryNode.categoryRootId;
     this.nodeLevel = categoryNode.nodeLevel;
     this.numberOfCategories = categoryNode.numberOfCategories;
     this.categoryNodeList = categoryNode.categoryNodeList;
@@ -25,12 +28,14 @@ class CategoryTree {
   CategoryTree copyWith(
       {String nodeName,
       String nodeId,
+      String categoryRootId,
       int nodeLevel,
       int numberOfCategories,
       List<dynamic> categoryNodeList}) {
     return CategoryTree(
       nodeName: nodeName ?? this.nodeName,
       nodeId: nodeId ?? this.nodeId,
+      categoryRootId: categoryRootId ?? this.categoryRootId,
       nodeLevel: nodeLevel ?? this.nodeLevel,
       numberOfCategories: numberOfCategories ?? this.numberOfCategories,
       categoryNodeList: categoryNodeList ?? this.categoryNodeList,
@@ -40,6 +45,7 @@ class CategoryTree {
   CategoryTree.fromJson(Map<String, dynamic> json)
       : nodeName = json['nodeName'],
         nodeId = json['nodeId'],
+        categoryRootId = json['categoryRootId'],
         nodeLevel = json['nodeLevel'],
         numberOfCategories = json['numberOfCategories'],
         categoryNodeList = json['categoryNodeList'];
@@ -47,6 +53,7 @@ class CategoryTree {
   Map<String, dynamic> toJson() => {
         'nodeName': nodeName,
         'nodeId': nodeId,
+        'categoryRootId': categoryRootId,
         'nodeLevel': nodeLevel,
         'numberOfCategories': numberOfCategories,
         'categoryNodeList': categoryNodeList,
@@ -56,6 +63,7 @@ class CategoryTree {
     return CategoryTree(
       nodeName: "",
       nodeId: "",
+      categoryRootId: "",
       nodeLevel: 0,
       numberOfCategories: 0,
       categoryNodeList: null,

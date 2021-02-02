@@ -14,6 +14,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // ignore: must_be_immutable
 class BookingCreation extends StatefulWidget {
@@ -54,7 +55,8 @@ class _BookingCreationState extends State<BookingCreation> {
 
   BookingState bookingState = BookingState().toEmpty();
 
-  Future<void> _selectDate(BuildContext context, DateTime cIn, DateTime cOut) async {
+
+  Future<void> _selectDate(BuildContext context, TextEditingController controller, DateTime cIn, DateTime cOut) async {
     final DateTimeRange picked = await showDateRangePicker(
         context: context,
         initialDateRange: DateTimeRange(start: cIn, end: cOut),
@@ -69,7 +71,6 @@ class _BookingCreationState extends State<BookingCreation> {
         checkIn = picked.start;
         checkOut = picked.end;
       });
-      debugPrint('$checkIn $checkOut');
     }
     return null;
   }
@@ -108,7 +109,7 @@ class _BookingCreationState extends State<BookingCreation> {
                 child: Padding(
                   padding: const EdgeInsets.only(left: 0.0),
                   child: Text(
-                    "Invite Guest",
+                    AppLocalizations.of(context).inviteGuest,
                     textAlign: TextAlign.start,
                     style: TextStyle(
                       color: Colors.white,
@@ -143,7 +144,7 @@ class _BookingCreationState extends State<BookingCreation> {
                                       Container(
                                         margin: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 5, top: SizeConfig.blockSizeVertical * 2),
                                         child: Text(
-                                          'ENTER GUEST\'S DETAILS TO ADD THEM TO BUYTIME',
+                                          AppLocalizations.of(context).enterGuestDetails,
                                           style: TextStyle(
                                               fontFamily: BuytimeTheme.FontFamily,
                                               color: Colors.black,
@@ -220,7 +221,7 @@ class _BookingCreationState extends State<BookingCreation> {
                                                           borderSide: BorderSide(color: Color(0xff666666)),
                                                           borderRadius: BorderRadius.all(Radius.circular(10.0))
                                                       ),
-                                                      labelText: 'Email to invite',
+                                                      labelText: AppLocalizations.of(context).emailToInvite,
                                                       //hintText: "email *",
                                                       //hintStyle: TextStyle(color: Color(0xff666666)),
                                                       labelStyle: TextStyle(
@@ -241,7 +242,7 @@ class _BookingCreationState extends State<BookingCreation> {
                                                     ),
                                                     validator: (String value) {
                                                       if (value.isEmpty && !EmailValidator.validate(value)) {
-                                                        return 'Please enter a valid email address';
+                                                        return AppLocalizations.of(context).pleaseEnterAValidEmail;
                                                       }
                                                       return null;
                                                     },
@@ -266,7 +267,7 @@ class _BookingCreationState extends State<BookingCreation> {
                                                           borderSide: BorderSide(color: Color(0xff666666)),
                                                           borderRadius: BorderRadius.all(Radius.circular(10.0))
                                                       ),
-                                                      labelText: 'Name',
+                                                      labelText: AppLocalizations.of(context).name,
                                                       //hintText: "email *",
                                                       //hintStyle: TextStyle(color: Color(0xff666666)),
                                                       labelStyle: TextStyle(
@@ -282,7 +283,7 @@ class _BookingCreationState extends State<BookingCreation> {
                                                     ),
                                                     validator: (String value) {
                                                       if (value.isEmpty) {
-                                                        return 'Please enter a valid Name';
+                                                        return AppLocalizations.of(context).pleaseEnterAValidName;
                                                       }
                                                       return null;
                                                     },
@@ -307,7 +308,7 @@ class _BookingCreationState extends State<BookingCreation> {
                                                           borderSide: BorderSide(color: Color(0xff666666)),
                                                           borderRadius: BorderRadius.all(Radius.circular(10.0))
                                                       ),
-                                                      labelText: 'Surname',
+                                                      labelText: AppLocalizations.of(context).surname,
                                                       //hintText: "email *",
                                                       //hintStyle: TextStyle(color: Color(0xff666666)),
                                                       labelStyle: TextStyle(
@@ -323,7 +324,7 @@ class _BookingCreationState extends State<BookingCreation> {
                                                     ),
                                                     validator: (String value) {
                                                       if (value.isEmpty) {
-                                                        return 'Please enter a valid Surname';
+                                                        return AppLocalizations.of(context).pleaseEnterAValidSurname;
                                                       }
                                                       return null;
                                                     },
@@ -342,7 +343,7 @@ class _BookingCreationState extends State<BookingCreation> {
                                                       Expanded(
                                                           child:  GestureDetector(
                                                             onTap: ()async{
-                                                              await _selectDate(context, checkIn, checkOut);
+                                                              await _selectDate(context, _checkInController, checkIn, checkOut);
                                                             },
                                                             child: TextFormField(
                                                               enabled: false,
@@ -360,7 +361,7 @@ class _BookingCreationState extends State<BookingCreation> {
                                                                       borderSide: BorderSide(color: Color(0xff666666)),
                                                                       borderRadius: BorderRadius.all(Radius.circular(10.0))
                                                                   ),
-                                                                  labelText: 'Check-in',
+                                                                  labelText: AppLocalizations.of(context).checkIn,
                                                                   //hintText: "email *",
                                                                   //hintStyle: TextStyle(color: Color(0xff666666)),
                                                                   labelStyle: TextStyle(
@@ -379,7 +380,7 @@ class _BookingCreationState extends State<BookingCreation> {
                                                               ),
                                                               validator: (String value) {
                                                                 if (value.isEmpty) {
-                                                                  return 'Please enter a valid interval of dates';
+                                                                  return AppLocalizations.of(context).pleaseEnterAValidDateInterval;
                                                                 }
                                                                 return null;
                                                               },
@@ -393,7 +394,7 @@ class _BookingCreationState extends State<BookingCreation> {
                                                       Expanded(
                                                           child: GestureDetector(
                                                             onTap: () async{
-                                                              await _selectDate(context, checkIn, checkOut);
+                                                              await _selectDate(context, _checkOutController, checkIn, checkOut);
                                                             },
                                                             child: TextFormField(
                                                               enabled: false,
@@ -411,7 +412,7 @@ class _BookingCreationState extends State<BookingCreation> {
                                                                       borderSide: BorderSide(color: Color(0xff666666)),
                                                                       borderRadius: BorderRadius.all(Radius.circular(10.0))
                                                                   ),
-                                                                  labelText: 'Check-out',
+                                                                  labelText: AppLocalizations.of(context).checkOut,
                                                                   //hintText: "email *",
                                                                   //hintStyle: TextStyle(color: Color(0xff666666)),
                                                                   labelStyle: TextStyle(
@@ -431,7 +432,7 @@ class _BookingCreationState extends State<BookingCreation> {
                                                               validator: (String value) {
                                                                 debugPrint('${checkIn.compareTo(checkOut)}');
                                                                 if (value.isEmpty || checkIn.compareTo(checkOut) > 0) {
-                                                                  return 'Please enter a valid interval of dates';
+                                                                  return AppLocalizations.of(context).pleaseEnterAValidDateInterval;
                                                                 }
                                                                 return null;
                                                               },
@@ -464,7 +465,7 @@ class _BookingCreationState extends State<BookingCreation> {
                                                           borderSide: BorderSide(color: Colors.redAccent),
                                                           borderRadius: BorderRadius.all(Radius.circular(10.0))
                                                       ),
-                                                      labelText: 'Number of guests',
+                                                      labelText: AppLocalizations.of(context).numberOfGuest,
                                                       //hintText: "email *",
                                                       //hintStyle: TextStyle(color: Color(0xff666666)),
                                                       labelStyle: TextStyle(
@@ -513,9 +514,6 @@ class _BookingCreationState extends State<BookingCreation> {
 
                                                     bookingState.wide = businessState.wide;
 
-                                                    bookingState.start_date = checkIn;
-                                                    bookingState.end_date = checkOut;
-
                                                     StoreProvider.of<AppState>(context).dispatch(CreateBookingRequest(bookingState));
 
                                                     //Navigator.push(context, MaterialPageRoute(builder: (context) => BookingDetails(bookingState: bookingState)));
@@ -529,7 +527,7 @@ class _BookingCreationState extends State<BookingCreation> {
                                                   borderRadius: new BorderRadius.circular(5),
                                                 ),
                                                 child: Text(
-                                                  "CREATE INVITE",
+                                                  AppLocalizations.of(context).createInvite,
                                                   style: TextStyle(
                                                       fontSize: 18,
                                                       fontFamily: 'Roboto',
@@ -587,5 +585,4 @@ class _BookingCreationState extends State<BookingCreation> {
       },
     );
   }
-
 }

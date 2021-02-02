@@ -8,6 +8,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class UI_U_Tabs extends StatefulWidget {
   final String title = '/tabs';
@@ -47,7 +48,7 @@ class UI_U_TabsState extends State<UI_U_Tabs> {
                     Icons.keyboard_arrow_left,
                     color: Colors.white,
                   ),
-                  tooltip: 'Show menu',
+                  tooltip: AppLocalizations.of(context).showMenu,
                   onPressed: () {
                     //_drawerKeyTabs.currentState.openDrawer();
                     Navigator.of(context).pop();

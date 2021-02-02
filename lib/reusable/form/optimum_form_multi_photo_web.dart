@@ -5,6 +5,7 @@ import 'package:path/path.dart' as path;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:ui';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 
 typedef OnFilePickedCallback = void Function(OptimumFileToUpload fileToUpload);
@@ -102,7 +103,7 @@ class OptimumFormMultiPhotoState extends State<OptimumFormMultiPhoto> {
       child: Column(
         children: [
           Text(
-            text == null ? "static placeholder" : text,
+            text == null ? AppLocalizations.of(context).staticPlaceholder : text,
           ),
           GestureDetector(
             child: image == null ? Image(width: 200, image: assetImage) : image,

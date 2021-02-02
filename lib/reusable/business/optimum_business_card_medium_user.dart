@@ -1,5 +1,6 @@
 import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 typedef OptimumBusinessCardMediumUserCallback = void Function(BusinessState);
 
@@ -70,7 +71,7 @@ class _OptimumBusinessCardMediumUserState
   Widget build(BuildContext context) {
     if (widget.image == null && widget.imageUrl == null) {
       return Container(
-        child: Text("Foto non inserita."),
+        child: Text(AppLocalizations.of(context).photoNotInserted),
       );
     }
     return Container(

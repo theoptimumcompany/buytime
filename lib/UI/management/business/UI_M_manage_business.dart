@@ -1,28 +1,26 @@
 import 'package:Buytime/UI/management/business/UI_M_business.dart';
 import 'package:Buytime/UI/management/business/UI_M_business_list.dart';
-import 'package:Buytime/UI/management/business/UI_C_create_business.dart';
-import 'package:Buytime/UI/management/business/UI_C_edit_business.dart';
+import 'package:Buytime/UI/management/business/UI_M_create_business.dart';
+import 'package:Buytime/UI/management/business/UI_M_edit_business.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
-import 'package:Buytime/UI/user/business/UI_U_business_list.dart';
-import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reusable/appbar/manager_buytime_appbar.dart';
-import 'package:Buytime/reusable/appbar/user_buytime_appbar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_redux/flutter_redux.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 
-class UI_ManageBusiness extends StatefulWidget {
-  UI_ManageBusiness(int indexBusiness) {
+
+class UI_M_ManageBusiness extends StatefulWidget {
+  UI_M_ManageBusiness(int indexBusiness) {
     this.indexBusiness = indexBusiness;
   }
 
   int indexBusiness;
 
   @override
-  State<StatefulWidget> createState() => UI_ManageBusinessState();
+  State<StatefulWidget> createState() => UI_M_ManageBusinessState();
 }
 
-class UI_ManageBusinessState extends State<UI_ManageBusiness> {
+class UI_M_ManageBusinessState extends State<UI_M_ManageBusiness> {
   @override
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
@@ -49,7 +47,7 @@ class UI_ManageBusinessState extends State<UI_ManageBusiness> {
                 ),
               ),
               Text(
-                widget.indexBusiness == -1 ? "Creazione Business" : "Modifica Business",
+                widget.indexBusiness == -1 ? AppLocalizations.of(context).businessCreation : AppLocalizations.of(context).businessEdit,
                 textAlign: TextAlign.start,
                 style: TextStyle(
                   fontSize: media.height * 0.035,
@@ -62,7 +60,7 @@ class UI_ManageBusinessState extends State<UI_ManageBusiness> {
               )
             ],
           ),
-          body: widget.indexBusiness == -1 ? UI_CreateBusiness() : UI_EditBusiness()),
+          body: widget.indexBusiness == -1 ? UI_M_CreateBusiness() : UI_M_EditBusiness()),
     );
   }
 }

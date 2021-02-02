@@ -2,6 +2,7 @@ import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:nfc_in_flutter/nfc_in_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 bool check_remember = false;
 
@@ -67,7 +68,7 @@ class EasyCheckInState extends State<EasyCheckIn>
                       children: <Widget>[
                         Container(
                           child: Text(
-                            "Easy Check-In",
+                            AppLocalizations.of(context).easyCheckIn,
                             style: TextStyle(
                               //color: Colors.blue,
                                 fontWeight: FontWeight.bold,
@@ -82,7 +83,7 @@ class EasyCheckInState extends State<EasyCheckIn>
                         ),
                         Container(
                           child: Text(
-                            "Are you inside the facility?",
+                            AppLocalizations.of(context).areYouInside,
                             style: TextStyle(
                               //color: Colors.blue,
                                 fontWeight: FontWeight.normal,
@@ -113,7 +114,7 @@ class EasyCheckInState extends State<EasyCheckIn>
                                   width: 300,
                                   //padding: EdgeInsets.only(top: 10),
                                   child: Text(
-                                    "We have detected that your device has NFC, Search the NFC symbol to go directly to the service menu",
+                                    AppLocalizations.of(context).nfcDetected,
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       fontFamily: BuytimeTheme.FontFamily,
@@ -153,7 +154,7 @@ class EasyCheckInState extends State<EasyCheckIn>
                                       width: 275,
                                       //margin: EdgeInsets.only(right: 10),
                                       child: Text(
-                                        "find the QR Code around you to quickly check in the service list",
+                                        AppLocalizations.of(context).findQRCode,
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                           fontFamily: BuytimeTheme.FontFamily,
@@ -189,7 +190,7 @@ class EasyCheckInState extends State<EasyCheckIn>
                                     },
                                   ),
                                   Text(
-                                    "Do not show again",
+                                    AppLocalizations.of(context).doNotShowAgain,
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       fontFamily: BuytimeTheme.FontFamily,
@@ -217,7 +218,7 @@ class EasyCheckInState extends State<EasyCheckIn>
                                         borderRadius:
                                         new BorderRadius.circular(500.0)),
                                     child: Text(
-                                      "Ok I got it!",
+                                      AppLocalizations.of(context).okIGotIt,
                                       style: TextStyle(
                                         fontSize: 23,
                                         fontFamily: BuytimeTheme.FontFamily,

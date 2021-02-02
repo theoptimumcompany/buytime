@@ -1,5 +1,5 @@
 import 'package:Buytime/reusable/appbar/manager_buytime_appbar.dart';
-import 'package:Buytime/UI/management/category/UI_manage_category.dart';
+import 'package:Buytime/UI/management/category/UI_M_manage_category.dart';
 import 'package:Buytime/UI/management/category/W_category_list_item.dart';
 import 'package:Buytime/UI/management/invite/UI_M_BookingList.dart';
 import 'package:Buytime/UI/management/service/UI_M_service_list.dart';
@@ -14,8 +14,9 @@ import 'package:Buytime/reusable/menu/UI_M_business_list_drawer.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'UI_C_manage_business.dart';
+import 'UI_M_manage_business.dart';
 
 class UI_M_Business extends StatefulWidget {
   static String route = '/customer';
@@ -54,7 +55,7 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
         store.dispatch(RequestRootListCategory(store.state.business.id_firestore)),
       },
       builder: (context, snapshot) {
-        List<CategoryState> categoryStateList = snapshot.categoryList.categoryListState;
+        List<CategoryState> categoryRootList = snapshot.categoryList.categoryListState;
         return WillPopScope(
           onWillPop: () async => false,
           child: Scaffold(
@@ -71,7 +72,7 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                       color: Colors.white,
                       size: 30.0,
                     ),
-                    tooltip: 'Open Menu',
+                    tooltip: AppLocalizations.of(context).openMenu,
                     onPressed: () {
                       _drawerKey.currentState.openDrawer();
                     },
@@ -81,7 +82,7 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                   child: Padding(
                     padding: const EdgeInsets.only(left: 0.0),
                     child: Text(
-                      "Dashboard",
+                      AppLocalizations.of(context).dashboard,
                       textAlign: TextAlign.start,
                       style: TextStyle(
                         color: Colors.white,
@@ -98,13 +99,13 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                       onTap: () {
                         Navigator.pushReplacement(
                           context,
-                          MaterialPageRoute(builder: (context) => UI_ManageBusiness(0)),
+                          MaterialPageRoute(builder: (context) => UI_M_ManageBusiness(0)),
                         );
                       },
                       child: Container(
                         padding: EdgeInsets.all(5.0),
                         child: Text(
-                          'Edit',
+                          AppLocalizations.of(context).edit,
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: media.height * 0.025,
@@ -156,7 +157,7 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                                             Container(
                                               margin: EdgeInsets.only(top: 10),
                                               child: Text(
-                                                '1000 employees',
+                                                AppLocalizations.of(context).employees,
                                                 style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16, color: Colors.blueGrey),
                                               ),
                                             ),
@@ -165,7 +166,7 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                                             Container(
                                               margin: EdgeInsets.only(top: 2.5),
                                               child: Text(
-                                                '1 menu items',
+                                                AppLocalizations.of(context).menuItems,
                                                 style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16, color: Colors.blueGrey),
                                               ),
                                             )
@@ -196,40 +197,6 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                       ),
                     ),
 
-                    ///Testing Service List
-                    Container(
-                        margin: EdgeInsets.only(left: 20.0, top: 20.0, right: 10.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            ///Services
-                            Container(
-                              child: Text(
-                                'Services',
-                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                              ),
-                            ),
-
-                            ///Manage
-                            InkWell(
-                              onTap: () {
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => UI_M_ServiceList()),
-                                );
-                              },
-                              borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                              child: Container(
-                                padding: EdgeInsets.all(5.0),
-                                child: Text(
-                                  'Test ServiceList',
-                                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20, color: Colors.lightBlue),
-                                ),
-                              ),
-                            ),
-                          ],
-                        )),
-
                     ///Categories & Manage
 
                     Container(
@@ -240,7 +207,7 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                             ///Categories
                             Container(
                               child: Text(
-                                'Categories',
+                                AppLocalizations.of(context).serviceCategories,
                                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                               ),
                             ),
@@ -254,14 +221,14 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                                 }
                                 Navigator.pushReplacement(
                                   context,
-                                  MaterialPageRoute(builder: (context) => UI_ManageCategory()),
+                                  MaterialPageRoute(builder: (context) => UI_M_ManageCategory()),
                                 );
                               },
                               borderRadius: BorderRadius.all(Radius.circular(5.0)),
                               child: Container(
                                 padding: EdgeInsets.all(5.0),
                                 child: Text(
-                                  'Manage',
+                                  AppLocalizations.of(context).manage,
                                   style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20, color: Colors.lightBlue),
                                 ),
                               ),
@@ -280,7 +247,7 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                             flex: 1,
                             child: Container(
                               child: Text(
-                                'MENU ITEMS',
+                                AppLocalizations.of(context).menuItemsCaps,
                                 style: TextStyle(fontWeight: FontWeight.w500, fontSize: 12.5),
                               ),
                             ),
@@ -291,7 +258,7 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                             flex: 1,
                             child: Container(
                               child: Text(
-                                'MOST POPULAR',
+                                AppLocalizations.of(context).mostPopularCaps,
                                 style: TextStyle(fontWeight: FontWeight.w500, fontSize: 12.5),
                               ),
                             ),
@@ -303,128 +270,137 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
 
                         ///Categories list & Invite user
                         Expanded(
-                            child: Stack(
-                              children: [
-                                categoryStateList.length > 0
-                                    ?
-                                ///Categories list
-                                Positioned.fill(
-                                  child: Align(
-                                    alignment: Alignment.topCenter,
-                                    child: Container(
-                                      color: Colors.blueGrey.withOpacity(0.1),
-                                      margin: EdgeInsets.only(bottom: 60.0),
-                                      padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
-                                      child: CustomScrollView(shrinkWrap: true, slivers: [
-                                        SliverList(
-                                          delegate: SliverChildBuilderDelegate(
-                                            (context, index) {
-                                              //MenuItemModel menuItem = menuItems.elementAt(index);
-                                              CategoryState categoryItem = categoryStateList.elementAt(index);
-                                              return InkWell(
-                                                onTap: () {
-                                                  debugPrint('Category Item: ${categoryItem.name.toUpperCase()} Clicked!');
-                                                },
-                                                //child: MenuItemListItemWidget(menuItem),
-                                                child: CategoryListItemWidget(categoryItem),
-                                              );
-                                            },
-                                            childCount: categoryStateList.length,
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => UI_M_ServiceList()),
+                                );
+                              },
+                              child: Stack(
+                                children: [
+                                  categoryRootList.length > 0
+                                      ?
+                                  ///Categories list
+                                  Positioned.fill(
+                                    child: Align(
+                                      alignment: Alignment.topCenter,
+                                      child: Container(
+                                        color: Colors.blueGrey.withOpacity(0.1),
+                                        margin: EdgeInsets.only(bottom: 60.0),
+                                        padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+                                        child: CustomScrollView(shrinkWrap: true, slivers: [
+                                          SliverList(
+                                            delegate: SliverChildBuilderDelegate(
+                                              (context, index) {
+                                                //MenuItemModel menuItem = menuItems.elementAt(index);
+                                                CategoryState categoryItem = categoryRootList.elementAt(index);
+                                                return  CategoryListItemWidget(categoryItem);
+                                                // return InkWell(
+                                                //   onTap: () {
+                                                //     debugPrint('Category Item: ${categoryItem.name.toUpperCase()} Clicked!');
+                                                //   },
+                                                //   //child: MenuItemListItemWidget(menuItem),
+                                                //   child: CategoryListItemWidget(categoryItem),
+                                                // );
+                                              },
+                                              childCount: categoryRootList.length,
+                                            ),
                                           ),
-                                        ),
-                                      ]),
+                                        ]),
+                                      ),
+                                    ),
+                                  ) : Container(
+                                    height: SizeConfig.screenHeight * 0.1,
+                                    child: Center(
+                                      child: Text("Non ci sono categorie attive!"),
                                     ),
                                   ),
-                                ) : Container(
-                                  height: SizeConfig.screenHeight * 0.1,
-                                  child: Center(
-                                    child: Text("Non ci sono categorie attive!"),
-                                  ),
-                                ),
 
-                                Positioned.fill(
-                                  child: Align(
-                                    alignment: Alignment.bottomCenter,
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.grey.withOpacity(0.3),
-                                            spreadRadius: 5,
-                                            blurRadius: 5,
-                                            offset: Offset(0, 3), // changes position of shadow
-                                          ),
-                                        ],
-                                      ),
-                                      child: Material(
-                                        color: Colors.transparent,
-                                        child: InkWell(
-                                          onTap: () {
-                                            debugPrint('INVITE USER Clicked!');
+                                  Positioned.fill(
+                                    child: Align(
+                                      alignment: Alignment.bottomCenter,
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.grey.withOpacity(0.3),
+                                              spreadRadius: 5,
+                                              blurRadius: 5,
+                                              offset: Offset(0, 3), // changes position of shadow
+                                            ),
+                                          ],
+                                        ),
+                                        child: Material(
+                                          color: Colors.transparent,
+                                          child: InkWell(
+                                            onTap: () {
+                                              debugPrint('INVITE USER Clicked!');
 
-                                            /*final RenderBox box = context.findRenderObject();
-                                            Share.share('Share', subject: 'Test', sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);*/
+                                              /*final RenderBox box = context.findRenderObject();
+                                              Share.share('Share', subject: 'Test', sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);*/
 
-                                            Navigator.push(context, MaterialPageRoute(builder: (context) => BookingList(bookingList: bookingList)));
-                                          },
-                                          child: Container(
-                                            height: 70,
-                                            child: Row(
-                                              children: [
-                                                ///QR code Icon
-                                                Expanded(
-                                                  flex: 1,
-                                                  child: Container(
-                                                    margin: EdgeInsets.only(left: 15.0),
-                                                    child: Icon(
-                                                      Icons.qr_code_scanner,
-                                                      color: Colors.grey,
+                                              Navigator.push(context, MaterialPageRoute(builder: (context) => BookingList(bookingList: bookingList)));
+                                            },
+                                            child: Container(
+                                              height: 70,
+                                              child: Row(
+                                                children: [
+                                                  ///QR code Icon
+                                                  Expanded(
+                                                    flex: 1,
+                                                    child: Container(
+                                                      margin: EdgeInsets.only(left: 15.0),
+                                                      child: Icon(
+                                                        Icons.qr_code_scanner,
+                                                        color: Colors.grey,
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
 
-                                                ///Message
-                                                Expanded(
-                                                    flex: 3,
+                                                  ///Message
+                                                  Expanded(
+                                                      flex: 3,
+                                                      child: Container(
+                                                        margin: EdgeInsets.only(top: 10.0, bottom: 5.0),
+                                                        child: Column(
+                                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                          children: [
+                                                            Container(
+                                                              child: Text(
+                                                                'Invite user',
+                                                                style: TextStyle(fontWeight: FontWeight.bold),
+                                                              ),
+                                                            ),
+                                                            Container(
+                                                              child: Text(
+                                                                'Users join by scanning your QR code',
+                                                                style: TextStyle(fontWeight: FontWeight.w500, color: Colors.grey.withOpacity(0.8)),
+                                                              ),
+                                                            )
+                                                          ],
+                                                        ),
+                                                      )),
+
+                                                  ///Arrow Icon
+                                                  Expanded(
+                                                    flex: 1,
                                                     child: Container(
-                                                      margin: EdgeInsets.only(top: 10.0, bottom: 5.0),
-                                                      child: Column(
-                                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                                        children: [
-                                                          Container(
-                                                            child: Text(
-                                                              'Invite user',
-                                                              style: TextStyle(fontWeight: FontWeight.bold),
-                                                            ),
-                                                          ),
-                                                          Container(
-                                                            child: Text(
-                                                              'Users join by scanning your QR code',
-                                                              style: TextStyle(fontWeight: FontWeight.w500, color: Colors.grey.withOpacity(0.8)),
-                                                            ),
-                                                          )
-                                                        ],
-                                                      ),
-                                                    )),
-
-                                                ///Arrow Icon
-                                                Expanded(
-                                                  flex: 1,
-                                                  child: Container(
-                                                    child: Icon(Icons.keyboard_arrow_right, color: Colors.grey),
-                                                  ),
-                                                )
-                                              ],
+                                                      child: Icon(Icons.keyboard_arrow_right, color: Colors.grey),
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
                                             ),
                                           ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                )
-                              ],
+                                  )
+                                ],
+                              ),
                             ),
                           ),
 

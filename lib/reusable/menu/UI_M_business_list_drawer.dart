@@ -24,6 +24,7 @@ import 'package:Buytime/UI/user/login/UI_U_Home.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../utils/globals.dart';
 
@@ -83,7 +84,7 @@ class _UI_M_BusinessListDrawerState extends State<UI_M_BusinessListDrawer> {
                     child: Padding(
                       padding: const EdgeInsets.only(top: 15.0),
                       child: Text(
-                        "Buytime",
+                        AppLocalizations.of(context).buytime,
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.start,
                         style: TextStyle(
@@ -98,7 +99,7 @@ class _UI_M_BusinessListDrawerState extends State<UI_M_BusinessListDrawer> {
                     child: Padding(
                       padding: const EdgeInsets.only(top: 5.0),
                       child: Text(
-                        "Enterprise Management",
+                        AppLocalizations.of(context).enterpriseManagement,
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.start,
                         style: TextStyle(
@@ -116,7 +117,7 @@ class _UI_M_BusinessListDrawerState extends State<UI_M_BusinessListDrawer> {
             selectedTileColor: Color.fromRGBO(32, 124, 195, 0.3),
             autofocus: false,
             title: Text(
-              "Business List",
+              AppLocalizations.of(context).businessList,
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.start,
               style: TextStyle(
@@ -153,7 +154,7 @@ class _UI_M_BusinessListDrawerState extends State<UI_M_BusinessListDrawer> {
                       Navigator.pushReplacement(context,
                           MaterialPageRoute(builder: (context) => Landing()));
                     },
-                    title: Text('Switch to client mode',
+                    title: Text(AppLocalizations.of(context).clientMode,
                         style: TextStyle(
                           color: Colors.black.withOpacity(0.7),
                           fontSize: mediaHeight * 0.025,
@@ -168,7 +169,7 @@ class _UI_M_BusinessListDrawerState extends State<UI_M_BusinessListDrawer> {
                     leading: Icon(Icons.settings,
                         color: Colors.black.withOpacity(0.6), size: 30),
                     onTap: () {},
-                    title: Text('User Settings',
+                    title: Text(AppLocalizations.of(context).userSettings,
                         style: TextStyle(
                           color: Colors.black.withOpacity(0.7),
                           fontSize: mediaHeight * 0.025,
@@ -226,7 +227,7 @@ class _UI_M_BusinessListDrawerState extends State<UI_M_BusinessListDrawer> {
                         );
                       });
                     },
-                    title: Text('Logout',
+                    title: Text(AppLocalizations.of(context).logout,
                         style: TextStyle(
                           color: Colors.black.withOpacity(0.7),
                           fontSize: mediaHeight * 0.025,

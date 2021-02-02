@@ -1,6 +1,7 @@
 import 'package:Buytime/UI/management/invite/UI_M_BookingDetails.dart';
 import 'package:Buytime/reblox/model/category/invitation/category_invite_state.dart';
 import 'package:Buytime/reblox/model/category/tree/category_tree_state.dart';
+import 'package:Buytime/reblox/model/category/invitation/category_invite_state.dart';
 import 'package:Buytime/services/category_invite_service_epic.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/UI/user/login/UI_U_Home.dart';
@@ -21,7 +22,7 @@ import 'package:Buytime/reblox/model/user/user_state.dart';
 import 'package:Buytime/reblox/reducer/app_reducer.dart';
 import 'package:Buytime/reblox/navigation/route_aware_widget.dart';
 import 'package:Buytime/services/business_service_epic.dart';
-import 'package:Buytime/services/category_snippet_service_epic.dart';
+import 'package:Buytime/services/category_tree_service_epic.dart';
 import 'package:Buytime/services/category_service_epic.dart';
 import 'package:Buytime/services/order_service_epic.dart';
 import 'package:Buytime/services/pipeline_service_epic.dart';
@@ -38,9 +39,10 @@ import 'package:redux_epics/redux_epics.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/services/booking_service_epic.dart';
 import 'package:Buytime/reblox/navigation/navigation_middleware.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() {
-
   final epics = combineEpics<AppState>([
     BusinessRequestService(),
     BusinessUpdateService(),
@@ -82,7 +84,6 @@ void main() {
     OrderUpdateService(),
     OrderCreateService(),
   ]);
-
   final _initialState = AppState(
     category: CategoryState().toEmpty(),
     categoryInvite: CategoryInviteState().toEmpty(),
@@ -135,6 +136,19 @@ class Buytime extends StatelessWidget {
     return StoreProvider<AppState>(
       store: store,
       child: MaterialApp(
+        localizationsDelegates: [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate
+        ],
+        supportedLocales: [
+          const Locale('en', ''),
+          const Locale('it', ''),
+          const Locale('es', ''),
+          const Locale('de', ''),
+          const Locale('fr', ''),
+        ],
         navigatorKey: navigatorKey,
         navigatorObservers: [routeObserver],
         onGenerateRoute: (RouteSettings settings) => _getRoute(settings),

@@ -2,6 +2,7 @@ import 'package:Buytime/reblox/model/category/category_state.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // ignore: must_be_immutable
 class CategoryListItemWidget extends StatefulWidget {
@@ -88,7 +89,7 @@ class _CategoryListItemWidgetState extends State<CategoryListItemWidget> {
                   Flexible(
                     child: Container(
                       child: Text(
-                        "Servizio più Popolare",
+                        AppLocalizations.of(context).mostPopularService,
                         style: TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 17

@@ -7,8 +7,6 @@ import 'package:Buytime/reblox/reducer/category_reducer.dart';
 import 'package:Buytime/reblox/model/snippet/manager.dart';
 import 'package:Buytime/reblox/model/snippet/worker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:Buytime/reblox/model/snippet/generic.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:redux_epics/redux_epics.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -24,7 +22,7 @@ class CategoryListRequestService implements EpicClass<AppState> {
           .get()
           .then((QuerySnapshot snapshot) {
         print("CategoryListService firestore request");
-        List<CategoryState> categoryStateList = List<CategoryState>();
+        List<CategoryState> categoryStateList = [];
         snapshot.docs.forEach((element) {
           CategoryState categoryState = CategoryState.fromJson(element.data());
           categoryState.businessId = event.businessId;
@@ -52,7 +50,7 @@ class CategoryRootListRequestService implements EpicClass<AppState> {
           .get()
           .then((QuerySnapshot snapshot) {
         print("CategoryRootListService firestore request");
-        List<CategoryState> categoryStateList = List<CategoryState>();
+        List<CategoryState> categoryStateList = [];
         snapshot.docs.forEach((element) {
           CategoryState categoryState = CategoryState.fromJson(element.data());
           categoryState.businessId = event.businessId;
@@ -68,6 +66,8 @@ class CategoryRootListRequestService implements EpicClass<AppState> {
 }
 
 class CategoryRequestService implements EpicClass<AppState> {
+  CategoryState categoryState = CategoryState().toEmpty();
+
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<CategoryRequest>().asyncMap((event) async {
@@ -80,14 +80,11 @@ class CategoryRequestService implements EpicClass<AppState> {
           .where("id", isEqualTo: categoryId)
           .get();
 
-      CategoryState categoryState = new CategoryState();
-
       query.docs.forEach((snapshot) {
         categoryState = CategoryState.fromJson(snapshot.data());
       });
       print("CategoryState return " + categoryState.name);
-      return new CategoryRequestResponse(categoryState);
-    }).takeUntil(actions.whereType<UnlistenCategory>());
+    }).expand((element) => [CategoryRequestResponse(categoryState)]);
   }
 }
 
@@ -231,11 +228,77 @@ class CategoryDeleteWorkerService implements EpicClass<AppState> {
   }
 }
 
+///Scorro Albero e una volta trovato nodo con id passato, controllo se ha figli, se li ha modifico il parent nuovo
+seekNode(List<dynamic> list, String id, String id_business, String rootId) {
+  if (list != null) {
+    for (int i = 0; i < list.length; i++) {
+      if (list[i]['nodeId'] == id) {
+        print("Trovato ID nella ricerca");
+        if (list[i]['nodeCategory'] != null && list[i]['nodeCategory'].length != 0) {
+          openTreeToUpdateSon(list[i]['nodeCategory'],id_business, rootId);
+        }
+      }
+      if (list[i]['nodeCategory'] != null) {
+        seekNode(list[i]['nodeCategory'], id,id_business,rootId);
+      }
+    }
+  }
+}
+
+openTreeToUpdateSon(List<dynamic> list,  String id_business, String rootId) async {
+  CategoryState cat;
+  for (int i = 0; i < list.length; i++) {
+    ///Qui ho il figlio da aggiornare
+    var query = await FirebaseFirestore.instance
+        .collection("business")
+        .doc(id_business)
+        .collection("category")
+        .where("id", isEqualTo: list[i]['nodeId']).limit(1)
+        .get();
+
+    print("Firebase-Read : categoryServiceEpic");
+
+    query.docs.forEach((snapshot) {
+      cat = CategoryState.fromJson(snapshot.data());
+    });
+    if(cat.categoryRootId != rootId){
+
+
+      cat.categoryRootId = rootId;
+      cat.parent.parentRootId = rootId;
+
+      FirebaseFirestore.instance
+          .collection("business")
+          .doc(id_business)
+          .collection("category")
+          .doc(cat.id)
+          .update(cat.toJson());
+
+      print("Firebase-Update : categoryServiceEpic");
+
+    }
+
+
+    if (list[i]['nodeCategory'] != null) {
+      openTreeToUpdateSon(list[i]['nodeCategory'],id_business, rootId);
+    }
+  }
+}
+
 class CategoryUpdateService implements EpicClass<AppState> {
+  CategoryState categoryState;
+
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<UpdateCategory>().asyncMap((event) {
-      print("CategoryService updating category: " + event.categoryState.name);
+      categoryState = event.categoryState;
+      print("CategoryService updating category: " + categoryState.name);
+
+
+      categoryState.categoryRootId = categoryState.parent.parentRootId;
+      ///Va controllato se ha figli, e se li ha vanno aggiornati i categoryRootId e parent.parentRootId a cascata
+      seekNode(store.state.categoryTree.categoryNodeList, categoryState.id, store.state.business.id_firestore, categoryState.categoryRootId);
+
       return FirebaseFirestore.instance
           .collection("business")
           .doc(event.categoryState.businessId)
@@ -244,9 +307,8 @@ class CategoryUpdateService implements EpicClass<AppState> {
           .update(event.categoryState.toJson())
           .then((value) {
         print("Category Service should be updated online ");
-        return new UpdatedCategory(null);
       });
-    }).takeUntil(actions.whereType<UnlistenCategory>());
+    }).expand((element) => [UpdatedCategory(categoryState)]);
   }
 }
 
@@ -260,10 +322,18 @@ class CategoryCreateService implements EpicClass<AppState> {
           .doc(store.state.business.id_firestore)
           .collection('category')
           .doc();
-      categoryState.id = docReference.id;
+
       store.state.category.id = docReference.id;
+      if(categoryState.parent.id == 'no_parent'){
+        categoryState.categoryRootId = docReference.id;
+        categoryState.parent.parentRootId = docReference.id;
+      }
+      else{
+        categoryState.categoryRootId = categoryState.parent.parentRootId;
+      }
       categoryState.businessId = store.state.business.id_firestore;
-      ServiceSnippet serviceState = ServiceSnippet().toEmpty();
+      categoryState.id = docReference.id;
+      ServiceState serviceState = ServiceState().toEmpty();
       categoryState.categorySnippet.mostSoldService = serviceState;
       return docReference.set(categoryState.toJson()).then((value) {
         print("CategoryService has created new category " + docReference.id);

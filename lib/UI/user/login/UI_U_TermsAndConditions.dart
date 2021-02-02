@@ -1,11 +1,10 @@
 import 'dart:async';
-
 import 'package:Buytime/utils/theme/buytime_theme.dart';
-import 'package:Buytime/reusable/back_button_blue.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 
 class TermsAndConditions extends StatefulWidget {
@@ -102,7 +101,7 @@ class _TermsAndConditionsState extends State<TermsAndConditions> with SingleTick
                                           child: Padding(
                                             padding: const EdgeInsets.symmetric(horizontal: 12.0),
                                             child: Text(
-                                              "Buytime",
+                                              AppLocalizations.of(context).buytime,
                                               style: TextStyle(
                                                   fontFamily: 'Roboto',
                                                   fontSize: SizeConfig.safeBlockVertical * 5,

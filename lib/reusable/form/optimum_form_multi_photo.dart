@@ -10,6 +10,7 @@ import 'package:path/path.dart' as path;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 typedef OnFilePickedCallback = void Function(OptimumFileToUpload fileToUpload);
 
@@ -158,7 +159,7 @@ class OptimumFormMultiPhotoState extends State<OptimumFormMultiPhoto> {
              CropAspectRatioPreset.ratio16x9
            ],*/
            androidUiSettings: AndroidUiSettings(
-               toolbarTitle: 'Crop your Image',
+               toolbarTitle: AppLocalizations.of(context).cropYourImage,
                toolbarColor: BuytimeTheme.UserPrimary,
                toolbarWidgetColor: BuytimeTheme.TextWhite,
                initAspectRatio: cropAspectRatioPreset,
@@ -166,7 +167,7 @@ class OptimumFormMultiPhotoState extends State<OptimumFormMultiPhoto> {
              hideBottomControls: true
            ),
            iosUiSettings: IOSUiSettings(
-             title: 'Crop your Image',
+             title: AppLocalizations.of(context).cropYourImage,
              hidesNavigationBar: true,
              rotateButtonsHidden: true,
              resetButtonHidden: true,
@@ -240,7 +241,7 @@ class OptimumFormMultiPhotoState extends State<OptimumFormMultiPhoto> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                text == null ? "static placeholder" : text,
+                text == null ? AppLocalizations.of(context).staticPlaceholder : text,
                 style: TextStyle(
                     fontFamily: BuytimeTheme.FontFamily,
                     color: BuytimeTheme.TextDark,
@@ -251,7 +252,7 @@ class OptimumFormMultiPhotoState extends State<OptimumFormMultiPhoto> {
               underReqSize ? Container(
                 margin: EdgeInsets.only(top: 10),
                 child: Text(
-                  'Invalid Size: Minimum 1000x1000',
+                  AppLocalizations.of(context).invalidSize,
                   style: TextStyle(
                       fontFamily: BuytimeTheme.FontFamily,
                       color: BuytimeTheme.AccentRed,

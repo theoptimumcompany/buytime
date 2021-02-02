@@ -1,22 +1,18 @@
-import 'package:Buytime/UI/management/business/UI_C_manage_business.dart';
+import 'package:Buytime/UI/management/business/UI_M_manage_business.dart';
 import 'package:Buytime/UI/management/business/UI_M_business.dart';
-import 'package:Buytime/UI/management/service/UI_M_service_list.dart';
+import 'package:Buytime/reblox/model/business/business_list_state.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
-import 'package:Buytime/reblox/model/business/business_list_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/reducer/business_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/business_reducer.dart';
 import 'package:Buytime/reusable/business/optimum_business_card_medium_manager.dart';
-import 'package:Buytime/reusable/business/optimum_business_card_medium_user.dart';
 import 'package:Buytime/reusable/appbar/manager_buytime_appbar.dart';
 import 'package:Buytime/reusable/menu/UI_M_business_list_drawer.dart';
-import 'package:Buytime/reusable/menu/UI_menu_drawer.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class UI_M_BusinessList extends StatefulWidget {
   @override
@@ -59,7 +55,7 @@ class UI_M_BusinessListState extends State<UI_M_BusinessList> {
                           color: BuytimeTheme.TextWhite,
                           size: 30.0,
                         ),
-                        tooltip: 'Show menu',
+                        tooltip: AppLocalizations.of(context).showMenu,
                         onPressed: () {
                           _drawerKeyTabs.currentState.openDrawer();
                         },
@@ -69,7 +65,7 @@ class UI_M_BusinessListState extends State<UI_M_BusinessList> {
                       child: Padding(
                         padding: const EdgeInsets.only(left: 0.0),
                         child: Text(
-                          "Business management",
+                          AppLocalizations.of(context).businessManagement,
                           textAlign: TextAlign.start,
                           style: TextStyle(
                             color: BuytimeTheme.TextWhite,
@@ -88,12 +84,12 @@ class UI_M_BusinessListState extends State<UI_M_BusinessList> {
                           color: BuytimeTheme.TextWhite,
                           size: 30.0,
                         ),
-                        tooltip: 'Create Business',
+                        tooltip: AppLocalizations.of(context).createBusinessPlain,
                         onPressed: () {
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => UI_ManageBusiness(-1)),
+                                builder: (context) => UI_M_ManageBusiness(-1)),
                           );
                         },
                       ),
@@ -137,7 +133,7 @@ class UI_M_BusinessListState extends State<UI_M_BusinessList> {
                                   );
                                 })
                             : Center(
-                                child: Text("Non hai business attivi!"),
+                                child: Text(AppLocalizations.of(context).noActiveBusinesses),
                               ),
                       ),
                     ),

@@ -25,6 +25,7 @@ import 'package:Buytime/UI/user/login/UI_U_Home.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../utils/globals.dart';
 
@@ -88,8 +89,8 @@ class MenuDrawer extends StatelessWidget {
                             ? ListTile(
                                 title: Text(
                                   managerDrawer
-                                      ? 'Switch to User'
-                                      : 'Switch to Manager',
+                                      ? AppLocalizations.of(context).userModeShort
+                                      : AppLocalizations.of(context).managerModeShort,
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                       fontFamily: BuytimeTheme.FontFamily,
@@ -191,7 +192,7 @@ class MenuDrawer extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                         borderRadius: new BorderRadius.circular(500.0)),
                     child: Text(
-                      "Logout",
+                      AppLocalizations.of(context).logout,
                       style: TextStyle(
                         fontSize: 23,
                         fontFamily: BuytimeTheme.FontFamily,

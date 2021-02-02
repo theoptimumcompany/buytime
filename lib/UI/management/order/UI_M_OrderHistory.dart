@@ -8,6 +8,7 @@ import 'package:Buytime/reusable/order/optimum_order_history_item_card_medium.da
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class UI_M_OrderHistory extends StatefulWidget {
   final String title = 'Order History';
@@ -32,7 +33,7 @@ class UI_M_OrderHistoryState extends State<UI_M_OrderHistory> {
         Padding(
           padding: const EdgeInsets.only(top: 30.0, left: 10.0),
           child: Text(
-            "I tuoi ordini",
+            AppLocalizations.of(context).yourOrders,
             textAlign: TextAlign.start,
             style: TextStyle(
               fontSize: media.height * 0.035,
@@ -90,7 +91,7 @@ class UI_M_OrderHistoryState extends State<UI_M_OrderHistory> {
                           },
                         )
                       :  Center(
-                    child: Text("Non hai ordini da vedere!"),
+                    child: Text(AppLocalizations.of(context).thereAreNoOrders),
                   );
                 }),
           ),

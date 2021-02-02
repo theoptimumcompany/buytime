@@ -6,6 +6,7 @@ import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class InviteGuestForm extends StatefulWidget {
 
@@ -86,7 +87,7 @@ class _InviteGuestFormState extends State<InviteGuestForm> {
                           Container(
                             margin: EdgeInsets.only(top: 10.0, left: SizeConfig.safeBlockHorizontal * 10, right: SizeConfig.safeBlockHorizontal * 10),
                             child: Text(
-                              'Booking Code'.toUpperCase(),
+                              AppLocalizations.of(context).bookingCode.toUpperCase(),
                               style: TextStyle(
                                   fontFamily: BuytimeTheme.FontFamily,
                                   color: Colors.white,
@@ -99,7 +100,7 @@ class _InviteGuestFormState extends State<InviteGuestForm> {
                           Container(
                             margin: EdgeInsets.only(top: 50.0, left: SizeConfig.safeBlockHorizontal * 10, right: SizeConfig.safeBlockHorizontal * 10),
                             child: Text(
-                              'Enter your booking code',
+                              AppLocalizations.of(context).enterYourBookingCode,
                               style: TextStyle(
                                   fontFamily: BuytimeTheme.FontFamily,
                                   color: Colors.white,
@@ -133,9 +134,9 @@ class _InviteGuestFormState extends State<InviteGuestForm> {
                                   borderSide: BorderSide(color: Colors.redAccent),
                                   borderRadius: BorderRadius.all(Radius.circular(10.0)),
                                 ),
-                                labelText: currentFocus.hasFocus ? '' : 'Booking Code',
+                                labelText: currentFocus.hasFocus ? '' : AppLocalizations.of(context).bookingCode,
                                 //hintText: 'Booking Code',
-                                helperText: 'Your booking code is a ## digits code included in the email and text notification the hotel sent you',
+                                helperText: AppLocalizations.of(context).yourBookingCodeIs,
                                 //hintText: "email *",
                                 //hintStyle: TextStyle(color: Color(0xff666666)),
                                 labelStyle: TextStyle(

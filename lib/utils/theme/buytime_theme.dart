@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 class BuytimeTheme {
 
+  ///Primary Color
   static const MaterialColor UserPrimary = MaterialColor(0xFF019FE0, userPrimarySwatch);
   static const Map<int, Color> userPrimarySwatch =  {
     50: Color.fromRGBO(225, 243, 251, 1.0),
@@ -17,18 +18,42 @@ class BuytimeTheme {
     900: Color.fromRGBO(16, 114, 203, 1.0),
   };
 
-
-  static const Color TextWhite = Color.fromARGB(255, 255, 255, 255);
-  static const Color TextDark = Color.fromARGB(255, 16, 5, 14);
-  static const Color TextMedium = Color.fromARGB(255, 117, 117, 117);
-  static const Color IconGrey = Color.fromARGB(255, 117, 117, 117);
-  static const Color BackgroundWhite = Color.fromARGB(255, 255, 255, 255);
-  static const Color BackgroundCerulean = Color.fromARGB(255, 119, 148, 170);
-  static const Color BackgroundLightGrey = Color.fromARGB(255, 237, 237, 237);
-  static const Color DividerGrey = Color.fromARGB(255, 237, 237, 237);
+  ///Custom Colors ordered as Figma
   static const Color ManagerPrimary = Color.fromARGB(255, 0, 103, 145);
   static const Color Secondary = Color.fromARGB(255, 253, 192, 47);
+  static const Color TextDark = Color.fromARGB(255, 16, 5, 14);
+  static const Color TextMedium = Color.fromARGB(255, 117, 117, 117);
+  static const Color PrimaryMalibu = Color.fromARGB(255, 32, 124, 195);
+  static const Color ActionButton = Color.fromARGB(255, 1, 175, 81);
   static const Color AccentRed = Color.fromARGB(255, 255, 99, 99);
+  static const Color BackgroundCerulean = Color.fromARGB(255, 119, 148, 170);
+  static const Color BackgroundLightGrey = Color.fromARGB(255, 237, 237, 237);
+  static const Color BackgroundLightBlue = Color.fromARGB(255, 118, 216, 237);
+  static const Color DividerGrey = Color.fromARGB(255, 237, 237, 237);
+  static const Color BackgroundWhite = Color.fromARGB(255, 255, 255, 255);
+  static const Color SymbolWhite = Color.fromARGB(255, 255, 255, 255);
+  static const Color ButtonWhite = Color.fromARGB(255, 255, 255, 255);
+  static const Color TextWhite = Color.fromARGB(255, 255, 255, 255);
+  static const Color TextMalibu = Color.fromARGB(255, 32, 124, 195);
+  static const Color SymbolMalibu = Color.fromARGB(255, 32, 124, 195);
+  static const Color TextBlack = Color.fromARGB(255, 0, 0, 0);
+  static const Color SymbolBlack = Color.fromARGB(255, 0, 0, 0);
+  static const Color ButtonMalibu = Color.fromARGB(255, 32, 124, 195);
+  static const Color TextGrey = Color.fromARGB(255, 114, 114, 114);
+  static const Color SymbolGrey = Color.fromARGB(255, 117, 117, 117);
+  static const Color TextLightGrey = Color.fromARGB(255, 237, 237, 237);
+  static const Color TextPurple = Color.fromARGB(255, 186, 104, 200);
+  static const Color SymbolPurple = Color.fromARGB(255, 186, 104, 200);
+  static const Color BackgroundBlack = Color.fromARGB(255, 0, 0, 0);
+  static const Color SymbolLime = Color.fromARGB(255, 175, 180, 43);
+  static const Color BackgroundAntracite = Color.fromARGB(255, 33, 33, 33);
+  static const Color ErrorRed = Color.fromARGB(255, 251, 36, 36);
+  static const Color SymbolLightGrey = Color.fromARGB(255, 196, 196, 196);
+
+
+
+
+
 
   static const String FontFamily = 'Roboto';
 

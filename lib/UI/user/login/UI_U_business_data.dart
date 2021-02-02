@@ -2,6 +2,7 @@ import 'package:Buytime/reusable/back_button_blue.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'UI_U_TermsAndConditions.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class BusinessData extends StatefulWidget {
   @override
@@ -55,9 +56,9 @@ class _BusinessDataState extends State<BusinessData> with SingleTickerProviderSt
                       text: TextSpan(
                         style: defaultStyle,
                         children: <TextSpan>[
-                          TextSpan(text: 'Qui trovi i '),
+                          TextSpan(text: AppLocalizations.of(context).hereYouFind),
                           TextSpan(
-                              text: 'Termini e condizioni',
+                              text: AppLocalizations.of(context).termsAndConditions,
                               style: linkStyle,
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () {
@@ -67,7 +68,7 @@ class _BusinessDataState extends State<BusinessData> with SingleTickerProviderSt
                                         builder: (context) => TermsAndConditions('')),
                                   );
                                 }),
-                          TextSpan(text: ' che devi accettare per utilizzare il nostro servizio come business.'),
+                          TextSpan(text: AppLocalizations.of(context).haveToAccept),
 
                         ],
                       ),

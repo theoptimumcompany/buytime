@@ -8,6 +8,7 @@ import 'package:Buytime/reusable/business/optimum_business_card_medium_user.dart
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 
 class Struttura {
@@ -53,7 +54,7 @@ class UI_U_BusinessListState extends State<UI_U_BusinessList> {
                       Padding(
                         padding: const EdgeInsets.only(top: 30.0, left: 10.0),
                         child: Text(
-                          "Benvenuto su Buytime",
+                          AppLocalizations.of(context).welcomeToBuytime,
                           textAlign: TextAlign.start,
                           style: TextStyle(
                             fontSize: media.height * 0.035,

@@ -23,6 +23,7 @@ class ServiceState {
   List<GenericState> write_permission;
   List<GenericState> pipelineList;
   List<OptimumFileToUpload> fileToUploadList;
+  int timesSold;
 
   ServiceState({
     this.id,
@@ -43,6 +44,7 @@ class ServiceState {
     this.write_permission,
     this.pipelineList,
     this.fileToUploadList,
+    this.timesSold,
   });
 
   ServiceState toEmpty() {
@@ -65,6 +67,7 @@ class ServiceState {
       write_permission: [],
       pipelineList: [],
       fileToUploadList: null,
+      timesSold: 0,
     );
   }
 
@@ -87,10 +90,10 @@ class ServiceState {
     this.write_permission = service.write_permission;
     this.pipelineList = service.pipelineList;
     this.fileToUploadList = service.fileToUploadList;
+    this.timesSold = service.timesSold;
   }
 
-  serviceStateFieldUpdate(
-      String id,
+  serviceStateFieldUpdate(String id,
       String id_business,
       String name,
       String thumbnail,
@@ -106,7 +109,7 @@ class ServiceState {
       double price,
       List<GenericState> write_permission,
       List<GenericState> pipelineList,
-      List<OptimumFileToUpload> fileToUploadList,) {
+      List<OptimumFileToUpload> fileToUploadList, int timesSold) {
     ServiceState(
       id: id ?? this.id,
       id_business: id_business ?? this.id_business,
@@ -125,28 +128,28 @@ class ServiceState {
       write_permission: write_permission ?? this.write_permission,
       pipelineList: pipelineList ?? this.pipelineList,
       fileToUploadList: fileToUploadList ?? this.fileToUploadList,
+      timesSold: timesSold ?? this.timesSold,
     );
   }
 
-  ServiceState copyWith(
-      {
-        String id,
-        String id_business,
-      String name,
-      String thumbnail,
-      String description,
-      bool availability,
-      List<GenericState> actionList,
-      List<GenericState> categoryList,
-      List<GenericState> externalCategoryList,
-      List<GenericState> positionList,
-      String visibility,
-      List<GenericState> constraintList,
-      List<GenericState> tagList,
-      double price,
-      List<GenericState> write_permission,
-      List<GenericState> pipelineList,
-      List<OptimumFileToUpload> fileToUploadList}) {
+  ServiceState copyWith({
+    String id,
+    String id_business,
+    String name,
+    String thumbnail,
+    String description,
+    bool availability,
+    List<GenericState> actionList,
+    List<GenericState> categoryList,
+    List<GenericState> externalCategoryList,
+    List<GenericState> positionList,
+    String visibility,
+    List<GenericState> constraintList,
+    List<GenericState> tagList,
+    double price,
+    List<GenericState> write_permission,
+    List<GenericState> pipelineList,
+    List<OptimumFileToUpload> fileToUploadList, int timesSold}) {
     return ServiceState(
       id: id ?? this.id,
       id_business: id_business ?? this.id_business,
@@ -165,11 +168,12 @@ class ServiceState {
       write_permission: write_permission ?? this.write_permission,
       pipelineList: pipelineList ?? this.pipelineList,
       fileToUploadList: fileToUploadList ?? this.fileToUploadList,
+      timesSold: timesSold ?? this.timesSold,
     );
   }
 
   List<dynamic> convertToJson(List<GenericState> objectStateList) {
-    List<dynamic> list = List<dynamic>();
+    List<dynamic> list = [];
     objectStateList.forEach((element) {
       list.add(element.toJson());
     });
@@ -179,63 +183,66 @@ class ServiceState {
   ServiceState.fromJson(Map<String, dynamic> json)
       :
         id = json['id'],
+        timesSold = json['timesSold'],
         id_business = json['id_business'],
         name = json['name'],
         thumbnail = json['thumbnail'],
         description = json['description'],
         availability = json['availability'],
         actionList = List<GenericState>.from(json["actionList"].map((item) {
-          return new GenericState(
+          return  GenericState(
             content: item["name"],
             id: item["id"],
           );
         })),
         categoryList = List<GenericState>.from(json["categoryList"].map((item) {
-          return new GenericState(
+          return  GenericState(
             content: item["name"],
             id: item["id"],
           );
         })),
         externalCategoryList = List<GenericState>.from(json["externalCategoryList"].map((item) {
-          return new GenericState(
+          return  GenericState(
             content: item["name"],
             id: item["id"],
           );
         })),
         positionList = List<GenericState>.from(json["positionList"].map((item) {
-          return new GenericState(
+          return  GenericState(
             content: item["name"],
             id: item["id"],
           );
         })),
         visibility = json['visibility'],
         constraintList = List<GenericState>.from(json["constraintList"].map((item) {
-          return new GenericState(
+          return  GenericState(
             content: item["name"],
             id: item["id"],
           );
         })),
         tagList = List<GenericState>.from(json["tagList"].map((item) {
-          return new GenericState(
+          return  GenericState(
             content: item["name"],
             id: item["id"],
           );
         })),
         price = json['price'],
         write_permission = List<GenericState>.from(json["write_permission"].map((item) {
-          return new GenericState(
+          return  GenericState(
             content: item["name"],
             id: item["id"],
           );
         })),
         pipelineList = List<GenericState>.from(json["pipelineList"].map((item) {
-          return new GenericState(
+          return  GenericState(
             content: item["name"],
             id: item["id"],
           );
-        }));
+        }
+          ));
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() =>
+      {
         'id': id,
         'id_business': id_business,
         'name': name,
@@ -252,6 +259,7 @@ class ServiceState {
         'price': price,
         'write_permission': convertToJson(write_permission),
         'pipelineList': convertToJson(pipelineList),
+        'timesSold': timesSold,
       };
 }
 

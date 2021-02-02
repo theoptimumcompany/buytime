@@ -36,6 +36,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:share/share.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class Landing extends StatefulWidget {
   @override
@@ -93,7 +94,7 @@ class LandingState extends State<Landing> {
                                         width: double.infinity,
                                         height: double.infinity,
                                         child: Text(
-                                          'Welcome to Buytime',
+                                          AppLocalizations.of(context).welcomeToBuytime,
                                           style: TextStyle(
                                               fontFamily: BuytimeTheme.FontFamily,
                                               color: Colors.white,
@@ -111,7 +112,7 @@ class LandingState extends State<Landing> {
                                         onPressed: () async{
                                           /*final RenderBox box = context.findRenderObject();
                                           Uri link = await createDynamicLink('prova');
-                                          Share.share('check out Buytime App at $link', subject: 'Take your Time!', sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
+                                          Share.share(AppLocalizations.of(context).checkYourBuytimeApp + link.toString(), subject: AppLocalizations.of(context).takeYourTime, sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
                                           Share.share('Share', subject:
                                           Platform.isAndroid ?
                                               'https://play.google.com/store/apps/details?id=com.theoptimumcompany.buytime' :
@@ -138,8 +139,7 @@ class LandingState extends State<Landing> {
                                       left: SizeConfig.safeBlockHorizontal * 8,
                                       right: SizeConfig.safeBlockHorizontal * 8),
                                   child: Text(
-                                    'When you book with a Buytime Enabled® Hotel, you\’ll be granted access to your hotel facilities via Buytime app.\n\n'
-                                    'Book massages and request a drink with just two taps.',
+                                    AppLocalizations.of(context).whenYouBookWith,
                                     style: TextStyle(
                                         fontFamily: BuytimeTheme.FontFamily,
                                         color: Colors.white,
@@ -212,7 +212,7 @@ class LandingState extends State<Landing> {
                                           child: Container(
                                             padding: EdgeInsets.all(5.0),
                                             child: Text(
-                                              'VIEW PAST BOOKINGS',
+                                              AppLocalizations.of(context).viewPastBookings,
                                               style: TextStyle(
                                                   fontFamily: BuytimeTheme.FontFamily,
                                                   color: BuytimeTheme.UserPrimary,
@@ -256,7 +256,7 @@ class LandingState extends State<Landing> {
                                               },
                                               child: CustomBottomButtonWidget(
                                                   Text(
-                                                    'Go to Business managment',
+                                                    AppLocalizations.of(context).goToBusiness,
                                                     style: TextStyle(
                                                         fontFamily: BuytimeTheme.FontFamily,
                                                         color: Colors.black.withOpacity(.7),
@@ -267,7 +267,7 @@ class LandingState extends State<Landing> {
                                                   '',
                                                   Icon(
                                                     Icons.business_center,
-                                                    color: BuytimeTheme.IconGrey,
+                                                    color: BuytimeTheme.SymbolGrey,
                                                   )),
                                             ),
                                           ),
@@ -293,7 +293,7 @@ class LandingState extends State<Landing> {
                                               },
                                               child: CustomBottomButtonWidget(
                                                   Text(
-                                                    'Contact Us',
+                                                    AppLocalizations.of(context).contactUs,
                                                     style: TextStyle(
                                                         fontFamily: BuytimeTheme.FontFamily,
                                                         color: Colors.black.withOpacity(.7),
@@ -301,10 +301,10 @@ class LandingState extends State<Landing> {
                                                         fontSize: 16
                                                     ),
                                                   ),
-                                                  'Have any question?',
+                                                  AppLocalizations.of(context).haveAnyQuestion,
                                                   Icon(
                                                     Icons.call,
-                                                    color: BuytimeTheme.IconGrey,
+                                                    color: BuytimeTheme.SymbolGrey,
                                                   )),
                                             ),
                                           ),
@@ -358,7 +358,7 @@ class LandingState extends State<Landing> {
                                                 },
                                                 child: CustomBottomButtonWidget(
                                                     Text(
-                                                      'Log out',
+                                                      AppLocalizations.of(context).logOut,
                                                       style: TextStyle(
                                                           fontFamily: BuytimeTheme.FontFamily,
                                                           color: Colors.black.withOpacity(.7),
@@ -369,7 +369,7 @@ class LandingState extends State<Landing> {
                                                     '',
                                                     Icon(
                                                       Icons.logout,
-                                                      color: BuytimeTheme.IconGrey,
+                                                      color: BuytimeTheme.SymbolGrey,
                                                     ))),
                                           ),
                                         ),
