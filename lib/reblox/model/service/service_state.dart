@@ -173,7 +173,7 @@ class ServiceState {
   }
 
   List<dynamic> convertToJson(List<GenericState> objectStateList) {
-    List<dynamic> list = List<dynamic>();
+    List<dynamic> list = [];
     objectStateList.forEach((element) {
       list.add(element.toJson());
     });
@@ -190,51 +190,51 @@ class ServiceState {
         description = json['description'],
         availability = json['availability'],
         actionList = List<GenericState>.from(json["actionList"].map((item) {
-          return new GenericState(
+          return  GenericState(
             content: item["name"],
             id: item["id"],
           );
         })),
         categoryList = List<GenericState>.from(json["categoryList"].map((item) {
-          return new GenericState(
+          return  GenericState(
             content: item["name"],
             id: item["id"],
           );
         })),
         externalCategoryList = List<GenericState>.from(json["externalCategoryList"].map((item) {
-          return new GenericState(
+          return  GenericState(
             content: item["name"],
             id: item["id"],
           );
         })),
         positionList = List<GenericState>.from(json["positionList"].map((item) {
-          return new GenericState(
+          return  GenericState(
             content: item["name"],
             id: item["id"],
           );
         })),
         visibility = json['visibility'],
         constraintList = List<GenericState>.from(json["constraintList"].map((item) {
-          return new GenericState(
+          return  GenericState(
             content: item["name"],
             id: item["id"],
           );
         })),
         tagList = List<GenericState>.from(json["tagList"].map((item) {
-          return new GenericState(
+          return  GenericState(
             content: item["name"],
             id: item["id"],
           );
         })),
         price = json['price'],
         write_permission = List<GenericState>.from(json["write_permission"].map((item) {
-          return new GenericState(
+          return  GenericState(
             content: item["name"],
             id: item["id"],
           );
         })),
         pipelineList = List<GenericState>.from(json["pipelineList"].map((item) {
-          return new GenericState(
+          return  GenericState(
             content: item["name"],
             id: item["id"],
           );

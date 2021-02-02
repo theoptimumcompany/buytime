@@ -32,14 +32,14 @@ class CategorySnippet {
 
   CategorySnippet.fromJson(Map<String, dynamic> json)
       : numberOfServices = json['numberOfServices'],
-        mostSoldService = ServiceState.fromJson(json["mostSoldService"]),
+        //mostSoldService = ServiceState.fromJson(json["mostSoldService"]),
         numberOfManagers = json['numberOfManagers'],
         numberOfWorkers = json['numberOfWorkers'];
 
 
   Map<String, dynamic> toJson() => {
         'numberOfServices': numberOfServices,
-        'mostSoldService': mostSoldService.toJson(),
+        //'mostSoldService': mostSoldService.toJson(),
         'numberOfManagers': numberOfManagers,
         'numberOfWorkers': numberOfWorkers,
       };
