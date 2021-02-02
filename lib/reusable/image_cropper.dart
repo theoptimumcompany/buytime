@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ImageCropperScreen extends StatefulWidget {
   final String title;
@@ -93,13 +94,13 @@ class _ImageCropperScreenState extends State<ImageCropperScreen> {
           CropAspectRatioPreset.ratio16x9
         ],
         androidUiSettings: AndroidUiSettings(
-            toolbarTitle: 'Cropper',
+            toolbarTitle: AppLocalizations.of(context).cropper,
             toolbarColor: Colors.deepOrange,
             toolbarWidgetColor: Colors.white,
             initAspectRatio: CropAspectRatioPreset.original,
             lockAspectRatio: false),
         iosUiSettings: IOSUiSettings(
-          title: 'Cropper',
+          title: AppLocalizations.of(context).cropper,
         ));
     if (croppedFile != null) {
       imageFile = croppedFile;

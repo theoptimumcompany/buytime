@@ -1,4 +1,4 @@
-import 'package:Buytime/UI/management/business/UI_C_manage_business.dart';
+import 'package:Buytime/UI/management/business/UI_M_manage_business.dart';
 import 'package:Buytime/UI/management/service/UI_M_service_list.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/business/business_list_state.dart';
@@ -10,6 +10,7 @@ import 'package:Buytime/reusable/business/optimum_business_card_medium_user.dart
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class UI_M_BusinessList extends StatefulWidget {
   @override
@@ -42,7 +43,7 @@ class UI_M_BusinessListState extends State<UI_M_BusinessList> {
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => UI_ManageBusiness(-1)),
+                        builder: (context) => UI_M_ManageBusiness(-1)),
                   );
                 },
                 child: Icon(Icons.add),
@@ -54,7 +55,7 @@ class UI_M_BusinessListState extends State<UI_M_BusinessList> {
                   Padding(
                     padding: const EdgeInsets.only(top: 30.0, left: 10.0),
                     child: Text(
-                      "I tuoi Business",
+                      AppLocalizations.of(context).yourBusinesses,
                       textAlign: TextAlign.start,
                       style: TextStyle(
                         fontSize: media.height * 0.035,
@@ -90,7 +91,7 @@ class UI_M_BusinessListState extends State<UI_M_BusinessList> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  UI_ManageBusiness(index)),
+                                                  UI_M_ManageBusiness(index)),
                                         );
                                       },
                                     ),
@@ -112,7 +113,7 @@ class UI_M_BusinessListState extends State<UI_M_BusinessList> {
                                 );
                               })
                           : Center(
-                              child: Text("Non hai business attivi!"),
+                              child: Text(AppLocalizations.of(context).youHaveNoActiveBusiness),
                             ),
                     ),
                   ),

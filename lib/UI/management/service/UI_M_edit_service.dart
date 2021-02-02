@@ -1,7 +1,7 @@
 import 'package:Buytime/UI/management/service/UI_M_service_list.dart';
-import 'package:Buytime/UI/management/service/UI_manage_service_old.dart';
+import 'package:Buytime/UI/management/service/UI_M_manage_service_old.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
-import 'package:Buytime/reblox/model/category/snippet/category_snippet_state.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:Buytime/reblox/model/category/tree/category_tree_state.dart';
 import 'package:Buytime/reblox/model/snippet/generic.dart';
 import 'package:Buytime/reblox/model/pipeline/pipeline_list_state.dart';
@@ -222,7 +222,7 @@ class UI_EditServiceState extends State<UI_EditService> {
                               onSaved: (value) {
                                 _serviceName = value;
                               },
-                              decoration: InputDecoration(labelText: 'Name'),
+                              decoration: InputDecoration(labelText: AppLocalizations.of(context).name),
                             ),
                           )),
                         ),
@@ -251,7 +251,7 @@ class UI_EditServiceState extends State<UI_EditService> {
                                 _serviceDescription = value;
                               },
                               decoration:
-                                  InputDecoration(labelText: 'Description'),
+                                  InputDecoration(labelText: AppLocalizations.of(context).description),
                             ),
                           )),
                         ),
@@ -282,7 +282,7 @@ class UI_EditServiceState extends State<UI_EditService> {
                                 _servicePrice = double.parse(value);
                               },
                               decoration: InputDecoration(
-                                labelText: 'Price',
+                                labelText: AppLocalizations.of(context).price,
                               ),
                             ),
                           )),
@@ -294,7 +294,7 @@ class UI_EditServiceState extends State<UI_EditService> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            "Select Categories",
+                            AppLocalizations.of(context).selectCateogories,
                           ),
                           Container(
                               width: media.width * 0.8,
@@ -340,7 +340,7 @@ class UI_EditServiceState extends State<UI_EditService> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            "Select all pipelines that apply",
+                            AppLocalizations.of(context).selectAllPipelines,
                           ),
                           Container(
                               width: media.width * 0.8,

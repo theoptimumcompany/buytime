@@ -1,5 +1,5 @@
 import 'package:Buytime/reusable/appbar/manager_buytime_appbar.dart';
-import 'package:Buytime/UI/management/category/UI_manage_category.dart';
+import 'package:Buytime/UI/management/category/UI_M_manage_category.dart';
 import 'package:Buytime/UI/management/category/W_category_list_item.dart';
 import 'package:Buytime/UI/management/invite/UI_M_BookingList.dart';
 import 'package:Buytime/UI/management/service/UI_M_service_list.dart';
@@ -14,8 +14,9 @@ import 'package:Buytime/reusable/menu/UI_M_business_list_drawer.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'UI_C_manage_business.dart';
+import 'UI_M_manage_business.dart';
 
 class UI_M_Business extends StatefulWidget {
   static String route = '/customer';
@@ -71,7 +72,7 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                       color: Colors.white,
                       size: 30.0,
                     ),
-                    tooltip: 'Open Menu',
+                    tooltip: AppLocalizations.of(context).openMenu,
                     onPressed: () {
                       _drawerKey.currentState.openDrawer();
                     },
@@ -81,7 +82,7 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                   child: Padding(
                     padding: const EdgeInsets.only(left: 0.0),
                     child: Text(
-                      "Dashboard",
+                      AppLocalizations.of(context).dashboard,
                       textAlign: TextAlign.start,
                       style: TextStyle(
                         color: Colors.white,
@@ -98,13 +99,13 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                       onTap: () {
                         Navigator.pushReplacement(
                           context,
-                          MaterialPageRoute(builder: (context) => UI_ManageBusiness(0)),
+                          MaterialPageRoute(builder: (context) => UI_M_ManageBusiness(0)),
                         );
                       },
                       child: Container(
                         padding: EdgeInsets.all(5.0),
                         child: Text(
-                          'Edit',
+                          AppLocalizations.of(context).edit,
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: media.height * 0.025,
@@ -156,7 +157,7 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                                             Container(
                                               margin: EdgeInsets.only(top: 10),
                                               child: Text(
-                                                '1000 employees',
+                                                AppLocalizations.of(context).employees,
                                                 style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16, color: Colors.blueGrey),
                                               ),
                                             ),
@@ -165,7 +166,7 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                                             Container(
                                               margin: EdgeInsets.only(top: 2.5),
                                               child: Text(
-                                                '1 menu items',
+                                                AppLocalizations.of(context).menuItems,
                                                 style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16, color: Colors.blueGrey),
                                               ),
                                             )
@@ -206,7 +207,7 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                             ///Categories
                             Container(
                               child: Text(
-                                'Service Categories',
+                                AppLocalizations.of(context).serviceCategories,
                                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                               ),
                             ),
@@ -220,14 +221,14 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                                 }
                                 Navigator.pushReplacement(
                                   context,
-                                  MaterialPageRoute(builder: (context) => UI_ManageCategory()),
+                                  MaterialPageRoute(builder: (context) => UI_M_ManageCategory()),
                                 );
                               },
                               borderRadius: BorderRadius.all(Radius.circular(5.0)),
                               child: Container(
                                 padding: EdgeInsets.all(5.0),
                                 child: Text(
-                                  'Manage',
+                                  AppLocalizations.of(context).manage,
                                   style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20, color: Colors.lightBlue),
                                 ),
                               ),
@@ -246,7 +247,7 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                             flex: 1,
                             child: Container(
                               child: Text(
-                                'MENU ITEMS',
+                                AppLocalizations.of(context).menuItemsCaps,
                                 style: TextStyle(fontWeight: FontWeight.w500, fontSize: 12.5),
                               ),
                             ),
@@ -257,7 +258,7 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                             flex: 1,
                             child: Container(
                               child: Text(
-                                'MOST POPULAR',
+                                AppLocalizations.of(context).mostPopularCaps,
                                 style: TextStyle(fontWeight: FontWeight.w500, fontSize: 12.5),
                               ),
                             ),

@@ -1,5 +1,6 @@
 import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 typedef OptimumBusinessCardMediumManagerCallback = void Function(BusinessState);
 
@@ -69,7 +70,7 @@ class _OptimumBusinessCardMediumManagerState extends State<OptimumBusinessCardMe
   Widget build(BuildContext context) {
     if (widget.image == null && widget.imageUrl == null) {
       return Container(
-        child: Text("Foto non inserita."),
+        child: Text(AppLocalizations.of(context).photoNotInserted),
       );
     }
     return Container(
@@ -122,7 +123,7 @@ class _OptimumBusinessCardMediumManagerState extends State<OptimumBusinessCardMe
                                 ),
                               ),
                               Text(
-                                "4 employees",
+                                AppLocalizations.of(context).employees,
                                 overflow: TextOverflow.ellipsis,
                                 textAlign: TextAlign.start,
                                 style: TextStyle(
@@ -132,7 +133,7 @@ class _OptimumBusinessCardMediumManagerState extends State<OptimumBusinessCardMe
                               Padding(
                                 padding: const EdgeInsets.only(top: 3.0),
                                 child: Text(
-                                  "5 services",
+                                  AppLocalizations.of(context).services5,
                                   overflow: TextOverflow.ellipsis,
                                   textAlign: TextAlign.start,
                                   style: TextStyle(

@@ -9,7 +9,7 @@ import 'package:Buytime/utils/theme/buytime_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class PastBooking extends StatefulWidget {
@@ -92,7 +92,7 @@ class _PastBookingState extends State<PastBooking> {
                       Container(
                         margin: EdgeInsets.only(left: 25.0),
                         child: Text(
-                          'Past bookings',
+                          AppLocalizations.of(context).pastBookings,
                           style: TextStyle(
                               fontFamily: BuytimeTheme.FontFamily,
                               color: Colors.white,
@@ -166,8 +166,7 @@ class _PastBookingState extends State<PastBooking> {
                             child: Container(
                                 margin: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 8, right: SizeConfig.safeBlockHorizontal * 8, top: SizeConfig.safeBlockVertical * 5),
                                 child: Text(
-                                  'Your past booking with us will appear here.\n\n'
-                                      'Would you want to know more about Buytime network? ',
+                                  AppLocalizations.of(context).yourPastBookingWill,
                                   style: TextStyle(
                                       fontFamily: BuytimeTheme.FontFamily,
                                       color: Colors.black54,
@@ -201,7 +200,7 @@ class _PastBookingState extends State<PastBooking> {
                             },
                             child: CustomBottomButtonWidget(
                                 Text(
-                                  'Contact Us',
+                                  AppLocalizations.of(context).contactUs,
                                   style: TextStyle(
                                       fontFamily: BuytimeTheme.FontFamily,
                                       color: Colors.black.withOpacity(.7),
@@ -209,7 +208,7 @@ class _PastBookingState extends State<PastBooking> {
                                       fontSize: 16
                                   ),
                                 ),
-                                'Have any question?',
+                                AppLocalizations.of(context).haveAnyQuestion,
                                 Icon(
                                   Icons.call,
                                   color: Colors.greenAccent,

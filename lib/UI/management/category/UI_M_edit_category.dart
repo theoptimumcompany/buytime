@@ -1,4 +1,4 @@
-import 'package:Buytime/UI/management/category/UI_manage_category.dart';
+import 'package:Buytime/UI/management/category/UI_M_manage_category.dart';
 import 'package:Buytime/reblox/model/category/invitation/category_invite_state.dart';
 import 'package:Buytime/reblox/model/category/tree/category_tree_state.dart';
 import 'package:Buytime/reblox/reducer/category_invite_reducer.dart';
@@ -13,22 +13,23 @@ import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:share/share.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../reusable/appbar/manager_buytime_appbar.dart';
 
-class UI_EditCategory extends StatefulWidget {
+class UI_M_EditCategory extends StatefulWidget {
   final String title = 'Categories';
   String empty;
 
-  UI_EditCategory({String empty}) {
+  UI_M_EditCategory({String empty}) {
     this.empty = empty;
   }
 
   @override
-  State<StatefulWidget> createState() => UI_EditCategoryState();
+  State<StatefulWidget> createState() => UI_M_EditCategoryState();
 }
 
-class UI_EditCategoryState extends State<UI_EditCategory> {
+class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>(); // TODO hero kacchan fix duplicates all mightaaa "There are multiple heroes that share the same tag within a subtree."
   final GlobalKey<FormState> _formInviteKey = GlobalKey<FormState>();
 
@@ -165,7 +166,7 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
   Future<bool> _onWillPop() {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => UI_ManageCategory()),
+      MaterialPageRoute(builder: (context) => UI_M_ManageCategory()),
     );
   }
 
@@ -197,7 +198,7 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
       builder: (_) => new AlertDialog(
         actions: <Widget>[
           FlatButton(
-            child: Text("Cancel"),
+            child: Text(AppLocalizations.of(context).cancel),
             onPressed: () {
               Navigator.of(context).pop();
             },
@@ -205,7 +206,7 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
 
           ///Gestire invito manaager/worker da aggiungere alla categoria e alle sue sottocategorie
           FlatButton(
-            child: Text("Invite"),
+            child: Text(AppLocalizations.of(context).invite),
             onPressed: () async {
               print("Category Edit Mail to add : " + inviteMail);
 
@@ -234,7 +235,7 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
                     break;
                 }
                 final RenderBox box = context.findRenderObject();
-                Share.share('check out Buytime App at $link', subject: 'Take your Time!', sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
+                Share.share(AppLocalizations.of(context).checkOutBuytimeApp + '$link', subject: AppLocalizations.of(context).takeYourTime, sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
                 Navigator.of(context).pop();
               }
             },
@@ -253,7 +254,7 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
                     children: [
                       Container(
                         child: Text(
-                          "Invite a $role",
+                          AppLocalizations.of(context).inviteA + role,
                           textAlign: TextAlign.start,
                           style: TextStyle(
                             color: BuytimeTheme.TextDark,
@@ -275,7 +276,7 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
                       Container(
                         width: wrap_width_text,
                         child: Text(
-                          "Type a $role email below. They will receive an email invite to install the application and join the business",
+                          AppLocalizations.of(context).typeA + role + AppLocalizations.of(context).emailBelow,
                           textAlign: TextAlign.start,
                           style: TextStyle(
                             color: BuytimeTheme.TextDark,
@@ -301,12 +302,12 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
                             autofocus: true,
                             keyboardType: TextInputType.emailAddress,
                             validator: (value) => value.isEmpty
-                                ? 'Email cannot be blank'
+                                ? AppLocalizations.of(context).emailCannotBeBlank
                                 : validateEmail(value)
                                     ? duplicateMail(role, value)
-                                        ? 'Esiste già questa mail per un $role'
+                                        ? AppLocalizations.of(context).emailExistsFor + role
                                         : null
-                                    : 'Not a valid email',
+                                    : AppLocalizations.of(context).notAValidEmail,
                             onChanged: (value) {
                               setState(() {
                                 inviteMail = value;
@@ -318,7 +319,7 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
                               });
                             },
                             decoration: InputDecoration(
-                              labelText: 'Email address',
+                              labelText: AppLocalizations.of(context).emailAddress,
                               border: InputBorder.none,
                               focusedBorder: InputBorder.none,
                               enabledBorder: InputBorder.none,
@@ -349,13 +350,13 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
             child: new Wrap(
               children: <Widget>[
                 new ListTile(
-                    title: new Text('Add Manager'),
+                    title: new Text(AppLocalizations.of(context).addManager),
                     onTap: () => {
                           Navigator.of(context).pop(),
                           sendInvitationMailDialog(context, 'Manager'),
                         }),
                 new ListTile(
-                  title: new Text('Add Worker'),
+                  title: new Text(AppLocalizations.of(context).addWorker),
                   onTap: () => {Navigator.of(context).pop(), sendInvitationMailDialog(context, 'Worker')},
                 ),
               ],
@@ -437,7 +438,7 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
   List<Widget> listEmptyWidget() {
     List<Widget> listOfWidget = new List();
     listOfWidget.add(Container(
-      child: Text("Sono vuoto"),
+      child: Text(AppLocalizations.of(context).empty),
     ));
   }
 
@@ -472,11 +473,11 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
                         color: Colors.white,
                         size: 25.0,
                       ),
-                      tooltip: 'Come back',
+                      tooltip: AppLocalizations.of(context).comeBack,
                       onPressed: () {
                         Navigator.pushReplacement(
                           context,
-                          MaterialPageRoute(builder: (context) => UI_ManageCategory()),
+                          MaterialPageRoute(builder: (context) => UI_M_ManageCategory()),
                         );
                       },
                     ),
@@ -486,7 +487,7 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
                       child: Padding(
                         padding: const EdgeInsets.only(left: 0.0),
                         child: Text(
-                          "Edit " + snapshot.category.name,
+                          AppLocalizations.of(context).editSpace + snapshot.category.name,
                           textAlign: TextAlign.start,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
@@ -506,7 +507,7 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
                           color: Colors.white,
                           size: 25.0,
                         ),
-                        tooltip: 'Submit New Category',
+                        tooltip: AppLocalizations.of(context).submitNewCategory,
                         onPressed: () {
                           if (validateAndSave()) {
                             if (canMoveToParent) {
@@ -520,7 +521,7 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => UI_ManageCategory(
+                                      builder: (context) => UI_M_ManageCategory(
                                             edited: true,
                                           )),
                                 );
@@ -531,8 +532,8 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
                                 builder: (BuildContext context) {
                                   // return object of type Dialog
                                   return AlertDialog(
-                                    title: new Text("Caution"),
-                                    content: new Text("You can't move the branch to selected parent!"),
+                                    title: new Text(AppLocalizations.of(context).caution),
+                                    content: new Text(AppLocalizations.of(context).youCannotMoveBranch),
                                   );
                                 },
                               );
@@ -565,7 +566,7 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
                               child: Padding(
                                 padding: const EdgeInsets.only(top: 0.0, bottom: 5.0, left: 10.0, right: 10.0),
                                 child: TextFormField(
-                                  validator: (value) => value.isEmpty ? 'Category name cannot be blank' : null,
+                                  validator: (value) => value.isEmpty ? AppLocalizations.of(context).categoryNameIsBlank : null,
                                   initialValue: snapshot.category.name,
                                   keyboardType: TextInputType.name,
                                   onChanged: (value) {
@@ -575,7 +576,7 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
                                   onSaved: (value) {
                                     _selectedCategoryName = value;
                                   },
-                                  decoration: InputDecoration(labelText: 'Category Name'),
+                                  decoration: InputDecoration(labelText: AppLocalizations.of(context).categoryName),
                                 ),
                               )),
                         ),
@@ -594,7 +595,7 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
                                   isExpanded: true,
                                   value: selectedParentCategory,
                                   items: _dropdownMenuParentCategory,
-                                  decoration: InputDecoration(labelText: 'Parent Category', enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white))),
+                                  decoration: InputDecoration(labelText: AppLocalizations.of(context).parentCategory, enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white))),
                                   onChanged: (value) {
                                     setState(() {
                                       selectedParentCategory = value;
@@ -647,7 +648,7 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
                                             child: Padding(
                                               padding: const EdgeInsets.only(left: 5.0),
                                               child: Text(
-                                                "Managers",
+                                                AppLocalizations.of(context).managers,
                                                 textAlign: TextAlign.start,
                                                 style: TextStyle(
                                                   color: BuytimeTheme.TextDark,
@@ -746,7 +747,7 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
                                               child: Padding(
                                                 padding: const EdgeInsets.only(left: 5.0),
                                                 child: Text(
-                                                  "Workers",
+                                                  AppLocalizations.of(context).workers,
                                                   textAlign: TextAlign.start,
                                                   style: TextStyle(
                                                     color: BuytimeTheme.TextDark,
@@ -805,7 +806,7 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
                                         : Padding(
                                             padding: EdgeInsets.only(top: 10, bottom: 10),
                                             child: Row(
-                                              children: [Text("Non ci sono lavoratori assegnati a questa categoria.")],
+                                              children: [Text(AppLocalizations.of(context).noWorkersHere)],
                                             ),
                                           ),
                                   ],
@@ -843,7 +844,7 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
                                           Future.delayed(const Duration(milliseconds: 500), () {
                                             Navigator.pushReplacement(
                                               context,
-                                              MaterialPageRoute(builder: (context) => UI_ManageCategory(deleted: true)),
+                                              MaterialPageRoute(builder: (context) => UI_M_ManageCategory(deleted: true)),
                                             );
                                           });
                                         },
@@ -860,7 +861,7 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
                                               child: Padding(
                                                 padding: const EdgeInsets.only(left: 10.0),
                                                 child: Text(
-                                                  "Delete Category",
+                                                  AppLocalizations.of(context).deleteCategory,
                                                   textAlign: TextAlign.start,
                                                   style: TextStyle(
                                                     color: BuytimeTheme.AccentRed,

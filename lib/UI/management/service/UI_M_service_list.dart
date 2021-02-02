@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:core';
 
 import 'package:Buytime/UI/management/business/UI_M_business.dart';
-import 'package:Buytime/UI/management/service/UI_manage_service.dart';
+import 'package:Buytime/UI/management/service/UI_M_manage_service.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/business/snippet/business_snippet_state.dart';
 import 'package:Buytime/reblox/model/category/category_state.dart';
@@ -18,6 +18,7 @@ import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class UI_M_ServiceList extends StatefulWidget {
   @override
@@ -116,11 +117,11 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                                   child: Row(
                                     children: [
                                       Container(
-                                        child: Icon(Icons.add_box_outlined, color: BuytimeTheme.IconGrey, size: media.width * 0.1),
+                                        child: Icon(Icons.add_box_outlined, color: BuytimeTheme.SymbolGrey, size: media.width * 0.1),
                                       ),
                                       Container(child: Text("Add a " + categoryRootList[i].name)),
                                       Container(
-                                        child: Icon(Icons.arrow_forward_ios_outlined, color: BuytimeTheme.IconGrey, size: media.width * 0.1),
+                                        child: Icon(Icons.arrow_forward_ios_outlined, color: BuytimeTheme.SymbolGrey, size: media.width * 0.1),
                                       ),
                                     ],
                                   ),

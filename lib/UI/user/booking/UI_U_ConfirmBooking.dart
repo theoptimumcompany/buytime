@@ -1,12 +1,11 @@
 import 'dart:async';
-
-import 'package:Buytime/UI/user/booking/UI_U_BookingPage.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/utils/b_cube_grid_spinner.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
+
 
 class ConfirmBooking extends StatefulWidget {
 
@@ -77,7 +76,7 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                         //margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
                         margin: EdgeInsets.only(left: 25.0),
                         child: Text(
-                          'Confirm new booking',
+                          AppLocalizations.of(context).confirmNewBooking,
                           style: TextStyle(
                               fontFamily: BuytimeTheme.FontFamily,
                               color: Colors.white,
@@ -116,7 +115,7 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                           ///Hotel Name Text
                           Container(
                             child: Text(
-                              state.business_name ?? 'HotelName',
+                              state.business_name ?? AppLocalizations.of(context).hotelName,
                               style: TextStyle(
                                   fontFamily: BuytimeTheme.FontFamily,
                                   color: Colors.black,
@@ -128,7 +127,7 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                           ///Location & Country Text
                           Container(
                             child: Text(
-                              state.business_address ?? 'Location, Country',
+                              state.business_address ?? AppLocalizations.of(context).locationCountry,
                               style: TextStyle(
                                   fontFamily: BuytimeTheme.FontFamily,
                                   color: Colors.grey,
@@ -140,7 +139,7 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                           ///Guest Number
                           Container(
                             child: Text(
-                              state.guest_number_booked_for ?? '## guests',
+                              state.guest_number_booked_for ?? AppLocalizations.of(context).guestsNumber,
                               style: TextStyle(
                                   fontFamily: BuytimeTheme.FontFamily,
                                   color: Colors.grey,
@@ -216,7 +215,7 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                                   borderRadius: new BorderRadius.circular(5),
                                 ),
                                 child: Text(
-                                  "CONFIRM BOOKING",
+                                  AppLocalizations.of(context).confirmBooking,
                                   style: TextStyle(
                                     fontSize: 18,
                                     fontFamily: 'Roboto',
@@ -238,7 +237,7 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                                     child: Container(
                                       padding: EdgeInsets.all(5.0),
                                       child: Text(
-                                        'SOMETHING ISN\'T RIGHT',
+                                        AppLocalizations.of(context).somethingIsNotRight,
                                         style: TextStyle(
                                             fontFamily: BuytimeTheme.FontFamily,
                                             color: BuytimeTheme.UserPrimary,

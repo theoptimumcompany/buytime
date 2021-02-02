@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
-
 import 'package:Buytime/UI/user/landing/UI_U_Landing.dart';
 import 'package:Buytime/reblox/model/snippet/device.dart';
 import 'package:Buytime/reblox/model/snippet/token.dart';
@@ -26,6 +25,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import '../../../reblox/model/app_state.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 
 class Login extends StatefulWidget {
@@ -185,7 +185,7 @@ class LoginState extends State<Login> {
 
       ProgressDialog pr = new ProgressDialog(context);
       pr.style(
-          message: 'Authentication ...',
+          message: AppLocalizations.of(context).authentication,
           borderRadius: 10.0,
           backgroundColor: Colors.white,
           progressWidget: CircularProgressIndicator(),
@@ -288,7 +288,7 @@ class LoginState extends State<Login> {
     if(oauthCredential != null){
       ProgressDialog pr = new ProgressDialog(context);
       pr.style(
-          message: 'Authentication ...',
+          message: AppLocalizations.of(context).authentication,
           borderRadius: 10.0,
           backgroundColor: Colors.white,
           progressWidget: CircularProgressIndicator(),
@@ -365,7 +365,7 @@ class LoginState extends State<Login> {
 
     ProgressDialog pr = new ProgressDialog(context);
     pr.style(
-        message: 'Authentication ...',
+        message: AppLocalizations.of(context).authentication,
         borderRadius: 10.0,
         backgroundColor: Colors.white,
         progressWidget: CircularProgressIndicator(),
@@ -461,15 +461,15 @@ class LoginState extends State<Login> {
         responseMessage = '';
       }else{
         if(emailHasError && passwordHasError)
-          responseMessage = 'Please enter a valid Email and Password';
+          responseMessage = AppLocalizations.of(context).pleaseEmailAndPass;
         else if(emailHasError)
-          responseMessage = 'Please enter a valid Email address';
+          responseMessage = AppLocalizations.of(context).pleaseEmail;
         else if(passwordHasError)
-          responseMessage = 'Please enter a valid password';
+          responseMessage = AppLocalizations.of(context).pleasePass;
         else if(!_success)
-          responseMessage = 'Registration failed';
+          responseMessage = AppLocalizations.of(context).registrationFail;
         else
-          responseMessage = 'Successfully signed in';
+          responseMessage = AppLocalizations.of(context).successSign;
       }
     });
   }
@@ -553,7 +553,7 @@ class LoginState extends State<Login> {
                                             Container(
                                               margin: EdgeInsets.only(top:  SizeConfig.safeBlockVertical * 5),
                                               child: Text(
-                                                'Please Sign in:',
+                                                AppLocalizations.of(context).pleaseSignIn,
                                                 style: TextStyle(
                                                     fontFamily: BuytimeTheme.FontFamily,
                                                     color: Colors.black,
@@ -586,7 +586,7 @@ class LoginState extends State<Login> {
                                                   borderSide: BorderSide(color: Colors.redAccent),
                                                   borderRadius: BorderRadius.all(Radius.circular(10.0))
                                               ),
-                                              labelText: 'Email address',
+                                              labelText: AppLocalizations.of(context).emailAddress,
                                               //hintText: "email *",
                                               //hintStyle: TextStyle(color: Color(0xff666666)),
                                               labelStyle: TextStyle(
@@ -632,7 +632,7 @@ class LoginState extends State<Login> {
                                                     borderSide: BorderSide(color: Colors.redAccent),
                                                     borderRadius: BorderRadius.all(Radius.circular(10.0))
                                                 ),
-                                                labelText: 'Password',
+                                                labelText: AppLocalizations.of(context).password,
                                                 //hintText: "email *",
                                                 //hintStyle: TextStyle(color: Color(0xff666666)),
                                                 labelStyle: TextStyle(
@@ -694,7 +694,7 @@ class LoginState extends State<Login> {
                                             Container(
                                               margin: EdgeInsets.only(top:  SizeConfig.safeBlockVertical * 5),
                                               child: Text(
-                                                'Please Sign in:',
+                                                AppLocalizations.of(context).pleaseSignIn,
                                                 style: TextStyle(
                                                     fontFamily: BuytimeTheme.FontFamily,
                                                     color: Colors.black,
@@ -726,7 +726,7 @@ class LoginState extends State<Login> {
                                                     borderSide: BorderSide(color: Colors.redAccent),
                                                     borderRadius: BorderRadius.all(Radius.circular(10.0))
                                                 ),
-                                                labelText: 'Email address',
+                                                labelText: AppLocalizations.of(context).emailAddress,
                                                 //hintText: "email *",
                                                 //hintStyle: TextStyle(color: Color(0xff666666)),
                                                 labelStyle: TextStyle(
@@ -772,7 +772,7 @@ class LoginState extends State<Login> {
                                                     borderSide: BorderSide(color: Colors.redAccent),
                                                     borderRadius: BorderRadius.all(Radius.circular(10.0))
                                                 ),
-                                                labelText: 'Password',
+                                                labelText: AppLocalizations.of(context).password,
                                                 //hintText: "email *",
                                                 //hintStyle: TextStyle(color: Color(0xff666666)),
                                                 labelStyle: TextStyle(
@@ -864,9 +864,9 @@ class LoginState extends State<Login> {
                               child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    BrandedButton("assets/img/google_logo.png",'Sign in with Google', initiateGoogleSignIn),
-                                    BrandedButton("assets/img/apple_logo.png",'Sign in with Apple', initiateAppleSignIn),
-                                    BrandedButton("assets/img/facebook_logo.png",'Sign in with Facebook', initiateFacebookSignIn),
+                                    BrandedButton("assets/img/google_logo.png",AppLocalizations.of(context).signGoogle, initiateGoogleSignIn),
+                                    BrandedButton("assets/img/apple_logo.png",AppLocalizations.of(context).signApple, initiateAppleSignIn),
+                                    BrandedButton("assets/img/facebook_logo.png",AppLocalizations.of(context).signFacebook, initiateFacebookSignIn),
                                   ]
                               ),
                             ),

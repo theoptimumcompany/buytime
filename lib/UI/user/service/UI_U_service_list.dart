@@ -1,12 +1,10 @@
-import 'dart:async';
 import 'dart:core';
-import 'package:Buytime/UI/user/business/UI_U_business_list.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:Buytime/UI/user/cart/UI_U_cart.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/business/snippet/business_snippet_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/order/order_entry.dart';
-import 'package:Buytime/reblox/model/service/service_list_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
@@ -86,7 +84,7 @@ class UI_U_ServiceListState extends State<UI_U_ServiceList> {
                 Padding(
                   padding: const EdgeInsets.only(top: 30.0, left: 10.0),
                   child: Text(
-                    "I nostri servizi",
+                    AppLocalizations.of(context).ourServices,
                     textAlign: TextAlign.start,
                     style: TextStyle(
                       fontSize: media.height * 0.025,
@@ -145,10 +143,10 @@ class UI_U_ServiceListState extends State<UI_U_ServiceList> {
                                       }),
                                     )
                                   : Center(
-                                      child: Text("Non ci sono servizi in questo business!"),
+                                      child: Text(AppLocalizations.of(context).thereAreNoServicesInThisBusiness),
                                     )
                               : Center(
-                                  child: Text("Non ci sono servizi in questo business!"),
+                                  child: Text(AppLocalizations.of(context).thereAreNoServicesInThisBusiness),
                                 );
                         }),
                   ),
@@ -189,11 +187,11 @@ class CartIconAppBar extends StatelessWidget {
           showDialog(
               context: context,
               builder: (_) => new AlertDialog(
-                    title: new Text("Attenzione!"),
-                    content: new Text("Il carrello è vuoto! Scegli prima un servizio dall'elenco sottostante."),
+                    title: new Text(AppLocalizations.of(context).warning),
+                    content: new Text(AppLocalizations.of(context).emptyCart),
                     actions: <Widget>[
                       FlatButton(
-                        child: Text('Ok'),
+                        child: Text(AppLocalizations.of(context).ok),
                         onPressed: () {
                           Navigator.of(context).pop();
                         },

@@ -1,10 +1,11 @@
 import 'package:Buytime/UI/management/service/UI_M_service_list.dart';
-import 'package:Buytime/UI/management/service/UI_edit_service.dart';
+import 'package:Buytime/UI/management/service/UI_M_edit_service.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reusable/appbar/manager_buytime_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'UI_create_service.dart';
+import 'UI_M_create_service.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class UI_ManageService extends StatefulWidget {
   UI_ManageService(bool creation) {
@@ -58,8 +59,8 @@ class UI_ManageServiceState extends State<UI_ManageService> {
                     ),
                     Text(
                       widget.creation == true
-                          ? "Creazione Servizio"
-                          : "Modifica Servizio",
+                          ? AppLocalizations.of(context).serviceCreation
+                          : AppLocalizations.of(context).serviceEdit,
                       textAlign: TextAlign.start,
                       style: TextStyle(
                         fontSize: media.height * 0.035,

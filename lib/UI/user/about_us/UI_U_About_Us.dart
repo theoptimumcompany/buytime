@@ -1,11 +1,8 @@
 import 'package:Buytime/reblox/model/app_state.dart';
-import 'package:Buytime/reusable/appbar/user_buytime_appbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class UI_U_AboutUs extends StatefulWidget {
   final String title = 'About Us';
@@ -36,7 +33,7 @@ class UI_U_AboutUsState extends State<UI_U_AboutUs> {
                       Padding(
                         padding: const EdgeInsets.only(top: 30.0, left: 20.0),
                         child: Text(
-                          "About Us",
+                          AppLocalizations.of(context).aboutUs,
                           textAlign: TextAlign.start,
                           style: TextStyle(
                             fontSize: media.height * 0.035,
@@ -50,7 +47,7 @@ class UI_U_AboutUsState extends State<UI_U_AboutUs> {
                             child: Column(
                               children: [
                                 Text(
-                                  "Buytime was created in 2020 by an enthusiast group of tech people who loved to experiment with new technologies.",
+                                  AppLocalizations.of(context).buytimeWasCreated,
                                   style: new TextStyle(
                                     fontSize: media.height * 0.028,
                                   ),
@@ -63,8 +60,7 @@ class UI_U_AboutUsState extends State<UI_U_AboutUs> {
                                   padding: const EdgeInsets.only(top: 0.0),
                                   alignment: Alignment.topLeft,
                                   child: Text(
-                                    '''© The Optimum Company S.r.l, 2020          
-                                   Icons by Freepick''',
+                                    AppLocalizations.of(context).copy,
                                     style: new TextStyle(
                                       fontSize: media.height * 0.025,
                                     ),

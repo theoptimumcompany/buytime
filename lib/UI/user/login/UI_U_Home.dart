@@ -1,9 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:math';
-
 import 'package:Buytime/utils/theme/buytime_theme.dart';
-import 'package:Buytime/UI/user/login/UI_U_TermsAndConditions.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:Buytime/UI/user/login/UI_U_ToS_TermsConditons.dart';
 import 'package:Buytime/UI/user/login/UI_U_Login.dart';
 import 'package:Buytime/UI/user/login/UI_U_Registration.dart';
@@ -260,7 +259,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                             child: Padding(
                                               padding: const EdgeInsets.symmetric(horizontal: 12.0),
                                               child: Text(
-                                                "Buytime",
+                                                AppLocalizations.of(context).buytime,
                                                 style: BuytimeTheme.whiteTitle,
                                                 textAlign: TextAlign.center,
                                               ),
@@ -285,7 +284,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                       child: Padding(
                                         padding: const EdgeInsets.symmetric(horizontal: 40.0),
                                         child: Text(
-                                          "Unisciti a un nuovo mondo di servizi per il tuo soggiorno in hotel",
+                                          AppLocalizations.of(context).joinHotel,
                                           style: BuytimeTheme.whiteSubtitle,
                                           textAlign: TextAlign.center,
                                         ),
@@ -323,7 +322,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                       borderRadius: new BorderRadius.circular(5),
                                     ),
                                     child: Text(
-                                      "Inizia Il Tuo Soggiorno",
+                                      AppLocalizations.of(context).startStay,
                                       style: TextStyle(
                                         fontSize: 18,
                                         fontFamily: 'Roboto',
@@ -358,7 +357,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                       borderRadius: new BorderRadius.circular(5),
                                     ),
                                     child: Text(
-                                      "Riloggati",
+                                      AppLocalizations.of(context).logBack,
                                       style: TextStyle(
                                           fontSize: 18,
                                           fontFamily: 'Roboto',
@@ -389,7 +388,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                       borderRadius: new BorderRadius.circular(5),
                                     ),
                                     child: Text(
-                                      "Inizia Il Tuo Soggiorno",
+                                      AppLocalizations.of(context).startStay,
                                       style: TextStyle(
                                         fontSize: 18,
                                         fontFamily: 'Roboto',
@@ -424,7 +423,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                       borderRadius: new BorderRadius.circular(5),
                                     ),
                                     child: Text(
-                                      "Riloggati",
+                                      AppLocalizations.of(context).logBack,
                                       style: TextStyle(
                                           fontSize: 18,
                                           fontFamily: 'Roboto',
@@ -446,7 +445,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                               children: [
                                 Container(
                                   child: Text(
-                                    'Iscrivendoti accetti i nostri ',
+                                    AppLocalizations.of(context).youAccept,
                                     style: TextStyle(
                                         color: Colors.grey,
                                         fontWeight: FontWeight.w400
@@ -459,7 +458,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                         color: BuytimeTheme.userPrimarySwatch[300],
                                         fontWeight: FontWeight.w500
                                     ),
-                                    text: 'ToS',
+                                    text: AppLocalizations.of(context).tos,
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = (){
                                         debugPrint('UI_U_Home - ToS Clicked: ' + tosPdfPath);
@@ -469,7 +468,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                 ),
                                 Container(
                                   child: Text(
-                                    ' e ',
+                                    AppLocalizations.of(context).and,
                                     style: TextStyle(
                                         color: Colors.grey,
                                         fontWeight: FontWeight.w400
@@ -482,7 +481,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                         color: BuytimeTheme.userPrimarySwatch[300],
                                         fontWeight: FontWeight.w500
                                     ),
-                                    text: 'Privacy Policy',
+                                    text: AppLocalizations.of(context).privacyPolicy,
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = (){
                                         debugPrint('UI_U_Home - Privacy Policy Clicked: ' + tcPdfPath);

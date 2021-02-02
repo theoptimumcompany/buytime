@@ -1,11 +1,10 @@
 import 'dart:async';
 import 'dart:core';
-
 import 'package:Buytime/UI/management/business/UI_M_business.dart';
-import 'package:Buytime/UI/management/service/UI_manage_service.dart';
+import 'package:Buytime/UI/management/service/UI_M_manage_service.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/business/snippet/business_snippet_state.dart';
-import 'package:Buytime/reblox/model/snippet/generic.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/order/order_entry.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
@@ -101,7 +100,7 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                     Padding(
                       padding: const EdgeInsets.only(top: 30.0, left: 10.0),
                       child: Text(
-                        "I nostri servizi",
+                        AppLocalizations.of(context).ourServices,
                         textAlign: TextAlign.start,
                         style: TextStyle(
                           fontSize: media.height * 0.025,
@@ -206,7 +205,7 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                                 }),
                               )
                             : Center(
-                                child: Text("Non ci sono servizi in questo business!"),
+                                child: Text(AppLocalizations.of(context).thereAreNoServicesInThisBusiness),
                               ),
                       ),
                     ),

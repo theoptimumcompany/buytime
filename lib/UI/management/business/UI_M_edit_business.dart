@@ -9,17 +9,18 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:image_cropper/image_cropper.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../reusable/form/optimum_chip.dart';
 import '../../../reusable/form/optimum_form_field.dart';
 import 'package:Buytime/reusable/form/optimum_form_multi_photo.dart' if (dart.library.html) 'package:Buytime/reusable/form/optimum_form_multi_photo_web.dart';
 
-class UI_EditBusiness extends StatefulWidget {
+class UI_M_EditBusiness extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => UI_EditBusinessState();
+  State<StatefulWidget> createState() => UI_M_EditBusinessState();
 }
 
-class UI_EditBusinessState extends State<UI_EditBusiness> {
+class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
   BuildContext context;
   int _index = 0;
   int currentStep = 0;
@@ -63,7 +64,7 @@ class UI_EditBusinessState extends State<UI_EditBusiness> {
 
   String validateName(String value) {
     if (value.length < 3)
-      return 'Name must be more than 2 charater';
+      return AppLocalizations.of(context).nameMin;
     else
       return null;
   }
@@ -72,7 +73,7 @@ class UI_EditBusinessState extends State<UI_EditBusiness> {
     Pattern pattern = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
     RegExp regex = new RegExp(pattern);
     if (!regex.hasMatch(value))
-      return 'Enter Valid Email';
+      return AppLocalizations.of(context).enterValidEmail;
     else
       return null;
   }
@@ -133,14 +134,14 @@ class UI_EditBusinessState extends State<UI_EditBusiness> {
                 return Stepper(
                   steps: [
                     Step(
-                      title: Text('Definition'),
+                      title: Text(AppLocalizations.of(context).definition),
                       isActive: currentStep == 0 ? true : false,
                       state: currentStep == 0 ? StepState.editing : StepState.indexed,
                       content: Column(
                         children: <Widget>[
                           Row(
                             children: [
-                              Text("Published"),
+                              Text(AppLocalizations.of(context).published),
                               Switch(value: !snapshot.draft, onChanged: (value) {
                                 StoreProvider.of<AppState>(context).dispatch(SetBusinessDraft(!value));
                               })
@@ -150,7 +151,7 @@ class UI_EditBusinessState extends State<UI_EditBusiness> {
                             field: "businessName",
                             textInputType: TextInputType.text,
                             minLength: 3,
-                            inputDecoration: InputDecoration(labelText: 'Company Name'),
+                            inputDecoration: InputDecoration(labelText: AppLocalizations.of(context).companyName),
                             globalFieldKey: _formKeyNameFieldEdit,
                             typeOfValidate: "name",
                             initialFieldValue: snapshot.name,
@@ -165,7 +166,7 @@ class UI_EditBusinessState extends State<UI_EditBusiness> {
                             field: "responsible_person_name",
                             textInputType: TextInputType.text,
                             minLength: 3,
-                            inputDecoration: InputDecoration(labelText: 'Responsible Person Name'),
+                            inputDecoration: InputDecoration(labelText: AppLocalizations.of(context).responsibleName),
                             globalFieldKey: _formKeyResponsablePersonNameFieldEdit,
                             typeOfValidate: "name",
                             initialFieldValue: snapshot.responsible_person_name,
@@ -177,7 +178,7 @@ class UI_EditBusinessState extends State<UI_EditBusiness> {
                             field: "responsible_person_surname",
                             textInputType: TextInputType.text,
                             minLength: 3,
-                            inputDecoration: InputDecoration(labelText: 'Responsible Person Surname'),
+                            inputDecoration: InputDecoration(labelText: AppLocalizations.of(context).responsibleSurname),
                             globalFieldKey: _formKeyResponsablePersonSurnameFieldEdit,
                             typeOfValidate: "name",
                             initialFieldValue: snapshot.responsible_person_surname,
@@ -189,7 +190,7 @@ class UI_EditBusinessState extends State<UI_EditBusiness> {
                             field: "responsible_person_email",
                             textInputType: TextInputType.text,
                             minLength: 3,
-                            inputDecoration: InputDecoration(labelText: 'Responsible Person Email'),
+                            inputDecoration: InputDecoration(labelText: AppLocalizations.of(context).responsibleEmail),
                             globalFieldKey: _formKeyResponsablePersonEmailFieldEdit,
                             typeOfValidate: "email",
                             initialFieldValue: snapshot.responsible_person_email,
@@ -201,7 +202,7 @@ class UI_EditBusinessState extends State<UI_EditBusiness> {
                             field: "mail",
                             textInputType: TextInputType.text,
                             minLength: 3,
-                            inputDecoration: InputDecoration(labelText: 'Business Email'),
+                            inputDecoration: InputDecoration(labelText: AppLocalizations.of(context).businessEmail),
                             globalFieldKey: _formKeyEmailFieldEdit,
                             typeOfValidate: "email",
                             initialFieldValue: snapshot.email,
@@ -213,7 +214,7 @@ class UI_EditBusinessState extends State<UI_EditBusiness> {
                             field: "vat",
                             textInputType: TextInputType.text,
                             minLength: 3,
-                            inputDecoration: InputDecoration(labelText: 'VAT Number'),
+                            inputDecoration: InputDecoration(labelText: AppLocalizations.of(context).vatNumber),
                             globalFieldKey: _formKeyVatFieldEdit,
                             typeOfValidate: "number",
                             initialFieldValue: snapshot.VAT,
@@ -225,7 +226,7 @@ class UI_EditBusinessState extends State<UI_EditBusiness> {
                       ),
                     ),
                     Step(
-                        title: Text('Address'),
+                        title: Text(AppLocalizations.of(context).address),
                         isActive: currentStep == 1 ? true : false,
                         state: currentStep == 1 ? StepState.editing : StepState.indexed,
                         content: Column(
@@ -234,7 +235,7 @@ class UI_EditBusinessState extends State<UI_EditBusiness> {
                               field: "street",
                               textInputType: TextInputType.text,
                               minLength: 3,
-                              inputDecoration: InputDecoration(labelText: 'Street'),
+                              inputDecoration: InputDecoration(labelText: AppLocalizations.of(context).street),
                               globalFieldKey: _formKeyStreetFieldEdit,
                               typeOfValidate: "name",
                               initialFieldValue: snapshot.street,
@@ -246,7 +247,7 @@ class UI_EditBusinessState extends State<UI_EditBusiness> {
                               field: "streetNumber",
                               textInputType: TextInputType.text,
                               minLength: 1,
-                              inputDecoration: InputDecoration(labelText: 'Street Number'),
+                              inputDecoration: InputDecoration(labelText: AppLocalizations.of(context).streetNumber),
                               globalFieldKey: _formKeyStreetNumberFieldEdit,
                               typeOfValidate: "number",
                               initialFieldValue: snapshot.street_number,
@@ -258,7 +259,7 @@ class UI_EditBusinessState extends State<UI_EditBusiness> {
                               field: "zip",
                               textInputType: TextInputType.number,
                               minLength: 3,
-                              inputDecoration: InputDecoration(labelText: 'ZIP'),
+                              inputDecoration: InputDecoration(labelText: AppLocalizations.of(context).zip),
                               globalFieldKey: _formKeyZipFieldEdit,
                               typeOfValidate: "number",
                               initialFieldValue: snapshot.ZIP,
@@ -270,7 +271,7 @@ class UI_EditBusinessState extends State<UI_EditBusiness> {
                               field: "municipality",
                               textInputType: TextInputType.text,
                               minLength: 3,
-                              inputDecoration: InputDecoration(labelText: 'Municipality'),
+                              inputDecoration: InputDecoration(labelText: AppLocalizations.of(context).municipality),
                               globalFieldKey: _formKeyMunicipalityFieldEdit,
                               typeOfValidate: "name",
                               initialFieldValue: snapshot.municipality,
@@ -282,7 +283,7 @@ class UI_EditBusinessState extends State<UI_EditBusiness> {
                               field: "state",
                               textInputType: TextInputType.text,
                               minLength: 3,
-                              inputDecoration: InputDecoration(labelText: 'State'),
+                              inputDecoration: InputDecoration(labelText: AppLocalizations.of(context).state),
                               globalFieldKey: _formKeyStateFieldEdit,
                               typeOfValidate: "name",
                               initialFieldValue: snapshot.state_province,
@@ -294,7 +295,7 @@ class UI_EditBusinessState extends State<UI_EditBusiness> {
                               field: "nation",
                               textInputType: TextInputType.text,
                               minLength: 3,
-                              inputDecoration: InputDecoration(labelText: 'Nation'),
+                              inputDecoration: InputDecoration(labelText: AppLocalizations.of(context).nation),
                               globalFieldKey: _formKeyNationFieldEdit,
                               typeOfValidate: "name",
                               initialFieldValue: snapshot.nation,
@@ -306,7 +307,7 @@ class UI_EditBusinessState extends State<UI_EditBusiness> {
                               field: "coordinate",
                               textInputType: TextInputType.text,
                               minLength: 3,
-                              inputDecoration: InputDecoration(labelText: 'Coordinate'),
+                              inputDecoration: InputDecoration(labelText: AppLocalizations.of(context).coordinate),
                               globalFieldKey: _formKeyCoordinateFieldEdit,
                               typeOfValidate: "name",
                               initialFieldValue: snapshot.coordinate,
@@ -317,7 +318,7 @@ class UI_EditBusinessState extends State<UI_EditBusiness> {
                           ],
                         )),
                     Step(
-                      title: Text('Company Information'),
+                      title: Text(AppLocalizations.of(context).companyInformation),
                       isActive: currentStep == 2 ? true : false,
                       state: currentStep == 2 ? StepState.editing : StepState.indexed,
                       content: Column(
@@ -326,7 +327,7 @@ class UI_EditBusinessState extends State<UI_EditBusiness> {
                             field: "description",
                             textInputType: TextInputType.text,
                             minLength: 3,
-                            inputDecoration: InputDecoration(labelText: 'Description'),
+                            inputDecoration: InputDecoration(labelText: AppLocalizations.of(context).description),
                             globalFieldKey: _formKeyDescriptionFieldEdit,
                             typeOfValidate: "multiline",
                             initialFieldValue: snapshot.description,
@@ -339,7 +340,7 @@ class UI_EditBusinessState extends State<UI_EditBusiness> {
                             padding: const EdgeInsets.only(top: 10.0),
                             child: Column(
                               children: <Widget>[
-                                Text("Type of Business"),
+                                Text(AppLocalizations.of(context).typeOfBusiness),
                                 OptimumChip(
                                   chipList: reportList,
                                   selectedChoices: snapshot.business_type,
@@ -352,7 +353,7 @@ class UI_EditBusinessState extends State<UI_EditBusiness> {
                           ),
                           //Business Logo
                           OptimumFormMultiPhoto(
-                            text: "logo",
+                            text: AppLocalizations.of(context).logo,
                             remotePath: "business/" + snapshot.name + "/logo",
                             maxHeight: 1000,
                             maxPhoto: 1,
@@ -368,7 +369,7 @@ class UI_EditBusinessState extends State<UI_EditBusiness> {
                           ),
                           //Business Thumbnail
                           OptimumFormMultiPhoto(
-                            text: "Wide",
+                            text: AppLocalizations.of(context).wide,
                             remotePath: "business/" + snapshot.name + "/wide",
                             maxHeight: 1000,
                             maxPhoto: 1,
@@ -384,7 +385,7 @@ class UI_EditBusinessState extends State<UI_EditBusiness> {
                           ),
                           //Photo Profile
                           OptimumFormMultiPhoto(
-                            text: "profile",
+                            text: AppLocalizations.of(context).profile,
                             remotePath: "business/" + snapshot.name + "/profile",
                             maxHeight: 1000,
                             maxPhoto: 1,
@@ -400,7 +401,7 @@ class UI_EditBusinessState extends State<UI_EditBusiness> {
                           ),
                           //Business Gallery
                           OptimumFormMultiPhoto(
-                            text: "gallery",
+                            text: AppLocalizations.of(context).gallery,
                             remotePath: "business/" + snapshot.name + "/gallery",
                             maxHeight: 1000,
                             maxPhoto: 1,
@@ -434,7 +435,7 @@ class UI_EditBusinessState extends State<UI_EditBusiness> {
                               ? Container()
                               : RaisedButton(
                                   onPressed: onStepCancel,
-                                  child: const Text('Back!'),
+                                  child: Text(AppLocalizations.of(context).back),
                                 ),
                           currentStep != 2
                               ? RaisedButton(
@@ -442,7 +443,7 @@ class UI_EditBusinessState extends State<UI_EditBusiness> {
                                     print("salesman board: Upload to DB");
                                     onStepContinue();
                                   },
-                                  child: const Text('Next'),
+                                  child: Text(AppLocalizations.of(context).next),
                                 )
                               : RaisedButton(
                                   onPressed: () {
@@ -460,7 +461,7 @@ class UI_EditBusinessState extends State<UI_EditBusiness> {
                                       MaterialPageRoute(builder: (context) => UI_M_Business()),
                                     );
                                   },
-                                  child: const Text('Edit Business!'),
+                                  child: Text(AppLocalizations.of(context).editBusiness),
                                 ),
                         ],
                       );

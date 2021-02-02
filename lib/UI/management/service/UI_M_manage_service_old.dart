@@ -1,5 +1,5 @@
 import 'package:Buytime/UI/management/service/UI_M_service_list.dart';
-import 'package:Buytime/UI/management/service/UI_edit_service.dart';
+import 'package:Buytime/UI/management/service/UI_M_edit_service.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/reducer/service_list_reducer.dart';
@@ -7,9 +7,8 @@ import 'package:Buytime/reblox/reducer/service_reducer.dart';
 import 'package:Buytime/reusable/service/optimum_service_card_medium.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-
-import '../old_design/UI_M_Tabs.dart';
-import 'UI_create_service.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'UI_M_create_service.dart';
 
 class UI_ManageService extends StatefulWidget {
   final String title = 'Services';
@@ -50,7 +49,7 @@ class UI_ManageServiceState extends State<UI_ManageService> {
           elevation: 5,
           duration: Duration(seconds: 3),
           content: Text(
-            'Service Created!',
+            AppLocalizations.of(context).serviceCreated,
             style: TextStyle(color: Colors.white),
           ),
         );
@@ -61,7 +60,7 @@ class UI_ManageServiceState extends State<UI_ManageService> {
           backgroundColor: Colors.blue,
           duration: Duration(seconds: 3),
           content: Text(
-            'Service Edited!',
+            AppLocalizations.of(context).serviceEdited,
             style: TextStyle(color: Colors.white),
           ),
         );
@@ -73,7 +72,7 @@ class UI_ManageServiceState extends State<UI_ManageService> {
           backgroundColor: Colors.blue,
           duration: Duration(seconds: 3),
           content: Text(
-            'Service Deleted!',
+            AppLocalizations.of(context).serviceDeleted,
             style: TextStyle(color: Colors.white),
           ),
         );
@@ -131,7 +130,7 @@ class UI_ManageServiceState extends State<UI_ManageService> {
               key: widget._keyScaffoldService,
               appBar: AppBar(
                 title: Text(
-                  'Services',
+                  AppLocalizations.of(context).services,
                   style: TextStyle(
                     color: Colors.black,
                   ),

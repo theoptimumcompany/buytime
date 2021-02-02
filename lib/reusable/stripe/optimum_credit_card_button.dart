@@ -1,6 +1,7 @@
 import 'package:Buytime/reblox/model/stripe/stripe_card_response.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 typedef OptimumCreditCardButtonCallback = void Function();
 typedef OptimumCreditCardDisposeCallback = void Function(StripeCardResponse stripeCardResponse);
@@ -80,7 +81,7 @@ class _OptimumCreditCardButtonState extends State<OptimumCreditCardButton> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  capitalizedBrand + ", termina " + stripeCardResponse.last4,
+                                  capitalizedBrand + AppLocalizations.of(context).ending + stripeCardResponse.last4,
                                   textAlign: TextAlign.left,
                                   style: TextStyle(
                                     fontSize: 25.0,

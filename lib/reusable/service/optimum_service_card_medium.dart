@@ -1,6 +1,7 @@
 import 'package:Buytime/UI/user/service/UI_U_ServiceDetails.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 typedef OptimumServiceCardMediumCallback = void Function(ServiceState);
 
@@ -65,7 +66,7 @@ class _OptimumServiceCardMediumState extends State<OptimumServiceCardMedium> {
     var mediaHeight = media.height;
     if (widget.image == null && widget.imageUrl == null) {
       return Container(
-        child: Text("Foto non inserita."),
+        child: Text(AppLocalizations.of(context).photoNotInserted),
       );
     }
     return Container(
@@ -129,13 +130,13 @@ class _OptimumServiceCardMediumState extends State<OptimumServiceCardMedium> {
                                 children: [
                                   widget.greyScale
                                       ? Text(
-                                          "€ " + widget.serviceState.price.toString(),
+                                          AppLocalizations.of(context).euroSpace + widget.serviceState.price.toString(),
                                           overflow: TextOverflow.ellipsis,
                                           style:
                                               TextStyle(fontWeight: FontWeight.w700, fontSize: mediaSize.height * 0.021, color: Colors.grey.withOpacity(0.6), decoration: TextDecoration.lineThrough),
                                         )
                                       : Text(
-                                          "€ " + widget.serviceState.price.toString(),
+                                          AppLocalizations.of(context).euroSpace + widget.serviceState.price.toString(),
                                           overflow: TextOverflow.ellipsis,
                                           style: TextStyle(
                                             fontWeight: FontWeight.w700,
@@ -145,7 +146,7 @@ class _OptimumServiceCardMediumState extends State<OptimumServiceCardMedium> {
                                         ),
                                   widget.greyScale
                                       ? Text(
-                                          " - Unavailable",
+                                          AppLocalizations.of(context).unavailable,
                                           overflow: TextOverflow.ellipsis,
                                           style: TextStyle(
                                             fontWeight: FontWeight.w700,

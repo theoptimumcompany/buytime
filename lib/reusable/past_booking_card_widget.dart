@@ -1,7 +1,6 @@
-import 'package:Buytime/UI/user/landing/invite_guest_form.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
-import 'package:animations/animations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:share/share.dart';
 
@@ -95,8 +94,8 @@ class _PastBookingCardWidgetState extends State<PastBookingCardWidget> {
                     child: IconButton(
                       onPressed: (){
                         final RenderBox box = context.findRenderObject();
-                        Share.share('Share',
-                            subject: 'Test',
+                        Share.share(AppLocalizations.of(context).share,
+                            subject: AppLocalizations.of(context).test,
                             sharePositionOrigin:
                             box.localToGlobal(Offset.zero) &
                             box.size);

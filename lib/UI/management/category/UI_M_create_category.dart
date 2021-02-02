@@ -1,4 +1,4 @@
-import 'package:Buytime/UI/management/category/UI_manage_category.dart';
+import 'package:Buytime/UI/management/category/UI_M_manage_category.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/category/category_state.dart';
 import 'package:Buytime/reblox/model/category/tree/category_tree_state.dart';
@@ -9,20 +9,21 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import '../../../reusable/appbar/manager_buytime_appbar.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class UI_CreateCategory extends StatefulWidget {
+class UI_M_CreateCategory extends StatefulWidget {
   final String title = 'Categories';
   String empty;
 
-  UI_CreateCategory({String empty}) {
+  UI_M_CreateCategory({String empty}) {
     this.empty = empty;
   }
 
   @override
-  State<StatefulWidget> createState() => UI_CreateCategoryState();
+  State<StatefulWidget> createState() => UI_M_CreateCategoryState();
 }
 
-class UI_CreateCategoryState extends State<UI_CreateCategory> {
+class UI_M_CreateCategoryState extends State<UI_M_CreateCategory> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final GlobalKey<FormState> _formInviteKey = GlobalKey<FormState>();
 
@@ -132,7 +133,7 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
   Future<bool> _onWillPop() {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => UI_ManageCategory()),
+      MaterialPageRoute(builder: (context) => UI_M_ManageCategory()),
     );
   }
 
@@ -174,11 +175,11 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
                         color: Colors.white,
                         size: 25.0,
                       ),
-                      tooltip: 'Come back',
+                      tooltip: AppLocalizations.of(context).comeBack,
                       onPressed: () {
                         Navigator.pushReplacement(
                           context,
-                          MaterialPageRoute(builder: (context) => UI_ManageCategory()),
+                          MaterialPageRoute(builder: (context) => UI_M_ManageCategory()),
                         );
                       },
                     ),
@@ -187,7 +188,7 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
                     child: Padding(
                       padding: const EdgeInsets.only(left: 0.0),
                       child: Text(
-                        "Create Category",
+                        AppLocalizations.of(context).createCategory,
                         textAlign: TextAlign.start,
                         style: TextStyle(
                           color: Colors.white,
@@ -205,7 +206,7 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
                         color: Colors.white,
                         size: 25.0,
                       ),
-                      tooltip: 'Submit New Category',
+                      tooltip: AppLocalizations.of(context).submitNewCategory,
                       onPressed: () {
                         if (validateAndSave()) {
                           if (changeParent == false) {
@@ -232,7 +233,7 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => UI_ManageCategory(
+                                  builder: (context) => UI_M_ManageCategory(
                                         created: true,
                                       )),
                             );
@@ -260,7 +261,7 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
                                   child: Padding(
                                     padding: const EdgeInsets.only(top: 0.0, bottom: 5.0, left: 10.0, right: 10.0),
                                     child: TextFormField(
-                                      validator: (value) => value.isEmpty ? 'Category name cannot be blank' : null,
+                                      validator: (value) => value.isEmpty ? AppLocalizations.of(context).categoryNameIsBlank : null,
                                       initialValue: _selectedCategoryName,
                                       onChanged: (value) {
                                         _selectedCategoryName = value;
@@ -269,7 +270,7 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
                                       onSaved: (value) {
                                         _selectedCategoryName = value;
                                       },
-                                      decoration: InputDecoration(labelText: 'Category Name'),
+                                      decoration: InputDecoration(labelText: AppLocalizations.of(context).categoryName),
                                     ),
                                   )),
                             ),
@@ -288,7 +289,7 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
                                       isExpanded: true,
                                       value: selectedDropValue,
                                       items: _dropdownMenuParentCategory,
-                                      decoration: InputDecoration(labelText: 'Parent Category', enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white))),
+                                      decoration: InputDecoration(labelText: AppLocalizations.of(context).parentCategory, enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white))),
                                       onChanged: (Parent newValue) {
                                         setState(() {
                                           changeParent = true;

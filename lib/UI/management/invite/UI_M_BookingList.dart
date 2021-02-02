@@ -4,6 +4,7 @@ import 'package:Buytime/reusable/menu/UI_M_business_list_drawer.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'UI_M_BookingCreation.dart';
 
@@ -47,7 +48,7 @@ class _BookingListState extends State<BookingList> {
             child: Padding(
               padding: const EdgeInsets.only(left: 0.0),
               child: Text(
-                "Guests",
+                AppLocalizations.of(context).guests,
                 textAlign: TextAlign.start,
                 style: TextStyle(
                   color: Colors.white,
@@ -68,7 +69,7 @@ class _BookingListState extends State<BookingList> {
                 Container(
                   margin: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 5, top: SizeConfig.blockSizeVertical * 2),
                   child: Text(
-                    'ACTIVE BOOKINGS',
+                    AppLocalizations.of(context).activeBookings,
                     style: TextStyle(
                         fontFamily: BuytimeTheme.FontFamily,
                         color: Colors.black,
@@ -112,7 +113,7 @@ class _BookingListState extends State<BookingList> {
                         height: SizeConfig.screenHeight * 0.1,
                         child: Center(
                           child: Text(
-                            "No active Booking found!",
+                            AppLocalizations.of(context).noActiveBookingFound,
                             style: TextStyle(
                                 fontFamily: BuytimeTheme.FontFamily,
                                 color: Colors.black,
@@ -167,7 +168,7 @@ class _BookingListState extends State<BookingList> {
                                   },
                                   child: CustomBottomButtonWidget(
                                       Text(
-                                        'View closed bookings',
+                                        AppLocalizations.of(context).viewClosedBookings,
                                         style: TextStyle(
                                             fontFamily: BuytimeTheme.FontFamily,
                                             color: Color(0xffba68c8),

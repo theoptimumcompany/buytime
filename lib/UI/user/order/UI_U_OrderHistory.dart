@@ -4,7 +4,7 @@ import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/reducer/order_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
-import 'package:Buytime/reusable/appbar/user_buytime_appbar.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:Buytime/reusable/order/optimum_order_history_item_card_medium.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +33,7 @@ class UI_U_OrderHistoryState extends State<UI_U_OrderHistory> {
         Padding(
           padding: const EdgeInsets.only(top: 30.0, left: 10.0),
           child: Text(
-            "I tuoi ordini",
+            AppLocalizations.of(context).yourOrders,
             textAlign: TextAlign.start,
             style: TextStyle(
               fontSize: media.height * 0.035,
@@ -77,7 +77,7 @@ class UI_U_OrderHistoryState extends State<UI_U_OrderHistory> {
                                   IconButton(
                                     icon: Icon(
                                       Icons.chevron_right,
-                                      color: BuytimeTheme.IconGrey,
+                                      color: BuytimeTheme.SymbolGrey,
                                     ),
                                     onPressed: () {
                                       StoreProvider.of<AppState>(context).dispatch(new SetOrder(snapshot.orderList.orderListState[index]));
@@ -96,7 +96,7 @@ class UI_U_OrderHistoryState extends State<UI_U_OrderHistory> {
                           child: Padding(
                             padding: const EdgeInsets.only(top: 30.0, left: 10.0),
                             child: Text(
-                              "Non hai ordini arretrati",
+                              AppLocalizations.of(context).noOldOrders,
                               textAlign: TextAlign.start,
                               style: TextStyle(
                                 fontSize: media.height * 0.025,

@@ -1,5 +1,6 @@
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class OrderTotal extends StatelessWidget {
   const OrderTotal({
@@ -28,14 +29,14 @@ class OrderTotal extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Totale: € " + orderState.total.toStringAsFixed(2),
+              AppLocalizations.of(context).total + orderState.total.toStringAsFixed(2),
               style: TextStyle(
                 fontWeight: FontWeight.w700,
                 fontSize: media.height * 0.026,
               ),
             ),
             Text(
-              "IVA: € " + (orderState.total != null ? (orderState.total * 0.25).toStringAsFixed(2) : "0"),
+              AppLocalizations.of(context).tax + (orderState.total != null ? (orderState.total * 0.25).toStringAsFixed(2) : "0"),
               style: TextStyle(
                 fontWeight: FontWeight.w400,
                 fontSize: media.height * 0.020,
