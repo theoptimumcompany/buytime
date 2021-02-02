@@ -56,7 +56,7 @@ class _BookingCreationState extends State<BookingCreation> {
   BookingState bookingState = BookingState().toEmpty();
 
 
-  Future<void> _selectDate(BuildContext context, TextEditingController controller, DateTime cIn, DateTime cOut) async {
+  Future<void> _selectDate(BuildContext context, DateTime cIn, DateTime cOut) async {
     final DateTimeRange picked = await showDateRangePicker(
         context: context,
         initialDateRange: DateTimeRange(start: cIn, end: cOut),
@@ -343,7 +343,7 @@ class _BookingCreationState extends State<BookingCreation> {
                                                       Expanded(
                                                           child:  GestureDetector(
                                                             onTap: ()async{
-                                                              await _selectDate(context, _checkInController, checkIn, checkOut);
+                                                              await _selectDate(context, checkIn, checkOut);
                                                             },
                                                             child: TextFormField(
                                                               enabled: false,
@@ -394,7 +394,7 @@ class _BookingCreationState extends State<BookingCreation> {
                                                       Expanded(
                                                           child: GestureDetector(
                                                             onTap: () async{
-                                                              await _selectDate(context, _checkOutController, checkIn, checkOut);
+                                                              await _selectDate(context, checkIn, checkOut);
                                                             },
                                                             child: TextFormField(
                                                               enabled: false,
@@ -513,6 +513,9 @@ class _BookingCreationState extends State<BookingCreation> {
                                                     bookingState.user.add(currentUser);
 
                                                     bookingState.wide = businessState.wide;
+
+                                                    bookingState.start_date = checkIn;
+                                                    bookingState.end_date = checkOut;
 
                                                     StoreProvider.of<AppState>(context).dispatch(CreateBookingRequest(bookingState));
 
