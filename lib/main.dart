@@ -21,7 +21,7 @@ import 'package:Buytime/reblox/model/user/user_state.dart';
 import 'package:Buytime/reblox/reducer/app_reducer.dart';
 import 'package:Buytime/reblox/navigation/route_aware_widget.dart';
 import 'package:Buytime/services/business_service_epic.dart';
-import 'package:Buytime/services/category_snippet_service_epic.dart';
+import 'package:Buytime/services/category_tree_service_epic.dart';
 import 'package:Buytime/services/category_service_epic.dart';
 import 'package:Buytime/services/order_service_epic.dart';
 import 'package:Buytime/services/pipeline_service_epic.dart';

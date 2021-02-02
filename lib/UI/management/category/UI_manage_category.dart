@@ -238,14 +238,10 @@ class UI_ManageCategoryState extends State<UI_ManageCategory> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Flexible(
-                              child: Container(
-                                child: Text(
-                                  list[index]["nodeName"],
-                                  overflow: TextOverflow. ellipsis,
-                                  style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.normal),
-                                ),
-                              ),
+                            Text(
+                              list[index]["nodeName"],
+                              overflow: TextOverflow. ellipsis,
+                              style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.normal),
                             ),
                             IconButton(
                               icon: const Icon(

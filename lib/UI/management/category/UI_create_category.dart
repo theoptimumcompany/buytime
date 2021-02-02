@@ -26,9 +26,9 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final GlobalKey<FormState> _formInviteKey = GlobalKey<FormState>();
 
-  Parent _dropdownParentCategory = Parent(level: 0, id: "no_parent", name: "No Parent");
+  Parent _dropdownParentCategory = Parent(level: 0, id: "no_parent", name: "No Parent", parentRootId: "");
 
-  List<DropdownMenuItem<Parent>> _dropdownMenuParentCategory = new List<DropdownMenuItem<Parent>>();
+  List<DropdownMenuItem<Parent>> _dropdownMenuParentCategory = [];
 
   var size;
 
@@ -69,7 +69,7 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
 
   setNewCategoryParent(Parent contentSelectDrop, List<dynamic> list) {
     if (list == null || list.length == 0) {
-      Parent parentInitial = Parent(level: 0, id: "no_parent", name: "No Parent");
+      Parent parentInitial = Parent(level: 0, id: "no_parent", name: "No Parent",parentRootId: "");
       StoreProvider.of<AppState>(context).dispatch(SetCategoryLevel(0));
       StoreProvider.of<AppState>(context).dispatch(SetCategoryParent(parentInitial));
     } else if (list != null && list.length > 0) {
@@ -82,7 +82,7 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
     if (stopBuildDropDown == false) {
       stopBuildDropDown = true;
       CategoryTree categoryNode = StoreProvider.of<AppState>(context).state.categoryTree;
-      List<DropdownMenuItem<Parent>> items = List();
+      List<DropdownMenuItem<Parent>> items = [];
 
       items.add(
         DropdownMenuItem(
@@ -108,7 +108,7 @@ class UI_CreateCategoryState extends State<UI_CreateCategory> {
   openTree(List<dynamic> list, List<DropdownMenuItem<Parent>> items) {
     for (int i = 0; i < list.length; i++) {
       if (list[i]['level'] < 4) {
-        Parent parent = Parent(name: list[i]['nodeName'].toString(), id: list[i]['nodeId'], level: list[i]['level']);
+        Parent parent = Parent(name: list[i]['nodeName'].toString(), id: list[i]['nodeId'], level: list[i]['level'], parentRootId: list[i]['categoryRootId']);
         items.add(
           DropdownMenuItem(
             child: Padding(

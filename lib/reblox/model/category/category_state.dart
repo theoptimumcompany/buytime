@@ -9,6 +9,7 @@ class CategoryState {
   String id;
   int level;
   int children;
+  String categoryRootId;
   Parent parent;
   List<Manager> manager;
   List<String> managerMailList;
@@ -22,6 +23,7 @@ class CategoryState {
     this.id,
     this.level,
     this.children,
+    this.categoryRootId,
     this.parent,
     this.manager,
     this.managerMailList,
@@ -37,6 +39,7 @@ class CategoryState {
       id: "",
       level: 0,
       children: 0,
+      categoryRootId: "",
       parent: Parent(name: "No Parent", id: "no_parent"),
       manager: [],
       managerMailList: [],
@@ -52,6 +55,7 @@ class CategoryState {
     this.id = category.id;
     this.level = category.level;
     this.children = category.children;
+    this.categoryRootId = category.categoryRootId;
     this.parent = category.parent;
     this.manager = category.manager;
     this.managerMailList = category.managerMailList;
@@ -61,23 +65,14 @@ class CategoryState {
     this.categorySnippet = category.categorySnippet;
   }
 
-  categoryStateFieldUpdate(
-      String name,
-      String id,
-      int level,
-      int children,
-      Parent parent,
-      List<Manager> manager,
-      List<String> managerMailList,
-      String businessId,
-      List<Worker> worker,
-      List<String> workerMailList,
-      CategorySnippet categorySnippet) {
+  categoryStateFieldUpdate(String name, String id, int level, int children, String categoryRootId, Parent parent, List<Manager> manager, List<String> managerMailList, String businessId,
+      List<Worker> worker, List<String> workerMailList, CategorySnippet categorySnippet) {
     CategoryState(
       name: name ?? this.name,
       id: id ?? this.id,
       level: level ?? this.level,
       children: children ?? this.children,
+      categoryRootId: categoryRootId ?? this.categoryRootId,
       parent: parent ?? this.parent,
       manager: manager ?? this.manager,
       managerMailList: managerMailList ?? this.managerMailList,
@@ -93,6 +88,7 @@ class CategoryState {
       String id,
       int level,
       int children,
+      String categoryRootId,
       GenericState parent,
       List<Manager> manager,
       List<String> managerMailList,
@@ -105,6 +101,7 @@ class CategoryState {
       id: id ?? this.id,
       level: level ?? this.level,
       children: children ?? this.children,
+      categoryRootId: categoryRootId ?? this.categoryRootId,
       parent: parent ?? this.parent,
       manager: manager ?? this.manager,
       managerMailList: managerMailList ?? this.managerMailList,
@@ -116,7 +113,7 @@ class CategoryState {
   }
 
   List<dynamic> convertManagerToJson(List<Manager> objectStateList) {
-    List<dynamic> list = List<dynamic>();
+    List<dynamic> list = [];
     objectStateList.forEach((element) {
       list.add(element.toJson());
     });
@@ -124,7 +121,7 @@ class CategoryState {
   }
 
   List<dynamic> convertWorkerToJson(List<Worker> objectStateList) {
-    List<dynamic> list = List<dynamic>();
+    List<dynamic> list = [];
     objectStateList.forEach((element) {
       list.add(element.toJson());
     });
@@ -136,6 +133,7 @@ class CategoryState {
         id = json['id'],
         level = json['level'],
         children = json['children'],
+        categoryRootId = json['categoryRootId'],
         parent = Parent.fromJson(json["parent"]),
         manager = List<Manager>.from(json["manager"].map((item) {
           return new Manager(
@@ -163,6 +161,7 @@ class CategoryState {
         'id': id,
         'level': level,
         'children': children,
+        'categoryRootId': categoryRootId,
         'parent': parent.toJson(),
         'manager': convertManagerToJson(manager),
         'managerMailList': managerMailList,

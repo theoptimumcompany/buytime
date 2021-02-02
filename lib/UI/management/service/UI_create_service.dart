@@ -6,6 +6,7 @@ import 'package:Buytime/reblox/model/category/tree/category_tree_state.dart';
 import 'package:Buytime/reblox/model/snippet/generic.dart';
 import 'package:Buytime/reblox/model/pipeline/pipeline_list_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
+import 'package:Buytime/reblox/reducer/category_tree_reducer.dart';
 import 'package:Buytime/reblox/reducer/service_reducer.dart';
 import 'package:Buytime/reusable/form/optimum_chip.dart';
 import 'package:Buytime/reusable/form/optimum_dropdown.dart';
@@ -27,7 +28,7 @@ class UI_CreateServiceState extends State<UI_CreateService> {
   AssetImage assetImage = AssetImage('assets/img/image_placeholder.png');
   Image image;
   final ImagePicker imagePicker = ImagePicker();
-  List<GenericState> categoryList = [GenericState(content: "Category 1"), GenericState(content: "Category 2"), GenericState(content: "Category 3")];
+  List<GenericState> categoryList = [];
   List<GenericState> pipelineListName = [GenericState(content: "Pipeline 1"), GenericState(content: "Pipeline 2"), GenericState(content: "Pipeline 3")];
   List<GenericState> _tags = [GenericState(content: "Tag 1"), GenericState(content: "Tag 2"), GenericState(content: "Tag 3")];
   List<GenericState> _actions = [GenericState(content: "Action 1"), GenericState(content: "Action 2"), GenericState(content: "Action 3")];
@@ -65,7 +66,7 @@ class UI_CreateServiceState extends State<UI_CreateService> {
 
   void setCategoryList() {
     CategoryTree categoryNode = StoreProvider.of<AppState>(context).state.categoryTree;
-    List<GenericState> items = List();
+    List<GenericState> items = [];
 
     if (categoryNode.categoryNodeList != null) {
       if (categoryNode.categoryNodeList.length != 0 && categoryNode.categoryNodeList.length != null) {
@@ -105,7 +106,7 @@ class UI_CreateServiceState extends State<UI_CreateService> {
     var media = MediaQuery.of(context).size;
     return StoreConnector<AppState, AppState>(
         converter: (store) => store.state,
-        // onInit: (store) => store.dispatch(new CategoryNodeRequest()),
+         onInit: (store) => store.dispatch(CategoryTreeRequest()),
         builder: (context, snapshot) {
           //Popolo le categorie
           setCategoryList();
@@ -227,20 +228,27 @@ class UI_CreateServiceState extends State<UI_CreateService> {
                     Padding(
                       padding: const EdgeInsets.only(bottom: 15.0),
                       child: Center(
-                        child: Container(
-                          width: media.width * 0.9,
-                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                            child: OptimumDropdown(
-                              value: _selectedAction,
-                              items: _dropActions,
-                              list: _actions,
-                              optimumDropdownToDispatch: (GenericState selectedAction) {
-                                //  StoreProvider.of<AppState>(context).dispatch(SetServicePipelineId(selectedChoices));
-                              },
+                        child: Column(
+                          children: [
+                            Text(
+                              "Select all actions that apply",
                             ),
-                          ),
+                            Container(
+                              width: media.width * 0.9,
+                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                                child: OptimumDropdown(
+                                  value: _selectedAction,
+                                  items: _dropActions,
+                                  list: _actions,
+                                  optimumDropdownToDispatch: (GenericState selectedAction) {
+                                    //  StoreProvider.of<AppState>(context).dispatch(SetServicePipelineId(selectedChoices));
+                                  },
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),

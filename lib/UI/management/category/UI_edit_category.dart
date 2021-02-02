@@ -32,7 +32,7 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>(); // TODO hero kacchan fix duplicates all mightaaa "There are multiple heroes that share the same tag within a subtree."
   final GlobalKey<FormState> _formInviteKey = GlobalKey<FormState>();
 
-  Parent _dropdownParentCategory = Parent(level: 0, id: "no_parent", name: "No Parent");
+  Parent _dropdownParentCategory = Parent(level: 0, id: "no_parent", name: "No Parent", parentRootId: "");
 
   List<DropdownMenuItem<Parent>> _dropdownMenuParentCategory = [];
 
@@ -71,7 +71,7 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
 
   setNewCategoryParent(Parent contentSelectDrop, List<dynamic> list) {
     if (list == null || list.length == 0) {
-      Parent parentInitial = Parent(level: 0, id: "no_parent", name: "No Parent");
+      Parent parentInitial = Parent(level: 0, id: "no_parent", name: "No Parent", parentRootId: "");
       StoreProvider.of<AppState>(context).dispatch(SetCategoryLevel(0));
       StoreProvider.of<AppState>(context).dispatch(SetCategoryParent(parentInitial));
     } else if (list != null && list.length > 0) {
@@ -84,7 +84,7 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
     if (stopBuildDropDown == false) {
       stopBuildDropDown = true;
       CategoryTree categoryNode = StoreProvider.of<AppState>(context).state.categoryTree;
-      List<DropdownMenuItem<Parent>> items = List();
+      List<DropdownMenuItem<Parent>> items = [];
 
       if (categoryNode.categoryNodeList != null) {
         if (categoryNode.categoryNodeList.length != 0 && categoryNode.categoryNodeList.length != null) {
@@ -135,7 +135,7 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
   openTree(List<dynamic> list, List<DropdownMenuItem<Parent>> items) {
     for (int i = 0; i < list.length; i++) {
       if (list[i]['nodeId'] == StoreProvider.of<AppState>(context).state.category.parent && StoreProvider.of<AppState>(context).state.category.parent != "no_parent") {
-        Parent parent = Parent(name: list[i]['nodeName'].toString(), id: list[i]['nodeId'], level: list[i]['level']);
+        Parent parent = Parent(name: list[i]['nodeName'].toString(), id: list[i]['nodeId'], level: list[i]['level'], parentRootId: list[i]['categoryRootId']);
         parentValue = parent;
       }
       if (list[i]['nodeId'] == StoreProvider.of<AppState>(context).state.category.id) {
@@ -146,7 +146,7 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
         }
       }
       if (list[i]['nodeId'] != StoreProvider.of<AppState>(context).state.category.id) {
-        Parent objectState = Parent(name: list[i]['nodeName'].toString(), id: list[i]['nodeId'], level: list[i]['level']);
+        Parent objectState = Parent(name: list[i]['nodeName'].toString(), id: list[i]['nodeId'], level: list[i]['level'], parentRootId: list[i]['categoryRootId']);
         items.add(
           DropdownMenuItem(
             child: Text(objectState.name),
@@ -370,7 +370,7 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
     }
 
     for (var element in _dropdownMenuParentCategory) {
-      if (snapshot.category.id == element.value.id) {
+      if (snapshot.category.parent.id == element.value.id) {
         return element.value;
       }
     }
@@ -441,6 +441,7 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
     ));
   }
 
+
   @override
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
@@ -448,6 +449,7 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
         converter: (store) => store.state,
         builder: (context, snapshot) {
           buildDropDownMenuItemsParent(_dropdownParentCategory);
+
           if (snapshot.category != null) {
             managerList = snapshot.category.manager;
             managerMailList = snapshot.category.managerMailList;
@@ -511,6 +513,7 @@ class UI_EditCategoryState extends State<UI_EditCategory> {
                               Parent newCategoryParent = selectedParentCategory;
                               print("Aggiorno " + newCategoryParent.name);
                               StoreProvider.of<AppState>(context).dispatch(new UpdateCategory(snapshot.category));
+
                               StoreProvider.of<AppState>(context).dispatch(new UpdateCategoryTree(newCategoryParent));
 
                               Future.delayed(const Duration(milliseconds: 500), () {
