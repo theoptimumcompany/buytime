@@ -16,45 +16,43 @@ class CategoryTreeCreateIfNotExistsService implements EpicClass<AppState> {
       print("CategoryNodeCreateIfNotExistsService CategoryNode exists?");
       CollectionReference collectionReference = FirebaseFirestore.instance.collection("business").doc(store.state.business.id_firestore).collection("category_tree");
       collectionReference.get().then((value) {
-        print("CategoryNodeCreateIfNotExistsService CategoryNode DOES NOT exists!");
         if (value.docs.length == 0) {
+          print("CategoryNodeCreateIfNotExistsService CategoryNode not exists!");
+          CategoryTree newCategoryNode = CategoryTree().toEmpty();
           DocumentReference doc = FirebaseFirestore.instance.collection('business').doc(event.idFirestore).collection('category_tree').doc();
-          CategoryTree newCategoryNode = CategoryTree(nodeName: "root", nodeId: doc.id, nodeLevel: 0, numberOfCategories: 0, categoryNodeList: null);
+          newCategoryNode = CategoryTree(nodeName: "root", nodeId: doc.id, nodeLevel: 0, numberOfCategories: 0, categoryNodeList: null);
           doc.set(newCategoryNode.toJson());
-          return;
-        } else {
-          return;
+        }
+        else{
+          print("CategoryNodeCreateIfNotExistsService CategoryNode exists!");
         }
       });
-    });
-  }
-}
-
-class CategorySnippetCreateService implements EpicClass<AppState> {
-  @override
-  Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    return actions.whereType<CreateCategoryTree>().asyncMap((event) {
-      String idBusiness = event.idBusiness;
-    });
+    }).expand((element) => [CategoryTreeRequest()]);
   }
 }
 
 class CategoryTreeRequestService implements EpicClass<AppState> {
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    return actions.whereType<CategoryTreeRequest>().asyncMap((event) async {
-      if (store.state.business.id_firestore != null || store.state.business.id_firestore != '') {
-        var query = await FirebaseFirestore.instance.collection("business").doc(store.state.business.id_firestore).collection("category_tree").get();
-        CategoryTree categoryNode = CategoryTree();
+    CategoryTree categoryNode = CategoryTree();
 
+    return actions.whereType<CategoryTreeRequest>().asyncMap((event) async {
+      print("CategoryTree Epic : business name : " + store.state.business.name);
+      var query = await FirebaseFirestore.instance.collection("business").doc(store.state.business.id_firestore).collection("category_tree").get();
+      if(query.docs.length != 0){
         query.docs.forEach((snapshot) {
           categoryNode = CategoryTree.fromJson(snapshot.data());
         });
-        if (categoryNode != null) {
-          return new CategoryTreeRequestResponse(categoryNode);
-        }
       }
-    }).takeUntil(actions.whereType<UnlistenCategoryTree>());
+      else{
+        categoryNode  = CategoryTree().toEmpty();
+      }
+
+
+
+      print("CategoryTree Epic : category tree Number of Categories : " + categoryNode.numberOfCategories.toString());
+
+    }).expand((element) => [CategoryTreeRequestResponse(categoryNode)]);
   }
 }
 
@@ -134,7 +132,7 @@ class CategoryTreeAddService implements EpicClass<AppState> {
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<AddCategoryTree>().asyncMap((event) async {
-      if (store.state.categoryTree.categoryNodeList.isNotEmpty) {
+      if (store.state.categoryTree.categoryNodeList != null && store.state.categoryTree.categoryNodeList.isNotEmpty) {
         updateLevel = store.state.categoryTree.nodeLevel;
         updateNumberOfCategories = store.state.categoryTree.numberOfCategories;
       } else {

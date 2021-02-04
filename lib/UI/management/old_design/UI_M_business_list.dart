@@ -73,7 +73,6 @@ class UI_M_BusinessListState extends State<UI_M_BusinessList> {
                               shrinkWrap: true,
                               itemCount: businessListState.length,
                               itemBuilder: (BuildContext ctxt, int index) {
-                                print("Chiamo " + index.toString());
                                 return Padding(
                                   padding: const EdgeInsets.only(top: 8.0),
                                   child: new OptimumBusinessCardMediumManager(

@@ -156,7 +156,7 @@ class SetCategoryTreeToEmpty {
 }
 
 CategoryTree categoryTreeReducer(CategoryTree state, action) {
-  CategoryTree categoryNode = new CategoryTree.fromState(state);
+  CategoryTree categoryNode = CategoryTree.fromState(state);
   if (action is SetCategoryTreeToEmpty) {
     categoryNode = CategoryTree().toEmpty();
     return categoryNode;
@@ -185,13 +185,8 @@ CategoryTree categoryTreeReducer(CategoryTree state, action) {
     categoryNode = action.categoryNode.copyWith();
     return categoryNode;
   }
-  if (action is CreateCategoryTree) {
-    /*categoryNode = action.categoryNode.copyWith();
-    return categoryNode;*/
-  }
   if (action is CategoryTreeRequestResponse) {
     categoryNode = action.categoryNode;
-    print(categoryNode.nodeName + " nel reducer");
     return categoryNode;
   }
 

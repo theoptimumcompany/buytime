@@ -47,8 +47,7 @@ class UI_M_BusinessListState extends State<UI_M_BusinessList> {
                 appBar: BuytimeAppbarManager(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 0.0, horizontal: 0.0),
+                      padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
                       child: IconButton(
                         icon: const Icon(
                           Icons.menu,
@@ -76,8 +75,7 @@ class UI_M_BusinessListState extends State<UI_M_BusinessList> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 0.0, horizontal: 0.0),
+                      padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
                       child: IconButton(
                         icon: const Icon(
                           Icons.add,
@@ -88,8 +86,7 @@ class UI_M_BusinessListState extends State<UI_M_BusinessList> {
                         onPressed: () {
                           Navigator.pushReplacement(
                             context,
-                            MaterialPageRoute(
-                                builder: (context) => UI_M_ManageBusiness(-1)),
+                            MaterialPageRoute(builder: (context) => UI_M_ManageBusiness(-1)),
                           );
                         },
                       ),
@@ -103,28 +100,21 @@ class UI_M_BusinessListState extends State<UI_M_BusinessList> {
                     Expanded(
                       child: Padding(
                         padding: const EdgeInsets.only(top: 20.0),
-                        child: businessListState != null &&
-                                businessListState.length > 0
+                        child: businessListState != null && businessListState.length > 0
                             ? ListView.builder(
                                 scrollDirection: Axis.vertical,
                                 shrinkWrap: true,
                                 itemCount: businessListState.length,
                                 itemBuilder: (BuildContext ctxt, int index) {
-                                  print("Chiamo " + index.toString());
                                   return Padding(
                                     padding: const EdgeInsets.only(top: 1.0),
                                     child: new OptimumBusinessCardMediumManager(
                                       businessState: businessListState[index],
-                                      onBusinessCardTap:
-                                          (BusinessState businessState) {
-                                        StoreProvider.of<AppState>(context)
-                                            .dispatch(new SetBusiness(
-                                                businessListState[index]));
+                                      onBusinessCardTap: (BusinessState businessState) {
+                                        StoreProvider.of<AppState>(context).dispatch(SetBusiness(businessListState[index]));
                                         Navigator.pushReplacement(
                                           context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  UI_M_Business()),
+                                          MaterialPageRoute(builder: (context) => UI_M_Business()),
                                         );
                                       },
                                       imageUrl: businessListState[index].profile,
