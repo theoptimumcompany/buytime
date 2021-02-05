@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
@@ -104,7 +106,7 @@ class _BookingCreationState extends State<BookingCreation> {
             key: _drawerKey,
             ///Appbar
             appBar: AppBar(
-              backgroundColor: BuytimeTheme.ManagerPrimary,
+              backgroundColor: BuytimeTheme.PrimaryMalibu,
               title: Container(
                 child: Padding(
                   padding: const EdgeInsets.only(left: 0.0),
@@ -119,8 +121,17 @@ class _BookingCreationState extends State<BookingCreation> {
                   ),
                 ),
               ),
+              leading: IconButton(
+                icon: Icon(
+                  Icons.keyboard_arrow_left,
+                  color: Colors.white,
+                ),
+                onPressed: () async{
+                  Navigator.of(context).pop();
+                },
+              ),
             ),
-            drawer: UI_M_BusinessListDrawer(),
+            //drawer: UI_M_BusinessListDrawer(),
             body: SafeArea(
               child: Center(
                 child: SingleChildScrollView(
@@ -142,14 +153,15 @@ class _BookingCreationState extends State<BookingCreation> {
                                     children: [
                                       ///Title
                                       Container(
-                                        margin: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 5, top: SizeConfig.blockSizeVertical * 2),
+                                        margin: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 5, top: SizeConfig.blockSizeVertical * 3),
                                         child: Text(
                                           AppLocalizations.of(context).enterGuestDetails,
                                           style: TextStyle(
                                               fontFamily: BuytimeTheme.FontFamily,
                                               color: Colors.black,
-                                              fontWeight: FontWeight.w400,
-                                              fontSize: 14
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 12,
+                                              letterSpacing: 2
                                           ),
                                           textAlign: TextAlign.left,
                                         ),
@@ -517,8 +529,18 @@ class _BookingCreationState extends State<BookingCreation> {
                                                     bookingState.start_date = checkIn;
                                                     bookingState.end_date = checkOut;
 
+                                                    bookingState.status = bookingState.enumToString(BookingStatus.created);
+
                                                     StoreProvider.of<AppState>(context).dispatch(CreateBookingRequest(bookingState));
 
+
+                                                    Timer(
+                                                      Duration(seconds: 1), () {
+                                                        setState(() {
+                                                          bookingRequest = '';
+                                                        });
+                                                      }
+                                                    );
                                                     //Navigator.push(context, MaterialPageRoute(builder: (context) => BookingDetails(bookingState: bookingState)));
 
                                                   }
@@ -530,12 +552,13 @@ class _BookingCreationState extends State<BookingCreation> {
                                                   borderRadius: new BorderRadius.circular(5),
                                                 ),
                                                 child: Text(
-                                                  AppLocalizations.of(context).createInvite,
+                                                  AppLocalizations.of(context).createInvite.toUpperCase(),
                                                   style: TextStyle(
                                                       fontSize: 18,
                                                       fontFamily: 'Roboto',
-                                                      fontWeight: FontWeight.w500,
-                                                      color: BuytimeTheme.TextDark
+                                                      fontWeight: FontWeight.bold,
+                                                      color: BuytimeTheme.TextDark,
+                                                    letterSpacing: 2
                                                   ),
                                                 ),
                                               )

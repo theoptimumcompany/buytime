@@ -1,3 +1,5 @@
+import 'package:Buytime/UI/management/invite/UI_M_BookingList.dart';
+import 'package:Buytime/reblox/model/booking/booking_list_state.dart';
 import 'package:Buytime/reblox/model/business/business_list_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
@@ -29,6 +31,7 @@ class AppState {
   BusinessState business;
   BookingState booking;
   BusinessListState businessList;
+  BookingListState bookingList;
   OrderState order;
   OrderListState orderList;
   StripeState stripe;
@@ -51,6 +54,7 @@ class AppState {
     @required this.orderList,
     @required this.stripe,
     @required this.businessList,
+    @required this.bookingList,
     @required this.user,
     @required this.category,
     @required this.categoryInvite,
@@ -71,6 +75,7 @@ class AppState {
     stripe = StripeState();
     orderList = OrderListState();
     businessList = BusinessListState();
+    bookingList = BookingListState();
     user = UserState();
     category = CategoryState();
     categoryInvite = CategoryInviteState();
@@ -90,6 +95,7 @@ class AppState {
       OrderListState orderList,
       StripeState stripe,
       BusinessListState businessList,
+        BookingListState bookingList,
       UserState user,
       CategoryState category,
       CategoryInviteState categoryInvite,
@@ -107,6 +113,7 @@ class AppState {
     this.orderList = orderList;
     this.stripe = stripe;
     this.businessList = businessList;
+    this.bookingList = bookingList;
     this.user = user;
     this.category = category;
     this.categoryInvite = categoryInvite;
@@ -127,6 +134,7 @@ class AppState {
     orderList = json['orderList'];
     stripe = json['stripe'];
     businessList = json['businessList'];
+    bookingList = json['bookingList'];
     user = json['user'];
     category = json['category'];
     categoryInvite = json['categoryInvite'];
@@ -147,6 +155,7 @@ class AppState {
         'orderList': orderList,
         'stripe': stripe,
         'businessList': businessList,
+        'bookingList': bookingList,
         'user': user,
         'category': category,
         'categoryInvite': categoryInvite,

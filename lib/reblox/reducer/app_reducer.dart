@@ -2,6 +2,7 @@ import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/business/business_list_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
+import 'package:Buytime/reblox/model/booking/booking_list_state.dart';
 import 'package:Buytime/reblox/model/category/category_list_state.dart';
 import 'package:Buytime/reblox/model/category/category_state.dart';
 import 'package:Buytime/reblox/model/category/invitation/category_invite_state.dart';
@@ -27,6 +28,7 @@ import 'package:Buytime/reblox/reducer/service_reducer.dart';
 import 'package:Buytime/reblox/reducer/stripe_payment_reducer.dart';
 import 'package:Buytime/reblox/reducer/user_reducer.dart';
 import 'package:Buytime/reblox/reducer/booking_reducer.dart';
+import 'package:Buytime/reblox/reducer/booking_list_reducer.dart';
 import 'package:Buytime/utils/globals.dart';
 
 import 'business_reducer.dart';
@@ -45,6 +47,7 @@ AppState appReducer(AppState state, dynamic action) {
   OrderState orderState = orderReducer(state.order, action);
   OrderListState orderListState = orderListReducer(state.orderList, action);
   BusinessListState businessListState = businessListReducer(state.businessList, action);
+  BookingListState bookingListState = bookingListReducer(state.bookingList, action);
   StripeState stripeState = stripePaymentReducer(state.stripe, action);
   UserState userState = userReducer(state.user, action);
   CategoryState categoryState = categoryReducer(state.category, action);
@@ -64,6 +67,7 @@ AppState appReducer(AppState state, dynamic action) {
     order: orderState,
     orderList: orderListState,
     businessList: businessListState,
+    bookingList: bookingListState,
     user: userState,
     stripe: stripeState,
     category: categoryState,

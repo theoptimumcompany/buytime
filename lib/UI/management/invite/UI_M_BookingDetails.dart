@@ -20,8 +20,8 @@ class BookingDetails extends StatefulWidget {
   static String route = '/bookingDetails';
 
   BookingState bookingState;
-
-  BookingDetails({Key key, this.bookingState}) : super(key: key);
+  bool view;
+  BookingDetails({Key key, this.bookingState, this.view}) : super(key: key);
 
   @override
   _BookingDetailsState createState() => _BookingDetailsState();
@@ -46,12 +46,14 @@ class _BookingDetailsState extends State<BookingDetails> {
   String bookingCode;
 
   BookingState bookingState;
+  bool view;
 
   @override
   void initState() {
     super.initState();
 
-    bookingState = BookingState().toEmpty();
+    bookingState = widget.bookingState;
+    view = widget.view ?? false;
     /*bookingState = widget.bookingState;
 
     fullName = '${bookingState.user.first.name} ${bookingState.user.first.surname}';
@@ -102,7 +104,8 @@ class _BookingDetailsState extends State<BookingDetails> {
     return StoreConnector<AppState, AppState>(
       converter: (store) => store.state,
       builder: (context, snapshot) {
-        BookingState bookingState = snapshot.booking;
+        if(bookingState == null)
+          bookingState = snapshot.booking;
 
         _checkInController.text = DateFormat('dd/MM/yyyy').format(bookingState.start_date);
         _checkOutController.text = DateFormat('dd/MM/yyyy').format(bookingState.end_date);
@@ -118,12 +121,12 @@ class _BookingDetailsState extends State<BookingDetails> {
             key: _drawerKey,
             ///Appbar
             appBar: AppBar(
-              backgroundColor: BuytimeTheme.ManagerPrimary,
+              backgroundColor: BuytimeTheme.PrimaryMalibu,
               title: Container(
                 child: Padding(
                   padding: const EdgeInsets.only(left: 0.0),
                   child: Text(
-                    "Invite Guest",
+                    "Guest Details",
                     textAlign: TextAlign.start,
                     style: TextStyle(
                       color: Colors.white,
@@ -133,8 +136,17 @@ class _BookingDetailsState extends State<BookingDetails> {
                   ),
                 ),
               ),
+              leading: IconButton(
+                icon: Icon(
+                  Icons.keyboard_arrow_left,
+                  color: Colors.white,
+                ),
+                onPressed: () async{
+                  Navigator.of(context).pop();
+                },
+              ),
             ),
-            drawer: UI_M_BusinessListDrawer(),
+            //drawer: !view ? UI_M_BusinessListDrawer() : null,
             body: SafeArea(
               child: Center(
                 child: SingleChildScrollView(
@@ -156,15 +168,16 @@ class _BookingDetailsState extends State<BookingDetails> {
                                   style: TextStyle(
                                       fontFamily: BuytimeTheme.FontFamily,
                                       color: Colors.black,
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 14
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 13,
+                                      letterSpacing: 2.5
                                   ),
                                   textAlign: TextAlign.left,
                                 ),
                               ),
                               ///Booking Code & Email & Name & Surname & Check In & Check Out & Number Of Guests
                               Container(
-                                height: SizeConfig.safeBlockVertical * 55,
+                                height: view ? SizeConfig.safeBlockVertical * 50 : SizeConfig.safeBlockVertical * 55,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -265,7 +278,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                                             Container(
                                               margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
                                               child: Text(
-                                                bookingState.user.first.email,
+                                                bookingState.user.first.email ?? 'sample@gmail.com',
                                                 style: TextStyle(
                                                     fontFamily: BuytimeTheme.FontFamily,
                                                     color: BuytimeTheme.TextDark,
@@ -439,7 +452,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Container(
-                                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 4),
+                                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 4, bottom: view ? SizeConfig.safeBlockVertical * 4 : SizeConfig.safeBlockVertical * 0),
                                       //color: Colors.black,
                                       child: QrImage(
                                         data: '$link',
@@ -452,7 +465,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                                 ),
                               ),
                               ///Send invitation
-                              Expanded(
+                              !view ? Expanded(
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
@@ -463,6 +476,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                                           onPressed: () async{
                                             final RenderBox box = context.findRenderObject();
                                             //Uri link = await createDynamicLink(bookingState.booking_code);
+                                            StoreProvider.of<AppState>(context).dispatch(SetBookingStatus(BookingStatus.sent)); //TODO: Create the booking status update epic
                                             Share.share('check out Buytime App at $link', subject: 'Take your Time!', sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
                                             /*Share.share('Share', subject:
                                             Platform.isAndroid ?
@@ -481,15 +495,16 @@ class _BookingDetailsState extends State<BookingDetails> {
                                             style: TextStyle(
                                                 fontSize: 18,
                                                 fontFamily: 'Roboto',
-                                                fontWeight: FontWeight.w500,
-                                                color: BuytimeTheme.TextDark
+                                                fontWeight: FontWeight.bold,
+                                                color: BuytimeTheme.TextDark,
+                                                letterSpacing: 2
                                             ),
                                           ),
                                         )
                                     )
                                   ],
                                 ),
-                              )
+                              ) : Container()
                             ],
                           ),
                         ),

@@ -1,7 +1,7 @@
 import 'package:Buytime/UI/management/invite/UI_M_BookingDetails.dart';
+import 'package:Buytime/reblox/model/booking/booking_list_state.dart';
 import 'package:Buytime/reblox/model/category/invitation/category_invite_state.dart';
 import 'package:Buytime/reblox/model/category/tree/category_tree_state.dart';
-import 'package:Buytime/reblox/model/category/invitation/category_invite_state.dart';
 import 'package:Buytime/services/category_invite_service_epic.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/UI/user/login/UI_U_Home.dart';
@@ -33,7 +33,6 @@ import 'package:Buytime/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:flutter_redux_navigation/flutter_redux_navigation.dart';
 import 'package:redux/redux.dart';
 import 'package:redux_epics/redux_epics.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
@@ -49,6 +48,7 @@ void main() {
     BusinessCreateService(),
     BusinessListRequestService(),
     BookingCreateRequestService(),
+    BookingListRequestService(),
     UserRequestService(),
     UserEditDevice(),
     UserEditToken(),
@@ -95,6 +95,7 @@ void main() {
     orderList: OrderListState().toEmpty(),
     stripe: StripeState().toEmpty(),
     businessList: BusinessListState().toEmpty(),
+    bookingList: BookingListState().toEmpty(),
     categoryList: CategoryListState().toEmpty(),
     serviceList: ServiceListState().toEmpty(),
     pipelineList: PipelineList().toEmpty(),

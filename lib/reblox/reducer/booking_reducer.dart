@@ -57,6 +57,14 @@ class ClosedRequestBooking {
   String get closedRequestBooking => _closedRequestBooking;
 }
 
+class SetBookingStatus {
+  BookingStatus _bookingStatus;
+
+  SetBookingStatus(this._bookingStatus);
+
+  BookingStatus get bookingStatus => _bookingStatus;
+}
+
 
 BookingState bookingReducer(BookingState state, action) {
   BookingState bookingState = new BookingState.fromState(state);
@@ -69,6 +77,13 @@ BookingState bookingReducer(BookingState state, action) {
 
   if (action is DeleteBooking) {
     bookingState = BookingState().toEmpty();
+    return bookingState;
+  }
+
+  if (action is SetBookingStatus) {
+    debugPrint('booking_reducer: action: ${action.bookingStatus}');
+    bookingState.status = bookingState.enumToString(action.bookingStatus);
+    debugPrint('booking_reducer: booking status: ${bookingState.status}');
     return bookingState;
   }
   

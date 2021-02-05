@@ -164,7 +164,7 @@ class OptimumFormMultiPhotoState extends State<OptimumFormMultiPhoto> {
                toolbarWidgetColor: BuytimeTheme.TextWhite,
                initAspectRatio: cropAspectRatioPreset,
                lockAspectRatio: true,
-             hideBottomControls: true
+               hideBottomControls: true
            ),
            iosUiSettings: IOSUiSettings(
              title: AppLocalizations.of(context).cropYourImage,

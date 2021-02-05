@@ -2,6 +2,16 @@ import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
 import 'package:Buytime/reblox/model/snippet/generic.dart';
 import 'package:flutter/foundation.dart';
 
+enum BookingStatus {
+  opened,
+  closed,
+  sent,
+  canceld,
+  created,
+  empty
+}
+
+
 class BookingState {
   String business_id;
   String booking_id;
@@ -12,7 +22,7 @@ class BookingState {
   DateTime end_date;
   String booking_code;
   List<UserSnippet> user;
-  String state; //TODO Change to Enum
+  String status; //TODO Change to Enum
   String wide;
 
   List<dynamic> convertToJson(List<UserSnippet> objectStateList) {
@@ -33,7 +43,7 @@ class BookingState {
     @required this.end_date,
     @required this.booking_code,
     @required this.user,
-    @required this.state,
+    @required this.status,
     @required this.wide,
   });
 
@@ -48,9 +58,13 @@ class BookingState {
       end_date: new DateTime.now(),
       booking_code: "",
       user: [],
-      state: "",
+      status: enumToString(BookingStatus.empty),
       wide: "",
     );
+  }
+
+  String enumToString(BookingStatus bookingStatus){
+    return bookingStatus.toString().split('.').last;
   }
 
   BookingState.fromState(BookingState state) {
@@ -63,7 +77,7 @@ class BookingState {
     this.end_date = state.end_date;
     this.booking_code = state.booking_code;
     this.user = state.user;
-    this.state = state.state;
+    this.status = state.status;
     this.wide = state.wide;
   }
 
@@ -77,7 +91,7 @@ class BookingState {
     DateTime end_date,
     String booking_code,
     List<GenericState> user,
-    String state,
+    String status,
     String wide,
   ) {
     BookingState(
@@ -90,7 +104,7 @@ class BookingState {
       end_date: end_date ?? this.end_date,
       booking_code: booking_code ?? this.booking_code,
       user: user ?? this.user,
-      state: state ?? this.state,
+      status: status ?? this.status,
       wide: wide ?? this.wide,
     );
   }
@@ -105,7 +119,7 @@ class BookingState {
     DateTime end_date,
     String booking_code,
     List<GenericState> user,
-    String state,
+    String status,
     String wide,
   }) {
     return BookingState(
@@ -118,7 +132,7 @@ class BookingState {
       end_date: end_date ?? this.end_date,
       booking_code: booking_code ?? this.booking_code,
       user: user ?? this.user,
-      state: state ?? this.state,
+      status: status ?? this.status,
       wide: wide ?? this.wide,
     );
   }
@@ -135,10 +149,12 @@ class BookingState {
         user = List<UserSnippet>.from(json["user"].map((item) {
           return new UserSnippet(
             name: item["name"] != null ? item["name"] : "",
-            id: item["id"] != null ? item["id"] : "",
+            surname: item["surname"] != null ? item["surname"] : "",
+            email: item["email"] != null ? item["email"] : "",
+            //id: item["id"] != null ? item["id"] : "",
           );
         })),
-        state = json['state'],
+        status = json['status'],
         wide = json['wide'];
 
   Map<String, dynamic> toJson() => {
@@ -151,7 +167,7 @@ class BookingState {
         'end_date': end_date,
         'booking_code': booking_code,
         'user': convertToJson(user),
-        'state': state,
+        'status': status,
         'wide': wide
       };
 }

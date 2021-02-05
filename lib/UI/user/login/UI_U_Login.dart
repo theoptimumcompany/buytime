@@ -1,7 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
+import 'package:Buytime/UI/management/business/UI_M_business_list.dart';
+import 'package:Buytime/UI/user/UI_U_Tabs.dart';
 import 'package:Buytime/UI/user/landing/UI_U_Landing.dart';
+import 'package:Buytime/reblox/model/role/role.dart';
 import 'package:Buytime/reblox/model/snippet/device.dart';
 import 'package:Buytime/reblox/model/snippet/token.dart';
 import 'package:Buytime/utils/b_cube_grid_spinner.dart';
@@ -964,7 +967,11 @@ class LoginState extends State<Login> {
       setState(() {
         _success = true;
         Navigator.of(context).pop();
-        Navigator.push(context, MaterialPageRoute(builder: (context) => Landing()));
+
+        if(StoreProvider.of<AppState>(context).state.user.getRole() != Role.user)
+          Navigator.push(context, MaterialPageRoute(builder: (context) => UI_M_BusinessList()));
+        else
+          Navigator.push(context, MaterialPageRoute(builder: (context) => Landing()));
       });
     }else{
       Navigator.of(context).pop();
