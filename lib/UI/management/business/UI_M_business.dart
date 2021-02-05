@@ -31,13 +31,11 @@ class UI_M_Business extends StatefulWidget {
 }
 
 class _UI_M_BusinessState extends State<UI_M_Business> {
-
   List<BookingState> bookingList = new List();
 
   @override
   void initState() {
     super.initState();
-
   }
 
   final GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
@@ -52,6 +50,7 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
       converter: (store) => store.state,
       onInit: (store) => {
         print("On Init Business : Request List of Root Categories"),
+        print("Nome business " + store.state.business.name),
         store.dispatch(RequestRootListCategory(store.state.business.id_firestore)),
       },
       builder: (context, snapshot) {
@@ -216,9 +215,8 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                             InkWell(
                               onTap: () {
                                 debugPrint('MANAGE Clicked!');
-                                if (StoreProvider.of<AppState>(context).state.categoryTree.categoryNodeList == null) {
-                                  StoreProvider.of<AppState>(context).dispatch(new CategoryTreeCreateIfNotExists(snapshot.business.id_firestore, context));
-                                }
+                                StoreProvider.of<AppState>(context).dispatch(CategoryTreeCreateIfNotExists(snapshot.business.id_firestore, context));
+
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(builder: (context) => UI_M_ManageCategory()),
@@ -267,22 +265,22 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                       ),
                     ),
 
+                    ///Categories list & Invite user
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) => UI_M_ServiceList()),
+                          );
+                        },
+                        child: Stack(
+                          children: [
+                            categoryRootList.length > 0
+                                ?
 
-                        ///Categories list & Invite user
-                        Expanded(
-                            child: GestureDetector(
-                              onTap: () {
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => UI_M_ServiceList()),
-                                );
-                              },
-                              child: Stack(
-                                children: [
-                                  categoryRootList.length > 0
-                                      ?
-                                  ///Categories list
-                                  Positioned.fill(
+                                ///Categories list
+                                Positioned.fill(
                                     child: Align(
                                       alignment: Alignment.topCenter,
                                       child: Container(
@@ -295,7 +293,7 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                                               (context, index) {
                                                 //MenuItemModel menuItem = menuItems.elementAt(index);
                                                 CategoryState categoryItem = categoryRootList.elementAt(index);
-                                                return  CategoryListItemWidget(categoryItem);
+                                                return CategoryListItemWidget(categoryItem);
                                                 // return InkWell(
                                                 //   onTap: () {
                                                 //     debugPrint('Category Item: ${categoryItem.name.toUpperCase()} Clicked!');
@@ -339,71 +337,71 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                                             onTap: () {
                                               debugPrint('INVITE USER Clicked!');
 
-                                              /*final RenderBox box = context.findRenderObject();
+                                        /*final RenderBox box = context.findRenderObject();
                                               Share.share('Share', subject: 'Test', sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);*/
 
-                                              Navigator.push(context, MaterialPageRoute(builder: (context) => BookingList(bookingList: bookingList)));
-                                            },
-                                            child: Container(
-                                              height: 70,
-                                              child: Row(
-                                                children: [
-                                                  ///QR code Icon
-                                                  Expanded(
-                                                    flex: 1,
-                                                    child: Container(
-                                                      margin: EdgeInsets.only(left: 15.0),
-                                                      child: Icon(
-                                                        Icons.qr_code_scanner,
-                                                        color: Colors.grey,
-                                                      ),
-                                                    ),
-                                                  ),
-
-                                                  ///Message
-                                                  Expanded(
-                                                      flex: 3,
-                                                      child: Container(
-                                                        margin: EdgeInsets.only(top: 10.0, bottom: 5.0),
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                          children: [
-                                                            Container(
-                                                              child: Text(
-                                                                'Invite user',
-                                                                style: TextStyle(fontWeight: FontWeight.bold),
-                                                              ),
-                                                            ),
-                                                            Container(
-                                                              child: Text(
-                                                                'Users join by scanning your QR code',
-                                                                style: TextStyle(fontWeight: FontWeight.w500, color: Colors.grey.withOpacity(0.8)),
-                                                              ),
-                                                            )
-                                                          ],
-                                                        ),
-                                                      )),
-
-                                                  ///Arrow Icon
-                                                  Expanded(
-                                                    flex: 1,
-                                                    child: Container(
-                                                      child: Icon(Icons.keyboard_arrow_right, color: Colors.grey),
-                                                    ),
-                                                  )
-                                                ],
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => BookingList(bookingList: bookingList)));
+                                      },
+                                      child: Container(
+                                        height: 70,
+                                        child: Row(
+                                          children: [
+                                            ///QR code Icon
+                                            Expanded(
+                                              flex: 1,
+                                              child: Container(
+                                                margin: EdgeInsets.only(left: 15.0),
+                                                child: Icon(
+                                                  Icons.qr_code_scanner,
+                                                  color: Colors.grey,
+                                                ),
                                               ),
                                             ),
-                                          ),
+
+                                            ///Message
+                                            Expanded(
+                                                flex: 3,
+                                                child: Container(
+                                                  margin: EdgeInsets.only(top: 10.0, bottom: 5.0),
+                                                  child: Column(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      Container(
+                                                        child: Text(
+                                                          'Invite user',
+                                                          style: TextStyle(fontWeight: FontWeight.bold),
+                                                        ),
+                                                      ),
+                                                      Container(
+                                                        child: Text(
+                                                          'Users join by scanning your QR code',
+                                                          style: TextStyle(fontWeight: FontWeight.w500, color: Colors.grey.withOpacity(0.8)),
+                                                        ),
+                                                      )
+                                                    ],
+                                                  ),
+                                                )),
+
+                                            ///Arrow Icon
+                                            Expanded(
+                                              flex: 1,
+                                              child: Container(
+                                                child: Icon(Icons.keyboard_arrow_right, color: Colors.grey),
+                                              ),
+                                            )
+                                          ],
                                         ),
                                       ),
                                     ),
-                                  )
-                                ],
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
 
                     ///Invite user
 

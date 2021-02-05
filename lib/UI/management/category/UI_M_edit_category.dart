@@ -19,11 +19,6 @@ import '../../../reusable/appbar/manager_buytime_appbar.dart';
 
 class UI_M_EditCategory extends StatefulWidget {
   final String title = 'Categories';
-  String empty;
-
-  UI_M_EditCategory({String empty}) {
-    this.empty = empty;
-  }
 
   @override
   State<StatefulWidget> createState() => UI_M_EditCategoryState();
@@ -150,7 +145,12 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
         Parent objectState = Parent(name: list[i]['nodeName'].toString(), id: list[i]['nodeId'], level: list[i]['level'], parentRootId: list[i]['categoryRootId']);
         items.add(
           DropdownMenuItem(
-            child: Text(objectState.name),
+            child: Padding(
+              padding: EdgeInsets.only(
+                left: double.parse(list[i]["level"].toString()) * 12.0,
+              ),
+              child: Text(objectState.name),
+            ),
             value: objectState,
           ),
         );
@@ -254,7 +254,7 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                     children: [
                       Container(
                         child: Text(
-                          AppLocalizations.of(context).inviteA + role,
+                          AppLocalizations.of(context).inviteA + " " + role,
                           textAlign: TextAlign.start,
                           style: TextStyle(
                             color: BuytimeTheme.TextDark,
@@ -276,7 +276,7 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                       Container(
                         width: wrap_width_text,
                         child: Text(
-                          AppLocalizations.of(context).typeA + role + AppLocalizations.of(context).emailBelow,
+                          AppLocalizations.of(context).typeA + " " + role + " " + AppLocalizations.of(context).emailBelow,
                           textAlign: TextAlign.start,
                           style: TextStyle(
                             color: BuytimeTheme.TextDark,
@@ -366,10 +366,6 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
   }
 
   Parent searchDropdownParent(var snapshot) {
-    if (widget.empty == 'empty' || snapshot.category.level == 0) {
-      return _dropdownMenuParentCategory.first.value;
-    }
-
     for (var element in _dropdownMenuParentCategory) {
       if (snapshot.category.parent.id == element.value.id) {
         return element.value;
@@ -457,6 +453,7 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
             workerList = snapshot.category.worker;
             workerMailList = snapshot.category.workerMailList;
             selectedParentCategory = searchDropdownParent(snapshot);
+            _selectedCategoryName = snapshot.category.name;
           }
 
           return WillPopScope(
@@ -567,7 +564,7 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                                 padding: const EdgeInsets.only(top: 0.0, bottom: 5.0, left: 10.0, right: 10.0),
                                 child: TextFormField(
                                   validator: (value) => value.isEmpty ? AppLocalizations.of(context).categoryNameIsBlank : null,
-                                  initialValue: snapshot.category.name,
+                                  initialValue: _selectedCategoryName,
                                   keyboardType: TextInputType.name,
                                   onChanged: (value) {
                                     _selectedCategoryName = value;

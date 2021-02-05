@@ -13,9 +13,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class UI_M_CreateCategory extends StatefulWidget {
   final String title = 'Categories';
-  String empty;
+  bool empty;
 
-  UI_M_CreateCategory({String empty}) {
+  UI_M_CreateCategory({bool empty}) {
     this.empty = empty;
   }
 
@@ -34,7 +34,7 @@ class UI_M_CreateCategoryState extends State<UI_M_CreateCategory> {
   var size;
 
   String _selectedCategoryName = "";
-  Parent selectedDropValue;
+  Parent selectedParentDropValue;
   Parent newParent;
   bool changeParent = false;
   bool stopBuildDropDown = false;
@@ -138,10 +138,6 @@ class UI_M_CreateCategoryState extends State<UI_M_CreateCategory> {
   }
 
   Parent searchDropdownParent(var snapshot) {
-    if (widget.empty == 'empty') {
-      return _dropdownMenuParentCategory.first.value;
-    }
-
     for (var element in _dropdownMenuParentCategory) {
       if (snapshot.category.id == element.value.id) {
         return element.value;
@@ -157,8 +153,11 @@ class UI_M_CreateCategoryState extends State<UI_M_CreateCategory> {
         builder: (context, snapshot) {
           buildDropDownMenuItemsParent(_dropdownParentCategory);
 
-          if (snapshot.category != null) {
-            selectedDropValue = searchDropdownParent(snapshot);
+          if (snapshot.category != null && !widget.empty) {
+            selectedParentDropValue = searchDropdownParent(snapshot);
+          }
+          else {
+            selectedParentDropValue = _dropdownMenuParentCategory.first.value;
           }
 
           return WillPopScope(
@@ -212,7 +211,7 @@ class UI_M_CreateCategoryState extends State<UI_M_CreateCategory> {
                           if (changeParent == false) {
                             print("CategoryCreate : Parent non Scelto");
                             CategoryState categoryCreate = snapshot.category != null ? snapshot.category : CategoryState().toEmpty();
-                            Parent newCategoryParent = selectedDropValue;
+                            Parent newCategoryParent = selectedParentDropValue;
                             print("Livello prima : " + snapshot.category.level.toString());
                             categoryCreate.parent = newCategoryParent;
                             if (categoryCreate.parent != _dropdownMenuParentCategory.first.value) {
@@ -287,16 +286,16 @@ class UI_M_CreateCategoryState extends State<UI_M_CreateCategory> {
                                 child: DropdownButtonHideUnderline(
                                   child: DropdownButtonFormField<Parent>(
                                       isExpanded: true,
-                                      value: selectedDropValue,
+                                      value: selectedParentDropValue,
                                       items: _dropdownMenuParentCategory,
                                       decoration: InputDecoration(labelText: AppLocalizations.of(context).parentCategory, enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white))),
                                       onChanged: (Parent newValue) {
                                         setState(() {
                                           changeParent = true;
-                                          selectedDropValue = newValue;
+                                          selectedParentDropValue = newValue;
                                           newParent = newValue;
-                                          print("Drop Selezionato su onchangedrop : " + selectedDropValue.name);
-                                          setNewCategoryParent(selectedDropValue, snapshot.categoryTree.categoryNodeList);
+                                          print("Drop Selezionato su onchangedrop : " + selectedParentDropValue.name);
+                                          setNewCategoryParent(selectedParentDropValue, snapshot.categoryTree.categoryNodeList);
                                         });
                                       }),
                                 ),

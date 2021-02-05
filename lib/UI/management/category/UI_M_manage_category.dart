@@ -89,20 +89,17 @@ class UI_M_ManageCategoryState extends State<UI_M_ManageCategory> {
   Widget buildBranchesAfterRoot(List<dynamic> list, int index) {
     if (list != null) {
       return Padding(
-        padding: EdgeInsets.only(
-            left: double.parse(list[index]["level"].toString()) * 12.0,
-            right: (list[index]['nodeCategory'] != null && list[index]['nodeCategory'].length != 0) ? 0.0 : 39.0),
+        padding: EdgeInsets.only(left: double.parse(list[index]["level"].toString()) * 12.0, right: (list[index]['nodeCategory'] != null && list[index]['nodeCategory'].length != 0) ? 0.0 : 39.0),
         child: (list[index]['nodeCategory'] != null && list[index]['nodeCategory'].length != 0)
             ? ExpansionTile(
                 title: GestureDetector(
                     onTap: () {
                       StoreProvider.of<AppState>(context).dispatch(CategoryRequest(list[index]["nodeId"]));
-                      Future.delayed(const Duration(milliseconds: 1000), () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (context) => UI_M_EditCategory()),
-                        );
-                      });
+
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => UI_M_EditCategory()),
+                      );
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -111,7 +108,7 @@ class UI_M_ManageCategoryState extends State<UI_M_ManageCategory> {
                           child: Container(
                             child: Text(
                               list[index]["nodeName"],
-                              overflow: TextOverflow. ellipsis,
+                              overflow: TextOverflow.ellipsis,
                               style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.normal),
                             ),
                           ),
@@ -126,12 +123,10 @@ class UI_M_ManageCategoryState extends State<UI_M_ManageCategory> {
                           onPressed: () {
                             StoreProvider.of<AppState>(context).dispatch(CategoryRequest(list[index]["nodeId"]));
                             StoreProvider.of<AppState>(context).state.categoryTree.numberOfCategories < 50
-                                ? Future.delayed(const Duration(milliseconds: 500), () {
-                                    Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(builder: (context) => UI_M_CreateCategory()),
-                                    );
-                                  })
+                                ? Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => UI_M_CreateCategory(empty: false,)),
+                                  )
                                 : showDialog(
                                     context: context,
                                     builder: (BuildContext context) {
@@ -147,9 +142,7 @@ class UI_M_ManageCategoryState extends State<UI_M_ManageCategory> {
                       ],
                     )),
                 children: [
-                  (list[index]['nodeCategory'] != null)
-                      ? buildBranchesAfterRoot(list[index]['nodeCategory'], index)
-                      : Text(AppLocalizations.of(context).empty),
+                  (list[index]['nodeCategory'] != null) ? buildBranchesAfterRoot(list[index]['nodeCategory'], index) : Text(AppLocalizations.of(context).empty),
                 ],
               )
             : ListTile(
@@ -160,40 +153,39 @@ class UI_M_ManageCategoryState extends State<UI_M_ManageCategory> {
                       child: Container(
                         child: Text(
                           list[index]["nodeName"],
-                          overflow: TextOverflow. ellipsis,
+                          overflow: TextOverflow.ellipsis,
                           style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.normal),
                         ),
                       ),
                     ),
-                    list[index]['level'] < 4?
-                    IconButton(
-                      icon: const Icon(
-                        Icons.add_circle_sharp,
-                        color: Colors.black,
-                        size: 25.0,
-                      ),
-                      tooltip: AppLocalizations.of(context).createSubCategory,
-                      onPressed: () {
-                        StoreProvider.of<AppState>(context).dispatch(CategoryRequest(list[index]["nodeId"]));
-                        StoreProvider.of<AppState>(context).state.categoryTree.numberOfCategories < 50
-                            ? Future.delayed(const Duration(milliseconds: 500), () {
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => UI_M_CreateCategory()),
-                                );
-                              })
-                            : showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  // return object of type Dialog
-                                  return AlertDialog(
-                                    title: new Text(AppLocalizations.of(context).caution),
-                                    content: new Text(AppLocalizations.of(context).maxCategories),
-                                  );
-                                },
-                              );
-                      },
-                    ):Container(),
+                    list[index]['level'] < 4
+                        ? IconButton(
+                            icon: const Icon(
+                              Icons.add_circle_sharp,
+                              color: Colors.black,
+                              size: 25.0,
+                            ),
+                            tooltip: AppLocalizations.of(context).createSubCategory,
+                            onPressed: () {
+                              StoreProvider.of<AppState>(context).dispatch(CategoryRequest(list[index]["nodeId"]));
+                              StoreProvider.of<AppState>(context).state.categoryTree.numberOfCategories < 50
+                                  ? Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => UI_M_CreateCategory(empty: false,)),
+                                    )
+                                  : showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        // return object of type Dialog
+                                        return AlertDialog(
+                                          title: new Text(AppLocalizations.of(context).caution),
+                                          content: new Text(AppLocalizations.of(context).maxCategories),
+                                        );
+                                      },
+                                    );
+                            },
+                          )
+                        : Container(),
                   ],
                 ),
                 onTap: () {
@@ -219,9 +211,7 @@ class UI_M_ManageCategoryState extends State<UI_M_ManageCategory> {
     if (list != null) {
       return Padding(
           padding: EdgeInsets.only(
-              bottom: 15.0,
-              left: double.parse(list[index]["level"].toString()) * 12.0,
-              right: (list[index]['nodeCategory'] != null && list[index]['nodeCategory'].length != 0) ? 0.0 : 39.0),
+              bottom: 15.0, left: double.parse(list[index]["level"].toString()) * 12.0, right: (list[index]['nodeCategory'] != null && list[index]['nodeCategory'].length != 0) ? 0.0 : 39.0),
           child: Container(
             child: (list[index]['nodeCategory'] != null && list[index]['nodeCategory'].length != 0)
                 ? Container(
@@ -241,7 +231,7 @@ class UI_M_ManageCategoryState extends State<UI_M_ManageCategory> {
                           children: [
                             Text(
                               list[index]["nodeName"],
-                              overflow: TextOverflow. ellipsis,
+                              overflow: TextOverflow.ellipsis,
                               style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.normal),
                             ),
                             IconButton(
@@ -254,12 +244,10 @@ class UI_M_ManageCategoryState extends State<UI_M_ManageCategory> {
                               onPressed: () {
                                 StoreProvider.of<AppState>(context).dispatch(CategoryRequest(list[index]["nodeId"]));
                                 StoreProvider.of<AppState>(context).state.categoryTree.numberOfCategories < 50
-                                    ? Future.delayed(const Duration(milliseconds: 500), () {
-                                        Navigator.pushReplacement(
-                                          context,
-                                          MaterialPageRoute(builder: (context) => UI_M_CreateCategory()),
-                                        );
-                                      })
+                                    ? Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => UI_M_CreateCategory(empty: false,)),
+                                      )
                                     : showDialog(
                                         context: context,
                                         builder: (BuildContext context) {
@@ -286,40 +274,39 @@ class UI_M_ManageCategoryState extends State<UI_M_ManageCategory> {
                           child: Container(
                             child: Text(
                               list[index]["nodeName"],
-                              overflow: TextOverflow. ellipsis,
+                              overflow: TextOverflow.ellipsis,
                               style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.normal),
                             ),
                           ),
                         ),
-                        list[index]['level'] < 4?
-                        IconButton(
-                          icon: const Icon(
-                            Icons.add_circle_sharp,
-                            color: Colors.black,
-                            size: 25.0,
-                          ),
-                          tooltip: AppLocalizations.of(context).createSubCategory,
-                          onPressed: () {
-                            StoreProvider.of<AppState>(context).dispatch(CategoryRequest(list[index]["nodeId"]));
-                            StoreProvider.of<AppState>(context).state.categoryTree.numberOfCategories < 50
-                                ? Future.delayed(const Duration(milliseconds: 500), () {
-                                    Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(builder: (context) => UI_M_CreateCategory()),
-                                    );
-                                  })
-                                : showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      // return object of type Dialog
-                                      return AlertDialog(
-                                        title: new Text(AppLocalizations.of(context).caution),
-                                        content: new Text(AppLocalizations.of(context).maxCategories),
-                                      );
-                                    },
-                                  );
-                          },
-                        ):Container(),
+                        list[index]['level'] < 4
+                            ? IconButton(
+                                icon: const Icon(
+                                  Icons.add_circle_sharp,
+                                  color: Colors.black,
+                                  size: 25.0,
+                                ),
+                                tooltip: AppLocalizations.of(context).createSubCategory,
+                                onPressed: () {
+                                  StoreProvider.of<AppState>(context).dispatch(CategoryRequest(list[index]["nodeId"]));
+                                  StoreProvider.of<AppState>(context).state.categoryTree.numberOfCategories < 50
+                                      ? Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(builder: (context) => UI_M_CreateCategory(empty: false,)),
+                                        )
+                                      : showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            // return object of type Dialog
+                                            return AlertDialog(
+                                              title: new Text(AppLocalizations.of(context).caution),
+                                              content: new Text(AppLocalizations.of(context).maxCategories),
+                                            );
+                                          },
+                                        );
+                                },
+                              )
+                            : Container(),
                       ],
                     ),
                     onTap: () {
@@ -339,8 +326,8 @@ class UI_M_ManageCategoryState extends State<UI_M_ManageCategory> {
   }
 
   List<Widget> listBranchCategory() {
-    List<Widget> branches = new List();
-    List<dynamic> firebaseTree = StoreProvider.of<AppState>(context).state.categoryTree.categoryNodeList;
+    List<Widget> branches = [];
+    List<dynamic> firebaseTree = StoreProvider.of<AppState>(context).state.categoryTree.categoryNodeList != null ? StoreProvider.of<AppState>(context).state.categoryTree.categoryNodeList : [];
     branches.add(SizedBox(
       height: 10,
     ));
@@ -380,9 +367,7 @@ class UI_M_ManageCategoryState extends State<UI_M_ManageCategory> {
     var media = MediaQuery.of(context).size;
     return StoreConnector<AppState, AppState>(
         converter: (store) => store.state,
-        onInit: (store) => store.dispatch(new CategoryTreeRequest()),
-        onDidChange: (store) {},
-        onWillChange: (store, AppState state) {},
+        onInit: (store) => store.dispatch(CategoryTreeRequest()),
         builder: (context, snapshot) {
           return WillPopScope(
             onWillPop: () async {
@@ -438,10 +423,11 @@ class UI_M_ManageCategoryState extends State<UI_M_ManageCategory> {
                       ),
                       tooltip: AppLocalizations.of(context).createCategory,
                       onPressed: () {
+                        print("Numero categorie prima del create " + snapshot.categoryTree.numberOfCategories.toString());
                         snapshot.categoryTree.numberOfCategories < 50
                             ? Navigator.pushReplacement(
                                 context,
-                                MaterialPageRoute(builder: (context) => UI_M_CreateCategory(empty: "empty")),
+                                MaterialPageRoute(builder: (context) => UI_M_CreateCategory(empty: true)),
                               )
                             : showDialog(
                                 context: context,
