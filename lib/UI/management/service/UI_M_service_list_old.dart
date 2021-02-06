@@ -77,7 +77,7 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                   onPressed: () {
                     Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (context) => UI_ManageService(true)),
+                      MaterialPageRoute(builder: (context) => UI_ManageService(creation: true)),
                     );
                   },
                   child: Icon(Icons.add),
@@ -142,7 +142,7 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                                             StoreProvider.of<AppState>(context).dispatch(new SetService(snapshot.serviceList.serviceListState[index]));
                                             Navigator.pushReplacement(
                                               context,
-                                              MaterialPageRoute(builder: (context) => UI_ManageService(false)),
+                                              MaterialPageRoute(builder: (context) => UI_ManageService(creation: false)),
                                             );
                                           },
                                         ),
@@ -197,7 +197,7 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                                         ],
                                       ),
                                     ),
-                                    imageUrl: serviceList[index].thumbnail,
+                                    imageUrl: serviceList[index].image1,
                                     mediaSize: media,
                                     serviceState: serviceList[index],
                                     onServiceCardTap: (serviceState) {},

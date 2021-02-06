@@ -8,9 +8,7 @@ import 'UI_M_create_service.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class UI_ManageService extends StatefulWidget {
-  UI_ManageService(bool creation) {
-    this.creation = creation;
-  }
+  UI_ManageService({this.creation = false});
 
   bool creation;
 

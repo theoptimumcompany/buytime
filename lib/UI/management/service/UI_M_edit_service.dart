@@ -1,6 +1,7 @@
 import 'package:Buytime/UI/management/service/UI_M_service_list.dart';
 import 'package:Buytime/UI/management/service/UI_M_manage_service_old.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
+import 'package:Buytime/reblox/model/snippet/parent.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:Buytime/reblox/model/category/tree/category_tree_state.dart';
 import 'package:Buytime/reblox/model/snippet/generic.dart';
@@ -26,75 +27,14 @@ class UI_EditServiceState extends State<UI_EditService> {
   AssetImage assetImage = AssetImage('assets/img/image_placeholder.png');
   Image image;
   final ImagePicker imagePicker = ImagePicker();
-  List<GenericState> categoryList = [
-    GenericState(content: "Category 1"),
-    GenericState(content: "Category 2"),
-    GenericState(content: "Category 3")
-  ];
-  List<GenericState> pipelineListName = [
-    GenericState(content: "Pipeline 1"),
-    GenericState(content: "Pipeline 2"),
-    GenericState(content: "Pipeline 3")
-  ];
-  List<GenericState> _tags = [
-    GenericState(content: "Tag 1"),
-    GenericState(content: "Tag 2"),
-    GenericState(content: "Tag 3")
-  ];
-  List<GenericState> _actions = [
-    GenericState(content: "Action 1"),
-    GenericState(content: "Action 2"),
-    GenericState(content: "Action 3")
-  ];
-  List<GenericState> _constraints = [
-    GenericState(content: "Constraint 1"),
-    GenericState(content: "Constraint 2"),
-    GenericState(content: "Constraint 3")
-  ];
-  List<GenericState> _positions = [
-    GenericState(content: "Position 1"),
-    GenericState(content: "Position 2"),
-    GenericState(content: "Position 3")
-  ];
-  List<GenericState> _visibility = [
-    GenericState(content: "Visible"),
-    GenericState(content: "Shadow"),
-    GenericState(content: "Invisible")
-  ];
-
-  List<DropdownMenuItem<GenericState>> _dropActions;
-  GenericState _selectedAction;
-
-  List<DropdownMenuItem<GenericState>> _dropTags;
-  GenericState _selectedTag;
-
-  List<DropdownMenuItem<GenericState>> _dropConstraints;
-  GenericState _selectedConstraint;
-
-  List<DropdownMenuItem<GenericState>> _dropPositions;
-  GenericState _selectedPosition;
-
-  List<DropdownMenuItem<GenericState>> _dropVisibility;
-  GenericState _selectedVisibility;
-
+  List<Parent> selectedCategoryList = [];
+  List<Parent> categoryList = [];
   var size;
-
-  void setPipelineList() {
-    PipelineList pipelineList =
-        StoreProvider.of<AppState>(context).state.pipelineList;
-    List<GenericState> items = List();
-    for (int i = 0; i < pipelineList.pipelineList.length; i++) {
-      items.add(GenericState(
-        content: pipelineList.pipelineList[i].name,
-      ));
-    }
-    pipelineListName = items;
-  }
 
   void setCategoryList() {
     CategoryTree categoryNode =
         StoreProvider.of<AppState>(context).state.categoryTree;
-    List<GenericState> items = List();
+    List<Parent> items = [];
 
     if (categoryNode.categoryNodeList != null) {
       if (categoryNode.categoryNodeList.length != 0 &&
@@ -107,10 +47,10 @@ class UI_EditServiceState extends State<UI_EditService> {
     categoryList = items;
   }
 
-  openTree(List<dynamic> list, List<GenericState> items) {
+  openTree(List<dynamic> list, List<Parent> items) {
     for (int i = 0; i < list.length; i++) {
       items.add(
-        GenericState(content: list[i]['nodeName']),
+        Parent(name: list[i]['nodeName']),
       );
       if (list[i]['nodeCategory'] != null) {
         openTree(list[i]['nodeCategory'], items);
@@ -130,6 +70,38 @@ class UI_EditServiceState extends State<UI_EditService> {
     );
   }
 
+
+  _buildChoiceList() {
+    List<Widget> choices = [];
+    categoryList.forEach((item) {
+      choices.add(Container(
+        padding: const EdgeInsets.all(2.0),
+        child: ChoiceChip(
+          label: Text(item.name),
+          selected: selectedCategoryList.any((element) => element.id == item.id),
+          selectedColor: Theme.of(context).accentColor,
+          labelStyle: TextStyle(color: selectedCategoryList.any((element) => element.id == item.id) ? Colors.black : Colors.white),
+          onSelected: (selected) {
+
+            setState(() {
+              if (selectedCategoryList.any((element) => element.id == item.id)) {
+                selectedCategoryList.removeWhere((element) => element.id == item.id);
+              } else {
+                selectedCategoryList.add(item);
+              }
+            });
+
+            selectedCategoryList.forEach((element) {
+              print(element.id);
+            });
+            // StoreProvider.of<AppState>(context).dispatch(SetServiceCategory(selectedChoices));
+          },
+        ),
+      ));
+    });
+    return choices;
+  }
+
   @override
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
@@ -137,27 +109,26 @@ class UI_EditServiceState extends State<UI_EditService> {
         converter: (store) => store.state,
         // onInit: (store) => store.dispatch(new CategoryNodeRequest()),
         builder: (context, snapshot) {
-          switch (snapshot.serviceState.visibility) {
-            case 'Visible':
-              _selectedVisibility =  _visibility[0];
-              break;
-            case 'Shadow':
-              _selectedVisibility =  _visibility[1];
-              break;
-            case 'Invisible':
-              _selectedVisibility =  _visibility[2];
-              break;
-          }
+          // switch (snapshot.serviceState.visibility) {
+          //   case 'Visible':
+          //     _selectedVisibility =  _visibility[0];
+          //     break;
+          //   case 'Shadow':
+          //     _selectedVisibility =  _visibility[1];
+          //     break;
+          //   case 'Invisible':
+          //     _selectedVisibility =  _visibility[2];
+          //     break;
+          // }
           //Popolo le categorie
           setCategoryList();
-          setPipelineList();
           return WillPopScope(
             onWillPop: _onWillPop,
             child: Scaffold(
               floatingActionButton: FloatingActionButton(
                 onPressed: () {
                   StoreProvider.of<AppState>(context)
-                      .dispatch(DeleteService(snapshot.serviceState.id));
+                      .dispatch(DeleteService(snapshot.serviceState.serviceId));
 
                     Navigator.pushReplacement(
                       context,
@@ -189,10 +160,10 @@ class UI_EditServiceState extends State<UI_EditService> {
                       minWidth: 600,
                       cropAspectRatioPreset: CropAspectRatioPreset.square,
                       image: snapshot.serviceState == null ||
-                              snapshot.serviceState.thumbnail == null ||
-                              snapshot.serviceState.thumbnail.isEmpty
+                              snapshot.serviceState.image1 == null ||
+                              snapshot.serviceState.image1.isEmpty
                           ? null
-                          : Image.network(snapshot.serviceState.thumbnail,
+                          : Image.network(snapshot.serviceState.image1,
                               width: media.width * 0.5),
                       onFilePicked: (fileToUpload) {
                         print("UI_create_service - callback!");
@@ -297,174 +268,22 @@ class UI_EditServiceState extends State<UI_EditService> {
                             AppLocalizations.of(context).selectCateogories,
                           ),
                           Container(
-                              width: media.width * 0.8,
-                              child: OptimumChip(
-                                chipList: categoryList,
-                                selectedChoices:
-                                    snapshot.serviceState.categoryList,
-                                optimumChipListToDispatch:
-                                    (List<GenericState> selectedChoices) {
-                                  StoreProvider.of<AppState>(context).dispatch(
-                                      SetServiceCategory(selectedChoices));
-                                },
-                              )),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  AppLocalizations.of(context).selectCateogories,
+                                ),
+                                Container(
+                                    width: media.width * 0.8,
+                                    child: Wrap(
+                                      children: _buildChoiceList(),
+                                    )),
+                              ],
+                            ),
+                          ),
                         ],
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 15.0),
-                      child: Center(
-                        child: Container(
-                          width: media.width * 0.9,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8.0),
-                              border: Border.all(color: Colors.grey)),
-                          child: Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 10.0),
-                            child: OptimumDropdown(
-                              value: _selectedAction,
-                              items: _dropActions,
-                              list: _actions,
-                              optimumDropdownToDispatch:
-                                  (GenericState selectedAction) {
-                                //  StoreProvider.of<AppState>(context).dispatch(SetServicePipelineId(selectedChoices));
-                              },
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            AppLocalizations.of(context).selectAllPipelines,
-                          ),
-                          Container(
-                              width: media.width * 0.8,
-                              child: OptimumChip(
-                                chipList: pipelineListName,
-                                selectedChoices:
-                                    snapshot.serviceState.categoryList,
-                                optimumChipListToDispatch:
-                                    (List<GenericState> selectedChoices) {
-                                  StoreProvider.of<AppState>(context).dispatch(
-                                      SetServicePipeline(selectedChoices));
-                                },
-                              )),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 15.0),
-                      child: Center(
-                        child: Container(
-                          width: media.width * 0.9,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8.0),
-                              border: Border.all(color: Colors.grey)),
-                          child: Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 10.0),
-                            child: OptimumDropdown(
-                              value: _selectedTag,
-                              items: _dropTags,
-                              list: _tags,
-                              optimumDropdownToDispatch:
-                                  (GenericState selectedTag) {
-                                //  StoreProvider.of<AppState>(context).dispatch(SetServicePipelineId(selectedChoices));
-                              },
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 15.0),
-                      child: Center(
-                        child: Container(
-                          width: media.width * 0.9,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8.0),
-                              border: Border.all(color: Colors.grey)),
-                          child: Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 10.0),
-                            child: OptimumDropdown(
-                              value: _selectedConstraint,
-                              items: _dropConstraints,
-                              list: _constraints,
-                              optimumDropdownToDispatch:
-                                  (GenericState selectedConstraint) {
-                                //  StoreProvider.of<AppState>(context).dispatch(SetServicePipelineId(selectedChoices));
-                              },
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 15.0),
-                      child: Center(
-                        child: Container(
-                          width: media.width * 0.9,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8.0),
-                              border: Border.all(color: Colors.grey)),
-                          child: Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 10.0),
-                            child: OptimumDropdown(
-                              value: _selectedPosition,
-                              items: _dropPositions,
-                              list: _positions,
-                              optimumDropdownToDispatch:
-                                  (GenericState selectedPosition) {
-                                //  StoreProvider.of<AppState>(context).dispatch(SetServicePipelineId(selectedChoices));
-                              },
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 15.0),
-                      child: Center(
-                        child: Container(
-                          width: media.width * 0.9,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8.0),
-                              border: Border.all(color: Colors.grey)),
-                          child: Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 10.0),
-                            child: OptimumDropdown(
-                              value: _selectedVisibility,
-                              items: _dropVisibility,
-                              list: _visibility,
-                              optimumDropdownToDispatch:
-                                  (GenericState selectedVisibility) {
-                                  StoreProvider.of<AppState>(context).dispatch(SetServiceVisibility(selectedVisibility.content));
-                              },
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    FlatButton(
-                      textColor: Colors.black,
-                      onPressed: () {
-                        StoreProvider.of<AppState>(context)
-                            .dispatch(new UpdateService(snapshot.serviceState));
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => UI_M_ServiceList()),
-                        );
-                      },
-                      child: Icon(Icons.check),
                     ),
                   ],
                 ),

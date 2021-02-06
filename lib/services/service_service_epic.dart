@@ -15,19 +15,18 @@ class ServiceListRequestService implements EpicClass<AppState> {
     return actions.whereType<ServiceListRequest>().asyncMap((event) async {
       print("ServiceListService Firestore request");
       List<ServiceState> serviceStateList = List<ServiceState>();
-      if(event.permission == "user"){
-        var servicesFirebaseShadow = await FirebaseFirestore.instance.collection("service").where("id_business", isEqualTo: event.businessId).where("visibility", isEqualTo:'Shadow').get();
+      if (event.permission == "user") {
+        var servicesFirebaseShadow = await FirebaseFirestore.instance.collection("service").where("id_business", isEqualTo: event.businessId).where("visibility", isEqualTo: 'Shadow').get();
         servicesFirebaseShadow.docs.forEach((element) {
           ServiceState serviceState = ServiceState.fromJson(element.data());
           serviceStateList.add(serviceState);
         });
-        var servicesFirebaseVisible = await FirebaseFirestore.instance.collection("service").where("id_business", isEqualTo: event.businessId).where("visibility", isEqualTo:'Visible').get();
+        var servicesFirebaseVisible = await FirebaseFirestore.instance.collection("service").where("id_business", isEqualTo: event.businessId).where("visibility", isEqualTo: 'Visible').get();
         servicesFirebaseVisible.docs.forEach((element) {
           ServiceState serviceState = ServiceState.fromJson(element.data());
           serviceStateList.add(serviceState);
         });
-      }
-      else{
+      } else {
         var servicesFirebase = await FirebaseFirestore.instance.collection("service").where("id_business", isEqualTo: event.businessId).get();
         servicesFirebase.docs.forEach((element) {
           ServiceState serviceState = ServiceState.fromJson(element.data());
@@ -85,7 +84,7 @@ class ServiceCreateService implements EpicClass<AppState> {
     return actions.whereType<CreateService>().asyncMap((event) async {
       ServiceState serviceState = event.serviceState;
 
-      serviceState.id_business = event.businessId;
+      serviceState.businessId = event.businessId;
 
       if (event.serviceState.fileToUploadList != null) {
         await uploadFiles(event.serviceState.fileToUploadList, event.serviceState).then((ServiceState updatedServiceState) {
@@ -106,7 +105,7 @@ Future<ServiceState> uploadFiles(List<OptimumFileToUpload> fileToUploadList, Ser
   await Future.forEach(
       fileToUploadList,
       (fileToUpload) => uploadToFirebaseStorage(fileToUpload).then((fileUrl) {
-            serviceState.thumbnail = fileUrl.toString();
+            serviceState.image1 = fileUrl.toString();
             return serviceState;
           }));
   return serviceState;
@@ -114,7 +113,7 @@ Future<ServiceState> uploadFiles(List<OptimumFileToUpload> fileToUploadList, Ser
 
 Future<CreatedService> createService(ServiceState serviceState) {
   DocumentReference docReference = FirebaseFirestore.instance.collection('service').doc();
-  serviceState.id = docReference.id;
+  serviceState.serviceId = docReference.id;
   return docReference.set(serviceState.toJson()).then((value) {
     print("ServiceService has created new Service! ");
     return new CreatedService(serviceState);
@@ -127,7 +126,7 @@ Future<CreatedService> createService(ServiceState serviceState) {
 
 Future<UpdatedService> updateService(ServiceState serviceState) {
   print("Visibilità è : " + serviceState.visibility);
-  return FirebaseFirestore.instance.collection("service").doc(serviceState.id).update(serviceState.toJson()).then((value) {
+  return FirebaseFirestore.instance.collection("service").doc(serviceState.serviceId).update(serviceState.toJson()).then((value) {
     print("ServiceService should be updated online ");
     return new UpdatedService(serviceState);
   }).catchError((error) {

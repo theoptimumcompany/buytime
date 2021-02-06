@@ -128,14 +128,14 @@ class UI_U_ServiceListState extends State<UI_U_ServiceList> {
                                                     )
                                                   ],
                                                 ),
-                                                imageUrl: serviceList[index].thumbnail,
+                                                imageUrl: serviceList[index].image1,
                                                 mediaSize: media,
                                                 serviceState: serviceList[index],
                                                 onServiceCardTap: (serviceState) {},
                                               )
                                             : OptimumServiceCardMedium(
                                                 greyScale: true,
-                                                imageUrl: serviceList[index].thumbnail,
+                                                imageUrl: serviceList[index].image1,
                                                 mediaSize: media,
                                                 serviceState: serviceList[index],
                                                 onServiceCardTap: (serviceState) {},

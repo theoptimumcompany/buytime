@@ -4,262 +4,179 @@ import 'package:flutter/material.dart';
 
 import '../file/optimum_file_to_upload.dart';
 
+enum ServiceVisibility {
+  Active,
+  Deactivated,
+  Invisible,
+}
+
 class ServiceState {
-  String id;
-  String id_business;
+  String serviceId;
+  String businessId;
+  List<String> categoryId;
+  List<String> categoryRootId;
+  String image1;
+  String image2;
+  String image3;
   String name;
-  String thumbnail;
-  String image;
   String description;
-  bool availability;
-  List<GenericState> actionList;
-  List<GenericState> categoryList;
-  List<GenericState> externalCategoryList;
-  List<GenericState> positionList;
   String visibility;
-  List<GenericState> constraintList;
-  List<GenericState> tagList;
   double price;
-  List<GenericState> write_permission;
-  List<GenericState> pipelineList;
   List<OptimumFileToUpload> fileToUploadList;
   int timesSold;
 
   ServiceState({
-    this.id,
-    this.id_business,
+    this.serviceId,
+    this.businessId,
+    this.categoryId,
+    this.categoryRootId,
     this.name,
-    this.thumbnail,
-    this.image,
+    this.image1,
+    this.image2,
+    this.image3,
     this.description,
-    this.availability,
-    this.actionList,
-    this.categoryList,
-    this.externalCategoryList,
-    this.positionList,
     this.visibility,
-    this.constraintList,
-    this.tagList,
     this.price,
-    this.write_permission,
-    this.pipelineList,
     this.fileToUploadList,
     this.timesSold,
   });
 
+  String enumToString(ServiceVisibility serviceVisibility) {
+    return serviceVisibility.toString().split('.').last;
+  }
+
   ServiceState toEmpty() {
     return ServiceState(
-      id: "",
-      id_business: "",
+      serviceId: "",
+      businessId: "",
+      categoryId: [],
+      categoryRootId: [],
       name: "",
-      thumbnail: "",
-      image: "",
+      image1: "",
+      image2: "",
+      image3: "",
       description: "",
-      availability: false,
-      actionList: [],
-      categoryList: [],
-      externalCategoryList: [],
-      positionList: [],
-      visibility: "Visible",
-      constraintList: [],
-      tagList: [],
+      visibility: enumToString(ServiceVisibility.Invisible),
       price: 0.00,
-      write_permission: [],
-      pipelineList: [],
-      fileToUploadList: null,
+      fileToUploadList: [],
       timesSold: 0,
     );
   }
 
   ServiceState.fromState(ServiceState service) {
-    this.id = service.id;
-    this.id_business = service.id_business;
+    this.serviceId = service.serviceId;
+    this.businessId = service.businessId;
+    this.categoryId = service.categoryId;
+    this.categoryRootId = service.categoryRootId;
     this.name = service.name;
-    this.thumbnail = service.thumbnail;
-    this.image = service.image;
+    this.image1 = service.image1;
+    this.image2 = service.image2;
+    this.image3 = service.image3;
     this.description = service.description;
-    this.availability = service.availability;
-    this.actionList = service.actionList;
-    this.categoryList = service.categoryList;
-    this.externalCategoryList = service.externalCategoryList;
-    this.positionList = service.positionList;
     this.visibility = service.visibility;
-    this.constraintList = service.constraintList;
-    this.tagList = service.tagList;
     this.price = service.price;
-    this.write_permission = service.write_permission;
-    this.pipelineList = service.pipelineList;
     this.fileToUploadList = service.fileToUploadList;
     this.timesSold = service.timesSold;
   }
 
-  serviceStateFieldUpdate(String id,
-      String id_business,
+  serviceStateFieldUpdate(
+    String serviceId,
+    String businessId,
+      List<String> categoryId,
+      List<String> categoryRootId,
+    String image1,
+    String image2,
+    String image3,
       String name,
-      String thumbnail,
-      String description,
-      bool availability,
-      List<GenericState> actionList,
-      List<GenericState> categoryList,
-      List<GenericState> externalCategoryList,
-      List<GenericState> positionList,
-      String visibility,
-      List<GenericState> constraintList,
-      List<GenericState> tagList,
-      double price,
-      List<GenericState> write_permission,
-      List<GenericState> pipelineList,
-      List<OptimumFileToUpload> fileToUploadList, int timesSold) {
+    String description,
+    String visibility,
+    double price,
+    List<OptimumFileToUpload> fileToUploadList,
+    int timesSold,
+  ) {
     ServiceState(
-      id: id ?? this.id,
-      id_business: id_business ?? this.id_business,
+      serviceId: serviceId ?? this.serviceId,
+      businessId: businessId ?? this.businessId,
+      categoryId: categoryId ?? this.categoryId,
+      categoryRootId: categoryRootId ?? this.categoryRootId,
       name: name ?? this.name,
-      thumbnail: thumbnail ?? this.thumbnail,
+      image1: image1 ?? this.image1,
+      image2: image2 ?? this.image2,
+      image3: image3 ?? this.image3,
       description: description ?? this.description,
-      availability: availability ?? this.availability,
-      actionList: actionList ?? this.actionList,
-      categoryList: categoryList ?? this.categoryList,
-      externalCategoryList: externalCategoryList ?? this.externalCategoryList,
-      positionList: positionList ?? this.positionList,
       visibility: visibility ?? this.visibility,
-      constraintList: constraintList ?? this.constraintList,
-      tagList: tagList ?? this.tagList,
       price: price ?? this.price,
-      write_permission: write_permission ?? this.write_permission,
-      pipelineList: pipelineList ?? this.pipelineList,
       fileToUploadList: fileToUploadList ?? this.fileToUploadList,
       timesSold: timesSold ?? this.timesSold,
     );
   }
 
   ServiceState copyWith({
-    String id,
-    String id_business,
+    String serviceId,
+    String businessId,
+    List<String> categoryId,
+    List<String> categoryRootId,
     String name,
-    String thumbnail,
+    String image1,
+    String image2,
+    String image3,
     String description,
-    bool availability,
-    List<GenericState> actionList,
-    List<GenericState> categoryList,
-    List<GenericState> externalCategoryList,
-    List<GenericState> positionList,
     String visibility,
-    List<GenericState> constraintList,
-    List<GenericState> tagList,
     double price,
-    List<GenericState> write_permission,
-    List<GenericState> pipelineList,
-    List<OptimumFileToUpload> fileToUploadList, int timesSold}) {
+    List<OptimumFileToUpload> fileToUploadList,
+    int timesSold,
+  }) {
     return ServiceState(
-      id: id ?? this.id,
-      id_business: id_business ?? this.id_business,
+      serviceId: serviceId ?? this.serviceId,
+      businessId: businessId ?? this.businessId,
+      categoryId: categoryId ?? this.categoryId,
+      categoryRootId: categoryRootId ?? this.categoryRootId,
       name: name ?? this.name,
-      thumbnail: thumbnail ?? this.thumbnail,
+      image1: image1 ?? this.image1,
+      image2: image2 ?? this.image2,
+      image3: image3 ?? this.image3,
       description: description ?? this.description,
-      availability: availability ?? this.availability,
-      actionList: actionList ?? this.actionList,
-      categoryList: categoryList ?? this.categoryList,
-      externalCategoryList: externalCategoryList ?? this.externalCategoryList,
-      positionList: positionList ?? this.positionList,
       visibility: visibility ?? this.visibility,
-      constraintList: constraintList ?? this.constraintList,
-      tagList: tagList ?? this.tagList,
       price: price ?? this.price,
-      write_permission: write_permission ?? this.write_permission,
-      pipelineList: pipelineList ?? this.pipelineList,
       fileToUploadList: fileToUploadList ?? this.fileToUploadList,
       timesSold: timesSold ?? this.timesSold,
     );
   }
 
-  List<dynamic> convertToJson(List<GenericState> objectStateList) {
-    List<dynamic> list = [];
-    objectStateList.forEach((element) {
-      list.add(element.toJson());
-    });
-    return list;
-  }
+  // List<dynamic> convertToJson(List<GenericState> objectStateList) {
+  //   List<dynamic> list = [];
+  //   objectStateList.forEach((element) {
+  //     list.add(element.toJson());
+  //   });
+  //   return list;
+  // }
 
   ServiceState.fromJson(Map<String, dynamic> json)
-      :
-        id = json['id'],
-        timesSold = json['timesSold'],
-        id_business = json['id_business'],
+      : serviceId = json['serviceId'],
+        businessId = json['businessId'],
+        categoryId = List<String>.from(json['categoryId']),
+        categoryRootId =  List<String>.from(json['categoryRootId']),
         name = json['name'],
-        thumbnail = json['thumbnail'],
+        image1 = json['image1'],
+        image2 = json['image2'],
+        image3 = json['image3'],
         description = json['description'],
-        availability = json['availability'],
-        actionList = List<GenericState>.from(json["actionList"].map((item) {
-          return  GenericState(
-            content: item["name"],
-            id: item["id"],
-          );
-        })),
-        categoryList = List<GenericState>.from(json["categoryList"].map((item) {
-          return  GenericState(
-            content: item["name"],
-            id: item["id"],
-          );
-        })),
-        externalCategoryList = List<GenericState>.from(json["externalCategoryList"].map((item) {
-          return  GenericState(
-            content: item["name"],
-            id: item["id"],
-          );
-        })),
-        positionList = List<GenericState>.from(json["positionList"].map((item) {
-          return  GenericState(
-            content: item["name"],
-            id: item["id"],
-          );
-        })),
         visibility = json['visibility'],
-        constraintList = List<GenericState>.from(json["constraintList"].map((item) {
-          return  GenericState(
-            content: item["name"],
-            id: item["id"],
-          );
-        })),
-        tagList = List<GenericState>.from(json["tagList"].map((item) {
-          return  GenericState(
-            content: item["name"],
-            id: item["id"],
-          );
-        })),
         price = json['price'],
-        write_permission = List<GenericState>.from(json["write_permission"].map((item) {
-          return  GenericState(
-            content: item["name"],
-            id: item["id"],
-          );
-        })),
-        pipelineList = List<GenericState>.from(json["pipelineList"].map((item) {
-          return  GenericState(
-            content: item["name"],
-            id: item["id"],
-          );
-        }
-          ));
+        timesSold = json['timesSold'];
 
-  Map<String, dynamic> toJson() =>
-      {
-        'id': id,
-        'id_business': id_business,
+  Map<String, dynamic> toJson() => {
+        'serviceId': serviceId,
+        'businessId': businessId,
+        'categoryId': categoryId,
+        'categoryRootId': categoryRootId,
         'name': name,
-        'thumbnail': thumbnail,
+        'image1': image1,
+        'image2': image2,
+        'image3': image3,
         'description': description,
-        'availability': availability,
-        'actionList': convertToJson(actionList),
-        'categoryList': convertToJson(categoryList),
-        'externalCategoryList': convertToJson(externalCategoryList),
-        'positionList': convertToJson(positionList),
         'visibility': visibility,
-        'constraintList': convertToJson(constraintList),
-        'tagList': convertToJson(tagList),
         'price': price,
-        'write_permission': convertToJson(write_permission),
-        'pipelineList': convertToJson(pipelineList),
         'timesSold': timesSold,
       };
 }
-

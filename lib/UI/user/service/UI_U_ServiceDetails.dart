@@ -26,7 +26,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
   void initState() {
     super.initState();
     serviceState = widget.serviceState;
-    debugPrint('image: ${serviceState.image}');
+    debugPrint('image: ${serviceState.image1}');
   }
 
 
@@ -74,7 +74,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                               width: double.infinity,
                               decoration: BoxDecoration(
                                   image: DecorationImage(
-                                      image: NetworkImage(version200(serviceState.thumbnail)),
+                                      image: NetworkImage(version200(serviceState.image1)),
                                       fit: BoxFit.fill
                                   )
                               ),

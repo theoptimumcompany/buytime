@@ -169,7 +169,7 @@ class UI_ManageServiceState extends State<UI_ManageService> {
                                 return Container(
                                   child: serviceListState.length > 0
                                       ? OptimumServiceCardMedium(
-                                        imageUrl: serviceListState[index].thumbnail,
+                                        imageUrl: serviceListState[index].image1,
                                         mediaSize: media,
                                         serviceState: serviceListState[index],
                                         onServiceCardTap: (serviceState) {

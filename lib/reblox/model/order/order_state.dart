@@ -162,7 +162,7 @@ class OrderState {
   addItem(ServiceState itemToAdd, String idOwner) {
     bool added = false;
     itemList.forEach((element) {
-      if (!added && element.id == itemToAdd.id) {
+      if (!added && element.id == itemToAdd.serviceId) {
         element.number++;
         added = true;
       }
@@ -173,9 +173,9 @@ class OrderState {
           name: itemToAdd.name,
           description: itemToAdd.description,
           price: itemToAdd.price,
-          thumbnail: itemToAdd.thumbnail,
-          id: itemToAdd.id,
-          id_business: itemToAdd.id_business,
+          thumbnail: itemToAdd.image1,
+          id: itemToAdd.serviceId,
+          id_business: itemToAdd.businessId,
           id_owner: idOwner));
     }
     this.total += itemToAdd.price;
