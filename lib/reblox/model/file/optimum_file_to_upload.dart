@@ -5,6 +5,13 @@ import 'package:Buytime/reblox/model/file/web_image_info.dart' if (dart.library.
 
 import 'package:image_picker/image_picker.dart';
 
+
+enum ImageState {
+  free,
+  picked,
+  cropped,
+}
+
 class OptimumFileToUpload {
   String localPath;
   String remoteFolder;

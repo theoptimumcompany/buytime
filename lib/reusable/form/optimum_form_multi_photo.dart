@@ -55,12 +55,6 @@ class OptimumFormMultiPhoto extends StatefulWidget {
   );
 }
 
-enum ImageState {
-  free,
-  picked,
-  cropped,
-}
-
 class OptimumFormMultiPhotoState extends State<OptimumFormMultiPhoto> {
   final ImagePicker imagePicker = ImagePicker();
   final String text;
