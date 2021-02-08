@@ -1,5 +1,3 @@
-import 'package:Buytime/reblox/model/category/category_state.dart';
-import 'package:Buytime/reblox/model/snippet/generic.dart';
 import 'package:Buytime/reblox/model/file/optimum_file_to_upload.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/model/snippet/parent.dart';
@@ -80,13 +78,10 @@ class DeletedService {
 
 class CreateService {
   ServiceState _serviceState;
-  String _businessId;
 
-  CreateService(this._serviceState, this._businessId);
+  CreateService(this._serviceState);
 
   ServiceState get serviceState => _serviceState;
-
-  String get businessId => _businessId;
 }
 
 class CreatedService {
@@ -158,11 +153,11 @@ class SetServiceDescription {
 }
 
 class SetServiceVisibility {
-  String _visibility;
+  ServiceVisibility _visibility;
 
   SetServiceVisibility(this._visibility);
 
-  String get visibility => _visibility;
+  ServiceVisibility get visibility => _visibility;
 }
 
 class SetServicePrice {
@@ -208,7 +203,7 @@ ServiceState serviceReducer(ServiceState state, action) {
     return serviceState;
   }
   if (action is SetServiceVisibility) {
-    serviceState.visibility = action.visibility;
+    serviceState.visibility = ServiceState().enumToString(action.visibility);
     return serviceState;
   }
   if (action is SetServicePrice) {
@@ -253,15 +248,15 @@ ServiceState serviceReducer(ServiceState state, action) {
   if (action is AddFileToUploadInService) {
     print("business_reducer: addFileInService. service: " + state.name);
     if (state.fileToUploadList != null) {
-      print("business_reducer: fileuploadlist != null");
+      print("service_reducer: fileuploadlist != null");
       serviceState.fileToUploadList = []
         ..addAll(state.fileToUploadList)
         ..add(action.fileToUpload);
     } else {
-      print("business_reducer: fileuploadlist == null");
+      print("service_reducer: fileuploadlist == null");
       serviceState.fileToUploadList = []..add(action.fileToUpload);
     }
-    print("business_reducer: fileToUploadList(0) is now: " + serviceState.fileToUploadList
+    print("service_reducer: fileToUploadList(0) is now: " + serviceState.fileToUploadList
         .elementAt(0)
         .remoteName);
     return serviceState;

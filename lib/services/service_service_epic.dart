@@ -82,9 +82,8 @@ class ServiceCreateService implements EpicClass<AppState> {
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<CreateService>().asyncMap((event) async {
-      ServiceState serviceState = event.serviceState;
 
-      serviceState.businessId = event.businessId;
+      ServiceState serviceState = event.serviceState;
 
       if (event.serviceState.fileToUploadList != null) {
         await uploadFiles(event.serviceState.fileToUploadList, event.serviceState).then((ServiceState updatedServiceState) {

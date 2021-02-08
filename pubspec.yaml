@@ -154,9 +154,6 @@ flutter:
     - assets/img/mastercard.png
     - assets/icon.jpeg
     - assets/icon.png
-    - assets/img/icon/service_disabled.png
-    - assets/img/icon/service_invisible.png
-    - assets/img/icon/service_visible.png
     - assets/video/
     - assets/documents/tc.pdf
     - assets/documents/tos.pdf

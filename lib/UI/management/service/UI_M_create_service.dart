@@ -660,8 +660,8 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                   maxPhoto: 1,
                                   cropAspectRatioPreset: CropAspectRatioPreset.square,
                                   onFilePicked: (fileToUpload) {
-                                    print("UI_create_service - callback!");
-                                    StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInService(fileToUpload));
+                                    print("UI_create_service - callback upload image 1!");
+                                   // StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInService(fileToUpload));
                                   },
                                 ),
                               ),
@@ -675,8 +675,8 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                       maxPhoto: 1,
                                       cropAspectRatioPreset: CropAspectRatioPreset.square,
                                       onFilePicked: (fileToUpload) {
-                                        print("UI_create_service - callback!");
-                                        StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInService(fileToUpload));
+                                        print("UI_create_service -  callback upload image 2!");
+                                       // StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInService(fileToUpload));
                                       },
                                     ),
                                   ),
@@ -685,8 +685,8 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                     maxPhoto: 1,
                                     cropAspectRatioPreset: CropAspectRatioPreset.square,
                                     onFilePicked: (fileToUpload) {
-                                      print("UI_create_service - callback!");
-                                      StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInService(fileToUpload));
+                                      print("UI_create_service -  callback upload image 3!");
+                                      //StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInService(fileToUpload));
                                     },
                                   ),
                                 ],
@@ -869,6 +869,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                                 setState(() {
                                                   radioServiceVisibility = value;
                                                 });
+                                                StoreProvider.of<AppState>(context).dispatch(SetServiceVisibility(value));
                                               }),
                                         ),
                                       ],
@@ -883,7 +884,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                 Padding(
                                   padding: EdgeInsets.only(left: mediaWidth * 0.05, right: mediaWidth * 0.07),
                                   child: Container(
-                                    child: Icon(Icons.remove_red_eye, color: BuytimeTheme.SymbolGrey, size: mediaWidth * 0.07),
+                                    child: Icon(Icons.visibility_off, color: BuytimeTheme.SymbolGrey, size: mediaWidth * 0.07),
                                   ),
                                 ),
                                 Expanded(
@@ -914,6 +915,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                                 setState(() {
                                                   radioServiceVisibility = value;
                                                 });
+                                                StoreProvider.of<AppState>(context).dispatch(SetServiceVisibility(value));
                                               }),
                                         ),
                                       ],
@@ -928,7 +930,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                 Padding(
                                   padding: EdgeInsets.only(left: mediaWidth * 0.05, right: mediaWidth * 0.07),
                                   child: Container(
-                                    child: Icon(Icons.remove_red_eye, color: BuytimeTheme.SymbolGrey, size: mediaWidth * 0.07),
+                                    child: Icon(Icons.do_disturb_alt_outlined, color: BuytimeTheme.SymbolGrey, size: mediaWidth * 0.07),
                                   ),
                                 ),
                                 Expanded(
@@ -959,6 +961,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                                 setState(() {
                                                   radioServiceVisibility = value;
                                                 });
+                                                StoreProvider.of<AppState>(context).dispatch(SetServiceVisibility(value));
                                               }),
                                         ),
                                       ],
