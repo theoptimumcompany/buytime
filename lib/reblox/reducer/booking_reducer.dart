@@ -57,12 +57,28 @@ class ClosedRequestBooking {
   String get closedRequestBooking => _closedRequestBooking;
 }
 
-class SetBookingStatus {
-  BookingStatus _bookingStatus;
+class UpdateBooking {
+  //BookingStatus _bookingStatus;
+  //String _bookingId;
+  BookingState _bookingState;
 
-  SetBookingStatus(this._bookingStatus);
+  UpdateBooking(this._bookingState);
 
-  BookingStatus get bookingStatus => _bookingStatus;
+  //BookingStatus get bookingStatus => _bookingStatus;
+  //String get bookingId => _bookingId;
+  BookingState get bookingState => _bookingState;
+}
+
+class UpdatedBooking {
+  //BookingStatus _bookingStatus;
+  //String _bookingId;
+  BookingState _bookingState;
+
+  UpdatedBooking(this._bookingState);
+
+  //BookingStatus get bookingStatus => _bookingStatus;
+  //String get bookingId => _bookingId;
+  BookingState get bookingState => _bookingState;
 }
 
 
@@ -80,9 +96,9 @@ BookingState bookingReducer(BookingState state, action) {
     return bookingState;
   }
 
-  if (action is SetBookingStatus) {
-    debugPrint('booking_reducer: action: ${action.bookingStatus}');
-    bookingState.status = bookingState.enumToString(action.bookingStatus);
+  if (action is UpdatedBooking) {
+    //debugPrint('booking_reducer: action: ${action.bookingStatus}');
+    bookingState = action.bookingState.copyWith();
     debugPrint('booking_reducer: booking status: ${bookingState.status}');
     return bookingState;
   }

@@ -49,6 +49,7 @@ void main() {
     BusinessListRequestService(),
     BookingCreateRequestService(),
     BookingListRequestService(),
+    BookingUpdateRequestService(),
     UserRequestService(),
     UserEditDevice(),
     UserEditToken(),

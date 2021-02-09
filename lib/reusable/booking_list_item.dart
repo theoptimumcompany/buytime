@@ -25,6 +25,7 @@ class _BookingListItemState extends State<BookingListItem> {
     super.initState();
     booking = widget.booking;
     debugPrint('booking_list_item: User: ${booking.user.first.name} ${booking.user.first.surname} ${booking.user.first.email}');
+    debugPrint('booking_list_item: booking status: ${booking.user.first.surname} ${booking.status}');
   }
 
   @override
@@ -92,6 +93,7 @@ class _BookingListItemState extends State<BookingListItem> {
                           ],
                         ),
                         ///Share icon
+                        widget.booking.status != 'closed' ?
                         Container(
                           margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 0),
                           child: Row(
@@ -101,7 +103,7 @@ class _BookingListItemState extends State<BookingListItem> {
                               Container(
                                 child: IconButton(
                                   icon: Icon(
-                                    booking.status == 'created' ? Icons.bookmark_border : Icons.check,
+                                    widget.booking.status == 'created' ? Icons.bookmark_border : Icons.check,
                                     color: BuytimeTheme.ActionButton,
                                   ),
                                 ),
@@ -109,7 +111,7 @@ class _BookingListItemState extends State<BookingListItem> {
                               ///Status
                               Container(
                                 child: Text(
-                                  '${booking.status}',
+                                  '${widget.booking.status}',
                                   style: TextStyle(
                                       fontFamily: BuytimeTheme.FontFamily,
                                       color: BuytimeTheme.TextBlack,
@@ -120,7 +122,8 @@ class _BookingListItemState extends State<BookingListItem> {
                               )
                             ],
                           ),
-                        ),
+                        ) :
+                        Container(),
                       ],
                     ),
 

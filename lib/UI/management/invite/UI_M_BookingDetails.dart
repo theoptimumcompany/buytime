@@ -1,4 +1,5 @@
 import 'dart:core';
+import 'dart:html';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/navigation/navigation_middleware.dart';
@@ -121,12 +122,12 @@ class _BookingDetailsState extends State<BookingDetails> {
             key: _drawerKey,
             ///Appbar
             appBar: AppBar(
-              backgroundColor: BuytimeTheme.PrimaryMalibu,
+              backgroundColor: BuytimeTheme.ManagerPrimary,
               title: Container(
                 child: Padding(
                   padding: const EdgeInsets.only(left: 0.0),
                   child: Text(
-                    "Guest Details",
+                    "Guest Details", //TODO Make it global
                     textAlign: TextAlign.start,
                     style: TextStyle(
                       color: Colors.white,
@@ -476,7 +477,9 @@ class _BookingDetailsState extends State<BookingDetails> {
                                           onPressed: () async{
                                             final RenderBox box = context.findRenderObject();
                                             //Uri link = await createDynamicLink(bookingState.booking_code);
-                                            StoreProvider.of<AppState>(context).dispatch(SetBookingStatus(BookingStatus.sent)); //TODO: Create the booking status update epic
+                                            bookingState.status = bookingState.enumToString(BookingStatus.sent);
+                                            StoreProvider.of<AppState>(context).dispatch(UpdateBooking(bookingState)); //TODO: Create the booking status update epic
+
                                             Share.share('check out Buytime App at $link', subject: 'Take your Time!', sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
                                             /*Share.share('Share', subject:
                                             Platform.isAndroid ?

@@ -106,12 +106,13 @@ class _BookingCreationState extends State<BookingCreation> {
             key: _drawerKey,
             ///Appbar
             appBar: AppBar(
-              backgroundColor: BuytimeTheme.PrimaryMalibu,
+              backgroundColor: BuytimeTheme.ManagerPrimary,
               title: Container(
                 child: Padding(
                   padding: const EdgeInsets.only(left: 0.0),
                   child: Text(
-                    AppLocalizations.of(context).inviteGuest,
+                    //AppLocalizations.of(context).inviteGuest,
+                    'Create Invite', //TODO Make it global
                     textAlign: TextAlign.start,
                     style: TextStyle(
                       color: Colors.white,
@@ -141,7 +142,7 @@ class _BookingCreationState extends State<BookingCreation> {
                         height: (SizeConfig.safeBlockVertical * 100) - 56,
                         child: Stack(
                           children: [
-                            ///Bookin Code
+                            ///Booking Code
                             Positioned.fill(
                               child: Align(
                                 alignment: Alignment.topCenter,
@@ -514,7 +515,7 @@ class _BookingCreationState extends State<BookingCreation> {
 
                                                     bookingState.business_id = businessState.id_firestore;
                                                     bookingState.business_name = businessState.name;
-                                                    bookingState.guest_number_booked_for = int.parse(_numberOfGuestsController.text) ?? 0;
+                                                    bookingState.guest_number_booked_for = _numberOfGuestsController.text.isNotEmpty ? int.parse(_numberOfGuestsController.text) : 1;
 
                                                     UserSnippet currentUser = UserSnippet(
                                                         name: _nameController.text,

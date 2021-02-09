@@ -1,3 +1,4 @@
+import 'package:Buytime/UI/management/invite/UI_M_CheckedOutBookingList.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_list_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
@@ -30,9 +31,13 @@ class BookingList extends StatefulWidget {
 
 class _BookingListState extends State<BookingList> {
 
-  List<BookingState> bookingList = new List();
+  List<BookingState> bookingList = [];
+
   Map<String, List<BookingState>> bookingsMap = new Map();
-  List<List<BookingState>> bookingsList = new List();
+  List<List<BookingState>> bookingsList = [];
+
+  Map<String, List<BookingState>> checkedOutBookingsMap = new Map();
+  List<List<BookingState>> checkedOutBookingsList = [];
 
   @override
   void initState() {
@@ -50,8 +55,8 @@ class _BookingListState extends State<BookingList> {
     ///Init sizeConfig
     SizeConfig().init(context);
 
-    return StoreConnector<AppState, BookingListState>(
-      converter: (store) => store.state.bookingList,
+    return StoreConnector<AppState, AppState>(
+      converter: (store) => store.state,
       onInit: (store) => {
         print("Oninitbookinglist"),
         store.dispatch(BookingListRequest(store.state.business.id_firestore)),
@@ -61,22 +66,40 @@ class _BookingListState extends State<BookingList> {
         //bookingList.clear();
         bookingsMap.clear();
         bookingsList.clear();
+        checkedOutBookingsMap.clear();
+        checkedOutBookingsList.clear();
 
-        debugPrint('UI_M_BookingList: snapshot: ${snapshot.bookingListState.length}');
-        bookingList = snapshot.bookingListState;
+        debugPrint('UI_M_BookingList: snapshot: ${snapshot.bookingList.bookingListState.length}');
+        bookingList = snapshot.bookingList.bookingListState;
 
         bookingList.sort((a,b) => DateFormat('MM').format(a.start_date).compareTo(DateFormat('MM').format(b.start_date)));
         //DateFormat('dd/MM').format(widget.booking.start_date)
         bookingList.forEach((element) {
-          bookingsMap.putIfAbsent(DateFormat('MMM yyyy').format(element.start_date), () => []);
-          bookingsMap[DateFormat('MMM yyyy').format(element.start_date)].add(element);
+          //debugPrint('UI_M_BookingList: snapshot booking status: ${element.user.first.surname} ${element.status}');
+          if(element.status != 'closed'){
+            bookingsMap.putIfAbsent(DateFormat('MMM yyyy').format(element.start_date), () => []);
+            bookingsMap[DateFormat('MMM yyyy').format(element.start_date)].add(element);
+          }else{
+            checkedOutBookingsMap.putIfAbsent(DateFormat('MMM yyyy').format(element.start_date), () => []);
+            checkedOutBookingsMap[DateFormat('MMM yyyy').format(element.start_date)].add(element);
+          }
+
         });
 
         bookingsMap.forEach((key, value) {
-          value.forEach((booking) {
-            //debugPrint('UI_M_BookingList: User: ${booking.user.first.name} ${booking.user.first.surname} ${booking.user.first.email}');
-          });
+          /*value.forEach((element) {
+            debugPrint('UI_M_BookingList: value booking status: ${element.user.first.surname} ${element.status}');
+          });*/
+          value.sort((a,b) => DateFormat('dd').format(a.start_date).compareTo(DateFormat('dd').format(b.start_date)));
           bookingsList.add(value);
+        });
+
+        checkedOutBookingsMap.forEach((key, value) {
+          /*value.forEach((element) {
+            debugPrint('UI_M_BookingList: value booking status: ${element.user.first.surname} ${element.status}');
+          });*/
+          value.sort((a,b) => DateFormat('dd').format(a.start_date).compareTo(DateFormat('dd').format(b.start_date)));
+          checkedOutBookingsList.add(value);
         });
 
         //debugPrint('UI_M_BookingList: bookingsList: ${bookingsList.length}');
@@ -88,7 +111,7 @@ class _BookingListState extends State<BookingList> {
             key: _drawerKey,
             ///Appbar
             appBar: AppBar(
-              backgroundColor: BuytimeTheme.PrimaryMalibu,
+              backgroundColor: BuytimeTheme.ManagerPrimary,
               title: Container(
                 child: Padding(
                   padding: const EdgeInsets.only(left: 0.0),
@@ -131,6 +154,9 @@ class _BookingListState extends State<BookingList> {
                                       delegate: SliverChildBuilderDelegate((context, index) {
                                         //MenuItemModel menuItem = menuItems.elementAt(index);
                                         List<BookingState> bookings = bookingsList.elementAt(index);
+                                        bookings.forEach((element) {
+                                          debugPrint('UI_M_BookingList: bookings booking status: ${element.user.first.surname} ${element.status}');
+                                        });
                                         return BookingMonthList(bookings);
                                       },
                                         childCount: bookingsList.length,
@@ -193,7 +219,7 @@ class _BookingListState extends State<BookingList> {
                                   )
                               ),
                             ),
-                            ///Past Bookings
+                            ///Checked out bookings
                             Positioned.fill(
                               child: Align(
                                 alignment: Alignment.bottomCenter,
@@ -205,11 +231,11 @@ class _BookingListState extends State<BookingList> {
                                     color: Colors.transparent,
                                     child: InkWell(
                                         onTap: () async {
-
+                                          Navigator.push(context, MaterialPageRoute(builder: (context) => CheckedOutBookingList(checkedOutBookingsList: checkedOutBookingsList)));
                                         },
                                         child: CustomBottomButtonWidget(
                                             Text(
-                                              AppLocalizations.of(context).viewClosedBookings,
+                                              'View Checked-out bookings', //TODO Make it global
                                               style: TextStyle(
                                                   fontFamily: BuytimeTheme.FontFamily,
                                                   color: BuytimeTheme.TextBlack,

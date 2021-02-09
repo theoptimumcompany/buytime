@@ -364,7 +364,6 @@ class LoginState extends State<Login> {
   Future<int> _handleSignIn() async {
     FacebookLoginResult facebookLoginResult = await _handleFBSignIn();
     debugPrint('UI_U_Login - facebookLoginResult 2 : ' + facebookLoginResult.toString());
-    final accessToken = facebookLoginResult.accessToken.token;
 
     ProgressDialog pr = new ProgressDialog(context);
     pr.style(
@@ -383,6 +382,7 @@ class LoginState extends State<Login> {
     await pr.show();
 
     if (facebookLoginResult.status == FacebookLoginStatus.loggedIn) {
+      final accessToken = facebookLoginResult.accessToken.token;
       final facebookAuthCred = auth.FacebookAuthProvider.credential(accessToken);
       final facebookUserFromFirebase = await _auth.signInWithCredential(facebookAuthCred);
       /*print("User : " + user.displayName);*/

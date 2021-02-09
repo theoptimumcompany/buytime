@@ -59,6 +59,7 @@ class BookingCreateRequestService implements EpicClass<AppState> {
         // example: return new ErrorInBookingCreation(event.bookingState);
       }
       bookingState = event.bookingState;
+      bookingState.booking_id = bookingId;
 
       tmpBookingList = store.state.bookingList.copyWith();
       tmpBookingList.bookingListState.add(bookingState);
@@ -122,3 +123,31 @@ class BookingListRequestService implements EpicClass<AppState> {
     }).expand((element) => [BookingListReturned(bookingStateList)]);
   }
 }
+
+class BookingUpdateRequestService implements EpicClass<AppState> {
+  BookingState bookingState;
+  BookingListState tmpBookingList;
+
+  @override
+  Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
+    return actions.whereType<UpdateBooking>().asyncMap((event) async {
+
+      print("booking_service_epic: booking id:" + event.bookingState.booking_id);
+      await FirebaseFirestore.instance
+          .collection("booking")
+          .doc(event.bookingState.booking_id)
+          .update(event.bookingState.toJson());
+
+      bookingState = event.bookingState;
+
+      tmpBookingList = store.state.bookingList.copyWith();
+      tmpBookingList.bookingListState.removeWhere((item) => item.booking_id == bookingState.booking_id);
+      tmpBookingList.bookingListState.add(bookingState);
+
+    }).expand((element) => [
+      UpdatedBooking(bookingState),
+      BookingListReturned(tmpBookingList.bookingListState)
+    ]);
+  }
+}
+

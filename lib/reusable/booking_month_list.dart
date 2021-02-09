@@ -52,6 +52,7 @@ class _BookingMonthListState extends State<BookingMonthList> {
                   (context, index) {
                 //MenuItemModel menuItem = menuItems.elementAt(index);
                 BookingState booking = widget.bookingList.elementAt(index);
+                debugPrint('booking_month_list: bookings booking status: ${booking.user.first.surname} ${booking.status}');
                 return BookingListItem(booking);
               },
               childCount: widget.bookingList.length,

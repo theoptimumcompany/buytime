@@ -358,7 +358,6 @@ class RegistrationState extends State<Registration> {
   Future<int> _handleSignIn() async {
     FacebookLoginResult facebookLoginResult = await _handleFBSignIn();
     if (facebookLoginResult.accessToken != null) {
-      final accessToken = facebookLoginResult.accessToken.token;
 
       ProgressDialog pr = new ProgressDialog(context);
       pr.style(
@@ -375,6 +374,7 @@ class RegistrationState extends State<Registration> {
       await pr.show();
 
       if (facebookLoginResult.status == FacebookLoginStatus.loggedIn) {
+        final accessToken = facebookLoginResult.accessToken.token;
         final facebookAuthCred = auth.FacebookAuthProvider.credential(accessToken);
         final facebookUserFromFirebase = await _auth.signInWithCredential(facebookAuthCred);
         await pr.hide();
