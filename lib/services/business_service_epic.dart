@@ -4,6 +4,7 @@ import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/model/snippet/generic.dart';
 import 'package:Buytime/reblox/model/file/optimum_file_to_upload.dart';
 import 'package:Buytime/reblox/model/role/role.dart';
+import 'package:Buytime/reblox/navigation/navigation_reducer.dart';
 import 'package:Buytime/reblox/reducer/booking_reducer.dart';
 import 'package:Buytime/reblox/reducer/business_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/business_reducer.dart';
@@ -128,28 +129,40 @@ Future<BusinessState> uploadFiles(
 }
 
 class BusinessUpdateService implements EpicClass<AppState> {
+  BusinessState businessState;
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     print("BusinessService call of update");
     return actions.whereType<UpdateBusiness>().asyncMap((event) async {
-      if (event.businessState.fileToUploadList != null) {
+      businessState = event.businessState;
+
+      if (businessState.fileToUploadList != null) {
         // TODO at the moment the upload error is not managed
-        uploadFiles(event.businessState.fileToUploadList, event.businessState)
-            .then((BusinessState updatedBusinessState) {
-          return updateBusiness(updatedBusinessState);
-        });
+        businessState = await uploadFiles(businessState.fileToUploadList, businessState);
       }
-      return updateBusiness(event.businessState);
-    }).takeUntil(actions.whereType<UnlistenBusiness>());
+
+      return FirebaseFirestore.instance
+          .collection("business")
+          .doc(businessState.id_firestore)
+          .update(businessState.toJson())
+          .then((value) {
+        print("BusinessService should be updated online ");
+      });
+
+    }).takeUntil(actions.whereType<UnlistenBusiness>()).expand((element) => [
+      UpdatedBusiness(businessState),
+      NavigatePushAction(AppRoutes.business),
+    ]);
   }
 }
 
 class BusinessCreateService implements EpicClass<AppState> {
+  BusinessState businessState;
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<CreateBusiness>().asyncMap((event) async {
-      BusinessState businessState = event.businessState;
-
+      businessState = event.businessState;
+      DocumentReference docReference = FirebaseFirestore.instance.collection("business").doc();
 
       if (businessState.business_type.isNotEmpty && businessState.business_type[0].toString().isEmpty &&
           businessState.business_type.length > 1) {
@@ -162,18 +175,21 @@ class BusinessCreateService implements EpicClass<AppState> {
       }
 
       if (event.businessState.fileToUploadList != null) {
-        await uploadFiles(event.businessState.fileToUploadList, event.businessState)
-            .then((BusinessState updatedBusinessState) {
-          print("BusinessServiceEpic: uploadFiles executed.");
-          return createBusiness(updatedBusinessState);
-        }).catchError((error, stackTrace) {
-          print("BusinessServiceEpic: uploadFiles failed: $error");
-          return null;
-        });
-      } else {
-        return createBusiness(businessState);
+        businessState = await uploadFiles(event.businessState.fileToUploadList, event.businessState);
       }
-    });
+
+      return docReference.set(businessState.toJson()).then((value) async{
+        print("BusinessService has created new Business! ");
+      }).catchError((error) {
+        print(error);
+      }).then((value) {
+        return null;
+      });
+
+    }).expand((element) => [
+      CreatedBusiness(businessState),
+      NavigatePushAction(AppRoutes.businessList),
+    ]);
   }
 }
 

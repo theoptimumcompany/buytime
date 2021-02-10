@@ -10,8 +10,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class InviteGuestForm extends StatefulWidget {
 
-  /*String id;
-  InviteGuestForm(this.id);*/
+  String id;
+  InviteGuestForm(this.id);
   @override
   _InviteGuestFormState createState() => _InviteGuestFormState();
 }
@@ -23,8 +23,55 @@ class _InviteGuestFormState extends State<InviteGuestForm> {
   @override
   void initState() {
     super.initState();
-    //bookingCodeController.text = widget.id;
+    bookingCodeController.text = widget.id;
+    if(bookingCodeController.text.isNotEmpty)
+      WidgetsBinding.instance.addPostFrameCallback((_) => onBookingCode());
     state = new BookingState(business_id: null, business_name: null, business_address: null, guest_number_booked_for: null, start_date: null, end_date: null, booking_code: null, user: null, status: null, wide: null);
+  }
+
+  onBookingCode(){
+    ///Ripple
+    showDialog(
+        context: context,
+        builder: (context) {
+          return  WillPopScope(
+              onWillPop: () async {
+                FocusScope.of(context).unfocus();
+                return false;
+              },
+              child: Container(
+                  height: SizeConfig.safeBlockVertical * 100,
+                  decoration: BoxDecoration(
+                    color: BuytimeTheme.BackgroundCerulean.withOpacity(.8),
+                  ),
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Container(
+                          width: SizeConfig.safeBlockVertical * 20,
+                          height: SizeConfig.safeBlockVertical * 20,
+                          child: Center(
+                            child: SpinKitRipple(
+                              color: Colors.white,
+                              size: SizeConfig.safeBlockVertical * 18,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+              )
+          );
+        });
+
+    Timer(Duration(milliseconds: 5000), (){
+      Navigator.of(context).pop();
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ConfirmBooking(state)),
+      );
+    });
   }
 
 
@@ -162,49 +209,7 @@ class _InviteGuestFormState extends State<InviteGuestForm> {
                               ),
                               onEditingComplete: (){
                                 debugPrint('done');
-                                ///Ripple
-                                showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return  WillPopScope(
-                                          onWillPop: () async {
-                                            FocusScope.of(context).unfocus();
-                                            return false;
-                                          },
-                                          child: Container(
-                                              height: SizeConfig.safeBlockVertical * 100,
-                                              decoration: BoxDecoration(
-                                                color: BuytimeTheme.BackgroundCerulean.withOpacity(.8),
-                                              ),
-                                              child: Center(
-                                                child: Column(
-                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                  children: <Widget>[
-                                                    Container(
-                                                      width: SizeConfig.safeBlockVertical * 20,
-                                                      height: SizeConfig.safeBlockVertical * 20,
-                                                      child: Center(
-                                                        child: SpinKitRipple(
-                                                          color: Colors.white,
-                                                          size: SizeConfig.safeBlockVertical * 18,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              )
-                                          )
-                                      );
-                                    });
-
-                                Timer(Duration(milliseconds: 5000), (){
-                                  Navigator.of(context).pop();
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => ConfirmBooking(state)),
-                                  );
-                                });
-
+                                onBookingCode();
                               },
                             ),
                           ),

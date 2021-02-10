@@ -1,6 +1,8 @@
+import 'package:Buytime/UI/management/business/UI_M_create_business.dart';
 import 'package:Buytime/UI/management/business/UI_M_manage_business.dart';
 import 'package:Buytime/UI/management/business/UI_M_business.dart';
 import 'package:Buytime/reblox/model/business/business_list_state.dart';
+import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
@@ -15,6 +17,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class UI_M_BusinessList extends StatefulWidget {
+  static String route = '/businessList';
   @override
   State<StatefulWidget> createState() => UI_M_BusinessListState();
 }
@@ -46,33 +49,38 @@ class UI_M_BusinessListState extends State<UI_M_BusinessList> {
                 key: _drawerKeyTabs,
                 appBar: BuytimeAppbarManager(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
-                      child: IconButton(
-                        icon: const Icon(
-                          Icons.menu,
-                          color: BuytimeTheme.TextWhite,
-                          size: 30.0,
-                        ),
-                        tooltip: AppLocalizations.of(context).showMenu,
-                        onPressed: () {
-                          _drawerKeyTabs.currentState.openDrawer();
-                        },
-                      ),
-                    ),
-                    Container(
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 0.0),
-                        child: Text(
-                          AppLocalizations.of(context).businessManagement,
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                            color: BuytimeTheme.TextWhite,
-                            fontSize: media.height * 0.025,
-                            fontWeight: FontWeight.w400,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
+                          child: IconButton(
+                            icon: const Icon(
+                              Icons.menu,
+                              color: BuytimeTheme.TextWhite,
+                              size: 30.0,
+                            ),
+                            tooltip: AppLocalizations.of(context).showMenu,
+                            onPressed: () {
+                              _drawerKeyTabs.currentState.openDrawer();
+                            },
                           ),
                         ),
-                      ),
+                        Container(
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 20.0),
+                            child: Text(
+                              AppLocalizations.of(context).businessManagement,
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                color: BuytimeTheme.TextWhite,
+                                fontSize: SizeConfig.safeBlockHorizontal * 5,
+                                fontWeight: FontWeight.w400, ///w400
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
@@ -86,7 +94,7 @@ class UI_M_BusinessListState extends State<UI_M_BusinessList> {
                         onPressed: () {
                           Navigator.pushReplacement(
                             context,
-                            MaterialPageRoute(builder: (context) => UI_M_ManageBusiness(-1)),
+                            MaterialPageRoute(builder: (context) => UI_M_CreateBusiness()),
                           );
                         },
                       ),
@@ -99,7 +107,7 @@ class UI_M_BusinessListState extends State<UI_M_BusinessList> {
                   children: [
                     Expanded(
                       child: Padding(
-                        padding: const EdgeInsets.only(top: 20.0),
+                        padding: const EdgeInsets.only(top: 10.0),
                         child: businessListState != null && businessListState.length > 0
                             ? ListView.builder(
                                 scrollDirection: Axis.vertical,

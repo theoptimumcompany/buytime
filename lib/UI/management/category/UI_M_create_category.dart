@@ -189,36 +189,41 @@ class UI_M_CreateCategoryState extends State<UI_M_CreateCategory> {
                         resizeToAvoidBottomInset: false,
                         appBar: BuytimeAppbarManager(
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
-                              child: IconButton(
-                                icon: const Icon(
-                                  Icons.arrow_back_ios_rounded,
-                                  color: Colors.white,
-                                  size: 25.0,
-                                ),
-                                tooltip: AppLocalizations.of(context).comeBack,
-                                onPressed: () {
-                                  Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => ManageCategory()),
-                                  );
-                                },
-                              ),
-                            ),
-                            Container(
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 0.0),
-                                child: Text(
-                                  AppLocalizations.of(context).createCategory,
-                                  textAlign: TextAlign.start,
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: media.height * 0.028,
-                                    fontWeight: FontWeight.w400,
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
+                                  child: IconButton(
+                                    icon: const Icon(
+                                      Icons.keyboard_arrow_left,
+                                      color: Colors.white,
+                                      size: 25.0,
+                                    ),
+                                    tooltip: AppLocalizations.of(context).comeBack,
+                                    onPressed: () {
+                                      Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => ManageCategory()),
+                                      );
+                                    },
                                   ),
                                 ),
-                              ),
+                                Container(
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 20.0),
+                                    child: Text(
+                                      AppLocalizations.of(context).createCategory,
+                                      textAlign: TextAlign.start,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: media.height * 0.028,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),

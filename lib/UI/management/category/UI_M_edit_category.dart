@@ -505,39 +505,42 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                         resizeToAvoidBottomInset: false,
                         appBar: BuytimeAppbarManager(
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
-                              child: IconButton(
-                                icon: const Icon(
-                                  Icons.arrow_back_ios_rounded,
-                                  color: Colors.white,
-                                  size: 25.0,
-                                ),
-                                tooltip: AppLocalizations.of(context).comeBack,
-                                onPressed: () {
-                                  Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => ManageCategory()),
-                                  );
-                                },
-                              ),
-                            ),
-                            Flexible(
-                              child: Container(
-                                child: Padding(
-                                  padding: const EdgeInsets.only(left: 0.0),
-                                  child: Text(
-                                    AppLocalizations.of(context).editSpace + snapshot.category.name,
-                                    textAlign: TextAlign.start,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
+                                  child: IconButton(
+                                    icon: const Icon(
+                                      Icons.keyboard_arrow_left,
                                       color: Colors.white,
-                                      fontSize: media.height * 0.028,
-                                      fontWeight: FontWeight.w400,
+                                      size: 25.0,
+                                    ),
+                                    tooltip: AppLocalizations.of(context).comeBack,
+                                    onPressed: () {
+                                      Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => ManageCategory()),
+                                      );
+                                    },
+                                  ),
+                                ),
+                                Container(
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 20.0),
+                                    child: Text(
+                                      AppLocalizations.of(context).editSpace + snapshot.category.name,
+                                      textAlign: TextAlign.start,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: media.height * 0.028,
+                                        fontWeight: FontWeight.w400,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
+                              ],
                             ),
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),

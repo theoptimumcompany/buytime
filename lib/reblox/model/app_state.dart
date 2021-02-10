@@ -25,6 +25,8 @@ class AppRoutes {
   static const orderDetail = "/orderDetail";
   static const bookingDetails = "/bookingDetails";
   static const categories = "/categories";
+  static const businessList = "/businessList";
+  static const business = "/business";
 
 }
 
