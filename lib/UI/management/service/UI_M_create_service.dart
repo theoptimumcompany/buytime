@@ -9,6 +9,7 @@ import 'package:Buytime/reblox/reducer/service_reducer.dart';
 import 'package:Buytime/reusable/appbar/manager_buytime_appbar.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -43,8 +44,7 @@ class UI_CreateServiceState extends State<UI_CreateService> {
   }
 
   bool validatePrice(String value) {
-    Pattern pattern = r'(^\d*\.?\d*)$';
-    RegExp regex = new RegExp(pattern);
+    RegExp regex = RegExp(r'(^\d*\.?\d*)');
     return (!regex.hasMatch(value)) ? false : true;
   }
 
@@ -57,13 +57,11 @@ class UI_CreateServiceState extends State<UI_CreateService> {
   }
 
   void setCategoryList() {
-    CategoryTree categoryNode =
-        StoreProvider.of<AppState>(context).state.categoryTree;
+    CategoryTree categoryNode = StoreProvider.of<AppState>(context).state.categoryTree;
     List<Parent> items = [];
 
     if (categoryNode.categoryNodeList != null) {
-      if (categoryNode.categoryNodeList.length != 0 &&
-          categoryNode.categoryNodeList.length != null) {
+      if (categoryNode.categoryNodeList.length != 0 && categoryNode.categoryNodeList.length != null) {
         List<dynamic> list = categoryNode.categoryNodeList;
         items = openTree(list, items);
       }
@@ -96,28 +94,20 @@ class UI_CreateServiceState extends State<UI_CreateService> {
         padding: const EdgeInsets.all(2.0),
         child: ChoiceChip(
           label: Text(item.name),
-          selected:
-              selectedCategoryList.any((element) => element.id == item.id),
+          selected: selectedCategoryList.any((element) => element.id == item.id),
           selectedColor: Theme.of(context).accentColor,
-          labelStyle: TextStyle(
-              color:
-                  selectedCategoryList.any((element) => element.id == item.id)
-                      ? BuytimeTheme.TextBlack
-                      : BuytimeTheme.TextWhite),
+          labelStyle: TextStyle(color: selectedCategoryList.any((element) => element.id == item.id) ? BuytimeTheme.TextBlack : BuytimeTheme.TextWhite),
           onSelected: (selected) {
             setState(() {
-              if (selectedCategoryList
-                  .any((element) => element.id == item.id)) {
-                selectedCategoryList
-                    .removeWhere((element) => element.id == item.id);
+              if (selectedCategoryList.any((element) => element.id == item.id)) {
+                selectedCategoryList.removeWhere((element) => element.id == item.id);
               } else {
                 selectedCategoryList.add(item);
               }
             });
 
             ///Aggiorno lo store con la lista di categorie selezionate salvando id e rootId
-            StoreProvider.of<AppState>(context)
-                .dispatch(SetServiceSelectedCategories(selectedCategoryList));
+            StoreProvider.of<AppState>(context).dispatch(SetServiceSelectedCategories(selectedCategoryList));
           },
         ),
       ));
@@ -139,12 +129,10 @@ class UI_CreateServiceState extends State<UI_CreateService> {
                 children: [
                   Container(
                     child: IconButton(
-                      icon: Icon(Icons.chevron_left,
-                          color: Colors.white, size: media.width * 0.09),
+                      icon: Icon(Icons.chevron_left, color: Colors.white, size: media.width * 0.09),
                       onPressed: () => Navigator.pushReplacement(
                         context,
-                        MaterialPageRoute(
-                            builder: (context) => UI_M_ServiceList()),
+                        MaterialPageRoute(builder: (context) => UI_M_ServiceList()),
                       ),
                     ),
                   ),
@@ -161,10 +149,12 @@ class UI_CreateServiceState extends State<UI_CreateService> {
                   ),
                   Container(
                     child: IconButton(
-                        icon: Icon(Icons.check,
-                            color: Colors.white, size: media.width * 0.07),
+                        icon: Icon(Icons.check, color: Colors.white, size: media.width * 0.07),
                         onPressed: () {
-                          print("Salva nuovo servizio");
+                          // if (validateAndSave() || validateChosenCategories()) {
+                          if (validateAndSave()) {
+                            print("Salva nuovo servizio");
+                          }
                         }),
                   ),
                 ],
@@ -184,18 +174,11 @@ class UI_CreateServiceState extends State<UI_CreateService> {
                                 child: Container(
                                   color: Colors.yellow,
                                   child: WidgetServicePhoto(
-                                    remotePath: "service/" +
-                                        (snapshot.business.name != null
-                                            ? snapshot.business.name + "/"
-                                            : "") +
-                                        snapshot.serviceState.name +
-                                        "_1",
+                                    remotePath: "service/" + (snapshot.business.name != null ? snapshot.business.name + "/" : "") + snapshot.serviceState.name + "_1",
                                     maxPhoto: 1,
-                                    cropAspectRatioPreset:
-                                        CropAspectRatioPreset.square,
+                                    cropAspectRatioPreset: CropAspectRatioPreset.square,
                                     onFilePicked: (fileToUpload) {
-                                      print(
-                                          "UI_create_service - callback upload image 1!");
+                                      print("UI_create_service - callback upload image 1!");
                                       // StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInService(fileToUpload));
                                     },
                                   ),
@@ -206,35 +189,21 @@ class UI_CreateServiceState extends State<UI_CreateService> {
                                   children: [
                                     Container(
                                       child: WidgetServicePhoto(
-                                        remotePath: "service/" +
-                                            (snapshot.business.name != null
-                                                ? snapshot.business.name + "/"
-                                                : "") +
-                                            snapshot.serviceState.name +
-                                            "_2",
+                                        remotePath: "service/" + (snapshot.business.name != null ? snapshot.business.name + "/" : "") + snapshot.serviceState.name + "_2",
                                         maxPhoto: 1,
-                                        cropAspectRatioPreset:
-                                            CropAspectRatioPreset.square,
+                                        cropAspectRatioPreset: CropAspectRatioPreset.square,
                                         onFilePicked: (fileToUpload) {
-                                          print(
-                                              "UI_create_service -  callback upload image 2!");
+                                          print("UI_create_service -  callback upload image 2!");
                                           // StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInService(fileToUpload));
                                         },
                                       ),
                                     ),
                                     WidgetServicePhoto(
-                                      remotePath: "service/" +
-                                          (snapshot.business.name != null
-                                              ? snapshot.business.name + "/"
-                                              : "") +
-                                          snapshot.serviceState.name +
-                                          "_3",
+                                      remotePath: "service/" + (snapshot.business.name != null ? snapshot.business.name + "/" : "") + snapshot.serviceState.name + "_3",
                                       maxPhoto: 1,
-                                      cropAspectRatioPreset:
-                                          CropAspectRatioPreset.square,
+                                      cropAspectRatioPreset: CropAspectRatioPreset.square,
                                       onFilePicked: (fileToUpload) {
-                                        print(
-                                            "UI_create_service -  callback upload image 3!");
+                                        print("UI_create_service -  callback upload image 3!");
                                         //StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInService(fileToUpload));
                                       },
                                     ),
@@ -250,34 +219,27 @@ class UI_CreateServiceState extends State<UI_CreateService> {
                         child: Center(
                           child: Container(
                             width: media.width * 0.9,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8.0),
-                                border: Border.all(color: Colors.grey)),
-                            child: Form(
-                                child: Padding(
-                              padding: const EdgeInsets.only(
-                                  top: 0.0,
-                                  bottom: 5.0,
-                                  left: 10.0,
-                                  right: 10.0),
+                            // decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 0.0, bottom: 5.0, left: 10.0, right: 10.0),
                               child: TextFormField(
                                 initialValue: _serviceName,
-                                validator: (value) => value.isEmpty
-                                    ? 'Service name is blank'
-                                    : null,
+                                validator: (value) => value.isEmpty ? 'Service name is blank' : null,
                                 onChanged: (value) {
-                                  _serviceName = value;
-                                  StoreProvider.of<AppState>(context)
-                                      .dispatch(SetServiceName(_serviceName));
+                                  if (validateAndSave()) {
+                                    _serviceName = value;
+                                    StoreProvider.of<AppState>(context).dispatch(SetServiceName(_serviceName));
+                                  }
                                 },
                                 onSaved: (value) {
-                                  _serviceName = value;
+                                  if (validateAndSave()) {
+                                    _serviceName = value;
+                                    StoreProvider.of<AppState>(context).dispatch(SetServiceName(_serviceName));
+                                  }
                                 },
-                                decoration: InputDecoration(
-                                    labelText:
-                                        AppLocalizations.of(context).name),
+                                decoration: InputDecoration(labelText: AppLocalizations.of(context).name),
                               ),
-                            )),
+                            ),
                           ),
                         ),
                       ),
@@ -286,34 +248,23 @@ class UI_CreateServiceState extends State<UI_CreateService> {
                         child: Center(
                           child: Container(
                             width: media.width * 0.9,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8.0),
-                                border: Border.all(color: Colors.grey)),
-                            child: Form(
-                                child: Padding(
-                              padding: const EdgeInsets.only(
-                                  top: 0.0,
-                                  bottom: 5.0,
-                                  left: 10.0,
-                                  right: 10.0),
+                            //decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 0.0, bottom: 5.0, left: 10.0, right: 10.0),
                               child: TextFormField(
                                 keyboardType: TextInputType.multiline,
                                 maxLines: null,
                                 initialValue: _serviceDescription,
                                 onChanged: (value) {
                                   _serviceDescription = value;
-                                  StoreProvider.of<AppState>(context).dispatch(
-                                      SetServiceDescription(
-                                          _serviceDescription));
+                                  StoreProvider.of<AppState>(context).dispatch(SetServiceDescription(_serviceDescription));
                                 },
                                 onSaved: (value) {
                                   _serviceDescription = value;
                                 },
-                                decoration: InputDecoration(
-                                    labelText: AppLocalizations.of(context)
-                                        .description),
+                                decoration: InputDecoration(labelText: AppLocalizations.of(context).description),
                               ),
-                            )),
+                            ),
                           ),
                         ),
                       ),
@@ -322,42 +273,37 @@ class UI_CreateServiceState extends State<UI_CreateService> {
                         child: Center(
                           child: Container(
                             width: media.width * 0.9,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8.0),
-                                border: Border.all(color: Colors.grey)),
-                            child: Form(
-                                child: Padding(
-                              padding: const EdgeInsets.only(
-                                  top: 0.0,
-                                  bottom: 5.0,
-                                  left: 10.0,
-                                  right: 10.0),
+                            //decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 0.0, bottom: 5.0, left: 10.0, right: 10.0),
                               child: TextFormField(
                                 initialValue: _servicePrice.toString(),
                                 keyboardType: TextInputType.number,
-                                validator: (value) => value.isEmpty
-                                    ? 'Service Price is blank'
-                                    : validatePrice(value)
-                                        ? null
-                                        : 'Not a valid price',
+                                inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d*)'))],
                                 onChanged: (value) {
+                                  if (value == "") {
+                                    value = "0.0";
+                                  }
                                   _servicePrice = double.parse(value);
-                                  StoreProvider.of<AppState>(context)
-                                      .dispatch(SetServicePrice(_servicePrice));
+                                  StoreProvider.of<AppState>(context).dispatch(SetServicePrice(_servicePrice));
                                 },
                                 onSaved: (value) {
+                                  if (value == "") {
+                                    value = "0.0";
+                                  }
                                   _servicePrice = double.parse(value);
+                                  StoreProvider.of<AppState>(context).dispatch(SetServicePrice(_servicePrice));
                                 },
                                 decoration: InputDecoration(
                                   labelText: AppLocalizations.of(context).price,
                                 ),
                               ),
-                            )),
+                            ),
                           ),
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(top: 20.0, bottom: 10),
+                        padding: const EdgeInsets.only(top: 20.0),
                         child: Container(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -381,30 +327,25 @@ class UI_CreateServiceState extends State<UI_CreateService> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(bottom: 15.0),
-                        child: Center(
-                          child: Container(
-                            width: media.width * 0.9,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8.0),
-                                border: Border.all(color: Colors.grey)),
-                            child: Form(
-                                child: Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 0.0,
-                                        bottom: 5.0,
-                                        left: 10.0,
-                                        right: 10.0),
-                                    child: Text(
-                                      'You have to select at least one category',
-                                      style: TextStyle(
-                                        fontSize: media.height * 0.018,
-                                        color: BuytimeTheme.ErrorRed,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ))),
-                          ),
-                        ),
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: Container(
+                            child: Row(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(
+                                left: media.width * 0.05,
+                              ),
+                              child: Text(
+                                'You have to select at least one category',
+                                style: TextStyle(
+                                  fontSize: media.height * 0.016,
+                                  color: BuytimeTheme.ErrorRed,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          ],
+                        )),
                       ),
 
                       ///Divider under category selection
@@ -445,27 +386,20 @@ class UI_CreateServiceState extends State<UI_CreateService> {
                                 // mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Padding(
-                                    padding: EdgeInsets.only(
-                                        left: media.width * 0.05,
-                                        right: media.width * 0.07),
+                                    padding: EdgeInsets.only(left: media.width * 0.05, right: media.width * 0.07),
                                     child: Container(
-                                      child: Icon(Icons.remove_red_eye,
-                                          color: BuytimeTheme.SymbolGrey,
-                                          size: media.width * 0.07),
+                                      child: Icon(Icons.remove_red_eye, color: BuytimeTheme.SymbolGrey, size: media.width * 0.07),
                                     ),
                                   ),
                                   Expanded(
                                     child: Container(
                                       decoration: BoxDecoration(
                                         border: Border(
-                                          bottom: BorderSide(
-                                              width: 1.0,
-                                              color: BuytimeTheme.DividerGrey),
+                                          bottom: BorderSide(width: 1.0, color: BuytimeTheme.DividerGrey),
                                         ),
                                       ),
                                       child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
                                           Container(
                                               child: Text(
@@ -480,18 +414,12 @@ class UI_CreateServiceState extends State<UI_CreateService> {
                                           Container(
                                             child: Radio(
                                                 value: ServiceVisibility.Active,
-                                                groupValue:
-                                                    radioServiceVisibility,
+                                                groupValue: radioServiceVisibility,
                                                 onChanged: (value) {
                                                   setState(() {
-                                                    radioServiceVisibility =
-                                                        value;
+                                                    radioServiceVisibility = value;
                                                   });
-                                                  StoreProvider.of<AppState>(
-                                                          context)
-                                                      .dispatch(
-                                                          SetServiceVisibility(
-                                                              value));
+                                                  StoreProvider.of<AppState>(context).dispatch(SetServiceVisibility(value));
                                                 }),
                                           ),
                                         ],
@@ -504,27 +432,20 @@ class UI_CreateServiceState extends State<UI_CreateService> {
                                 // mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Padding(
-                                    padding: EdgeInsets.only(
-                                        left: media.width * 0.05,
-                                        right: media.width * 0.07),
+                                    padding: EdgeInsets.only(left: media.width * 0.05, right: media.width * 0.07),
                                     child: Container(
-                                      child: Icon(Icons.visibility_off,
-                                          color: BuytimeTheme.SymbolGrey,
-                                          size: media.width * 0.07),
+                                      child: Icon(Icons.visibility_off, color: BuytimeTheme.SymbolGrey, size: media.width * 0.07),
                                     ),
                                   ),
                                   Expanded(
                                     child: Container(
                                       decoration: BoxDecoration(
                                         border: Border(
-                                          bottom: BorderSide(
-                                              width: 1.0,
-                                              color: BuytimeTheme.DividerGrey),
+                                          bottom: BorderSide(width: 1.0, color: BuytimeTheme.DividerGrey),
                                         ),
                                       ),
                                       child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
                                           Container(
                                               child: Text(
@@ -538,20 +459,13 @@ class UI_CreateServiceState extends State<UI_CreateService> {
                                           )),
                                           Container(
                                             child: Radio(
-                                                value: ServiceVisibility
-                                                    .Deactivated,
-                                                groupValue:
-                                                    radioServiceVisibility,
+                                                value: ServiceVisibility.Deactivated,
+                                                groupValue: radioServiceVisibility,
                                                 onChanged: (value) {
                                                   setState(() {
-                                                    radioServiceVisibility =
-                                                        value;
+                                                    radioServiceVisibility = value;
                                                   });
-                                                  StoreProvider.of<AppState>(
-                                                          context)
-                                                      .dispatch(
-                                                          SetServiceVisibility(
-                                                              value));
+                                                  StoreProvider.of<AppState>(context).dispatch(SetServiceVisibility(value));
                                                 }),
                                           ),
                                         ],
@@ -564,27 +478,20 @@ class UI_CreateServiceState extends State<UI_CreateService> {
                                 // mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Padding(
-                                    padding: EdgeInsets.only(
-                                        left: media.width * 0.05,
-                                        right: media.width * 0.07),
+                                    padding: EdgeInsets.only(left: media.width * 0.05, right: media.width * 0.07),
                                     child: Container(
-                                      child: Icon(Icons.do_disturb_alt_outlined,
-                                          color: BuytimeTheme.SymbolGrey,
-                                          size: media.width * 0.07),
+                                      child: Icon(Icons.do_disturb_alt_outlined, color: BuytimeTheme.SymbolGrey, size: media.width * 0.07),
                                     ),
                                   ),
                                   Expanded(
                                     child: Container(
                                       decoration: BoxDecoration(
                                         border: Border(
-                                          bottom: BorderSide(
-                                              width: 1.0,
-                                              color: BuytimeTheme.DividerGrey),
+                                          bottom: BorderSide(width: 1.0, color: BuytimeTheme.DividerGrey),
                                         ),
                                       ),
                                       child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
                                           Container(
                                               child: Text(
@@ -598,20 +505,13 @@ class UI_CreateServiceState extends State<UI_CreateService> {
                                           )),
                                           Container(
                                             child: Radio(
-                                                value:
-                                                    ServiceVisibility.Invisible,
-                                                groupValue:
-                                                    radioServiceVisibility,
+                                                value: ServiceVisibility.Invisible,
+                                                groupValue: radioServiceVisibility,
                                                 onChanged: (value) {
                                                   setState(() {
-                                                    radioServiceVisibility =
-                                                        value;
+                                                    radioServiceVisibility = value;
                                                   });
-                                                  StoreProvider.of<AppState>(
-                                                          context)
-                                                      .dispatch(
-                                                          SetServiceVisibility(
-                                                              value));
+                                                  StoreProvider.of<AppState>(context).dispatch(SetServiceVisibility(value));
                                                 }),
                                           ),
                                         ],
