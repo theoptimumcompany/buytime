@@ -21,10 +21,10 @@ class Item {
   bool isExpanded;
 }
 
-class UI_M_ManageCategory extends StatefulWidget {
+class ManageCategory extends StatefulWidget {
   final String title = 'Categories';
 
-  UI_M_ManageCategory({this.edited = false, this.created = false, this.deleted = false});
+  ManageCategory({this.edited = false, this.created = false, this.deleted = false});
 
   bool edited;
   bool created;
@@ -32,10 +32,10 @@ class UI_M_ManageCategory extends StatefulWidget {
   final GlobalKey<ScaffoldState> _keyScaffoldCategory = GlobalKey<ScaffoldState>();
 
   @override
-  State<StatefulWidget> createState() => UI_M_ManageCategoryState();
+  State<StatefulWidget> createState() => ManageCategoryState();
 }
 
-class UI_M_ManageCategoryState extends State<UI_M_ManageCategory> {
+class ManageCategoryState extends State<ManageCategory> {
   @override
   void initState() {
     super.initState();

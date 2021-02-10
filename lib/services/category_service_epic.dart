@@ -1,12 +1,16 @@
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/category/category_state.dart';
+import 'package:Buytime/reblox/model/file/optimum_file_to_upload.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/model/service/snippet/service_snippet_state.dart';
+import 'package:Buytime/reblox/navigation/navigation_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_reducer.dart';
 import 'package:Buytime/reblox/model/snippet/manager.dart';
 import 'package:Buytime/reblox/model/snippet/worker.dart';
+import 'package:Buytime/services/file_upload_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:redux_epics/redux_epics.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -290,14 +294,28 @@ class CategoryUpdateService implements EpicClass<AppState> {
 
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    return actions.whereType<UpdateCategory>().asyncMap((event) {
+    return actions.whereType<UpdateCategory>().asyncMap((event) async{
       categoryState = event.categoryState;
+      DocumentReference docReference = FirebaseFirestore.instance
+          .collection('business')
+          .doc(store.state.business.id_firestore)
+          .collection('category')
+          .doc();
       print("CategoryService updating category: " + categoryState.name);
 
 
       categoryState.categoryRootId = categoryState.parent.parentRootId;
       ///Va controllato se ha figli, e se li ha vanno aggiornati i categoryRootId e parent.parentRootId a cascata
       seekNode(store.state.categoryTree.categoryNodeList, categoryState.id, store.state.business.id_firestore, categoryState.categoryRootId);
+
+      if (event.categoryState.fileToUpload != null){
+        categoryState = await uploadFile(event.categoryState.fileToUpload, event.categoryState).catchError((error, stackTrace) {
+          print("category_service_epic: uploadFiles failed: $error");
+          return null;
+        });
+        print("category_service_epic: uploadFiles executed.");
+        debugPrint('category_service_epic: categoryImage in: ${categoryState.categoryImage}');
+      }
 
       return FirebaseFirestore.instance
           .collection("business")
@@ -308,15 +326,19 @@ class CategoryUpdateService implements EpicClass<AppState> {
           .then((value) {
         print("Category Service should be updated online ");
       });
-    }).expand((element) => [UpdatedCategory(categoryState)]);
+    }).expand((element) => [
+      UpdatedCategory(categoryState),
+      NavigatePushAction(AppRoutes.categories),
+    ]);
   }
 }
 
 class CategoryCreateService implements EpicClass<AppState> {
+  CategoryState categoryState;
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    return actions.whereType<CreateCategory>().asyncMap((event) {
-      CategoryState categoryState = event.categoryState;
+    return actions.whereType<CreateCategory>().asyncMap((event) async{
+      categoryState = event.categoryState;
       DocumentReference docReference = FirebaseFirestore.instance
           .collection('business')
           .doc(store.state.business.id_firestore)
@@ -331,21 +353,43 @@ class CategoryCreateService implements EpicClass<AppState> {
       else{
         categoryState.categoryRootId = categoryState.parent.parentRootId;
       }
+      //categoryState.categoryImage = store.state.category.categoryImage;
       categoryState.businessId = store.state.business.id_firestore;
       categoryState.id = docReference.id;
       ServiceState serviceState = ServiceState().toEmpty();
       categoryState.categorySnippet.mostSoldService = serviceState;
-      return docReference.set(categoryState.toJson()).then((value) {
-        print("CategoryService has created new category " + docReference.id);
 
-        return new CreatedCategory(categoryState);
+      if (event.categoryState.fileToUpload != null){
+        categoryState = await uploadFile(event.categoryState.fileToUpload, event.categoryState).catchError((error, stackTrace) {
+          print("category_service_epic: uploadFiles failed: $error");
+          return null;
+        });
+        print("category_service_epic: uploadFiles executed.");
+        debugPrint('category_service_epic: categoryImage in: ${categoryState.categoryImage}');
+      }
+
+      return docReference.set(categoryState.toJson()).then((value) async{
+        print("CategoryService has created new category " + docReference.id);
       }).catchError((error) {
         print(error);
       }).then((value) {
         return null;
       });
-    });
+
+    }).expand((element) => [
+      CreatedCategory(categoryState),
+      NavigatePushAction(AppRoutes.categories),
+    ]);
   }
+}
+
+Future<CategoryState> uploadFile(OptimumFileToUpload fileToUpload, CategoryState categoryState) async {
+  String fileUrl = await uploadToFirebaseStorage(fileToUpload);
+
+  debugPrint('category_service_epic: fileUrl: $fileUrl');
+  categoryState.categoryImage = fileUrl.toString();
+  debugPrint('category_service_epic: categoryImage: ${categoryState.categoryImage}');
+  return categoryState;
 }
 
 class CategoryDeleteService implements EpicClass<AppState> {

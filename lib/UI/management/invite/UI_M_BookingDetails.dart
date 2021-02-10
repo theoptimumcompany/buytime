@@ -1,5 +1,4 @@
 import 'dart:core';
-import 'dart:html';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/navigation/navigation_middleware.dart';

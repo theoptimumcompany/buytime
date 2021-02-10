@@ -219,7 +219,7 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
 
                                 Navigator.pushReplacement(
                                   context,
-                                  MaterialPageRoute(builder: (context) => UI_M_ManageCategory()),
+                                  MaterialPageRoute(builder: (context) => ManageCategory()),
                                 );
                               },
                               borderRadius: BorderRadius.all(Radius.circular(5.0)),

@@ -1,3 +1,4 @@
+import 'package:Buytime/UI/management/category/UI_M_manage_category.dart';
 import 'package:Buytime/UI/management/invite/UI_M_BookingDetails.dart';
 import 'package:Buytime/reblox/model/booking/booking_list_state.dart';
 import 'package:Buytime/reblox/model/category/invitation/category_invite_state.dart';
@@ -128,6 +129,8 @@ class Buytime extends StatelessWidget {
         return MainRoute(Home(), settings: settings);
       case AppRoutes.bookingDetails:
         return FabRoute(BookingDetails(), settings: settings);
+      case AppRoutes.categories:
+        return FabRoute(ManageCategory(), settings: settings);
     }
   }
 

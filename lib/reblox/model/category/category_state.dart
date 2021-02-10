@@ -1,8 +1,15 @@
 import 'package:Buytime/reblox/model/category/snippet/category_snippet_state.dart';
+import 'package:Buytime/reblox/model/file/optimum_file_to_upload.dart';
 import 'package:Buytime/reblox/model/snippet/generic.dart';
 import 'package:Buytime/reblox/model/snippet/manager.dart';
 import 'package:Buytime/reblox/model/snippet/parent.dart';
 import 'package:Buytime/reblox/model/snippet/worker.dart';
+
+enum CustomTag {
+  showcase,
+  external,
+  other,
+}
 
 class CategoryState {
   String name;
@@ -17,6 +24,9 @@ class CategoryState {
   List<Worker> worker;
   List<String> workerMailList;
   CategorySnippet categorySnippet;
+  OptimumFileToUpload fileToUpload;
+  String categoryImage;
+  String customTag;
 
   CategoryState({
     this.name,
@@ -31,6 +41,9 @@ class CategoryState {
     this.worker,
     this.workerMailList,
     this.categorySnippet,
+    this.fileToUpload,
+    this.categoryImage,
+    this.customTag
   });
 
   CategoryState toEmpty() {
@@ -47,6 +60,9 @@ class CategoryState {
       worker: [],
       workerMailList: [],
       categorySnippet: CategorySnippet().toEmpty(),
+      fileToUpload: null,
+        categoryImage: '',
+      customTag: ''
     );
   }
 
@@ -63,10 +79,32 @@ class CategoryState {
     this.worker = category.worker;
     this.workerMailList = category.workerMailList;
     this.categorySnippet = category.categorySnippet;
+    this.fileToUpload = category.fileToUpload;
+    this.categoryImage = category.categoryImage;
+    this.customTag = category.customTag;
   }
 
-  categoryStateFieldUpdate(String name, String id, int level, int children, String categoryRootId, Parent parent, List<Manager> manager, List<String> managerMailList, String businessId,
-      List<Worker> worker, List<String> workerMailList, CategorySnippet categorySnippet) {
+  String enumToString(CustomTag customTag){
+    return customTag.toString().split('.').last;
+  }
+
+  categoryStateFieldUpdate(
+      String name,
+          String id,
+      int level,
+          int children,
+      String categoryRootId,
+      Parent parent,
+      List<Manager> manager,
+      List<String> managerMailList,
+      String businessId,
+      List<Worker> worker,
+      List<String> workerMailList,
+      CategorySnippet categorySnippet,
+      OptimumFileToUpload fileToUpload,
+      String categoryImage,
+      String customTag
+      ) {
     CategoryState(
       name: name ?? this.name,
       id: id ?? this.id,
@@ -80,6 +118,9 @@ class CategoryState {
       worker: worker ?? this.worker,
       workerMailList: workerMailList ?? this.workerMailList,
       categorySnippet: categorySnippet ?? this.categorySnippet,
+      fileToUpload: fileToUpload ?? this.fileToUpload,
+        categoryImage: categoryImage ?? this.categoryImage,
+      customTag: customTag ?? this.customTag
     );
   }
 
@@ -95,7 +136,11 @@ class CategoryState {
       String businessId,
       List<Worker> worker,
       List<String> workerMailList,
-      CategorySnippet categorySnippet}) {
+      CategorySnippet categorySnippet,
+        OptimumFileToUpload fileToUpload,
+        String categoryImage,
+        String customTag
+      }) {
     return CategoryState(
       name: name ?? this.name,
       id: id ?? this.id,
@@ -109,6 +154,9 @@ class CategoryState {
       worker: worker ?? this.worker,
       workerMailList: workerMailList ?? this.workerMailList,
       categorySnippet: categorySnippet ?? this.categorySnippet,
+      fileToUpload: fileToUpload ?? this.fileToUpload,
+        categoryImage: categoryImage ?? this.categoryImage,
+        customTag:  customTag ?? this.customTag
     );
   }
 
@@ -154,7 +202,9 @@ class CategoryState {
           );
         })),
         workerMailList = List<String>.from(json['workerMailList']),
-        categorySnippet = CategorySnippet.fromJson(json['snippet']);
+        categorySnippet = CategorySnippet.fromJson(json['snippet']),
+        categoryImage = json['categoryImage'],
+        customTag = json['customTag'];
 
   Map<String, dynamic> toJson() => {
         'name': name,
@@ -169,5 +219,7 @@ class CategoryState {
         'worker': convertWorkerToJson(worker),
         'workerMailList': workerMailList,
         'snippet': categorySnippet.toJson(),
+        'categoryImage': categoryImage,
+        'customTag': customTag,
       };
 }

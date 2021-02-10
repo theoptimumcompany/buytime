@@ -1,17 +1,23 @@
 import 'package:Buytime/UI/management/category/UI_M_manage_category.dart';
+import 'package:Buytime/reblox/model/category/category_state.dart';
 import 'package:Buytime/reblox/model/category/invitation/category_invite_state.dart';
 import 'package:Buytime/reblox/model/category/tree/category_tree_state.dart';
+import 'package:Buytime/reblox/reducer/business_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_invite_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_tree_reducer.dart';
 import 'package:Buytime/reblox/model/snippet/manager.dart';
 import 'package:Buytime/reblox/model/snippet/parent.dart';
 import 'package:Buytime/reblox/model/snippet/worker.dart';
+import 'package:Buytime/reusable/form/optimum_form_multi_photo.dart';
+import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/reducer/category_reducer.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:share/share.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -32,6 +38,8 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
 
   List<DropdownMenuItem<Parent>> _dropdownMenuParentCategory = [];
 
+  List<DropdownMenuItem<CustomTag>> _dropdownMenuCustomTag = [];
+
   var size;
 
   String _selectedCategoryName = "";
@@ -51,6 +59,9 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
 
   /// Invite mail String
   String inviteMail = '';
+
+  CustomTag customTag;
+  String bookingRequest = '';
 
   void initState() {
     super.initState();
@@ -74,6 +85,10 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
       StoreProvider.of<AppState>(context).dispatch(SetCategoryLevel(contentSelectDrop.level + 1));
       StoreProvider.of<AppState>(context).dispatch(SetCategoryParent(contentSelectDrop));
     }
+  }
+
+  setNewCategoryCustomTag(CustomTag customTag) {
+    StoreProvider.of<AppState>(context).dispatch(SetCustomTag(CategoryState().enumToString(customTag)));
   }
 
   void buildDropDownMenuItemsParent(Parent item) {
@@ -101,6 +116,22 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
       _dropdownMenuParentCategory = items;
     }
   }
+
+  /*void buildDropDownMenuItemsCustomTag() {
+    List<DropdownMenuItem<CustomTag>> items = [];
+
+    items.insert(
+      0,
+      DropdownMenuItem(
+        child: Text(
+          item.name,
+          overflow: TextOverflow.ellipsis,
+        ),
+        value: item,
+      ),
+    );
+    _dropdownMenuParentCategory = items;
+  }*/
 
   int numberLevel = 0;
   bool canMoveToParent = true;
@@ -166,7 +197,7 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
   Future<bool> _onWillPop() {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => UI_M_ManageCategory()),
+      MaterialPageRoute(builder: (context) => ManageCategory()),
     );
   }
 
@@ -456,430 +487,548 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
             _selectedCategoryName = snapshot.category.name;
           }
 
-          return WillPopScope(
-            onWillPop: _onWillPop,
-            child: Scaffold(
-              resizeToAvoidBottomInset: false,
-              appBar: BuytimeAppbarManager(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
-                    child: IconButton(
-                      icon: const Icon(
-                        Icons.arrow_back_ios_rounded,
-                        color: Colors.white,
-                        size: 25.0,
-                      ),
-                      tooltip: AppLocalizations.of(context).comeBack,
-                      onPressed: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (context) => UI_M_ManageCategory()),
-                        );
-                      },
-                    ),
-                  ),
-                  Flexible(
-                    child: Container(
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 0.0),
-                        child: Text(
-                          AppLocalizations.of(context).editSpace + snapshot.category.name,
-                          textAlign: TextAlign.start,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: media.height * 0.028,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
-                    child: IconButton(
-                        icon: const Icon(
-                          Icons.check,
-                          color: Colors.white,
-                          size: 25.0,
-                        ),
-                        tooltip: AppLocalizations.of(context).submitNewCategory,
-                        onPressed: () {
-                          if (validateAndSave()) {
-                            if (canMoveToParent) {
-                              Parent newCategoryParent = selectedParentCategory;
-                              print("Aggiorno " + newCategoryParent.name);
-                              StoreProvider.of<AppState>(context).dispatch(new UpdateCategory(snapshot.category));
+          //debugPrint('UI_M_edit_category: category Name: ${snapshot.category.name}, category Image: ${snapshot.category.categoryImage}');
 
-                              StoreProvider.of<AppState>(context).dispatch(new UpdateCategoryTree(newCategoryParent));
+          customTag = snapshot.category.customTag == 'showcase' ? CustomTag.showcase : snapshot.category.customTag == 'external' ? CustomTag.external : CustomTag.other;
 
-                              Future.delayed(const Duration(milliseconds: 500), () {
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => UI_M_ManageCategory(
-                                            edited: true,
-                                          )),
-                                );
-                              });
-                            } else {
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  // return object of type Dialog
-                                  return AlertDialog(
-                                    title: new Text(AppLocalizations.of(context).caution),
-                                    content: new Text(AppLocalizations.of(context).youCannotMoveBranch),
+          String businessName = snapshot.business.name;
+
+          return Stack(
+            children: [
+              ///Booking Code
+              Positioned.fill(
+                child: Align(
+                    alignment: Alignment.topCenter,
+                    child: WillPopScope(
+                      onWillPop: _onWillPop,
+                      child: Scaffold(
+                        resizeToAvoidBottomInset: false,
+                        appBar: BuytimeAppbarManager(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
+                              child: IconButton(
+                                icon: const Icon(
+                                  Icons.arrow_back_ios_rounded,
+                                  color: Colors.white,
+                                  size: 25.0,
+                                ),
+                                tooltip: AppLocalizations.of(context).comeBack,
+                                onPressed: () {
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => ManageCategory()),
                                   );
                                 },
-                              );
-                            }
-                          }
-                        }),
-                  ),
-                ],
-              ),
-              floatingActionButton: FloatingActionButton(
-                onPressed: () {
-                  print("add worker/manager");
-                  _modalAddPerson(context);
-                },
-                child: Icon(Icons.add),
-                backgroundColor: BuytimeTheme.Secondary,
-              ),
-              body: Padding(
-                padding: EdgeInsets.only(top: 10.0),
-                child: Column(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
-                      child: Center(
-                        child: Container(
-                          width: media.width * 0.9,
-                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
-                          child: Form(
-                              key: _formKey,
-                              child: Padding(
-                                padding: const EdgeInsets.only(top: 0.0, bottom: 5.0, left: 10.0, right: 10.0),
-                                child: TextFormField(
-                                  validator: (value) => value.isEmpty ? AppLocalizations.of(context).categoryNameIsBlank : null,
-                                  initialValue: _selectedCategoryName,
-                                  keyboardType: TextInputType.name,
-                                  onChanged: (value) {
-                                    _selectedCategoryName = value;
-                                    StoreProvider.of<AppState>(context).dispatch(SetCategoryName(_selectedCategoryName));
-                                  },
-                                  onSaved: (value) {
-                                    _selectedCategoryName = value;
-                                  },
-                                  decoration: InputDecoration(labelText: AppLocalizations.of(context).categoryName),
-                                ),
-                              )),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10.0, bottom: 25.0),
-                      child: Center(
-                        child: Container(
-                          width: media.width * 0.9,
-                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
-                          child: Padding(
-                            padding: const EdgeInsets.all(6.0),
-                            child: DropdownButtonHideUnderline(
-                              child: DropdownButtonFormField<Parent>(
-                                  isExpanded: true,
-                                  value: selectedParentCategory,
-                                  items: _dropdownMenuParentCategory,
-                                  decoration: InputDecoration(labelText: AppLocalizations.of(context).parentCategory, enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white))),
-                                  onChanged: (value) {
-                                    setState(() {
-                                      selectedParentCategory = value;
-                                      checkNumberLevelToMove(snapshot.categoryTree.categoryNodeList, snapshot.category.id);
-                                      setNewCategoryParent(selectedParentCategory, snapshot.categoryTree.categoryNodeList);
-                                      if (selectedParentCategory.level + numberLevel < 6) {
-                                        canMoveToParent = true;
-                                        numberLevel = 0;
-                                      } else {
-                                        canMoveToParent = false;
-                                        numberLevel = 0;
-                                      }
-                                    });
-                                  }),
+                              ),
                             ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      child: Column(
-                        children: <Widget>[
-                          Container(
-                            // height: media.height * 0.266,
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              border: Border(
-                                top: BorderSide(
-                                  color: BuytimeTheme.DividerGrey,
-                                  width: 16.0,
+                            Flexible(
+                              child: Container(
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 0.0),
+                                  child: Text(
+                                    AppLocalizations.of(context).editSpace + snapshot.category.name,
+                                    textAlign: TextAlign.start,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: media.height * 0.028,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
-                            child: Padding(
-                              padding: const EdgeInsets.only(top: 10.0, left: 20.0, right: 20.0),
-                              child: Column(
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Container(
-                                            child: Icon(
-                                              Icons.account_balance_rounded,
-                                              size: 24,
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
+                              child: IconButton(
+                                  icon: const Icon(
+                                    Icons.check,
+                                    color: Colors.white,
+                                    size: 25.0,
+                                  ),
+                                  tooltip: AppLocalizations.of(context).submitNewCategory,
+                                  onPressed: () {
+                                    if (validateAndSave()) {
+                                      if (canMoveToParent) {
+
+                                        setState(() {
+                                          bookingRequest = 'send';
+                                        });
+
+                                        Parent newCategoryParent = selectedParentCategory;
+                                        print("Aggiorno " + newCategoryParent.name);
+                                        StoreProvider.of<AppState>(context).dispatch(new UpdateCategory(snapshot.category));
+
+                                        StoreProvider.of<AppState>(context).dispatch(new UpdateCategoryTree(newCategoryParent));
+
+                                        /*Future.delayed(const Duration(milliseconds: 500), () {
+                                          Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => ManageCategory(
+                                                  edited: true,
+                                                )),
+                                          );
+                                        });*/
+                                      } else {
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            // return object of type Dialog
+                                            return AlertDialog(
+                                              title: new Text(AppLocalizations.of(context).caution),
+                                              content: new Text(AppLocalizations.of(context).youCannotMoveBranch),
+                                            );
+                                          },
+                                        );
+                                      }
+                                    }
+                                  }),
+                            ),
+                          ],
+                        ),
+                        floatingActionButton: FloatingActionButton(
+                          onPressed: () {
+                            print("add worker/manager");
+                            _modalAddPerson(context);
+                          },
+                          child: Icon(Icons.add),
+                          backgroundColor: BuytimeTheme.Secondary,
+                        ),
+                        body: SingleChildScrollView(
+                          child: Padding(
+                            padding: EdgeInsets.only(top: 10.0),
+                            child: Column(
+                              children: <Widget>[
+                                ///Caterogry Image
+                                OptimumFormMultiPhoto(
+                                  text: 'Category Image', //TODO Make it global
+                                  remotePath: "business/" + businessName + "/category",
+                                  maxHeight: 1000,
+                                  maxPhoto: 1,
+                                  maxWidth: 800,
+                                  minHeight: 200,
+                                  minWidth: 600,
+                                  cropAspectRatioPreset: CropAspectRatioPreset.square,
+                                  image: snapshot.category.categoryImage == null || snapshot.category.categoryImage.isEmpty ? null : Image.network(snapshot.category.categoryImage, width: media.width * 0.3),
+                                  onFilePicked: (fileToUpload) {
+                                    fileToUpload.remoteFolder = "business/" + businessName + "/category";
+                                    StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInCategory(fileToUpload, fileToUpload.state, 0));
+                                  },
+                                ),
+                                ///Category Name
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+                                  child: Center(
+                                    child: Container(
+                                      width: media.width * 0.9,
+                                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
+                                      child: Form(
+                                          key: _formKey,
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(top: 0.0, bottom: 5.0, left: 10.0, right: 10.0),
+                                            child: TextFormField(
+                                              validator: (value) => value.isEmpty ? AppLocalizations.of(context).categoryNameIsBlank : null,
+                                              initialValue: _selectedCategoryName,
+                                              keyboardType: TextInputType.name,
+                                              onChanged: (value) {
+                                                _selectedCategoryName = value;
+                                                StoreProvider.of<AppState>(context).dispatch(SetCategoryName(_selectedCategoryName));
+                                              },
+                                              onSaved: (value) {
+                                                _selectedCategoryName = value;
+                                              },
+                                              decoration: InputDecoration(labelText: AppLocalizations.of(context).categoryName),
+                                            ),
+                                          )),
+                                    ),
+                                  ),
+                                ),
+                                ///Category Tag
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
+                                  child: Center(
+                                    child: Container(
+                                      width: media.width * 0.9,
+                                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(6.0),
+                                        child: DropdownButtonHideUnderline(
+                                          child: DropdownButtonFormField<CustomTag>(
+                                              isExpanded: true,
+                                              value: customTag,
+                                              items: [
+                                                DropdownMenuItem(
+                                                  child: Text(
+                                                    CategoryState().enumToString(CustomTag.showcase),
+                                                    overflow: TextOverflow.ellipsis,
+                                                  ),
+                                                  value: CustomTag.showcase,
+                                                ),
+                                                DropdownMenuItem(
+                                                  child: Text(
+                                                    CategoryState().enumToString(CustomTag.external),
+                                                    overflow: TextOverflow.ellipsis,
+                                                  ),
+                                                  value: CustomTag.external,
+                                                ),
+                                                DropdownMenuItem(
+                                                  child: Text(
+                                                    CategoryState().enumToString(CustomTag.other),
+                                                    overflow: TextOverflow.ellipsis,
+                                                  ),
+                                                  value: CustomTag.other,
+                                                ),
+                                              ],
+                                              decoration: InputDecoration(labelText: 'Custom Tag', enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white))), //TODO Make it global
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  customTag = value;
+                                                  setNewCategoryCustomTag(customTag);
+                                                });
+                                              }),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                ///Parent Category
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 10.0, bottom: 25.0),
+                                  child: Center(
+                                    child: Container(
+                                      width: media.width * 0.9,
+                                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(6.0),
+                                        child: DropdownButtonHideUnderline(
+                                          child: DropdownButtonFormField<Parent>(
+                                              isExpanded: true,
+                                              value: selectedParentCategory,
+                                              items: _dropdownMenuParentCategory,
+                                              decoration: InputDecoration(labelText: AppLocalizations.of(context).parentCategory, enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white))),
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  selectedParentCategory = value;
+                                                  checkNumberLevelToMove(snapshot.categoryTree.categoryNodeList, snapshot.category.id);
+                                                  setNewCategoryParent(selectedParentCategory, snapshot.categoryTree.categoryNodeList);
+                                                  if (selectedParentCategory.level + numberLevel < 6) {
+                                                    canMoveToParent = true;
+                                                    numberLevel = 0;
+                                                  } else {
+                                                    canMoveToParent = false;
+                                                    numberLevel = 0;
+                                                  }
+                                                });
+                                              }),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  child: Column(
+                                    children: <Widget>[
+                                      Container(
+                                        // height: media.height * 0.266,
+                                        width: double.infinity,
+                                        decoration: BoxDecoration(
+                                          border: Border(
+                                            top: BorderSide(
+                                              color: BuytimeTheme.DividerGrey,
+                                              width: 16.0,
                                             ),
                                           ),
-                                          Container(
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(left: 5.0),
-                                              child: Text(
-                                                AppLocalizations.of(context).managers,
-                                                textAlign: TextAlign.start,
-                                                style: TextStyle(
-                                                  color: BuytimeTheme.TextDark,
-                                                  fontSize: media.height * 0.023,
-                                                  fontWeight: FontWeight.w500,
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(top: 10.0, left: 20.0, right: 20.0),
+                                          child: Column(
+                                            children: [
+                                              Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      Container(
+                                                        child: Icon(
+                                                          Icons.account_balance_rounded,
+                                                          size: 24,
+                                                        ),
+                                                      ),
+                                                      Container(
+                                                        child: Padding(
+                                                          padding: const EdgeInsets.only(left: 5.0),
+                                                          child: Text(
+                                                            AppLocalizations.of(context).managers,
+                                                            textAlign: TextAlign.start,
+                                                            style: TextStyle(
+                                                              color: BuytimeTheme.TextDark,
+                                                              fontSize: media.height * 0.023,
+                                                              fontWeight: FontWeight.w500,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                              Container(
+                                                width: double.infinity,
+                                                child: Row(
+                                                  children: listOfManagerChips(snapshot),
                                                 ),
+                                              ),
+                                              (managerList.length > 0 && managerList != null)
+                                                  ? Container(
+                                                height: media.height * 0.15,
+                                                child: ListView.builder(
+                                                  itemCount: managerList.length,
+                                                  itemBuilder: (context, i) {
+                                                    return Row(
+                                                      children: [
+                                                        InputChip(
+                                                          selected: false,
+                                                          label: Text(
+                                                            managerList[i].mail,
+                                                            style: TextStyle(
+                                                              fontSize: 13.0,
+                                                              fontWeight: FontWeight.w500,
+                                                            ),
+                                                          ),
+                                                          //avatar: FlutterLogo(),
+                                                          onPressed: () {
+                                                            print('Manager is pressed');
+
+                                                            ///Vedere che fare quando si pigia il chip
+                                                            setState(() {
+                                                              //_selected = !_selected;
+                                                            });
+                                                          },
+                                                          onDeleted: () {
+                                                            Manager managerToDelete = Manager(id: "", name: "", surname: "", mail: managerList[i].mail);
+                                                            print("Mail di invito Manager da eliminare : " + managerList[i].mail);
+                                                            CategoryInviteState categoryInviteState = CategoryInviteState().toEmpty();
+                                                            categoryInviteState.role = "Manager";
+                                                            categoryInviteState.id_category = snapshot.category.id;
+                                                            categoryInviteState.mail = managerList[i].mail;
+                                                            StoreProvider.of<AppState>(context).dispatch(DeleteCategoryInvite(categoryInviteState));
+                                                            StoreProvider.of<AppState>(context).dispatch(new DeleteCategoryManager(managerToDelete));
+                                                            print('Manager is deleted');
+                                                          },
+                                                        ),
+                                                      ],
+                                                    );
+                                                  },
+                                                ),
+                                              )
+                                                  : Container()
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 10.0, left: 10.0, right: 10.0),
+                                        child: Container(
+                                          width: double.infinity,
+                                          decoration: BoxDecoration(
+                                            border: Border(
+                                              top: BorderSide(
+                                                color: BuytimeTheme.DividerGrey,
+                                                width: 4.0,
                                               ),
                                             ),
                                           ),
-                                        ],
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(left: 15.0, top: 10.0),
+                                            child: Column(
+                                              children: [
+                                                Row(
+                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                  children: [
+                                                    Row(
+                                                      children: [
+                                                        Container(
+                                                          child: Icon(
+                                                            Icons.room_service,
+                                                            size: 24,
+                                                          ),
+                                                        ),
+                                                        Container(
+                                                          child: Padding(
+                                                            padding: const EdgeInsets.only(left: 5.0),
+                                                            child: Text(
+                                                              AppLocalizations.of(context).workers,
+                                                              textAlign: TextAlign.start,
+                                                              style: TextStyle(
+                                                                color: BuytimeTheme.TextDark,
+                                                                fontSize: media.height * 0.023,
+                                                                fontWeight: FontWeight.w500,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                                (workerList.length > 0 && workerList != null)
+                                                    ? Container(
+                                                  height: media.height * 0.15,
+                                                  child: ListView.builder(
+                                                    itemCount: workerList.length,
+                                                    itemBuilder: (context, i) {
+                                                      return Row(
+                                                        children: [
+                                                          InputChip(
+                                                            selected: false,
+                                                            label: Text(
+                                                              workerList[i].mail,
+                                                              style: TextStyle(
+                                                                fontSize: 13.0,
+                                                                fontWeight: FontWeight.w500,
+                                                              ),
+                                                            ),
+                                                            onPressed: () {
+                                                              print('Worker is pressed');
+
+                                                              ///Vedere che fare quando si pigia il chip
+                                                              setState(() {
+                                                                //_selected = !_selected;
+                                                              });
+                                                            },
+                                                            onDeleted: () {
+                                                              Worker workerToDelete = Worker(id: "", name: "", surname: "", mail: workerList[i].mail);
+                                                              print("Mail di invito Worker da eliminare : " + workerList[i].mail);
+                                                              CategoryInviteState categoryInviteState = CategoryInviteState().toEmpty();
+                                                              categoryInviteState.role = "Worker";
+                                                              categoryInviteState.id_category = snapshot.category.id;
+                                                              categoryInviteState.mail = workerList[i].mail;
+                                                              StoreProvider.of<AppState>(context).dispatch(DeleteCategoryInvite(categoryInviteState));
+                                                              StoreProvider.of<AppState>(context).dispatch(new DeleteCategoryWorker(workerToDelete));
+                                                              print('Worker is deleted');
+                                                            },
+                                                          ),
+                                                        ],
+                                                      );
+                                                    },
+                                                  ),
+                                                )
+                                                    : Padding(
+                                                  padding: EdgeInsets.only(top: 10, bottom: 10),
+                                                  child: Row(
+                                                    children: [Text(AppLocalizations.of(context).noWorkersHere)],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
                                       ),
                                     ],
                                   ),
-                                  Container(
-                                    width: double.infinity,
-                                    child: Row(
-                                      children: listOfManagerChips(snapshot),
-                                    ),
-                                  ),
-                                  (managerList.length > 0 && managerList != null)
-                                      ? Container(
-                                          height: media.height * 0.15,
-                                          child: ListView.builder(
-                                            itemCount: managerList.length,
-                                            itemBuilder: (context, i) {
-                                              return Row(
-                                                children: [
-                                                  InputChip(
-                                                    selected: false,
-                                                    label: Text(
-                                                      managerList[i].mail,
-                                                      style: TextStyle(
-                                                        fontSize: 13.0,
-                                                        fontWeight: FontWeight.w500,
-                                                      ),
-                                                    ),
-                                                    //avatar: FlutterLogo(),
-                                                    onPressed: () {
-                                                      print('Manager is pressed');
-
-                                                      ///Vedere che fare quando si pigia il chip
-                                                      setState(() {
-                                                        //_selected = !_selected;
-                                                      });
-                                                    },
-                                                    onDeleted: () {
-                                                      Manager managerToDelete = Manager(id: "", name: "", surname: "", mail: managerList[i].mail);
-                                                      print("Mail di invito Manager da eliminare : " + managerList[i].mail);
-                                                      CategoryInviteState categoryInviteState = CategoryInviteState().toEmpty();
-                                                      categoryInviteState.role = "Manager";
-                                                      categoryInviteState.id_category = snapshot.category.id;
-                                                      categoryInviteState.mail = managerList[i].mail;
-                                                      StoreProvider.of<AppState>(context).dispatch(DeleteCategoryInvite(categoryInviteState));
-                                                      StoreProvider.of<AppState>(context).dispatch(new DeleteCategoryManager(managerToDelete));
-                                                      print('Manager is deleted');
-                                                    },
-                                                  ),
-                                                ],
-                                              );
-                                            },
-                                          ),
-                                        )
-                                      : Container()
-                                ],
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 10.0, left: 10.0, right: 10.0),
-                            child: Container(
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                border: Border(
-                                  top: BorderSide(
-                                    color: BuytimeTheme.DividerGrey,
-                                    width: 4.0,
-                                  ),
                                 ),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 15.0, top: 10.0),
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Container(
-                                              child: Icon(
-                                                Icons.room_service,
-                                                size: 24,
-                                              ),
-                                            ),
-                                            Container(
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(left: 5.0),
-                                                child: Text(
-                                                  AppLocalizations.of(context).workers,
-                                                  textAlign: TextAlign.start,
-                                                  style: TextStyle(
-                                                    color: BuytimeTheme.TextDark,
-                                                    fontSize: media.height * 0.023,
-                                                    fontWeight: FontWeight.w500,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 10.0),
+                                  child: Container(
+                                      width: double.infinity,
+                                      decoration: BoxDecoration(
+                                        border: Border(
+                                          top: BorderSide(
+                                            color: BuytimeTheme.DividerGrey,
+                                            width: 16.0,
+                                          ),
                                         ),
-                                      ],
-                                    ),
-                                    (workerList.length > 0 && workerList != null)
-                                        ? Container(
-                                            height: media.height * 0.15,
-                                            child: ListView.builder(
-                                              itemCount: workerList.length,
-                                              itemBuilder: (context, i) {
-                                                return Row(
-                                                  children: [
-                                                    InputChip(
-                                                      selected: false,
-                                                      label: Text(
-                                                        workerList[i].mail,
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(20.0),
+                                        child: Row(
+                                          children: [
+                                            !hasChild
+                                                ? GestureDetector(
+                                              behavior: HitTestBehavior.opaque,
+                                              onTap: () {
+                                                print("CategoryEdit ::: Elimino nodo categoria dall'albero");
+                                                StoreProvider.of<AppState>(context).dispatch(DeleteCategoryTree(snapshot.category.id));
+                                                print("CategoryEdit ::: Elimino categoria " + snapshot.category.id);
+                                                StoreProvider.of<AppState>(context).dispatch(DeleteCategory(snapshot.category.id));
+                                                Future.delayed(const Duration(milliseconds: 500), () {
+                                                  Navigator.pushReplacement(
+                                                    context,
+                                                    MaterialPageRoute(builder: (context) => ManageCategory(deleted: true)),
+                                                  );
+                                                });
+                                              },
+                                              child: Row(
+                                                children: [
+                                                  Container(
+                                                    child: Icon(
+                                                      Icons.delete,
+                                                      size: 25,
+                                                      color: BuytimeTheme.AccentRed,
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    child: Padding(
+                                                      padding: const EdgeInsets.only(left: 10.0),
+                                                      child: Text(
+                                                        AppLocalizations.of(context).deleteCategory,
+                                                        textAlign: TextAlign.start,
                                                         style: TextStyle(
-                                                          fontSize: 13.0,
+                                                          color: BuytimeTheme.AccentRed,
+                                                          fontSize: 18,
                                                           fontWeight: FontWeight.w500,
                                                         ),
                                                       ),
-                                                      onPressed: () {
-                                                        print('Worker is pressed');
-
-                                                        ///Vedere che fare quando si pigia il chip
-                                                        setState(() {
-                                                          //_selected = !_selected;
-                                                        });
-                                                      },
-                                                      onDeleted: () {
-                                                        Worker workerToDelete = Worker(id: "", name: "", surname: "", mail: workerList[i].mail);
-                                                        print("Mail di invito Worker da eliminare : " + workerList[i].mail);
-                                                        CategoryInviteState categoryInviteState = CategoryInviteState().toEmpty();
-                                                        categoryInviteState.role = "Worker";
-                                                        categoryInviteState.id_category = snapshot.category.id;
-                                                        categoryInviteState.mail = workerList[i].mail;
-                                                        StoreProvider.of<AppState>(context).dispatch(DeleteCategoryInvite(categoryInviteState));
-                                                        StoreProvider.of<AppState>(context).dispatch(new DeleteCategoryWorker(workerToDelete));
-                                                        print('Worker is deleted');
-                                                      },
                                                     ),
-                                                  ],
-                                                );
-                                              },
-                                            ),
-                                          )
-                                        : Padding(
-                                            padding: EdgeInsets.only(top: 10, bottom: 10),
-                                            child: Row(
-                                              children: [Text(AppLocalizations.of(context).noWorkersHere)],
-                                            ),
-                                          ),
-                                  ],
+                                                  ),
+                                                ],
+                                              ),
+                                            )
+                                                : Container(),
+                                          ],
+                                        ),
+                                      )),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
+                ),
+              ),
+              ///Ripple Effect
+              bookingRequest.isNotEmpty ? Positioned.fill(
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Container(
+                      height: SizeConfig.safeBlockVertical * 100,
+                      decoration: BoxDecoration(
+                        color: BuytimeTheme.BackgroundCerulean.withOpacity(.8),
+                      ),
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Container(
+                              width: 50,
+                              height: 50,
+                              child: Center(
+                                child: SpinKitRipple(
+                                  color: Colors.white,
+                                  size: 50,
                                 ),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10.0),
-                      child: Container(
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            border: Border(
-                              top: BorderSide(
-                                color: BuytimeTheme.DividerGrey,
-                                width: 16.0,
-                              ),
-                            ),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(20.0),
-                            child: Row(
-                              children: [
-                                !hasChild
-                                    ? GestureDetector(
-                                        behavior: HitTestBehavior.opaque,
-                                        onTap: () {
-                                          print("CategoryEdit ::: Elimino nodo categoria dall'albero");
-                                          StoreProvider.of<AppState>(context).dispatch(DeleteCategoryTree(snapshot.category.id));
-                                          print("CategoryEdit ::: Elimino categoria " + snapshot.category.id);
-                                          StoreProvider.of<AppState>(context).dispatch(DeleteCategory(snapshot.category.id));
-                                          Future.delayed(const Duration(milliseconds: 500), () {
-                                            Navigator.pushReplacement(
-                                              context,
-                                              MaterialPageRoute(builder: (context) => UI_M_ManageCategory(deleted: true)),
-                                            );
-                                          });
-                                        },
-                                        child: Row(
-                                          children: [
-                                            Container(
-                                              child: Icon(
-                                                Icons.delete,
-                                                size: 25,
-                                                color: BuytimeTheme.AccentRed,
-                                              ),
-                                            ),
-                                            Container(
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(left: 10.0),
-                                                child: Text(
-                                                  AppLocalizations.of(context).deleteCategory,
-                                                  textAlign: TextAlign.start,
-                                                  style: TextStyle(
-                                                    color: BuytimeTheme.AccentRed,
-                                                    fontSize: 18,
-                                                    fontWeight: FontWeight.w500,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      )
-                                    : Container(),
-                              ],
-                            ),
-                          )),
-                    ),
-                  ],
+                          ],
+                        ),
+                      )
+                  ),
                 ),
-              ),
-            ),
+              ) : Container()
+            ],
           );
         });
   }

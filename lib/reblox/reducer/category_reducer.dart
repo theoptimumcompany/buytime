@@ -1,8 +1,10 @@
 import 'package:Buytime/reblox/model/category/category_state.dart';
+import 'package:Buytime/reblox/model/file/optimum_file_to_upload.dart';
 import 'package:Buytime/reblox/model/snippet/generic.dart';
 import 'package:Buytime/reblox/model/snippet/manager.dart';
 import 'package:Buytime/reblox/model/snippet/parent.dart';
 import 'package:Buytime/reblox/model/snippet/worker.dart';
+import 'package:flutter/material.dart';
 
 class CategoryRequest {
   String _id;
@@ -50,6 +52,16 @@ class CategoryInviteWorkerResponse {
   CategoryInviteWorkerResponse(this._categoryState);
 
   CategoryState get categoryState => _categoryState;
+}
+
+class AddFileToUploadInCategory {
+  OptimumFileToUpload _fileToUpload;
+  ImageState state;
+  int index;
+
+  AddFileToUploadInCategory(this._fileToUpload, this.state, this.index);
+
+  OptimumFileToUpload get fileToUpload => _fileToUpload;
 }
 
 class SetCategoryToEmpty {
@@ -164,6 +176,22 @@ class SetCategoryParent {
   Parent get parent => _parent;
 }
 
+class SetCategoryImage {
+  String _categoryImage;
+
+  SetCategoryImage(this._categoryImage);
+
+  String get categoryImage => _categoryImage;
+}
+
+class SetCustomTag {
+  String _customTag;
+
+  SetCustomTag(this._customTag);
+
+  String get customTag => _customTag;
+}
+
 class DeleteCategoryManager {
   Manager _manager;
 
@@ -211,6 +239,14 @@ CategoryState categoryReducer(CategoryState state, action) {
     categoryState.parent = action.parent;
     return categoryState;
   }
+  if (action is SetCategoryImage) {
+    categoryState.categoryImage = action.categoryImage;
+    return categoryState;
+  }
+  if (action is SetCustomTag) {
+    categoryState.customTag = action.customTag;
+    return categoryState;
+  }
   if (action is CategoryInviteManager) {
     categoryState.manager.add(action.manager);
     return categoryState;
@@ -225,6 +261,26 @@ CategoryState categoryReducer(CategoryState state, action) {
   }
   if (action is DeleteCategoryWorker) {
     categoryState.worker.removeWhere((element) => element.mail == action.worker.mail);
+    return categoryState;
+  }
+  if (action is AddFileToUploadInCategory) {
+    print("category_reducer: addFileInCategory. category: " + state.name);
+
+    //categoryState.fileToUpload = null;
+
+    if (state.fileToUpload != null) {
+      print("category_reducer: fileupload != null");
+
+      categoryState.fileToUpload = state.fileToUpload;
+
+    }
+    categoryState.fileToUpload = action.fileToUpload;
+    debugPrint('category_reducer: cation remoteName: ${action.fileToUpload.remoteName}');
+    replaceIfExists(categoryState.fileToUpload, action.fileToUpload);
+
+    debugPrint('category_reducer: remoteName: ${categoryState.fileToUpload.remoteName}');
+    debugPrint('category_reducer: remoteFolder: ${categoryState.fileToUpload.remoteFolder}');
+
     return categoryState;
   }
   if (action is SetCategoryBusinessId) {
@@ -242,6 +298,7 @@ CategoryState categoryReducer(CategoryState state, action) {
   }
   if (action is CreatedCategory) {
     categoryState = action.categoryState.copyWith();
+    debugPrint('category_reducer: categoryImage: ${categoryState.categoryImage}');
     return categoryState;
   }
   if (action is CategoryRequestResponse) {
@@ -262,4 +319,8 @@ CategoryState categoryReducer(CategoryState state, action) {
   }
 
   return state;
+}
+
+void replaceIfExists(OptimumFileToUpload fileToUpload, OptimumFileToUpload myFile){
+  fileToUpload = myFile;
 }
