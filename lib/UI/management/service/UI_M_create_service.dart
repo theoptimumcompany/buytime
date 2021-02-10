@@ -33,6 +33,7 @@ class UI_CreateServiceState extends State<UI_CreateService> {
   List<Parent> selectedCategoryList = [];
   List<Parent> categoryList = [];
   ServiceVisibility radioServiceVisibility = ServiceVisibility.Invisible;
+  bool errorCategoryListEmpty = false;
 
   bool validateAndSave() {
     final FormState form = _keyCreateServiceForm.currentState;
@@ -50,8 +51,14 @@ class UI_CreateServiceState extends State<UI_CreateService> {
 
   bool validateChosenCategories() {
     if (selectedCategoryList.isNotEmpty) {
+      setState(() {
+        errorCategoryListEmpty = false;
+      });
       return true;
     } else {
+      setState(() {
+        errorCategoryListEmpty = true;
+      });
       return false;
     }
   }
@@ -104,6 +111,7 @@ class UI_CreateServiceState extends State<UI_CreateService> {
               } else {
                 selectedCategoryList.add(item);
               }
+              validateChosenCategories();
             });
 
             ///Aggiorno lo store con la lista di categorie selezionate salvando id e rootId
@@ -151,8 +159,7 @@ class UI_CreateServiceState extends State<UI_CreateService> {
                     child: IconButton(
                         icon: Icon(Icons.check, color: Colors.white, size: media.width * 0.07),
                         onPressed: () {
-                          // if (validateAndSave() || validateChosenCategories()) {
-                          if (validateAndSave()) {
+                           if (validateChosenCategories() && validateAndSave() && validatePrice(_servicePrice.toString())) {
                             print("Salva nuovo servizio");
                           }
                         }),
@@ -280,18 +287,30 @@ class UI_CreateServiceState extends State<UI_CreateService> {
                                 initialValue: _servicePrice.toString(),
                                 keyboardType: TextInputType.number,
                                 inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d*)'))],
+                                validator: (value) => value.isEmpty ? 'Service price is blank' : validatePrice(value)? null : 'Not a valid price',
                                 onChanged: (value) {
                                   if (value == "") {
-                                    value = "0.0";
+                                    setState(() {
+                                      _servicePrice = 0.0;
+                                    });
+                                  } else {
+                                    setState(() {
+                                      _servicePrice = double.parse(value);
+                                    });
                                   }
-                                  _servicePrice = double.parse(value);
+                                  validateAndSave();
                                   StoreProvider.of<AppState>(context).dispatch(SetServicePrice(_servicePrice));
                                 },
                                 onSaved: (value) {
                                   if (value == "") {
-                                    value = "0.0";
+                                    setState(() {
+                                      _servicePrice = 0.0;
+                                    });
+                                  } else {
+                                    setState(() {
+                                      _servicePrice = double.parse(value);
+                                    });
                                   }
-                                  _servicePrice = double.parse(value);
                                   StoreProvider.of<AppState>(context).dispatch(SetServicePrice(_servicePrice));
                                 },
                                 decoration: InputDecoration(
@@ -303,7 +322,7 @@ class UI_CreateServiceState extends State<UI_CreateService> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(top: 20.0),
+                        padding: const EdgeInsets.only(left:20.0,top: 20.0),
                         child: Container(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -312,7 +331,7 @@ class UI_CreateServiceState extends State<UI_CreateService> {
                                 AppLocalizations.of(context).selectCateogories,
                                 textAlign: TextAlign.start,
                                 style: TextStyle(
-                                  fontSize: media.height * 0.018,
+                                  fontSize: media.height * 0.02,
                                   color: BuytimeTheme.TextBlack,
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -326,27 +345,24 @@ class UI_CreateServiceState extends State<UI_CreateService> {
                           ),
                         ),
                       ),
+                      ///Error message Empty CategoryList
+                      errorCategoryListEmpty?
                       Padding(
-                        padding: const EdgeInsets.only(bottom: 10),
+                        padding: const EdgeInsets.only(left:30.0,bottom: 10),
                         child: Container(
                             child: Row(
                           children: [
-                            Padding(
-                              padding: EdgeInsets.only(
-                                left: media.width * 0.05,
-                              ),
-                              child: Text(
-                                'You have to select at least one category',
-                                style: TextStyle(
-                                  fontSize: media.height * 0.016,
-                                  color: BuytimeTheme.ErrorRed,
-                                  fontWeight: FontWeight.w500,
-                                ),
+                            Text(
+                              'You have to select at least one category',
+                              style: TextStyle(
+                                fontSize: media.height * 0.018,
+                                color: BuytimeTheme.ErrorRed,
+                                fontWeight: FontWeight.w500,
                               ),
                             ),
                           ],
                         )),
-                      ),
+                      ): Container(),
 
                       ///Divider under category selection
 
@@ -360,7 +376,7 @@ class UI_CreateServiceState extends State<UI_CreateService> {
 
                       ///Visibility Block
                       Padding(
-                        padding: const EdgeInsets.only(top: 20.0, bottom: 10),
+                        padding: const EdgeInsets.only(top: 20.0, bottom: 10,left: 15.0, right:15.0),
                         child: Container(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -375,7 +391,7 @@ class UI_CreateServiceState extends State<UI_CreateService> {
                                     //  AppLocalizations.of(context).visibility,  todo : aggiungere alle lingue
                                     textAlign: TextAlign.start,
                                     style: TextStyle(
-                                      fontSize: media.height * 0.018,
+                                      fontSize: media.height * 0.02,
                                       color: BuytimeTheme.TextBlack,
                                       fontWeight: FontWeight.w500,
                                     ),
