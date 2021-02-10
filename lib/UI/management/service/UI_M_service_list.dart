@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:core';
 
 import 'package:Buytime/UI/management/business/UI_M_business.dart';
-import 'package:Buytime/UI/management/service/UI_M_manage_service.dart';
+import 'package:Buytime/UI/management/service/UI_M_create_service.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/business/snippet/business_snippet_state.dart';
 import 'package:Buytime/reblox/model/category/category_state.dart';
@@ -88,7 +88,7 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                       onPressed: () {
                         Navigator.pushReplacement(
                           context,
-                          MaterialPageRoute(builder: (context) => UI_ManageService(creation: true)),
+                          MaterialPageRoute(builder: (context) => UI_CreateService()),
                         );
                       },
                     ),
