@@ -58,7 +58,7 @@ class _CheckedOutBookingListState extends State<CheckedOutBookingList> {
             child: Padding(
               padding: const EdgeInsets.only(left: 0.0),
               child: Text(
-                'Checked out bookings', //TODO make it global
+                AppLocalizations.of(context).checkedOutBookings,
                 textAlign: TextAlign.start,
                 style: TextStyle(
                   color: BuytimeTheme.TextWhite,

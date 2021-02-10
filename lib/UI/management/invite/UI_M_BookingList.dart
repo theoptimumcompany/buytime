@@ -235,7 +235,7 @@ class _BookingListState extends State<BookingList> {
                                         },
                                         child: CustomBottomButtonWidget(
                                             Text(
-                                              'View Checked-out bookings', //TODO Make it global
+                                              AppLocalizations.of(context).viewCheckedOutBookings,
                                               style: TextStyle(
                                                   fontFamily: BuytimeTheme.FontFamily,
                                                   color: BuytimeTheme.TextBlack,

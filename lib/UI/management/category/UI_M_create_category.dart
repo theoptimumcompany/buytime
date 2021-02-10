@@ -274,7 +274,7 @@ class UI_M_CreateCategoryState extends State<UI_M_CreateCategory> {
                                 children: <Widget>[
                                   ///Caterogry Image
                                   OptimumFormMultiPhoto(
-                                    text: 'Category Image', //TODO Make it global
+                                    text: AppLocalizations.of(context).categoryImage,
                                     remotePath: "business/" + businessName + "/category",
                                     maxHeight: 1000,
                                     maxPhoto: 1,
@@ -350,7 +350,7 @@ class UI_M_CreateCategoryState extends State<UI_M_CreateCategory> {
                                                     value: CustomTag.other,
                                                   ),
                                                 ],
-                                                decoration: InputDecoration(labelText: 'Custom Tag', enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white))), //TODO Make it global
+                                                decoration: InputDecoration(labelText: AppLocalizations.of(context).customTag, enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white))),
                                                 onChanged: (value) {
                                                   setState(() {
                                                     customTag = value;

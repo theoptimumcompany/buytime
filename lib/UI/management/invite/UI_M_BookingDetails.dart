@@ -14,6 +14,8 @@ import 'package:intl/intl.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:share/share.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 // ignore: must_be_immutable
 class BookingDetails extends StatefulWidget {
@@ -126,7 +128,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                 child: Padding(
                   padding: const EdgeInsets.only(left: 0.0),
                   child: Text(
-                    "Guest Details", //TODO Make it global
+                    AppLocalizations.of(context).guestDetails,
                     textAlign: TextAlign.start,
                     style: TextStyle(
                       color: Colors.white,

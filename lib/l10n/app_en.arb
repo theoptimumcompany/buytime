@@ -227,5 +227,11 @@
   "createInvite": "Create Invite",
   "addToCart": "ADD TO CART",
   "createYourAccount": "Create your account:",
-  "serviceCategories": "Service Categories"
+  "serviceCategories": "Service Categories",
+  "checkedOutBookings": "Checked out bookings",
+  "createInvite": "Create Invite",
+  "guestDetails": "Guest Details",
+  "categoryImage": "Category Image",
+  "viewCheckedOutBookings": "View Checked-out bookings",
+  "customTag": "Custom Tag"
 }

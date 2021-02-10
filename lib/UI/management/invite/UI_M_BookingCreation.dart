@@ -112,7 +112,7 @@ class _BookingCreationState extends State<BookingCreation> {
                   padding: const EdgeInsets.only(left: 0.0),
                   child: Text(
                     //AppLocalizations.of(context).inviteGuest,
-                    'Create Invite', //TODO Make it global
+                    AppLocalizations.of(context).createInvite,
                     textAlign: TextAlign.start,
                     style: TextStyle(
                       color: Colors.white,
