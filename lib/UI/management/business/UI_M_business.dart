@@ -1,3 +1,4 @@
+import 'package:Buytime/UI/management/business/UI_M_edit_business.dart';
 import 'package:Buytime/reusable/appbar/manager_buytime_appbar.dart';
 import 'package:Buytime/UI/management/category/UI_M_manage_category.dart';
 import 'package:Buytime/UI/management/category/W_category_list_item.dart';
@@ -19,7 +20,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'UI_M_manage_business.dart';
 
 class UI_M_Business extends StatefulWidget {
-  static String route = '/customer';
+  static String route = '/business';
 
   ManagerModel manager;
   ServiceModel service;
@@ -63,33 +64,38 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
             ///Appbar
             appBar: BuytimeAppbarManager(
               children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
-                  child: IconButton(
-                    icon: const Icon(
-                      Icons.menu,
-                      color: Colors.white,
-                      size: 30.0,
-                    ),
-                    tooltip: AppLocalizations.of(context).openMenu,
-                    onPressed: () {
-                      _drawerKey.currentState.openDrawer();
-                    },
-                  ),
-                ),
-                Container(
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 0.0),
-                    child: Text(
-                      AppLocalizations.of(context).dashboard,
-                      textAlign: TextAlign.start,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: media.height * 0.025,
-                        fontWeight: FontWeight.w400,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
+                      child: IconButton(
+                        icon: const Icon(
+                          Icons.menu,
+                          color: Colors.white,
+                          size: 30.0,
+                        ),
+                        tooltip: AppLocalizations.of(context).openMenu,
+                        onPressed: () {
+                          _drawerKey.currentState.openDrawer();
+                        },
                       ),
                     ),
-                  ),
+                    Container(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 20.0),
+                        child: Text(
+                          AppLocalizations.of(context).dashboard,
+                          textAlign: TextAlign.start,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: media.height * 0.025,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 Padding(
                     padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
@@ -98,7 +104,7 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                       onTap: () {
                         Navigator.pushReplacement(
                           context,
-                          MaterialPageRoute(builder: (context) => UI_M_ManageBusiness(0)),
+                          MaterialPageRoute(builder: (context) => UI_M_EditBusiness()),
                         );
                       },
                       child: Container(

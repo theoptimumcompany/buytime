@@ -25,7 +25,9 @@ class BuytimeAppbarManager extends StatelessWidget implements PreferredSizeWidge
           ),
           child: Padding(
             padding: new EdgeInsets.only(top: statusbarHeight),
-            child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: children),
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: children),
           ),
         ));
   }

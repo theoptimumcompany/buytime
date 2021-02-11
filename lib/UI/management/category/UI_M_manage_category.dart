@@ -5,6 +5,7 @@ import 'package:Buytime/UI/management/category/UI_M_create_category.dart';
 import 'package:Buytime/reblox/reducer/category_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_tree_reducer.dart';
 import 'package:Buytime/reusable/appbar/manager_buytime_appbar.dart';
+import 'package:Buytime/utils/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -382,36 +383,40 @@ class ManageCategoryState extends State<ManageCategory> {
               key: widget._keyScaffoldCategory,
               appBar: BuytimeAppbarManager(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
-                    child: IconButton(
-                      icon: const Icon(
-                        Icons.arrow_back_ios_rounded,
-                        color: Colors.white,
-                        size: 25.0,
-                      ),
-                      tooltip: AppLocalizations.of(context).comeBack,
-                      onPressed: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (context) => UI_M_Business()),
-                        );
-                      },
-                    ),
-                  ),
-                  Container(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 0.0),
-                      child: Text(
-                        AppLocalizations.of(context).categories,
-                        textAlign: TextAlign.start,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: media.height * 0.03,
-                          fontWeight: FontWeight.w400,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
+                        child: IconButton(
+                          icon: const Icon(
+                            Icons.keyboard_arrow_left,
+                            color: Colors.white,
+                          ),
+                          tooltip: AppLocalizations.of(context).comeBack,
+                          onPressed: () {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (context) => UI_M_Business()),
+                            );
+                          },
                         ),
                       ),
-                    ),
+                      Container(
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 20.0),
+                          child: Text(
+                            AppLocalizations.of(context).categories,
+                            textAlign: TextAlign.start,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: SizeConfig.safeBlockHorizontal * 5,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),

@@ -5,6 +5,7 @@ import 'dart:ui';
 
 import 'package:Buytime/UI/user/UI_U_Tabs.dart';
 import 'package:Buytime/UI/user/landing/UI_U_Landing.dart';
+import 'package:Buytime/UI/user/landing/invite_guest_form.dart';
 import 'package:Buytime/reblox/model/snippet/device.dart';
 import 'package:Buytime/reblox/model/snippet/token.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
@@ -98,12 +99,12 @@ class _SplashScreenState extends State<SplashScreen> {
         if (deepLink.queryParameters.containsKey('booking')) {
           String id = deepLink.queryParameters['booking'];
           debugPrint('splash_screen: booking: $id');
-          Navigator.of(context).push(MaterialPageRoute(builder: (context) => UI_U_Tabs()));
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) => InviteGuestForm(id)));
         }
         else if (deepLink.queryParameters.containsKey('categoryInvite')) {
           String id = deepLink.queryParameters['categoryInvite'];
           debugPrint('splash_screen: categoryInvite: $id');
-          Navigator.of(context).push(MaterialPageRoute(builder: (context) => UI_U_Tabs()));
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) => InviteGuestForm(id)));
         }
       }
     }, onError: (OnLinkErrorException e) async {
@@ -121,12 +122,12 @@ class _SplashScreenState extends State<SplashScreen> {
       if (deepLink.queryParameters.containsKey('booking')) {
         String id = deepLink.queryParameters['booking'];
         debugPrint('splash_screen: booking: $id');
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) => UI_U_Tabs()));
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) => InviteGuestForm(id)));
       }
       else if (deepLink.queryParameters.containsKey('categoryInvite')) {
         String id = deepLink.queryParameters['categoryInvite'];
         debugPrint('splash_screen: categoryInvite: $id');
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) => UI_U_Tabs()));
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) =>InviteGuestForm(id)));
       }
     }
   }

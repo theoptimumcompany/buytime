@@ -403,7 +403,7 @@ class _OpenContainerWrapper extends StatelessWidget {
     return OpenContainer<bool>(
       transitionType: ContainerTransitionType.fadeThrough,
       openBuilder: (BuildContext context, VoidCallback _) {
-        return index == 0 ? InviteGuestForm() : UI_U_Tabs();
+        return index == 0 ? InviteGuestForm('') : UI_U_Tabs();
       },
       onClosed: onClosed,
       closedShape: RoundedRectangleBorder(

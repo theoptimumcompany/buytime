@@ -33,6 +33,7 @@ class BusinessState {
   String ownerId;
   bool draft;
   List<OptimumFileToUpload> fileToUploadList;
+  List<String> tag;
 
   List<dynamic> convertToJson(List<GenericState> objectStateList) {
     List<dynamic> list = List<dynamic>();
@@ -71,6 +72,7 @@ class BusinessState {
     this.owner,
     this.ownerId,
     this.fileToUploadList,
+    this.tag,
   });
 
   BusinessState toEmpty() {
@@ -103,6 +105,7 @@ class BusinessState {
       owner: GenericState(),
       ownerId: "",
       fileToUploadList: null,
+      tag: [],
     );
   }
 
@@ -135,6 +138,7 @@ class BusinessState {
     this.ownerId = state.ownerId;
     this.draft = state.draft;
     this.fileToUploadList = state.fileToUploadList;
+    this.tag = state.tag;
   }
 
   companyStateFieldUpdate(
@@ -166,6 +170,7 @@ class BusinessState {
     String ownerId,
     bool draft,
     List<OptimumFileToUpload> fileToUploadList,
+    List<String> tag,
   ) {
     BusinessState(
       name: name ?? this.name,
@@ -196,6 +201,7 @@ class BusinessState {
       ownerId: ownerId ?? this.ownerId,
       draft: draft ?? this.draft,
       fileToUploadList: fileToUploadList ?? this.fileToUploadList,
+      tag: tag ?? this.tag,
     );
   }
 
@@ -228,6 +234,7 @@ class BusinessState {
     String ownerId,
     bool draft,
     List<OptimumFileToUpload> fileToUploadList,
+    List<String> tag
   }) {
     return BusinessState(
       name: name ?? this.name,
@@ -258,6 +265,7 @@ class BusinessState {
       ownerId: ownerId ?? this.ownerId,
       draft: draft ?? this.draft,
       fileToUploadList: fileToUploadList ?? this.fileToUploadList,
+      tag: tag ?? this.tag,
     );
   }
 
@@ -277,7 +285,7 @@ class BusinessState {
         nation = json['nation'],
         coordinate = json['coordinate'],
         profile = json['profile'],
-        gallery = List<String>.from(json['gallery']),
+        gallery =  json['gallery'] != null ? List<String>.from(json['gallery']) : [],
         hasAccess = json.containsKey('hasAccess') ? List<String>.from(json['hasAccess']) : [],
         wide = json['wide'],
         logo = json['logo'],
@@ -295,7 +303,8 @@ class BusinessState {
         salesmanId = json['salesmanId'],
         draft = json['draft'],
         owner = GenericState.fromJson(json["owner"]),
-        ownerId = json['ownerId'];
+        ownerId = json['ownerId'],
+        tag = json['tag'] != null ? List<String>.from(json['tag']) : [];
 
   Map<String, dynamic> toJson() => {
         'name': name,
@@ -325,5 +334,6 @@ class BusinessState {
         'owner': owner.toJson(),
         'ownerId': ownerId,
         'draft': draft,
+        'tag': tag,
       };
 }

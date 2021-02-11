@@ -24,6 +24,7 @@ class ServiceState {
   double price;
   List<OptimumFileToUpload> fileToUploadList;
   int timesSold;
+  List<String> tag;
 
   ServiceState({
     this.serviceId,
@@ -39,6 +40,7 @@ class ServiceState {
     this.price,
     this.fileToUploadList,
     this.timesSold,
+    this.tag,
   });
 
   String enumToString(ServiceVisibility serviceVisibility) {
@@ -60,6 +62,7 @@ class ServiceState {
       price: 0.00,
       fileToUploadList: [],
       timesSold: 0,
+      tag: [],
     );
   }
 
@@ -77,6 +80,7 @@ class ServiceState {
     this.price = service.price;
     this.fileToUploadList = service.fileToUploadList;
     this.timesSold = service.timesSold;
+    this.tag = service.tag;
   }
 
   serviceStateFieldUpdate(
@@ -93,6 +97,7 @@ class ServiceState {
     double price,
     List<OptimumFileToUpload> fileToUploadList,
     int timesSold,
+    List<String> tag,
   ) {
     ServiceState(
       serviceId: serviceId ?? this.serviceId,
@@ -108,6 +113,7 @@ class ServiceState {
       price: price ?? this.price,
       fileToUploadList: fileToUploadList ?? this.fileToUploadList,
       timesSold: timesSold ?? this.timesSold,
+      tag: tag ?? this.tag,
     );
   }
 
@@ -125,6 +131,7 @@ class ServiceState {
     double price,
     List<OptimumFileToUpload> fileToUploadList,
     int timesSold,
+    List<String> tag,
   }) {
     return ServiceState(
       serviceId: serviceId ?? this.serviceId,
@@ -140,6 +147,7 @@ class ServiceState {
       price: price ?? this.price,
       fileToUploadList: fileToUploadList ?? this.fileToUploadList,
       timesSold: timesSold ?? this.timesSold,
+      tag: tag ?? this.tag,
     );
   }
 
@@ -163,7 +171,8 @@ class ServiceState {
         description = json['description'],
         visibility = json['visibility'],
         price = json['price'],
-        timesSold = json['timesSold'];
+        timesSold = json['timesSold'],
+        tag = List<String>.from(json['tag']);
 
   Map<String, dynamic> toJson() => {
         'serviceId': serviceId,
@@ -178,5 +187,6 @@ class ServiceState {
         'visibility': visibility,
         'price': price,
         'timesSold': timesSold,
+        'tag': tag,
       };
 }
