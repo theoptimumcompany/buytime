@@ -28,13 +28,13 @@ class BusinessListRequestService implements EpicClass<AppState> {
             .limit(10)
             .get();
       } else {
-        if (event.role == Role.manager) {
+        if (event.role == Role.manager || event.role == Role.worker) {
           businessListFromFirebase = await FirebaseFirestore.instance // TODO we have to be sure about this
               .collection("business")
               .where("hasAccess", arrayContains: store.state.user.email) // TODO check that arrayContains is ok here
               .limit(10)
               .get();
-        }if (event.role == Role.owner) {
+        } else if (event.role == Role.owner) {
           businessListFromFirebase = await FirebaseFirestore.instance
               .collection("business")
               .where("ownerId", isEqualTo: store.state.user.uid)
