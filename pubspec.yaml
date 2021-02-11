@@ -106,6 +106,9 @@ flutter:
     - assets/img/iceresort.png
     - assets/img/hermitage.png
     - assets/img/placeholder.png
+    - assets/img/image_placeholder.png
+    - assets/img/image_placeholder_square.png
+    - assets/img/image_placeholder_square_upload.png
     - assets/img/beach_girl.png
     - assets/img/booking_code.png
     - assets/img/img_buytime.png

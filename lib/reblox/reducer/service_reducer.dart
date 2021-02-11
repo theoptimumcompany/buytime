@@ -215,10 +215,13 @@ ServiceState serviceReducer(ServiceState state, action) {
     List<String> selRootCat = [];
     action.selectedCategories.forEach((element) {
       selCat.add(element.id);
-      selRootCat.add(element.parentRootId);
+      if(!selRootCat.contains(element.parentRootId)){
+        selRootCat.add(element.parentRootId);
+      }
     });
     serviceState.categoryId = selCat;
     serviceState.categoryRootId = selRootCat;
+
     return serviceState;
   }
   if (action is ServiceChanged) {

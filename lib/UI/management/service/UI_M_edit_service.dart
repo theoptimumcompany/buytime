@@ -708,21 +708,34 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
               body: SingleChildScrollView(
                 child: Form(
                   key: _keyEditServiceForm,
-                  child: Scaffold(
-                    body: SingleChildScrollView(
-                      child: Column(
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 25.0),
-                            child: Container(
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    flex: 2,
-                                    child: Container(
-                                      color: Colors.yellow,
+                  child: Column(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 25.0),
+                        child: Container(
+                          child: Row(
+                            children: [
+                              Expanded(
+                                flex: 2,
+                                child: Container(
+                                  color: Colors.yellow,
+                                  child: WidgetServicePhoto(
+                                    remotePath: "service/" + (snapshot.business.name != null ? snapshot.business.name + "/" : "") + snapshot.serviceState.name + "_1",
+                                    maxPhoto: 1,
+                                    cropAspectRatioPreset: CropAspectRatioPreset.square,
+                                    onFilePicked: (fileToUpload) {
+                                      print("UI_create_service - callback!");
+                                      StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInService(fileToUpload));
+                                    },
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: Column(
+                                  children: [
+                                    Container(
                                       child: WidgetServicePhoto(
-                                        remotePath: "service/" + (snapshot.business.name != null ? snapshot.business.name + "/" : "") + snapshot.serviceState.name + "_1",
+                                        remotePath: "service/" + (snapshot.business.name != null ? snapshot.business.name + "/" : "") + snapshot.serviceState.name + "_2",
                                         maxPhoto: 1,
                                         cropAspectRatioPreset: CropAspectRatioPreset.square,
                                         onFilePicked: (fileToUpload) {
@@ -731,149 +744,196 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                         },
                                       ),
                                     ),
-                                  ),
-                                  Expanded(
-                                    child: Column(
-                                      children: [
-                                        Container(
-                                          child: WidgetServicePhoto(
-                                            remotePath: "service/" + (snapshot.business.name != null ? snapshot.business.name + "/" : "") + snapshot.serviceState.name + "_2",
-                                            maxPhoto: 1,
-                                            cropAspectRatioPreset: CropAspectRatioPreset.square,
-                                            onFilePicked: (fileToUpload) {
-                                              print("UI_create_service - callback!");
-                                              StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInService(fileToUpload));
-                                            },
-                                          ),
-                                        ),
-                                        WidgetServicePhoto(
-                                          remotePath: "service/" + (snapshot.business.name != null ? snapshot.business.name + "/" : "") + snapshot.serviceState.name + "_3",
-                                          maxPhoto: 1,
-                                          cropAspectRatioPreset: CropAspectRatioPreset.square,
-                                          onFilePicked: (fileToUpload) {
-                                            print("UI_create_service - callback!");
-                                            StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInService(fileToUpload));
-                                          },
-                                        ),
-                                      ],
+                                    WidgetServicePhoto(
+                                      remotePath: "service/" + (snapshot.business.name != null ? snapshot.business.name + "/" : "") + snapshot.serviceState.name + "_3",
+                                      maxPhoto: 1,
+                                      cropAspectRatioPreset: CropAspectRatioPreset.square,
+                                      onFilePicked: (fileToUpload) {
+                                        print("UI_create_service - callback!");
+                                        StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInService(fileToUpload));
+                                      },
                                     ),
-                                  )
-                                ],
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 15.0),
+                        child: Center(
+                          child: Container(
+                            width: media.width * 0.9,
+                            // decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 0.0, bottom: 5.0, left: 10.0, right: 10.0),
+                              child: TextFormField(
+                                initialValue: _serviceName,
+                                validator: (value) => value.isEmpty ? 'Service name is blank' : null,
+                                onChanged: (value) {
+                                  if (validateAndSave()) {
+                                    _serviceName = value;
+                                    StoreProvider.of<AppState>(context).dispatch(SetServiceName(_serviceName));
+                                  }
+                                },
+                                onSaved: (value) {
+                                  if (validateAndSave()) {
+                                    _serviceName = value;
+                                    StoreProvider.of<AppState>(context).dispatch(SetServiceName(_serviceName));
+                                  }
+                                },
+                                decoration: InputDecoration(labelText: AppLocalizations.of(context).name),
                               ),
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 15.0),
-                            child: Center(
-                              child: Container(
-                                width: media.width * 0.9,
-                                // decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
-                                child: Padding(
-                                  padding: const EdgeInsets.only(top: 0.0, bottom: 5.0, left: 10.0, right: 10.0),
-                                  child: TextFormField(
-                                    initialValue: _serviceName,
-                                    validator: (value) => value.isEmpty ? 'Service name is blank' : null,
-                                    onChanged: (value) {
-                                      if (validateAndSave()) {
-                                        _serviceName = value;
-                                        StoreProvider.of<AppState>(context).dispatch(SetServiceName(_serviceName));
-                                      }
-                                    },
-                                    onSaved: (value) {
-                                      if (validateAndSave()) {
-                                        _serviceName = value;
-                                        StoreProvider.of<AppState>(context).dispatch(SetServiceName(_serviceName));
-                                      }
-                                    },
-                                    decoration: InputDecoration(labelText: AppLocalizations.of(context).name),
-                                  ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 15.0),
+                        child: Center(
+                          child: Container(
+                            width: media.width * 0.9,
+                            //decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 0.0, bottom: 5.0, left: 10.0, right: 10.0),
+                              child: TextFormField(
+                                keyboardType: TextInputType.multiline,
+                                maxLines: null,
+                                initialValue: _serviceDescription,
+                                onChanged: (value) {
+                                  _serviceDescription = value;
+                                  StoreProvider.of<AppState>(context).dispatch(SetServiceDescription(_serviceDescription));
+                                },
+                                onSaved: (value) {
+                                  _serviceDescription = value;
+                                },
+                                decoration: InputDecoration(labelText: AppLocalizations.of(context).description),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 15.0),
+                        child: Center(
+                          child: Container(
+                            width: media.width * 0.9,
+                            //decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 0.0, bottom: 5.0, left: 10.0, right: 10.0),
+                              child: TextFormField(
+                                initialValue: _servicePrice.toString(),
+                                keyboardType: TextInputType.number,
+                                inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d*)'))],
+                                validator: (value) => value.isEmpty
+                                    ? 'Service price is blank'
+                                    : validatePrice(value)
+                                        ? null
+                                        : 'Not a valid price',
+                                onChanged: (value) {
+                                  if (value == "") {
+                                    setState(() {
+                                      _servicePrice = 0.0;
+                                    });
+                                  } else {
+                                    setState(() {
+                                      _servicePrice = double.parse(value);
+                                    });
+                                  }
+                                  validateAndSave();
+                                  StoreProvider.of<AppState>(context).dispatch(SetServicePrice(_servicePrice));
+                                },
+                                onSaved: (value) {
+                                  if (value == "") {
+                                    setState(() {
+                                      _servicePrice = 0.0;
+                                    });
+                                  } else {
+                                    setState(() {
+                                      _servicePrice = double.parse(value);
+                                    });
+                                  }
+                                  StoreProvider.of<AppState>(context).dispatch(SetServicePrice(_servicePrice));
+                                },
+                                decoration: InputDecoration(
+                                  labelText: AppLocalizations.of(context).price,
                                 ),
                               ),
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 15.0),
-                            child: Center(
-                              child: Container(
-                                width: media.width * 0.9,
-                                //decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
-                                child: Padding(
-                                  padding: const EdgeInsets.only(top: 0.0, bottom: 5.0, left: 10.0, right: 10.0),
-                                  child: TextFormField(
-                                    keyboardType: TextInputType.multiline,
-                                    maxLines: null,
-                                    initialValue: _serviceDescription,
-                                    onChanged: (value) {
-                                      _serviceDescription = value;
-                                      StoreProvider.of<AppState>(context).dispatch(SetServiceDescription(_serviceDescription));
-                                    },
-                                    onSaved: (value) {
-                                      _serviceDescription = value;
-                                    },
-                                    decoration: InputDecoration(labelText: AppLocalizations.of(context).description),
-                                  ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 20.0, top: 20.0),
+                        child: Container(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                AppLocalizations.of(context).selectCateogories,
+                                textAlign: TextAlign.start,
+                                style: TextStyle(
+                                  fontSize: media.height * 0.02,
+                                  color: BuytimeTheme.TextBlack,
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
-                            ),
+                              Container(
+                                  width: media.width * 0.9,
+                                  child: Wrap(
+                                    children: _buildChoiceList(),
+                                  )),
+                            ],
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 15.0),
-                            child: Center(
+                        ),
+                      ),
+
+                      ///Error message Empty CategoryList
+                      errorCategoryListEmpty
+                          ? Padding(
+                              padding: const EdgeInsets.only(left: 30.0, bottom: 10),
                               child: Container(
-                                width: media.width * 0.9,
-                                //decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
-                                child: Padding(
-                                  padding: const EdgeInsets.only(top: 0.0, bottom: 5.0, left: 10.0, right: 10.0),
-                                  child: TextFormField(
-                                    initialValue: _servicePrice.toString(),
-                                    keyboardType: TextInputType.number,
-                                    inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d*)'))],
-                                    validator: (value) => value.isEmpty
-                                        ? 'Service price is blank'
-                                        : validatePrice(value)
-                                            ? null
-                                            : 'Not a valid price',
-                                    onChanged: (value) {
-                                      if (value == "") {
-                                        setState(() {
-                                          _servicePrice = 0.0;
-                                        });
-                                      } else {
-                                        setState(() {
-                                          _servicePrice = double.parse(value);
-                                        });
-                                      }
-                                      validateAndSave();
-                                      StoreProvider.of<AppState>(context).dispatch(SetServicePrice(_servicePrice));
-                                    },
-                                    onSaved: (value) {
-                                      if (value == "") {
-                                        setState(() {
-                                          _servicePrice = 0.0;
-                                        });
-                                      } else {
-                                        setState(() {
-                                          _servicePrice = double.parse(value);
-                                        });
-                                      }
-                                      StoreProvider.of<AppState>(context).dispatch(SetServicePrice(_servicePrice));
-                                    },
-                                    decoration: InputDecoration(
-                                      labelText: AppLocalizations.of(context).price,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 20.0, top: 20.0),
-                            child: Container(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                                  child: Row(
                                 children: [
                                   Text(
-                                    AppLocalizations.of(context).selectCateogories,
+                                    'You have to select at least one category',
+                                    style: TextStyle(
+                                      fontSize: media.height * 0.018,
+                                      color: BuytimeTheme.ErrorRed,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              )),
+                            )
+                          : Container(),
+
+                      ///Divider under category selection
+
+                      Container(
+                        child: Divider(
+                          indent: 0.0,
+                          color: BuytimeTheme.DividerGrey,
+                          thickness: 20.0,
+                        ),
+                      ),
+
+                      ///Visibility Block
+                      Padding(
+                        padding: const EdgeInsets.only(top: 20.0, bottom: 10, left: 15.0, right: 15.0),
+                        child: Container(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.only(
+                                  left: media.width * 0.05,
+                                ),
+                                child: Container(
+                                  child: Text(
+                                    "Visibility",
+                                    //  AppLocalizations.of(context).visibility,  todo : aggiungere alle lingue
                                     textAlign: TextAlign.start,
                                     style: TextStyle(
                                       fontSize: media.height * 0.02,
@@ -881,314 +941,251 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                       fontWeight: FontWeight.w500,
                                     ),
                                   ),
-                                  Container(
-                                      width: media.width * 0.9,
-                                      child: Wrap(
-                                        children: _buildChoiceList(),
-                                      )),
-                                ],
+                                ),
                               ),
-                            ),
-                          ),
-
-                          ///Error message Empty CategoryList
-                          errorCategoryListEmpty
-                              ? Padding(
-                                  padding: const EdgeInsets.only(left: 30.0, bottom: 10),
-                                  child: Container(
-                                      child: Row(
-                                    children: [
-                                      Text(
-                                        'You have to select at least one category',
-                                        style: TextStyle(
-                                          fontSize: media.height * 0.018,
-                                          color: BuytimeTheme.ErrorRed,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ],
-                                  )),
-                                )
-                              : Container(),
-
-                          ///Divider under category selection
-
-                          Container(
-                            child: Divider(
-                              indent: 0.0,
-                              color: BuytimeTheme.DividerGrey,
-                              thickness: 20.0,
-                            ),
-                          ),
-
-                          ///Visibility Block
-                          Padding(
-                            padding: const EdgeInsets.only(top: 20.0, bottom: 10, left: 15.0, right: 15.0),
-                            child: Container(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                              Row(
+                                // mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Padding(
-                                    padding: EdgeInsets.only(
-                                      left: media.width * 0.05,
-                                    ),
+                                    padding: EdgeInsets.only(left: media.width * 0.05, right: media.width * 0.07),
                                     child: Container(
-                                      child: Text(
-                                        "Visibility",
-                                        //  AppLocalizations.of(context).visibility,  todo : aggiungere alle lingue
-                                        textAlign: TextAlign.start,
-                                        style: TextStyle(
-                                          fontSize: media.height * 0.02,
-                                          color: BuytimeTheme.TextBlack,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
+                                      child: Icon(Icons.remove_red_eye, color: BuytimeTheme.SymbolGrey, size: media.width * 0.07),
                                     ),
                                   ),
-                                  Row(
-                                    // mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsets.only(left: media.width * 0.05, right: media.width * 0.07),
-                                        child: Container(
-                                          child: Icon(Icons.remove_red_eye, color: BuytimeTheme.SymbolGrey, size: media.width * 0.07),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            border: Border(
-                                              bottom: BorderSide(width: 1.0, color: BuytimeTheme.DividerGrey),
-                                            ),
-                                          ),
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Container(
-                                                  child: Text(
-                                                "Active", //todo: lang
-                                                textAlign: TextAlign.start,
-                                                style: TextStyle(
-                                                  color: BuytimeTheme.TextBlack,
-                                                  fontSize: media.height * 0.018,
-                                                  fontWeight: FontWeight.w400,
-                                                ),
-                                              )),
-                                              Container(
-                                                child: Radio(
-                                                    value: ServiceVisibility.Active,
-                                                    groupValue: radioServiceVisibility,
-                                                    onChanged: (value) {
-                                                      setState(() {
-                                                        radioServiceVisibility = value;
-                                                      });
-                                                      StoreProvider.of<AppState>(context).dispatch(SetServiceVisibility(value));
-                                                    }),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    // mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsets.only(left: media.width * 0.05, right: media.width * 0.07),
-                                        child: Container(
-                                          child: Icon(Icons.visibility_off, color: BuytimeTheme.SymbolGrey, size: media.width * 0.07),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            border: Border(
-                                              bottom: BorderSide(width: 1.0, color: BuytimeTheme.DividerGrey),
-                                            ),
-                                          ),
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Container(
-                                                  child: Text(
-                                                "Deactivated", //todo: lang
-                                                textAlign: TextAlign.start,
-                                                style: TextStyle(
-                                                  color: BuytimeTheme.TextBlack,
-                                                  fontSize: media.height * 0.018,
-                                                  fontWeight: FontWeight.w400,
-                                                ),
-                                              )),
-                                              Container(
-                                                child: Radio(
-                                                    value: ServiceVisibility.Deactivated,
-                                                    groupValue: radioServiceVisibility,
-                                                    onChanged: (value) {
-                                                      setState(() {
-                                                        radioServiceVisibility = value;
-                                                      });
-                                                      StoreProvider.of<AppState>(context).dispatch(SetServiceVisibility(value));
-                                                    }),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    // mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsets.only(left: media.width * 0.05, right: media.width * 0.07),
-                                        child: Container(
-                                          child: Icon(Icons.do_disturb_alt_outlined, color: BuytimeTheme.SymbolGrey, size: media.width * 0.07),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            border: Border(
-                                              bottom: BorderSide(width: 1.0, color: BuytimeTheme.DividerGrey),
-                                            ),
-                                          ),
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Container(
-                                                  child: Text(
-                                                "Invisible", //todo: lang
-                                                textAlign: TextAlign.start,
-                                                style: TextStyle(
-                                                  color: BuytimeTheme.TextBlack,
-                                                  fontSize: media.height * 0.018,
-                                                  fontWeight: FontWeight.w400,
-                                                ),
-                                              )),
-                                              Container(
-                                                child: Radio(
-                                                    value: ServiceVisibility.Invisible,
-                                                    groupValue: radioServiceVisibility,
-                                                    onChanged: (value) {
-                                                      setState(() {
-                                                        radioServiceVisibility = value;
-                                                      });
-                                                      StoreProvider.of<AppState>(context).dispatch(SetServiceVisibility(value));
-                                                    }),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-
-                          ///Divider under visibility block
-                          Container(
-                            child: Divider(
-                              indent: 0.0,
-                              color: BuytimeTheme.DividerGrey,
-                              thickness: 20.0,
-                            ),
-                          ),
-
-                          ///Switch Booking
-                          Padding(
-                            padding: const EdgeInsets.only(top: 8.0, bottom: 10.0, left: 20.0, right: 20.0),
-                            child: Container(
-                              child: Row(
-                                children: [
-                                  Switch(
-                                      value: switchBooking,
-                                      onChanged: (value) {
-                                        setState(() {
-                                          switchBooking = value;
-                                        });
-                                      }),
                                   Expanded(
-                                    child: Text(
-                                      "The service can be booked by guests with time slots",
-                                      //  AppLocalizations.of(context).  todo : aggiungere alle lingue
-                                      textAlign: TextAlign.start,
-                                      overflow: TextOverflow.clip,
-                                      style: TextStyle(
-                                        fontSize: media.height * 0.018,
-                                        color: BuytimeTheme.TextGrey,
-                                        fontWeight: FontWeight.w500,
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        border: Border(
+                                          bottom: BorderSide(width: 1.0, color: BuytimeTheme.DividerGrey),
+                                        ),
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Container(
+                                              child: Text(
+                                            "Active", //todo: lang
+                                            textAlign: TextAlign.start,
+                                            style: TextStyle(
+                                              color: BuytimeTheme.TextBlack,
+                                              fontSize: media.height * 0.018,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          )),
+                                          Container(
+                                            child: Radio(
+                                                value: ServiceVisibility.Active,
+                                                groupValue: radioServiceVisibility,
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    radioServiceVisibility = value;
+                                                  });
+                                                  StoreProvider.of<AppState>(context).dispatch(SetServiceVisibility(value));
+                                                }),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ),
                                 ],
                               ),
-                            ),
+                              Row(
+                                // mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.only(left: media.width * 0.05, right: media.width * 0.07),
+                                    child: Container(
+                                      child: Icon(Icons.visibility_off, color: BuytimeTheme.SymbolGrey, size: media.width * 0.07),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        border: Border(
+                                          bottom: BorderSide(width: 1.0, color: BuytimeTheme.DividerGrey),
+                                        ),
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Container(
+                                              child: Text(
+                                            "Deactivated", //todo: lang
+                                            textAlign: TextAlign.start,
+                                            style: TextStyle(
+                                              color: BuytimeTheme.TextBlack,
+                                              fontSize: media.height * 0.018,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          )),
+                                          Container(
+                                            child: Radio(
+                                                value: ServiceVisibility.Deactivated,
+                                                groupValue: radioServiceVisibility,
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    radioServiceVisibility = value;
+                                                  });
+                                                  StoreProvider.of<AppState>(context).dispatch(SetServiceVisibility(value));
+                                                }),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                // mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.only(left: media.width * 0.05, right: media.width * 0.07),
+                                    child: Container(
+                                      child: Icon(Icons.do_disturb_alt_outlined, color: BuytimeTheme.SymbolGrey, size: media.width * 0.07),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        border: Border(
+                                          bottom: BorderSide(width: 1.0, color: BuytimeTheme.DividerGrey),
+                                        ),
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Container(
+                                              child: Text(
+                                            "Invisible", //todo: lang
+                                            textAlign: TextAlign.start,
+                                            style: TextStyle(
+                                              color: BuytimeTheme.TextBlack,
+                                              fontSize: media.height * 0.018,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          )),
+                                          Container(
+                                            child: Radio(
+                                                value: ServiceVisibility.Invisible,
+                                                groupValue: radioServiceVisibility,
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    radioServiceVisibility = value;
+                                                  });
+                                                  StoreProvider.of<AppState>(context).dispatch(SetServiceVisibility(value));
+                                                }),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
-
-                          switchBooking
-                              ?
-
-                              ///Booking Block
-                              Column(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 10.0),
-                                      child: Container(
-                                        height: 50,
-                                        color: BuytimeTheme.ManagerPrimary,
-                                        child: TabBar(
-                                          controller: bookingController,
-                                          tabs: [
-                                            Text(
-                                              "AVAILABILITY", //todo: lang
-                                              textAlign: TextAlign.start,
-                                              style: TextStyle(
-                                                color: BuytimeTheme.TextWhite,
-                                                fontSize: media.height * 0.018,
-                                                fontWeight: FontWeight.w400,
-                                              ),
-                                            ),
-                                            Text(
-                                              "LENGTH", //todo: lang
-                                              textAlign: TextAlign.start,
-                                              style: TextStyle(
-                                                color: BuytimeTheme.TextWhite,
-                                                fontSize: media.height * 0.018,
-                                                fontWeight: FontWeight.w400,
-                                              ),
-                                            ),
-                                            Text(
-                                              "TAB", //todo: lang
-                                              textAlign: TextAlign.start,
-                                              style: TextStyle(
-                                                color: BuytimeTheme.TextWhite,
-                                                fontSize: media.height * 0.018,
-                                                fontWeight: FontWeight.w400,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      height: heightBookingBlock,
-                                      child: Expanded(
-                                        child: TabBarView(
-                                          controller: bookingController,
-                                          children: getTabs(media),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                )
-                              : Container(),
-                        ],
+                        ),
                       ),
-                    ),
+
+                      ///Divider under visibility block
+                      Container(
+                        child: Divider(
+                          indent: 0.0,
+                          color: BuytimeTheme.DividerGrey,
+                          thickness: 20.0,
+                        ),
+                      ),
+
+                      ///Switch Booking
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0, bottom: 10.0, left: 20.0, right: 20.0),
+                        child: Container(
+                          child: Row(
+                            children: [
+                              Switch(
+                                  value: switchBooking,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      switchBooking = value;
+                                    });
+                                  }),
+                              Expanded(
+                                child: Text(
+                                  "The service can be booked by guests with time slots",
+                                  //  AppLocalizations.of(context).  todo : aggiungere alle lingue
+                                  textAlign: TextAlign.start,
+                                  overflow: TextOverflow.clip,
+                                  style: TextStyle(
+                                    fontSize: media.height * 0.018,
+                                    color: BuytimeTheme.TextGrey,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+
+                      switchBooking
+                          ?
+
+                          ///Booking Block
+                          Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 10.0),
+                                  child: Container(
+                                    height: 50,
+                                    color: BuytimeTheme.ManagerPrimary,
+                                    child: TabBar(
+                                      controller: bookingController,
+                                      tabs: [
+                                        Text(
+                                          "AVAILABILITY", //todo: lang
+                                          textAlign: TextAlign.start,
+                                          style: TextStyle(
+                                            color: BuytimeTheme.TextWhite,
+                                            fontSize: media.height * 0.018,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                        Text(
+                                          "LENGTH", //todo: lang
+                                          textAlign: TextAlign.start,
+                                          style: TextStyle(
+                                            color: BuytimeTheme.TextWhite,
+                                            fontSize: media.height * 0.018,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                        Text(
+                                          "TAB", //todo: lang
+                                          textAlign: TextAlign.start,
+                                          style: TextStyle(
+                                            color: BuytimeTheme.TextWhite,
+                                            fontSize: media.height * 0.018,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  height: heightBookingBlock,
+                                  child: Expanded(
+                                    child: TabBarView(
+                                      controller: bookingController,
+                                      children: getTabs(media),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            )
+                          : Container(),
+                    ],
                   ),
+
                 ),
               ));
         });

@@ -1,7 +1,3 @@
-import 'package:Buytime/reblox/model/snippet/generic.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-
 import '../file/optimum_file_to_upload.dart';
 
 enum ServiceVisibility {

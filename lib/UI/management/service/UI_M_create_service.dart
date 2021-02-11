@@ -84,7 +84,7 @@ class UI_CreateServiceState extends State<UI_CreateService> {
           name: list[i]['nodeName'],
           id: list[i]['nodeId'],
           level: list[i]['level'],
-          parentRootId: list[i]['parentRootId'],
+          parentRootId: list[i]['categoryRootId'],
         ),
       );
       if (list[i]['nodeCategory'] != null) {
@@ -159,8 +159,13 @@ class UI_CreateServiceState extends State<UI_CreateService> {
                     child: IconButton(
                         icon: Icon(Icons.check, color: Colors.white, size: media.width * 0.07),
                         onPressed: () {
-                           if (validateChosenCategories() && validateAndSave() && validatePrice(_servicePrice.toString())) {
+                          if (validateChosenCategories() && validateAndSave() && validatePrice(_servicePrice.toString())) {
                             print("Salva nuovo servizio");
+                            StoreProvider.of<AppState>(context).dispatch(CreateService(snapshot.serviceState));
+                            // Navigator.pushReplacement(
+                            //   context,
+                            //   MaterialPageRoute(builder: (context) => UI_EditService()),
+                            // );
                           }
                         }),
                   ),
@@ -179,14 +184,13 @@ class UI_CreateServiceState extends State<UI_CreateService> {
                               Expanded(
                                 flex: 2,
                                 child: Container(
-                                  color: Colors.yellow,
                                   child: WidgetServicePhoto(
                                     remotePath: "service/" + (snapshot.business.name != null ? snapshot.business.name + "/" : "") + snapshot.serviceState.name + "_1",
                                     maxPhoto: 1,
                                     cropAspectRatioPreset: CropAspectRatioPreset.square,
                                     onFilePicked: (fileToUpload) {
                                       print("UI_create_service - callback upload image 1!");
-                                      // StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInService(fileToUpload));
+                                      StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInService(fileToUpload));
                                     },
                                   ),
                                 ),
@@ -201,7 +205,7 @@ class UI_CreateServiceState extends State<UI_CreateService> {
                                         cropAspectRatioPreset: CropAspectRatioPreset.square,
                                         onFilePicked: (fileToUpload) {
                                           print("UI_create_service -  callback upload image 2!");
-                                          // StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInService(fileToUpload));
+                                          StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInService(fileToUpload));
                                         },
                                       ),
                                     ),
@@ -211,7 +215,7 @@ class UI_CreateServiceState extends State<UI_CreateService> {
                                       cropAspectRatioPreset: CropAspectRatioPreset.square,
                                       onFilePicked: (fileToUpload) {
                                         print("UI_create_service -  callback upload image 3!");
-                                        //StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInService(fileToUpload));
+                                        StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInService(fileToUpload));
                                       },
                                     ),
                                   ],
@@ -287,7 +291,11 @@ class UI_CreateServiceState extends State<UI_CreateService> {
                                 initialValue: _servicePrice.toString(),
                                 keyboardType: TextInputType.number,
                                 inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d*)'))],
-                                validator: (value) => value.isEmpty ? 'Service price is blank' : validatePrice(value)? null : 'Not a valid price',
+                                validator: (value) => value.isEmpty
+                                    ? 'Service price is blank'
+                                    : validatePrice(value)
+                                        ? null
+                                        : 'Not a valid price',
                                 onChanged: (value) {
                                   if (value == "") {
                                     setState(() {
@@ -322,7 +330,7 @@ class UI_CreateServiceState extends State<UI_CreateService> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(left:20.0,top: 20.0),
+                        padding: const EdgeInsets.only(left: 20.0, top: 20.0),
                         child: Container(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -345,24 +353,26 @@ class UI_CreateServiceState extends State<UI_CreateService> {
                           ),
                         ),
                       ),
+
                       ///Error message Empty CategoryList
-                      errorCategoryListEmpty?
-                      Padding(
-                        padding: const EdgeInsets.only(left:30.0,bottom: 10),
-                        child: Container(
-                            child: Row(
-                          children: [
-                            Text(
-                              'You have to select at least one category',
-                              style: TextStyle(
-                                fontSize: media.height * 0.018,
-                                color: BuytimeTheme.ErrorRed,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
-                        )),
-                      ): Container(),
+                      errorCategoryListEmpty
+                          ? Padding(
+                              padding: const EdgeInsets.only(left: 30.0, bottom: 10),
+                              child: Container(
+                                  child: Row(
+                                children: [
+                                  Text(
+                                    'You have to select at least one category',
+                                    style: TextStyle(
+                                      fontSize: media.height * 0.018,
+                                      color: BuytimeTheme.ErrorRed,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              )),
+                            )
+                          : Container(),
 
                       ///Divider under category selection
 
@@ -376,7 +386,7 @@ class UI_CreateServiceState extends State<UI_CreateService> {
 
                       ///Visibility Block
                       Padding(
-                        padding: const EdgeInsets.only(top: 20.0, bottom: 10,left: 15.0, right:15.0),
+                        padding: const EdgeInsets.only(top: 20.0, bottom: 10, left: 15.0, right: 15.0),
                         child: Container(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,

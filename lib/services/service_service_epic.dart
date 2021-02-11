@@ -81,47 +81,78 @@ class ServiceUpdateService implements EpicClass<AppState> {
 class ServiceCreateService implements EpicClass<AppState> {
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
+    ServiceState returnedServiceState;
     return actions.whereType<CreateService>().asyncMap((event) async {
-
       ServiceState serviceState = event.serviceState;
-
-      if (event.serviceState.fileToUploadList != null) {
+      DocumentReference docReference = FirebaseFirestore.instance.collection('service').doc();
+      serviceState.serviceId = docReference.id;
+      serviceState.businessId = store.state.business.id_firestore;
+      if (serviceState.fileToUploadList != null && serviceState.fileToUploadList.isNotEmpty) {
+        print("ServiceEpic/CreateService : Create service with images");
         await uploadFiles(event.serviceState.fileToUploadList, event.serviceState).then((ServiceState updatedServiceState) {
           print("ServiceServiceEpic: uploadFiles executed.");
-          return createService(updatedServiceState);
+          docReference.set(updatedServiceState.toJson()).then((value) {
+            print("ServiceService has created new Service! ");
+            returnedServiceState = updatedServiceState.copyWith();
+          }).catchError((error) {
+            print(error);
+          });
+          returnedServiceState = serviceState.copyWith();
         }).catchError((error, stackTrace) {
           print("ServiceServiceEpic: uploadFiles failed: $error");
-          return null;
         });
       } else {
-        return createService(serviceState);
+        print("ServiceEpic/CreateService : Create service without images");
+        docReference.set(serviceState.toJson()).then((value) {
+          print("ServiceService has created new Service! ");
+        }).catchError((error) {
+          print(error);
+        });
+        returnedServiceState = serviceState.copyWith();
       }
-    });
+    }).expand((element) => [CreatedService(returnedServiceState)]);
   }
 }
 
 Future<ServiceState> uploadFiles(List<OptimumFileToUpload> fileToUploadList, ServiceState serviceState) async {
-  await Future.forEach(
-      fileToUploadList,
-      (fileToUpload) => uploadToFirebaseStorage(fileToUpload).then((fileUrl) {
-            serviceState.image1 = fileUrl.toString();
-            return serviceState;
-          }));
+
+  for(int index = 0; index< fileToUploadList.length; index ++){
+   await uploadToFirebaseStorage(fileToUploadList[index]).then((fileUrl) {
+      switch(index){
+        case 0 :
+          serviceState.image1 = fileUrl.toString();
+          break;
+        case 1 :
+          serviceState.image2 = fileUrl.toString();
+          break;
+        case 2 :
+          serviceState.image3 = fileUrl.toString();
+          break;
+      }
+    });
+  }
+
+  // await Future.forEach(
+  //     fileToUploadList,
+  //     (fileToUpload) => uploadToFirebaseStorage(fileToUpload).then((fileUrl) {
+  //           serviceState.image1 = fileUrl.toString();
+  //           return serviceState;
+  //         }));
   return serviceState;
 }
 
-Future<CreatedService> createService(ServiceState serviceState) {
-  DocumentReference docReference = FirebaseFirestore.instance.collection('service').doc();
-  serviceState.serviceId = docReference.id;
-  return docReference.set(serviceState.toJson()).then((value) {
-    print("ServiceService has created new Service! ");
-    return new CreatedService(serviceState);
-  }).catchError((error) {
-    print(error);
-  }).then((value) {
-    return null;
-  });
-}
+// Future<CreatedService> createService(ServiceState serviceState) {
+//   DocumentReference docReference = FirebaseFirestore.instance.collection('service').doc();
+//   serviceState.serviceId = docReference.id;
+//   return docReference.set(serviceState.toJson()).then((value) {
+//     print("ServiceService has created new Service! ");
+//     return serviceState;
+//   }).catchError((error) {
+//     print(error);
+//   }).then((value) {
+//     return null;
+//   });
+// }
 
 Future<UpdatedService> updateService(ServiceState serviceState) {
   print("Visibilità è : " + serviceState.visibility);
