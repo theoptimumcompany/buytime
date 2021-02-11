@@ -131,13 +131,6 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
     super.dispose();
   }
 
-  Future<bool> _onWillPop() {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => UI_M_ServiceList()),
-    );
-  }
-
   _buildChoiceList() {
     List<Widget> choices = [];
     categoryList.forEach((item) {
@@ -724,7 +717,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                     maxPhoto: 1,
                                     cropAspectRatioPreset: CropAspectRatioPreset.square,
                                     onFilePicked: (fileToUpload) {
-                                      print("UI_create_service - callback!");
+                                      print("UI_edit_service - callback!");
                                       StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInService(fileToUpload));
                                     },
                                   ),

@@ -12,9 +12,9 @@ class ServiceListRequestService implements EpicClass<AppState> {
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     print("ServiceListService catched action");
+    List<ServiceState> serviceStateList = [];
     return actions.whereType<ServiceListRequest>().asyncMap((event) async {
       print("ServiceListService Firestore request");
-      List<ServiceState> serviceStateList = List<ServiceState>();
       if (event.permission == "user") {
         var servicesFirebaseShadow = await FirebaseFirestore.instance.collection("service").where("id_business", isEqualTo: event.businessId).where("visibility", isEqualTo: 'Shadow').get();
         servicesFirebaseShadow.docs.forEach((element) {
@@ -27,16 +27,20 @@ class ServiceListRequestService implements EpicClass<AppState> {
           serviceStateList.add(serviceState);
         });
       } else {
-        var servicesFirebase = await FirebaseFirestore.instance.collection("service").where("id_business", isEqualTo: event.businessId).get();
-        servicesFirebase.docs.forEach((element) {
-          ServiceState serviceState = ServiceState.fromJson(element.data());
-          serviceStateList.add(serviceState);
+        CollectionReference servicesFirebase = FirebaseFirestore.instance.collection("service");
+        Query query = servicesFirebase.where("businessId", isEqualTo: event.businessId);
+        //   query = query.where("id_category", isEqualTo: categoryInviteState.id_category);
+
+         await query.get().then((value) {
+          value.docs.forEach((element) {
+            ServiceState serviceState = ServiceState.fromJson(element.data());
+            serviceStateList.add(serviceState);
+          });
         });
       }
 
       print("ServiceListService return list with " + serviceStateList.length.toString());
-      return new ServiceListReturned(serviceStateList);
-    });
+    }).expand((element) => [ServiceListReturned(serviceStateList)]);
   }
 }
 
@@ -82,6 +86,7 @@ class ServiceCreateService implements EpicClass<AppState> {
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     ServiceState returnedServiceState;
+    List<ServiceState> listService;
     return actions.whereType<CreateService>().asyncMap((event) async {
       ServiceState serviceState = event.serviceState;
       DocumentReference docReference = FirebaseFirestore.instance.collection('service').doc();
@@ -110,22 +115,23 @@ class ServiceCreateService implements EpicClass<AppState> {
         });
         returnedServiceState = serviceState.copyWith();
       }
-    }).expand((element) => [CreatedService(returnedServiceState)]);
+      listService = store.state.serviceList.serviceListState;
+      listService.add(returnedServiceState);
+    }).expand((element) => [CreatedService(returnedServiceState), SetServiceList(listService)]);
   }
 }
 
 Future<ServiceState> uploadFiles(List<OptimumFileToUpload> fileToUploadList, ServiceState serviceState) async {
-
-  for(int index = 0; index< fileToUploadList.length; index ++){
-   await uploadToFirebaseStorage(fileToUploadList[index]).then((fileUrl) {
-      switch(index){
-        case 0 :
+  for (int index = 0; index < fileToUploadList.length; index++) {
+    await uploadToFirebaseStorage(fileToUploadList[index]).then((fileUrl) {
+      switch (index) {
+        case 0:
           serviceState.image1 = fileUrl.toString();
           break;
-        case 1 :
+        case 1:
           serviceState.image2 = fileUrl.toString();
           break;
-        case 2 :
+        case 2:
           serviceState.image3 = fileUrl.toString();
           break;
       }

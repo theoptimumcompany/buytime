@@ -187,72 +187,64 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                                       ),
 
                                       ///Service List
-                                      Container(
-                                        height: serviceList.length * 44.00,
-                                        child: ListView.builder(
-                                          physics: const NeverScrollableScrollPhysics(),
-                                          itemCount: serviceList.length,
-                                          itemBuilder: (context, index) {
-                                            // print("Index " + index.toString() + "  della lista ha visibilità : " + snapshot.serviceList.serviceListState[index].visibility);
-                                            // switch (snapshot.serviceList.serviceListState[index].visibility) {
-                                            //   case 'Visible':
-                                            //     iconVisibility = Image.asset('assets/img/icon/service_visible.png');
-                                            //     break;
-                                            //   case 'Shadow':
-                                            //     iconVisibility = Image.asset('assets/img/icon/service_disabled.png');
-                                            //     break;
-                                            //   case 'Invisible':
-                                            //     iconVisibility = Image.asset('assets/img/icon/service_invisible.png');
-                                            //     break;
-                                            // }
-                                            return GestureDetector(
-                                              onTap: () {
-                                                print("Tap on add new service");
+                                      serviceList.length > 0
+                                          ? Container(
+                                              height: serviceList.length * 44.00,
+                                              child: ListView.builder(
+                                                physics: const NeverScrollableScrollPhysics(),
+                                                itemCount: serviceList.length,
+                                                itemBuilder: (context, index) {
+                                                  return (serviceList[index].categoryRootId.contains(categoryRootList[i].id))
+                                                      ? GestureDetector(
+                                                          onTap: () {
+                                                            print("Tap on add new service");
 
-                                                ///QUi mi passo parent root e costruisco albero parent nel crea servizio solo costituito dal parent scelto e i suoi children
-                                              },
-                                              child: Row(
-                                                // mainAxisAlignment: MainAxisAlignment.center,
-                                                children: [
-                                                  Padding(
-                                                    padding: EdgeInsets.only(left: mediaWidth * 0.12, right: mediaWidth * 0.07),
-                                                    child: Container(
-                                                      child: Icon(Icons.remove_red_eye, color: BuytimeTheme.SymbolGrey, size: mediaWidth * 0.07),
-                                                    ),
-                                                  ),
-                                                  Expanded(
-                                                    child: Container(
-                                                      decoration: BoxDecoration(
-                                                        border: Border(
-                                                          bottom: BorderSide(width: 1.0, color: BuytimeTheme.DividerGrey),
-                                                        ),
-                                                      ),
-                                                      child: Row(
-                                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                        children: [
-                                                          Container(
-                                                              child: Text(
-                                                            "Servizio Prova in attesa di veri servizi",
-                                                            textAlign: TextAlign.start,
-                                                            style: TextStyle(
-                                                              color: BuytimeTheme.TextBlack,
-                                                              fontSize: media.height * 0.018,
-                                                              fontWeight: FontWeight.w400,
-                                                            ),
-                                                          )),
-                                                          Container(
-                                                            child: Icon(Icons.chevron_right, color: BuytimeTheme.SymbolGrey, size: media.width * 0.1),
+                                                            ///QUi mi passo parent root e costruisco albero parent nel crea servizio solo costituito dal parent scelto e i suoi children
+                                                          },
+                                                          child: Row(
+                                                            // mainAxisAlignment: MainAxisAlignment.center,
+                                                            children: [
+                                                              Padding(
+                                                                padding: EdgeInsets.only(left: mediaWidth * 0.12, right: mediaWidth * 0.07),
+                                                                child: Container(
+                                                                  child: Icon(Icons.remove_red_eye, color: BuytimeTheme.SymbolGrey, size: mediaWidth * 0.07),
+                                                                ),
+                                                              ),
+                                                              Expanded(
+                                                                child: Container(
+                                                                  decoration: BoxDecoration(
+                                                                    border: Border(
+                                                                      bottom: BorderSide(width: 1.0, color: BuytimeTheme.DividerGrey),
+                                                                    ),
+                                                                  ),
+                                                                  child: Row(
+                                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                    children: [
+                                                                      Container(
+                                                                          child: Text(
+                                                                        serviceList[index].name,
+                                                                        textAlign: TextAlign.start,
+                                                                        style: TextStyle(
+                                                                          color: BuytimeTheme.TextBlack,
+                                                                          fontSize: media.height * 0.018,
+                                                                          fontWeight: FontWeight.w400,
+                                                                        ),
+                                                                      )),
+                                                                      Container(
+                                                                        child: Icon(Icons.chevron_right, color: BuytimeTheme.SymbolGrey, size: media.width * 0.1),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ],
                                                           ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
+                                                        )
+                                                      : Container();
+                                                },
                                               ),
-                                            );
-                                          },
-                                        ),
-                                      ),
+                                            )
+                                          : Container(),
 
                                       // Padding(
                                       //   padding: const EdgeInsets.only(top: 10),

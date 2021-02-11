@@ -4,9 +4,11 @@ import 'package:Buytime/reblox/model/service/service_state.dart';
 class ServiceListRequest {
   String _businessId;
   String _permission;
-  ServiceListRequest(this._businessId,this._permission);
+
+  ServiceListRequest(this._businessId, this._permission);
 
   String get businessId => _businessId;
+
   String get permission => _permission;
 }
 
@@ -20,8 +22,18 @@ class ServiceListReturned {
 
 class SetServiceListToEmpty {
   String _something;
+
   SetServiceListToEmpty();
+
   String get something => _something;
+}
+
+class SetServiceList {
+  List<ServiceState> _serviceListState;
+
+  SetServiceList(this._serviceListState);
+
+  List<ServiceState> get serviceListState => _serviceListState;
 }
 
 ServiceListState serviceListReducer(ServiceListState state, action) {
@@ -30,9 +42,12 @@ ServiceListState serviceListReducer(ServiceListState state, action) {
     serviceListState = ServiceListState().toEmpty();
     return serviceListState;
   }
+  if (action is SetServiceList) {
+    serviceListState = ServiceListState(serviceListState: action.serviceListState).copyWith();
+    return serviceListState;
+  }
   if (action is ServiceListReturned) {
     serviceListState = ServiceListState(serviceListState: action.serviceListState).copyWith();
-    print("Nel Reducer Service List...");
     return serviceListState;
   }
   return state;
