@@ -2,6 +2,8 @@ import 'package:Buytime/UI/management/business/UI_M_business.dart';
 import 'package:Buytime/UI/management/business/UI_M_business_list.dart';
 import 'package:Buytime/UI/management/category/UI_M_manage_category.dart';
 import 'package:Buytime/UI/management/invite/UI_M_BookingDetails.dart';
+import 'package:Buytime/UI/user/booking/UI_U_BookingPage.dart';
+import 'package:Buytime/UI/user/booking/UI_U_ConfirmBooking.dart';
 import 'package:Buytime/reblox/model/booking/booking_list_state.dart';
 import 'package:Buytime/reblox/model/category/invitation/category_invite_state.dart';
 import 'package:Buytime/reblox/model/category/tree/category_tree_state.dart';
@@ -46,13 +48,16 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() {
   final epics = combineEpics<AppState>([
+    BusinessAndNavigateRequestService(),
     BusinessRequestService(),
     BusinessUpdateService(),
     BusinessCreateService(),
     BusinessListRequestService(),
     BookingCreateRequestService(),
+    BookingRequestService(),
     BookingListRequestService(),
     BookingUpdateRequestService(),
+    BookingUpdateAndNavigateRequestService(),
     UserRequestService(),
     UserEditDevice(),
     UserEditToken(),
@@ -81,6 +86,7 @@ void main() {
     ServiceDeleteService(),
     ServiceCreateService(),
     ServiceListRequestService(),
+    ServiceListAndNavigateRequestService(),
     PipelineRequestService(),
     PipelineListRequestService(),
     OrderListRequestService(),
@@ -137,6 +143,10 @@ class Buytime extends StatelessWidget {
         return FabRoute(UI_M_BusinessList(), settings: settings);
       case AppRoutes.business:
         return FabRoute(UI_M_Business(), settings: settings);
+      case AppRoutes.confirmBooking:
+        return FabRoute(ConfirmBooking(), settings: settings);
+      case AppRoutes.bookingPage:
+        return FabRoute(BookingPage(), settings: settings);
     }
   }
 

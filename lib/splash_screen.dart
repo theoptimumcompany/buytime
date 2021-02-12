@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
 
-import 'package:Buytime/UI/user/UI_U_Tabs.dart';
 import 'package:Buytime/UI/user/landing/UI_U_Landing.dart';
 import 'package:Buytime/UI/user/landing/invite_guest_form.dart';
 import 'package:Buytime/reblox/model/snippet/device.dart';
@@ -37,7 +36,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    initDynamicLinks();
+
 
     //DynamicLinkService().retrieveDynamicLink(context);
 
@@ -90,47 +89,7 @@ class _SplashScreenState extends State<SplashScreen> {
     initPlatformState();
   }
 
-  void initDynamicLinks() async {
-    print("Dentro initial dynamic");
-    FirebaseDynamicLinks.instance.onLink(onSuccess: (PendingDynamicLinkData dynamicLink) async {
-      final Uri deepLink = dynamicLink?.link;
 
-      if (deepLink != null) {
-        if (deepLink.queryParameters.containsKey('booking')) {
-          String id = deepLink.queryParameters['booking'];
-          debugPrint('splash_screen: booking: $id');
-          Navigator.of(context).push(MaterialPageRoute(builder: (context) => InviteGuestForm(id)));
-        }
-        else if (deepLink.queryParameters.containsKey('categoryInvite')) {
-          String id = deepLink.queryParameters['categoryInvite'];
-          debugPrint('splash_screen: categoryInvite: $id');
-          Navigator.of(context).push(MaterialPageRoute(builder: (context) => InviteGuestForm(id)));
-        }
-      }
-    }, onError: (OnLinkErrorException e) async {
-      print('onLinkError');
-      print(e.message);
-    });
-
-    await Future.delayed(Duration(seconds: 2));
-
-    ///Serve un delay che altrimenti getInitialLink torna NULL
-    final PendingDynamicLinkData data = await FirebaseDynamicLinks.instance.getInitialLink();
-    final Uri deepLink = data?.link;
-
-    if (deepLink != null) {
-      if (deepLink.queryParameters.containsKey('booking')) {
-        String id = deepLink.queryParameters['booking'];
-        debugPrint('splash_screen: booking: $id');
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) => InviteGuestForm(id)));
-      }
-      else if (deepLink.queryParameters.containsKey('categoryInvite')) {
-        String id = deepLink.queryParameters['categoryInvite'];
-        debugPrint('splash_screen: categoryInvite: $id');
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) =>InviteGuestForm(id)));
-      }
-    }
-  }
 
   /// Replace with server token from firebase console settings.
   String serverToken = 'AAAA6xUtyfE:APA91bGHhEzVUY9fnj4FbTXJX57qcgF-8GBrfBbGIa8kEpEIdsXRgQxbtsvbhL-w-_MQYKIj0XVlSaDSf2s6O3D3SM3o-z_AZnHQwBNLiw1ygyZOuVAKa5YmXeu6Da9eBqRD9uwFHSPi';
@@ -280,6 +239,7 @@ class _SplashScreenState extends State<SplashScreen> {
         StoreProvider.of<AppState>(context).dispatch(new UpdateUserDevice(device));
         Token token = Token(name: "token", id: serverToken, user_uid: user.uid);
         StoreProvider.of<AppState>(context).dispatch(new UpdateUserToken(token));
+
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => Landing()),

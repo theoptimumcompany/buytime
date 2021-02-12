@@ -1,6 +1,7 @@
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/file/optimum_file_to_upload.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
+import 'package:Buytime/reblox/navigation/navigation_reducer.dart';
 import 'package:Buytime/reblox/reducer/service_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/service_reducer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -44,6 +45,41 @@ class ServiceListRequestService implements EpicClass<AppState> {
 
       print("Epic ServiceListService return list with " + serviceStateList.length.toString());
     }).expand((element) => [ServiceListReturned(serviceStateList)]);
+  }
+}
+
+class ServiceListAndNavigateRequestService implements EpicClass<AppState> {
+  List<ServiceState> serviceStateList;
+  @override
+  Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
+    print("ServiceListService catched action");
+    return actions.whereType<ServiceListRequest>().asyncMap((event) async {
+      print("ServiceListService Firestore request");
+      serviceStateList = List<ServiceState>();
+      if (event.permission == "user") {
+        var servicesFirebaseShadow = await FirebaseFirestore.instance.collection("service").where("id_business", isEqualTo: event.businessId).where("visibility", isEqualTo: 'Shadow').get();
+        servicesFirebaseShadow.docs.forEach((element) {
+          ServiceState serviceState = ServiceState.fromJson(element.data());
+          serviceStateList.add(serviceState);
+        });
+        var servicesFirebaseVisible = await FirebaseFirestore.instance.collection("service").where("id_business", isEqualTo: event.businessId).where("visibility", isEqualTo: 'Visible').get();
+        servicesFirebaseVisible.docs.forEach((element) {
+          ServiceState serviceState = ServiceState.fromJson(element.data());
+          serviceStateList.add(serviceState);
+        });
+      } else {
+        var servicesFirebase = await FirebaseFirestore.instance.collection("service").where("id_business", isEqualTo: event.businessId).get();
+        servicesFirebase.docs.forEach((element) {
+          ServiceState serviceState = ServiceState.fromJson(element.data());
+          serviceStateList.add(serviceState);
+        });
+      }
+
+      print("ServiceListService return list with " + serviceStateList.length.toString());
+    }).expand((element) => [
+      ServiceListReturned(serviceStateList),
+      NavigatePushAction(AppRoutes.confirmBooking),
+    ]);
   }
 }
 

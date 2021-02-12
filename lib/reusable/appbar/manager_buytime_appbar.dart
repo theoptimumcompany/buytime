@@ -7,11 +7,13 @@ class BuytimeAppbarManager extends StatelessWidget implements PreferredSizeWidge
   final double _preferredHeight = 70.0;
   double width;
   double height;
+  Color background = Color.fromRGBO(0, 103, 145, 1.0);
 
   BuytimeAppbarManager({
     @required this.children,
     @required this.width,
     @required this.height,
+    this.background
   });
 
   @override
@@ -21,7 +23,7 @@ class BuytimeAppbarManager extends StatelessWidget implements PreferredSizeWidge
         height: statusbarHeight + _preferredHeight,
         child: CustomPaint(
           painter: ContainerShapeBottomCircle(
-            Color.fromRGBO(0, 103, 145, 1.0),
+            background,
           ),
           child: Padding(
             padding: new EdgeInsets.only(top: statusbarHeight),

@@ -1,10 +1,13 @@
 import 'dart:async';
 
 import 'package:Buytime/UI/user/booking/UI_U_ConfirmBooking.dart';
+import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
+import 'package:Buytime/reblox/reducer/booking_reducer.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -65,13 +68,8 @@ class _InviteGuestFormState extends State<InviteGuestForm> {
           );
         });
 
-    Timer(Duration(milliseconds: 5000), (){
-      Navigator.of(context).pop();
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => ConfirmBooking(state)),
-      );
-    });
+    StoreProvider.of<AppState>(context).dispatch(BookingRequest(bookingCodeController.text));
+
   }
 
 
@@ -80,6 +78,8 @@ class _InviteGuestFormState extends State<InviteGuestForm> {
 
     FocusScopeNode currentFocus = FocusScope.of(context);
      bool bookingRequest = false;
+
+
 
     return Scaffold(
       appBar: AppBar(

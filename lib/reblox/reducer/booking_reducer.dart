@@ -91,6 +91,12 @@ BookingState bookingReducer(BookingState state, action) {
     return bookingState;
   }
 
+  if (action is BookingRequestResponse) {
+    bookingState = action.bookingState.copyWith();
+    debugPrint('booking_reducer: ${bookingState.user.first.name}');
+    return bookingState;
+  }
+
   if (action is DeleteBooking) {
     bookingState = BookingState().toEmpty();
     return bookingState;

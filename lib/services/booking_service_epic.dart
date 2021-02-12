@@ -4,6 +4,7 @@ import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/navigation/navigation_reducer.dart';
 import 'package:Buytime/reblox/reducer/booking_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/booking_reducer.dart';
+import 'package:Buytime/reblox/reducer/business_reducer.dart';
 import 'package:Buytime/utils/utils.dart';
 import 'package:flutter/widgets.dart';
 import 'package:redux_epics/redux_epics.dart';
@@ -73,24 +74,22 @@ class BookingCreateRequestService implements EpicClass<AppState> {
 }
 
 class BookingRequestService implements EpicClass<AppState> {
+  BookingState bookingState;
+
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<BookingRequest>().asyncMap((event) async {
       print("BookingService document id:" + event.bookingId);
 
-      DocumentSnapshot query = await FirebaseFirestore.instance
+      QuerySnapshot bookingSnapshot = await FirebaseFirestore.instance
           .collection("booking")
-          .doc(event.bookingId)
-          .get();
+          .where('booking_code', isEqualTo: event.bookingId).get();
 
-      //print("BusinessService firestore listener:" + snapshot.get('name'));
-
-      BookingState bookingState = new BookingState();
-
-      bookingState = BookingState.fromJson(query.data());
-
-      return new BookingRequestResponse(bookingState);
-    });
+      bookingState =  BookingState.fromJson(bookingSnapshot.docs.first.data());
+    }).expand((element) => [
+      BookingRequestResponse(bookingState),
+      BusinessRequest(bookingState.business_id)
+    ]);
   }
 }
 
@@ -147,6 +146,33 @@ class BookingUpdateRequestService implements EpicClass<AppState> {
     }).expand((element) => [
       UpdatedBooking(bookingState),
       BookingListReturned(tmpBookingList.bookingListState)
+    ]);
+  }
+}
+
+class BookingUpdateAndNavigateRequestService implements EpicClass<AppState> {
+  BookingState bookingState;
+  BookingListState tmpBookingList;
+
+  @override
+  Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
+    return actions.whereType<UpdateBooking>().asyncMap((event) async {
+
+      print("booking_service_epic: booking id:" + event.bookingState.booking_id);
+      await FirebaseFirestore.instance
+          .collection("booking")
+          .doc(event.bookingState.booking_id)
+          .update(event.bookingState.toJson());
+
+      bookingState = event.bookingState;
+
+      tmpBookingList = store.state.bookingList.copyWith();
+      tmpBookingList.bookingListState.removeWhere((item) => item.booking_id == bookingState.booking_id);
+      tmpBookingList.bookingListState.add(bookingState);
+
+    }).expand((element) => [
+      UpdatedBooking(bookingState),
+      NavigatePushAction(AppRoutes.bookingPage),
     ]);
   }
 }

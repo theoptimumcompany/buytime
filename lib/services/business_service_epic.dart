@@ -8,6 +8,7 @@ import 'package:Buytime/reblox/navigation/navigation_reducer.dart';
 import 'package:Buytime/reblox/reducer/booking_reducer.dart';
 import 'package:Buytime/reblox/reducer/business_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/business_reducer.dart';
+import 'package:Buytime/reblox/reducer/service_list_reducer.dart';
 
 import 'package:Buytime/services/file_upload_service.dart'
     if (dart.library.html) 'package:Buytime/services/file_upload_service_web.dart';
@@ -63,44 +64,42 @@ class BusinessListRequestService implements EpicClass<AppState> {
   }
 }
 
-class BusinessRequestService implements EpicClass<AppState> {
+class BusinessAndNavigateRequestService implements EpicClass<AppState> {
+  BusinessState businessState;
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    return actions.whereType<BusinessRequest>().asyncMap((event) {
+    return actions.whereType<BusinessRequest>().asyncMap((event) async {
       print("BusinessService document id:" + event.businessStateId);
-      return FirebaseFirestore.instance
+
+      DocumentSnapshot businessSnapshot = await FirebaseFirestore.instance
           .collection("business")
           .doc(event.businessStateId)
-          .get()
-          .then((snapshot) {
-        print("BusinessService firestore listener:" + snapshot.get('name'));
-        return new BusinessRequestResponse(BusinessState(
-          name: snapshot.get('name'),
-          responsible_person_name: snapshot.get('responsible_person_name'),
-          responsible_person_surname: snapshot.get('responsible_person_surname'),
-          responsible_person_email: snapshot.get('responsible_person_email'),
-          phone_number: snapshot.get('phone_number') ?? '000 000 0000',
-          email: snapshot.get('email'),
-          VAT: snapshot.get('VAT'),
-          street: snapshot.get('street'),
-          municipality: snapshot.get('municipality'),
-          street_number: snapshot.get('street_number'),
-          ZIP: snapshot.get('ZIP'),
-          state_province: snapshot.get('state_province'),
-          nation: snapshot.get('nation'),
-          coordinate: snapshot.get('coordinate'),
-          profile: snapshot.get('profile'),
-          gallery: List<String>.from(snapshot.get('gallery')),
-          wide: snapshot.get('wide'),
-          logo: snapshot.get('logo'),
-          business_type: List<GenericState>.from(snapshot.get('business_type')),
-          description: snapshot.get('description'),
-          id_firestore: snapshot.get('id_firestore'),
-          salesmanId: snapshot.get('salesmanId'),
-          ownerId: snapshot.get('salesmanId'),
-        ));
-      });
-    }).takeUntil(actions.whereType<UnlistenBusiness>());
+          .get();
+
+     businessState =  BusinessState.fromJson(businessSnapshot.data());
+    }).expand((element) => [
+      BusinessRequestResponse(businessState),
+      ServiceListRequest(businessState.id_firestore, 'User')
+    ]);
+  }
+}
+
+class BusinessRequestService implements EpicClass<AppState> {
+  BusinessState businessState;
+  @override
+  Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
+    return actions.whereType<BusinessRequest>().asyncMap((event) async {
+      print("BusinessService document id:" + event.businessStateId);
+
+      DocumentSnapshot businessSnapshot = await FirebaseFirestore.instance
+          .collection("business")
+          .doc(event.businessStateId)
+          .get();
+
+     businessState =  BusinessState.fromJson(businessSnapshot.data());
+    }).expand((element) => [
+      BusinessRequestResponse(businessState),
+    ]);
   }
 }
 

@@ -30,6 +30,7 @@ import 'package:Buytime/utils/theme/buytime_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:animations/animations.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -51,6 +52,50 @@ class LandingState extends State<Landing> {
     super.initState();
     cards.add(LandingCardWidget('Enter booking code', 'Start your journey', 'assets/img/booking_code.png', null));
     cards.add(LandingCardWidget('About Buytime', 'Discover our network', 'assets/img/beach_girl.png', null));
+
+    initDynamicLinks();
+  }
+
+  void initDynamicLinks() async {
+    print("Dentro initial dynamic");
+    FirebaseDynamicLinks.instance.onLink(onSuccess: (PendingDynamicLinkData dynamicLink) async {
+      final Uri deepLink = dynamicLink?.link;
+
+      if (deepLink != null) {
+        if (deepLink.queryParameters.containsKey('booking')) {
+          String id = deepLink.queryParameters['booking'];
+          debugPrint('splash_screen: booking: $id');
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) => InviteGuestForm(id)));
+        }
+        else if (deepLink.queryParameters.containsKey('categoryInvite')) {
+          String id = deepLink.queryParameters['categoryInvite'];
+          debugPrint('splash_screen: categoryInvite: $id');
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) => InviteGuestForm(id)));
+        }
+      }
+    }, onError: (OnLinkErrorException e) async {
+      print('onLinkError');
+      print(e.message);
+    });
+
+    await Future.delayed(Duration(seconds: 2));
+
+    ///Serve un delay che altrimenti getInitialLink torna NULL
+    final PendingDynamicLinkData data = await FirebaseDynamicLinks.instance.getInitialLink();
+    final Uri deepLink = data?.link;
+
+    if (deepLink != null) {
+      if (deepLink.queryParameters.containsKey('booking')) {
+        String id = deepLink.queryParameters['booking'];
+        debugPrint('splash_screen: booking: $id');
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) => InviteGuestForm(id)));
+      }
+      else if (deepLink.queryParameters.containsKey('categoryInvite')) {
+        String id = deepLink.queryParameters['categoryInvite'];
+        debugPrint('splash_screen: categoryInvite: $id');
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) =>InviteGuestForm(id)));
+      }
+    }
   }
 
   @override
@@ -58,6 +103,7 @@ class LandingState extends State<Landing> {
     var media = MediaQuery.of(context).size;
     SizeConfig().init(context);
     var isManagerOrAbove = false;
+
 
     return WillPopScope(
         onWillPop: () async {

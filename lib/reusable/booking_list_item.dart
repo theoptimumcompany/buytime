@@ -103,7 +103,7 @@ class _BookingListItemState extends State<BookingListItem> {
                               Container(
                                 child: IconButton(
                                   icon: Icon(
-                                    widget.booking.status == 'created' ? Icons.bookmark_border : Icons.check,
+                                    widget.booking.status == 'created' ? Icons.bookmark_border : widget.booking.status == 'opened' ? Icons.check_circle : Icons.check_circle_outline,
                                     color: BuytimeTheme.ActionButton,
                                   ),
                                 ),
