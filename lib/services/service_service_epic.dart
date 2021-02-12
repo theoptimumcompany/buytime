@@ -22,24 +22,27 @@ class ServiceListRequestService implements EpicClass<AppState> {
           serviceStateList.add(serviceState);
         });
         var servicesFirebaseVisible = await FirebaseFirestore.instance.collection("service").where("id_business", isEqualTo: event.businessId).where("visibility", isEqualTo: 'Visible').get();
+        serviceStateList.clear();
         servicesFirebaseVisible.docs.forEach((element) {
           ServiceState serviceState = ServiceState.fromJson(element.data());
+
           serviceStateList.add(serviceState);
         });
       } else {
         CollectionReference servicesFirebase = FirebaseFirestore.instance.collection("service");
         Query query = servicesFirebase.where("businessId", isEqualTo: event.businessId);
         //   query = query.where("id_category", isEqualTo: categoryInviteState.id_category);
-
-         await query.get().then((value) {
+        serviceStateList.clear();
+        await query.get().then((value) {
           value.docs.forEach((element) {
             ServiceState serviceState = ServiceState.fromJson(element.data());
+
             serviceStateList.add(serviceState);
           });
         });
       }
 
-      print("ServiceListService return list with " + serviceStateList.length.toString());
+      print("Epic ServiceListService return list with " + serviceStateList.length.toString());
     }).expand((element) => [ServiceListReturned(serviceStateList)]);
   }
 }
