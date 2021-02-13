@@ -1,5 +1,6 @@
 import 'package:Buytime/reusable/appbar/container_shape_bottom_circle.dart';
 import 'package:Buytime/splash_screen.dart';
+import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:flutter/material.dart';
 
 class BuytimeAppbarManager extends StatelessWidget implements PreferredSizeWidget {
@@ -7,7 +8,7 @@ class BuytimeAppbarManager extends StatelessWidget implements PreferredSizeWidge
   final double _preferredHeight = 70.0;
   double width;
   double height;
-  Color background = Color.fromRGBO(0, 103, 145, 1.0);
+  Color background = BuytimeTheme.UserPrimary; //Color.fromRGBO(0, 103, 145, 1.0);
 
   BuytimeAppbarManager({
     @required this.children,

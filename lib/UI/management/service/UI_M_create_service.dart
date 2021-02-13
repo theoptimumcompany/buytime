@@ -17,7 +17,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class UI_CreateService extends StatefulWidget {
-  UI_CreateService();
+  String categoryId = "";
+
+  UI_CreateService({this.categoryId});
 
   @override
   State<StatefulWidget> createState() => UI_CreateServiceState();
@@ -65,10 +67,7 @@ class UI_CreateServiceState extends State<UI_CreateService> {
   }
 
   void setCategoryList() {
-    CategoryTree categoryNode = StoreProvider
-        .of<AppState>(context)
-        .state
-        .categoryTree;
+    CategoryTree categoryNode = StoreProvider.of<AppState>(context).state.categoryTree;
     List<Parent> items = [];
 
     if (categoryNode.categoryNodeList != null) {
@@ -98,6 +97,17 @@ class UI_CreateServiceState extends State<UI_CreateService> {
     return items;
   }
 
+  void addDefaultCategory() {
+    if (widget.categoryId != null && widget.categoryId != "") {
+      categoryList.forEach((element) {
+        if (element.id == widget.categoryId) {
+          selectedCategoryList.add(element);
+          StoreProvider.of<AppState>(context).dispatch(SetServiceSelectedCategories(selectedCategoryList));
+        }
+      });
+    }
+  }
+
   _buildChoiceList() {
     List<Widget> choices = [];
     categoryList.forEach((item) {
@@ -106,22 +116,24 @@ class UI_CreateServiceState extends State<UI_CreateService> {
         child: ChoiceChip(
           label: Text(item.name),
           selected: selectedCategoryList.any((element) => element.id == item.id),
-          selectedColor: Theme
-              .of(context)
-              .accentColor,
+          selectedColor: Theme.of(context).accentColor,
           labelStyle: TextStyle(color: selectedCategoryList.any((element) => element.id == item.id) ? BuytimeTheme.TextBlack : BuytimeTheme.TextWhite),
           onSelected: (selected) {
-            setState(() {
-              if (selectedCategoryList.any((element) => element.id == item.id)) {
-                selectedCategoryList.removeWhere((element) => element.id == item.id);
-              } else {
-                selectedCategoryList.add(item);
-              }
-              validateChosenCategories();
-            });
+            if (widget.categoryId != null && widget.categoryId != "" && item.parentRootId != widget.categoryId) {
+              return null;
+            } else {
+              setState(() {
+                if (selectedCategoryList.any((element) => element.id == item.id)) {
+                  selectedCategoryList.removeWhere((element) => element.id == item.id);
+                } else {
+                  selectedCategoryList.add(item);
+                }
+                validateChosenCategories();
+              });
 
-            ///Aggiorno lo store con la lista di categorie selezionate salvando id e rootId
-            StoreProvider.of<AppState>(context).dispatch(SetServiceSelectedCategories(selectedCategoryList));
+              ///Aggiorno lo store con la lista di categorie selezionate salvando id e rootId
+              StoreProvider.of<AppState>(context).dispatch(SetServiceSelectedCategories(selectedCategoryList));
+            }
           },
         ),
       ));
@@ -131,14 +143,13 @@ class UI_CreateServiceState extends State<UI_CreateService> {
 
   @override
   Widget build(BuildContext context) {
-    var media = MediaQuery
-        .of(context)
-        .size;
+    var media = MediaQuery.of(context).size;
     return StoreConnector<AppState, AppState>(
         converter: (store) => store.state,
         onInit: (store) => store.dispatch(CategoryTreeRequest()),
         builder: (context, snapshot) {
           setCategoryList();
+          // addDefaultCategory();  case 1 create default
           return Scaffold(
               appBar: BuytimeAppbarManager(
                 width: media.width,
@@ -146,18 +157,15 @@ class UI_CreateServiceState extends State<UI_CreateService> {
                   Container(
                     child: IconButton(
                       icon: Icon(Icons.chevron_left, color: Colors.white, size: media.width * 0.09),
-                      onPressed: () =>
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (context) => UI_M_ServiceList()),
-                          ),
+                      onPressed: () => Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => UI_M_ServiceList()),
+                      ),
                     ),
                   ),
                   Container(
                     child: Text(
-                      AppLocalizations
-                          .of(context)
-                          .serviceCreation,
+                      AppLocalizations.of(context).serviceCreation,
                       textAlign: TextAlign.start,
                       style: TextStyle(
                         fontSize: media.height * 0.028,
@@ -259,9 +267,7 @@ class UI_CreateServiceState extends State<UI_CreateService> {
                                     StoreProvider.of<AppState>(context).dispatch(SetServiceName(_serviceName));
                                   }
                                 },
-                                decoration: InputDecoration(labelText: AppLocalizations
-                                    .of(context)
-                                    .name),
+                                decoration: InputDecoration(labelText: AppLocalizations.of(context).name),
                               ),
                             ),
                           ),
@@ -286,9 +292,7 @@ class UI_CreateServiceState extends State<UI_CreateService> {
                                 onSaved: (value) {
                                   _serviceDescription = value;
                                 },
-                                decoration: InputDecoration(labelText: AppLocalizations
-                                    .of(context)
-                                    .description),
+                                decoration: InputDecoration(labelText: AppLocalizations.of(context).description),
                               ),
                             ),
                           ),
@@ -306,12 +310,11 @@ class UI_CreateServiceState extends State<UI_CreateService> {
                                 initialValue: _servicePrice.toString(),
                                 keyboardType: TextInputType.number,
                                 inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d*)'))],
-                                validator: (value) =>
-                                value.isEmpty
+                                validator: (value) => value.isEmpty
                                     ? 'Service price is blank'
                                     : validatePrice(value)
-                                    ? null
-                                    : 'Not a valid price',
+                                        ? null
+                                        : 'Not a valid price',
                                 onChanged: (value) {
                                   if (value == "") {
                                     setState(() {
@@ -338,9 +341,7 @@ class UI_CreateServiceState extends State<UI_CreateService> {
                                   StoreProvider.of<AppState>(context).dispatch(SetServicePrice(_servicePrice));
                                 },
                                 decoration: InputDecoration(
-                                  labelText: AppLocalizations
-                                      .of(context)
-                                      .price,
+                                  labelText: AppLocalizations.of(context).price,
                                 ),
                               ),
                             ),
@@ -354,9 +355,7 @@ class UI_CreateServiceState extends State<UI_CreateService> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                AppLocalizations
-                                    .of(context)
-                                    .selectCateogories,
+                                AppLocalizations.of(context).selectCateogories,
                                 textAlign: TextAlign.start,
                                 style: TextStyle(
                                   fontSize: media.height * 0.02,
@@ -377,21 +376,21 @@ class UI_CreateServiceState extends State<UI_CreateService> {
                       ///Error message Empty CategoryList
                       errorCategoryListEmpty
                           ? Padding(
-                        padding: const EdgeInsets.only(left: 30.0, bottom: 10),
-                        child: Container(
-                            child: Row(
-                              children: [
-                                Text(
-                                  'You have to select at least one category',
-                                  style: TextStyle(
-                                    fontSize: media.height * 0.018,
-                                    color: BuytimeTheme.ErrorRed,
-                                    fontWeight: FontWeight.w500,
+                              padding: const EdgeInsets.only(left: 30.0, bottom: 10),
+                              child: Container(
+                                  child: Row(
+                                children: [
+                                  Text(
+                                    'You have to select at least one category',
+                                    style: TextStyle(
+                                      fontSize: media.height * 0.018,
+                                      color: BuytimeTheme.ErrorRed,
+                                      fontWeight: FontWeight.w500,
+                                    ),
                                   ),
-                                ),
-                              ],
-                            )),
-                      )
+                                ],
+                              )),
+                            )
                           : Container(),
 
                       ///Divider under category selection
@@ -449,14 +448,14 @@ class UI_CreateServiceState extends State<UI_CreateService> {
                                         children: [
                                           Container(
                                               child: Text(
-                                                "Active", //todo: lang
-                                                textAlign: TextAlign.start,
-                                                style: TextStyle(
-                                                  color: BuytimeTheme.TextBlack,
-                                                  fontSize: media.height * 0.018,
-                                                  fontWeight: FontWeight.w400,
-                                                ),
-                                              )),
+                                            "Active", //todo: lang
+                                            textAlign: TextAlign.start,
+                                            style: TextStyle(
+                                              color: BuytimeTheme.TextBlack,
+                                              fontSize: media.height * 0.018,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          )),
                                           Container(
                                             child: Radio(
                                                 value: ServiceVisibility.Active,
@@ -495,14 +494,14 @@ class UI_CreateServiceState extends State<UI_CreateService> {
                                         children: [
                                           Container(
                                               child: Text(
-                                                "Deactivated", //todo: lang
-                                                textAlign: TextAlign.start,
-                                                style: TextStyle(
-                                                  color: BuytimeTheme.TextBlack,
-                                                  fontSize: media.height * 0.018,
-                                                  fontWeight: FontWeight.w400,
-                                                ),
-                                              )),
+                                            "Deactivated", //todo: lang
+                                            textAlign: TextAlign.start,
+                                            style: TextStyle(
+                                              color: BuytimeTheme.TextBlack,
+                                              fontSize: media.height * 0.018,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          )),
                                           Container(
                                             child: Radio(
                                                 value: ServiceVisibility.Deactivated,
@@ -541,14 +540,14 @@ class UI_CreateServiceState extends State<UI_CreateService> {
                                         children: [
                                           Container(
                                               child: Text(
-                                                "Invisible", //todo: lang
-                                                textAlign: TextAlign.start,
-                                                style: TextStyle(
-                                                  color: BuytimeTheme.TextBlack,
-                                                  fontSize: media.height * 0.018,
-                                                  fontWeight: FontWeight.w400,
-                                                ),
-                                              )),
+                                            "Invisible", //todo: lang
+                                            textAlign: TextAlign.start,
+                                            style: TextStyle(
+                                              color: BuytimeTheme.TextBlack,
+                                              fontSize: media.height * 0.018,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          )),
                                           Container(
                                             child: Radio(
                                                 value: ServiceVisibility.Invisible,

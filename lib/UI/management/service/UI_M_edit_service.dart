@@ -25,7 +25,6 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
   String _serviceName = "";
   double _servicePrice = 0.0;
   String _serviceDescription = "";
-  AssetImage assetImage = AssetImage('assets/img/image_placeholder.png');
   Image image;
   final ImagePicker imagePicker = ImagePicker();
   List<Parent> selectedCategoryList = [];
@@ -39,6 +38,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
   List<bool> weekSwitch = [false, false, false, false, false, false, false];
   double heightBookingBlock = 0.0;
   bool errorCategoryListEmpty = false;
+  bool editBasicInformation = false;
 
   bool validateAndSave() {
     final FormState form = _keyEditServiceForm.currentState;
@@ -108,6 +108,16 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
           parentRootId: list[i]['parentRootId'],
         ),
       );
+      if (StoreProvider.of<AppState>(context).state.serviceState.categoryId.contains(list[i]['nodeId'])) {
+        selectedCategoryList.add(
+          Parent(
+            name: list[i]['nodeName'],
+            id: list[i]['nodeId'],
+            level: list[i]['level'],
+            parentRootId: list[i]['parentRootId'],
+          ),
+        );
+      }
       if (list[i]['nodeCategory'] != null) {
         openTree(list[i]['nodeCategory'], items);
       }
@@ -663,6 +673,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
         builder: (context, snapshot) {
           //Popolo le categorie
           setCategoryList();
+          radioServiceVisibility = ServiceState().stringToEnum(snapshot.serviceState.visibility);
           return Scaffold(
               appBar: BuytimeAppbarManager(
                 width: media.width,
@@ -678,7 +689,8 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                   ),
                   Container(
                     child: Text(
-                      AppLocalizations.of(context).serviceEdit,
+                      //AppLocalizations.of(context).serviceEdit,
+                      "Edit " + snapshot.serviceState.name,
                       textAlign: TextAlign.start,
                       style: TextStyle(
                         fontSize: media.height * 0.028,
@@ -693,6 +705,11 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                         onPressed: () {
                           if (validateChosenCategories() && validateAndSave() && validatePrice(_servicePrice.toString())) {
                             print("Edita servizio");
+                            if(editBasicInformation){
+                              setState(() {
+                                editBasicInformation = false;
+                              });
+                            }
                           }
                         }),
                   ),
@@ -703,6 +720,80 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                   key: _keyEditServiceForm,
                   child: Column(
                     children: <Widget>[
+                      !editBasicInformation ?
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical: 25.0, horizontal: 30.00),
+                        child: Container(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Container(
+                                child: snapshot.serviceState.image1 == null || snapshot.serviceState.image1.isEmpty
+                                    ? Image.asset('assets/img/image_placeholder.png')
+                                    : Image.network(snapshot.serviceState.image1 + "_200x200",height: 100,width: 100,),
+                              ),
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 20.00),
+                                  child: Container(
+                                    height: 80,
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Container(
+                                              child: Text(
+                                                snapshot.serviceState.name,
+                                                style: TextStyle(
+                                                  fontSize: media.height * 0.028,
+                                                  color: BuytimeTheme.TextBlack,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                            ),
+                                            GestureDetector(
+                                              onTap: (){
+                                                setState(() {
+                                                  editBasicInformation = true;
+                                                });
+                                              },
+                                              child: Container(
+                                                child: Icon(Icons.edit, color: BuytimeTheme.SymbolGrey, size: media.width * 0.07),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(top: 15.0),
+                                          child: Row(
+                                            children: [
+                                              Container(
+                                                child: Text(
+                                                  snapshot.serviceState.description,
+                                                  style: TextStyle(
+                                                    fontSize: media.height * 0.028,
+                                                    color: BuytimeTheme.TextBlack,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ):Container(),
+
+                      ///Edit service basic information (clicked pencil)
+                      editBasicInformation?
                       Padding(
                         padding: const EdgeInsets.only(bottom: 25.0),
                         child: Container(
@@ -715,6 +806,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                   child: WidgetServicePhoto(
                                     remotePath: "service/" + (snapshot.business.name != null ? snapshot.business.name + "/" : "") + snapshot.serviceState.name + "_1",
                                     maxPhoto: 1,
+                                    image: snapshot.serviceState.image1 == null || snapshot.serviceState.image1.isEmpty ? null : Image.network(snapshot.serviceState.image1),
                                     cropAspectRatioPreset: CropAspectRatioPreset.square,
                                     onFilePicked: (fileToUpload) {
                                       print("UI_edit_service - callback!");
@@ -730,9 +822,10 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                       child: WidgetServicePhoto(
                                         remotePath: "service/" + (snapshot.business.name != null ? snapshot.business.name + "/" : "") + snapshot.serviceState.name + "_2",
                                         maxPhoto: 1,
+                                        image: snapshot.serviceState.image2 == null || snapshot.serviceState.image2.isEmpty ? null : Image.network(snapshot.serviceState.image2),
                                         cropAspectRatioPreset: CropAspectRatioPreset.square,
                                         onFilePicked: (fileToUpload) {
-                                          print("UI_create_service - callback!");
+                                          print("UI_edit_service - callback!");
                                           StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInService(fileToUpload));
                                         },
                                       ),
@@ -740,9 +833,10 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                     WidgetServicePhoto(
                                       remotePath: "service/" + (snapshot.business.name != null ? snapshot.business.name + "/" : "") + snapshot.serviceState.name + "_3",
                                       maxPhoto: 1,
+                                      image: snapshot.serviceState.image3 == null || snapshot.serviceState.image3.isEmpty ? null : Image.network(snapshot.serviceState.image3),
                                       cropAspectRatioPreset: CropAspectRatioPreset.square,
                                       onFilePicked: (fileToUpload) {
-                                        print("UI_create_service - callback!");
+                                        print("UI_edit_service - callback!");
                                         StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInService(fileToUpload));
                                       },
                                     ),
@@ -752,7 +846,8 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                             ],
                           ),
                         ),
-                      ),
+                      ):Container(),
+                      editBasicInformation?
                       Padding(
                         padding: const EdgeInsets.only(bottom: 15.0),
                         child: Center(
@@ -762,7 +857,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                             child: Padding(
                               padding: const EdgeInsets.only(top: 0.0, bottom: 5.0, left: 10.0, right: 10.0),
                               child: TextFormField(
-                                initialValue: _serviceName,
+                                initialValue: snapshot.serviceState.name,
                                 validator: (value) => value.isEmpty ? 'Service name is blank' : null,
                                 onChanged: (value) {
                                   if (validateAndSave()) {
@@ -781,7 +876,8 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                             ),
                           ),
                         ),
-                      ),
+                      ):Container(),
+                      editBasicInformation?
                       Padding(
                         padding: const EdgeInsets.only(bottom: 15.0),
                         child: Center(
@@ -793,7 +889,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                               child: TextFormField(
                                 keyboardType: TextInputType.multiline,
                                 maxLines: null,
-                                initialValue: _serviceDescription,
+                                initialValue: snapshot.serviceState.description,
                                 onChanged: (value) {
                                   _serviceDescription = value;
                                   StoreProvider.of<AppState>(context).dispatch(SetServiceDescription(_serviceDescription));
@@ -806,7 +902,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                             ),
                           ),
                         ),
-                      ),
+                      ):Container(),
                       Padding(
                         padding: const EdgeInsets.only(bottom: 15.0),
                         child: Center(
@@ -816,7 +912,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                             child: Padding(
                               padding: const EdgeInsets.only(top: 0.0, bottom: 5.0, left: 10.0, right: 10.0),
                               child: TextFormField(
-                                initialValue: _servicePrice.toString(),
+                                initialValue: snapshot.serviceState.price.toString(),
                                 keyboardType: TextInputType.number,
                                 inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d*)'))],
                                 validator: (value) => value.isEmpty
@@ -857,6 +953,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                           ),
                         ),
                       ),
+                      editBasicInformation?
                       Padding(
                         padding: const EdgeInsets.only(left: 20.0, top: 20.0),
                         child: Container(
@@ -880,10 +977,10 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                             ],
                           ),
                         ),
-                      ),
+                      ):Container(),
 
                       ///Error message Empty CategoryList
-                      errorCategoryListEmpty
+                      errorCategoryListEmpty && editBasicInformation
                           ? Padding(
                               padding: const EdgeInsets.only(left: 30.0, bottom: 10),
                               child: Container(
@@ -1178,7 +1275,6 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                           : Container(),
                     ],
                   ),
-
                 ),
               ));
         });

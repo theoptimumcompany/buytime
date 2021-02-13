@@ -16,8 +16,8 @@ class ContainerShapeBottomCircle extends CustomPainter {
     );
 
     final Rect colorBounds = Rect.fromLTRB(0, 0, size.width, size.height);
-    final Paint paint = new Paint()
-      ..shader = gradient.createShader(colorBounds);
+    final Paint paint = new Paint();
+      //..shader = gradient.createShader(colorBounds);
 
     Path path = Path();
     path.moveTo(size.width, 0);

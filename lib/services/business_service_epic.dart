@@ -56,7 +56,6 @@ class BusinessListRequestService implements EpicClass<AppState> {
       businessListFromFirebase.docs.forEach((element) {
         BusinessState businessState = BusinessState.fromJson(element.data());
         businessState.id_firestore = element.id;
-        print("business_service_epic : ID doc -> " + element.id);
         businessStateList.add(businessState);
       });
       return new BusinessListReturned(businessStateList);

@@ -3,6 +3,7 @@ import 'dart:core';
 
 import 'package:Buytime/UI/management/business/UI_M_business.dart';
 import 'package:Buytime/UI/management/service/UI_M_create_service.dart';
+import 'package:Buytime/UI/management/service/UI_M_edit_service.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/business/snippet/business_snippet_state.dart';
 import 'package:Buytime/reblox/model/category/category_state.dart';
@@ -41,6 +42,7 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
           listRoot.add(serviceList[s]);
         }
       }
+      listRoot.sort((a, b) => a.name.compareTo(b.name));
       listOfServiceEachRoot.add(listRoot);
     }
   }
@@ -65,9 +67,10 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
     return StoreConnector<AppState, AppState>(
         converter: (store) => store.state,
         onInit: (store) => {store.dispatch(ServiceListRequest(store.state.business.id_firestore, 'manager'))},
-        onWillChange: (store,storeNew) => setServiceLists(storeNew.categoryList.categoryListState, storeNew.serviceList.serviceListState),
+        onWillChange: (store, storeNew) => setServiceLists(storeNew.categoryList.categoryListState, storeNew.serviceList.serviceListState),
         builder: (context, snapshot) {
           List<CategoryState> categoryRootList = snapshot.categoryList.categoryListState;
+          categoryRootList.sort((a, b) => a.name.compareTo(b.name));
           List<ServiceState> serviceList = StoreProvider.of<AppState>(context).state.serviceList.serviceListState;
           order = snapshot.order.itemList != null ? (snapshot.order.itemList.length > 0 ? snapshot.order : order) : order;
           return WillPopScope(
@@ -157,7 +160,10 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                                       ///Static add service to category
                                       GestureDetector(
                                         onTap: () {
-                                          print("Add Service");
+                                          Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(builder: (context) => UI_CreateService(categoryId: categoryRootList[i].id)),
+                                          );
                                         },
                                         child: Row(
                                           // mainAxisAlignment: MainAxisAlignment.center,
@@ -180,7 +186,7 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                                                   children: [
                                                     Container(
                                                         child: Text(
-                                                      "Add a " + categoryRootList[i].name,
+                                                      "Add a " + categoryRootList[i].name, //todo translate
                                                       textAlign: TextAlign.start,
                                                       style: TextStyle(
                                                         color: BuytimeTheme.TextBlack,
@@ -207,17 +213,32 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                                                 physics: const NeverScrollableScrollPhysics(),
                                                 itemCount: listOfServiceEachRoot.length > 0 ? listOfServiceEachRoot[i].length : 0,
                                                 itemBuilder: (context, index) {
+                                                  Widget iconVisibility;
+                                                  switch (listOfServiceEachRoot[i][index].visibility) {
+                                                    case 'Active':
+                                                      iconVisibility = Icon(Icons.remove_red_eye, color: BuytimeTheme.SymbolGrey, size: mediaWidth * 0.07);
+                                                      break;
+                                                    case 'Deactivated':
+                                                      iconVisibility = Icon(Icons.visibility_off, color: BuytimeTheme.SymbolGrey, size: mediaWidth * 0.07);
+                                                      break;
+                                                    case 'Invisible':
+                                                      iconVisibility = Icon(Icons.do_disturb_alt_outlined, color: BuytimeTheme.SymbolGrey, size: mediaWidth * 0.07);
+                                                      break;
+                                                  }
                                                   return GestureDetector(
                                                     onTap: () {
-                                                      print("Edit Service");
+                                                      StoreProvider.of<AppState>(context).dispatch(SetService(listOfServiceEachRoot[i][index]));
+                                                      Navigator.pushReplacement(
+                                                        context,
+                                                        MaterialPageRoute(builder: (context) => UI_EditService()),
+                                                      );
                                                     },
                                                     child: Row(
-                                                      // mainAxisAlignment: MainAxisAlignment.center,
                                                       children: [
                                                         Padding(
                                                           padding: EdgeInsets.only(left: mediaWidth * 0.12, right: mediaWidth * 0.07),
                                                           child: Container(
-                                                            child: Icon(Icons.remove_red_eye, color: BuytimeTheme.SymbolGrey, size: mediaWidth * 0.07),
+                                                            child: iconVisibility,
                                                           ),
                                                         ),
                                                         Expanded(
@@ -254,94 +275,6 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                                               ),
                                             )
                                           : Container(),
-
-                                      // Padding(
-                                      //   padding: const EdgeInsets.only(top: 10),
-                                      //   child: serviceList.length > 0
-                                      //       ? GridView.count(
-                                      //           crossAxisCount: 1,
-                                      //           childAspectRatio: 3.465,
-                                      //           scrollDirection: Axis.vertical,
-                                      //           shrinkWrap: true,
-                                      //           children: List.generate(serviceList.length, (index) {
-                                      //             return OptimumServiceCardMedium(
-                                      //               rightWidget1: Column(
-                                      //                 children: [
-                                      //                   IconButton(
-                                      //                     icon: Icon(
-                                      //                       Icons.edit,
-                                      //                       size: 20.0,
-                                      //                     ),
-                                      //                     onPressed: () {
-                                      //                       StoreProvider.of<AppState>(context).dispatch(new SetService(snapshot.serviceList.serviceListState[index]));
-                                      //                       Navigator.pushReplacement(
-                                      //                         context,
-                                      //                         MaterialPageRoute(builder: (context) => UI_ManageService(false)),
-                                      //                       );
-                                      //                     },
-                                      //                   ),
-                                      //                 ],
-                                      //               ),
-                                      //               rowWidget1: Container(
-                                      //                 child: Column(
-                                      //                   children: [
-                                      //                     !uploadServiceVisibility
-                                      //                         ? IconButton(
-                                      //                             icon: iconVisibility,
-                                      //                             onPressed: () {
-                                      //                               ServiceState serviceStateUpdatedVisibility = snapshot.serviceList.serviceListState[index];
-                                      //                               String visibilitySnapshot = serviceStateUpdatedVisibility.visibility;
-                                      //                               setState(() {
-                                      //                                 uploadServiceVisibility = true;
-                                      //                                 print("La visibilità quando clicco è " + visibilitySnapshot);
-                                      //                                 switch (visibilitySnapshot) {
-                                      //                                   case 'Visible':
-                                      //                                     serviceStateUpdatedVisibility.visibility = 'Shadow';
-                                      //                                     print("Cambio in shadow");
-                                      //                                     iconVisibility = Image.asset('assets/img/icon/service_disabled.png');
-                                      //                                     break;
-                                      //                                   case 'Shadow':
-                                      //                                     serviceStateUpdatedVisibility.visibility = 'Invisible';
-                                      //                                     print("Cambio in red");
-                                      //                                     iconVisibility = Image.asset('assets/img/icon/service_invisible.png');
-                                      //                                     break;
-                                      //                                   case 'Invisible':
-                                      //                                     serviceStateUpdatedVisibility.visibility = 'Visible';
-                                      //                                     print("Cambio in visible");
-                                      //                                     iconVisibility = Image.asset('assets/img/icon/service_visible.png');
-                                      //                                     break;
-                                      //                                 }
-                                      //                               });
-                                      //                               //TODO: DISCUTERE SE UPLOAD ON DB DEL SERVICE AGGIORNATO LO METTIAMO QUI e se viene aggiornata la lista dei servizi quando entro nel singolo servizio
-                                      //                               StoreProvider.of<AppState>(context).dispatch(UpdateService(serviceStateUpdatedVisibility));
-                                      //                               Future.delayed(const Duration(milliseconds: 1000), () {
-                                      //                                 setState(() {
-                                      //                                   uploadServiceVisibility = false;
-                                      //                                 });
-                                      //                               });
-                                      //                             },
-                                      //                           )
-                                      //                         : Center(
-                                      //                             child: SizedBox(
-                                      //                               child: CircularProgressIndicator(),
-                                      //                               height: 15.0,
-                                      //                               width: 15.0,
-                                      //                             ),
-                                      //                           ),
-                                      //                   ],
-                                      //                 ),
-                                      //               ),
-                                      //               imageUrl: serviceList[index].thumbnail,
-                                      //               mediaSize: media,
-                                      //               serviceState: serviceList[index],
-                                      //               onServiceCardTap: (serviceState) {},
-                                      //             );
-                                      //           }),
-                                      //         )
-                                      //       : Center(
-                                      //           child: Text("Non ci sono servizi in questo business!"),
-                                      //         ),
-                                      // ),
                                     ],
                                   ),
                                 ),

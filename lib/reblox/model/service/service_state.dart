@@ -43,6 +43,20 @@ class ServiceState {
     return serviceVisibility.toString().split('.').last;
   }
 
+  ServiceVisibility stringToEnum(String serviceVisibility) {
+    switch(serviceVisibility){
+      case 'Active':
+        return ServiceVisibility.Active;
+        break;
+      case 'Deactivated':
+        return ServiceVisibility.Deactivated;
+        break;
+      case 'Invisible':
+        return ServiceVisibility.Invisible;
+        break;
+    }
+  }
+
   ServiceState toEmpty() {
     return ServiceState(
       serviceId: "",
@@ -82,12 +96,12 @@ class ServiceState {
   serviceStateFieldUpdate(
     String serviceId,
     String businessId,
-      List<String> categoryId,
-      List<String> categoryRootId,
+    List<String> categoryId,
+    List<String> categoryRootId,
     String image1,
     String image2,
     String image3,
-      String name,
+    String name,
     String description,
     String visibility,
     double price,
@@ -159,7 +173,7 @@ class ServiceState {
       : serviceId = json['serviceId'],
         businessId = json['businessId'],
         categoryId = List<String>.from(json['categoryId']),
-        categoryRootId =  List<String>.from(json['categoryRootId']),
+        categoryRootId = List<String>.from(json['categoryRootId']),
         name = json['name'],
         image1 = json['image1'],
         image2 = json['image2'],

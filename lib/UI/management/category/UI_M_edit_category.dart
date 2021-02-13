@@ -431,7 +431,7 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
   }
 
   List<Widget> listOfManagerChips(AppState snapshot) {
-    List<Widget> listOfWidget = new List();
+    List<Widget> listOfWidget = [];
     listOfWidget.add(InputChip(
       selected: false,
       label: Text(

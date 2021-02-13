@@ -86,7 +86,7 @@ void main() {
     ServiceDeleteService(),
     ServiceCreateService(),
     ServiceListRequestService(),
-    ServiceListAndNavigateRequestService(),
+    //ServiceListAndNavigateRequestService(),
     PipelineRequestService(),
     PipelineListRequestService(),
     OrderListRequestService(),
