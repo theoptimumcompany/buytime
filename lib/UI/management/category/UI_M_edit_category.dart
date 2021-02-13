@@ -266,7 +266,7 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                     break;
                 }
                 final RenderBox box = context.findRenderObject();
-                Share.share(AppLocalizations.of(context).checkOutBuytimeApp + '$link', subject: AppLocalizations.of(context).takeYourTime, sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
+                Share.share(AppLocalizations.of(context).checkOutBuytimeApp + ' $link', subject: AppLocalizations.of(context).takeYourTime, sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
                 Navigator.of(context).pop();
               }
             },

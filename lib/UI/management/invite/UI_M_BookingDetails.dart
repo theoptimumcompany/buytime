@@ -475,7 +475,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                                             final RenderBox box = context.findRenderObject();
                                             //Uri link = await createDynamicLink(bookingState.booking_code);
                                             bookingState.status = bookingState.enumToString(BookingStatus.sent);
-                                            StoreProvider.of<AppState>(context).dispatch(UpdateBooking(bookingState)); //TODO: Create the booking status update epic
+                                            StoreProvider.of<AppState>(context).dispatch(UpdateBookingNavigate(bookingState)); //TODO: Create the booking status update epic
 
                                             Share.share('check out Buytime App at $link', subject: 'Take your Time!', sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
                                             /*Share.share('Share', subject:

@@ -25,6 +25,22 @@ class CreateBookingRequest {
   BookingState get bookingState => _bookingState;
 }
 
+class ConfirmBookingRequest {
+  BookingState _bookingState;
+
+  ConfirmBookingRequest(this._bookingState);
+
+  BookingState get bookingState => _bookingState;
+}
+
+class ConfirmedBookingRequest {
+  BookingState _bookingState;
+
+  ConfirmedBookingRequest(this._bookingState);
+
+  BookingState get bookingState => _bookingState;
+}
+
 class BookingRequestResponse {
   BookingState _bookingState;
 
@@ -68,6 +84,17 @@ class UpdateBooking {
   //String get bookingId => _bookingId;
   BookingState get bookingState => _bookingState;
 }
+class UpdateBookingNavigate {
+  //BookingStatus _bookingStatus;
+  //String _bookingId;
+  BookingState _bookingState;
+
+  UpdateBookingNavigate(this._bookingState);
+
+  //BookingStatus get bookingStatus => _bookingStatus;
+  //String get bookingId => _bookingId;
+  BookingState get bookingState => _bookingState;
+}
 
 class UpdatedBooking {
   //BookingStatus _bookingStatus;
@@ -92,6 +119,12 @@ BookingState bookingReducer(BookingState state, action) {
   }
 
   if (action is BookingRequestResponse) {
+    bookingState = action.bookingState.copyWith();
+    debugPrint('booking_reducer: ${bookingState.user.first.name}');
+    return bookingState;
+  }
+
+  if (action is ConfirmedBookingRequest) {
     bookingState = action.bookingState.copyWith();
     debugPrint('booking_reducer: ${bookingState.user.first.name}');
     return bookingState;

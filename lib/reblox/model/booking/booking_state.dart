@@ -21,12 +21,13 @@ class BookingState {
   DateTime start_date;
   DateTime end_date;
   String booking_code;
+  List<String> userEmail;
   List<UserSnippet> user;
   String status; //TODO Change to Enum
   String wide;
 
   List<dynamic> convertToJson(List<UserSnippet> objectStateList) {
-    List<dynamic> list = List<dynamic>();
+    List<dynamic> list = [];
     objectStateList.forEach((element) {
       list.add(element.toJson());
     });
@@ -42,6 +43,7 @@ class BookingState {
     @required this.start_date,
     @required this.end_date,
     @required this.booking_code,
+    @required this.userEmail,
     @required this.user,
     @required this.status,
     @required this.wide,
@@ -57,6 +59,7 @@ class BookingState {
       start_date: new DateTime.now(),
       end_date: new DateTime.now(),
       booking_code: "",
+      userEmail: [],
       user: [],
       status: enumToString(BookingStatus.empty),
       wide: "",
@@ -76,6 +79,7 @@ class BookingState {
     this.start_date = state.start_date;
     this.end_date = state.end_date;
     this.booking_code = state.booking_code;
+    this.userEmail = state.userEmail;
     this.user = state.user;
     this.status = state.status;
     this.wide = state.wide;
@@ -90,6 +94,7 @@ class BookingState {
     DateTime start_date,
     DateTime end_date,
     String booking_code,
+    List<String> userEmail,
     List<GenericState> user,
     String status,
     String wide,
@@ -103,6 +108,7 @@ class BookingState {
       start_date: start_date ?? this.start_date,
       end_date: end_date ?? this.end_date,
       booking_code: booking_code ?? this.booking_code,
+      userEmail: userEmail ?? this.userEmail,
       user: user ?? this.user,
       status: status ?? this.status,
       wide: wide ?? this.wide,
@@ -118,6 +124,7 @@ class BookingState {
     DateTime start_date,
     DateTime end_date,
     String booking_code,
+    List<String> userEmail,
     List<GenericState> user,
     String status,
     String wide,
@@ -131,6 +138,7 @@ class BookingState {
       start_date: start_date ?? this.start_date,
       end_date: end_date ?? this.end_date,
       booking_code: booking_code ?? this.booking_code,
+      userEmail: userEmail ?? this.userEmail,
       user: user ?? this.user,
       status: status ?? this.status,
       wide: wide ?? this.wide,
@@ -146,6 +154,7 @@ class BookingState {
         start_date = json['start_date'].toDate(),
         end_date = json['end_date'].toDate(),
         booking_code = json['booking_code'],
+        userEmail = List<String>.from(json["userEmail"]),
         user = List<UserSnippet>.from(json["user"].map((item) {
           return new UserSnippet(
             name: item["name"] != null ? item["name"] : "",
@@ -166,6 +175,7 @@ class BookingState {
         'start_date': start_date,
         'end_date': end_date,
         'booking_code': booking_code,
+        'userEmail': userEmail,
         'user': convertToJson(user),
         'status': status,
         'wide': wide

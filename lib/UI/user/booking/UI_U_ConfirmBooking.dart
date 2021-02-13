@@ -213,7 +213,7 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                                           });*/
 
                                       bookingState.status = bookingState.enumToString(BookingStatus.opened);
-                                      StoreProvider.of<AppState>(context).dispatch(UpdateBooking(bookingState));
+                                      StoreProvider.of<AppState>(context).dispatch(UpdateBookingNavigate(bookingState));
 
                                       /*Timer(Duration(milliseconds: 5000), (){
                                         Navigator.of(context).pop();

@@ -1,3 +1,4 @@
+import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:flutter/material.dart';
 
 class ContainerShapeBottomCircle extends CustomPainter {
@@ -8,16 +9,8 @@ class ContainerShapeBottomCircle extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final Gradient gradient = new LinearGradient(
-      begin: Alignment.topCenter,
-      end: Alignment.bottomCenter,
-      colors: [colour, /*Color.fromARGB(255, 55, 160, 224)*/ colour],
-      tileMode: TileMode.clamp,
-    );
-
-    final Rect colorBounds = Rect.fromLTRB(0, 0, size.width, size.height);
-    final Paint paint = new Paint();
-      //..shader = gradient.createShader(colorBounds);
+    final Paint paint = new Paint()
+    ..color = BuytimeTheme.ManagerPrimary;
 
     Path path = Path();
     path.moveTo(size.width, 0);
