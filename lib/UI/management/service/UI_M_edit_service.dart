@@ -42,6 +42,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
   bool editBasicInformation = false;
   bool resumeServiceBooking = true;
   List<bool> switchWeek = [true];
+  TextEditingController _tagServiceController = TextEditingController();
 
   bool validateAndSave() {
     final FormState form = _keyEditServiceForm.currentState;
@@ -1015,6 +1016,144 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                         width: media.width * 0.9,
                                         child: Wrap(
                                           children: _buildChoiceList(),
+                                        )),
+                                  ],
+                                ),
+                              ),
+                            )
+                          : Container(),
+                      editBasicInformation
+                          ? Padding(
+                              padding: const EdgeInsets.only(left: 30.0, top: 20.0,bottom: 10.0,right: 30.0),
+                              child: Container(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Seleziona tag', //TODO: trans lang
+                                      textAlign: TextAlign.start,
+                                      style: TextStyle(
+                                        fontSize: media.height * 0.02,
+                                        color: BuytimeTheme.TextBlack,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+
+                                    ///Tags
+                                    Padding(
+                                      padding: const EdgeInsets.only(top:15.0),
+                                      child: Container(
+                                        child: Column(
+                                          children: [
+                                            Row(
+                                             // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+
+                                                ///Add Tag field & Add Tag Button
+                                                Row(
+                                                  children: [
+                                                    ///Add Tag field
+                                                    Container(
+                                                      height: 50,
+                                                      width: media.width * 0.55,
+                                                      child: TextFormField(
+                                                        controller: _tagServiceController,
+                                                        textAlign: TextAlign.start,
+                                                        decoration: InputDecoration(
+                                                          enabledBorder: OutlineInputBorder(
+                                                              borderSide: BorderSide(color: Color(0xffe0e0e0)),
+                                                              borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                                          ),
+                                                          focusedBorder: OutlineInputBorder(
+                                                              borderSide: BorderSide(color: Color(0xff666666)),
+                                                              borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                                          ),
+                                                          errorBorder: OutlineInputBorder(
+                                                              borderSide: BorderSide(color: Colors.redAccent),
+                                                              borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                                          ),
+                                                          labelText: 'Add new tag',
+                                                          labelStyle: TextStyle(
+                                                            fontFamily: BuytimeTheme.FontFamily,
+                                                            color: Color(0xff666666),
+                                                            fontWeight: FontWeight.w400,
+                                                          ),
+                                                        ),
+                                                        style: TextStyle(
+                                                          fontFamily: BuytimeTheme.FontFamily,
+                                                          color: Color(0xff666666),
+                                                          fontWeight: FontWeight.w800,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    ///Add tag button
+                                                    Container(
+                                                      child: IconButton(
+                                                        icon: Icon(
+                                                          Icons.add_circle_rounded,
+                                                          size: 24,
+                                                          color: BuytimeTheme.TextGrey,
+                                                        ),
+                                                        onPressed: (){
+                                                          setState(() {
+                                                            if(_tagServiceController.text.isNotEmpty) {
+                                                              snapshot.serviceState.tag.add(_tagServiceController.text);
+                                                              _tagServiceController.clear();
+                                                            }
+                                                          });
+
+                                                        },
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                            (snapshot.serviceState.tag.length > 0 && snapshot.serviceState.tag != null)
+                                                ? Container(
+                                              height: media.height * 0.05,
+                                              child: ListView.builder(
+                                                itemCount: snapshot.serviceState.tag.length,
+                                                itemBuilder: (context, i) {
+                                                  return Row(
+                                                    children: [
+                                                      Container(
+                                                        margin: EdgeInsets.only(left: 5.0),
+                                                        child: InputChip(
+                                                          selected: false,
+                                                          label: Text(
+                                                            snapshot.serviceState.tag[i],
+                                                            style: TextStyle(
+                                                              fontSize: 13.0,
+                                                              fontWeight: FontWeight.w500,
+                                                            ),
+                                                          ),
+                                                          onPressed: () {
+                                                            setState(() {
+                                                              //_selected = !_selected;
+                                                            });
+                                                          },
+                                                          onDeleted: () {
+                                                            setState(() {
+                                                              snapshot.serviceState.tag.remove(snapshot.serviceState.tag[i]);
+                                                            });
+                                                          },
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  );
+                                                },
+                                              ),
+                                            )
+                                                : Container()
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                        width: media.width * 0.9,
+                                        child: Wrap(
+                                          children: [Container()],
                                         )),
                                   ],
                                 ),
