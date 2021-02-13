@@ -8,6 +8,7 @@ import 'package:Buytime/reblox/reducer/category_tree_reducer.dart';
 import 'package:Buytime/reblox/reducer/service_reducer.dart';
 import 'package:Buytime/reusable/appbar/manager_buytime_appbar.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
+import 'package:Buytime/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -141,6 +142,10 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
   void dispose() {
     bookingController.dispose();
     super.dispose();
+  }
+
+  List<Widget> generateNewAvailabilityInterval() {
+    List<Widget> listOfAvailabilityInterval = [];
   }
 
   _buildChoiceList() {
@@ -283,17 +288,17 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                       children: [
                         Container(
                             child: Padding(
-                              padding: const EdgeInsets.only(bottom: 10.0),
-                              child: Text(
-                                'Every day',
-                                textAlign: TextAlign.start,
-                                style: TextStyle(
-                                  color: BuytimeTheme.TextBlack,
-                                  fontSize: media.height * 0.018,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                            )),
+                          padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+                          child: Text(
+                            'Every day',
+                            textAlign: TextAlign.start,
+                            style: TextStyle(
+                              color: BuytimeTheme.TextBlack,
+                              fontSize: media.height * 0.02,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        )),
                       ],
                     ),
                   ),
@@ -302,18 +307,19 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
             ),
           ),
         ),
-        !switchWeek[0]?
-        Column(
-          children: [
-            weekSwitchDay(media, switchDay[0], 'Monday'), //todo: lang
-            weekSwitchDay(media, switchDay[1], 'Tuesday'), //todo: lang
-            weekSwitchDay(media, switchDay[2], 'Wednesday'), //todo: lang
-            weekSwitchDay(media, switchDay[3], 'Thursday'), //todo: lang
-            weekSwitchDay(media, switchDay[4], 'Friday'), //todo: lang
-            weekSwitchDay(media, switchDay[5], 'Saturday'), //todo: lang
-            weekSwitchDay(media, switchDay[6], 'Sunday'), //todo: lang
-          ],
-        ):Container(),
+        !switchWeek[0]
+            ? Column(
+                children: [
+                  weekSwitchDay(media, switchDay[0], 'Monday'), //todo: lang
+                  weekSwitchDay(media, switchDay[1], 'Tuesday'), //todo: lang
+                  weekSwitchDay(media, switchDay[2], 'Wednesday'), //todo: lang
+                  weekSwitchDay(media, switchDay[3], 'Thursday'), //todo: lang
+                  weekSwitchDay(media, switchDay[4], 'Friday'), //todo: lang
+                  weekSwitchDay(media, switchDay[5], 'Saturday'), //todo: lang
+                  weekSwitchDay(media, switchDay[6], 'Sunday'), //todo: lang
+                ],
+              )
+            : Container(),
         Padding(
           padding: const EdgeInsets.only(top: 20.0),
           child: Padding(
@@ -323,9 +329,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
               child: OutlinedButton(
                 onPressed: () {
                   print("ADD INTEVAL");
-                  setState(() {
-
-                  });
+                  generateNewAvailabilityInterval();
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),
@@ -361,21 +365,19 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                 ),
                 onPressed: () {
                   print("Save tab 1");
-                  setState(() {
-
-                  });
+                  setState(() {});
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(15.0),
                   child: Text(
-                      "SAVE", //todo: lang
-                      textAlign: TextAlign.start,
-                      style: TextStyle(
-                        fontSize: media.height * 0.023,
-                        color: BuytimeTheme.TextWhite,
-                        fontWeight: FontWeight.w900,
-                      ),
+                    "SAVE", //todo: lang
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                      fontSize: media.height * 0.023,
+                      color: BuytimeTheme.TextWhite,
+                      fontWeight: FontWeight.w900,
                     ),
+                  ),
                 ),
               ),
             ),
@@ -649,7 +651,9 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
       // mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Padding(
-          padding: EdgeInsets.only(left: media.width * 0.05, ),
+          padding: EdgeInsets.only(
+            left: media.width * 0.05,
+          ),
           child: Container(
             child: Padding(
               padding: const EdgeInsets.only(bottom: 10.0),
@@ -761,7 +765,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                       child: snapshot.serviceState.image1 == null || snapshot.serviceState.image1.isEmpty
                                           ? Image.asset('assets/img/image_placeholder.png')
                                           : Image.network(
-                                              snapshot.serviceState.image1 + "_200x200",
+                                              Utils.sizeImage(snapshot.serviceState.image1, Utils.imageSizing200),
                                               height: 100,
                                               width: 100,
                                             ),
@@ -841,7 +845,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                         child: WidgetServicePhoto(
                                           remotePath: "service/" + (snapshot.business.name != null ? snapshot.business.name + "/" : "") + snapshot.serviceState.name + "_1",
                                           maxPhoto: 1,
-                                          image: snapshot.serviceState.image1 == null || snapshot.serviceState.image1.isEmpty ? null : Image.network(snapshot.serviceState.image1),
+                                          image: snapshot.serviceState.image1 == null || snapshot.serviceState.image1.isEmpty ? null : Image.network(Utils.sizeImage(snapshot.serviceState.image1, Utils.imageSizing600)),
                                           cropAspectRatioPreset: CropAspectRatioPreset.square,
                                           onFilePicked: (fileToUpload) {
                                             print("UI_edit_service - callback!");
@@ -857,7 +861,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                             child: WidgetServicePhoto(
                                               remotePath: "service/" + (snapshot.business.name != null ? snapshot.business.name + "/" : "") + snapshot.serviceState.name + "_2",
                                               maxPhoto: 1,
-                                              image: snapshot.serviceState.image2 == null || snapshot.serviceState.image2.isEmpty ? null : Image.network(snapshot.serviceState.image2),
+                                              image: snapshot.serviceState.image2 == null || snapshot.serviceState.image2.isEmpty ? null : Image.network(Utils.sizeImage(snapshot.serviceState.image2, Utils.imageSizing200)),
                                               cropAspectRatioPreset: CropAspectRatioPreset.square,
                                               onFilePicked: (fileToUpload) {
                                                 print("UI_edit_service - callback!");
@@ -868,7 +872,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                           WidgetServicePhoto(
                                             remotePath: "service/" + (snapshot.business.name != null ? snapshot.business.name + "/" : "") + snapshot.serviceState.name + "_3",
                                             maxPhoto: 1,
-                                            image: snapshot.serviceState.image3 == null || snapshot.serviceState.image3.isEmpty ? null : Image.network(snapshot.serviceState.image3),
+                                            image: snapshot.serviceState.image3 == null || snapshot.serviceState.image3.isEmpty ? null : Image.network(Utils.sizeImage(snapshot.serviceState.image3, Utils.imageSizing200)),
                                             cropAspectRatioPreset: CropAspectRatioPreset.square,
                                             onFilePicked: (fileToUpload) {
                                               print("UI_edit_service - callback!");
@@ -1348,7 +1352,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
 
                                         ///Booking Settings Block
                                         Container(
-                                          child: Column(
+                                            child: Column(
                                               children: [
                                                 Padding(
                                                   padding: const EdgeInsets.only(top: 10.0),
@@ -1398,7 +1402,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                 ),
                                               ],
                                             ),
-                                        )
+                                          )
                                     : Container(),
                               ],
                             )

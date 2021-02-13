@@ -3,6 +3,18 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 class Utils {
+
+  static String imageSizing200 =  "_200x200";
+  static String imageSizing600 =  "_600x600";
+  static String imageSizing1000 =  "_1000x1000";
+
+  static String sizeImage(String image, String sizing) {
+    int lastPoint = image.lastIndexOf('.');
+    String extension = image.substring(lastPoint);
+    image = image.replaceAll(extension, '');
+    return image + sizing + extension;
+  }
+
   static Widget bottomArc = CustomPaint(
     painter: ShapesPainter(),
     child: Container(height: 20),
@@ -17,6 +29,7 @@ class Utils {
     }
     return result;
   }
+
 
 }
 
