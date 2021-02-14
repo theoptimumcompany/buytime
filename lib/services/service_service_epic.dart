@@ -17,12 +17,12 @@ class ServiceListRequestService implements EpicClass<AppState> {
     return actions.whereType<ServiceListRequest>().asyncMap((event) async {
       print("ServiceListService Firestore request");
       if (event.permission == "user") {
-        var servicesFirebaseShadow = await FirebaseFirestore.instance.collection("service").where("id_business", isEqualTo: event.businessId).where("visibility", isEqualTo: 'Shadow').get();
+        var servicesFirebaseShadow = await FirebaseFirestore.instance.collection("service").where("businessId", isEqualTo: event.businessId).where("visibility", isEqualTo: 'Shadow').get();
         servicesFirebaseShadow.docs.forEach((element) {
           ServiceState serviceState = ServiceState.fromJson(element.data());
           serviceStateList.add(serviceState);
         });
-        var servicesFirebaseVisible = await FirebaseFirestore.instance.collection("service").where("id_business", isEqualTo: event.businessId).where("visibility", isEqualTo: 'Visible').get();
+        var servicesFirebaseVisible = await FirebaseFirestore.instance.collection("service").where("businessId", isEqualTo: event.businessId).where("visibility", isEqualTo: 'Visible').get();
         serviceStateList.clear();
         servicesFirebaseVisible.docs.forEach((element) {
           ServiceState serviceState = ServiceState.fromJson(element.data());
@@ -58,13 +58,8 @@ class ServiceListAndNavigateRequestService implements EpicClass<AppState> {
       serviceStateList = List<ServiceState>();
       if (event.permission == "user") {
         print("ServiceListAndNavigateRequestService: permission as user");
-        var servicesFirebaseShadow = await FirebaseFirestore.instance.collection("service").where("businessId", isEqualTo: event.businessId).where("visibility", isEqualTo: 'Shadow').get();
+        var servicesFirebaseShadow = await FirebaseFirestore.instance.collection("service").where("businessId", isEqualTo: event.businessId).where("visibility", isEqualTo: 'Deactivated').get();
         servicesFirebaseShadow.docs.forEach((element) {
-          ServiceState serviceState = ServiceState.fromJson(element.data());
-          serviceStateList.add(serviceState);
-        });
-        var servicesFirebaseVisible = await FirebaseFirestore.instance.collection("service").where("businessId", isEqualTo: event.businessId).where("visibility", isEqualTo: 'Visible').get();
-        servicesFirebaseVisible.docs.forEach((element) {
           ServiceState serviceState = ServiceState.fromJson(element.data());
           serviceStateList.add(serviceState);
         });

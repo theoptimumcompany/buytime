@@ -4,6 +4,7 @@ import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:share/share.dart';
+import 'package:Buytime/UI/user/service/UI_U_ServiceDetails.dart';
 
 class BookingListServiceListItem extends StatefulWidget {
 
@@ -27,7 +28,10 @@ class _BookingListServiceListItemState extends State<BookingListServiceListItem>
             child: InkWell(
               borderRadius: BorderRadius.all(Radius.circular(10)),
               onTap: () async {
-
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ServiceDetails(serviceState: widget.serviceState,)),
+                );
               },
               child: Container(
                 height: SizeConfig.safeBlockVertical * 15,

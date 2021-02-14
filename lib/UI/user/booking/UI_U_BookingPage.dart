@@ -401,11 +401,133 @@ class _BookingPageState extends State<BookingPage> {
                               ],
                             ),
                           ),
-                          Container(
-                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, bottom: SizeConfig.safeBlockVertical * 2),
-                            height: SizeConfig.safeBlockVertical * 30,
-                            width: double.infinity,
-                            color: BuytimeTheme.BackgroundWhite,
+                          ///Top Service
+                          Flexible(
+                            child: Container(
+                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
+                              padding: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 1),
+                              color: BuytimeTheme.BackgroundWhite,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  ///Top Services
+                                  Container(
+                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
+                                    child: Text(
+                                      'Find your inspiration here',
+                                      style: TextStyle(
+                                          fontFamily: BuytimeTheme.FontFamily,
+                                          color: BuytimeTheme.TextDark,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: SizeConfig.safeBlockHorizontal * 4
+                                      ),
+                                    ),
+                                  ),
+                                  serviceList.isNotEmpty ? Container(
+                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 2, right: SizeConfig.safeBlockHorizontal * 2),
+                                    height: SizeConfig.safeBlockVertical * 50,
+                                    width: double.infinity,
+                                    child: Column(
+                                      children: [
+                                        Flexible(
+                                          flex: 1,
+                                          child: Row(
+                                            children: [
+                                              Flexible(
+                                                flex: 1,
+                                                child: Container(
+                                                  margin: EdgeInsets.all(SizeConfig.safeBlockVertical*.25),
+                                                  //width: double.infinity,
+                                                  //height: double.infinity,
+                                                  width: SizeConfig.safeBlockVertical * 18,
+                                                  height: SizeConfig.safeBlockVertical * 18,
+                                                  color: BuytimeTheme.AccentRed,
+                                                ),
+                                              ),
+                                              Expanded(
+                                                flex: 1,
+                                                child: Container(
+                                                  margin: EdgeInsets.all(SizeConfig.safeBlockVertical*.25),
+                                                  //width: double.infinity,
+                                                  //height: double.infinity,
+                                                  width: SizeConfig.safeBlockVertical * 18,
+                                                  height: SizeConfig.safeBlockVertical * 18,
+                                                  color: BuytimeTheme.Secondary,
+                                                ),
+                                              ),
+                                              Expanded(
+                                                flex: 1,
+                                                child: Container(
+                                                  margin: EdgeInsets.all(SizeConfig.safeBlockVertical*.25),
+                                                  //width: double.infinity,
+                                                  //height: double.infinity,
+                                                  width: SizeConfig.safeBlockVertical * 18,
+                                                  height: SizeConfig.safeBlockVertical * 18,
+                                                  color: BuytimeTheme.ManagerPrimary,
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        Flexible(
+                                          flex: 1,
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              Flexible(
+                                                flex: 1,
+                                                child: Container(
+                                                  margin: EdgeInsets.all(SizeConfig.safeBlockVertical*.25),
+                                                  //width: double.infinity,
+                                                  //height: double.infinity,
+                                                  width: SizeConfig.safeBlockVertical * 28,
+                                                  height: SizeConfig.safeBlockVertical * 28,
+                                                  color: BuytimeTheme.BackgroundLightBlue,
+                                                ),
+                                              ),
+                                              Flexible(
+                                                flex: 1,
+                                                child: Container(
+                                                  margin: EdgeInsets.all(SizeConfig.safeBlockVertical*.25),
+                                                  //width: double.infinity,
+                                                  //height: double.infinity,
+                                                  width: SizeConfig.safeBlockVertical * 28,
+                                                  height: SizeConfig.safeBlockVertical * 28,
+                                                  color: BuytimeTheme.TextPurple,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ) : Container(
+                                    height: SizeConfig.safeBlockVertical * 8,
+                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                    decoration: BoxDecoration(
+                                        color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2),
+                                        borderRadius: BorderRadius.circular(10)
+                                    ),
+                                    child: Center(
+                                        child: Container(
+                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 4),
+                                          alignment: Alignment.centerLeft,
+                                          child:  Text(
+                                            'No active service found',
+                                            style: TextStyle(
+                                                fontFamily: BuytimeTheme.FontFamily,
+                                                color: BuytimeTheme.TextGrey,
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 16
+                                            ),
+                                          ),
+                                        )
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
                           ),
                         ],
                       ),
