@@ -89,7 +89,7 @@ class BookingRequestService implements EpicClass<AppState> {
       bookingState =  BookingState.fromJson(bookingSnapshot.docs.first.data());
     }).expand((element) => [
       BookingRequestResponse(bookingState),
-      BusinessRequest(bookingState.business_id)
+      BusinessAndNavigateRequest(bookingState.business_id)
     ]);
   }
 }

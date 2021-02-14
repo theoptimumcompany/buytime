@@ -69,6 +69,7 @@ class _InviteGuestFormState extends State<InviteGuestForm> {
         });
 
     StoreProvider.of<AppState>(context).dispatch(BookingRequest(bookingCodeController.text));
+    //Timer(Duration(seconds: 1), () => Navigator.of(context).pop());
 
   }
 

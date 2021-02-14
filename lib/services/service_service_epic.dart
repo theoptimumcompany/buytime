@@ -48,40 +48,47 @@ class ServiceListRequestService implements EpicClass<AppState> {
   }
 }
 
-// class ServiceListAndNavigateRequestService implements EpicClass<AppState> {
-//   List<ServiceState> serviceStateList;
-//   @override
-//   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-//     print("ServiceListService catched action");
-//     return actions.whereType<ServiceListRequest>().asyncMap((event) async {
-//       print("ServiceListService Firestore request");
-//       serviceStateList = List<ServiceState>();
-//       if (event.permission == "user") {
-//         var servicesFirebaseShadow = await FirebaseFirestore.instance.collection("service").where("id_business", isEqualTo: event.businessId).where("visibility", isEqualTo: 'Shadow').get();
-//         servicesFirebaseShadow.docs.forEach((element) {
-//           ServiceState serviceState = ServiceState.fromJson(element.data());
-//           serviceStateList.add(serviceState);
-//         });
-//         var servicesFirebaseVisible = await FirebaseFirestore.instance.collection("service").where("id_business", isEqualTo: event.businessId).where("visibility", isEqualTo: 'Visible').get();
-//         servicesFirebaseVisible.docs.forEach((element) {
-//           ServiceState serviceState = ServiceState.fromJson(element.data());
-//           serviceStateList.add(serviceState);
-//         });
-//       } else {
-//         var servicesFirebase = await FirebaseFirestore.instance.collection("service").where("id_business", isEqualTo: event.businessId).get();
-//         servicesFirebase.docs.forEach((element) {
-//           ServiceState serviceState = ServiceState.fromJson(element.data());
-//           serviceStateList.add(serviceState);
-//         });
-//       }
-//
-//       print("ServiceListService return list with " + serviceStateList.length.toString());
-//     }).expand((element) => [
-//       ServiceListReturned(serviceStateList),
-//       NavigatePushAction(AppRoutes.confirmBooking),
-//     ]);
-//   }
-// }
+class ServiceListAndNavigateRequestService implements EpicClass<AppState> {
+  List<ServiceState> serviceStateList;
+  @override
+  Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
+    print("ServiceListAndNavigateRequestService catched action");
+    return actions.whereType<ServiceListAndNavigateRequest>().asyncMap((event) async {
+      print("ServiceListAndNavigateRequestService Firestore request business Id: ${event.businessId}, permission: ${event.permission}");
+      serviceStateList = List<ServiceState>();
+      if (event.permission == "user") {
+        print("ServiceListAndNavigateRequestService: permission as user");
+        var servicesFirebaseShadow = await FirebaseFirestore.instance.collection("service").where("businessId", isEqualTo: event.businessId).where("visibility", isEqualTo: 'Shadow').get();
+        servicesFirebaseShadow.docs.forEach((element) {
+          ServiceState serviceState = ServiceState.fromJson(element.data());
+          serviceStateList.add(serviceState);
+        });
+        var servicesFirebaseVisible = await FirebaseFirestore.instance.collection("service").where("businessId", isEqualTo: event.businessId).where("visibility", isEqualTo: 'Visible').get();
+        servicesFirebaseVisible.docs.forEach((element) {
+          ServiceState serviceState = ServiceState.fromJson(element.data());
+          serviceStateList.add(serviceState);
+        });
+        var servicesFirebaseActive = await FirebaseFirestore.instance.collection("service").where("businessId", isEqualTo: event.businessId).where("visibility", isEqualTo: 'Active').get();
+        servicesFirebaseActive.docs.forEach((element) {
+          ServiceState serviceState = ServiceState.fromJson(element.data());
+          serviceStateList.add(serviceState);
+        });
+      } else {
+        print("ServiceListAndNavigateRequestService: permission as manager");
+        var servicesFirebase = await FirebaseFirestore.instance.collection("service").where("businessId", isEqualTo: event.businessId).get();
+        servicesFirebase.docs.forEach((element) {
+          ServiceState serviceState = ServiceState.fromJson(element.data());
+          serviceStateList.add(serviceState);
+        });
+      }
+
+      print("ServiceListAndNavigateRequestService return list with " + serviceStateList.length.toString());
+    }).expand((element) => [
+      ServiceListReturned(serviceStateList),
+      NavigatePushAction(AppRoutes.confirmBooking),
+    ]);
+  }
+}
 
 // class ServiceRequestService implements EpicClass<AppState> {
 //   @override

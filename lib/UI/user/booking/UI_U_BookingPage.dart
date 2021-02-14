@@ -6,6 +6,7 @@ import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/model/service/service_list_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reusable/appbar/manager_buytime_appbar.dart';
+import 'package:Buytime/reusable/booking_page_service_list_item.dart';
 import 'package:Buytime/reusable/custom_bottom_button_widget.dart';
 import 'package:Buytime/reusable/past_booking_card_widget.dart';
 import 'package:Buytime/utils/size_config.dart';
@@ -245,9 +246,7 @@ class _BookingPageState extends State<BookingPage> {
                                         //MenuItemModel menuItem = menuItems.elementAt(index);
                                         ServiceState service = serviceList.elementAt(index);
 
-                                        return Container(
-                                          color: Colors.black54,
-                                        );
+                                        return BookingListServiceListItem(service);
                                       },
                                         childCount: serviceList.length > 5 ? serviceList.getRange(0, 5).length : serviceList.length,
                                       ),

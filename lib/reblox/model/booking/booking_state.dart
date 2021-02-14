@@ -154,7 +154,7 @@ class BookingState {
         start_date = json['start_date'].toDate(),
         end_date = json['end_date'].toDate(),
         booking_code = json['booking_code'],
-        userEmail = List<String>.from(json["userEmail"]),
+        userEmail = json["userEmail"] != null ? List<String>.from(json["userEmail"]) : [],
         user = List<UserSnippet>.from(json["user"].map((item) {
           return new UserSnippet(
             name: item["name"] != null ? item["name"] : "",
