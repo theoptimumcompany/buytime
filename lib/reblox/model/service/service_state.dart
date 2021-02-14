@@ -182,7 +182,7 @@ class ServiceState {
         visibility = json['visibility'],
         price = json['price'],
         timesSold = json['timesSold'],
-        tag = List<String>.from(json['tag']);
+        tag = json['tag'] != null ? List<String>.from(json['tag']) : [];
 
   Map<String, dynamic> toJson() => {
         'serviceId': serviceId,

@@ -996,9 +996,10 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                           ),
                         ),
                       ),
+                      ///Categories Chip Block
                       editBasicInformation
                           ? Padding(
-                              padding: const EdgeInsets.only(left: 20.0, top: 20.0, bottom: 10.0),
+                              padding: const EdgeInsets.only(left: 20.0, top: 10.0, bottom: 10.0),
                               child: Container(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -1022,9 +1023,29 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                               ),
                             )
                           : Container(),
+                      ///Error message Empty CategoryList
+                      errorCategoryListEmpty && editBasicInformation
+                          ? Padding(
+                        padding: const EdgeInsets.only(left: 30.0, bottom: 10.0),
+                        child: Container(
+                            child: Row(
+                              children: [
+                                Text(
+                                  'You have to select at least one category',
+                                  style: TextStyle(
+                                    fontSize: media.height * 0.018,
+                                    color: BuytimeTheme.ErrorRed,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            )),
+                      )
+                          : Container(),
+                      ///Tag Block
                       editBasicInformation
                           ? Padding(
-                              padding: const EdgeInsets.only(left: 30.0, top: 20.0,bottom: 10.0,right: 30.0),
+                              padding: const EdgeInsets.only(left: 30.0, top: 5.0,bottom: 10.0,right: 30.0),
                               child: Container(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -1046,15 +1067,13 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                         child: Column(
                                           children: [
                                             Row(
-                                             // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                               children: [
-
                                                 ///Add Tag field & Add Tag Button
                                                 Row(
                                                   children: [
                                                     ///Add Tag field
                                                     Container(
-                                                      height: 50,
+                                                      height: 40,
                                                       width: media.width * 0.55,
                                                       child: TextFormField(
                                                         controller: _tagServiceController,
@@ -1069,19 +1088,20 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                               borderRadius: BorderRadius.all(Radius.circular(10.0))
                                                           ),
                                                           errorBorder: OutlineInputBorder(
-                                                              borderSide: BorderSide(color: Colors.redAccent),
+                                                              borderSide: BorderSide(color: BuytimeTheme.ErrorRed),
                                                               borderRadius: BorderRadius.all(Radius.circular(10.0))
                                                           ),
                                                           labelText: 'Add new tag',
                                                           labelStyle: TextStyle(
+                                                            fontSize: 14,
                                                             fontFamily: BuytimeTheme.FontFamily,
-                                                            color: Color(0xff666666),
+                                                            color: BuytimeTheme.TextGrey,
                                                             fontWeight: FontWeight.w400,
                                                           ),
                                                         ),
                                                         style: TextStyle(
                                                           fontFamily: BuytimeTheme.FontFamily,
-                                                          color: Color(0xff666666),
+                                                          color: BuytimeTheme.TextGrey,
                                                           fontWeight: FontWeight.w800,
                                                         ),
                                                       ),
@@ -1091,7 +1111,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                       child: IconButton(
                                                         icon: Icon(
                                                           Icons.add_circle_rounded,
-                                                          size: 24,
+                                                          size: 30,
                                                           color: BuytimeTheme.TextGrey,
                                                         ),
                                                         onPressed: (){
@@ -1111,14 +1131,13 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                             ),
                                             (snapshot.serviceState.tag.length > 0 && snapshot.serviceState.tag != null)
                                                 ? Container(
-                                              height: media.height * 0.05,
+                                              height: snapshot.serviceState.tag.length * 40.00,
                                               child: ListView.builder(
                                                 itemCount: snapshot.serviceState.tag.length,
                                                 itemBuilder: (context, i) {
-                                                  return Row(
+                                                  return Wrap(
                                                     children: [
                                                       Container(
-                                                        margin: EdgeInsets.only(left: 5.0),
                                                         child: InputChip(
                                                           selected: false,
                                                           label: Text(
@@ -1128,11 +1147,6 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                               fontWeight: FontWeight.w500,
                                                             ),
                                                           ),
-                                                          onPressed: () {
-                                                            setState(() {
-                                                              //_selected = !_selected;
-                                                            });
-                                                          },
                                                           onDeleted: () {
                                                             setState(() {
                                                               snapshot.serviceState.tag.remove(snapshot.serviceState.tag[i]);
@@ -1158,26 +1172,6 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                   ],
                                 ),
                               ),
-                            )
-                          : Container(),
-
-                      ///Error message Empty CategoryList
-                      errorCategoryListEmpty && editBasicInformation
-                          ? Padding(
-                              padding: const EdgeInsets.only(left: 30.0, bottom: 10.0),
-                              child: Container(
-                                  child: Row(
-                                children: [
-                                  Text(
-                                    'You have to select at least one category',
-                                    style: TextStyle(
-                                      fontSize: media.height * 0.018,
-                                      color: BuytimeTheme.ErrorRed,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ],
-                              )),
                             )
                           : Container(),
 
