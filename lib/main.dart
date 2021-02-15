@@ -2,6 +2,7 @@ import 'package:Buytime/UI/management/business/UI_M_business.dart';
 import 'package:Buytime/UI/management/business/UI_M_business_list.dart';
 import 'package:Buytime/UI/management/category/UI_M_manage_category.dart';
 import 'package:Buytime/UI/management/invite/UI_M_BookingDetails.dart';
+import 'package:Buytime/UI/management/service/UI_M_service_list.dart';
 import 'package:Buytime/UI/user/booking/UI_U_BookingPage.dart';
 import 'package:Buytime/UI/user/booking/UI_U_ConfirmBooking.dart';
 import 'package:Buytime/reblox/model/booking/booking_list_state.dart';
@@ -83,6 +84,7 @@ void main() {
     StripePaymentCardListRequest(),
     StripeDetachPaymentMethodRequest(),
     ServiceUpdateService(),
+    ServiceUpdateServiceVisibility(),
     ServiceDeleteService(),
     ServiceCreateService(),
     ServiceListRequestService(),
@@ -147,6 +149,8 @@ class Buytime extends StatelessWidget {
         return FabRoute(ConfirmBooking(), settings: settings);
       case AppRoutes.bookingPage:
         return FabRoute(BookingPage(), settings: settings);
+      case AppRoutes.managerServiceList:
+        return FabRoute(UI_M_ServiceList(), settings: settings);
     }
   }
 

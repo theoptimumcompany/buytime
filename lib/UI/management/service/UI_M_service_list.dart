@@ -31,7 +31,7 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
 
   var iconVisibility = Image.asset('assets/img/icon/service_visible.png');
   bool uploadServiceVisibility = false;
-
+  List<bool> updateVisibilitySpinner = [];
   List<List<ServiceState>> listOfServiceEachRoot = [];
 
   void setServiceLists(List<CategoryState> categoryRootList, List<ServiceState> serviceList) {
@@ -213,35 +213,80 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                                                 physics: const NeverScrollableScrollPhysics(),
                                                 itemCount: listOfServiceEachRoot.length > 0 ? listOfServiceEachRoot[i].length : 0,
                                                 itemBuilder: (context, index) {
+                                                  updateVisibilitySpinner.add(false);
                                                   Widget iconVisibility;
                                                   switch (listOfServiceEachRoot[i][index].visibility) {
                                                     case 'Active':
-                                                      iconVisibility = Icon(Icons.remove_red_eye, color: BuytimeTheme.SymbolGrey, size: mediaWidth * 0.07);
+                                                      if (updateVisibilitySpinner[index]) {
+                                                        iconVisibility = Padding(
+                                                          padding: const EdgeInsets.only(left:6.3),
+                                                          child: CircularProgressIndicator.adaptive(),
+                                                        );
+                                                      } else {
+                                                        iconVisibility = Icon(Icons.remove_red_eye, color: BuytimeTheme.SymbolGrey, size: mediaWidth * 0.07);
+                                                      }
                                                       break;
                                                     case 'Deactivated':
-                                                      iconVisibility = Icon(Icons.visibility_off, color: BuytimeTheme.SymbolGrey, size: mediaWidth * 0.07);
+                                                      if (updateVisibilitySpinner[index]) {
+                                                        iconVisibility = Padding(
+                                                          padding: const EdgeInsets.only(left:6.3),
+                                                          child: CircularProgressIndicator.adaptive(),
+                                                        );
+                                                      } else {
+                                                        iconVisibility = Icon(Icons.visibility_off, color: BuytimeTheme.SymbolGrey, size: mediaWidth * 0.07);
+                                                      }
                                                       break;
                                                     case 'Invisible':
-                                                      iconVisibility = Icon(Icons.do_disturb_alt_outlined, color: BuytimeTheme.SymbolGrey, size: mediaWidth * 0.07);
+                                                      if (updateVisibilitySpinner[index]) {
+                                                        iconVisibility = Padding(
+                                                          padding: const EdgeInsets.only(left:6.3),
+                                                          child: CircularProgressIndicator.adaptive(),
+                                                        );
+                                                      } else {
+                                                        iconVisibility = Icon(Icons.do_disturb_alt_outlined, color: BuytimeTheme.SymbolGrey, size: mediaWidth * 0.07);
+                                                      }
                                                       break;
                                                   }
-                                                  return GestureDetector(
-                                                    onTap: () {
-                                                      StoreProvider.of<AppState>(context).dispatch(SetService(listOfServiceEachRoot[i][index]));
-                                                      Navigator.pushReplacement(
-                                                        context,
-                                                        MaterialPageRoute(builder: (context) => UI_EditService()),
-                                                      );
-                                                    },
-                                                    child: Row(
-                                                      children: [
-                                                        Padding(
-                                                          padding: EdgeInsets.only(left: mediaWidth * 0.12, right: mediaWidth * 0.07),
-                                                          child: Container(
-                                                            child: iconVisibility,
-                                                          ),
-                                                        ),
-                                                        Expanded(
+                                                  return Row(
+                                                    children: [
+                                                      GestureDetector(
+                                                        onTap: () {
+                                                     //     updateVisibilitySpinner[index] = true;
+
+
+                                                          setState(() {
+                                                            switch (listOfServiceEachRoot[i][index].visibility) {
+                                                              case 'Active':
+                                                                listOfServiceEachRoot[i][index].visibility = 'Deactivated';
+                                                                break;
+                                                              case 'Deactivated':
+                                                                listOfServiceEachRoot[i][index].visibility = 'Invisible';
+                                                                break;
+                                                              case 'Invisible':
+                                                                listOfServiceEachRoot[i][index].visibility = 'Active';
+                                                                break;
+                                                            }
+
+                                                            ///Aggiorno Database
+                                                            StoreProvider.of<AppState>(context)
+                                                                .dispatch(SetServiceListVisibilityOnFirebase(listOfServiceEachRoot[i][index].serviceId, listOfServiceEachRoot[i][index].visibility));
+                                                          });
+                                                        },
+                                                        child: Padding(
+                                                            padding: EdgeInsets.only(left: mediaWidth * 0.12, right: mediaWidth * 0.07),
+                                                            child: Container(
+                                                              child: iconVisibility,
+                                                            )),
+                                                      ),
+                                                      Expanded(
+                                                        child: GestureDetector(
+                                                          onTap: () {
+                                                            StoreProvider.of<AppState>(context).dispatch(SetService(listOfServiceEachRoot[i][index]));
+                                                            Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(builder: (context) => UI_EditService()),
+                                                            );
+                                                          },
                                                           child: Container(
                                                             decoration: BoxDecoration(
                                                               border: Border(
@@ -268,8 +313,8 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                                                             ),
                                                           ),
                                                         ),
-                                                      ],
-                                                    ),
+                                                      ),
+                                                    ],
                                                   );
                                                 },
                                               ),

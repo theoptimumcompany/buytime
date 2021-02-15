@@ -35,7 +35,7 @@ class UI_CreateServiceState extends State<UI_CreateService> {
   final ImagePicker imagePicker = ImagePicker();
   List<Parent> selectedCategoryList = [];
   List<Parent> categoryList = [];
-  ServiceVisibility radioServiceVisibility = ServiceVisibility.Invisible;
+  String radioServiceVisibility = "Invisible";
   bool errorCategoryListEmpty = false;
 
   bool validateAndSave() {
@@ -149,7 +149,7 @@ class UI_CreateServiceState extends State<UI_CreateService> {
         onInit: (store) => store.dispatch(CategoryTreeRequest()),
         builder: (context, snapshot) {
           setCategoryList();
-          // addDefaultCategory();  case 1 create default
+          addDefaultCategory();
           return Scaffold(
               appBar: BuytimeAppbarManager(
                 width: media.width,
@@ -181,10 +181,10 @@ class UI_CreateServiceState extends State<UI_CreateService> {
                           if (validateChosenCategories() && validateAndSave() && validatePrice(_servicePrice.toString())) {
                             print("Salva nuovo servizio");
                             StoreProvider.of<AppState>(context).dispatch(CreateService(snapshot.serviceState));
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(builder: (context) => UI_EditService()),
-                            );
+                            // Navigator.pushReplacement(
+                            //   context,
+                            //   MaterialPageRoute(builder: (context) => UI_EditService()),
+                           // );
                           }
                         }),
                   ),
@@ -458,7 +458,7 @@ class UI_CreateServiceState extends State<UI_CreateService> {
                                           )),
                                           Container(
                                             child: Radio(
-                                                value: ServiceVisibility.Active,
+                                                value: 'Active',
                                                 groupValue: radioServiceVisibility,
                                                 onChanged: (value) {
                                                   setState(() {
@@ -504,7 +504,7 @@ class UI_CreateServiceState extends State<UI_CreateService> {
                                           )),
                                           Container(
                                             child: Radio(
-                                                value: ServiceVisibility.Deactivated,
+                                                value: "Deactivated",
                                                 groupValue: radioServiceVisibility,
                                                 onChanged: (value) {
                                                   setState(() {
@@ -550,7 +550,7 @@ class UI_CreateServiceState extends State<UI_CreateService> {
                                           )),
                                           Container(
                                             child: Radio(
-                                                value: ServiceVisibility.Invisible,
+                                                value: "Invisible",
                                                 groupValue: radioServiceVisibility,
                                                 onChanged: (value) {
                                                   setState(() {

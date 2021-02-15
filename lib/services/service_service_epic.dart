@@ -50,6 +50,7 @@ class ServiceListRequestService implements EpicClass<AppState> {
 
 class ServiceListAndNavigateRequestService implements EpicClass<AppState> {
   List<ServiceState> serviceStateList;
+
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     print("ServiceListAndNavigateRequestService catched action");
@@ -79,9 +80,9 @@ class ServiceListAndNavigateRequestService implements EpicClass<AppState> {
 
       print("ServiceListAndNavigateRequestService return list with " + serviceStateList.length.toString());
     }).expand((element) => [
-      ServiceListReturned(serviceStateList),
-      NavigatePushAction(AppRoutes.confirmBooking),
-    ]);
+          ServiceListReturned(serviceStateList),
+          NavigatePushAction(AppRoutes.confirmBooking),
+        ]);
   }
 }
 
@@ -109,17 +110,44 @@ class ServiceListAndNavigateRequestService implements EpicClass<AppState> {
 // }
 
 class ServiceUpdateService implements EpicClass<AppState> {
+  ServiceState serviceState;
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<UpdateService>().asyncMap((event) {
+
       if (event.serviceState.fileToUploadList != null) {
         // TODO at the moment the upload error is not managed
         uploadFiles(event.serviceState.fileToUploadList, event.serviceState).then((ServiceState updatedServiceState) {
+          serviceState = updatedServiceState;
           return updateService(updatedServiceState);
         });
       }
+      serviceState = event.serviceState;
       return updateService(event.serviceState);
-    }).takeUntil(actions.whereType<UnlistenCategory>());
+    }).expand((element) => [
+     NavigatePushAction(AppRoutes.managerServiceList),
+    ]);
+  }
+}
+
+class ServiceUpdateServiceVisibility implements EpicClass<AppState> {
+  String id;
+  String visibility;
+  @override
+  Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
+    return actions.whereType<SetServiceListVisibilityOnFirebase>().asyncMap((event) {
+      id = event.serviceId;
+      visibility = event.visibility;
+      return FirebaseFirestore.instance.collection("service").doc(event.serviceId).update({
+        "visibility": event.visibility,
+      }).then((value) {
+        print("ServiceService visibility should be updated online ");
+      }).catchError((error) {
+        print(error);
+      }).then((value) {});
+    }).expand((element) => [
+      SetServiceListVisibility(id, visibility)
+    ]);
   }
 }
 
@@ -158,7 +186,7 @@ class ServiceCreateService implements EpicClass<AppState> {
       }
       listService = store.state.serviceList.serviceListState;
       listService.add(returnedServiceState);
-    }).expand((element) => [CreatedService(returnedServiceState), SetServiceList(listService)]);
+    }).expand((element) => [CreatedService(returnedServiceState), NavigatePushAction(AppRoutes.managerServiceList),]);
   }
 }
 

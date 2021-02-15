@@ -1,5 +1,6 @@
 import 'package:Buytime/reblox/model/file/optimum_file_to_upload.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
+import 'package:Buytime/reblox/model/service/tab_availability_state.dart';
 import 'package:Buytime/reblox/model/snippet/parent.dart';
 
 class AddFileToUploadInService {
@@ -129,6 +130,7 @@ class SetServiceImage1 {
 
   String get image => _image;
 }
+
 class SetServiceImage2 {
   String _image;
 
@@ -136,6 +138,7 @@ class SetServiceImage2 {
 
   String get image => _image;
 }
+
 class SetServiceImage3 {
   String _image;
 
@@ -153,11 +156,11 @@ class SetServiceDescription {
 }
 
 class SetServiceVisibility {
-  ServiceVisibility _visibility;
+  String _visibility;
 
   SetServiceVisibility(this._visibility);
 
-  ServiceVisibility get visibility => _visibility;
+  String get visibility => _visibility;
 }
 
 class SetServicePrice {
@@ -176,8 +179,51 @@ class SetServiceSelectedCategories {
   List<Parent> get selectedCategories => _selectedCategories;
 }
 
+class SetServiceEnabledBooking {
+  bool _enabled;
+
+  SetServiceEnabledBooking(this._enabled);
+
+  bool get enabled => _enabled;
+}
+
+class SetServiceTabAvailability {
+  TabAvailabilityStoreState _tab;
+
+  SetServiceTabAvailability(this._tab);
+
+  TabAvailabilityStoreState get tab => _tab;
+}
+
+class SetServiceTabAvailabilityHeight {
+  double _height;
+
+  SetServiceTabAvailabilityHeight(this._height);
+
+  double get height => _height;
+}
+
+class SetServiceTabAvailabilitySwitchWeek {
+  bool _value;
+  int _index;
+
+  SetServiceTabAvailabilitySwitchWeek(this._value, this._index);
+
+  bool get value => _value;
+
+  int get index => _index;
+}
+
+class SetServiceTabAvailabilityNewSwitchWeekValue {
+  bool _value;
+
+  SetServiceTabAvailabilityNewSwitchWeekValue(this._value,);
+
+  bool get value => _value;
+}
+
 ServiceState serviceReducer(ServiceState state, action) {
-  ServiceState serviceState = new ServiceState.fromState(state);
+  ServiceState serviceState = ServiceState.fromState(state);
   if (action is SetServiceId) {
     serviceState.serviceId = action.id;
     return serviceState;
@@ -203,25 +249,46 @@ ServiceState serviceReducer(ServiceState state, action) {
     return serviceState;
   }
   if (action is SetServiceVisibility) {
-    serviceState.visibility = ServiceState().enumToString(action.visibility);
+    serviceState.visibility = action.visibility;
     return serviceState;
   }
   if (action is SetServicePrice) {
     serviceState.price = action.price;
     return serviceState;
   }
+  if (action is SetServiceEnabledBooking) {
+    serviceState.enabledBooking = action.enabled;
+    return serviceState;
+  }
+  if (action is SetServiceTabAvailability) {
+    serviceState.tabAvailability = action.tab.copyWith();
+    return serviceState;
+  }
+  if (action is SetServiceTabAvailabilityHeight) {
+    serviceState.tabAvailability.height = action.height;
+    return serviceState;
+  }
+  if (action is SetServiceTabAvailabilitySwitchWeek) {
+    serviceState.tabAvailability.switchWeek[action.index] = action.value;
+    return serviceState;
+  }
+  if (action is SetServiceTabAvailabilityNewSwitchWeekValue) {
+    serviceState.tabAvailability.switchWeek.add(action.value);
+    return serviceState;
+  }
   if (action is SetServiceSelectedCategories) {
     List<String> selCat = [];
     List<String> selRootCat = [];
     action.selectedCategories.forEach((element) {
-      selCat.add(element.id);
-      if(!selRootCat.contains(element.parentRootId)){
+      if (!selCat.contains(element.id)) {
+        selCat.add(element.id);
+      }
+      if (!selRootCat.contains(element.parentRootId)) {
         selRootCat.add(element.parentRootId);
       }
     });
     serviceState.categoryId = selCat;
     serviceState.categoryRootId = selRootCat;
-
     return serviceState;
   }
   if (action is ServiceChanged) {

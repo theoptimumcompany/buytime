@@ -1,10 +1,7 @@
-import '../file/optimum_file_to_upload.dart';
+import 'package:Buytime/UI/management/service/widget/W_service_tab_availability.dart';
+import 'package:Buytime/reblox/model/service/tab_availability_state.dart';
 
-enum ServiceVisibility {
-  Active,
-  Deactivated,
-  Invisible,
-}
+import '../file/optimum_file_to_upload.dart';
 
 class ServiceState {
   String serviceId;
@@ -21,6 +18,8 @@ class ServiceState {
   List<OptimumFileToUpload> fileToUploadList;
   int timesSold;
   List<String> tag;
+  bool enabledBooking;
+  TabAvailabilityStoreState tabAvailability;
 
   ServiceState({
     this.serviceId,
@@ -37,25 +36,27 @@ class ServiceState {
     this.fileToUploadList,
     this.timesSold,
     this.tag,
+    this.enabledBooking,
+    this.tabAvailability,
   });
 
-  String enumToString(ServiceVisibility serviceVisibility) {
-    return serviceVisibility.toString().split('.').last;
-  }
-
-  ServiceVisibility stringToEnum(String serviceVisibility) {
-    switch(serviceVisibility){
-      case 'Active':
-        return ServiceVisibility.Active;
-        break;
-      case 'Deactivated':
-        return ServiceVisibility.Deactivated;
-        break;
-      case 'Invisible':
-        return ServiceVisibility.Invisible;
-        break;
-    }
-  }
+  // String enumToString(ServiceVisibility serviceVisibility) {
+  //   return serviceVisibility.toString().split('.').last;
+  // }
+  //
+  // ServiceVisibility stringToEnum(String serviceVisibility) {
+  //   switch (serviceVisibility) {
+  //     case 'Active':
+  //       return ServiceVisibility.Active;
+  //       break;
+  //     case 'Deactivated':
+  //       return ServiceVisibility.Deactivated;
+  //       break;
+  //     case 'Invisible':
+  //       return ServiceVisibility.Invisible;
+  //       break;
+  //   }
+  // }
 
   ServiceState toEmpty() {
     return ServiceState(
@@ -68,11 +69,13 @@ class ServiceState {
       image2: "",
       image3: "",
       description: "",
-      visibility: enumToString(ServiceVisibility.Invisible),
+      visibility: 'Invisible',
       price: 0.00,
       fileToUploadList: [],
       timesSold: 0,
       tag: [],
+      enabledBooking: false,
+      tabAvailability: TabAvailabilityStoreState().toEmpty(),
     );
   }
 
@@ -91,6 +94,8 @@ class ServiceState {
     this.fileToUploadList = service.fileToUploadList;
     this.timesSold = service.timesSold;
     this.tag = service.tag;
+    this.enabledBooking = service.enabledBooking;
+    this.tabAvailability = service.tabAvailability;
   }
 
   serviceStateFieldUpdate(
@@ -108,6 +113,8 @@ class ServiceState {
     List<OptimumFileToUpload> fileToUploadList,
     int timesSold,
     List<String> tag,
+    bool enabledBooking,
+    TabAvailabilityStoreState tabAvailability,
   ) {
     ServiceState(
       serviceId: serviceId ?? this.serviceId,
@@ -124,6 +131,8 @@ class ServiceState {
       fileToUploadList: fileToUploadList ?? this.fileToUploadList,
       timesSold: timesSold ?? this.timesSold,
       tag: tag ?? this.tag,
+      enabledBooking: enabledBooking ?? this.enabledBooking,
+      tabAvailability: tabAvailability ?? this.tabAvailability,
     );
   }
 
@@ -142,6 +151,8 @@ class ServiceState {
     List<OptimumFileToUpload> fileToUploadList,
     int timesSold,
     List<String> tag,
+    bool enabledBooking,
+    TabAvailabilityStoreState tabAvailability,
   }) {
     return ServiceState(
       serviceId: serviceId ?? this.serviceId,
@@ -158,6 +169,8 @@ class ServiceState {
       fileToUploadList: fileToUploadList ?? this.fileToUploadList,
       timesSold: timesSold ?? this.timesSold,
       tag: tag ?? this.tag,
+      enabledBooking: enabledBooking ?? this.enabledBooking,
+      tabAvailability: tabAvailability ?? this.tabAvailability,
     );
   }
 
@@ -182,7 +195,9 @@ class ServiceState {
         visibility = json['visibility'],
         price = json['price'],
         timesSold = json['timesSold'],
-        tag = json['tag'] != null ? List<String>.from(json['tag']) : [];
+        tag = json['tag'] != null ? List<String>.from(json['tag']) : [],
+        enabledBooking = json.containsKey('enabledBooking') ? json['enabledBooking'] : false,
+        tabAvailability = json['tabAvailability'] != null ? TabAvailabilityStoreState.fromJson(json['tabAvailability']) : TabAvailabilityStoreState().toEmpty();
 
   Map<String, dynamic> toJson() => {
         'serviceId': serviceId,
@@ -198,5 +213,7 @@ class ServiceState {
         'price': price,
         'timesSold': timesSold,
         'tag': tag,
+        'enabledBooking': enabledBooking,
+        'tabAvailability': tabAvailability.toJson(),
       };
 }
