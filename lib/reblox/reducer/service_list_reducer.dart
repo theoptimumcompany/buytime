@@ -79,6 +79,15 @@ ServiceListState serviceListReducer(ServiceListState state, action) {
     serviceListState.serviceListState.forEach((element) {
       if (element.serviceId == action.serviceId) {
         element.visibility = action.visibility;
+        element.spinnerVisibility = false;
+      }
+    });
+    return serviceListState;
+  }
+  if (action is SetServiceListVisibilityOnFirebase) {
+    serviceListState.serviceListState.forEach((element) {
+      if (element.serviceId == action.serviceId) {
+        element.spinnerVisibility = true;
       }
     });
     return serviceListState;

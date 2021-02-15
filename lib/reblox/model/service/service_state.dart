@@ -20,6 +20,7 @@ class ServiceState {
   List<String> tag;
   bool enabledBooking;
   TabAvailabilityStoreState tabAvailability;
+  bool spinnerVisibility = false;
 
   ServiceState({
     this.serviceId,
@@ -38,6 +39,7 @@ class ServiceState {
     this.tag,
     this.enabledBooking,
     this.tabAvailability,
+    this.spinnerVisibility,
   });
 
   // String enumToString(ServiceVisibility serviceVisibility) {
@@ -76,6 +78,7 @@ class ServiceState {
       tag: [],
       enabledBooking: false,
       tabAvailability: TabAvailabilityStoreState().toEmpty(),
+      spinnerVisibility: false,
     );
   }
 
@@ -96,6 +99,7 @@ class ServiceState {
     this.tag = service.tag;
     this.enabledBooking = service.enabledBooking;
     this.tabAvailability = service.tabAvailability;
+    this.spinnerVisibility = service.spinnerVisibility;
   }
 
   serviceStateFieldUpdate(
@@ -115,6 +119,7 @@ class ServiceState {
     List<String> tag,
     bool enabledBooking,
     TabAvailabilityStoreState tabAvailability,
+      bool spinnerVisibility,
   ) {
     ServiceState(
       serviceId: serviceId ?? this.serviceId,
@@ -133,6 +138,7 @@ class ServiceState {
       tag: tag ?? this.tag,
       enabledBooking: enabledBooking ?? this.enabledBooking,
       tabAvailability: tabAvailability ?? this.tabAvailability,
+      spinnerVisibility: spinnerVisibility ?? this.spinnerVisibility,
     );
   }
 
@@ -153,6 +159,7 @@ class ServiceState {
     List<String> tag,
     bool enabledBooking,
     TabAvailabilityStoreState tabAvailability,
+    bool spinnerVisibility,
   }) {
     return ServiceState(
       serviceId: serviceId ?? this.serviceId,
@@ -171,6 +178,7 @@ class ServiceState {
       tag: tag ?? this.tag,
       enabledBooking: enabledBooking ?? this.enabledBooking,
       tabAvailability: tabAvailability ?? this.tabAvailability,
+      spinnerVisibility: spinnerVisibility ?? this.spinnerVisibility,
     );
   }
 

@@ -31,15 +31,16 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
 
   var iconVisibility = Image.asset('assets/img/icon/service_visible.png');
   bool uploadServiceVisibility = false;
-  List<bool> updateVisibilitySpinner = [];
   List<List<ServiceState>> listOfServiceEachRoot = [];
 
   void setServiceLists(List<CategoryState> categoryRootList, List<ServiceState> serviceList) {
     for (int c = 0; c < categoryRootList.length; c++) {
       List<ServiceState> listRoot = [];
+      List<bool> internalSpinnerVisibility = [];
       for (int s = 0; s < serviceList.length; s++) {
         if (serviceList[s].categoryRootId.contains(categoryRootList[c].id)) {
           listRoot.add(serviceList[s]);
+          internalSpinnerVisibility.add(false);
         }
       }
       listRoot.sort((a, b) => a.name.compareTo(b.name));
@@ -213,13 +214,12 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                                                 physics: const NeverScrollableScrollPhysics(),
                                                 itemCount: listOfServiceEachRoot.length > 0 ? listOfServiceEachRoot[i].length : 0,
                                                 itemBuilder: (context, index) {
-                                                  updateVisibilitySpinner.add(false);
                                                   Widget iconVisibility;
                                                   switch (listOfServiceEachRoot[i][index].visibility) {
                                                     case 'Active':
-                                                      if (updateVisibilitySpinner[index]) {
+                                                      if (listOfServiceEachRoot[i][index].spinnerVisibility) {
                                                         iconVisibility = Padding(
-                                                          padding: const EdgeInsets.only(left:6.3),
+                                                          padding: const EdgeInsets.only(left: 6.3),
                                                           child: CircularProgressIndicator.adaptive(),
                                                         );
                                                       } else {
@@ -227,9 +227,9 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                                                       }
                                                       break;
                                                     case 'Deactivated':
-                                                      if (updateVisibilitySpinner[index]) {
+                                                      if (listOfServiceEachRoot[i][index].spinnerVisibility) {
                                                         iconVisibility = Padding(
-                                                          padding: const EdgeInsets.only(left:6.3),
+                                                          padding: const EdgeInsets.only(left: 6.3),
                                                           child: CircularProgressIndicator.adaptive(),
                                                         );
                                                       } else {
@@ -237,9 +237,9 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                                                       }
                                                       break;
                                                     case 'Invisible':
-                                                      if (updateVisibilitySpinner[index]) {
+                                                      if (listOfServiceEachRoot[i][index].spinnerVisibility) {
                                                         iconVisibility = Padding(
-                                                          padding: const EdgeInsets.only(left:6.3),
+                                                          padding: const EdgeInsets.only(left: 6.3),
                                                           child: CircularProgressIndicator.adaptive(),
                                                         );
                                                       } else {
@@ -251,9 +251,7 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                                                     children: [
                                                       GestureDetector(
                                                         onTap: () {
-                                                     //     updateVisibilitySpinner[index] = true;
-
-
+                                                          // listOfServiceEachRoot[i][index].spinnerVisibility = true;
                                                           setState(() {
                                                             switch (listOfServiceEachRoot[i][index].visibility) {
                                                               case 'Active':
@@ -296,16 +294,19 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                                                             child: Row(
                                                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                               children: [
-                                                                Container(
-                                                                    child: Text(
-                                                                  listOfServiceEachRoot[i][index].name,
-                                                                  textAlign: TextAlign.start,
-                                                                  style: TextStyle(
-                                                                    color: BuytimeTheme.TextBlack,
-                                                                    fontSize: media.height * 0.018,
-                                                                    fontWeight: FontWeight.w400,
-                                                                  ),
-                                                                )),
+                                                                Flexible(
+                                                                  child: Container(
+                                                                      child: Text(
+                                                                    listOfServiceEachRoot[i][index].name,
+                                                                    textAlign: TextAlign.start,
+                                                                    overflow: TextOverflow.ellipsis,
+                                                                    style: TextStyle(
+                                                                      color: BuytimeTheme.TextBlack,
+                                                                      fontSize: media.height * 0.018,
+                                                                      fontWeight: FontWeight.w400,
+                                                                    ),
+                                                                  )),
+                                                                ),
                                                                 Container(
                                                                   child: Icon(Icons.chevron_right, color: BuytimeTheme.SymbolGrey, size: media.width * 0.1),
                                                                 ),

@@ -470,15 +470,18 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                               });
                             }
                           })),
-                  Container(
-                    child: Text(
-                      //AppLocalizations.of(context).serviceEdit,
-                      "Edit " + snapshot.serviceState.name,
-                      textAlign: TextAlign.start,
-                      style: TextStyle(
-                        fontSize: media.height * 0.028,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w700,
+                  Flexible(
+                    child: Container(
+                      child: Text(
+                        //AppLocalizations.of(context).serviceEdit,
+                        "Edit " + snapshot.serviceState.name,
+                        textAlign: TextAlign.start,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: media.height * 0.028,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
                   ),
@@ -533,13 +536,16 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                               Row(
                                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                 children: [
-                                                  Container(
-                                                    child: Text(
-                                                      snapshot.serviceState.name,
-                                                      style: TextStyle(
-                                                        fontSize: media.height * 0.028,
-                                                        color: BuytimeTheme.TextBlack,
-                                                        fontWeight: FontWeight.w500,
+                                                  Flexible(
+                                                    child: Container(
+                                                      child: Text(
+                                                        snapshot.serviceState.name,
+                                                        style: TextStyle(
+                                                          fontSize: media.height * 0.028,
+                                                          color: BuytimeTheme.TextBlack,
+                                                          fontWeight: FontWeight.w500,
+                                                        ),
+                                                        overflow: TextOverflow.ellipsis,
                                                       ),
                                                     ),
                                                   ),
