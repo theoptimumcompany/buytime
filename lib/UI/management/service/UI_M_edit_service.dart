@@ -1,5 +1,6 @@
 import 'package:Buytime/UI/management/service/UI_M_service_list.dart';
 import 'package:Buytime/UI/management/service/widget/W_service_photo.dart';
+import 'package:Buytime/UI/management/service/widget/W_service_tab_availability.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/category/tree/category_tree_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
@@ -26,22 +27,22 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
   String _serviceName = "";
   double _servicePrice = 0.0;
   String _serviceDescription = "";
-  Image image;
   final ImagePicker imagePicker = ImagePicker();
   List<Parent> selectedCategoryList = [];
   List<Parent> categoryList = [];
   var size;
-  ServiceVisibility radioServiceVisibility = ServiceVisibility.Invisible;
-  bool switchBooking = false;
+  String radioServiceVisibility = "Invisible";
   TabController bookingController;
-  int numberIntervalAvailability = 1;
+
   int numberCalendarIntervalAvailability = 1;
-  List<bool> switchDay = [false, false, false, false, false, false, false];
+
+
   double heightBookingBlock = 0.0;
+  double heightBookingBlockTab1 = 350.00;
+
   bool errorCategoryListEmpty = false;
   bool editBasicInformation = false;
   bool resumeServiceBooking = true;
-  List<bool> switchWeek = [true];
   TextEditingController _tagServiceController = TextEditingController();
 
   bool validateAndSave() {
@@ -76,7 +77,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
     setState(() {
       switch (bookingController.index) {
         case 0:
-          heightBookingBlock = (800 + numberIntervalAvailability.toDouble() * 50).toDouble();
+          heightBookingBlock = heightBookingBlockTab1;
           break;
         case 1:
           heightBookingBlock = 800;
@@ -109,7 +110,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
           name: list[i]['nodeName'],
           id: list[i]['nodeId'],
           level: list[i]['level'],
-          parentRootId: list[i]['parentRootId'],
+          parentRootId: list[i]['categoryRootId'],
         ),
       );
       if (StoreProvider.of<AppState>(context).state.serviceState.categoryId.contains(list[i]['nodeId'])) {
@@ -118,7 +119,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
             name: list[i]['nodeName'],
             id: list[i]['nodeId'],
             level: list[i]['level'],
-            parentRootId: list[i]['parentRootId'],
+            parentRootId: list[i]['categoryRootId'],
           ),
         );
       }
@@ -133,7 +134,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
   void initState() {
     super.initState();
     bookingController = TabController(length: 3, vsync: this);
-    heightBookingBlock = (800 + numberIntervalAvailability.toDouble() * 50).toDouble();
+    setHeightBookingBlock();
     bookingController.addListener(() {
       setHeightBookingBlock();
     });
@@ -143,10 +144,6 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
   void dispose() {
     bookingController.dispose();
     super.dispose();
-  }
-
-  List<Widget> generateNewAvailabilityInterval() {
-    List<Widget> listOfAvailabilityInterval = [];
   }
 
   _buildChoiceList() {
@@ -180,212 +177,8 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
   List<Widget> getTabs(Size media) {
     List<Widget> tabList = [];
 
-    ///Tab 1 : Availability -> todo : Convert in dynamic widget
-    tabList.add(Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Container(
-              child: Row(
-            children: [
-              Text(
-                "1. Availabile time",
-                textAlign: TextAlign.start,
-                style: TextStyle(
-                  fontSize: media.height * 0.018,
-                  color: BuytimeTheme.TextBlack,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
-          )),
-        ),
-        Container(
-            child: Row(
-          children: [
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.only(left: 20.0, right: 5),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: BuytimeTheme.BackgroundLightGrey,
-                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Start", //todo: lang
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                            fontSize: media.height * 0.024,
-                            color: BuytimeTheme.TextGrey,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        Icon(Icons.av_timer, color: BuytimeTheme.SymbolGrey, size: media.width * 0.07),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.only(right: 20.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: BuytimeTheme.BackgroundLightGrey,
-                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Stop", //todo: lang
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                            fontSize: media.height * 0.024,
-                            color: BuytimeTheme.TextGrey,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        Icon(Icons.av_timer, color: BuytimeTheme.SymbolGrey, size: media.width * 0.07),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        )),
-
-        ///Switch Every Day
-        Padding(
-          padding: const EdgeInsets.only(top: 8.0, left: 20.0, right: 20.0),
-          child: Container(
-            child: Row(
-              children: [
-                Switch(
-                    value: switchWeek[0],
-                    onChanged: (value) {
-                      setState(() {
-                        switchWeek[0] = value;
-                      });
-                    }),
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(width: 1.0, color: BuytimeTheme.DividerGrey),
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Container(
-                            child: Padding(
-                          padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
-                          child: Text(
-                            'Every day',
-                            textAlign: TextAlign.start,
-                            style: TextStyle(
-                              color: BuytimeTheme.TextBlack,
-                              fontSize: media.height * 0.02,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                        )),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        !switchWeek[0]
-            ? Column(
-                children: [
-                  weekSwitchDay(media, switchDay[0], 'Monday'), //todo: lang
-                  weekSwitchDay(media, switchDay[1], 'Tuesday'), //todo: lang
-                  weekSwitchDay(media, switchDay[2], 'Wednesday'), //todo: lang
-                  weekSwitchDay(media, switchDay[3], 'Thursday'), //todo: lang
-                  weekSwitchDay(media, switchDay[4], 'Friday'), //todo: lang
-                  weekSwitchDay(media, switchDay[5], 'Saturday'), //todo: lang
-                  weekSwitchDay(media, switchDay[6], 'Sunday'), //todo: lang
-                ],
-              )
-            : Container(),
-        Padding(
-          padding: const EdgeInsets.only(top: 20.0),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.00),
-            child: Container(
-              width: media.width * 0.50,
-              child: OutlinedButton(
-                onPressed: () {
-                  print("ADD INTEVAL");
-                  generateNewAvailabilityInterval();
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Icon(Icons.add, color: BuytimeTheme.ManagerPrimary, size: media.width * 0.08),
-                      Text(
-                        "ADD INTEVAL", //todo: lang
-                        textAlign: TextAlign.start,
-                        style: TextStyle(
-                          fontSize: media.height * 0.023,
-                          color: BuytimeTheme.ManagerPrimary,
-                          fontWeight: FontWeight.w900,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(top: 0.0),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.00),
-            child: Container(
-              width: media.width * 0.50,
-              child: OutlinedButton(
-                style: OutlinedButton.styleFrom(
-                  backgroundColor: BuytimeTheme.ManagerPrimary,
-                ),
-                onPressed: () {
-                  print("Save tab 1");
-                  setState(() {});
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Text(
-                    "SAVE", //todo: lang
-                    textAlign: TextAlign.start,
-                    style: TextStyle(
-                      fontSize: media.height * 0.023,
-                      color: BuytimeTheme.TextWhite,
-                      fontWeight: FontWeight.w900,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ],
-    ));
+    ///Tab Availability
+    tabList.add(TabAvailability(media: media));
 
     ///Tab 2 : Length
     tabList.add(Column(
@@ -647,57 +440,6 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
     return tabList;
   }
 
-  Widget weekSwitchDay(Size media, bool enabledDay, String dayName) {
-    return Row(
-      // mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Padding(
-          padding: EdgeInsets.only(
-            left: media.width * 0.05,
-          ),
-          child: Container(
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: 10.0),
-              child: Switch(
-                  value: enabledDay,
-                  onChanged: (value) {
-                    setState(() {
-                      switchDay[0] = value;
-                    });
-                  }),
-            ),
-          ),
-        ),
-        Expanded(
-          child: Container(
-            decoration: BoxDecoration(
-              border: Border(
-                bottom: BorderSide(width: 1.0, color: BuytimeTheme.DividerGrey),
-              ),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Container(
-                    child: Padding(
-                  padding: const EdgeInsets.only(bottom: 10.0),
-                  child: Text(
-                    dayName,
-                    textAlign: TextAlign.start,
-                    style: TextStyle(
-                      color: BuytimeTheme.TextBlack,
-                      fontSize: media.height * 0.018,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                )),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -708,29 +450,38 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
         builder: (context, snapshot) {
           //Popolo le categorie
           setCategoryList();
-          radioServiceVisibility = ServiceState().stringToEnum(snapshot.serviceState.visibility);
+          radioServiceVisibility = snapshot.serviceState.visibility;
           return Scaffold(
               appBar: BuytimeAppbar(
                 width: media.width,
                 children: [
                   Container(
-                    child: IconButton(
-                      icon: Icon(Icons.chevron_left, color: Colors.white, size: media.width * 0.09),
-                      onPressed: () => Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => UI_M_ServiceList()),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    child: Text(
-                      //AppLocalizations.of(context).serviceEdit,
-                      "Edit " + snapshot.serviceState.name,
-                      textAlign: TextAlign.start,
-                      style: TextStyle(
-                        fontSize: media.height * 0.028,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w700,
+                      child: IconButton(
+                          icon: Icon(Icons.chevron_left, color: Colors.white, size: media.width * 0.09),
+                          onPressed: () {
+                            if (!editBasicInformation) {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(builder: (context) => UI_M_ServiceList()),
+                              );
+                            } else {
+                              setState(() {
+                                editBasicInformation = false;
+                              });
+                            }
+                          })),
+                  Flexible(
+                    child: Container(
+                      child: Text(
+                        //AppLocalizations.of(context).serviceEdit,
+                        "Edit " + snapshot.serviceState.name,
+                        textAlign: TextAlign.start,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: media.height * 0.028,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
                   ),
@@ -739,11 +490,14 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                         icon: Icon(Icons.check, color: Colors.white, size: media.width * 0.07),
                         onPressed: () {
                           if (validateChosenCategories() && validateAndSave() && validatePrice(_servicePrice.toString())) {
-                            print("Edita servizio");
+                            StoreProvider.of<AppState>(context).dispatch(UpdateService(snapshot.serviceState));
                             if (editBasicInformation) {
                               setState(() {
                                 editBasicInformation = false;
                               });
+                            }
+                            else{
+                           //   Navigator.pop(context);
                             }
                           }
                         }),
@@ -764,7 +518,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                   children: [
                                     Container(
                                       child: snapshot.serviceState.image1 == null || snapshot.serviceState.image1.isEmpty
-                                          ? Image.asset('assets/img/image_placeholder.png')
+                                          ? Image.asset('assets/img/image_placeholder.png',width: 100,height: 100,)
                                           : Image.network(
                                               Utils.sizeImage(snapshot.serviceState.image1, Utils.imageSizing200),
                                               height: 100,
@@ -782,13 +536,16 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                               Row(
                                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                 children: [
-                                                  Container(
-                                                    child: Text(
-                                                      snapshot.serviceState.name,
-                                                      style: TextStyle(
-                                                        fontSize: media.height * 0.028,
-                                                        color: BuytimeTheme.TextBlack,
-                                                        fontWeight: FontWeight.w500,
+                                                  Flexible(
+                                                    child: Container(
+                                                      child: Text(
+                                                        snapshot.serviceState.name,
+                                                        style: TextStyle(
+                                                          fontSize: media.height * 0.028,
+                                                          color: BuytimeTheme.TextBlack,
+                                                          fontWeight: FontWeight.w500,
+                                                        ),
+                                                        overflow: TextOverflow.ellipsis,
                                                       ),
                                                     ),
                                                   ),
@@ -846,7 +603,9 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                         child: WidgetServicePhoto(
                                           remotePath: "service/" + (snapshot.business.name != null ? snapshot.business.name + "/" : "") + snapshot.serviceState.name + "_1",
                                           maxPhoto: 1,
-                                          image: snapshot.serviceState.image1 == null || snapshot.serviceState.image1.isEmpty ? null : Image.network(Utils.sizeImage(snapshot.serviceState.image1, Utils.imageSizing600)),
+                                          image: snapshot.serviceState.image1 == null || snapshot.serviceState.image1.isEmpty
+                                              ? null
+                                              : Image.network(Utils.sizeImage(snapshot.serviceState.image1, Utils.imageSizing600)),
                                           cropAspectRatioPreset: CropAspectRatioPreset.square,
                                           onFilePicked: (fileToUpload) {
                                             print("UI_edit_service - callback!");
@@ -862,7 +621,9 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                             child: WidgetServicePhoto(
                                               remotePath: "service/" + (snapshot.business.name != null ? snapshot.business.name + "/" : "") + snapshot.serviceState.name + "_2",
                                               maxPhoto: 1,
-                                              image: snapshot.serviceState.image2 == null || snapshot.serviceState.image2.isEmpty ? null : Image.network(Utils.sizeImage(snapshot.serviceState.image2, Utils.imageSizing200)),
+                                              image: snapshot.serviceState.image2 == null || snapshot.serviceState.image2.isEmpty
+                                                  ? null
+                                                  : Image.network(Utils.sizeImage(snapshot.serviceState.image2, Utils.imageSizing200)),
                                               cropAspectRatioPreset: CropAspectRatioPreset.square,
                                               onFilePicked: (fileToUpload) {
                                                 print("UI_edit_service - callback!");
@@ -873,7 +634,9 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                           WidgetServicePhoto(
                                             remotePath: "service/" + (snapshot.business.name != null ? snapshot.business.name + "/" : "") + snapshot.serviceState.name + "_3",
                                             maxPhoto: 1,
-                                            image: snapshot.serviceState.image3 == null || snapshot.serviceState.image3.isEmpty ? null : Image.network(Utils.sizeImage(snapshot.serviceState.image3, Utils.imageSizing200)),
+                                            image: snapshot.serviceState.image3 == null || snapshot.serviceState.image3.isEmpty
+                                                ? null
+                                                : Image.network(Utils.sizeImage(snapshot.serviceState.image3, Utils.imageSizing200)),
                                             cropAspectRatioPreset: CropAspectRatioPreset.square,
                                             onFilePicked: (fileToUpload) {
                                               print("UI_edit_service - callback!");
@@ -996,6 +759,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                           ),
                         ),
                       ),
+
                       ///Categories Chip Block
                       editBasicInformation
                           ? Padding(
@@ -1023,35 +787,37 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                               ),
                             )
                           : Container(),
+
                       ///Error message Empty CategoryList
                       errorCategoryListEmpty && editBasicInformation
                           ? Padding(
-                        padding: const EdgeInsets.only(left: 30.0, bottom: 10.0),
-                        child: Container(
-                            child: Row(
-                              children: [
-                                Text(
-                                  'You have to select at least one category',
-                                  style: TextStyle(
-                                    fontSize: media.height * 0.018,
-                                    color: BuytimeTheme.ErrorRed,
-                                    fontWeight: FontWeight.w500,
+                              padding: const EdgeInsets.only(left: 30.0, bottom: 10.0),
+                              child: Container(
+                                  child: Row(
+                                children: [
+                                  Text(
+                                    'You have to select at least one category',
+                                    style: TextStyle(
+                                      fontSize: media.height * 0.018,
+                                      color: BuytimeTheme.ErrorRed,
+                                      fontWeight: FontWeight.w500,
+                                    ),
                                   ),
-                                ),
-                              ],
-                            )),
-                      )
+                                ],
+                              )),
+                            )
                           : Container(),
+
                       ///Tag Block
                       editBasicInformation
                           ? Padding(
-                              padding: const EdgeInsets.only(left: 30.0, top: 5.0,bottom: 10.0,right: 30.0),
+                              padding: const EdgeInsets.only(left: 30.0, top: 5.0, bottom: 10.0, right: 30.0),
                               child: Container(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Seleziona tag', //TODO: trans lang
+                                      'Tag', //TODO: trans lang
                                       textAlign: TextAlign.start,
                                       style: TextStyle(
                                         fontSize: media.height * 0.02,
@@ -1062,86 +828,70 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
 
                                     ///Tags
                                     Padding(
-                                      padding: const EdgeInsets.only(top:15.0),
+                                      padding: const EdgeInsets.only(top: 15.0),
                                       child: Container(
                                         child: Column(
                                           children: [
                                             Row(
                                               children: [
                                                 ///Add Tag field & Add Tag Button
-                                                Row(
-                                                  children: [
-                                                    ///Add Tag field
-                                                    Container(
-                                                      height: 40,
-                                                      width: media.width * 0.55,
-                                                      child: TextFormField(
-                                                        controller: _tagServiceController,
-                                                        textAlign: TextAlign.start,
-                                                        decoration: InputDecoration(
-                                                          enabledBorder: OutlineInputBorder(
-                                                              borderSide: BorderSide(color: Color(0xffe0e0e0)),
-                                                              borderRadius: BorderRadius.all(Radius.circular(10.0))
-                                                          ),
-                                                          focusedBorder: OutlineInputBorder(
-                                                              borderSide: BorderSide(color: Color(0xff666666)),
-                                                              borderRadius: BorderRadius.all(Radius.circular(10.0))
-                                                          ),
-                                                          errorBorder: OutlineInputBorder(
-                                                              borderSide: BorderSide(color: BuytimeTheme.ErrorRed),
-                                                              borderRadius: BorderRadius.all(Radius.circular(10.0))
-                                                          ),
-                                                          labelText: 'Add new tag',
-                                                          labelStyle: TextStyle(
-                                                            fontSize: 14,
-                                                            fontFamily: BuytimeTheme.FontFamily,
-                                                            color: BuytimeTheme.TextGrey,
-                                                            fontWeight: FontWeight.w400,
-                                                          ),
-                                                        ),
-                                                        style: TextStyle(
-                                                          fontFamily: BuytimeTheme.FontFamily,
-                                                          color: BuytimeTheme.TextGrey,
-                                                          fontWeight: FontWeight.w800,
-                                                        ),
+                                                Container(
+                                                  height: 45,
+                                                  width: media.width * 0.55,
+                                                  child: TextFormField(
+                                                    controller: _tagServiceController,
+                                                    textAlign: TextAlign.start,
+                                                    decoration: InputDecoration(
+                                                      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                                      focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                                      errorBorder: OutlineInputBorder(borderSide: BorderSide(color: BuytimeTheme.ErrorRed), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                                      labelText: 'Add new tag',
+                                                      labelStyle: TextStyle(
+                                                        fontSize: 14,
+                                                        fontFamily: BuytimeTheme.FontFamily,
+                                                        color: BuytimeTheme.TextGrey,
+                                                        fontWeight: FontWeight.w400,
                                                       ),
                                                     ),
-                                                    ///Add tag button
-                                                    Container(
-                                                      child: IconButton(
-                                                        icon: Icon(
-                                                          Icons.add_circle_rounded,
-                                                          size: 30,
-                                                          color: BuytimeTheme.TextGrey,
-                                                        ),
-                                                        onPressed: (){
-                                                          setState(() {
-                                                            if(_tagServiceController.text.isNotEmpty) {
-                                                              snapshot.serviceState.tag.add(_tagServiceController.text);
-                                                              _tagServiceController.clear();
-                                                            }
-                                                          });
+                                                    style: TextStyle(
+                                                      fontFamily: BuytimeTheme.FontFamily,
+                                                      color: BuytimeTheme.TextGrey,
+                                                      fontWeight: FontWeight.w800,
+                                                    ),
+                                                  ),
+                                                ),
 
-                                                        },
-                                                      ),
+                                                ///Add tag button
+                                                Container(
+                                                  child: IconButton(
+                                                    icon: Icon(
+                                                      Icons.add_circle_rounded,
+                                                      size: 30,
+                                                      color: BuytimeTheme.TextGrey,
                                                     ),
-                                                  ],
+                                                    onPressed: () {
+                                                      setState(() {
+                                                        if (_tagServiceController.text.isNotEmpty) {
+                                                          snapshot.serviceState.tag.add(_tagServiceController.text);  //TODO : Check if is possible without errors
+                                                          _tagServiceController.clear();
+                                                        }
+                                                      });
+                                                    },
+                                                  ),
                                                 ),
                                               ],
                                             ),
                                             (snapshot.serviceState.tag.length > 0 && snapshot.serviceState.tag != null)
-                                                ? Container(
-                                              height: snapshot.serviceState.tag.length * 40.00,
-                                              child: ListView.builder(
-                                                itemCount: snapshot.serviceState.tag.length,
-                                                itemBuilder: (context, i) {
-                                                  return Wrap(
-                                                    children: [
-                                                      Container(
-                                                        child: InputChip(
+                                                ? Align(
+                                                    alignment: Alignment.topLeft,
+                                                    child: Wrap(
+                                                      spacing: 3.0,
+                                                      runSpacing: 3.0,
+                                                      children: List<Widget>.generate(snapshot.serviceState.tag.length, (int index) {
+                                                        return InputChip(
                                                           selected: false,
                                                           label: Text(
-                                                            snapshot.serviceState.tag[i],
+                                                            snapshot.serviceState.tag[index],
                                                             style: TextStyle(
                                                               fontSize: 13.0,
                                                               fontWeight: FontWeight.w500,
@@ -1149,16 +899,13 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                           ),
                                                           onDeleted: () {
                                                             setState(() {
-                                                              snapshot.serviceState.tag.remove(snapshot.serviceState.tag[i]);
+                                                              snapshot.serviceState.tag.remove(snapshot.serviceState.tag[index]);
                                                             });
                                                           },
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  );
-                                                },
-                                              ),
-                                            )
+                                                        );
+                                                      }),
+                                                    ),
+                                                  )
                                                 : Container()
                                           ],
                                         ),
@@ -1243,7 +990,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                     )),
                                                     Container(
                                                       child: Radio(
-                                                          value: ServiceVisibility.Active,
+                                                          value: 'Active',
                                                           groupValue: radioServiceVisibility,
                                                           onChanged: (value) {
                                                             setState(() {
@@ -1289,7 +1036,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                     )),
                                                     Container(
                                                       child: Radio(
-                                                          value: ServiceVisibility.Deactivated,
+                                                          value: 'Deactivated',
                                                           groupValue: radioServiceVisibility,
                                                           onChanged: (value) {
                                                             setState(() {
@@ -1335,7 +1082,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                     )),
                                                     Container(
                                                       child: Radio(
-                                                          value: ServiceVisibility.Invisible,
+                                                          value: 'Invisible',
                                                           groupValue: radioServiceVisibility,
                                                           onChanged: (value) {
                                                             setState(() {
@@ -1371,10 +1118,10 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                     child: Row(
                                       children: [
                                         Switch(
-                                            value: switchBooking,
+                                            value: snapshot.serviceState.enabledBooking,
                                             onChanged: (value) {
                                               setState(() {
-                                                switchBooking = value;
+                                                StoreProvider.of<AppState>(context).dispatch(SetServiceEnabledBooking(value));
                                               });
                                             }),
                                         Expanded(
@@ -1403,7 +1150,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                     thickness: 20.0,
                                   ),
                                 ),
-                                switchBooking
+                                snapshot.serviceState.enabledBooking
                                     ?
 
                                     ///Resume block for booking settings
@@ -1527,7 +1274,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                   ),
                                                 ),
                                                 Container(
-                                                  height: heightBookingBlock,
+                                                  height: snapshot.serviceState.tabAvailability.height,
                                                   child: TabBarView(
                                                     controller: bookingController,
                                                     children: getTabs(media),

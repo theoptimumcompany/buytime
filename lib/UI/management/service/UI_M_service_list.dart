@@ -31,15 +31,16 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
 
   var iconVisibility = Image.asset('assets/img/icon/service_visible.png');
   bool uploadServiceVisibility = false;
-
   List<List<ServiceState>> listOfServiceEachRoot = [];
 
   void setServiceLists(List<CategoryState> categoryRootList, List<ServiceState> serviceList) {
     for (int c = 0; c < categoryRootList.length; c++) {
       List<ServiceState> listRoot = [];
+      List<bool> internalSpinnerVisibility = [];
       for (int s = 0; s < serviceList.length; s++) {
         if (serviceList[s].categoryRootId.contains(categoryRootList[c].id)) {
           listRoot.add(serviceList[s]);
+          internalSpinnerVisibility.add(false);
         }
       }
       listRoot.sort((a, b) => a.name.compareTo(b.name));
@@ -216,32 +217,74 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                                                   Widget iconVisibility;
                                                   switch (listOfServiceEachRoot[i][index].visibility) {
                                                     case 'Active':
-                                                      iconVisibility = Icon(Icons.remove_red_eye, color: BuytimeTheme.SymbolGrey, size: mediaWidth * 0.07);
+                                                      if (listOfServiceEachRoot[i][index].spinnerVisibility) {
+                                                        iconVisibility = Padding(
+                                                          padding: const EdgeInsets.only(left: 6.3),
+                                                          child: CircularProgressIndicator.adaptive(),
+                                                        );
+                                                      } else {
+                                                        iconVisibility = Icon(Icons.remove_red_eye, color: BuytimeTheme.SymbolGrey, size: mediaWidth * 0.07);
+                                                      }
                                                       break;
                                                     case 'Deactivated':
-                                                      iconVisibility = Icon(Icons.visibility_off, color: BuytimeTheme.SymbolGrey, size: mediaWidth * 0.07);
+                                                      if (listOfServiceEachRoot[i][index].spinnerVisibility) {
+                                                        iconVisibility = Padding(
+                                                          padding: const EdgeInsets.only(left: 6.3),
+                                                          child: CircularProgressIndicator.adaptive(),
+                                                        );
+                                                      } else {
+                                                        iconVisibility = Icon(Icons.visibility_off, color: BuytimeTheme.SymbolGrey, size: mediaWidth * 0.07);
+                                                      }
                                                       break;
                                                     case 'Invisible':
-                                                      iconVisibility = Icon(Icons.do_disturb_alt_outlined, color: BuytimeTheme.SymbolGrey, size: mediaWidth * 0.07);
+                                                      if (listOfServiceEachRoot[i][index].spinnerVisibility) {
+                                                        iconVisibility = Padding(
+                                                          padding: const EdgeInsets.only(left: 6.3),
+                                                          child: CircularProgressIndicator.adaptive(),
+                                                        );
+                                                      } else {
+                                                        iconVisibility = Icon(Icons.do_disturb_alt_outlined, color: BuytimeTheme.SymbolGrey, size: mediaWidth * 0.07);
+                                                      }
                                                       break;
                                                   }
-                                                  return GestureDetector(
-                                                    onTap: () {
-                                                      StoreProvider.of<AppState>(context).dispatch(SetService(listOfServiceEachRoot[i][index]));
-                                                      Navigator.pushReplacement(
-                                                        context,
-                                                        MaterialPageRoute(builder: (context) => UI_EditService()),
-                                                      );
-                                                    },
-                                                    child: Row(
-                                                      children: [
-                                                        Padding(
-                                                          padding: EdgeInsets.only(left: mediaWidth * 0.12, right: mediaWidth * 0.07),
-                                                          child: Container(
-                                                            child: iconVisibility,
-                                                          ),
-                                                        ),
-                                                        Expanded(
+                                                  return Row(
+                                                    children: [
+                                                      GestureDetector(
+                                                        onTap: () {
+                                                          // listOfServiceEachRoot[i][index].spinnerVisibility = true;
+                                                          setState(() {
+                                                            switch (listOfServiceEachRoot[i][index].visibility) {
+                                                              case 'Active':
+                                                                listOfServiceEachRoot[i][index].visibility = 'Deactivated';
+                                                                break;
+                                                              case 'Deactivated':
+                                                                listOfServiceEachRoot[i][index].visibility = 'Invisible';
+                                                                break;
+                                                              case 'Invisible':
+                                                                listOfServiceEachRoot[i][index].visibility = 'Active';
+                                                                break;
+                                                            }
+
+                                                            ///Aggiorno Database
+                                                            StoreProvider.of<AppState>(context)
+                                                                .dispatch(SetServiceListVisibilityOnFirebase(listOfServiceEachRoot[i][index].serviceId, listOfServiceEachRoot[i][index].visibility));
+                                                          });
+                                                        },
+                                                        child: Padding(
+                                                            padding: EdgeInsets.only(left: mediaWidth * 0.12, right: mediaWidth * 0.07),
+                                                            child: Container(
+                                                              child: iconVisibility,
+                                                            )),
+                                                      ),
+                                                      Expanded(
+                                                        child: GestureDetector(
+                                                          onTap: () {
+                                                            StoreProvider.of<AppState>(context).dispatch(SetService(listOfServiceEachRoot[i][index]));
+                                                            Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(builder: (context) => UI_EditService()),
+                                                            );
+                                                          },
                                                           child: Container(
                                                             decoration: BoxDecoration(
                                                               border: Border(
@@ -251,16 +294,19 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                                                             child: Row(
                                                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                               children: [
-                                                                Container(
-                                                                    child: Text(
-                                                                  listOfServiceEachRoot[i][index].name,
-                                                                  textAlign: TextAlign.start,
-                                                                  style: TextStyle(
-                                                                    color: BuytimeTheme.TextBlack,
-                                                                    fontSize: media.height * 0.018,
-                                                                    fontWeight: FontWeight.w400,
-                                                                  ),
-                                                                )),
+                                                                Flexible(
+                                                                  child: Container(
+                                                                      child: Text(
+                                                                    listOfServiceEachRoot[i][index].name,
+                                                                    textAlign: TextAlign.start,
+                                                                    overflow: TextOverflow.ellipsis,
+                                                                    style: TextStyle(
+                                                                      color: BuytimeTheme.TextBlack,
+                                                                      fontSize: media.height * 0.018,
+                                                                      fontWeight: FontWeight.w400,
+                                                                    ),
+                                                                  )),
+                                                                ),
                                                                 Container(
                                                                   child: Icon(Icons.chevron_right, color: BuytimeTheme.SymbolGrey, size: media.width * 0.1),
                                                                 ),
@@ -268,8 +314,8 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                                                             ),
                                                           ),
                                                         ),
-                                                      ],
-                                                    ),
+                                                      ),
+                                                    ],
                                                   );
                                                 },
                                               ),

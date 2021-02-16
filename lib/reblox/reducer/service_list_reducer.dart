@@ -50,6 +50,28 @@ class SetServiceListToEmpty {
   String get something => _something;
 }
 
+class SetServiceListVisibility {
+  String _serviceId;
+  String _visibility;
+
+  SetServiceListVisibility(this._serviceId, this._visibility);
+
+  String get serviceId => _serviceId;
+
+  String get visibility => _visibility;
+}
+
+class SetServiceListVisibilityOnFirebase {
+  String _serviceId;
+  String _visibility;
+
+  SetServiceListVisibilityOnFirebase(this._serviceId, this._visibility);
+
+  String get serviceId => _serviceId;
+
+  String get visibility => _visibility;
+}
+
 class SetServiceList {
   List<ServiceState> _serviceListState;
 
@@ -62,6 +84,23 @@ ServiceListState serviceListReducer(ServiceListState state, action) {
   ServiceListState serviceListState = new ServiceListState.fromState(state);
   if (action is SetServiceListToEmpty) {
     serviceListState = ServiceListState().toEmpty();
+    return serviceListState;
+  }
+  if (action is SetServiceListVisibility) {
+    serviceListState.serviceListState.forEach((element) {
+      if (element.serviceId == action.serviceId) {
+        element.visibility = action.visibility;
+        element.spinnerVisibility = false;
+      }
+    });
+    return serviceListState;
+  }
+  if (action is SetServiceListVisibilityOnFirebase) {
+    serviceListState.serviceListState.forEach((element) {
+      if (element.serviceId == action.serviceId) {
+        element.spinnerVisibility = true;
+      }
+    });
     return serviceListState;
   }
   if (action is SetServiceList) {
