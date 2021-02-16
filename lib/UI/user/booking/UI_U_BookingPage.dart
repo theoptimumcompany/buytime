@@ -1,24 +1,46 @@
 import 'dart:async';
 
+import 'package:Buytime/UI/management/business/UI_M_business_list.dart';
+import 'package:Buytime/UI/user/login/UI_U_Home.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
+import 'package:Buytime/reblox/model/role/role.dart';
 import 'package:Buytime/reblox/model/service/service_list_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
-import 'package:Buytime/reusable/appbar/manager_buytime_appbar.dart';
+import 'package:Buytime/reblox/reducer/business_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/business_reducer.dart';
+import 'package:Buytime/reblox/reducer/category_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/category_reducer.dart';
+import 'package:Buytime/reblox/reducer/category_tree_reducer.dart';
+import 'package:Buytime/reblox/reducer/filter_reducer.dart';
+import 'package:Buytime/reblox/reducer/order_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/order_reducer.dart';
+import 'package:Buytime/reblox/reducer/pipeline_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/pipeline_reducer.dart';
+import 'package:Buytime/reblox/reducer/service_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/service_reducer.dart';
+import 'package:Buytime/reblox/reducer/stripe_payment_reducer.dart';
+import 'package:Buytime/reblox/reducer/user_reducer.dart';
+import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
 import 'package:Buytime/reusable/booking_page_service_list_item.dart';
 import 'package:Buytime/reusable/custom_bottom_button_widget.dart';
+import 'package:Buytime/reusable/menu/UI_M_business_list_drawer.dart';
 import 'package:Buytime/reusable/past_booking_card_widget.dart';
+import 'package:Buytime/utils/globals.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:animations/animations.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class BookingPage extends StatefulWidget {
 
@@ -57,9 +79,14 @@ class _BookingPageState extends State<BookingPage> {
     return result;
   }
 
+  List<String> titles = ['Log out']; //TODO Make it Global
+  String _selected = '';
+  bool isManagerOrAbove = false;
+
   @override
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
+    SizeConfig().init(context);
     return StoreConnector<AppState, AppState>(
       converter: (store) => store.state,
       builder: (context, snapshot) {
@@ -83,8 +110,8 @@ class _BookingPageState extends State<BookingPage> {
         return  WillPopScope(
           onWillPop: () async => false,
           child: Scaffold(
-            appBar: BuytimeAppbarManager(
-              background: Color.fromRGBO(119, 148, 170, 1.0),
+            appBar: BuytimeAppbar(
+              background: BuytimeTheme.BackgroundCerulean,
               width: media.width,
               children: [
                 Row(
@@ -94,7 +121,7 @@ class _BookingPageState extends State<BookingPage> {
                       child: Padding(
                         padding: const EdgeInsets.only(left: 10.0),
                         child: Text(
-                          'Buytime',
+                          'Buytime', //TODO Make it Global
                           textAlign: TextAlign.start,
                           style: TextStyle(
                             fontSize: SizeConfig.safeBlockHorizontal * 5,
@@ -108,18 +135,60 @@ class _BookingPageState extends State<BookingPage> {
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
-                  child: IconButton(
-                    icon: const Icon(
+                  child: PopupMenuButton(
+                    icon: Icon(
                       Icons.settings,
                       color: BuytimeTheme.TextWhite,
                       size: 30.0,
                     ),
-                    //tooltip: AppLocalizations.of(context).createBusinessPlain,
-                    onPressed: () {
-                      /*Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (context) => UI_M_CreateBusiness()),
-                        );*/
+                    elevation: 3.2,
+                    initialValue: _selected,
+                    onCanceled: () {
+                      print('You have not chossed anything');
+                    },
+                    onSelected:(String title) async{
+                      setState(() {
+                        _selected = title;
+                      });
+                      if(title == 'Log out') { //TODO Make it Global
+                        SharedPreferences prefs = await SharedPreferences.getInstance();
+
+                        await prefs.setBool('easy_check_in', false);
+                        await prefs.setBool('star_explanation', false);
+                        FirebaseAuth.instance.signOut().then((_) {
+                          googleSignIn.signOut();
+
+                          facebookSignIn.logOut();
+                          //Resetto il carrello
+                          cartCounter = 0;
+
+                          //Svuotare lo Store sul Logout
+                          StoreProvider.of<AppState>(context).dispatch(SetCategoryToEmpty());
+                          StoreProvider.of<AppState>(context).dispatch(SetCategoryListToEmpty());
+                          StoreProvider.of<AppState>(context).dispatch(SetCategoryTreeToEmpty());
+                          StoreProvider.of<AppState>(context).dispatch(SetFilterToEmpty());
+                          StoreProvider.of<AppState>(context).dispatch(SetOrderToEmpty(""));
+                          StoreProvider.of<AppState>(context).dispatch(SetOrderListToEmpty());
+                          StoreProvider.of<AppState>(context).dispatch(SetBusinessToEmpty());
+                          StoreProvider.of<AppState>(context).dispatch(SetBusinessListToEmpty());
+                          StoreProvider.of<AppState>(context).dispatch(SetServiceToEmpty());
+                          StoreProvider.of<AppState>(context).dispatch(SetServiceListToEmpty());
+                          StoreProvider.of<AppState>(context).dispatch(SetPipelineToEmpty());
+                          StoreProvider.of<AppState>(context).dispatch(SetPipelineListToEmpty());
+                          StoreProvider.of<AppState>(context).dispatch(SetStripeToEmpty());
+                          StoreProvider.of<AppState>(context).dispatch(SetUserStateToEmpty());
+                          //Torno al Login
+                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()),);
+                        });
+                      }
+                    },
+                    itemBuilder: (BuildContext context) {
+                      return titles.map((String title) {
+                        return PopupMenuItem(
+                          value: title,
+                          child: Text(title),
+                        );
+                      }).toList();
                     },
                   ),
                 ),
@@ -179,7 +248,7 @@ class _BookingPageState extends State<BookingPage> {
                                 Container(
                                   margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
                                   child: Text(
-                                    'Hi ${bookingState.user.first.name}',
+                                    'Hi ${bookingState.user.first.name}', //TODO Make it Global
                                     style: TextStyle(
                                         fontFamily: BuytimeTheme.FontFamily,
                                         color: BuytimeTheme.TextBlack,
@@ -192,7 +261,7 @@ class _BookingPageState extends State<BookingPage> {
                                 Container(
                                   margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                   child: Text(
-                                    'Your holiday in Portoferraio',
+                                    'Your holiday in Portoferraio', //TODO Make it Global
                                     style: TextStyle(
                                         fontFamily: BuytimeTheme.FontFamily,
                                         color: BuytimeTheme.TextGrey,
@@ -231,7 +300,7 @@ class _BookingPageState extends State<BookingPage> {
                                   Container(
                                     margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
                                     child: Text(
-                                      'Top Services',
+                                      'Top Services', //TODO Make it Global
                                       style: TextStyle(
                                           fontFamily: BuytimeTheme.FontFamily,
                                           color: BuytimeTheme.TextDark,
@@ -263,7 +332,7 @@ class _BookingPageState extends State<BookingPage> {
                                           margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 4),
                                           alignment: Alignment.centerLeft,
                                           child:  Text(
-                                            'No active service found',
+                                            'No active service found', //TODO Make it Global
                                             style: TextStyle(
                                                 fontFamily: BuytimeTheme.FontFamily,
                                                 color: BuytimeTheme.TextGrey,
@@ -306,8 +375,8 @@ class _BookingPageState extends State<BookingPage> {
                                           borderSide: BorderSide(color: Colors.redAccent),
                                           borderRadius: BorderRadius.all(Radius.circular(10.0))
                                       ),
-                                      labelText: 'What are you looking for?',
-                                      helperText: 'Search for services and ideas around you',
+                                      labelText: 'What are you looking for?', //TODO Make it Global
+                                      helperText: 'Search for services and ideas around you', //TODO Make it Global
                                       //hintText: "email *",
                                       //hintStyle: TextStyle(color: Color(0xff666666)),
                                       labelStyle: TextStyle(
@@ -345,7 +414,7 @@ class _BookingPageState extends State<BookingPage> {
                                           borderRadius: BorderRadius.all(Radius.circular(10)),
                                           onTap: () async {
                                             String url = businessState.phone_number;
-                                            debugPrint('Restaurant phonenumber: ' + url);
+                                            debugPrint('Restaurant phonenumber: ' + url); //TODO Make it Global
                                             if (await canLaunch('tel:$url')) {
                                               await launch('tel:$url');
                                             } else {
@@ -364,7 +433,7 @@ class _BookingPageState extends State<BookingPage> {
                                                   children: [
                                                     Container(
                                                       child: Text(
-                                                        'Speak with ${businessState.responsible_person_name}',
+                                                        'Speak with ${businessState.responsible_person_name}', //TODO Make it Global
                                                         style: TextStyle(
                                                             fontFamily: BuytimeTheme.FontFamily,
                                                             color: BuytimeTheme.TextBlack,
@@ -376,7 +445,7 @@ class _BookingPageState extends State<BookingPage> {
                                                     Container(
                                                       margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
                                                       child: Text(
-                                                        'your dedicated advisor',
+                                                        'your dedicated advisor', //TODO Make it Global
                                                         style: TextStyle(
                                                             fontFamily: BuytimeTheme.FontFamily,
                                                             color: BuytimeTheme.TextGrey,
@@ -401,7 +470,7 @@ class _BookingPageState extends State<BookingPage> {
                               ],
                             ),
                           ),
-                          ///Top Service
+                          ///Inspiration
                           Flexible(
                             child: Container(
                               margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
@@ -411,11 +480,11 @@ class _BookingPageState extends State<BookingPage> {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  ///Top Services
+                                  ///Inspiration
                                   Container(
                                     margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
                                     child: Text(
-                                      'Find your inspiration here',
+                                      'Find your inspiration here', //TODO Make it Global
                                       style: TextStyle(
                                           fontFamily: BuytimeTheme.FontFamily,
                                           color: BuytimeTheme.TextDark,
@@ -424,7 +493,7 @@ class _BookingPageState extends State<BookingPage> {
                                       ),
                                     ),
                                   ),
-                                  serviceList.isNotEmpty ? Container(
+                                  Container(
                                     margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 2, right: SizeConfig.safeBlockHorizontal * 2),
                                     height: SizeConfig.safeBlockVertical * 50,
                                     width: double.infinity,
@@ -502,7 +571,87 @@ class _BookingPageState extends State<BookingPage> {
                                         )
                                       ],
                                     ),
-                                  ) : Container(
+                                  )
+                                  /*serviceList.isNotEmpty ? Container(
+                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 2, right: SizeConfig.safeBlockHorizontal * 2),
+                                    height: SizeConfig.safeBlockVertical * 50,
+                                    width: double.infinity,
+                                    child: Column(
+                                      children: [
+                                        Flexible(
+                                          flex: 1,
+                                          child: Row(
+                                            children: [
+                                              Flexible(
+                                                flex: 1,
+                                                child: Container(
+                                                  margin: EdgeInsets.all(SizeConfig.safeBlockVertical*.25),
+                                                  //width: double.infinity,
+                                                  //height: double.infinity,
+                                                  width: SizeConfig.safeBlockVertical * 18,
+                                                  height: SizeConfig.safeBlockVertical * 18,
+                                                  color: BuytimeTheme.AccentRed,
+                                                ),
+                                              ),
+                                              Expanded(
+                                                flex: 1,
+                                                child: Container(
+                                                  margin: EdgeInsets.all(SizeConfig.safeBlockVertical*.25),
+                                                  //width: double.infinity,
+                                                  //height: double.infinity,
+                                                  width: SizeConfig.safeBlockVertical * 18,
+                                                  height: SizeConfig.safeBlockVertical * 18,
+                                                  color: BuytimeTheme.Secondary,
+                                                ),
+                                              ),
+                                              Expanded(
+                                                flex: 1,
+                                                child: Container(
+                                                  margin: EdgeInsets.all(SizeConfig.safeBlockVertical*.25),
+                                                  //width: double.infinity,
+                                                  //height: double.infinity,
+                                                  width: SizeConfig.safeBlockVertical * 18,
+                                                  height: SizeConfig.safeBlockVertical * 18,
+                                                  color: BuytimeTheme.ManagerPrimary,
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        Flexible(
+                                          flex: 1,
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              Flexible(
+                                                flex: 1,
+                                                child: Container(
+                                                  margin: EdgeInsets.all(SizeConfig.safeBlockVertical*.25),
+                                                  //width: double.infinity,
+                                                  //height: double.infinity,
+                                                  width: SizeConfig.safeBlockVertical * 28,
+                                                  height: SizeConfig.safeBlockVertical * 28,
+                                                  color: BuytimeTheme.BackgroundLightBlue,
+                                                ),
+                                              ),
+                                              Flexible(
+                                                flex: 1,
+                                                child: Container(
+                                                  margin: EdgeInsets.all(SizeConfig.safeBlockVertical*.25),
+                                                  //width: double.infinity,
+                                                  //height: double.infinity,
+                                                  width: SizeConfig.safeBlockVertical * 28,
+                                                  height: SizeConfig.safeBlockVertical * 28,
+                                                  color: BuytimeTheme.TextPurple,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ) :
+                                  Container(
                                     height: SizeConfig.safeBlockVertical * 8,
                                     margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                     decoration: BoxDecoration(
@@ -524,11 +673,53 @@ class _BookingPageState extends State<BookingPage> {
                                           ),
                                         )
                                     ),
-                                  )
+                                  )*/
                                 ],
                               ),
                             ),
                           ),
+                          StoreConnector<AppState, AppState>(
+                              converter: (store) => store.state,
+                              builder: (context, snapshot) {
+                                isManagerOrAbove = snapshot.user != null && (snapshot.user.getRole() != Role.user) ? true : false;
+                                return isManagerOrAbove ? Flexible(
+                                  flex: 1,
+                                  child: Container(
+                                    color: Colors.white,
+                                    height: 60,
+                                    child: Material(
+                                      color: Colors.transparent,
+                                      child: InkWell(
+                                        onTap: () async {
+                                          StoreProvider.of<AppState>(context).dispatch(SetBusinessListToEmpty());
+                                          StoreProvider.of<AppState>(context).dispatch(SetOrderListToEmpty());
+                                          Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    UI_M_BusinessList()),
+                                          );
+                                        },
+                                        child: CustomBottomButtonWidget(
+                                            Text(
+                                              AppLocalizations.of(context).goToBusiness,
+                                              style: TextStyle(
+                                                  fontFamily: BuytimeTheme.FontFamily,
+                                                  color: Colors.black.withOpacity(.7),
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 16
+                                              ),
+                                            ),
+                                            '',
+                                            Icon(
+                                              Icons.business_center,
+                                              color: BuytimeTheme.SymbolGrey,
+                                            )),
+                                      ),
+                                    ),
+                                  ),
+                                ): Container();
+                              })
                         ],
                       ),
                     ),

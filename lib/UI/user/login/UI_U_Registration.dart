@@ -519,7 +519,7 @@ class RegistrationState extends State<Registration> {
                               child: SizeConfig.screenHeight < 537
                                   ? Column(
                                       children: [
-                                        ///Sign in text
+                                        ///Sign up text
                                         Row(
                                           mainAxisAlignment: MainAxisAlignment.start,
                                           children: [
@@ -665,7 +665,7 @@ class RegistrationState extends State<Registration> {
                                             Container(
                                               margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 5),
                                               child: Text(
-                                                AppLocalizations.of(context).pleaseSignIn,
+                                                AppLocalizations.of(context).createYourAccount,
                                                 style: TextStyle(
                                                     fontFamily: BuytimeTheme.FontFamily,
                                                     color: Colors.black,

@@ -29,6 +29,7 @@ class AppRoutes {
   static const business = "/business";
   static const confirmBooking = "/confirmBooking";
   static const bookingPage = "/bookingPage";
+  static const landing = "/landing";
   static const managerServiceList = "/managerServiceList";
 
 }

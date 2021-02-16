@@ -7,6 +7,7 @@ import 'package:Buytime/UI/user/landing/UI_U_Landing.dart';
 import 'package:Buytime/reblox/model/role/role.dart';
 import 'package:Buytime/reblox/model/snippet/device.dart';
 import 'package:Buytime/reblox/model/snippet/token.dart';
+import 'package:Buytime/reblox/reducer/booking_reducer.dart';
 import 'package:Buytime/utils/b_cube_grid_spinner.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
@@ -966,12 +967,11 @@ class LoginState extends State<Login> {
       StoreProvider.of<AppState>(context).dispatch(new UpdateUserToken(token));
       setState(() {
         _success = true;
-        Navigator.of(context).pop();
 
         if(StoreProvider.of<AppState>(context).state.user.getRole() != Role.user)
           Navigator.push(context, MaterialPageRoute(builder: (context) => UI_M_BusinessList()));
         else
-          Navigator.push(context, MaterialPageRoute(builder: (context) => Landing()));
+          StoreProvider.of<AppState>(context).dispatch(new UserBookingRequest(user.email));
       });
     }else{
       Navigator.of(context).pop();

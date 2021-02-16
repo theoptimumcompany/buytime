@@ -9,7 +9,7 @@ import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reblox/reducer/service_list_reducer.dart';
-import 'package:Buytime/reusable/appbar/user_buytime_appbar.dart';
+import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
 import 'package:Buytime/utils/globals.dart';
 import 'package:Buytime/reusable/service/optimum_service_card_medium.dart';
 import 'package:badges/badges.dart';
@@ -40,7 +40,7 @@ class UI_U_ServiceListState extends State<UI_U_ServiceList> {
           order = snapshot.order.itemList != null ? (snapshot.order.itemList.length > 0 ? snapshot.order : order) : order;
           return Scaffold(
             resizeToAvoidBottomInset: false,
-            appBar: BuytimeAppbarUser(
+            appBar: BuytimeAppbar(
               width: media.width,
               children: [
                 IconButton(

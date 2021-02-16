@@ -5,10 +5,12 @@ import 'package:Buytime/UI/management/invite/UI_M_BookingDetails.dart';
 import 'package:Buytime/UI/management/service/UI_M_service_list.dart';
 import 'package:Buytime/UI/user/booking/UI_U_BookingPage.dart';
 import 'package:Buytime/UI/user/booking/UI_U_ConfirmBooking.dart';
+import 'package:Buytime/UI/user/landing/UI_U_Landing.dart';
 import 'package:Buytime/reblox/model/booking/booking_list_state.dart';
 import 'package:Buytime/reblox/model/category/invitation/category_invite_state.dart';
 import 'package:Buytime/reblox/model/category/tree/category_tree_state.dart';
 import 'package:Buytime/services/category_invite_service_epic.dart';
+import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/UI/user/login/UI_U_Home.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
@@ -50,12 +52,14 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 void main() {
   final epics = combineEpics<AppState>([
     BusinessAndNavigateRequestService(),
+    BusinessAndNavigateOnConfirmRequestService(),
     BusinessRequestService(),
     BusinessUpdateService(),
     BusinessCreateService(),
     BusinessListRequestService(),
     BookingCreateRequestService(),
     BookingRequestService(),
+    UserBookingRequestService(),
     BookingListRequestService(),
     BookingUpdateRequestService(),
     BookingUpdateAndNavigateRequestService(),
@@ -89,6 +93,7 @@ void main() {
     ServiceCreateService(),
     ServiceListRequestService(),
     ServiceListAndNavigateRequestService(),
+    ServiceListAndNavigateOnConfirmRequestService(),
     PipelineRequestService(),
     PipelineListRequestService(),
     OrderListRequestService(),
@@ -149,6 +154,8 @@ class Buytime extends StatelessWidget {
         return FabRoute(ConfirmBooking(), settings: settings);
       case AppRoutes.bookingPage:
         return FabRoute(BookingPage(), settings: settings);
+      case AppRoutes.landing:
+        return FabRoute(Landing(), settings: settings);
       case AppRoutes.managerServiceList:
         return FabRoute(UI_M_ServiceList(), settings: settings);
     }
@@ -157,7 +164,6 @@ class Buytime extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
-
     return StoreProvider<AppState>(
       store: store,
       child: MaterialApp(

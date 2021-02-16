@@ -8,6 +8,7 @@ import 'package:Buytime/reblox/reducer/booking_reducer.dart';
 import 'package:Buytime/reblox/reducer/business_reducer.dart';
 import 'package:Buytime/utils/utils.dart';
 import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
 import 'package:redux_epics/redux_epics.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -89,7 +90,44 @@ class BookingRequestService implements EpicClass<AppState> {
       bookingState =  BookingState.fromJson(bookingSnapshot.docs.first.data());
     }).expand((element) => [
       BookingRequestResponse(bookingState),
-      BusinessAndNavigateRequest(bookingState.business_id)
+      BusinessAndNavigateOnConfirmRequest(bookingState.business_id)
+    ]);
+  }
+}
+
+class UserBookingRequestService implements EpicClass<AppState> {
+  BookingState bookingState;
+  String route;
+  @override
+  Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
+    return actions.whereType<UserBookingRequest>().asyncMap((event) async {
+      print("UserBookingService user email:" + event.userEmail);
+
+      QuerySnapshot bookingSnapshot = await FirebaseFirestore.instance // TODO we have to be sure about this
+          .collection("booking")
+          .where("userEmail", arrayContains: event.userEmail)
+          .where('status', isEqualTo: 'opened') // TODO check that arrayContains is ok here
+          .get();
+
+      List<BookingState> tmpBookingList = [];
+
+      if(bookingSnapshot.docs.isNotEmpty){
+        bookingSnapshot.docs.forEach((element) {
+          tmpBookingList.add(BookingState.fromJson(element.data()));
+        });
+
+        tmpBookingList.sort((a,b) => DateFormat('dd').format(a.start_date).compareTo(DateFormat('dd').format(b.start_date)));
+
+        bookingState = tmpBookingList.first;
+        route = AppRoutes.bookingPage;
+      }
+      else{
+        bookingState = BookingState().toEmpty();
+        route = AppRoutes.landing;
+      }
+    }).expand((element) => [
+      UserBookingRequestResponse(bookingState),
+      bookingState.userEmail.isEmpty ? NavigatePushAction(route) : BusinessAndNavigateRequest(bookingState.business_id)
     ]);
   }
 }
@@ -139,6 +177,21 @@ class BookingUpdateRequestService implements EpicClass<AppState> {
           .update(event.bookingState.toJson());
 
       bookingState = event.bookingState;
+      /*UserState userState = store.state.user;
+      bookingState.user.forEach((user) {
+        // find the right user
+        if (userState.email == user.email) {
+          // update the id
+          user.id = userState.uid;
+          // add user email to the list if not present
+          if(bookingState.userEmail == null){
+            bookingState.userEmail = [];
+          }
+          if (!bookingState.userEmail.contains(userState.email)){
+            bookingState.userEmail.add(userState.email);
+          }
+        }
+      });*/
 
       tmpBookingList = store.state.bookingList.copyWith();
       tmpBookingList.bookingListState.removeWhere((item) => item.booking_id == bookingState.booking_id);
@@ -153,23 +206,37 @@ class BookingUpdateRequestService implements EpicClass<AppState> {
 
 class BookingUpdateAndNavigateRequestService implements EpicClass<AppState> {
   BookingState bookingState;
-  BookingListState tmpBookingList;
 
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<UpdateBookingNavigate>().asyncMap((event) async {
 
       print("booking_service_epic: booking id:" + event.bookingState.booking_id);
+
+      bookingState = event.bookingState;
+
+      UserState userState = store.state.user;
+
+      bookingState.user.forEach((user) {
+        // find the right user
+        if (userState.email == user.email) {
+          // update the id
+          user.id = userState.uid;
+        }
+      });
+
+      // add user email to the list if not present
+      if(bookingState.userEmail == null){
+        bookingState.userEmail = [];
+      }
+      if (!bookingState.userEmail.contains(userState.email)){
+        bookingState.userEmail.add(userState.email);
+      }
+
       await FirebaseFirestore.instance
           .collection("booking")
           .doc(event.bookingState.booking_id)
           .update(event.bookingState.toJson());
-
-      bookingState = event.bookingState;
-
-      tmpBookingList = store.state.bookingList.copyWith();
-      tmpBookingList.bookingListState.removeWhere((item) => item.booking_id == bookingState.booking_id);
-      tmpBookingList.bookingListState.add(bookingState);
 
     }).expand((element) => [
       UpdatedBooking(bookingState),
@@ -178,35 +245,4 @@ class BookingUpdateAndNavigateRequestService implements EpicClass<AppState> {
   }
 }
 
-class BookingConfirmAndNavigateRequestService implements EpicClass<AppState> {
-  BookingState bookingState;
-  BookingListState tmpBookingList;
-
-  @override
-  Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    return actions.whereType<ConfirmBookingRequest>().asyncMap((event) async {
-      print("BookingConfirmAndNavigateRequestService: booking id:" + event.bookingState.booking_id);
-      UserState userState = store.state.user;
-      bookingState = event.bookingState;
-      bookingState.user.forEach((user) {
-        // find the right user
-        if (userState.email == user.email) {
-          // update the id
-          user.id = userState.uid;
-          // add user email to the list if not present
-          if (!bookingState.userEmail.contains(userState.email)){
-            bookingState.userEmail.add(userState.email);
-          }
-        }
-      });
-      await FirebaseFirestore.instance
-          .collection("booking")
-          .doc(bookingState.booking_id)
-          .update(bookingState.toJson());
-    }).expand((element) => [
-      ConfirmedBookingRequest(bookingState),
-      NavigatePushAction(AppRoutes.bookingPage),
-    ]);
-  }
-}
 

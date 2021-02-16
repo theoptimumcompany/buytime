@@ -13,7 +13,7 @@ import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
 import 'package:Buytime/reblox/reducer/service_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/service_reducer.dart';
-import 'package:Buytime/reusable/appbar/manager_buytime_appbar.dart';
+import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
 import 'package:Buytime/reusable/service/optimum_service_card_medium.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:flutter/cupertino.dart';
@@ -78,7 +78,7 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
               onWillPop: _onWillPop,
               child: Scaffold(
                 resizeToAvoidBottomInset: false,
-                appBar: BuytimeAppbarManager(
+                appBar: BuytimeAppbar(
                   width: media.width,
                   children: [
                     IconButton(

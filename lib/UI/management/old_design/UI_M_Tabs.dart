@@ -1,5 +1,5 @@
 import 'package:Buytime/reblox/model/app_state.dart';
-import 'package:Buytime/reusable/appbar/manager_buytime_appbar.dart';
+import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
 import 'package:Buytime/reusable/menu/UI_menu_drawer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -45,7 +45,7 @@ class UI_M_TabsState extends State<UI_M_Tabs> {
               onWillPop: () async => false,
               child: Scaffold(
                 key: _drawerKeyTabs,
-                appBar: BuytimeAppbarManager(
+                appBar: BuytimeAppbar(
                   width: media.width,
                   height : media.height * 0.13,
                   children: [

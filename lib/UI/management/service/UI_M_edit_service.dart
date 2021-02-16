@@ -7,7 +7,7 @@ import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/model/snippet/parent.dart';
 import 'package:Buytime/reblox/reducer/category_tree_reducer.dart';
 import 'package:Buytime/reblox/reducer/service_reducer.dart';
-import 'package:Buytime/reusable/appbar/manager_buytime_appbar.dart';
+import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/utils/utils.dart';
 import 'package:flutter/material.dart';
@@ -450,7 +450,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
           setCategoryList();
           radioServiceVisibility = snapshot.serviceState.visibility;
           return Scaffold(
-              appBar: BuytimeAppbarManager(
+              appBar: BuytimeAppbar(
                 width: media.width,
                 children: [
                   Container(
