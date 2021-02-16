@@ -195,31 +195,50 @@ class SetServiceTabAvailability {
   TabAvailabilityStoreState get tab => _tab;
 }
 
-class SetServiceTabAvailabilityHeight {
+class SetServiceTabAvailabilityTabHeight {
   double _height;
 
-  SetServiceTabAvailabilityHeight(this._height);
+  SetServiceTabAvailabilityTabHeight(this._height);
 
   double get height => _height;
 }
 
-class SetServiceTabAvailabilitySwitchWeek {
-  bool _value;
-  int _index;
+class SetServiceTabAvailabilityIntervalsHeight {
+  double _height;
 
-  SetServiceTabAvailabilitySwitchWeek(this._value, this._index);
+  SetServiceTabAvailabilityIntervalsHeight(this._height);
 
-  bool get value => _value;
-
-  int get index => _index;
+  double get height => _height;
 }
 
-class SetServiceTabAvailabilityNewSwitchWeekValue {
-  bool _value;
+class SetServiceTabAvailabilityDaysInterval {
+  List<EveryDay> _daysInterval;
 
-  SetServiceTabAvailabilityNewSwitchWeekValue(this._value,);
+  SetServiceTabAvailabilityDaysInterval(this._daysInterval);
 
-  bool get value => _value;
+  List<EveryDay> get daysInterval => _daysInterval;
+}
+
+class SetServiceTabAvailabilityNumberOfInterval {
+  int _numberOfInterval;
+
+  SetServiceTabAvailabilityNumberOfInterval(this._numberOfInterval);
+
+  int get numberOfInterval => _numberOfInterval;
+}
+
+class SetServiceTabAvailabilitySwitchWeek {
+  List<bool> _switchWeek;
+  SetServiceTabAvailabilitySwitchWeek(this._switchWeek);
+  List<bool> get switchWeek => _switchWeek;
+
+}
+
+class SetServiceTabAvailabilitySwitchDay {
+  List<EveryDay> _everyDay;
+  SetServiceTabAvailabilitySwitchDay(this._everyDay);
+  List<EveryDay> get everyDay => _everyDay;
+
 }
 
 ServiceState serviceReducer(ServiceState state, action) {
@@ -264,16 +283,34 @@ ServiceState serviceReducer(ServiceState state, action) {
     serviceState.tabAvailability = action.tab.copyWith();
     return serviceState;
   }
-  if (action is SetServiceTabAvailabilityHeight) {
-    serviceState.tabAvailability.height = action.height;
+  if (action is SetServiceTabAvailabilityTabHeight) {
+    print("Service Reducer Set Availability TabHeight: State Prima - " + serviceState.tabAvailability.tabHeight.toString());
+    serviceState.tabAvailability.tabHeight = action.height;
+    print("Service Reducer Set Availability TabHeight: State Dopo - " + serviceState.tabAvailability.tabHeight.toString());
+    print("Service Reducer Set Availability TabHeight: Action - " + action.height.toString());
+    return serviceState;
+  }
+  if (action is SetServiceTabAvailabilityIntervalsHeight) {
+    print("Service Reducer Set Availability Interval Height: State Prima - " + serviceState.tabAvailability.intervalsHeight.toString());
+    serviceState.tabAvailability.intervalsHeight = action.height;
+    print("Service Reducer Set Availability Interval Height: State Dopo - " + serviceState.tabAvailability.intervalsHeight.toString());
+    print("Service Reducer Set Availability Interval Height: Action - " + action.height.toString());
+    return serviceState;
+  }
+  if (action is SetServiceTabAvailabilityDaysInterval) {
+    serviceState.tabAvailability.daysInterval = action.daysInterval;
+    return serviceState;
+  }
+  if (action is SetServiceTabAvailabilityNumberOfInterval) {
+    serviceState.tabAvailability.numberOfInterval = action.numberOfInterval;
     return serviceState;
   }
   if (action is SetServiceTabAvailabilitySwitchWeek) {
-    serviceState.tabAvailability.switchWeek[action.index] = action.value;
+    serviceState.tabAvailability.switchWeek = action.switchWeek;
     return serviceState;
   }
-  if (action is SetServiceTabAvailabilityNewSwitchWeekValue) {
-    serviceState.tabAvailability.switchWeek.add(action.value);
+  if (action is SetServiceTabAvailabilitySwitchDay) {
+    serviceState.tabAvailability.daysInterval = action.everyDay;
     return serviceState;
   }
   if (action is SetServiceSelectedCategories) {

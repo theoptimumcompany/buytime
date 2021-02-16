@@ -36,7 +36,6 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
 
   int numberCalendarIntervalAvailability = 1;
 
-
   double heightBookingBlock = 0.0;
   double heightBookingBlockTab1 = 350.00;
 
@@ -440,7 +439,6 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
     return tabList;
   }
 
-
   @override
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
@@ -495,9 +493,8 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                               setState(() {
                                 editBasicInformation = false;
                               });
-                            }
-                            else{
-                           //   Navigator.pop(context);
+                            } else {
+                              //   Navigator.pop(context);
                             }
                           }
                         }),
@@ -518,7 +515,11 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                   children: [
                                     Container(
                                       child: snapshot.serviceState.image1 == null || snapshot.serviceState.image1.isEmpty
-                                          ? Image.asset('assets/img/image_placeholder.png',width: 100,height: 100,)
+                                          ? Image.asset(
+                                              'assets/img/image_placeholder.png',
+                                              width: 100,
+                                              height: 100,
+                                            )
                                           : Image.network(
                                               Utils.sizeImage(snapshot.serviceState.image1, Utils.imageSizing200),
                                               height: 100,
@@ -872,7 +873,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                     onPressed: () {
                                                       setState(() {
                                                         if (_tagServiceController.text.isNotEmpty) {
-                                                          snapshot.serviceState.tag.add(_tagServiceController.text);  //TODO : Check if is possible without errors
+                                                          snapshot.serviceState.tag.add(_tagServiceController.text); //TODO : Check if is possible without errors
                                                           _tagServiceController.clear();
                                                         }
                                                       });
@@ -1274,7 +1275,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                   ),
                                                 ),
                                                 Container(
-                                                  height: snapshot.serviceState.tabAvailability.height,
+                                                  height: snapshot.serviceState.tabAvailability.tabHeight < 325 ? 325.00 : snapshot.serviceState.tabAvailability.tabHeight,
                                                   child: TabBarView(
                                                     controller: bookingController,
                                                     children: getTabs(media),
