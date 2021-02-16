@@ -332,10 +332,6 @@ ServiceState serviceReducer(ServiceState state, action) {
     serviceState = action.serviceState.copyWith();
     return serviceState;
   }
-  if (action is CreateService) {
-    serviceState = action.serviceState.copyWith();
-    return serviceState;
-  }
   if (action is CreatedService) {
     serviceState = action.serviceState.copyWith();
     return serviceState;

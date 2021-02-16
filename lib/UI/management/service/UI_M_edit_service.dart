@@ -567,12 +567,15 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                 child: Row(
                                                   children: [
                                                     Container(
-                                                      child: Text(
-                                                        snapshot.serviceState.description,
-                                                        style: TextStyle(
-                                                          fontSize: media.height * 0.028,
-                                                          color: BuytimeTheme.TextBlack,
-                                                          fontWeight: FontWeight.w500,
+                                                      child: Flexible(
+                                                        child: Text(
+                                                          snapshot.serviceState.description,
+                                                          overflow: TextOverflow.ellipsis,
+                                                          style: TextStyle(
+                                                            fontSize: media.height * 0.028,
+                                                            color: BuytimeTheme.TextBlack,
+                                                            fontWeight: FontWeight.w500,
+                                                          ),
                                                         ),
                                                       ),
                                                     )
