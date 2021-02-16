@@ -532,6 +532,8 @@ class _BookingCreationState extends State<BookingCreation> {
 
                                                     bookingState.status = bookingState.enumToString(BookingStatus.created);
 
+                                                    bookingState.userEmail.add(_emailToInviteController.text);
+
                                                     StoreProvider.of<AppState>(context).dispatch(CreateBookingRequest(bookingState));
 
 

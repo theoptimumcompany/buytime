@@ -5,6 +5,7 @@ import 'package:Buytime/reblox/reducer/booking_reducer.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:intl/intl.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -463,7 +464,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                                 ),
                               ),
                               ///Send invitation
-                              !view ? Expanded(
+                              Expanded(
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
@@ -472,17 +473,21 @@ class _BookingDetailsState extends State<BookingDetails> {
                                         //margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 4),
                                         child: RaisedButton(
                                           onPressed: () async{
-                                            final RenderBox box = context.findRenderObject();
-                                            //Uri link = await createDynamicLink(bookingState.booking_code);
-                                            bookingState.status = bookingState.enumToString(BookingStatus.sent);
-                                            StoreProvider.of<AppState>(context).dispatch(UpdateBooking(bookingState)); //TODO: Create the booking status update epic
+                                            if(view){
+                                              Clipboard.setData(ClipboardData(text: link));
+                                            }else{
+                                              final RenderBox box = context.findRenderObject();
+                                              //Uri link = await createDynamicLink(bookingState.booking_code);
+                                              bookingState.status = bookingState.enumToString(BookingStatus.sent);
+                                              StoreProvider.of<AppState>(context).dispatch(UpdateBooking(bookingState)); //TODO: Create the booking status update epic
 
-                                            Share.share('check out Buytime App at $link', subject: 'Take your Time!', sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
-                                            /*Share.share('Share', subject:
+                                              Share.share('check out Buytime App at $link', subject: 'Take your Time!', sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
+                                              /*Share.share('Share', subject:
                                             Platform.isAndroid ?
                                             'https://play.google.com/store/apps/details?id=com.theoptimumcompany.buytime' :
                                             'Test'
                                                 , sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);*/
+                                            }
                                           },
                                           textColor: BuytimeTheme.TextDark,
                                           color: BuytimeTheme.Secondary,
@@ -491,7 +496,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                                             borderRadius: new BorderRadius.circular(5),
                                           ),
                                           child: Text(
-                                            "SEND INVITE",
+                                            !view ? "SEND INVITE" : 'COPY LINK',
                                             style: TextStyle(
                                                 fontSize: 18,
                                                 fontFamily: 'Roboto',
@@ -504,7 +509,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                                     )
                                   ],
                                 ),
-                              ) : Container()
+                              )
                             ],
                           ),
                         ),

@@ -13,7 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_cropper/image_cropper.dart';
-import '../../../reusable/appbar/manager_buytime_appbar.dart';
+import '../../../reusable/appbar/buytime_appbar.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class UI_M_CreateCategory extends StatefulWidget {
@@ -187,7 +187,7 @@ class UI_M_CreateCategoryState extends State<UI_M_CreateCategory> {
                       onWillPop: _onWillPop,
                       child: Scaffold(
                         resizeToAvoidBottomInset: false,
-                        appBar: BuytimeAppbarManager(
+                        appBar: BuytimeAppbar(
                           children: [
                             Row(
                               mainAxisAlignment: MainAxisAlignment.start,

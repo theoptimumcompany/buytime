@@ -80,6 +80,43 @@ class ServiceListAndNavigateRequestService implements EpicClass<AppState> {
       print("ServiceListAndNavigateRequestService return list with " + serviceStateList.length.toString());
     }).expand((element) => [
       ServiceListReturned(serviceStateList),
+      NavigatePushAction(AppRoutes.bookingPage),
+    ]);
+  }
+}
+
+class ServiceListAndNavigateOnConfirmRequestService implements EpicClass<AppState> {
+  List<ServiceState> serviceStateList;
+  @override
+  Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
+    print("ServiceListAndNavigateRequestService catched action");
+    return actions.whereType<ServiceListAndNavigateOnConfirmRequest>().asyncMap((event) async {
+      print("ServiceListAndNavigateRequestService Firestore request business Id: ${event.businessId}, permission: ${event.permission}");
+      serviceStateList = List<ServiceState>();
+      if (event.permission == "user") {
+        print("ServiceListAndNavigateRequestService: permission as user");
+        var servicesFirebaseShadow = await FirebaseFirestore.instance.collection("service").where("businessId", isEqualTo: event.businessId).where("visibility", isEqualTo: 'Deactivated').get();
+        servicesFirebaseShadow.docs.forEach((element) {
+          ServiceState serviceState = ServiceState.fromJson(element.data());
+          serviceStateList.add(serviceState);
+        });
+        var servicesFirebaseActive = await FirebaseFirestore.instance.collection("service").where("businessId", isEqualTo: event.businessId).where("visibility", isEqualTo: 'Active').get();
+        servicesFirebaseActive.docs.forEach((element) {
+          ServiceState serviceState = ServiceState.fromJson(element.data());
+          serviceStateList.add(serviceState);
+        });
+      } else {
+        print("ServiceListAndNavigateRequestService: permission as manager");
+        var servicesFirebase = await FirebaseFirestore.instance.collection("service").where("businessId", isEqualTo: event.businessId).get();
+        servicesFirebase.docs.forEach((element) {
+          ServiceState serviceState = ServiceState.fromJson(element.data());
+          serviceStateList.add(serviceState);
+        });
+      }
+
+      print("ServiceListAndNavigateRequestService return list with " + serviceStateList.length.toString());
+    }).expand((element) => [
+      ServiceListReturned(serviceStateList),
       NavigatePushAction(AppRoutes.confirmBooking),
     ]);
   }

@@ -4,7 +4,7 @@ import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/model/snippet/generic.dart';
 import 'package:Buytime/reblox/reducer/business_reducer.dart';
-import 'package:Buytime/reusable/appbar/manager_buytime_appbar.dart';
+import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
 import 'package:Buytime/reusable/form/optimum_form_field.dart';
 import 'package:Buytime/reusable/form/optimum_form_multi_photo.dart' if (dart.library.html) 'package:Buytime/reusable/form/optimum_form_multi_photo_web.dart';
 import 'package:Buytime/utils/size_config.dart';
@@ -169,7 +169,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                   },
                   child: Scaffold(
                     resizeToAvoidBottomInset: false,
-                    appBar: BuytimeAppbarManager(
+                    appBar: BuytimeAppbar(
                       width: media.width,
                       children: [
                         Row(

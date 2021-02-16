@@ -9,7 +9,7 @@ import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/reducer/business_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/business_reducer.dart';
 import 'package:Buytime/reusable/business/optimum_business_card_medium_manager.dart';
-import 'package:Buytime/reusable/appbar/manager_buytime_appbar.dart';
+import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
 import 'package:Buytime/reusable/menu/UI_M_business_list_drawer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -47,7 +47,7 @@ class UI_M_BusinessListState extends State<UI_M_BusinessList> {
             onWillPop: () async => false,
             child: Scaffold(
                 key: _drawerKeyTabs,
-                appBar: BuytimeAppbarManager(
+                appBar: BuytimeAppbar(
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,

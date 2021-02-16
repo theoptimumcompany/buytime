@@ -23,6 +23,17 @@ class ServiceListAndNavigateRequest {
   String get permission => _permission;
 }
 
+class ServiceListAndNavigateOnConfirmRequest {
+  String _businessId;
+  String _permission;
+
+  ServiceListAndNavigateOnConfirmRequest(this._businessId, this._permission);
+
+  String get businessId => _businessId;
+
+  String get permission => _permission;
+}
+
 class ServiceListReturned {
   List<ServiceState> _serviceListState;
 

@@ -35,6 +35,14 @@ class BusinessAndNavigateRequest {
   String get businessStateId => _businessStateId;
 }
 
+class BusinessAndNavigateOnConfirmRequest {
+  String _businessStateId;
+
+  BusinessAndNavigateOnConfirmRequest(this._businessStateId);
+
+  String get businessStateId => _businessStateId;
+}
+
 class UnlistenBusiness {}
 
 class UpdateBusiness {

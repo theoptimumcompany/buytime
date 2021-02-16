@@ -1,7 +1,7 @@
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
-import 'package:Buytime/reusable/appbar/user_buytime_appbar.dart';
+import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
 import 'package:Buytime/utils/globals.dart';
 import 'package:Buytime/reusable/order/optimum_order_item_card_medium.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -51,7 +51,7 @@ class UI_U_OrderDetailState extends State<UI_U_OrderDetail> {
             String formattedDate = DateFormat('dd/MM/yyyy kk:mm').format(date);
             return Scaffold(
               resizeToAvoidBottomInset: false,
-              appBar: BuytimeAppbarUser(
+              appBar: BuytimeAppbar(
                 width: media.width,
                 children: [
                   IconButton(

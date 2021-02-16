@@ -3,7 +3,7 @@ import 'package:Buytime/UI/management/business/UI_M_business_list.dart';
 import 'package:Buytime/UI/management/business/UI_M_create_business.dart';
 import 'package:Buytime/UI/management/business/UI_M_edit_business.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
-import 'package:Buytime/reusable/appbar/manager_buytime_appbar.dart';
+import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -34,7 +34,7 @@ class UI_M_ManageBusinessState extends State<UI_M_ManageBusiness> {
         return false;
       },
       child: Scaffold(
-          appBar: BuytimeAppbarManager(
+          appBar: BuytimeAppbar(
             width: media.width,
             children: [
               IconButton(

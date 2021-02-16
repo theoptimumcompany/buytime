@@ -1,5 +1,5 @@
 import 'package:Buytime/UI/management/business/UI_M_edit_business.dart';
-import 'package:Buytime/reusable/appbar/manager_buytime_appbar.dart';
+import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
 import 'package:Buytime/UI/management/category/UI_M_manage_category.dart';
 import 'package:Buytime/UI/management/category/W_category_list_item.dart';
 import 'package:Buytime/UI/management/invite/UI_M_BookingList.dart';
@@ -62,7 +62,7 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
             drawerEnableOpenDragGesture: false,
             key: _drawerKey,
             ///Appbar
-            appBar: BuytimeAppbarManager(
+            appBar: BuytimeAppbar(
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,

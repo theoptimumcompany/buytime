@@ -53,7 +53,9 @@ class LandingState extends State<Landing> {
     cards.add(LandingCardWidget('Enter booking code', 'Start your journey', 'assets/img/booking_code.png', null));
     cards.add(LandingCardWidget('About Buytime', 'Discover our network', 'assets/img/beach_girl.png', null));
 
-    initDynamicLinks();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      initDynamicLinks();
+    });
   }
 
   void initDynamicLinks() async {

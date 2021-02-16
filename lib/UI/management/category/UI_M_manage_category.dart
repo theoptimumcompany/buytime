@@ -4,7 +4,7 @@ import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/UI/management/category/UI_M_create_category.dart';
 import 'package:Buytime/reblox/reducer/category_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_tree_reducer.dart';
-import 'package:Buytime/reusable/appbar/manager_buytime_appbar.dart';
+import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -381,7 +381,7 @@ class ManageCategoryState extends State<ManageCategory> {
             },
             child: Scaffold(
               key: widget._keyScaffoldCategory,
-              appBar: BuytimeAppbarManager(
+              appBar: BuytimeAppbar(
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,

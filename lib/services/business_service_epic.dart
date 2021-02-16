@@ -78,7 +78,27 @@ class BusinessAndNavigateRequestService implements EpicClass<AppState> {
      businessState =  BusinessState.fromJson(businessSnapshot.data());
     }).expand((element) => [
       BusinessRequestResponse(businessState),
-      ServiceListAndNavigateRequest(businessState.id_firestore, 'user')
+      ServiceListAndNavigateRequest(businessState.id_firestore, store.state.user.getRole().toString().split('.').last)
+    ]);
+  }
+}
+
+class BusinessAndNavigateOnConfirmRequestService implements EpicClass<AppState> {
+  BusinessState businessState;
+  @override
+  Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
+    return actions.whereType<BusinessAndNavigateOnConfirmRequest>().asyncMap((event) async {
+      print("BusinessService document id:" + event.businessStateId);
+
+      DocumentSnapshot businessSnapshot = await FirebaseFirestore.instance
+          .collection("business")
+          .doc(event.businessStateId)
+          .get();
+
+      businessState =  BusinessState.fromJson(businessSnapshot.data());
+    }).expand((element) => [
+      BusinessRequestResponse(businessState),
+      ServiceListAndNavigateOnConfirmRequest(businessState.id_firestore, store.state.user.getRole().toString().split('.').last)
     ]);
   }
 }

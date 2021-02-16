@@ -21,7 +21,7 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:share/share.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../reusable/appbar/manager_buytime_appbar.dart';
+import '../../../reusable/appbar/buytime_appbar.dart';
 
 class UI_M_EditCategory extends StatefulWidget {
   final String title = 'Categories';
@@ -503,7 +503,7 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                       onWillPop: _onWillPop,
                       child: Scaffold(
                         resizeToAvoidBottomInset: false,
-                        appBar: BuytimeAppbarManager(
+                        appBar: BuytimeAppbar(
                           children: [
                             Row(
                               mainAxisAlignment: MainAxisAlignment.start,
