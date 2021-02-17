@@ -3,6 +3,12 @@ class EveryDay {
 
   EveryDay({this.everyDay});
 
+  EveryDay toEmpty() {
+    return EveryDay(
+      everyDay: [false,false,false,false,false,false,false,],
+    );
+  }
+
   EveryDay copyWith({
     List<bool> everyDay,
   }) {
@@ -19,26 +25,30 @@ class EveryDay {
 }
 
 class TabAvailabilityStoreState {
-  double height;
+  double tabHeight;
+  double intervalsHeight;
   int numberOfInterval;
   List<bool> switchWeek;
   List<EveryDay> daysInterval;
 
   TabAvailabilityStoreState({
-    this.height,
+    this.tabHeight,
+    this.intervalsHeight,
     this.numberOfInterval,
     this.switchWeek,
     this.daysInterval,
   });
 
   TabAvailabilityStoreState copyWith({
-    double height,
+    double tabHeight,
+    double intervalsHeight,
     int numberOfInterval,
     List<bool> switchWeek,
     List<EveryDay> daysInterval,
   }) {
     return TabAvailabilityStoreState(
-      height: height ?? this.height,
+      tabHeight: tabHeight ?? this.tabHeight,
+      intervalsHeight: intervalsHeight ?? this.intervalsHeight,
       numberOfInterval: numberOfInterval ?? this.numberOfInterval,
       switchWeek: switchWeek ?? this.switchWeek,
       daysInterval: daysInterval ?? this.daysInterval,
@@ -47,7 +57,8 @@ class TabAvailabilityStoreState {
 
   TabAvailabilityStoreState toEmpty() {
     return TabAvailabilityStoreState(
-        height: 350.00,
+        tabHeight: 350.00,
+        intervalsHeight: 190.00,
         numberOfInterval: 1,
         switchWeek: [true],
         daysInterval: [EveryDay(everyDay: [false,false,false,false,false,false,false,])],
@@ -63,7 +74,8 @@ class TabAvailabilityStoreState {
   }
 
   TabAvailabilityStoreState.fromJson(Map<String, dynamic> json)
-      : height = json['height'],
+      : tabHeight = json.containsKey('tabHeight') ?  json['tabHeight'].toDouble() : 0.0,
+        intervalsHeight = json.containsKey('intervalsHeight') ?  json['intervalsHeight'].toDouble() : 0.0,
         numberOfInterval = json['numberOfInterval'],
         switchWeek = List<bool>.from(json['switchWeek']),
         daysInterval = List<EveryDay>.from(json["daysInterval"].map((item) {
@@ -73,7 +85,8 @@ class TabAvailabilityStoreState {
         }));
 
   Map<String, dynamic> toJson() => {
-        'height': height,
+        'tabHeight': tabHeight,
+        'intervalsHeight': intervalsHeight,
         'numberOfInterval': numberOfInterval,
         'switchWeek': switchWeek,
         'daysInterval': convertToJson(daysInterval),

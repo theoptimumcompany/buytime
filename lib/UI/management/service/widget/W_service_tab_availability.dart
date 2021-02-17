@@ -1,20 +1,13 @@
-import 'dart:async';
-import 'dart:io';
-import 'dart:ui' as ui;
-import 'package:Buytime/UI/management/service/UI_M_edit_service.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
-import 'package:Buytime/reblox/model/file/optimum_file_to_upload.dart';
+
+import 'package:Buytime/reblox/model/service/tab_availability_state.dart';
 import 'package:Buytime/reblox/reducer/service_reducer.dart';
-import 'package:Buytime/utils/size_config.dart';
+
 import 'package:Buytime/utils/theme/buytime_theme.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
+
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:image_cropper/image_cropper.dart';
-import 'package:path/path.dart' as path;
+
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 typedef OnFilePickedCallback = void Function();
 
@@ -29,18 +22,18 @@ class TabAvailability extends StatefulWidget {
 
 class TabAvailabilityState extends State<TabAvailability> {
   int numberOfAvailableInterval = 1;
+  TabAvailabilityStoreState baseAvailability = TabAvailabilityStoreState().toEmpty();
+
   List<bool> switchWeek = [];
-  List<bool> baseWeek = [false, false, false, false, false, false, false];
-  List<List<bool>> daysInterval = [];
+  List<EveryDay> daysInterval = [];
   double availableIntervalDynamicHeight = 155.00;
 
   @override
   void initState() {
     super.initState();
-    daysInterval.add(baseWeek);
   }
 
-  Widget weekSwitchDay(Size media, bool enabledDay, String dayName, int dayNumber) {
+  Widget weekSwitchDay(Size media, String dayName, int listNumber, int dayNumber) {
     return Row(
       // mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -52,10 +45,11 @@ class TabAvailabilityState extends State<TabAvailability> {
             child: Padding(
               padding: const EdgeInsets.only(bottom: 10.0),
               child: Switch(
-                  value: enabledDay,
+                  value: daysInterval[listNumber].everyDay[dayNumber],
                   onChanged: (value) {
                     setState(() {
-                      daysInterval[numberOfAvailableInterval][dayNumber] = value;
+                      daysInterval[listNumber].everyDay[dayNumber] = value;
+                      StoreProvider.of<AppState>(context).dispatch(SetServiceTabAvailabilitySwitchDay(daysInterval));
                     });
                   }),
             ),
@@ -97,7 +91,20 @@ class TabAvailabilityState extends State<TabAvailability> {
     return StoreConnector<AppState, AppState>(
         converter: (store) => store.state,
         builder: (context, snapshot) {
-          switchWeek = snapshot.serviceState.tabAvailability.switchWeek;
+          switchWeek = snapshot.serviceState.tabAvailability.switchWeek != null && snapshot.serviceState.tabAvailability.switchWeek.isNotEmpty
+              ? snapshot.serviceState.tabAvailability.switchWeek
+              : baseAvailability.switchWeek;
+          daysInterval = snapshot.serviceState.tabAvailability.daysInterval != null && snapshot.serviceState.tabAvailability.daysInterval.isNotEmpty
+              ? snapshot.serviceState.tabAvailability.daysInterval
+              : baseAvailability.daysInterval;
+          numberOfAvailableInterval = snapshot.serviceState.tabAvailability.numberOfInterval;
+          if (snapshot.serviceState.tabAvailability.intervalsHeight < 155.00) {
+            StoreProvider.of<AppState>(context).dispatch(SetServiceTabAvailabilityTabHeight(availableIntervalDynamicHeight + (160.00 * numberOfAvailableInterval)));
+            StoreProvider.of<AppState>(context).dispatch(SetServiceTabAvailabilityIntervalsHeight(availableIntervalDynamicHeight));
+          }
+          availableIntervalDynamicHeight = snapshot.serviceState.tabAvailability.intervalsHeight;
+          print("Dimensione array intervalli : " + daysInterval.length.toString());
+          //TODO : GESTIRE VALORA DAL DB PER ALTEZZE GIUSTE
           return Column(
             children: [
               Container(
@@ -199,15 +206,20 @@ class TabAvailabilityState extends State<TabAvailability> {
                                       value: switchWeek[i],
                                       onChanged: (value) {
                                         setState(() {
+                                          print("Dimensione availableIntervalDynamicHeight iniziale " + availableIntervalDynamicHeight.toString());
                                           if (!value) {
-                                            availableIntervalDynamicHeight = availableIntervalDynamicHeight + 410.00;
-                                            StoreProvider.of<AppState>(context).dispatch(SetServiceTabAvailabilityHeight(availableIntervalDynamicHeight + 160.00));
+                                            StoreProvider.of<AppState>(context).dispatch(SetServiceTabAvailabilityTabHeight(snapshot.serviceState.tabAvailability.tabHeight + 400.00));
+                                            StoreProvider.of<AppState>(context).dispatch(SetServiceTabAvailabilityIntervalsHeight(snapshot.serviceState.tabAvailability.intervalsHeight + 400.00));
                                           } else {
-                                            availableIntervalDynamicHeight = availableIntervalDynamicHeight - 410.00;
-                                            StoreProvider.of<AppState>(context).dispatch(SetServiceTabAvailabilityHeight(availableIntervalDynamicHeight + 160.00));
+                                            StoreProvider.of<AppState>(context).dispatch(SetServiceTabAvailabilityTabHeight(snapshot.serviceState.tabAvailability.tabHeight - 400.00));
+                                            StoreProvider.of<AppState>(context).dispatch(SetServiceTabAvailabilityIntervalsHeight(snapshot.serviceState.tabAvailability.intervalsHeight - 400.00));
                                           }
-                                          StoreProvider.of<AppState>(context).dispatch(SetServiceTabAvailabilitySwitchWeek(value, i));
-                                         // switchWeek[i] = value;
+                                          print("Dimensione dopo dispatch " + availableIntervalDynamicHeight.toString());
+                                          availableIntervalDynamicHeight = snapshot.serviceState.tabAvailability.intervalsHeight;
+                                          print("Dimensione dopo dispatch dopo assegnazione " + availableIntervalDynamicHeight.toString());
+
+                                          switchWeek[i] = value;
+                                          StoreProvider.of<AppState>(context).dispatch(SetServiceTabAvailabilitySwitchWeek(switchWeek));
                                         });
                                       }),
                                   Expanded(
@@ -241,16 +253,16 @@ class TabAvailabilityState extends State<TabAvailability> {
                               ),
                             ),
                           ),
-                          !switchWeek[i] //todo: <----Vedere perchè non sente il change sul valore
+                          !switchWeek[i]
                               ? Column(
                                   children: [
-                                    weekSwitchDay(widget.media, daysInterval[i][0], 'Monday', 0), //todo: lang
-                                    weekSwitchDay(widget.media, daysInterval[i][1], 'Tuesday', 1), //todo: lang
-                                    weekSwitchDay(widget.media, daysInterval[i][2], 'Wednesday', 2), //todo: lang
-                                    weekSwitchDay(widget.media, daysInterval[i][3], 'Thursday', 3), //todo: lang
-                                    weekSwitchDay(widget.media, daysInterval[i][4], 'Friday', 4), //todo: lang
-                                    weekSwitchDay(widget.media, daysInterval[i][5], 'Saturday', 5), //todo: lang
-                                    weekSwitchDay(widget.media, daysInterval[i][6], 'Sunday', 6), //todo: lang
+                                    weekSwitchDay(widget.media, 'Monday', i, 0), //todo: lang
+                                    weekSwitchDay(widget.media, 'Tuesday', i, 1), //todo: lang
+                                    weekSwitchDay(widget.media, 'Wednesday', i, 2), //todo: lang
+                                    weekSwitchDay(widget.media, 'Thursday', i, 3), //todo: lang
+                                    weekSwitchDay(widget.media, 'Friday', i, 4), //todo: lang
+                                    weekSwitchDay(widget.media, 'Saturday', i, 5), //todo: lang
+                                    weekSwitchDay(widget.media, 'Sunday', i, 6), //todo: lang
                                   ],
                                 )
                               : Container(),
@@ -265,12 +277,15 @@ class TabAvailabilityState extends State<TabAvailability> {
                   child: OutlinedButton(
                     onPressed: () {
                       setState(() {
-                       // switchWeek.add(true);
-                        StoreProvider.of<AppState>(context).dispatch(SetServiceTabAvailabilityNewSwitchWeekValue(true));
-                        daysInterval.add(baseWeek);
+                        switchWeek.add(true);
+                        StoreProvider.of<AppState>(context).dispatch(SetServiceTabAvailabilitySwitchWeek(switchWeek));
+                        daysInterval.add(EveryDay().toEmpty());
                         numberOfAvailableInterval = numberOfAvailableInterval + 1;
-                        availableIntervalDynamicHeight = availableIntervalDynamicHeight + 156.00;
-                        StoreProvider.of<AppState>(context).dispatch(SetServiceTabAvailabilityHeight(availableIntervalDynamicHeight + 160.00));
+                        StoreProvider.of<AppState>(context).dispatch(SetServiceTabAvailabilityNumberOfInterval(numberOfAvailableInterval));
+                        StoreProvider.of<AppState>(context).dispatch(SetServiceTabAvailabilityDaysInterval(daysInterval));
+                        StoreProvider.of<AppState>(context).dispatch(SetServiceTabAvailabilityTabHeight(snapshot.serviceState.tabAvailability.tabHeight + 155.00));
+                        StoreProvider.of<AppState>(context).dispatch(SetServiceTabAvailabilityIntervalsHeight(snapshot.serviceState.tabAvailability.intervalsHeight + 155.00));
+                        availableIntervalDynamicHeight = snapshot.serviceState.tabAvailability.tabHeight;
                       });
                     },
                     child: Padding(
@@ -305,8 +320,8 @@ class TabAvailabilityState extends State<TabAvailability> {
                         backgroundColor: BuytimeTheme.ManagerPrimary,
                       ),
                       onPressed: () {
-                        print("Save tab 1");
-                        setState(() {});
+                        print("Aggiorno il service con booking selezionato");
+                        StoreProvider.of<AppState>(context).dispatch(UpdateService(snapshot.serviceState));
                       },
                       child: Padding(
                         padding: const EdgeInsets.all(15.0),
