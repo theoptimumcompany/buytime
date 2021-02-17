@@ -105,6 +105,7 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                     IconButton(
                       icon: Icon(Icons.add, color: Colors.white, size: mediaWidth * 0.085),
                       onPressed: () {
+                        StoreProvider.of<AppState>(context).dispatch(SetService(ServiceState().toEmpty()));
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(builder: (context) => UI_CreateService()),
@@ -161,6 +162,7 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                                       ///Static add service to category
                                       GestureDetector(
                                         onTap: () {
+                                          StoreProvider.of<AppState>(context).dispatch(SetService(ServiceState().toEmpty()));
                                           Navigator.pushReplacement(
                                             context,
                                             MaterialPageRoute(builder: (context) => UI_CreateService(categoryId: categoryRootList[i].id)),

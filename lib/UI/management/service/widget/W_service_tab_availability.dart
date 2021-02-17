@@ -1,13 +1,15 @@
 import 'package:Buytime/reblox/model/app_state.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:Buytime/reblox/model/service/tab_availability_state.dart';
 import 'package:Buytime/reblox/reducer/service_reducer.dart';
+import 'package:Buytime/utils/size_config.dart';
 
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 
 import 'package:flutter_redux/flutter_redux.dart';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 typedef OnFilePickedCallback = void Function();
 
@@ -27,11 +29,17 @@ class TabAvailabilityState extends State<TabAvailability> {
   List<bool> switchWeek = [];
   List<EveryDay> daysInterval = [];
   double availableIntervalDynamicHeight = 155.00;
+  final TextEditingController _checkInController = TextEditingController();
+  final TextEditingController _checkOutController = TextEditingController();
+  DateTime checkIn = DateTime.now();
+  DateTime checkOut = DateTime.now();
 
   @override
   void initState() {
     super.initState();
   }
+
+
 
   Widget weekSwitchDay(Size media, String dayName, int listNumber, int dayNumber) {
     return Row(
@@ -86,8 +94,28 @@ class TabAvailabilityState extends State<TabAvailability> {
     );
   }
 
+  Future<void> _selectTimeRange(BuildContext context, DateTime cIn, DateTime cOut) async {
+    final DateTimeRange picked = await showDateRangePicker(
+        context: context,
+        initialDateRange: DateTimeRange(start: cIn, end: cOut),
+        firstDate: new DateTime(DateTime.now().year,DateTime.now().month, DateTime.now().day),
+        lastDate: new DateTime(2025)
+    );
+    if (picked != null && picked.start != null && picked.end != null) {
+      print(picked);
+      _checkInController.text = DateFormat('dd/MM/yyyy').format(picked.start);
+      _checkOutController.text = DateFormat('dd/MM/yyyy').format(picked.end);
+      setState(() {
+        checkIn = picked.start;
+        checkOut = picked.end;
+      });
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
+    var media = MediaQuery.of(context).size;
     return StoreConnector<AppState, AppState>(
         converter: (store) => store.state,
         builder: (context, snapshot) {
@@ -103,7 +131,6 @@ class TabAvailabilityState extends State<TabAvailability> {
             StoreProvider.of<AppState>(context).dispatch(SetServiceTabAvailabilityIntervalsHeight(availableIntervalDynamicHeight));
           }
           availableIntervalDynamicHeight = snapshot.serviceState.tabAvailability.intervalsHeight;
-          print("Dimensione array intervalli : " + daysInterval.length.toString());
           //TODO : GESTIRE VALORA DAL DB PER ALTEZZE GIUSTE
           return Column(
             children: [
@@ -132,69 +159,118 @@ class TabAvailabilityState extends State<TabAvailability> {
                               ],
                             )),
                           ),
+                          ///Time Range
                           Container(
+                              margin: EdgeInsets.only( left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
                               child: Row(
-                            children: [
-                              Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.only(left: 20.0, right: 5),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: BuytimeTheme.BackgroundLightGrey,
-                                      borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(15.0),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            "Start", //todo: lang
-                                            textAlign: TextAlign.start,
-                                            style: TextStyle(
-                                              fontSize: widget.media.height * 0.024,
-                                              color: BuytimeTheme.TextGrey,
-                                              fontWeight: FontWeight.w500,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  ///Check In
+                                  GestureDetector(
+                                    onTap: ()async{
+                                      await _selectTimeRange(context, checkIn, checkOut);
+                                    },
+                                    child: Container(
+                                      width: media.width * 0.4,
+                                      child: TextFormField(
+                                        enabled: false,
+                                        controller: _checkInController,
+                                        textAlign: TextAlign.start,
+                                        keyboardType: TextInputType.datetime,
+                                        decoration: InputDecoration(
+                                            filled: true,
+                                            fillColor: BuytimeTheme.DividerGrey,
+                                            enabledBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(color: Color(0xffe0e0e0)),
+                                                borderRadius: BorderRadius.all(Radius.circular(10.0))
                                             ),
-                                          ),
-                                          Icon(Icons.av_timer, color: BuytimeTheme.SymbolGrey, size: widget.media.width * 0.07),
-                                        ],
+                                            focusedBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(color: Color(0xff666666)),
+                                                borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                            ),
+                                            labelText: AppLocalizations.of(context).checkIn,
+                                            //hintText: "email *",
+                                            //hintStyle: TextStyle(color: Color(0xff666666)),
+                                            labelStyle: TextStyle(
+                                              fontFamily: BuytimeTheme.FontFamily,
+                                              color: Color(0xff666666),
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                            suffixIcon: Icon(
+                                                Icons.calendar_today
+                                            )
+                                        ),
+                                        style: TextStyle(
+                                          fontFamily: BuytimeTheme.FontFamily,
+                                          color: Color(0xff666666),
+                                          fontWeight: FontWeight.w800,
+                                        ),
+                                        validator: (String value) {
+                                          if (value.isEmpty) {
+                                            return AppLocalizations.of(context).pleaseEnterAValidDateInterval;
+                                          }
+                                          return null;
+                                        },
                                       ),
                                     ),
                                   ),
-                                ),
-                              ),
-                              Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.only(right: 20.0),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: BuytimeTheme.BackgroundLightGrey,
-                                      borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                                    ),
+                                  ///Check Out
+                                  GestureDetector(
+                                    onTap: () async{
+                                      await _selectTimeRange(context, checkIn, checkOut);
+                                    },
                                     child: Padding(
-                                      padding: const EdgeInsets.all(15.0),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            "Stop", //todo: lang
-                                            textAlign: TextAlign.start,
-                                            style: TextStyle(
-                                              fontSize: widget.media.height * 0.024,
-                                              color: BuytimeTheme.TextGrey,
-                                              fontWeight: FontWeight.w500,
-                                            ),
+                                      padding: const EdgeInsets.only(left: 15.0),
+                                      child: Container(
+                                        width: media.width * 0.4,
+                                        child: TextFormField(
+                                          enabled: false,
+                                          controller: _checkOutController,
+                                          textAlign: TextAlign.start,
+                                          keyboardType: TextInputType.datetime,
+                                          decoration: InputDecoration(
+                                              filled: true,
+                                              fillColor: BuytimeTheme.DividerGrey,
+                                              enabledBorder: OutlineInputBorder(
+                                                  borderSide: BorderSide(color: Color(0xffe0e0e0)),
+                                                  borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                              ),
+                                              focusedBorder: OutlineInputBorder(
+                                                  borderSide: BorderSide(color: Color(0xff666666)),
+                                                  borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                              ),
+                                              labelText: AppLocalizations.of(context).checkOut,
+                                              //hintText: "email *",
+                                              //hintStyle: TextStyle(color: Color(0xff666666)),
+                                              labelStyle: TextStyle(
+                                                fontFamily: BuytimeTheme.FontFamily,
+                                                color: Color(0xff666666),
+                                                fontWeight: FontWeight.w400,
+                                              ),
+                                              suffixIcon: Icon(
+                                                  Icons.calendar_today
+                                              )
                                           ),
-                                          Icon(Icons.av_timer, color: BuytimeTheme.SymbolGrey, size: widget.media.width * 0.07),
-                                        ],
+                                          style: TextStyle(
+                                            fontFamily: BuytimeTheme.FontFamily,
+                                            color: Color(0xff666666),
+                                            fontWeight: FontWeight.w800,
+                                          ),
+                                          validator: (String value) {
+                                            debugPrint('${checkIn.compareTo(checkOut)}');
+                                            if (value.isEmpty || checkIn.compareTo(checkOut) > 0) {
+                                              return AppLocalizations.of(context).pleaseEnterAValidDateInterval;
+                                            }
+                                            return null;
+                                          },
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          )),
+                                  )
+                                ],
+                              )
+                          ),
 
                           ///Switch Every Day
                           Padding(
