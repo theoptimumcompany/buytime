@@ -129,7 +129,7 @@ class _MyBookingsState extends State<MyBookings> {
                             flex: 7,
                             child: showList ?
                             Container(
-                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 0),
+                              margin: EdgeInsets.only(top: SizeConfig.safeBlockHorizontal * 0),
                               alignment: Alignment.centerLeft,
                               child: MediaQuery.removePadding(
                                   removeTop: true,
