@@ -124,6 +124,7 @@ class _InviteGuestFormState extends State<InviteGuestForm> {
                       }
 
                       await Future.delayed(const Duration(milliseconds: 500));
+                      StoreProvider.of<AppState>(context).dispatch(BookingRequestResponse(BookingState().toEmpty()));
                       Navigator.of(context).pop();
                     },
                   ),
@@ -192,7 +193,7 @@ class _InviteGuestFormState extends State<InviteGuestForm> {
                                   ),
                                   labelText: currentFocus.hasFocus ? '' : AppLocalizations.of(context).bookingCode,
                                   //hintText: 'Booking Code',
-                                  helperText: AppLocalizations.of(context).yourBookingCodeIs,
+                                  helperText: StoreProvider.of<AppState>(context).state.booking.booking_code != 'error' ? AppLocalizations.of(context).yourBookingCodeIs : 'Your booking code does not appear to be valid.',
                                   //hintText: "email *",
                                   //hintStyle: TextStyle(color: Color(0xff666666)),
                                   labelStyle: TextStyle(

@@ -2,11 +2,12 @@ import 'dart:core';
 
 import 'package:Buytime/UI/management/business/UI_M_business_list.dart';
 import 'package:Buytime/UI/user/UI_U_Tabs.dart';
-import 'package:Buytime/UI/user/booking/UI_U_PastBooking.dart';
+import 'package:Buytime/UI/user/booking/UI_U_MyBookings.dart';
 import 'package:Buytime/UI/user/landing/invite_guest_form.dart';
 import 'package:Buytime/UI/user/login/UI_U_Home.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/role/role.dart';
+import 'package:Buytime/reblox/reducer/booking_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/business_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/business_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_list_reducer.dart';
@@ -251,16 +252,17 @@ class LandingState extends State<Landing> {
                                       color: Colors.transparent,
                                       child: InkWell(
                                           onTap: () {
-                                            Navigator.push(
+                                            /*Navigator.push(
                                               context,
-                                              MaterialPageRoute(builder: (context) => PastBooking()),
-                                            );
+                                              MaterialPageRoute(builder: (context) => MyBookings()),
+                                            );*/
+                                            StoreProvider.of<AppState>(context).dispatch(UserBookingListRequest(StoreProvider.of<AppState>(context).state.user.email));
                                           },
                                           borderRadius: BorderRadius.all(Radius.circular(5.0)),
                                           child: Container(
                                             padding: EdgeInsets.all(5.0),
                                             child: Text(
-                                              AppLocalizations.of(context).viewPastBookings,
+                                              AppLocalizations.of(context).viewBookings,
                                               style: TextStyle(
                                                   fontFamily: BuytimeTheme.FontFamily,
                                                   color: BuytimeTheme.UserPrimary,

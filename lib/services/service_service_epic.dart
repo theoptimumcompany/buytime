@@ -2,6 +2,7 @@ import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/file/optimum_file_to_upload.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/navigation/navigation_reducer.dart';
+import 'package:Buytime/reblox/reducer/category_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/service_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/service_reducer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -50,10 +51,12 @@ class ServiceListRequestService implements EpicClass<AppState> {
 
 class ServiceListAndNavigateRequestService implements EpicClass<AppState> {
   List<ServiceState> serviceStateList;
+  String businessId;
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     print("ServiceListAndNavigateRequestService catched action");
     return actions.whereType<ServiceListAndNavigateRequest>().asyncMap((event) async {
+      businessId = event.businessId;
       print("ServiceListAndNavigateRequestService Firestore request business Id: ${event.businessId}, permission: ${event.permission}");
       serviceStateList = List<ServiceState>();
       if (event.permission == "user") {
@@ -80,7 +83,7 @@ class ServiceListAndNavigateRequestService implements EpicClass<AppState> {
       print("ServiceListAndNavigateRequestService return list with " + serviceStateList.length.toString());
     }).expand((element) => [
       ServiceListReturned(serviceStateList),
-      NavigatePushAction(AppRoutes.bookingPage),
+      RequestListCategory(businessId)
     ]);
   }
 }

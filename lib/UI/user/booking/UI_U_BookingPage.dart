@@ -1,10 +1,14 @@
 import 'dart:async';
 
 import 'package:Buytime/UI/management/business/UI_M_business_list.dart';
+import 'package:Buytime/UI/user/landing/UI_U_Landing.dart';
 import 'package:Buytime/UI/user/login/UI_U_Home.dart';
+import 'package:Buytime/UI/user/search/UI_U_SearchPage.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
+import 'package:Buytime/reblox/model/category/category_list_state.dart';
+import 'package:Buytime/reblox/model/category/category_state.dart';
 import 'package:Buytime/reblox/model/role/role.dart';
 import 'package:Buytime/reblox/model/service/service_list_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
@@ -25,8 +29,9 @@ import 'package:Buytime/reblox/reducer/user_reducer.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
 import 'package:Buytime/reusable/booking_page_service_list_item.dart';
 import 'package:Buytime/reusable/custom_bottom_button_widget.dart';
+import 'package:Buytime/reusable/find_your_inspiration_card_widget.dart';
 import 'package:Buytime/reusable/menu/UI_M_business_list_drawer.dart';
-import 'package:Buytime/reusable/past_booking_card_widget.dart';
+import 'package:Buytime/reusable/booking_card_widget.dart';
 import 'package:Buytime/utils/globals.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_config.dart';
@@ -45,7 +50,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 class BookingPage extends StatefulWidget {
 
   static String route = '/bookingPage';
-
+  bool fromConfirm;
+  BookingPage({Key key, this.fromConfirm}) : super(key: key);
   @override
   _BookingPageState createState() => _BookingPageState();
 }
@@ -58,6 +64,8 @@ class _BookingPageState extends State<BookingPage> {
   BusinessState businessState;
   ServiceListState serviceListState;
   List<ServiceState> serviceList = [];
+  CategoryListState categoryListState;
+  List<CategoryState> categoryList = [];
 
   bool sameMonth = false;
 
@@ -95,9 +103,11 @@ class _BookingPageState extends State<BookingPage> {
         businessState = snapshot.business;
         serviceListState = snapshot.serviceList;
         serviceList = serviceListState.serviceListState;
+        categoryListState = snapshot.categoryList;
+        categoryList = categoryListState.categoryListState;
 
-        debugPrint('UI_U_BookingPage: business logo => ${businessState.logo}');
-        debugPrint('UI_U_BookingPage: service list lenght => ${serviceList.length}');
+        //debugPrint('UI_U_BookingPage: business logo => ${businessState.logo}');
+        //debugPrint('UI_U_BookingPage: service list lenght => ${serviceList.length}');
         String startMonth = DateFormat('MM').format(bookingState.start_date);
         String endMonth = DateFormat('MM').format(bookingState.end_date);
 
@@ -117,6 +127,21 @@ class _BookingPageState extends State<BookingPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
+                      child: IconButton(
+                        icon: const Icon(
+                          Icons.keyboard_arrow_left,
+                          color: Colors.white,
+                          size: 25.0,
+                        ),
+                        tooltip: AppLocalizations.of(context).comeBack,
+                        onPressed: () {
+                          //widget.fromConfirm != null ? Navigator.of(context).pop() : Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Landing()),);
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ),
                     Container(
                       child: Padding(
                         padding: const EdgeInsets.only(left: 10.0),
@@ -348,126 +373,133 @@ class _BookingPageState extends State<BookingPage> {
                             ),
                           ),
                           ///Search & Contact
-                          Container(
-                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
-                            height: SizeConfig.safeBlockVertical * 24,
-                            width: double.infinity,
-                            color: BuytimeTheme.BackgroundWhite,
-                            child: Column(
-                              children: [
-                                ///Search
-                                Container(
-                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5),
-                                  height: SizeConfig.safeBlockHorizontal * 20,
-                                  child: TextFormField(
-                                    controller: _searchController,
-                                    textAlign: TextAlign.start,
-                                    decoration: InputDecoration(
-                                      enabledBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(color: Color(0xffe0e0e0)),
-                                          borderRadius: BorderRadius.all(Radius.circular(10.0))
+                          Flexible(
+                            child: Container(
+                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
+                              //height: SizeConfig.safeBlockVertical * 28,
+                              width: double.infinity,
+                              color: BuytimeTheme.BackgroundWhite,
+                              child: Column(
+                                children: [
+                                  ///Search
+                                  Container(
+                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5),
+                                    height: SizeConfig.safeBlockHorizontal * 20,
+                                    child: TextFormField(
+                                      controller: _searchController,
+                                      textAlign: TextAlign.start,
+                                      decoration: InputDecoration(
+                                        enabledBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(color: Color(0xffe0e0e0)),
+                                            borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                        ),
+                                        focusedBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(color: Color(0xff666666)),
+                                            borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                        ),
+                                        errorBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(color: Colors.redAccent),
+                                            borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                        ),
+                                        labelText: 'What are you looking for?', //TODO Make it Global
+                                        helperText: 'Search for services and ideas around you', //TODO Make it Global
+                                        //hintText: "email *",
+                                        //hintStyle: TextStyle(color: Color(0xff666666)),
+                                        labelStyle: TextStyle(
+                                          fontFamily: BuytimeTheme.FontFamily,
+                                          color: Color(0xff666666),
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                        helperStyle:  TextStyle(
+                                          fontFamily: BuytimeTheme.FontFamily,
+                                          color: Color(0xff666666),
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                        suffixIcon: Icon(
+                                          // Based on passwordVisible state choose the icon
+                                          Icons.search,
+                                          color: Color(0xff666666),
+                                        ),
                                       ),
-                                      focusedBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(color: Color(0xff666666)),
-                                          borderRadius: BorderRadius.all(Radius.circular(10.0))
-                                      ),
-                                      errorBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(color: Colors.redAccent),
-                                          borderRadius: BorderRadius.all(Radius.circular(10.0))
-                                      ),
-                                      labelText: 'What are you looking for?', //TODO Make it Global
-                                      helperText: 'Search for services and ideas around you', //TODO Make it Global
-                                      //hintText: "email *",
-                                      //hintStyle: TextStyle(color: Color(0xff666666)),
-                                      labelStyle: TextStyle(
+                                      style: TextStyle(
                                         fontFamily: BuytimeTheme.FontFamily,
                                         color: Color(0xff666666),
-                                        fontWeight: FontWeight.w400,
+                                        fontWeight: FontWeight.bold,
                                       ),
-                                      helperStyle:  TextStyle(
-                                        fontFamily: BuytimeTheme.FontFamily,
-                                        color: Color(0xff666666),
-                                        fontWeight: FontWeight.w400,
-                                      ),
-                                      suffixIcon: Icon(
-                                        // Based on passwordVisible state choose the icon
-                                        Icons.search,
-                                        color: Color(0xff666666),
-                                      ),
-                                    ),
-                                    style: TextStyle(
-                                      fontFamily: BuytimeTheme.FontFamily,
-                                      color: Color(0xff666666),
-                                      fontWeight: FontWeight.bold,
+                                      onEditingComplete: (){
+                                        debugPrint('done');
+                                        FocusScope.of(context).unfocus();
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => SearchPage()));
+                                      },
                                     ),
                                   ),
-                                ),
-                                ///Contact
-                                Container(
-                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 4, right: SizeConfig.safeBlockHorizontal * 4),
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.all(Radius.circular(50))
-                                    ),
-                                    child: Material(
-                                        color: Colors.transparent,
-                                        child: InkWell(
-                                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                                          onTap: () async {
-                                            String url = businessState.phone_number;
-                                            debugPrint('Restaurant phonenumber: ' + url); //TODO Make it Global
-                                            if (await canLaunch('tel:$url')) {
-                                              await launch('tel:$url');
-                                            } else {
-                                              throw 'Could not launch $url';
-                                            }
-                                          },
-                                          child: Container(
-                                            padding: EdgeInsets.all(SizeConfig.safeBlockHorizontal * 2),
-                                            child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                              children: [
-                                                ///Text
-                                                Column(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
-                                                    Container(
-                                                      child: Text(
-                                                        'Speak with ${businessState.responsible_person_name}', //TODO Make it Global
-                                                        style: TextStyle(
-                                                            fontFamily: BuytimeTheme.FontFamily,
-                                                            color: BuytimeTheme.TextBlack,
-                                                            fontWeight: FontWeight.bold,
-                                                            fontSize: SizeConfig.safeBlockHorizontal * 4
+                                  ///Contact
+                                  Container(
+                                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 4, right: SizeConfig.safeBlockHorizontal * 4),
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.all(Radius.circular(50))
+                                      ),
+                                      child: Material(
+                                          color: Colors.transparent,
+                                          child: InkWell(
+                                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                                            onTap: () async {
+                                              String url = businessState.phone_number;
+                                              debugPrint('Restaurant phonenumber: ' + url); //TODO Make it Global
+                                              if (await canLaunch('tel:$url')) {
+                                                await launch('tel:$url');
+                                              } else {
+                                                throw 'Could not launch $url';
+                                              }
+                                            },
+                                            child: Container(
+                                              padding: EdgeInsets.all(SizeConfig.safeBlockHorizontal * 2),
+                                              child: Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  ///Text
+                                                  Column(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      Container(
+                                                        child: Text(
+                                                          'Speak with ${businessState.responsible_person_name}', //TODO Make it Global
+                                                          style: TextStyle(
+                                                              fontFamily: BuytimeTheme.FontFamily,
+                                                              color: BuytimeTheme.TextBlack,
+                                                              fontWeight: FontWeight.bold,
+                                                              fontSize: SizeConfig.safeBlockHorizontal * 4
+                                                          ),
                                                         ),
                                                       ),
-                                                    ),
-                                                    Container(
-                                                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
-                                                      child: Text(
-                                                        'your dedicated advisor', //TODO Make it Global
-                                                        style: TextStyle(
-                                                            fontFamily: BuytimeTheme.FontFamily,
-                                                            color: BuytimeTheme.TextGrey,
-                                                            fontWeight: FontWeight.w500,
-                                                            fontSize: SizeConfig.safeBlockHorizontal * 4
+                                                      Container(
+                                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
+                                                        child: Text(
+                                                          'your dedicated advisor', //TODO Make it Global
+                                                          style: TextStyle(
+                                                              fontFamily: BuytimeTheme.FontFamily,
+                                                              color: BuytimeTheme.TextGrey,
+                                                              fontWeight: FontWeight.w500,
+                                                              fontSize: SizeConfig.safeBlockHorizontal * 4
+                                                          ),
                                                         ),
-                                                      ),
-                                                    )
-                                                  ],
-                                                ),
-                                                ///Icon
-                                                Icon(
-                                                  Icons.call,
-                                                  color: BuytimeTheme.ActionButton,
-                                                ),
-                                              ],
+                                                      )
+                                                    ],
+                                                  ),
+                                                  ///Icon
+                                                  Icon(
+                                                    Icons.call,
+                                                    color: BuytimeTheme.ActionButton,
+                                                  ),
+                                                ],
+                                              ),
                                             ),
-                                          ),
-                                        )
-                                    )
-                                )
-                              ],
+                                          )
+                                      )
+                                  )
+                                ],
+                              ),
                             ),
                           ),
                           ///Inspiration
@@ -481,7 +513,7 @@ class _BookingPageState extends State<BookingPage> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   ///Inspiration
-                                  Container(
+                                  /*Container(
                                     margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
                                     child: Text(
                                       'Find your inspiration here', //TODO Make it Global
@@ -571,82 +603,68 @@ class _BookingPageState extends State<BookingPage> {
                                         )
                                       ],
                                     ),
-                                  )
-                                  /*serviceList.isNotEmpty ? Container(
+                                  )*/
+                                  Container(
+                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
+                                    child: Text(
+                                      'Find your inspiration here', //TODO Make it Global
+                                      style: TextStyle(
+                                          fontFamily: BuytimeTheme.FontFamily,
+                                          color: BuytimeTheme.TextDark,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: SizeConfig.safeBlockHorizontal * 4
+                                      ),
+                                    ),
+                                  ),
+                                  categoryList.isNotEmpty ? Container(
                                     margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 2, right: SizeConfig.safeBlockHorizontal * 2),
-                                    height: SizeConfig.safeBlockVertical * 50,
+                                    //height: SizeConfig.safeBlockVertical * 50,
                                     width: double.infinity,
                                     child: Column(
                                       children: [
-                                        Flexible(
-                                          flex: 1,
-                                          child: Row(
-                                            children: [
-                                              Flexible(
-                                                flex: 1,
-                                                child: Container(
-                                                  margin: EdgeInsets.all(SizeConfig.safeBlockVertical*.25),
-                                                  //width: double.infinity,
-                                                  //height: double.infinity,
-                                                  width: SizeConfig.safeBlockVertical * 18,
-                                                  height: SizeConfig.safeBlockVertical * 18,
-                                                  color: BuytimeTheme.AccentRed,
-                                                ),
+                                        Row(
+                                          children: [
+                                            ///First showcase
+                                            Flexible(
+                                              flex: 1,
+                                              child: FindYourInspirationCardWidget(
+                                                  18,18, categoryList[0].categoryImage, categoryList[0].name
                                               ),
-                                              Expanded(
-                                                flex: 1,
-                                                child: Container(
-                                                  margin: EdgeInsets.all(SizeConfig.safeBlockVertical*.25),
-                                                  //width: double.infinity,
-                                                  //height: double.infinity,
-                                                  width: SizeConfig.safeBlockVertical * 18,
-                                                  height: SizeConfig.safeBlockVertical * 18,
-                                                  color: BuytimeTheme.Secondary,
-                                                ),
+                                            ),
+                                            ///Second showcase
+                                            categoryList.length >= 2 ? Flexible(
+                                              flex: 1,
+                                              child: FindYourInspirationCardWidget(
+                                                  18,18, categoryList[1].categoryImage, categoryList[1].name
                                               ),
-                                              Expanded(
-                                                flex: 1,
-                                                child: Container(
-                                                  margin: EdgeInsets.all(SizeConfig.safeBlockVertical*.25),
-                                                  //width: double.infinity,
-                                                  //height: double.infinity,
-                                                  width: SizeConfig.safeBlockVertical * 18,
-                                                  height: SizeConfig.safeBlockVertical * 18,
-                                                  color: BuytimeTheme.ManagerPrimary,
-                                                ),
-                                              )
-                                            ],
-                                          ),
+                                            ) : Container(),
+                                            ///third showcase
+                                            categoryList.length >= 3 ? Flexible(
+                                              flex: 1,
+                                              child: FindYourInspirationCardWidget(
+                                                  18,18, categoryList[2].categoryImage, categoryList[2].name
+                                              ),
+                                            ) : Container()
+                                          ],
                                         ),
-                                        Flexible(
-                                          flex: 1,
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            children: [
-                                              Flexible(
-                                                flex: 1,
-                                                child: Container(
-                                                  margin: EdgeInsets.all(SizeConfig.safeBlockVertical*.25),
-                                                  //width: double.infinity,
-                                                  //height: double.infinity,
-                                                  width: SizeConfig.safeBlockVertical * 28,
-                                                  height: SizeConfig.safeBlockVertical * 28,
-                                                  color: BuytimeTheme.BackgroundLightBlue,
-                                                ),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            ///Fourth showcase
+                                            categoryList.length >= 4 ? Flexible(
+                                              flex: 1,
+                                              child: FindYourInspirationCardWidget(
+                                                  28,28, categoryList[3].categoryImage, categoryList[3].name
                                               ),
-                                              Flexible(
-                                                flex: 1,
-                                                child: Container(
-                                                  margin: EdgeInsets.all(SizeConfig.safeBlockVertical*.25),
-                                                  //width: double.infinity,
-                                                  //height: double.infinity,
-                                                  width: SizeConfig.safeBlockVertical * 28,
-                                                  height: SizeConfig.safeBlockVertical * 28,
-                                                  color: BuytimeTheme.TextPurple,
-                                                ),
+                                            ) : Container(),
+                                            ///Fifth showcase
+                                            categoryList.length == 5 ? Flexible(
+                                              flex: 1,
+                                              child: FindYourInspirationCardWidget(
+                                                  28,28, categoryList[4].categoryImage, categoryList[4].name
                                               ),
-                                            ],
-                                          ),
+                                            ) : Container(),
+                                          ],
                                         )
                                       ],
                                     ),
@@ -673,7 +691,7 @@ class _BookingPageState extends State<BookingPage> {
                                           ),
                                         )
                                     ),
-                                  )*/
+                                  )
                                 ],
                               ),
                             ),

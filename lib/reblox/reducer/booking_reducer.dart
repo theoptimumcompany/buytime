@@ -17,14 +17,6 @@ class BookingRequest {
   String get bookingId => _bookingId;
 }
 
-class UserBookingRequest {
-  String _userEmail;
-
-  UserBookingRequest(this._userEmail);
-
-  String get userEmail => _userEmail;
-}
-
 class CreateBookingRequest {
   BookingState _bookingState;
 
@@ -57,13 +49,6 @@ class BookingRequestResponse {
   BookingState get bookingState => _bookingState;
 }
 
-class UserBookingRequestResponse {
-  BookingState _bookingState;
-
-  UserBookingRequestResponse(this._bookingState);
-
-  BookingState get bookingState => _bookingState;
-}
 
 class DeleteBooking {
   BookingState _bookingState;
@@ -135,12 +120,6 @@ BookingState bookingReducer(BookingState state, action) {
   }
 
   if (action is BookingRequestResponse) {
-    bookingState = action.bookingState.copyWith();
-    debugPrint('booking_reducer: ${bookingState.user.first.name}');
-    return bookingState;
-  }
-
-  if (action is UserBookingRequestResponse) {
     bookingState = action.bookingState.copyWith();
     //debugPrint('booking_reducer: ${bookingState.user.first.name}');
     return bookingState;

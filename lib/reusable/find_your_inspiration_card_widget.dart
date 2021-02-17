@@ -1,0 +1,90 @@
+import 'package:Buytime/UI/user/category/UI_U_CategoryDetails.dart';
+import 'package:Buytime/utils/size_config.dart';
+import 'package:Buytime/utils/theme/buytime_theme.dart';
+import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+
+class FindYourInspirationCardWidget extends StatefulWidget {
+
+  double width;
+  double heigth;
+  String imageUrl;
+  String categoryName;
+  FindYourInspirationCardWidget(this.width, this.heigth, this.imageUrl,this.categoryName);
+
+  @override
+  _FindYourInspirationCardWidgetState createState() => _FindYourInspirationCardWidgetState();
+}
+
+class _FindYourInspirationCardWidgetState extends State<FindYourInspirationCardWidget> {
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+
+    return  CachedNetworkImage(
+      imageUrl: widget.imageUrl,
+      imageBuilder: (context, imageProvider) => Container(
+        margin: EdgeInsets.all(SizeConfig.safeBlockVertical*.25),
+        //width: double.infinity,
+        //height: double.infinity,
+        width: SizeConfig.safeBlockVertical * widget.width,
+        height: SizeConfig.safeBlockVertical * widget.heigth,
+        decoration: BoxDecoration(
+            color: BuytimeTheme.Secondary,
+            borderRadius: BorderRadius.all(Radius.circular(5)),
+            image: DecorationImage(
+              image: imageProvider,
+              fit: BoxFit.cover,
+            )
+        ),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            splashColor: Colors.black.withOpacity(.3),
+            onTap: (){
+              Navigator.push(context, MaterialPageRoute(builder: (context) => CategoryDetails()));
+            },
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+            child: Container(
+              width: SizeConfig.safeBlockVertical * widget.width,
+              height: SizeConfig.safeBlockVertical * widget.heigth,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                  color: Colors.black.withOpacity(.2)
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, bottom: SizeConfig.safeBlockVertical * 2),
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        widget.categoryName,
+                        style: TextStyle(
+                            fontFamily: BuytimeTheme.FontFamily,
+                            color: BuytimeTheme.TextWhite,
+                            fontWeight: FontWeight.bold,
+                            fontSize: SizeConfig.safeBlockHorizontal * 4
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+      placeholder: (context, url) => CircularProgressIndicator(),
+      errorWidget: (context, url, error) => Icon(Icons.error),
+    );
+  }
+}
+

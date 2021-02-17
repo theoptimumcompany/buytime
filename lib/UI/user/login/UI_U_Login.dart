@@ -971,7 +971,9 @@ class LoginState extends State<Login> {
         if(StoreProvider.of<AppState>(context).state.user.getRole() != Role.user)
           Navigator.push(context, MaterialPageRoute(builder: (context) => UI_M_BusinessList()));
         else
-          StoreProvider.of<AppState>(context).dispatch(new UserBookingRequest(user.email));
+          Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.landing, (Route<dynamic> route) => false);
+          //Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.myBookings, ModalRoute.withName(AppRoutes.landing));
+          //StoreProvider.of<AppState>(context).dispatch(new UserBookingRequest(user.email));
       });
     }else{
       Navigator.of(context).pop();

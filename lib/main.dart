@@ -5,6 +5,7 @@ import 'package:Buytime/UI/management/invite/UI_M_BookingDetails.dart';
 import 'package:Buytime/UI/management/service/UI_M_service_list.dart';
 import 'package:Buytime/UI/user/booking/UI_U_BookingPage.dart';
 import 'package:Buytime/UI/user/booking/UI_U_ConfirmBooking.dart';
+import 'package:Buytime/UI/user/booking/UI_U_MyBookings.dart';
 import 'package:Buytime/UI/user/landing/UI_U_Landing.dart';
 import 'package:Buytime/reblox/model/booking/booking_list_state.dart';
 import 'package:Buytime/reblox/model/category/invitation/category_invite_state.dart';
@@ -59,7 +60,7 @@ void main() {
     BusinessListRequestService(),
     BookingCreateRequestService(),
     BookingRequestService(),
-    UserBookingRequestService(),
+    UserBookingListRequestService(),
     BookingListRequestService(),
     BookingUpdateRequestService(),
     BookingUpdateAndNavigateRequestService(),
@@ -78,6 +79,7 @@ void main() {
     CategoryCreateService(),
     CategoryDeleteService(),
     CategoryListRequestService(),
+    UserCategoryListRequestService(),
     CategoryRootListRequestService(),
     CategoryTreeRequestService(),
     CategoryTreeCreateIfNotExistsService(),
@@ -158,6 +160,8 @@ class Buytime extends StatelessWidget {
         return FabRoute(Landing(), settings: settings);
       case AppRoutes.managerServiceList:
         return FabRoute(UI_M_ServiceList(), settings: settings);
+      case AppRoutes.myBookings:
+        return FabRoute(MyBookings(), settings: settings);
     }
   }
 

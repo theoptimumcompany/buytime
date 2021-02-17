@@ -1,25 +1,65 @@
+import 'package:Buytime/reblox/model/app_state.dart';
+import 'package:Buytime/reblox/model/booking/booking_state.dart';
+import 'package:Buytime/reblox/reducer/booking_reducer.dart';
+import 'package:Buytime/reblox/reducer/business_reducer.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:intl/intl.dart';
 import 'package:share/share.dart';
 
-class PastBookingCardWidget extends StatefulWidget {
+class BookingCardWidget extends StatefulWidget {
 
-  String topString;
-  String bottomString;
-  String imagePath;
-  VoidCallback callback;
-  PastBookingCardWidget(this.topString, this.bottomString, this.imagePath, this.callback);
+  BookingState bookingState;
+  BookingCardWidget(this.bookingState);
 
   @override
-  _PastBookingCardWidgetState createState() => _PastBookingCardWidgetState();
+  _BookingCardWidgetState createState() => _BookingCardWidgetState();
 }
 
-class _PastBookingCardWidgetState extends State<PastBookingCardWidget> {
+class _BookingCardWidgetState extends State<BookingCardWidget> {
+
+  @override
+  void initState() {
+    super.initState();
+    if(widget.bookingState.status == 'opened')
+      readDynamicLink(widget.bookingState.booking_code);
+  }
+
+  Future<Uri> createDynamicLink(String id) async {
+    final DynamicLinkParameters parameters = DynamicLinkParameters(
+      uriPrefix: 'https://buytime.page.link',
+      link: Uri.parse('https://buytime.page.link/booking/?booking=$id'),
+      androidParameters: AndroidParameters(
+        packageName: 'com.theoptimumcompany.buytime',
+        minimumVersion: 1,
+      ),
+      iosParameters: IosParameters(
+        bundleId: 'com.theoptimumcompany.buytime',
+        minimumVersion: '1',
+        appStoreId: '1508552491',
+      ),
+    );
+    var dynamicUrl = await parameters.buildUrl();
+    print("Link dinamico creato " + dynamicUrl.toString());
+    return dynamicUrl;
+  }
+
+  String link = '';
+  Future readDynamicLink(String id) async{
+    if(link.isEmpty){
+      Uri tmp = await createDynamicLink(id);
+      setState(() {
+        link = '$tmp';
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-
 
     return Container(
       height: SizeConfig.safeBlockVertical * 28,
@@ -29,7 +69,7 @@ class _PastBookingCardWidgetState extends State<PastBookingCardWidget> {
           color: Colors.black,
           borderRadius: BorderRadius.all(Radius.circular(10)),
           image: DecorationImage(
-            image: AssetImage(widget.imagePath),
+            image: NetworkImage(widget.bookingState.wide),
             fit: BoxFit.cover,
           )
       ),
@@ -37,14 +77,17 @@ class _PastBookingCardWidgetState extends State<PastBookingCardWidget> {
         color: Colors.transparent,
         child: InkWell(
           splashColor: Colors.black.withOpacity(.3),
-          onTap: widget.callback,
+          onTap: widget.bookingState.status == 'opened' ? (){
+            StoreProvider.of<AppState>(context).dispatch(BookingRequestResponse(widget.bookingState));
+            StoreProvider.of<AppState>(context).dispatch(BusinessAndNavigateRequest(widget.bookingState.business_id));
+          } : null,
           borderRadius: BorderRadius.all(Radius.circular(10)),
           child: Container(
             height: SizeConfig.safeBlockVertical * 25,
             width: SizeConfig.safeBlockHorizontal * 50,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(10)),
-                color: Colors.black.withOpacity(.2)
+                color: widget.bookingState.status == 'opened' ? Colors.black.withOpacity(.2) : BuytimeTheme.BackgroundCerulean.withOpacity(.8)
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -58,10 +101,10 @@ class _PastBookingCardWidgetState extends State<PastBookingCardWidget> {
                       child: FittedBox(
                         fit: BoxFit.scaleDown,
                         child: Text(
-                          widget.topString,
+                          widget.bookingState.business_name,
                           style: TextStyle(
                               fontFamily: BuytimeTheme.FontFamily,
-                              color: Colors.white,
+                              color: widget.bookingState.status == 'opened' ? BuytimeTheme.TextWhite : BuytimeTheme.TextWhite.withOpacity(.8),
                               fontWeight: FontWeight.bold,
                               fontSize: SizeConfig.safeBlockHorizontal * 4
                           ),
@@ -73,10 +116,10 @@ class _PastBookingCardWidgetState extends State<PastBookingCardWidget> {
                       child:  FittedBox(
                         fit: BoxFit.scaleDown,
                         child: Text(
-                          widget.bottomString,
+                          '${DateFormat('dd MMMM').format(widget.bookingState.start_date)} - ${DateFormat('dd MMMM yyyy').format(widget.bookingState.end_date)}',
                           style: TextStyle(
                               fontFamily: BuytimeTheme.FontFamily,
-                              color: Colors.white,
+                              color: widget.bookingState.status == 'opened' ? BuytimeTheme.TextWhite : BuytimeTheme.TextWhite.withOpacity(.8),
                               fontWeight: FontWeight.bold,
                               fontSize: SizeConfig.safeBlockHorizontal * 4
                           ),
@@ -92,17 +135,13 @@ class _PastBookingCardWidgetState extends State<PastBookingCardWidget> {
                     alignment: Alignment.bottomRight,
                     margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, right: SizeConfig.safeBlockHorizontal * 2.5),
                     child: IconButton(
-                      onPressed: (){
+                      onPressed: widget.bookingState.status == 'opened' ?  (){
                         final RenderBox box = context.findRenderObject();
-                        Share.share(AppLocalizations.of(context).share,
-                            subject: AppLocalizations.of(context).test,
-                            sharePositionOrigin:
-                            box.localToGlobal(Offset.zero) &
-                            box.size);
-                      },
+                        Share.share('check out Buytime App at $link', subject: 'Take your Time!', sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
+                      } : null,
                       icon: Icon(
                         Icons.share,
-                        color: Colors.white,
+                        color: widget.bookingState.status == 'opened' ? BuytimeTheme.TextWhite : BuytimeTheme.TextWhite.withOpacity(.8),
                       ),
                     ),
                   ),

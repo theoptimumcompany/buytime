@@ -41,6 +41,37 @@ class CategoryListRequestService implements EpicClass<AppState> {
   }
 }
 
+class UserCategoryListRequestService implements EpicClass<AppState> {
+  List<CategoryState> categoryStateList;
+  @override
+  Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
+    print("CategoryListService catched action");
+    return actions.whereType<RequestListCategory>().asyncMap((event) {
+      return FirebaseFirestore.instance
+          .collection("business")
+          .doc(event.businessId)
+          .collection("category")
+          .where("customTag", isEqualTo: 'showcase')
+          .get()
+          .then((QuerySnapshot snapshot) {
+        print("CategoryListService firestore request");
+        categoryStateList = [];
+        snapshot.docs.forEach((element) {
+          CategoryState categoryState = CategoryState.fromJson(element.data());
+          categoryState.businessId = event.businessId;
+          categoryState.id = element.id;
+          categoryStateList.add(categoryState);
+        });
+        print(categoryStateList.length);
+        print("CategoryListService return list with " + categoryStateList.length.toString());
+      });
+    }).expand((element) => [
+      CategoryListReturned(categoryStateList),
+      NavigatePushAction(AppRoutes.bookingPage),
+    ]);
+  }
+}
+
 class CategoryRootListRequestService implements EpicClass<AppState> {
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {

@@ -241,11 +241,8 @@ class _SplashScreenState extends State<SplashScreen> {
         Token token = Token(name: "token", id: serverToken, user_uid: user.uid);
         StoreProvider.of<AppState>(context).dispatch(new UpdateUserToken(token));
 
-        StoreProvider.of<AppState>(context).dispatch(new UserBookingRequest(user.email));
-        /*Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => Landing()),
-        );*/
+        //StoreProvider.of<AppState>(context).dispatch(new UserBookingRequest(user.email));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => Landing()));
       } else {
         Navigator.push(
           context,

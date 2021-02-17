@@ -85,49 +85,65 @@ class BookingRequestService implements EpicClass<AppState> {
 
       QuerySnapshot bookingSnapshot = await FirebaseFirestore.instance
           .collection("booking")
-          .where('booking_code', isEqualTo: event.bookingId).get();
+          .where("userEmail", arrayContains: store.state.user.email)
+          .where('booking_code', isEqualTo: event.bookingId)
+          .where('status', isEqualTo: 'sent')
+          .get();
 
-      bookingState =  BookingState.fromJson(bookingSnapshot.docs.first.data());
+      if(bookingSnapshot.docs.isNotEmpty)
+        bookingState =  BookingState.fromJson(bookingSnapshot.docs.first.data());
+      else{
+        bookingState = BookingState().toEmpty();
+        bookingState.booking_code = 'error';
+      }
     }).expand((element) => [
       BookingRequestResponse(bookingState),
-      BusinessAndNavigateOnConfirmRequest(bookingState.business_id)
+      bookingState.booking_code != 'error' ? BusinessAndNavigateOnConfirmRequest(bookingState.business_id) : null
     ]);
   }
 }
 
-class UserBookingRequestService implements EpicClass<AppState> {
-  BookingState bookingState;
+class UserBookingListRequestService implements EpicClass<AppState> {
+  List<BookingState> bookingListState;
   String route;
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    return actions.whereType<UserBookingRequest>().asyncMap((event) async {
-      print("UserBookingService user email:" + event.userEmail);
+    return actions.whereType<UserBookingListRequest>().asyncMap((event) async {
+      print("UserBookingListService user email:" + event.userEmail);
 
-      QuerySnapshot bookingSnapshot = await FirebaseFirestore.instance // TODO we have to be sure about this
+      QuerySnapshot openedBookingSnapshot = await FirebaseFirestore.instance // TODO we have to be sure about this
           .collection("booking")
           .where("userEmail", arrayContains: event.userEmail)
-          .where('status', isEqualTo: 'opened') // TODO check that arrayContains is ok here
+          .where('status', isEqualTo: 'opened')
           .get();
 
-      List<BookingState> tmpBookingList = [];
+      QuerySnapshot closedBookingSnapshot = await FirebaseFirestore.instance // TODO we have to be sure about this
+          .collection("booking")
+          .where("userEmail", arrayContains: event.userEmail)
+          .where('status', isEqualTo: 'closed')
+          .get();
 
-      if(bookingSnapshot.docs.isNotEmpty){
-        bookingSnapshot.docs.forEach((element) {
-          tmpBookingList.add(BookingState.fromJson(element.data()));
-        });
+      bookingListState = [];
+      List<BookingState> openedBookingListState = [];
+      List<BookingState> closedBookingListState = [];
 
-        tmpBookingList.sort((a,b) => DateFormat('dd').format(a.start_date).compareTo(DateFormat('dd').format(b.start_date)));
+      openedBookingSnapshot.docs.forEach((element) {
+        openedBookingListState.add(BookingState.fromJson(element.data()));
+      });
+      openedBookingListState.sort((a,b) => DateFormat('dd').format(a.start_date).compareTo(DateFormat('dd').format(b.start_date)));
 
-        bookingState = tmpBookingList.first;
-        route = AppRoutes.bookingPage;
-      }
-      else{
-        bookingState = BookingState().toEmpty();
-        route = AppRoutes.landing;
-      }
+      closedBookingSnapshot.docs.forEach((element) {
+        closedBookingListState.add(BookingState.fromJson(element.data()));
+      });
+
+      closedBookingListState.sort((a,b) => DateFormat('dd').format(a.start_date).compareTo(DateFormat('dd').format(b.start_date)));
+
+      bookingListState.addAll(openedBookingListState);
+      bookingListState.addAll(closedBookingListState);
+
     }).expand((element) => [
-      UserBookingRequestResponse(bookingState),
-      bookingState.userEmail.isEmpty ? NavigatePushAction(route) : BusinessAndNavigateRequest(bookingState.business_id)
+      UserBookingListReturned(bookingListState),
+      NavigatePushAction(AppRoutes.myBookings),
     ]);
   }
 }

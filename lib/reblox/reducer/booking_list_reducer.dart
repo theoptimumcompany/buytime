@@ -9,9 +9,20 @@ class BookingListRequest {
   BookingListRequest(this._businessId);
   String get businessId => _businessId;
 }
+class UserBookingListRequest {
+  String _userEmail;
+  UserBookingListRequest(this._userEmail);
+  String get userEmail => _userEmail;
+}
 class BookingListReturned {
   List<BookingState> _bookingListState;
   BookingListReturned(this._bookingListState);
+  List<BookingState> get bookingListState => _bookingListState;
+}
+
+class UserBookingListReturned {
+  List<BookingState> _bookingListState;
+  UserBookingListReturned(this._bookingListState);
   List<BookingState> get bookingListState => _bookingListState;
 }
 
@@ -28,6 +39,13 @@ BookingListState bookingListReducer(BookingListState state, action) {
     return bookingListState;
   }
   if (action is BookingListReturned) {
+    bookingListState = BookingListState(bookingListState: action.bookingListState).copyWith();
+    debugPrint('booking_list_reducer: bookingListState : ${bookingListState.bookingListState.length}');
+    debugPrint('booking_list_reducer: action: ${action.bookingListState}');
+    print("Nel reducer booking List");
+    return bookingListState;
+  }
+  if (action is UserBookingListReturned) {
     bookingListState = BookingListState(bookingListState: action.bookingListState).copyWith();
     debugPrint('booking_list_reducer: bookingListState : ${bookingListState.bookingListState.length}');
     debugPrint('booking_list_reducer: action: ${action.bookingListState}');
