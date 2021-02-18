@@ -19,7 +19,7 @@ class _BookingListServiceListItemState extends State<BookingListServiceListItem>
   @override
   Widget build(BuildContext context) {
 
-
+    //debugPrint('image: ${widget.serviceState.image1}');
     return Container(
         //margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 4, right: SizeConfig.safeBlockHorizontal * 4),
         margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1),
@@ -47,7 +47,7 @@ class _BookingListServiceListItemState extends State<BookingListServiceListItem>
                           color: Colors.black,
                           borderRadius: BorderRadius.all(Radius.circular(5)),
                           image: DecorationImage(
-                            image: NetworkImage(widget.serviceState.image1),
+                            image: widget.serviceState.image1.isNotEmpty ? NetworkImage(widget.serviceState.image1) : AssetImage('assets/img/image_placeholder.png'),
                             fit: BoxFit.cover,
                           )
                       ),
@@ -62,8 +62,9 @@ class _BookingListServiceListItemState extends State<BookingListServiceListItem>
                           FittedBox(
                             fit: BoxFit.scaleDown,
                             child: Container(
+                              width: SizeConfig.safeBlockHorizontal * 50,
                               child: Text(
-                                '${widget.serviceState.name}',
+                                widget.serviceState.name ?? '',
                                 style: TextStyle(
                                     fontFamily: BuytimeTheme.FontFamily,
                                     color: BuytimeTheme.TextBlack,
@@ -76,9 +77,10 @@ class _BookingListServiceListItemState extends State<BookingListServiceListItem>
                           FittedBox(
                             fit: BoxFit.scaleDown,
                             child: Container(
+                              width: SizeConfig.safeBlockHorizontal * 50,
                               margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
                               child: Text(
-                                '${widget.serviceState.description}',
+                                widget.serviceState.description ?? '',
                                 style: TextStyle(
                                     fontFamily: BuytimeTheme.FontFamily,
                                     color: BuytimeTheme.TextGrey,
