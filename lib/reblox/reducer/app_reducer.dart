@@ -14,6 +14,7 @@ import 'package:Buytime/reblox/model/pipeline/pipeline.dart';
 import 'package:Buytime/reblox/model/pipeline/pipeline_list_state.dart';
 import 'package:Buytime/reblox/model/service/service_list_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
+import 'package:Buytime/reblox/model/statistics_state.dart';
 import 'package:Buytime/reblox/model/stripe/stripe_state.dart';
 import 'package:Buytime/reblox/model/user/user_state.dart';
 import 'package:Buytime/reblox/navigation/navigation_reducer.dart';
@@ -25,6 +26,7 @@ import 'package:Buytime/reblox/reducer/pipeline_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/pipeline_reducer.dart';
 import 'package:Buytime/reblox/reducer/service_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/service_reducer.dart';
+import 'package:Buytime/reblox/reducer/statistics_reducer.dart';
 import 'package:Buytime/reblox/reducer/stripe_payment_reducer.dart';
 import 'package:Buytime/reblox/reducer/user_reducer.dart';
 import 'package:Buytime/reblox/reducer/booking_reducer.dart';
@@ -58,7 +60,7 @@ AppState appReducer(AppState state, dynamic action) {
   ServiceListState serviceListState = serviceListReducer(state.serviceList, action);
   Pipeline pipeline = pipelineReducer(state.pipeline, action);
   PipelineList pipelineList = pipelineListReducer(state.pipelineList, action);
-
+  StatisticsState statisticsState = statisticsReducer(state.statistics, action);
 
   AppState newState = AppState.copyWith(
     filterSearch: filterSearchState,
@@ -78,7 +80,8 @@ AppState appReducer(AppState state, dynamic action) {
     serviceList: serviceListState,
     pipeline: pipeline,
     pipelineList: pipelineList,
-    route: navigationReducer(state.route, action)
+    route: navigationReducer(state.route, action),
+    statistics: statisticsState
   );
 
   if (action is ClickOnBusinessState) { // reset the store before going to the service list

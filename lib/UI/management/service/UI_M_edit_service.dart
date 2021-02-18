@@ -180,261 +180,267 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
     tabList.add(TabAvailability(media: media));
 
     ///Tab 2 : Length
-    tabList.add(Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Container(
-              child: Row(
+    tabList.add(
+        ConstrainedBox(
+          constraints: BoxConstraints(),
+          child: Column(
             children: [
-              Text(
-                "Service duration",
-                textAlign: TextAlign.start,
-                style: TextStyle(
-                  fontSize: media.height * 0.018,
-                  color: BuytimeTheme.TextBlack,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
-          )),
-        ),
-        Container(
-            child: Row(
-          children: [
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+              Padding(
+                padding: const EdgeInsets.all(20.0),
                 child: Container(
-                  decoration: BoxDecoration(
-                    color: BuytimeTheme.BackgroundLightGrey,
-                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(15.0),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          "0",
+                          "Service duration",
                           textAlign: TextAlign.start,
                           style: TextStyle(
-                            fontSize: media.height * 0.020,
-                            color: BuytimeTheme.TextGrey,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        Text(
-                          "min", //todo: lang
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                            fontSize: media.height * 0.020,
-                            color: BuytimeTheme.TextGrey,
+                            fontSize: media.height * 0.018,
+                            color: BuytimeTheme.TextBlack,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
                       ],
-                    ),
+                    )),
+              ),
+              Container(
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: BuytimeTheme.BackgroundLightGrey,
+                              borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(15.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "0",
+                                    textAlign: TextAlign.start,
+                                    style: TextStyle(
+                                      fontSize: media.height * 0.020,
+                                      color: BuytimeTheme.TextGrey,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  Text(
+                                    "min", //todo: lang
+                                    textAlign: TextAlign.start,
+                                    style: TextStyle(
+                                      fontSize: media.height * 0.020,
+                                      color: BuytimeTheme.TextGrey,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  )),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 0.0),
+                child: Container(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: media.width * 0.55,
+                        decoration: BoxDecoration(
+                          border: Border.all(width: 2, color: BuytimeTheme.BackgroundLightGrey),
+                          color: BuytimeTheme.UserPrimary,
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(5.0),
+                          ),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.00),
+                          child: Center(
+                            child: Text(
+                              "SAVE", //todo: lang
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                fontSize: media.height * 0.020,
+                                color: BuytimeTheme.TextWhite,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ),
-            ),
-          ],
-        )),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 0.0),
-          child: Container(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: media.width * 0.55,
-                  decoration: BoxDecoration(
-                    border: Border.all(width: 2, color: BuytimeTheme.BackgroundLightGrey),
-                    color: BuytimeTheme.UserPrimary,
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(5.0),
+              )
+            ],
+          ),
+        ));
+
+    ///Tab 3 : ???
+    tabList.add(ConstrainedBox(
+      constraints: BoxConstraints(),
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Container(
+                child: Row(
+                  children: [
+                    Text(
+                      "1. Calendar availability",
+                      textAlign: TextAlign.start,
+                      style: TextStyle(
+                        fontSize: media.height * 0.018,
+                        color: BuytimeTheme.TextBlack,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.00),
-                    child: Center(
-                      child: Text(
-                        "SAVE", //todo: lang
-                        textAlign: TextAlign.start,
-                        style: TextStyle(
-                          fontSize: media.height * 0.020,
-                          color: BuytimeTheme.TextWhite,
-                          fontWeight: FontWeight.w600,
+                  ],
+                )),
+          ),
+          Container(
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 20.0, right: 5),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: BuytimeTheme.BackgroundLightGrey,
+                          borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Start", //todo: lang
+                                textAlign: TextAlign.start,
+                                style: TextStyle(
+                                  fontSize: media.height * 0.024,
+                                  color: BuytimeTheme.TextGrey,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              Icon(Icons.calendar_today, color: BuytimeTheme.SymbolGrey, size: media.width * 0.07),
+                            ],
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 20.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: BuytimeTheme.BackgroundLightGrey,
+                          borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Stop", //todo: lang
+                                textAlign: TextAlign.start,
+                                style: TextStyle(
+                                  fontSize: media.height * 0.024,
+                                  color: BuytimeTheme.TextGrey,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              Icon(Icons.calendar_today, color: BuytimeTheme.SymbolGrey, size: media.width * 0.07),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              )),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20.00, horizontal: 0.0),
+            child: Container(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    width: media.width * 0.55,
+                    decoration: BoxDecoration(
+                      border: Border.all(width: 2, color: BuytimeTheme.BackgroundLightGrey),
+                      color: BuytimeTheme.BackgroundWhite,
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(5.0),
+                      ),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.00),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Icon(Icons.add, color: BuytimeTheme.UserPrimary, size: media.width * 0.08),
+                          Text(
+                            "ADD INTERVAL", //todo: lang
+                            textAlign: TextAlign.start,
+                            style: TextStyle(
+                              fontSize: media.height * 0.025,
+                              color: BuytimeTheme.UserPrimary,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-        )
-      ],
-    ));
-
-    ///Tab 3 : ???
-    tabList.add(Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Container(
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
+            child: Container(
               child: Row(
-            children: [
-              Text(
-                "1. Calendar availability",
-                textAlign: TextAlign.start,
-                style: TextStyle(
-                  fontSize: media.height * 0.018,
-                  color: BuytimeTheme.TextBlack,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
-          )),
-        ),
-        Container(
-            child: Row(
-          children: [
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.only(left: 20.0, right: 5),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: BuytimeTheme.BackgroundLightGrey,
-                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Start", //todo: lang
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    width: media.width * 0.55,
+                    decoration: BoxDecoration(
+                      border: Border.all(width: 2, color: BuytimeTheme.BackgroundLightGrey),
+                      color: BuytimeTheme.UserPrimary,
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(5.0),
+                      ),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.00),
+                      child: Center(
+                        child: Text(
+                          "SAVE", //todo: lang
                           textAlign: TextAlign.start,
                           style: TextStyle(
-                            fontSize: media.height * 0.024,
-                            color: BuytimeTheme.TextGrey,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        Icon(Icons.calendar_today, color: BuytimeTheme.SymbolGrey, size: media.width * 0.07),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.only(right: 20.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: BuytimeTheme.BackgroundLightGrey,
-                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Stop", //todo: lang
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                            fontSize: media.height * 0.024,
-                            color: BuytimeTheme.TextGrey,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        Icon(Icons.calendar_today, color: BuytimeTheme.SymbolGrey, size: media.width * 0.07),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        )),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20.00, horizontal: 0.0),
-          child: Container(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: media.width * 0.55,
-                  decoration: BoxDecoration(
-                    border: Border.all(width: 2, color: BuytimeTheme.BackgroundLightGrey),
-                    color: BuytimeTheme.BackgroundWhite,
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(5.0),
-                    ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.00),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Icon(Icons.add, color: BuytimeTheme.UserPrimary, size: media.width * 0.08),
-                        Text(
-                          "ADD INTERVAL", //todo: lang
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                            fontSize: media.height * 0.025,
-                            color: BuytimeTheme.UserPrimary,
+                            fontSize: media.height * 0.020,
+                            color: BuytimeTheme.TextWhite,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
-          child: Container(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: media.width * 0.55,
-                  decoration: BoxDecoration(
-                    border: Border.all(width: 2, color: BuytimeTheme.BackgroundLightGrey),
-                    color: BuytimeTheme.UserPrimary,
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(5.0),
-                    ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.00),
-                    child: Center(
-                      child: Text(
-                        "SAVE", //todo: lang
-                        textAlign: TextAlign.start,
-                        style: TextStyle(
-                          fontSize: media.height * 0.020,
-                          color: BuytimeTheme.TextWhite,
-                          fontWeight: FontWeight.w600,
-                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        )
-      ],
-    ));
+          )
+        ],
+      ),));
 
     return tabList;
   }
@@ -501,13 +507,18 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                   ),
                 ],
               ),
-              body: SingleChildScrollView(
-                child: Form(
-                  key: _keyEditServiceForm,
-                  child: Column(
-                    children: <Widget>[
-                      !editBasicInformation
-                          ? Padding(
+              body: SafeArea(
+                child: Center(
+                  child: SingleChildScrollView(
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(),
+                      child: Form(
+                        key: _keyEditServiceForm,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            !editBasicInformation ?
+                            Padding(
                               padding: EdgeInsets.symmetric(vertical: 25.0, horizontal: 30.00),
                               child: Container(
                                 child: Row(
@@ -516,15 +527,15 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                     Container(
                                       child: snapshot.serviceState.image1 == null || snapshot.serviceState.image1.isEmpty
                                           ? Image.asset(
-                                              'assets/img/image_placeholder.png',
-                                              width: 100,
-                                              height: 100,
-                                            )
+                                        'assets/img/image_placeholder.png',
+                                        width: 100,
+                                        height: 100,
+                                      )
                                           : Image.network(
-                                              Utils.sizeImage(snapshot.serviceState.image1, Utils.imageSizing200),
-                                              height: 100,
-                                              width: 100,
-                                            ),
+                                        Utils.sizeImage(snapshot.serviceState.image1, Utils.imageSizing200),
+                                        height: 100,
+                                        width: 100,
+                                      ),
                                     ),
                                     Expanded(
                                       child: Padding(
@@ -590,12 +601,11 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                   ],
                                 ),
                               ),
-                            )
-                          : Container(),
+                            ) : Container(),
 
-                      ///Edit service basic information (clicked pencil)
-                      editBasicInformation
-                          ? Padding(
+                            ///Edit service basic information (clicked pencil)
+                            editBasicInformation ?
+                            Padding(
                               padding: const EdgeInsets.only(bottom: 25.0),
                               child: Container(
                                 child: Row(
@@ -653,10 +663,9 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                   ],
                                 ),
                               ),
-                            )
-                          : Container(),
-                      editBasicInformation
-                          ? Padding(
+                            ) : Container(),
+                            editBasicInformation ?
+                            Padding(
                               padding: const EdgeInsets.only(bottom: 15.0),
                               child: Center(
                                 child: Container(
@@ -684,10 +693,9 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                   ),
                                 ),
                               ),
-                            )
-                          : Container(),
-                      editBasicInformation
-                          ? Padding(
+                            ) : Container(),
+                            editBasicInformation ?
+                            Padding(
                               padding: const EdgeInsets.only(bottom: 15.0),
                               child: Center(
                                 child: Container(
@@ -711,62 +719,61 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                   ),
                                 ),
                               ),
-                            )
-                          : Container(),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 15.0),
-                        child: Center(
-                          child: Container(
-                            width: media.width * 0.9,
-                            //decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
-                            child: Padding(
-                              padding: const EdgeInsets.only(top: 0.0, bottom: 5.0, left: 10.0, right: 10.0),
-                              child: TextFormField(
-                                initialValue: snapshot.serviceState.price.toString(),
-                                keyboardType: TextInputType.number,
-                                inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d*)'))],
-                                validator: (value) => value.isEmpty
-                                    ? 'Service price is blank'
-                                    : validatePrice(value)
-                                        ? null
-                                        : 'Not a valid price',
-                                onChanged: (value) {
-                                  if (value == "") {
-                                    setState(() {
-                                      _servicePrice = 0.0;
-                                    });
-                                  } else {
-                                    setState(() {
-                                      _servicePrice = double.parse(value);
-                                    });
-                                  }
-                                  validateAndSave();
-                                  StoreProvider.of<AppState>(context).dispatch(SetServicePrice(_servicePrice));
-                                },
-                                onSaved: (value) {
-                                  if (value == "") {
-                                    setState(() {
-                                      _servicePrice = 0.0;
-                                    });
-                                  } else {
-                                    setState(() {
-                                      _servicePrice = double.parse(value);
-                                    });
-                                  }
-                                  StoreProvider.of<AppState>(context).dispatch(SetServicePrice(_servicePrice));
-                                },
-                                decoration: InputDecoration(
-                                  labelText: AppLocalizations.of(context).price,
+                            ) : Container(),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 15.0),
+                              child: Center(
+                                child: Container(
+                                  width: media.width * 0.9,
+                                  //decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(top: 0.0, bottom: 5.0, left: 10.0, right: 10.0),
+                                    child: TextFormField(
+                                      initialValue: snapshot.serviceState.price.toString(),
+                                      keyboardType: TextInputType.number,
+                                      inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d*)'))],
+                                      validator: (value) => value.isEmpty
+                                          ? 'Service price is blank'
+                                          : validatePrice(value)
+                                          ? null
+                                          : 'Not a valid price',
+                                      onChanged: (value) {
+                                        if (value == "") {
+                                          setState(() {
+                                            _servicePrice = 0.0;
+                                          });
+                                        } else {
+                                          setState(() {
+                                            _servicePrice = double.parse(value);
+                                          });
+                                        }
+                                        validateAndSave();
+                                        StoreProvider.of<AppState>(context).dispatch(SetServicePrice(_servicePrice));
+                                      },
+                                      onSaved: (value) {
+                                        if (value == "") {
+                                          setState(() {
+                                            _servicePrice = 0.0;
+                                          });
+                                        } else {
+                                          setState(() {
+                                            _servicePrice = double.parse(value);
+                                          });
+                                        }
+                                        StoreProvider.of<AppState>(context).dispatch(SetServicePrice(_servicePrice));
+                                      },
+                                      decoration: InputDecoration(
+                                        labelText: AppLocalizations.of(context).price,
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        ),
-                      ),
 
-                      ///Categories Chip Block
-                      editBasicInformation
-                          ? Padding(
+                            ///Categories Chip Block
+                            editBasicInformation ?
+                            Padding(
                               padding: const EdgeInsets.only(left: 20.0, top: 10.0, bottom: 10.0),
                               child: Container(
                                 child: Column(
@@ -789,32 +796,30 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                   ],
                                 ),
                               ),
-                            )
-                          : Container(),
+                            ) : Container(),
 
-                      ///Error message Empty CategoryList
-                      errorCategoryListEmpty && editBasicInformation
-                          ? Padding(
+                            ///Error message Empty CategoryList
+                            errorCategoryListEmpty && editBasicInformation ?
+                            Padding(
                               padding: const EdgeInsets.only(left: 30.0, bottom: 10.0),
                               child: Container(
                                   child: Row(
-                                children: [
-                                  Text(
-                                    'You have to select at least one category',
-                                    style: TextStyle(
-                                      fontSize: media.height * 0.018,
-                                      color: BuytimeTheme.ErrorRed,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ],
-                              )),
-                            )
-                          : Container(),
+                                    children: [
+                                      Text(
+                                        'You have to select at least one category',
+                                        style: TextStyle(
+                                          fontSize: media.height * 0.018,
+                                          color: BuytimeTheme.ErrorRed,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ],
+                                  )),
+                            ) : Container(),
 
-                      ///Tag Block
-                      editBasicInformation
-                          ? Padding(
+                            ///Tag Block
+                            editBasicInformation ?
+                            Padding(
                               padding: const EdgeInsets.only(left: 30.0, top: 5.0, bottom: 10.0, right: 30.0),
                               child: Container(
                                 child: Column(
@@ -887,29 +892,29 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                             ),
                                             (snapshot.serviceState.tag.length > 0 && snapshot.serviceState.tag != null)
                                                 ? Align(
-                                                    alignment: Alignment.topLeft,
-                                                    child: Wrap(
-                                                      spacing: 3.0,
-                                                      runSpacing: 3.0,
-                                                      children: List<Widget>.generate(snapshot.serviceState.tag.length, (int index) {
-                                                        return InputChip(
-                                                          selected: false,
-                                                          label: Text(
-                                                            snapshot.serviceState.tag[index],
-                                                            style: TextStyle(
-                                                              fontSize: 13.0,
-                                                              fontWeight: FontWeight.w500,
-                                                            ),
-                                                          ),
-                                                          onDeleted: () {
-                                                            setState(() {
-                                                              snapshot.serviceState.tag.remove(snapshot.serviceState.tag[index]);
-                                                            });
-                                                          },
-                                                        );
-                                                      }),
+                                              alignment: Alignment.topLeft,
+                                              child: Wrap(
+                                                spacing: 3.0,
+                                                runSpacing: 3.0,
+                                                children: List<Widget>.generate(snapshot.serviceState.tag.length, (int index) {
+                                                  return InputChip(
+                                                    selected: false,
+                                                    label: Text(
+                                                      snapshot.serviceState.tag[index],
+                                                      style: TextStyle(
+                                                        fontSize: 13.0,
+                                                        fontWeight: FontWeight.w500,
+                                                      ),
                                                     ),
-                                                  )
+                                                    onDeleted: () {
+                                                      setState(() {
+                                                        snapshot.serviceState.tag.remove(snapshot.serviceState.tag[index]);
+                                                      });
+                                                    },
+                                                  );
+                                                }),
+                                              ),
+                                            )
                                                 : Container()
                                           ],
                                         ),
@@ -923,12 +928,11 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                   ],
                                 ),
                               ),
-                            )
-                          : Container(),
+                            ) : Container(),
 
-                      ///Column default edit screen
-                      !editBasicInformation
-                          ? Column(
+                            ///Column default edit screen
+                            !editBasicInformation ?
+                            Column(
                               children: [
                                 ///Divider under category selection
                                 Container(
@@ -984,14 +988,14 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                   children: [
                                                     Container(
                                                         child: Text(
-                                                      "Active", //todo: lang
-                                                      textAlign: TextAlign.start,
-                                                      style: TextStyle(
-                                                        color: BuytimeTheme.TextBlack,
-                                                        fontSize: media.height * 0.018,
-                                                        fontWeight: FontWeight.w400,
-                                                      ),
-                                                    )),
+                                                          "Active", //todo: lang
+                                                          textAlign: TextAlign.start,
+                                                          style: TextStyle(
+                                                            color: BuytimeTheme.TextBlack,
+                                                            fontSize: media.height * 0.018,
+                                                            fontWeight: FontWeight.w400,
+                                                          ),
+                                                        )),
                                                     Container(
                                                       child: Radio(
                                                           value: 'Active',
@@ -1030,14 +1034,14 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                   children: [
                                                     Container(
                                                         child: Text(
-                                                      "Deactivated", //todo: lang
-                                                      textAlign: TextAlign.start,
-                                                      style: TextStyle(
-                                                        color: BuytimeTheme.TextBlack,
-                                                        fontSize: media.height * 0.018,
-                                                        fontWeight: FontWeight.w400,
-                                                      ),
-                                                    )),
+                                                          "Deactivated", //todo: lang
+                                                          textAlign: TextAlign.start,
+                                                          style: TextStyle(
+                                                            color: BuytimeTheme.TextBlack,
+                                                            fontSize: media.height * 0.018,
+                                                            fontWeight: FontWeight.w400,
+                                                          ),
+                                                        )),
                                                     Container(
                                                       child: Radio(
                                                           value: 'Deactivated',
@@ -1076,14 +1080,14 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                   children: [
                                                     Container(
                                                         child: Text(
-                                                      "Invisible", //todo: lang
-                                                      textAlign: TextAlign.start,
-                                                      style: TextStyle(
-                                                        color: BuytimeTheme.TextBlack,
-                                                        fontSize: media.height * 0.018,
-                                                        fontWeight: FontWeight.w400,
-                                                      ),
-                                                    )),
+                                                          "Invisible", //todo: lang
+                                                          textAlign: TextAlign.start,
+                                                          style: TextStyle(
+                                                            color: BuytimeTheme.TextBlack,
+                                                            fontSize: media.height * 0.018,
+                                                            fontWeight: FontWeight.w400,
+                                                          ),
+                                                        )),
                                                     Container(
                                                       child: Radio(
                                                           value: 'Invisible',
@@ -1154,145 +1158,397 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                     thickness: 20.0,
                                   ),
                                 ),
-                                snapshot.serviceState.enabledBooking
-                                    ?
-
-                                    ///Resume block for booking settings
-                                    resumeServiceBooking
-                                        ? Column(
-                                            children: [
-                                              Padding(
-                                                padding: const EdgeInsets.symmetric(vertical: 25.0, horizontal: 15.0),
-                                                child: Row(
-                                                  children: [
-                                                    Container(
-                                                      child: Text(
-                                                        "Service time availability",
-                                                        //  AppLocalizations.of(context).  todo : aggiungere alle lingue
-                                                        textAlign: TextAlign.start,
-                                                        overflow: TextOverflow.clip,
-                                                        style: TextStyle(
-                                                          fontSize: media.height * 0.021,
-                                                          color: BuytimeTheme.TextBlack,
-                                                          fontWeight: FontWeight.w500,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
+                                snapshot.serviceState.enabledBooking ?
+                                ///Resume block for booking settings
+                                resumeServiceBooking ?
+                                Column(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(vertical: 25.0, horizontal: 15.0),
+                                      child: Row(
+                                        children: [
+                                          Container(
+                                            child: Text(
+                                              "Service time availability",
+                                              //  AppLocalizations.of(context).  todo : aggiungere alle lingue
+                                              textAlign: TextAlign.start,
+                                              overflow: TextOverflow.clip,
+                                              style: TextStyle(
+                                                fontSize: media.height * 0.021,
+                                                color: BuytimeTheme.TextBlack,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 15.0),
+                                      child: Row(
+                                        children: [
+                                          Container(
+                                            child: Text(
+                                              "No availability set, tap on edit to manage it",
+                                              //  AppLocalizations.of(context).  todo : aggiungere alle lingue
+                                              textAlign: TextAlign.start,
+                                              overflow: TextOverflow.clip,
+                                              style: TextStyle(
+                                                fontSize: media.height * 0.018,
+                                                color: BuytimeTheme.TextBlack,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 20.0),
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.00),
+                                        child: Container(
+                                          width: media.width * 0.50,
+                                          child: OutlinedButton(
+                                            onPressed: () {
+                                              print("Edit Booking clicked");
+                                              setState(() {
+                                                resumeServiceBooking = false;
+                                              });
+                                            },
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(10.0),
+                                              child: Text(
+                                                "EDIT", //todo: lang
+                                                textAlign: TextAlign.start,
+                                                style: TextStyle(
+                                                  fontSize: media.height * 0.022,
+                                                  color: BuytimeTheme.ManagerPrimary,
+                                                  fontWeight: FontWeight.w900,
                                                 ),
                                               ),
-                                              Padding(
-                                                padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 15.0),
-                                                child: Row(
-                                                  children: [
-                                                    Container(
-                                                      child: Text(
-                                                        "No availability set, tap on edit to manage it",
-                                                        //  AppLocalizations.of(context).  todo : aggiungere alle lingue
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ) :
+                                ///Booking Settings Block
+                                Container(
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      ///Tab
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 10.0),
+                                        child: Container(
+                                          height: 50,
+                                          color: BuytimeTheme.ManagerPrimary,
+                                          child: TabBar(
+                                            controller: bookingController,
+                                            tabs: [
+                                              Text(
+                                                "AVAILABILITY", //todo: lang
+                                                textAlign: TextAlign.start,
+                                                style: TextStyle(
+                                                  color: BuytimeTheme.TextWhite,
+                                                  fontSize: media.height * 0.018,
+                                                  fontWeight: FontWeight.w400,
+                                                ),
+                                              ),
+                                              Text(
+                                                "LENGTH", //todo: lang
+                                                textAlign: TextAlign.start,
+                                                style: TextStyle(
+                                                  color: BuytimeTheme.TextWhite,
+                                                  fontSize: media.height * 0.018,
+                                                  fontWeight: FontWeight.w400,
+                                                ),
+                                              ),
+                                              Text(
+                                                "TAB", //todo: lang
+                                                textAlign: TextAlign.start,
+                                                style: TextStyle(
+                                                  color: BuytimeTheme.TextWhite,
+                                                  fontSize: media.height * 0.018,
+                                                  fontWeight: FontWeight.w400,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      Container(
+                                        //height: media.height * 0.6,
+                                        //height : snapshot.serviceState.tabAvailability.tabHeight < 325 ? 325.00 : snapshot.serviceState.tabAvailability.tabHeight,
+                                        child: bookingController.index == 0 ?
+                                        TabAvailability(media: media,) :
+                                        bookingController.index == 1 ?
+                                        Column(
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.all(20.0),
+                                              child: Container(
+                                                  child: Row(
+                                                    children: [
+                                                      Text(
+                                                        "Service duration",
                                                         textAlign: TextAlign.start,
-                                                        overflow: TextOverflow.clip,
                                                         style: TextStyle(
                                                           fontSize: media.height * 0.018,
                                                           color: BuytimeTheme.TextBlack,
                                                           fontWeight: FontWeight.w500,
                                                         ),
                                                       ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              Padding(
-                                                padding: const EdgeInsets.only(top: 20.0),
-                                                child: Padding(
-                                                  padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.00),
-                                                  child: Container(
-                                                    width: media.width * 0.50,
-                                                    child: OutlinedButton(
-                                                      onPressed: () {
-                                                        print("Edit Booking clicked");
-                                                        setState(() {
-                                                          resumeServiceBooking = false;
-                                                        });
-                                                      },
+                                                    ],
+                                                  )),
+                                            ),
+                                            Container(
+                                                child: Row(
+                                                  children: [
+                                                    Expanded(
                                                       child: Padding(
-                                                        padding: const EdgeInsets.all(10.0),
-                                                        child: Text(
-                                                          "EDIT", //todo: lang
-                                                          textAlign: TextAlign.start,
-                                                          style: TextStyle(
-                                                            fontSize: media.height * 0.022,
-                                                            color: BuytimeTheme.ManagerPrimary,
-                                                            fontWeight: FontWeight.w900,
+                                                        padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+                                                        child: Container(
+                                                          decoration: BoxDecoration(
+                                                            color: BuytimeTheme.BackgroundLightGrey,
+                                                            borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                                          ),
+                                                          child: Padding(
+                                                            padding: const EdgeInsets.all(15.0),
+                                                            child: Row(
+                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                              children: [
+                                                                Text(
+                                                                  "0",
+                                                                  textAlign: TextAlign.start,
+                                                                  style: TextStyle(
+                                                                    fontSize: media.height * 0.020,
+                                                                    color: BuytimeTheme.TextGrey,
+                                                                    fontWeight: FontWeight.w500,
+                                                                  ),
+                                                                ),
+                                                                Text(
+                                                                  "min", //todo: lang
+                                                                  textAlign: TextAlign.start,
+                                                                  style: TextStyle(
+                                                                    fontSize: media.height * 0.020,
+                                                                    color: BuytimeTheme.TextGrey,
+                                                                    fontWeight: FontWeight.w500,
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
                                                           ),
                                                         ),
                                                       ),
                                                     ),
-                                                  ),
+                                                  ],
+                                                )),
+                                            Padding(
+                                              padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 0.0),
+                                              child: Container(
+                                                child: Row(
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  children: [
+                                                    Container(
+                                                      width: media.width * 0.55,
+                                                      decoration: BoxDecoration(
+                                                        border: Border.all(width: 2, color: BuytimeTheme.BackgroundLightGrey),
+                                                        color: BuytimeTheme.UserPrimary,
+                                                        borderRadius: BorderRadius.all(
+                                                          Radius.circular(5.0),
+                                                        ),
+                                                      ),
+                                                      child: Padding(
+                                                        padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.00),
+                                                        child: Center(
+                                                          child: Text(
+                                                            "SAVE", //todo: lang
+                                                            textAlign: TextAlign.start,
+                                                            style: TextStyle(
+                                                              fontSize: media.height * 0.020,
+                                                              color: BuytimeTheme.TextWhite,
+                                                              fontWeight: FontWeight.w600,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
                                                 ),
                                               ),
-                                            ],
-                                          )
-                                        :
-
-                                        ///Booking Settings Block
-                                        Container(
-                                            child: Column(
-                                              children: [
-                                                Padding(
-                                                  padding: const EdgeInsets.only(top: 10.0),
-                                                  child: Container(
-                                                    height: 50,
-                                                    color: BuytimeTheme.ManagerPrimary,
-                                                    child: TabBar(
-                                                      controller: bookingController,
-                                                      tabs: [
-                                                        Text(
-                                                          "AVAILABILITY", //todo: lang
-                                                          textAlign: TextAlign.start,
-                                                          style: TextStyle(
-                                                            color: BuytimeTheme.TextWhite,
-                                                            fontSize: media.height * 0.018,
-                                                            fontWeight: FontWeight.w400,
-                                                          ),
+                                            )
+                                          ],
+                                        ) :
+                                        Column(
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.all(20.0),
+                                              child: Container(
+                                                  child: Row(
+                                                    children: [
+                                                      Text(
+                                                        "1. Calendar availability",
+                                                        textAlign: TextAlign.start,
+                                                        style: TextStyle(
+                                                          fontSize: media.height * 0.018,
+                                                          color: BuytimeTheme.TextBlack,
+                                                          fontWeight: FontWeight.w500,
                                                         ),
-                                                        Text(
-                                                          "LENGTH", //todo: lang
-                                                          textAlign: TextAlign.start,
-                                                          style: TextStyle(
-                                                            color: BuytimeTheme.TextWhite,
-                                                            fontSize: media.height * 0.018,
-                                                            fontWeight: FontWeight.w400,
-                                                          ),
-                                                        ),
-                                                        Text(
-                                                          "TAB", //todo: lang
-                                                          textAlign: TextAlign.start,
-                                                          style: TextStyle(
-                                                            color: BuytimeTheme.TextWhite,
-                                                            fontSize: media.height * 0.018,
-                                                            fontWeight: FontWeight.w400,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                                Container(
-                                                  height: media.height * 0.6,
-                                                  //height : snapshot.serviceState.tabAvailability.tabHeight < 325 ? 325.00 : snapshot.serviceState.tabAvailability.tabHeight,
-                                                  child: TabBarView(
-                                                    controller: bookingController,
-                                                    children: getTabs(media),
-                                                  ),
-                                                ),
-                                              ],
+                                                      ),
+                                                    ],
+                                                  )),
                                             ),
-                                          )
-                                    : Container(),
+                                            Container(
+                                                child: Row(
+                                                  children: [
+                                                    Expanded(
+                                                      child: Padding(
+                                                        padding: const EdgeInsets.only(left: 20.0, right: 5),
+                                                        child: Container(
+                                                          decoration: BoxDecoration(
+                                                            color: BuytimeTheme.BackgroundLightGrey,
+                                                            borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                                          ),
+                                                          child: Padding(
+                                                            padding: const EdgeInsets.all(15.0),
+                                                            child: Row(
+                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                              children: [
+                                                                Text(
+                                                                  "Start", //todo: lang
+                                                                  textAlign: TextAlign.start,
+                                                                  style: TextStyle(
+                                                                    fontSize: media.height * 0.024,
+                                                                    color: BuytimeTheme.TextGrey,
+                                                                    fontWeight: FontWeight.w500,
+                                                                  ),
+                                                                ),
+                                                                Icon(Icons.calendar_today, color: BuytimeTheme.SymbolGrey, size: media.width * 0.07),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Expanded(
+                                                      child: Padding(
+                                                        padding: const EdgeInsets.only(right: 20.0),
+                                                        child: Container(
+                                                          decoration: BoxDecoration(
+                                                            color: BuytimeTheme.BackgroundLightGrey,
+                                                            borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                                          ),
+                                                          child: Padding(
+                                                            padding: const EdgeInsets.all(15.0),
+                                                            child: Row(
+                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                              children: [
+                                                                Text(
+                                                                  "Stop", //todo: lang
+                                                                  textAlign: TextAlign.start,
+                                                                  style: TextStyle(
+                                                                    fontSize: media.height * 0.024,
+                                                                    color: BuytimeTheme.TextGrey,
+                                                                    fontWeight: FontWeight.w500,
+                                                                  ),
+                                                                ),
+                                                                Icon(Icons.calendar_today, color: BuytimeTheme.SymbolGrey, size: media.width * 0.07),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                )),
+                                            Padding(
+                                              padding: const EdgeInsets.symmetric(vertical: 20.00, horizontal: 0.0),
+                                              child: Container(
+                                                child: Row(
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  children: [
+                                                    Container(
+                                                      width: media.width * 0.55,
+                                                      decoration: BoxDecoration(
+                                                        border: Border.all(width: 2, color: BuytimeTheme.BackgroundLightGrey),
+                                                        color: BuytimeTheme.BackgroundWhite,
+                                                        borderRadius: BorderRadius.all(
+                                                          Radius.circular(5.0),
+                                                        ),
+                                                      ),
+                                                      child: Padding(
+                                                        padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.00),
+                                                        child: Row(
+                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                          children: [
+                                                            Icon(Icons.add, color: BuytimeTheme.UserPrimary, size: media.width * 0.08),
+                                                            Text(
+                                                              "ADD INTERVAL", //todo: lang
+                                                              textAlign: TextAlign.start,
+                                                              style: TextStyle(
+                                                                fontSize: media.height * 0.025,
+                                                                color: BuytimeTheme.UserPrimary,
+                                                                fontWeight: FontWeight.w600,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
+                                              child: Container(
+                                                child: Row(
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  children: [
+                                                    Container(
+                                                      width: media.width * 0.55,
+                                                      decoration: BoxDecoration(
+                                                        border: Border.all(width: 2, color: BuytimeTheme.BackgroundLightGrey),
+                                                        color: BuytimeTheme.UserPrimary,
+                                                        borderRadius: BorderRadius.all(
+                                                          Radius.circular(5.0),
+                                                        ),
+                                                      ),
+                                                      child: Padding(
+                                                        padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.00),
+                                                        child: Center(
+                                                          child: Text(
+                                                            "SAVE", //todo: lang
+                                                            textAlign: TextAlign.start,
+                                                            style: TextStyle(
+                                                              fontSize: media.height * 0.020,
+                                                              color: BuytimeTheme.TextWhite,
+                                                              fontWeight: FontWeight.w600,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ) : Container(),
                               ],
-                            )
-                          : Container(),
-                    ],
+                            ) :
+                            Container(),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ));

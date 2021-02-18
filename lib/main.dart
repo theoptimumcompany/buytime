@@ -10,6 +10,8 @@ import 'package:Buytime/UI/user/landing/UI_U_Landing.dart';
 import 'package:Buytime/reblox/model/booking/booking_list_state.dart';
 import 'package:Buytime/reblox/model/category/invitation/category_invite_state.dart';
 import 'package:Buytime/reblox/model/category/tree/category_tree_state.dart';
+import 'package:Buytime/reblox/model/statistics_state.dart';
+import 'package:Buytime/reblox/reducer/statistics_reducer.dart';
 import 'package:Buytime/services/category_invite_service_epic.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
@@ -50,7 +52,8 @@ import 'package:Buytime/reblox/navigation/navigation_middleware.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-void main() {
+void main(){
+
   final epics = combineEpics<AppState>([
     BusinessAndNavigateRequestService(),
     BusinessAndNavigateOnConfirmRequestService(),
@@ -121,6 +124,7 @@ void main() {
     user: UserState().toEmpty(),
     serviceState: ServiceState().toEmpty(),
     pipeline: Pipeline().toEmpty(),
+    statistics: StatisticsState().toEmpty(),
   );
   final store = new Store<AppState>(
     appReducer,
@@ -168,6 +172,7 @@ class Buytime extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
+
     return StoreProvider<AppState>(
       store: store,
       child: MaterialApp(

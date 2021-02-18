@@ -12,6 +12,7 @@ import 'package:Buytime/reblox/model/pipeline/pipeline.dart';
 import 'package:Buytime/reblox/model/pipeline/pipeline_list_state.dart';
 import 'package:Buytime/reblox/model/service/service_list_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
+import 'package:Buytime/reblox/model/statistics_state.dart';
 import 'package:Buytime/reblox/model/stripe/stripe_state.dart';
 import 'package:Buytime/reblox/model/user/user_state.dart';
 import 'package:flutter/foundation.dart';
@@ -54,6 +55,7 @@ class AppState {
   Pipeline pipeline;
   PipelineList pipelineList;
   List<String> route;
+  StatisticsState statistics;
 
   AppState({
     @required this.filterSearch,
@@ -74,6 +76,7 @@ class AppState {
     @required this.pipeline,
     @required this.pipelineList,
     this.route = const [AppRoutes.home],
+    this.statistics
   });
 
   AppState.initialState() {
@@ -94,6 +97,7 @@ class AppState {
     serviceList = ServiceListState();
     pipeline = Pipeline();
     pipelineList = PipelineList();
+    statistics = StatisticsState();
   }
 
   AppState.copyWith(
@@ -114,7 +118,8 @@ class AppState {
       ServiceListState serviceList,
       Pipeline pipeline,
       PipelineList pipelineList,
-      List<String> route}) {
+      List<String> route,
+      StatisticsState statistics}) {
     this.filterSearch = filterSearch;
     this.business = business;
     this.booking = booking;
@@ -133,6 +138,7 @@ class AppState {
     this.pipeline = pipeline;
     this.pipelineList = pipelineList;
     this.route = route;
+    this.statistics = statistics;
   }
 
   AppState.fromJson(Map json) {
@@ -154,6 +160,7 @@ class AppState {
     pipeline = json['pipeline'];
     pipelineList = json['pipelineList'];
     route = json['route'];
+    statistics = json['statistics'];
   }
 
   Map toJson() => {
@@ -175,5 +182,6 @@ class AppState {
         'pipeline': pipeline,
         'pipelineList': pipelineList,
         'route': route,
+        'statistics': statistics,
       };
 }

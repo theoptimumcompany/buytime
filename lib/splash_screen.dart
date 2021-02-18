@@ -7,7 +7,9 @@ import 'package:Buytime/UI/user/landing/UI_U_Landing.dart';
 import 'package:Buytime/UI/user/landing/invite_guest_form.dart';
 import 'package:Buytime/reblox/model/snippet/device.dart';
 import 'package:Buytime/reblox/model/snippet/token.dart';
+import 'package:Buytime/reblox/model/statistics_state.dart';
 import 'package:Buytime/reblox/reducer/booking_reducer.dart';
+import 'package:Buytime/reblox/reducer/statistics_reducer.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/UI/user/order/UI_U_OrderDetail.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
@@ -31,14 +33,35 @@ class SplashScreen extends StatefulWidget {
   _SplashScreenState createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
+class _SplashScreenState extends State<SplashScreen>  with WidgetsBindingObserver {
   Timer _timerLink;
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state){
+    print('state = $state');
+    if(state == AppLifecycleState.paused){
+      debugPrint('paused: Calls: ${StoreProvider.of<AppState>(context).state.statistics.numberOfCalls}, Documents: ${StoreProvider.of<AppState>(context).state.statistics.numberOfDocuments}');
+      StatisticsState().writeToStorage(StoreProvider.of<AppState>(context).state.statistics);
+    }
+
+    if(state == AppLifecycleState.detached){
+      debugPrint('detached: Calls: ${StoreProvider.of<AppState>(context).state.statistics.numberOfCalls}, Documents: ${StoreProvider.of<AppState>(context).state.statistics.numberOfDocuments}');
+      //StatisticsState().writeToStorage(StoreProvider.of<AppState>(context).state.statistics);
+    }
+  }
+
+  StatisticsState statisticsState;
+  readFromStorage() async{
+    statisticsState = await StatisticsState().readFromStorage();
+    debugPrint('splash_screen: Calls: ${statisticsState.numberOfCalls}, Documents: ${statisticsState.numberOfDocuments}');
+    StoreProvider.of<AppState>(context).dispatch(UpdateStatistics(statisticsState));
+  }
+
+  @override
   void initState() {
+    WidgetsBinding.instance.addObserver(this);
     super.initState();
-
-
+    readFromStorage();
     //DynamicLinkService().retrieveDynamicLink(context);
 
     Firebase.initializeApp().then((value) {
@@ -50,7 +73,7 @@ class _SplashScreenState extends State<SplashScreen> {
               print("onMessage: $message");
               var data = message.data['data'] ?? message;
               String orderId = data['orderId'];
-              StoreProvider.of<AppState>(context).dispatch(new OrderRequest(orderId));
+              StoreProvider.of<AppState>(context).dispatch(new OrderRequest(orderId)); //TODO statistics
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => UI_U_OrderDetail()),
@@ -61,7 +84,7 @@ class _SplashScreenState extends State<SplashScreen> {
         FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
           var data = message.data['data'] ?? message;
           String orderId = data['orderId'];
-          StoreProvider.of<AppState>(context).dispatch(new OrderRequest(orderId));
+          StoreProvider.of<AppState>(context).dispatch(new OrderRequest(orderId)); //TODO statistics
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => UI_U_OrderDetail()),

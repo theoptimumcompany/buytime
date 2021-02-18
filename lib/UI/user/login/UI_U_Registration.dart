@@ -834,7 +834,7 @@ class RegistrationState extends State<Registration> {
                         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
                           BrandedButton("assets/img/google_logo.png", AppLocalizations.of(context).signGoogle, initiateGoogleSignIn),
                           BrandedButton("assets/img/apple_logo.png", AppLocalizations.of(context).signApple, initiateAppleSignIn),
-                          BrandedButton("assets/img/facebook_logo.png", AppLocalizations.of(context).signFacebook, initiateFacebookSignIn),
+                          //BrandedButton("assets/img/facebook_logo.png", AppLocalizations.of(context).signFacebook, initiateFacebookSignIn),
                         ]),
                       ),
                     )
