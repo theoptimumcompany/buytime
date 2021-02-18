@@ -1278,7 +1278,8 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                   ),
                                                 ),
                                                 Container(
-                                                  height: snapshot.serviceState.tabAvailability.tabHeight < 325 ? 325.00 : snapshot.serviceState.tabAvailability.tabHeight,
+                                                  height: media.height * 0.6,
+                                                  //height : snapshot.serviceState.tabAvailability.tabHeight < 325 ? 325.00 : snapshot.serviceState.tabAvailability.tabHeight,
                                                   child: TabBarView(
                                                     controller: bookingController,
                                                     children: getTabs(media),
