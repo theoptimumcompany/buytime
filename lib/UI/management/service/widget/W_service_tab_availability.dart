@@ -29,7 +29,6 @@ class TabAvailabilityState extends State<TabAvailability> {
 
   List<bool> switchWeek = [];
   List<EveryDay> daysInterval = [];
-  double availableIntervalDynamicHeight = 155.00;
   final TextEditingController _startController = TextEditingController();
   final TextEditingController _stopController = TextEditingController();
   TimeOfDay startTime = TimeOfDay.now();
@@ -38,7 +37,6 @@ class TabAvailabilityState extends State<TabAvailability> {
   bool errorStop = false;
   String errorTextStart = "";
   String errorTextStop = "";
-
 
   @override
   void initState() {
@@ -49,7 +47,6 @@ class TabAvailabilityState extends State<TabAvailability> {
 
   Widget weekSwitchDay(Size media, String dayName, int listNumber, int dayNumber) {
     return Row(
-      // mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Padding(
           padding: EdgeInsets.only(
@@ -101,14 +98,23 @@ class TabAvailabilityState extends State<TabAvailability> {
   }
 
   Future<void> _selectStartTime(BuildContext context) async {
+
     final TimeOfDay picked = await  showTimePicker(
+      builder: (BuildContext context, Widget child) {
+        return MediaQuery(
+          data: MediaQuery.of(context)
+              .copyWith(alwaysUse24HourFormat: true),
+          child: child,
+        );
+      },
         context: context,
         initialEntryMode: TimePickerEntryMode.dial,
         initialTime: TimeOfDay(hour: 0, minute: 0),
     );
      if (picked != null) {
-      print(picked);
-      _startController.text = picked.format(context);
+       String minute = picked.minute < 10 ? "0" + picked.minute.toString() : picked.minute.toString();
+       String format24 = picked.hour.toString() + ":" + minute;
+       _startController.text = format24;
       setState(() {
         startTime = picked;
       });
@@ -131,22 +137,19 @@ class TabAvailabilityState extends State<TabAvailability> {
       initialTime: TimeOfDay(hour: 0, minute: 0),
     );
     if (picked != null) {
-      print(picked);
-      _stopController.text = picked.format(context);
+      String minute = picked.minute < 10 ? "0" + picked.minute.toString() : picked.minute.toString();
+      String format24 = picked.hour.toString() + ":" + minute;
+      _stopController.text = format24;
       setState(() {
         stopTime = picked;
-        final localizations = MaterialLocalizations.of(context);
-        final formattedStartTimeOfDay = localizations.formatTimeOfDay(startTime);
-        print(formattedStartTimeOfDay);
-        final formattedStopTimeOfDay = localizations.formatTimeOfDay(stopTime);
-        print(formattedStopTimeOfDay);
+
         if((stopTime.hour + stopTime.minute/60.0) - (startTime.hour + startTime.minute/60.0) <= 0){
           errorStop = true;
-          errorTextStop = "OK";
+          errorTextStop = "Non si può";
         }else
         {
           errorStop = true;
-          errorTextStop = "NOOO";
+          errorTextStop = "Ok periodo decente";
         }
       });
     }
@@ -166,12 +169,6 @@ class TabAvailabilityState extends State<TabAvailability> {
               ? snapshot.serviceState.tabAvailability.daysInterval
               : baseAvailability.daysInterval;
           numberOfAvailableInterval = snapshot.serviceState.tabAvailability.numberOfInterval;
-          if (snapshot.serviceState.tabAvailability.intervalsHeight < 155.00) {
-            StoreProvider.of<AppState>(context).dispatch(SetServiceTabAvailabilityTabHeight(availableIntervalDynamicHeight + (160.00 * numberOfAvailableInterval)));
-            StoreProvider.of<AppState>(context).dispatch(SetServiceTabAvailabilityIntervalsHeight(availableIntervalDynamicHeight));
-          }
-          availableIntervalDynamicHeight = snapshot.serviceState.tabAvailability.intervalsHeight;
-          //TODO : GESTIRE VALORA DAL DB PER ALTEZZE GIUSTE
           return Column(
             mainAxisAlignment: MainAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
@@ -182,129 +179,61 @@ class TabAvailabilityState extends State<TabAvailability> {
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: numberOfAvailableInterval,
                     itemBuilder: (context, i) {
-                      return Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
-                            child: Container(
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      (i + 1).toString() + ". Available time",
-                                      textAlign: TextAlign.start,
-                                      style: TextStyle(
-                                        fontSize: widget.media.height * 0.018,
-                                        color: BuytimeTheme.TextBlack,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ],
-                                )),
+                      return Dismissible(
+                        key: UniqueKey(),
+                        background: Container(
+                          color: Colors.red,
+                          margin: EdgeInsets.symmetric(horizontal: 15),
+                          alignment: Alignment.centerRight,
+                          child: Icon(
+                            Icons.delete,
+                            color: Colors.white,
                           ),
-                          ///Time Range
-                          Container(
-                              margin: EdgeInsets.only( left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  ///Start Time
-                                  Column(
+                        ),
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
+                              child: Container(
+                                  child: Row(
                                     children: [
-                                      GestureDetector(
-                                        onTap: ()async{
-                                          setState(() {
-                                            errorStart = false;
-                                          });
-                                          await _selectStartTime(context);
-
-                                        },
-                                        child: Container(
-                                          width: media.width * 0.43,
-                                          child: TextFormField(
-                                            enabled: false,
-                                            controller: _startController,
-                                            textAlign: TextAlign.start,
-                                            keyboardType: TextInputType.number,
-                                            decoration: InputDecoration(
-                                                filled: true,
-                                                fillColor: BuytimeTheme.DividerGrey,
-                                                enabledBorder: OutlineInputBorder(
-                                                    borderSide: BorderSide(color: Color(0xffe0e0e0)),
-                                                    borderRadius: BorderRadius.all(Radius.circular(10.0))
-                                                ),
-                                                focusedBorder: OutlineInputBorder(
-                                                    borderSide: BorderSide(color: Color(0xff666666)),
-                                                    borderRadius: BorderRadius.all(Radius.circular(10.0))
-                                                ),
-                                                labelText: "Start", //todo trans
-                                                labelStyle: TextStyle(
-                                                  fontFamily: BuytimeTheme.FontFamily,
-                                                  color: Color(0xff666666),
-                                                  fontWeight: FontWeight.w400,
-                                                ),
-                                                suffixIcon: Icon(
-                                                    Icons.av_timer_outlined
-                                                )
-                                            ),
-                                            style: TextStyle(
-                                              fontFamily: BuytimeTheme.FontFamily,
-                                              color: Color(0xff666666),
-                                              fontWeight: FontWeight.w800,
-                                            ),
-                                          ),
+                                      Text(
+                                        (i + 1).toString() + ". Available time",
+                                        textAlign: TextAlign.start,
+                                        style: TextStyle(
+                                          fontSize: widget.media.height * 0.018,
+                                          color: BuytimeTheme.TextBlack,
+                                          fontWeight: FontWeight.w500,
                                         ),
                                       ),
-                                      errorStart
-                                          ? Container(
-                                        width: media.width * 0.43,
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(top: 10.0),
-                                          child: Container(
-                                              child: Row(
-                                                children: [
-                                                  Flexible(
-                                                    child: Text(
-                                                      errorTextStart,
-                                                      style: TextStyle(
-                                                        fontSize: media.height * 0.017,
-                                                        color: BuytimeTheme.ErrorRed,
-                                                        fontWeight: FontWeight.w500,
-                                                      ),
-                                                      overflow: TextOverflow.clip,
-                                                    ),
-                                                  ),
-                                                ],
-                                              )),
-                                        ),
-                                      )
-                                          : Container(),
                                     ],
-                                  ),
-                                  ///Stop Time
-                                  Column(
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () async{
-                                          if(_startController.text == ''){
+                                  )),
+                            ),
+                            ///Time Range
+                            Container(
+                                margin: EdgeInsets.only( left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    ///Start Time
+                                    Column(
+                                      children: [
+                                        GestureDetector(
+                                          onTap: ()async{
                                             setState(() {
-                                              errorStart = true;
-                                              errorTextStart = "Select start time first";
+                                              errorStart = false;
                                             });
-                                          }
-                                          else{
-                                            await _selectStopTime(context);
-                                          }
-                                        },
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(left: 15.0),
+                                            await _selectStartTime(context);
+
+                                          },
                                           child: Container(
                                             width: media.width * 0.43,
                                             child: TextFormField(
                                               enabled: false,
-                                              controller: _stopController,
+                                              controller: _startController,
                                               textAlign: TextAlign.start,
-                                              keyboardType: TextInputType.datetime,
+                                              keyboardType: TextInputType.number,
                                               decoration: InputDecoration(
                                                   filled: true,
                                                   fillColor: BuytimeTheme.DividerGrey,
@@ -316,9 +245,7 @@ class TabAvailabilityState extends State<TabAvailability> {
                                                       borderSide: BorderSide(color: Color(0xff666666)),
                                                       borderRadius: BorderRadius.all(Radius.circular(10.0))
                                                   ),
-                                                  labelText:  "Stop", //todo: trans
-                                                  //hintText: "email *",
-                                                  //hintStyle: TextStyle(color: Color(0xff666666)),
+                                                  labelText: "Start", //todo trans
                                                   labelStyle: TextStyle(
                                                     fontFamily: BuytimeTheme.FontFamily,
                                                     color: Color(0xff666666),
@@ -336,108 +263,178 @@ class TabAvailabilityState extends State<TabAvailability> {
                                             ),
                                           ),
                                         ),
-                                      ),
-                                      errorStop
-                                          ? Container(
-                                        width: media.width * 0.43,
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(top: 10.0,left: 10.0),
-                                          child: Container(
-                                              child: Row(
-                                                children: [
-                                                  Flexible(
-                                                    child: Text(
-                                                      errorTextStop,
-                                                      style: TextStyle(
-                                                        fontSize: media.height * 0.017,
-                                                        color: BuytimeTheme.ErrorRed,
-                                                        fontWeight: FontWeight.w500,
+                                        errorStart
+                                            ? Container(
+                                          width: media.width * 0.43,
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(top: 10.0),
+                                            child: Container(
+                                                child: Row(
+                                                  children: [
+                                                    Flexible(
+                                                      child: Text(
+                                                        errorTextStart,
+                                                        style: TextStyle(
+                                                          fontSize: media.height * 0.017,
+                                                          color: BuytimeTheme.ErrorRed,
+                                                          fontWeight: FontWeight.w500,
+                                                        ),
+                                                        overflow: TextOverflow.clip,
                                                       ),
-                                                      overflow: TextOverflow.clip,
+                                                    ),
+                                                  ],
+                                                )),
+                                          ),
+                                        )
+                                            : Container(),
+                                      ],
+                                    ),
+                                    ///Stop Time
+                                    Column(
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () async{
+                                            if(_startController.text == ''){
+                                              setState(() {
+                                                errorStart = true;
+                                                errorTextStart = "Select start time first";
+                                              });
+                                            }
+                                            else{
+                                              await _selectStopTime(context);
+                                            }
+                                          },
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(left: 15.0),
+                                            child: Container(
+                                              width: media.width * 0.43,
+                                              child: TextFormField(
+                                                enabled: false,
+                                                controller: _stopController,
+                                                textAlign: TextAlign.start,
+                                                keyboardType: TextInputType.datetime,
+                                                decoration: InputDecoration(
+                                                    filled: true,
+                                                    fillColor: BuytimeTheme.DividerGrey,
+                                                    enabledBorder: OutlineInputBorder(
+                                                        borderSide: BorderSide(color: Color(0xffe0e0e0)),
+                                                        borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                                    ),
+                                                    focusedBorder: OutlineInputBorder(
+                                                        borderSide: BorderSide(color: Color(0xff666666)),
+                                                        borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                                    ),
+                                                    labelText:  "Stop", //todo: trans
+                                                    //hintText: "email *",
+                                                    //hintStyle: TextStyle(color: Color(0xff666666)),
+                                                    labelStyle: TextStyle(
+                                                      fontFamily: BuytimeTheme.FontFamily,
+                                                      color: Color(0xff666666),
+                                                      fontWeight: FontWeight.w400,
+                                                    ),
+                                                    suffixIcon: Icon(
+                                                        Icons.av_timer_outlined
+                                                    )
+                                                ),
+                                                style: TextStyle(
+                                                  fontFamily: BuytimeTheme.FontFamily,
+                                                  color: Color(0xff666666),
+                                                  fontWeight: FontWeight.w800,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        errorStop
+                                            ? Container(
+                                          width: media.width * 0.43,
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(top: 10.0,left: 10.0),
+                                            child: Container(
+                                                child: Row(
+                                                  children: [
+                                                    Flexible(
+                                                      child: Text(
+                                                        errorTextStop,
+                                                        style: TextStyle(
+                                                          fontSize: media.height * 0.017,
+                                                          color: BuytimeTheme.ErrorRed,
+                                                          fontWeight: FontWeight.w500,
+                                                        ),
+                                                        overflow: TextOverflow.clip,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                )),
+                                          ),
+                                        )
+                                            : Container(),
+                                      ],
+                                    )
+                                  ],
+                                )
+                            ),
+
+                            ///Switch Every Day
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8.0, left: 20.0, right: 20.0),
+                              child: Container(
+                                child: Row(
+                                  children: [
+                                    Switch(
+                                        value: switchWeek[i],
+                                        onChanged: (value) {
+                                          setState(() {
+                                            switchWeek[i] = value;
+                                            StoreProvider.of<AppState>(context).dispatch(SetServiceTabAvailabilitySwitchWeek(switchWeek));
+                                          });
+                                        }),
+                                    Expanded(
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          border: Border(
+                                            bottom: BorderSide(width: 1.0, color: BuytimeTheme.DividerGrey),
+                                          ),
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          children: [
+                                            Container(
+                                                child: Padding(
+                                                  padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+                                                  child: Text(
+                                                    'Every day',
+                                                    textAlign: TextAlign.start,
+                                                    style: TextStyle(
+                                                      color: BuytimeTheme.TextBlack,
+                                                      fontSize: widget.media.height * 0.02,
+                                                      fontWeight: FontWeight.w400,
                                                     ),
                                                   ),
-                                                ],
-                                              )),
+                                                )),
+                                          ],
                                         ),
-                                      )
-                                          : Container(),
-                                    ],
-                                  )
-                                ],
-                              )
-                          ),
-
-                          ///Switch Every Day
-                          Padding(
-                            padding: const EdgeInsets.only(top: 8.0, left: 20.0, right: 20.0),
-                            child: Container(
-                              child: Row(
-                                children: [
-                                  Switch(
-                                      value: switchWeek[i],
-                                      onChanged: (value) {
-                                        setState(() {
-                                          print("Dimensione availableIntervalDynamicHeight iniziale " + availableIntervalDynamicHeight.toString());
-                                          if (!value) {
-                                            StoreProvider.of<AppState>(context).dispatch(SetServiceTabAvailabilityTabHeight(snapshot.serviceState.tabAvailability.tabHeight + 400.00));
-                                            StoreProvider.of<AppState>(context).dispatch(SetServiceTabAvailabilityIntervalsHeight(snapshot.serviceState.tabAvailability.intervalsHeight + 400.00));
-                                          } else {
-                                            StoreProvider.of<AppState>(context).dispatch(SetServiceTabAvailabilityTabHeight(snapshot.serviceState.tabAvailability.tabHeight - 400.00));
-                                            StoreProvider.of<AppState>(context).dispatch(SetServiceTabAvailabilityIntervalsHeight(snapshot.serviceState.tabAvailability.intervalsHeight - 400.00));
-                                          }
-                                          print("Dimensione dopo dispatch " + availableIntervalDynamicHeight.toString());
-                                          availableIntervalDynamicHeight = snapshot.serviceState.tabAvailability.intervalsHeight;
-                                          print("Dimensione dopo dispatch dopo assegnazione " + availableIntervalDynamicHeight.toString());
-
-                                          switchWeek[i] = value;
-                                          StoreProvider.of<AppState>(context).dispatch(SetServiceTabAvailabilitySwitchWeek(switchWeek));
-                                        });
-                                      }),
-                                  Expanded(
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        border: Border(
-                                          bottom: BorderSide(width: 1.0, color: BuytimeTheme.DividerGrey),
-                                        ),
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        children: [
-                                          Container(
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
-                                                child: Text(
-                                                  'Every day',
-                                                  textAlign: TextAlign.start,
-                                                  style: TextStyle(
-                                                    color: BuytimeTheme.TextBlack,
-                                                    fontSize: widget.media.height * 0.02,
-                                                    fontWeight: FontWeight.w400,
-                                                  ),
-                                                ),
-                                              )),
-                                        ],
                                       ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                          !switchWeek[i]
-                              ? Column(
-                            children: [
-                              weekSwitchDay(widget.media, 'Monday', i, 0), //todo: lang
-                              weekSwitchDay(widget.media, 'Tuesday', i, 1), //todo: lang
-                              weekSwitchDay(widget.media, 'Wednesday', i, 2), //todo: lang
-                              weekSwitchDay(widget.media, 'Thursday', i, 3), //todo: lang
-                              weekSwitchDay(widget.media, 'Friday', i, 4), //todo: lang
-                              weekSwitchDay(widget.media, 'Saturday', i, 5), //todo: lang
-                              weekSwitchDay(widget.media, 'Sunday', i, 6), //todo: lang
-                            ],
-                          )
-                              : Container(),
-                        ],
+                            !switchWeek[i]
+                                ? Column(
+                              children: [
+                                weekSwitchDay(widget.media, 'Monday', i, 0), //todo: lang
+                                weekSwitchDay(widget.media, 'Tuesday', i, 1), //todo: lang
+                                weekSwitchDay(widget.media, 'Wednesday', i, 2), //todo: lang
+                                weekSwitchDay(widget.media, 'Thursday', i, 3), //todo: lang
+                                weekSwitchDay(widget.media, 'Friday', i, 4), //todo: lang
+                                weekSwitchDay(widget.media, 'Saturday', i, 5), //todo: lang
+                                weekSwitchDay(widget.media, 'Sunday', i, 6), //todo: lang
+                              ],
+                            )
+                                : Container(),
+                          ],
+                        ),
                       );
                     }),
               ),
@@ -449,14 +446,11 @@ class TabAvailabilityState extends State<TabAvailability> {
                     onPressed: () {
                       setState(() {
                         switchWeek.add(true);
-                        StoreProvider.of<AppState>(context).dispatch(SetServiceTabAvailabilitySwitchWeek(switchWeek));
                         daysInterval.add(EveryDay().toEmpty());
                         numberOfAvailableInterval = numberOfAvailableInterval + 1;
+                        StoreProvider.of<AppState>(context).dispatch(SetServiceTabAvailabilitySwitchWeek(switchWeek));
                         StoreProvider.of<AppState>(context).dispatch(SetServiceTabAvailabilityNumberOfInterval(numberOfAvailableInterval));
                         StoreProvider.of<AppState>(context).dispatch(SetServiceTabAvailabilityDaysInterval(daysInterval));
-                        StoreProvider.of<AppState>(context).dispatch(SetServiceTabAvailabilityTabHeight(snapshot.serviceState.tabAvailability.tabHeight + 155.00));
-                        StoreProvider.of<AppState>(context).dispatch(SetServiceTabAvailabilityIntervalsHeight(snapshot.serviceState.tabAvailability.intervalsHeight + 155.00));
-                        availableIntervalDynamicHeight = snapshot.serviceState.tabAvailability.tabHeight;
                       });
                     },
                     child: Padding(
@@ -466,7 +460,7 @@ class TabAvailabilityState extends State<TabAvailability> {
                         children: [
                           Icon(Icons.add, color: BuytimeTheme.ManagerPrimary, size: widget.media.width * 0.08),
                           Text(
-                            "ADD INTEVAL", //todo: lang
+                            "ADD SLOT", //todo: lang
                             textAlign: TextAlign.start,
                             style: TextStyle(
                               fontSize: widget.media.height * 0.023,
@@ -497,7 +491,7 @@ class TabAvailabilityState extends State<TabAvailability> {
                       child: Padding(
                         padding: const EdgeInsets.all(15.0),
                         child: Text(
-                          "SAVE", //todo: lang
+                          "NEXT", //todo: lang
                           textAlign: TextAlign.start,
                           style: TextStyle(
                             fontSize: widget.media.height * 0.023,

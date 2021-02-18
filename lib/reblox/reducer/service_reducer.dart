@@ -187,28 +187,20 @@ class SetServiceEnabledBooking {
   bool get enabled => _enabled;
 }
 
+class SetServiceEnabledAutomaticRequest {
+  bool _enabled;
+
+  SetServiceEnabledAutomaticRequest(this._enabled);
+
+  bool get enabled => _enabled;
+}
+
 class SetServiceTabAvailability {
   TabAvailabilityStoreState _tab;
 
   SetServiceTabAvailability(this._tab);
 
   TabAvailabilityStoreState get tab => _tab;
-}
-
-class SetServiceTabAvailabilityTabHeight {
-  double _height;
-
-  SetServiceTabAvailabilityTabHeight(this._height);
-
-  double get height => _height;
-}
-
-class SetServiceTabAvailabilityIntervalsHeight {
-  double _height;
-
-  SetServiceTabAvailabilityIntervalsHeight(this._height);
-
-  double get height => _height;
 }
 
 class SetServiceTabAvailabilityDaysInterval {
@@ -279,22 +271,12 @@ ServiceState serviceReducer(ServiceState state, action) {
     serviceState.enabledBooking = action.enabled;
     return serviceState;
   }
+  if (action is SetServiceEnabledBooking) {
+    serviceState.enabledAutomaticRequest = action.enabled;
+    return serviceState;
+  }
   if (action is SetServiceTabAvailability) {
     serviceState.tabAvailability = action.tab.copyWith();
-    return serviceState;
-  }
-  if (action is SetServiceTabAvailabilityTabHeight) {
-    print("Service Reducer Set Availability TabHeight: State Prima - " + serviceState.tabAvailability.tabHeight.toString());
-    serviceState.tabAvailability.tabHeight = action.height;
-    print("Service Reducer Set Availability TabHeight: State Dopo - " + serviceState.tabAvailability.tabHeight.toString());
-    print("Service Reducer Set Availability TabHeight: Action - " + action.height.toString());
-    return serviceState;
-  }
-  if (action is SetServiceTabAvailabilityIntervalsHeight) {
-    print("Service Reducer Set Availability Interval Height: State Prima - " + serviceState.tabAvailability.intervalsHeight.toString());
-    serviceState.tabAvailability.intervalsHeight = action.height;
-    print("Service Reducer Set Availability Interval Height: State Dopo - " + serviceState.tabAvailability.intervalsHeight.toString());
-    print("Service Reducer Set Availability Interval Height: Action - " + action.height.toString());
     return serviceState;
   }
   if (action is SetServiceTabAvailabilityDaysInterval) {
