@@ -1119,6 +1119,37 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                   ),
                                 ),
 
+                                ///Switch Automatic Service Request
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 8.0, bottom: 10.0, left: 20.0, right: 20.0),
+                                  child: Container(
+                                    child: Row(
+                                      children: [
+                                        Switch(
+                                            value: snapshot.serviceState.enabledAutomaticRequest,
+                                            onChanged: (value) {
+                                              setState(() {
+                                                StoreProvider.of<AppState>(context).dispatch(SetServiceEnabledAutomaticRequest(value));
+                                              });
+                                            }),
+                                        Expanded(
+                                          child: Text(
+                                            "Allow users to automatically request services",
+                                            //  AppLocalizations.of(context).  todo : aggiungere alle lingue
+                                            textAlign: TextAlign.start,
+                                            overflow: TextOverflow.clip,
+                                            style: TextStyle(
+                                              fontSize: media.height * 0.018,
+                                              color: BuytimeTheme.TextGrey,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+
                                 ///Switch Booking
                                 Padding(
                                   padding: const EdgeInsets.only(top: 8.0, bottom: 10.0, left: 20.0, right: 20.0),
@@ -1219,7 +1250,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                             child: Padding(
                                               padding: const EdgeInsets.all(10.0),
                                               child: Text(
-                                                "EDIT", //todo: lang
+                                                "EDIT SLOT", //todo: lang
                                                 textAlign: TextAlign.start,
                                                 style: TextStyle(
                                                   fontSize: media.height * 0.022,

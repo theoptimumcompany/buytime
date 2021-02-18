@@ -19,6 +19,7 @@ class ServiceState {
   int timesSold;
   List<String> tag;
   bool enabledBooking;
+  bool enabledAutomaticRequest;
   TabAvailabilityStoreState tabAvailability;
   bool spinnerVisibility = false;
 
@@ -38,6 +39,7 @@ class ServiceState {
     this.timesSold,
     this.tag,
     this.enabledBooking,
+    this.enabledAutomaticRequest,
     this.tabAvailability,
     this.spinnerVisibility,
   });
@@ -77,6 +79,7 @@ class ServiceState {
       timesSold: 0,
       tag: [],
       enabledBooking: false,
+      enabledAutomaticRequest: false,
       tabAvailability: TabAvailabilityStoreState().toEmpty(),
       spinnerVisibility: false,
     );
@@ -98,6 +101,7 @@ class ServiceState {
     this.timesSold = service.timesSold;
     this.tag = service.tag;
     this.enabledBooking = service.enabledBooking;
+    this.enabledAutomaticRequest = service.enabledAutomaticRequest;
     this.tabAvailability = service.tabAvailability;
     this.spinnerVisibility = service.spinnerVisibility;
   }
@@ -118,6 +122,7 @@ class ServiceState {
     int timesSold,
     List<String> tag,
     bool enabledBooking,
+    bool enabledAutomaticRequest,
     TabAvailabilityStoreState tabAvailability,
       bool spinnerVisibility,
   ) {
@@ -137,6 +142,7 @@ class ServiceState {
       timesSold: timesSold ?? this.timesSold,
       tag: tag ?? this.tag,
       enabledBooking: enabledBooking ?? this.enabledBooking,
+      enabledAutomaticRequest: enabledAutomaticRequest ?? this.enabledAutomaticRequest,
       tabAvailability: tabAvailability ?? this.tabAvailability,
       spinnerVisibility: spinnerVisibility ?? this.spinnerVisibility,
     );
@@ -158,6 +164,7 @@ class ServiceState {
     int timesSold,
     List<String> tag,
     bool enabledBooking,
+    bool enabledAutomaticRequest,
     TabAvailabilityStoreState tabAvailability,
     bool spinnerVisibility,
   }) {
@@ -177,6 +184,7 @@ class ServiceState {
       timesSold: timesSold ?? this.timesSold,
       tag: tag ?? this.tag,
       enabledBooking: enabledBooking ?? this.enabledBooking,
+      enabledAutomaticRequest: enabledAutomaticRequest ?? this.enabledAutomaticRequest,
       tabAvailability: tabAvailability ?? this.tabAvailability,
       spinnerVisibility: spinnerVisibility ?? this.spinnerVisibility,
     );
@@ -205,6 +213,7 @@ class ServiceState {
         timesSold = json['timesSold'],
         tag = json['tag'] != null ? List<String>.from(json['tag']) : [],
         enabledBooking = json.containsKey('enabledBooking') ? json['enabledBooking'] : false,
+        enabledAutomaticRequest = json.containsKey('enabledAutomaticRequest') ? json['enabledAutomaticRequest'] : false,
         tabAvailability = json['tabAvailability'] != null ? TabAvailabilityStoreState.fromJson(json['tabAvailability']) : TabAvailabilityStoreState().toEmpty();
 
   Map<String, dynamic> toJson() => {
@@ -222,6 +231,7 @@ class ServiceState {
         'timesSold': timesSold,
         'tag': tag,
         'enabledBooking': enabledBooking,
+        'enabledAutomaticRequest': enabledAutomaticRequest,
         'tabAvailability': tabAvailability.toJson(),
       };
 }
