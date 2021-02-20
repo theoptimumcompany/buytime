@@ -1,6 +1,6 @@
 import 'package:Buytime/UI/management/service/UI_M_service_list.dart';
 import 'package:Buytime/UI/management/service/widget/W_service_photo.dart';
-import 'package:Buytime/UI/management/service/widget/W_service_tab_availability.dart';
+import 'package:Buytime/UI/management/service/widget/W_service_step_availabile_time.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/category/tree/category_tree_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
@@ -36,9 +36,6 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
 
   int numberCalendarIntervalAvailability = 1;
 
-  double heightBookingBlock = 0.0;
-  double heightBookingBlockTab1 = 350.00;
-
   bool errorCategoryListEmpty = false;
   bool editBasicInformation = false;
   bool resumeServiceBooking = true;
@@ -70,22 +67,6 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
       });
       return false;
     }
-  }
-
-  void setHeightBookingBlock() {
-    setState(() {
-      switch (bookingController.index) {
-        case 0:
-          heightBookingBlock = heightBookingBlockTab1;
-          break;
-        case 1:
-          heightBookingBlock = 800;
-          break;
-        case 2:
-          heightBookingBlock = (800 + numberCalendarIntervalAvailability.toDouble() * 50).toDouble();
-          break;
-      }
-    });
   }
 
   void setCategoryList() {
@@ -133,9 +114,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
   void initState() {
     super.initState();
     bookingController = TabController(length: 3, vsync: this);
-    setHeightBookingBlock();
     bookingController.addListener(() {
-      setHeightBookingBlock();
     });
   }
 
@@ -177,7 +156,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
     List<Widget> tabList = [];
 
     ///Tab Availability
-    tabList.add(TabAvailability(media: media));
+    tabList.add(StepAvailableTime(media: media));
 
     ///Tab 2 : Length
     tabList.add(
@@ -1119,22 +1098,22 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                   ),
                                 ),
 
-                                ///Switch Automatic Service Request
+                                ///Switch Auto Confirm
                                 Padding(
-                                  padding: const EdgeInsets.only(top: 8.0, bottom: 10.0, left: 20.0, right: 20.0),
+                                  padding: const EdgeInsets.only(top: 10.0, bottom: 0.0, left: 20.0, right: 20.0),
                                   child: Container(
                                     child: Row(
                                       children: [
                                         Switch(
-                                            value: snapshot.serviceState.enabledAutomaticRequest,
+                                            value: snapshot.serviceState.switchAutoConfirm,
                                             onChanged: (value) {
                                               setState(() {
-                                                StoreProvider.of<AppState>(context).dispatch(SetServiceEnabledAutomaticRequest(value));
+                                                StoreProvider.of<AppState>(context).dispatch(SetServiceSwitchAutoConfirm(value));
                                               });
                                             }),
                                         Expanded(
                                           child: Text(
-                                            "Allow users to automatically request services",
+                                            "Allow users to get this service without manager confirmation",
                                             //  AppLocalizations.of(context).  todo : aggiungere alle lingue
                                             textAlign: TextAlign.start,
                                             overflow: TextOverflow.clip,
@@ -1150,22 +1129,52 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                   ),
                                 ),
 
-                                ///Switch Booking
+                                ///Switch Slots
                                 Padding(
-                                  padding: const EdgeInsets.only(top: 8.0, bottom: 10.0, left: 20.0, right: 20.0),
+                                  padding: const EdgeInsets.only(top: 0.0, bottom: 0.0, left: 20.0, right: 20.0),
                                   child: Container(
                                     child: Row(
                                       children: [
                                         Switch(
-                                            value: snapshot.serviceState.enabledBooking,
+                                            value: snapshot.serviceState.switchSlots,
                                             onChanged: (value) {
                                               setState(() {
-                                                StoreProvider.of<AppState>(context).dispatch(SetServiceEnabledBooking(value));
+                                                StoreProvider.of<AppState>(context).dispatch(SetServiceSwitchSlots(value));
                                               });
                                             }),
                                         Expanded(
                                           child: Text(
-                                            "The service can be booked by guests with time slots",
+                                            "The service can be reserved ",
+                                            //  AppLocalizations.of(context).  todo : aggiungere alle lingue
+                                            textAlign: TextAlign.start,
+                                            overflow: TextOverflow.clip,
+                                            style: TextStyle(
+                                              fontSize: media.height * 0.018,
+                                              color: BuytimeTheme.TextGrey,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                ///Switch MultiPrice
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 0.0, bottom: 10.0, left: 20.0, right: 20.0),
+                                  child: Container(
+                                    child: Row(
+                                      children: [
+                                        Switch(
+                                            value: snapshot.serviceState.switchMultiPrice,
+                                            onChanged: (value) {
+                                              setState(() {
+                                                StoreProvider.of<AppState>(context).dispatch(SetServiceSwitchMultiPrice(value));
+                                              });
+                                            }),
+                                        Expanded(
+                                          child: Text(
+                                            "The service can have different price per slot",
                                             //  AppLocalizations.of(context).  todo : aggiungere alle lingue
                                             textAlign: TextAlign.start,
                                             overflow: TextOverflow.clip,
@@ -1189,7 +1198,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                     thickness: 20.0,
                                   ),
                                 ),
-                                snapshot.serviceState.enabledBooking ?
+                                snapshot.serviceState.switchSlots ?
                                 ///Resume block for booking settings
                                 resumeServiceBooking ?
                                 Column(
@@ -1210,6 +1219,16 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                 fontWeight: FontWeight.w500,
                                               ),
                                             ),
+                                          ),
+                                          Container(
+                                              child: IconButton(icon: Icon(Icons.edit, color: BuytimeTheme.SymbolGrey, size: media.width * 0.07),
+                                                onPressed: () {
+                                                  print("Edit Slot clicked");
+                                                  setState(() {
+                                                    resumeServiceBooking = false;
+                                                  });
+                                                },
+                                              )
                                           ),
                                         ],
                                       ),
@@ -1232,35 +1251,6 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                             ),
                                           ),
                                         ],
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 20.0),
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.00),
-                                        child: Container(
-                                          width: media.width * 0.50,
-                                          child: OutlinedButton(
-                                            onPressed: () {
-                                              print("Edit Booking clicked");
-                                              setState(() {
-                                                resumeServiceBooking = false;
-                                              });
-                                            },
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(10.0),
-                                              child: Text(
-                                                "EDIT SLOT", //todo: lang
-                                                textAlign: TextAlign.start,
-                                                style: TextStyle(
-                                                  fontSize: media.height * 0.022,
-                                                  color: BuytimeTheme.ManagerPrimary,
-                                                  fontWeight: FontWeight.w900,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
                                       ),
                                     ),
                                   ],
@@ -1314,7 +1304,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                         //height: media.height * 0.6,
                                         //height : snapshot.serviceState.tabAvailability.tabHeight < 325 ? 325.00 : snapshot.serviceState.tabAvailability.tabHeight,
                                         child: bookingController.index == 0 ?
-                                        TabAvailability(media: media,) :
+                                        StepAvailableTime(media: media,) :
                                         bookingController.index == 1 ?
                                         Column(
                                           children: [

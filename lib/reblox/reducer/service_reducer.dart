@@ -179,18 +179,26 @@ class SetServiceSelectedCategories {
   List<Parent> get selectedCategories => _selectedCategories;
 }
 
-class SetServiceEnabledBooking {
+class SetServiceSwitchSlots {
   bool _enabled;
 
-  SetServiceEnabledBooking(this._enabled);
+  SetServiceSwitchSlots(this._enabled);
 
   bool get enabled => _enabled;
 }
 
-class SetServiceEnabledAutomaticRequest {
+class SetServiceSwitchMultiPrice {
   bool _enabled;
 
-  SetServiceEnabledAutomaticRequest(this._enabled);
+  SetServiceSwitchMultiPrice(this._enabled);
+
+  bool get enabled => _enabled;
+}
+
+class SetServiceSwitchAutoConfirm {
+  bool _enabled;
+
+  SetServiceSwitchAutoConfirm(this._enabled);
 
   bool get enabled => _enabled;
 }
@@ -267,12 +275,16 @@ ServiceState serviceReducer(ServiceState state, action) {
     serviceState.price = action.price;
     return serviceState;
   }
-  if (action is SetServiceEnabledBooking) {
-    serviceState.enabledBooking = action.enabled;
+  if (action is SetServiceSwitchSlots) {
+    serviceState.switchSlots = action.enabled;
     return serviceState;
   }
-  if (action is SetServiceEnabledBooking) {
-    serviceState.enabledAutomaticRequest = action.enabled;
+  if (action is SetServiceSwitchAutoConfirm) {
+    serviceState.switchAutoConfirm = action.enabled;
+    return serviceState;
+  }
+  if (action is SetServiceSwitchMultiPrice) {
+    serviceState.switchMultiPrice = action.enabled;
     return serviceState;
   }
   if (action is SetServiceTabAvailability) {
