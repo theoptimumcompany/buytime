@@ -1,4 +1,4 @@
-import 'package:Buytime/UI/management/service/widget/W_service_tab_availability.dart';
+import 'package:Buytime/UI/management/service/widget/W_service_step_availabile_time.dart';
 import 'package:Buytime/reblox/model/service/tab_availability_state.dart';
 
 import '../file/optimum_file_to_upload.dart';
@@ -18,8 +18,9 @@ class ServiceState {
   List<OptimumFileToUpload> fileToUploadList;
   int timesSold;
   List<String> tag;
-  bool enabledBooking;
-  bool enabledAutomaticRequest;
+  bool switchSlots;
+  bool switchAutoConfirm;
+  bool switchMultiPrice;
   TabAvailabilityStoreState tabAvailability;
   bool spinnerVisibility = false;
 
@@ -38,8 +39,9 @@ class ServiceState {
     this.fileToUploadList,
     this.timesSold,
     this.tag,
-    this.enabledBooking,
-    this.enabledAutomaticRequest,
+    this.switchSlots,
+    this.switchAutoConfirm,
+    this.switchMultiPrice,
     this.tabAvailability,
     this.spinnerVisibility,
   });
@@ -78,8 +80,9 @@ class ServiceState {
       fileToUploadList: [],
       timesSold: 0,
       tag: [],
-      enabledBooking: false,
-      enabledAutomaticRequest: false,
+      switchSlots: false,
+      switchAutoConfirm: false,
+      switchMultiPrice: false,
       tabAvailability: TabAvailabilityStoreState().toEmpty(),
       spinnerVisibility: false,
     );
@@ -100,8 +103,9 @@ class ServiceState {
     this.fileToUploadList = service.fileToUploadList;
     this.timesSold = service.timesSold;
     this.tag = service.tag;
-    this.enabledBooking = service.enabledBooking;
-    this.enabledAutomaticRequest = service.enabledAutomaticRequest;
+    this.switchSlots = service.switchSlots;
+    this.switchAutoConfirm = service.switchAutoConfirm;
+    this.switchMultiPrice = service.switchMultiPrice;
     this.tabAvailability = service.tabAvailability;
     this.spinnerVisibility = service.spinnerVisibility;
   }
@@ -121,8 +125,9 @@ class ServiceState {
     List<OptimumFileToUpload> fileToUploadList,
     int timesSold,
     List<String> tag,
-    bool enabledBooking,
-    bool enabledAutomaticRequest,
+    bool switchSlots,
+    bool switchAutoConfirm,
+    bool switchMultiPrice,
     TabAvailabilityStoreState tabAvailability,
       bool spinnerVisibility,
   ) {
@@ -141,8 +146,9 @@ class ServiceState {
       fileToUploadList: fileToUploadList ?? this.fileToUploadList,
       timesSold: timesSold ?? this.timesSold,
       tag: tag ?? this.tag,
-      enabledBooking: enabledBooking ?? this.enabledBooking,
-      enabledAutomaticRequest: enabledAutomaticRequest ?? this.enabledAutomaticRequest,
+      switchSlots: switchSlots ?? this.switchSlots,
+      switchAutoConfirm: switchAutoConfirm ?? this.switchAutoConfirm,
+      switchMultiPrice: switchMultiPrice ?? this.switchMultiPrice,
       tabAvailability: tabAvailability ?? this.tabAvailability,
       spinnerVisibility: spinnerVisibility ?? this.spinnerVisibility,
     );
@@ -163,8 +169,9 @@ class ServiceState {
     List<OptimumFileToUpload> fileToUploadList,
     int timesSold,
     List<String> tag,
-    bool enabledBooking,
-    bool enabledAutomaticRequest,
+    bool switchSlots,
+    bool switchAutoConfirm,
+    bool switchMultiPrice,
     TabAvailabilityStoreState tabAvailability,
     bool spinnerVisibility,
   }) {
@@ -183,8 +190,9 @@ class ServiceState {
       fileToUploadList: fileToUploadList ?? this.fileToUploadList,
       timesSold: timesSold ?? this.timesSold,
       tag: tag ?? this.tag,
-      enabledBooking: enabledBooking ?? this.enabledBooking,
-      enabledAutomaticRequest: enabledAutomaticRequest ?? this.enabledAutomaticRequest,
+      switchSlots: switchSlots ?? this.switchSlots,
+      switchAutoConfirm: switchAutoConfirm ?? this.switchAutoConfirm,
+      switchMultiPrice: switchMultiPrice ?? this.switchMultiPrice,
       tabAvailability: tabAvailability ?? this.tabAvailability,
       spinnerVisibility: spinnerVisibility ?? this.spinnerVisibility,
     );
@@ -212,8 +220,9 @@ class ServiceState {
         price = json['price'],
         timesSold = json['timesSold'],
         tag = json['tag'] != null ? List<String>.from(json['tag']) : [],
-        enabledBooking = json.containsKey('enabledBooking') ? json['enabledBooking'] : false,
-        enabledAutomaticRequest = json.containsKey('enabledAutomaticRequest') ? json['enabledAutomaticRequest'] : false,
+        switchSlots = json.containsKey('switchSlots') ? json['switchSlots'] : false,
+        switchAutoConfirm = json.containsKey('switchAutoConfirm') ? json['switchAutoConfirm'] : false,
+        switchMultiPrice = json.containsKey('switchMultiPrice') ? json['switchMultiPrice'] : false,
         tabAvailability = json['tabAvailability'] != null ? TabAvailabilityStoreState.fromJson(json['tabAvailability']) : TabAvailabilityStoreState().toEmpty();
 
   Map<String, dynamic> toJson() => {
@@ -230,8 +239,9 @@ class ServiceState {
         'price': price,
         'timesSold': timesSold,
         'tag': tag,
-        'enabledBooking': enabledBooking,
-        'enabledAutomaticRequest': enabledAutomaticRequest,
+        'switchSlots': switchSlots,
+        'switchAutoConfirm': switchAutoConfirm,
+        'switchMultiPrice': switchMultiPrice,
         'tabAvailability': tabAvailability.toJson(),
       };
 }
