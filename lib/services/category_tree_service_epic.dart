@@ -3,42 +3,78 @@ import 'dart:convert';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/category/category_state.dart';
 import 'package:Buytime/reblox/model/category/tree/category_tree_state.dart';
+import 'package:Buytime/reblox/model/statistics_state.dart';
 import 'package:Buytime/reblox/reducer/category_tree_reducer.dart';
 import 'package:Buytime/reblox/model/snippet/parent.dart';
+import 'package:Buytime/reblox/reducer/statistics_reducer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:redux_epics/redux_epics.dart';
 import 'package:rxdart/rxdart.dart';
 
 class CategoryTreeCreateIfNotExistsService implements EpicClass<AppState> {
+  StatisticsState statisticsState;
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<CategoryTreeCreateIfNotExists>().asyncMap((event) {
-      print("CategoryNodeCreateIfNotExistsService CategoryNode exists?");
-      CollectionReference collectionReference = FirebaseFirestore.instance.collection("business").doc(store.state.business.id_firestore).collection("category_tree");
+      debugPrint("CATEGORY_TREE_SERVICE_EPIC - CategoryTreeCreateIfNotExistsService => CategoryNode exists?");
+      CollectionReference collectionReference = FirebaseFirestore.instance
+          .collection("business").doc(store.state.business.id_firestore).collection("category_tree"); /// 1 READ - ? DOC
+      int docs = 0;
+      int write = 0;
+      int read = 1;
       collectionReference.get().then((value) {
+        docs = value.docs.length;
         if (value.docs.length == 0) {
-          print("CategoryNodeCreateIfNotExistsService CategoryNode not exists!");
+          debugPrint("CATEGORY_TREE_SERVICE_EPIC - CategoryTreeCreateIfNotExistsService => CategoryNode not exists!");
           CategoryTree newCategoryNode = CategoryTree().toEmpty();
-          DocumentReference doc = FirebaseFirestore.instance.collection('business').doc(event.idFirestore).collection('category_tree').doc();
+          DocumentReference doc = FirebaseFirestore.instance /// 1 READ - 1 DOC
+              .collection('business')
+              .doc(event.idFirestore)
+              .collection('category_tree').doc();
           newCategoryNode = CategoryTree(nodeName: "root", nodeId: doc.id, nodeLevel: 0, numberOfCategories: 0, categoryNodeList: null);
-          doc.set(newCategoryNode.toJson());
+          doc.set(newCategoryNode.toJson()); /// 1 WRITE
+          ++read;
+          ++write;
+          ++docs;
         }
         else{
-          print("CategoryNodeCreateIfNotExistsService CategoryNode exists!");
+          print("CATEGORY_TREE_SERVICE_EPIC - CategoryTreeCreateIfNotExistsService => CategoryNodeCreateIfNotExistsService CategoryNode exists!");
         }
       });
-    }).expand((element) => [CategoryTreeRequest()]);
+
+      statisticsState = store.state.statistics;
+      int reads = statisticsState.categoryTreeCreateIfNotExistsServiceRead;
+      int writes = statisticsState.categoryTreeCreateIfNotExistsServiceWrite;
+      int documents = statisticsState.categoryTreeCreateIfNotExistsServiceDocuments;
+      debugPrint('CATEGORY_TREE_SERVICE_EPIC - CategoryTreeCreateIfNotExistsService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      reads = reads + read;
+      writes = writes + write;
+      documents = documents + docs;
+      debugPrint('CATEGORY_TREE_SERVICE_EPIC - CategoryTreeCreateIfNotExistsService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      statisticsState.categoryTreeCreateIfNotExistsServiceRead = reads;
+      statisticsState.categoryTreeCreateIfNotExistsServiceWrite = writes;
+      statisticsState.categoryTreeCreateIfNotExistsServiceDocuments = documents;
+
+    }).expand((element) => [
+      CategoryTreeRequest(),
+      UpdateStatistics(statisticsState),
+    ]);
   }
 }
 
 class CategoryTreeRequestService implements EpicClass<AppState> {
+  StatisticsState statisticsState;
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     CategoryTree categoryNode = CategoryTree();
-
     return actions.whereType<CategoryTreeRequest>().asyncMap((event) async {
-      print("CategoryTree Epic : business name : " + store.state.business.name);
-      var query = await FirebaseFirestore.instance.collection("business").doc(store.state.business.id_firestore).collection("category_tree").get();
+      debugPrint("CATEGORY_TREE_SERVICE_EPIC - CategoryTreeRequestService => BUSINESS NAME: ${store.state.business.name}");
+      QuerySnapshot query = await FirebaseFirestore.instance /// 1 READ - ? DOC
+          .collection("business").doc(store.state.business.id_firestore).collection("category_tree").get();
+
+      int queryDocs = query.docs.length;
+
       if(query.docs.length != 0){
         query.docs.forEach((snapshot) {
           categoryNode = CategoryTree.fromJson(snapshot.data());
@@ -47,19 +83,31 @@ class CategoryTreeRequestService implements EpicClass<AppState> {
       else{
         categoryNode  = CategoryTree().toEmpty();
       }
+      debugPrint("CATEGORY_TREE_SERVICE_EPIC - CategoryTreeRequestService => Category tree Number of Categories: " + categoryNode.numberOfCategories.toString());
 
+      statisticsState = store.state.statistics;
+      int reads = statisticsState.categoryTreeRequestServiceRead;
+      int writes = statisticsState.categoryTreeRequestServiceWrite;
+      int documents = statisticsState.categoryTreeRequestServiceDocuments;
+      debugPrint('CATEGORY_TREE_SERVICE_EPIC - CategoryTreeRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      ++reads;
+      documents = documents + queryDocs;
+      debugPrint('CATEGORY_TREE_SERVICE_EPIC - CategoryTreeRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      statisticsState.categoryTreeRequestServiceRead = reads;
+      statisticsState.categoryTreeRequestServiceWrite = writes;
+      statisticsState.categoryTreeRequestServiceDocuments = documents;
 
-
-      print("CategoryTree Epic : category tree Number of Categories : " + categoryNode.numberOfCategories.toString());
-
-    }).expand((element) => [CategoryTreeRequestResponse(categoryNode)]);
+    }).expand((element) => [
+      CategoryTreeRequestResponse(categoryNode),
+      UpdateStatistics(statisticsState),
+    ]);
   }
 }
 
 class CategoryTreeAddService implements EpicClass<AppState> {
   int updateLevel;
   int updateNumberOfCategories;
-
+  StatisticsState statisticsState;
   addTree(List<dynamic> list, String id, EpicStore<AppState> store) {
     if (id == "no_parent") {
       print("Dentro No Parent");
@@ -140,38 +188,57 @@ class CategoryTreeAddService implements EpicClass<AppState> {
         updateNumberOfCategories = 0;
       }
 
-      print("CategorySnippetService adding category tree");
-      print(event.selectedParent);
+      debugPrint("CATEGORY_TREE_SERVICE_EPIC - CategoryTreeAddService => CategorySnippetService adding category tree");
+      print('CATEGORY_TREE_SERVICE_EPIC - CategoryTreeAddService => ${event.selectedParent}');
       Parent selected = event.selectedParent;
       List<dynamic> listNode = store.state.categoryTree.categoryNodeList;
       CategoryTree categoryTree = store.state.categoryTree;
-      print("Lista Iniziale " + listNode.toString());
-      print("Parent : " + selected.name + " " + selected.id + " " + selected.level.toString());
+      debugPrint("CATEGORY_TREE_SERVICE_EPIC - CategoryTreeAddService => Lista Iniziale " + listNode.toString());
+      debugPrint("CATEGORY_TREE_SERVICE_EPIC - CategoryTreeAddService => Parent : " + selected.name + " " + selected.id + " " + selected.level.toString());
       List<dynamic> newlistNode = addTree(listNode, selected.id, store);
-      print("*******");
+      debugPrint("CATEGORY_TREE_SERVICE_EPIC - CategoryTreeAddService => *******");
       print(newlistNode);
-      print("*******");
+      debugPrint("CATEGORY_TREE_SERVICE_EPIC - CategoryTreeAddService => *******");
       CategoryTree newCategoryNode = CategoryTree(nodeName: "root", nodeId: "root", nodeLevel: updateLevel, numberOfCategories: updateNumberOfCategories, categoryNodeList: newlistNode);
-      print("dopo creazione category node");
-      print(store.state.business.id_firestore);
+      debugPrint("CATEGORY_TREE_SERVICE_EPIC - CategoryTreeAddService => Dopo creazione category node");
+      debugPrint('CATEGORY_TREE_SERVICE_EPIC - CategoryTreeAddService => ${store.state.business.id_firestore}');
 
-      var query = await FirebaseFirestore.instance.collection("business").doc(store.state.business.id_firestore).collection("category_tree").get();
+      QuerySnapshot query = await FirebaseFirestore.instance /// 1 READ - ? DOC
+          .collection("business").doc(store.state.business.id_firestore).collection("category_tree").get();
 
+      int queryDocs = query.docs.length;
+      int write = 0;
       query.docs.forEach((document) {
-        document.reference.update(newCategoryNode.toJson()).then((value) {
-          print("Category Node Service should be updated online ");
+        ++write;
+        document.reference.update(newCategoryNode.toJson()).then((value) { /// ? WRITE
+          debugPrint("CATEGORY_TREE_SERVICE_EPIC - CategoryTreeAddService => Category Node Service should be updated online ");
           return new UpdatedCategoryTree(null);
         });
-        ;
       });
-    }).takeUntil(actions.whereType<UnlistenCategoryTree>());
+
+      statisticsState = store.state.statistics;
+      int reads = statisticsState.categoryTreeAddServiceRead;
+      int writes = statisticsState.categoryTreeAddServiceWrite;
+      int documents = statisticsState.categoryTreeAddServiceDocuments;
+      debugPrint('CATEGORY_TREE_SERVICE_EPIC - CategoryTreeAddService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      ++reads;
+      writes = writes + write;
+      documents = documents + queryDocs;
+      debugPrint('CATEGORY_TREE_SERVICE_EPIC - CategoryTreeAddService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      statisticsState.categoryTreeAddServiceRead = reads;
+      statisticsState.categoryTreeAddServiceWrite = writes;
+      statisticsState.categoryTreeAddServiceDocuments = documents;
+
+    }).takeUntil(actions.whereType<UnlistenCategoryTree>()).expand((element) => [
+      UpdateStatistics(statisticsState),
+    ]);
   }
 }
 
 class CategoryTreeDeleteService implements EpicClass<AppState> {
   int updateLevel;
   int updateNumberOfCategories;
-
+  StatisticsState statisticsState;
   updateCategoryTreeLevel(List<dynamic> list) {
     for (int i = 0; i < list.length; i++) {
       updateLevel = updateLevel < list[i]['level'] ? list[i]['level'] : updateLevel;
@@ -203,7 +270,7 @@ class CategoryTreeDeleteService implements EpicClass<AppState> {
     if (categoryNodeList != null) {
       for (int i = 0; i < categoryNodeList.length; i++) {
         if (categoryNodeList[i]['nodeId'] == selectedNodeId) {
-          print("Trovato ID Nodo da eliminare");
+          print("CATEGORY_TREE_SERVICE_EPIC - CategoryTreeDeleteService => Trovato ID Nodo da eliminare");
           print(categoryNodeList[i]['nodeId'] + " " + categoryNodeList[i]['nodeName']);
 
           //Parte commentata si fa quando si gestisce la eliminazione annidata
@@ -231,21 +298,42 @@ class CategoryTreeDeleteService implements EpicClass<AppState> {
       updateLevel = store.state.categoryTree.nodeLevel;
       updateNumberOfCategories = store.state.categoryTree.numberOfCategories;
 
-      print("CategorySnippetService updating delete node");
-      print("Nodo da cancellare " + event.selectedNodeId);
+      print("CATEGORY_TREE_SERVICE_EPIC - CategoryTreeDeleteService => CategorySnippetService updating delete node");
+      print("CATEGORY_TREE_SERVICE_EPIC - CategoryTreeDeleteService => Nodo da cancellare " + event.selectedNodeId);
       List<dynamic> listNode = store.state.categoryTree.categoryNodeList;
       List<dynamic> newlistNode = deleteTree(listNode, event.selectedNodeId, store);
       updateLevel = 0;
       updateCategoryTreeLevel(newlistNode);
       CategoryTree newCategoryNode = CategoryTree(nodeName: "root", nodeId: "root", nodeLevel: updateLevel, numberOfCategories: updateNumberOfCategories, categoryNodeList: newlistNode);
-      var query = await FirebaseFirestore.instance.collection("business").doc(store.state.business.id_firestore).collection("category_tree").get();
+      QuerySnapshot query = await FirebaseFirestore.instance /// 1 READ - ? DOC
+          .collection("business").doc(store.state.business.id_firestore).collection("category_tree").get();
+
+      int queryDocs = query.docs.length;
+      int write = 0;
       query.docs.forEach((document) {
-        document.reference.update(newCategoryNode.toJson()).then((value) {
-          print("Category Node Service should be delete online ");
+        ++write;
+        document.reference.update(newCategoryNode.toJson()).then((value) { /// ? WRITE
+          print("CATEGORY_TREE_SERVICE_EPIC - CategoryTreeDeleteService => Category Node Service should be delete online ");
           return new DeletedCategoryTree(null);
         });
       });
-    }).takeUntil(actions.whereType<UnlistenCategoryTree>());
+
+      statisticsState = store.state.statistics;
+      int reads = statisticsState.categoryTreeDeleteServiceRead;
+      int writes = statisticsState.categoryTreeDeleteServiceWrite;
+      int documents = statisticsState.categoryTreeDeleteServiceDocuments;
+      debugPrint('CATEGORY_TREE_SERVICE_EPIC - CategoryTreeDeleteService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      ++reads;
+      writes = writes + write;
+      documents = documents + queryDocs;
+      debugPrint('CATEGORY_TREE_SERVICE_EPIC - CategoryTreeDeleteService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      statisticsState.categoryTreeDeleteServiceRead = reads;
+      statisticsState.categoryTreeDeleteServiceWrite = writes;
+      statisticsState.categoryTreeDeleteServiceDocuments = documents;
+
+    }).takeUntil(actions.whereType<UnlistenCategoryTree>()).expand((element) => [
+      UpdateStatistics(statisticsState),
+    ]);
   }
 }
 
@@ -255,6 +343,8 @@ class CategoryTreeUpdateService implements EpicClass<AppState> {
   int updateLevel;
   int updateNumberOfCategories;
   int localLevel;
+
+  StatisticsState statisticsState;
 
   updateCategoryTreeLevel(List<dynamic> list) {
     for (int i = 0; i < list.length; i++) {
@@ -352,10 +442,10 @@ class CategoryTreeUpdateService implements EpicClass<AppState> {
       updateLevel = store.state.categoryTree.nodeLevel;
       updateNumberOfCategories = store.state.categoryTree.numberOfCategories;
 
-      print("CategoryNodeService updating category tree");
-      print(event.selectedParent);
+      debugPrint("CATEGORY_TREE_SERVICE_EPIC - CategoryTreeUpdateService => CategoryNodeService updating category tree");
+      debugPrint('CATEGORY_TREE_SERVICE_EPIC - CategoryTreeUpdateService => ${event.selectedParent}');
       Parent selectedParent = event.selectedParent;
-      print("Selected New Parent ID: " + selectedParent.id);
+      debugPrint("CATEGORY_TREE_SERVICE_EPIC - CategoryTreeUpdateService => Selected New Parent ID: " + selectedParent.id);
       List<dynamic> listNode = store.state.categoryTree.categoryNodeList;
       CategoryState category = store.state.category;
 
@@ -367,17 +457,38 @@ class CategoryTreeUpdateService implements EpicClass<AppState> {
       updateCategoryTreeLevel(newlistNode);
       nodeToSave = [];
       CategoryTree newCategoryNode = CategoryTree(nodeName: "root", nodeId: "root", nodeLevel: updateLevel, numberOfCategories: updateNumberOfCategories, categoryNodeList: newlistNode);
-      print("dopo creazione category node");
-      print(store.state.business.id_firestore);
+      debugPrint("CATEGORY_TREE_SERVICE_EPIC - CategoryTreeUpdateService => Dopo creazione category node");
+      debugPrint('CATEGORY_TREE_SERVICE_EPIC - CategoryTreeUpdateService => ${store.state.business.id_firestore}');
 
-      var query = await FirebaseFirestore.instance.collection("business").doc(store.state.business.id_firestore).collection("category_tree").get();
+      QuerySnapshot query = await FirebaseFirestore.instance /// 1 READ - ? DOC
+          .collection("business").doc(store.state.business.id_firestore).collection("category_tree").get();
+
+      int queryDocs = query.docs.length;
+      int write = 0;
 
       query.docs.forEach((document) {
-        document.reference.update(newCategoryNode.toJson()).then((value) {
-          print("Category Node Service should be updated online ");
+        ++write;
+        document.reference.update(newCategoryNode.toJson()).then((value) { /// ? WRITE
+          debugPrint("CATEGORY_TREE_SERVICE_EPIC - CategoryTreeUpdateService => Category Node Service should be updated online ");
           return new UpdatedCategoryTree(null);
         });
       });
-    }).takeUntil(actions.whereType<UnlistenCategoryTree>());
+
+      statisticsState = store.state.statistics;
+      int reads = statisticsState.categoryTreeUpdateServiceRead;
+      int writes = statisticsState.categoryTreeUpdateServiceWrite;
+      int documents = statisticsState.categoryTreeUpdateServiceDocuments;
+      debugPrint('CATEGORY_TREE_SERVICE_EPIC - CategoryTreeUpdateService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      ++reads;
+      writes = writes + write;
+      documents = documents + queryDocs;
+      debugPrint('CATEGORY_TREE_SERVICE_EPIC - CategoryTreeUpdateService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      statisticsState.categoryTreeUpdateServiceRead = reads;
+      statisticsState.categoryTreeUpdateServiceWrite = writes;
+      statisticsState.categoryTreeUpdateServiceDocuments = documents;
+
+    }).takeUntil(actions.whereType<UnlistenCategoryTree>()).expand((element) => [
+      UpdateStatistics(statisticsState),
+    ]);
   }
 }

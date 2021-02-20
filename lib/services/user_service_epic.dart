@@ -13,32 +13,40 @@ class UserRequestService implements EpicClass<AppState> {
   UserState stateFromFirebase;
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    print("UserService catched action");
+    //print("USER_SERVICE_EPIC - UserRequstService => CATCHED ACTION");
     return actions.whereType<LoggedUser>().asyncMap((event) async {
-      print("UserService user id:" + event.userState.uid);
+      debugPrint("USER_SERVICE_EPIC - UserRequstService => USER ID: ${event.userState.uid}");
 
-      DocumentSnapshot userDocumentSnapshot = await FirebaseFirestore.instance
+      DocumentSnapshot userDocumentSnapshot = await FirebaseFirestore.instance /// 1 READ - 1 DOC
           .collection('user')
           .doc(event.userState.uid)
           .get()
           .catchError((onError) {
-        print(onError);
-        return new CreateUser(event.userState);
+        debugPrint('USER_SERVICE_EPIC - UserRequstService => ERROR: $onError');
+        stateFromFirebase = event.userState;
+        ///Return
+        //return CreateUser(event.userState);
       });
 
 
-      stateFromFirebase = UserState.fromJson(userDocumentSnapshot.data());
-      print("user_service_epic: " + stateFromFirebase.toString());
+      if(userDocumentSnapshot.data() != null && userDocumentSnapshot.data().isNotEmpty)
+        stateFromFirebase = UserState.fromJson(userDocumentSnapshot.data());
+
+      debugPrint("USER_SERVICE_EPIC - UserRequstService => USER STATE: " + stateFromFirebase.toString());
 
       statisticsState = store.state.statistics;
-      int calls = statisticsState.numberOfCalls;
-      int documents = statisticsState.numberOfDocuments;
-      debugPrint('UserRequestService: Calls: $calls, Documents: $documents');
-      ++calls;
+      int reads = statisticsState.userRequestServiceRead;
+      int writes = statisticsState.userRequestServiceWrite;
+      int documents = statisticsState.userRequestServiceDocuments;
+      debugPrint('USER_SERVICE_EPIC - UserRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      ++reads;
       ++documents;
-      statisticsState.numberOfCalls = calls;
-      statisticsState.numberOfDocuments = documents;
+      debugPrint('USER_SERVICE_EPIC - UserRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      statisticsState.userRequestServiceRead = reads;
+      statisticsState.userRequestServiceWrite = writes;
+      statisticsState.userRequestServiceDocuments = documents;
 
+      ///Return
       /*return new CreateUser(stateFromFirebase);
 
       return FirebaseFirestore.instance
@@ -68,22 +76,25 @@ class UserEditDevice implements EpicClass<AppState> {
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<UpdateUserDevice>().asyncMap((event) {
-      print("UserService edit field : " + event.device.name);
+      debugPrint("USER_SERVICE_EPIC - UserEditDevice => DEVICE NAME: ${event.device.name}, DEVICE ID: ${event.device.id}, DEVICE USER ID: ${event.device.user_uid}");
       List<String> idField = [event.device.id];
 
-      DocumentReference docUser = FirebaseFirestore.instance.collection('user').doc(event.device.user_uid);
-      docUser.update(<String, dynamic>{
-        event.device.name: FieldValue.arrayUnion(idField),
-      });
+      DocumentReference docUser = FirebaseFirestore.instance.collection('user').doc(event.device.user_uid); /// 1 READ - 1 DOC
+      docUser.update(<String, dynamic>{event.device.name: FieldValue.arrayUnion(idField),}); ///1 WRITE
 
       statisticsState = store.state.statistics;
-      int calls = statisticsState.numberOfCalls;
-      int documents = statisticsState.numberOfDocuments;
-      debugPrint('UserEditDevice: Calls: $calls, Documents: $documents');
-      calls = calls + 2;
+      int reads = statisticsState.userEditDeviceRead;
+      int writes = statisticsState.userEditDeviceWrite;
+      int documents = statisticsState.userEditDeviceDocuments;
+      debugPrint('USER_SERVICE_EPIC - UserEditDevice => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      ++reads;
+      ++writes;
       ++documents;
-      statisticsState.numberOfCalls = calls;
-      statisticsState.numberOfDocuments = documents;
+      debugPrint('USER_SERVICE_EPIC - UserEditDevice =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      statisticsState.userEditDeviceRead = reads;
+      statisticsState.userEditDeviceWrite = writes;
+      statisticsState.userEditDeviceDocuments = documents;
+
     }).expand((element) => [
       UpdateStatistics(statisticsState)
     ]);
@@ -95,23 +106,25 @@ class UserEditToken implements EpicClass<AppState> {
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<UpdateUserToken>().asyncMap((event) {
-      print("UserService edit token : " + event.token.name);
+      debugPrint("USER_SERVICE_EPIC - UserEditToken => TOKEN NAME: ${event.token.name}, TOKEN ID: ${event.token.id}, TOKEN USER ID: ${event.token.user_uid}");
       List<String> idField = [event.token.id];
 
-
-      DocumentReference docUser = FirebaseFirestore.instance.collection('user').doc(event.token.user_uid);
-      docUser.update(<String, dynamic>{
-        event.token.name: FieldValue.arrayUnion(idField),
-      });
+      DocumentReference docUser = FirebaseFirestore.instance.collection('user').doc(event.token.user_uid); /// 1 READ - 1 DOC
+      docUser.update(<String, dynamic>{event.token.name: FieldValue.arrayUnion(idField),}); /// 1 WRITE
 
       statisticsState = store.state.statistics;
-      int calls = statisticsState.numberOfCalls;
-      int documents = statisticsState.numberOfDocuments;
-      debugPrint('UserEditToken: Calls: $calls, Documents: $documents');
-      calls = calls + 2;
+      int reads = statisticsState.userEditTokenRead;
+      int writes = statisticsState.userEditTokenWrite;
+      int documents = statisticsState.userEditTokenDocuments;
+      debugPrint('USER_SERVICE_EPIC - UserEditToken => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      ++reads;
+      ++writes;
       ++documents;
-      statisticsState.numberOfCalls = calls;
-      statisticsState.numberOfDocuments = documents;
+      debugPrint('USER_SERVICE_EPIC - UserEditToken =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      statisticsState.userEditTokenRead = reads;
+      statisticsState.userEditTokenWrite = writes;
+      statisticsState.userEditTokenDocuments = documents;
+
     }).expand((element) => [
       UpdateStatistics(statisticsState)
     ]);

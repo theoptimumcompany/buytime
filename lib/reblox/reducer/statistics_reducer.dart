@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/model/statistics_state.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +19,7 @@ StatisticsState statisticsReducer(StatisticsState state, action) {
   
   if (action is UpdateStatistics) {
     statisticsState = action.statisticsState.copyWith();
-    debugPrint('statistics_reducer => Calls: ${statisticsState.numberOfCalls}, Documents: ${statisticsState.numberOfDocuments}');
+    //StatisticsState().log('STATISTICS_REDUCER', statisticsState);
     return statisticsState;
   }
   

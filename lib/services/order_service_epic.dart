@@ -1,36 +1,37 @@
 import 'dart:convert';
-
 import 'package:Buytime/reblox/model/app_state.dart';
-import 'package:Buytime/reblox/model/file/optimum_file_to_upload.dart';
-import 'package:Buytime/reblox/model/snippet/generic.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
-import 'package:Buytime/reblox/model/service/service_state.dart';
+import 'package:Buytime/reblox/model/statistics_state.dart';
 import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
 import 'package:Buytime/reblox/reducer/order_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
-import 'package:Buytime/reblox/reducer/service_list_reducer.dart';
-import 'package:Buytime/reblox/reducer/service_reducer.dart';
+import 'package:Buytime/reblox/reducer/statistics_reducer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_redux_navigation/flutter_redux_navigation.dart';
+import 'package:flutter/material.dart';
 import 'package:redux_epics/redux_epics.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:http/http.dart' as http;
 import 'package:Buytime/services/file_upload_service.dart' if (dart.library.html) 'package:Buytime/services/file_upload_service_web.dart';
 import 'package:stripe_sdk/stripe_sdk.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class OrderListRequestService implements EpicClass<AppState> {
+  StatisticsState statisticsState;
+  List<OrderState> orderStateList;
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-     print("OrderListService catched action");
+    debugPrint("ORDER_SERVICE_EPIC - OrderListRequestService =>  CATCHED ACTION");
      return actions.whereType<OrderListRequest>().asyncMap((event) async {
+       debugPrint("ORDER_SERVICE_EPIC - OrderListRequestService =>  USER ID: ${store.state.user.uid}");
         String userId = store.state.user.uid;
-        var ordersFirebase = await FirebaseFirestore.instance.collection("order")
+        QuerySnapshot ordersFirebase = await FirebaseFirestore.instance.collection("order") /// 1 READ - ? DOC
             .where("progress", isEqualTo: "paid")
             .where("userId", isEqualTo: userId)
             .get();
-        print("OrderListService Firestore request");
-        List<OrderState> orderStateList = List<OrderState>();
+
+        int ordersFirebaseDocs = ordersFirebase.docs.length;
+
+        debugPrint("ORDER_SERVICE_EPIC - OrderListRequestService => OrderListService Firestore request");
+        orderStateList = [];
         ordersFirebase.docs.forEach((element) {
           if(event.userId != "any"){
             OrderState orderState = OrderState.fromJson(element.data());
@@ -45,22 +46,57 @@ class OrderListRequestService implements EpicClass<AppState> {
             }
           }
         });
-        print("OrderListService return list with " + orderStateList.length.toString());
-        return new OrderListReturned(orderStateList);
-     });
+        debugPrint("ORDER_SERVICE_EPIC - OrderListRequestService => OrderListService return list with " + orderStateList.length.toString());
+
+        statisticsState = store.state.statistics;
+        int reads = statisticsState.orderListRequestServiceRead;
+        int writes = statisticsState.orderListRequestServiceWrite;
+        int documents = statisticsState.orderListRequestServiceDocuments;
+        debugPrint('ORDER_SERVICE_EPIC - OrderListRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+        ++reads;
+        documents = documents + ordersFirebaseDocs;
+        debugPrint('ORDER_SERVICE_EPIC - OrderListRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+        statisticsState.orderListRequestServiceRead = reads;
+        statisticsState.orderListRequestServiceWrite = writes;
+        statisticsState.orderListRequestServiceDocuments = documents;
+
+        ///Return
+        //return new OrderListReturned(orderStateList);
+     }).expand((element) => [
+       OrderListReturned(orderStateList),
+       UpdateStatistics(statisticsState),
+     ]);
   }
 }
 
 class OrderRequestService implements EpicClass<AppState> {
+  StatisticsState statisticsState;
+  OrderState orderState;
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    return actions.whereType<OrderRequest>().asyncMap((event) {
-     print("OrderRequest requests document id:" + event.orderStateId);
-     return FirebaseFirestore.instance.collection("order").doc(event.orderStateId).get().then((snapshot) {
-       OrderState orderState = OrderState.fromJson(snapshot.data());
-       return new OrderRequestResponse(orderState);
-     });
-    });
+    return actions.whereType<OrderRequest>().asyncMap((event) async{
+      debugPrint("ORDER_SERVICE_EPIC - OrderRequestService => OrderRequest requests document id:" + event.orderStateId);
+     DocumentSnapshot snapshot= await FirebaseFirestore.instance /// 1 READ - 1 DOC
+         .collection("order").doc(event.orderStateId).get();
+
+     orderState = OrderState.fromJson(snapshot.data());
+
+     statisticsState = store.state.statistics;
+     int reads = statisticsState.orderRequestServiceRead;
+     int writes = statisticsState.orderRequestServiceWrite;
+     int documents = statisticsState.orderRequestServiceDocuments;
+     debugPrint('ORDER_SERVICE_EPIC - OrderRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+     ++reads;
+     ++documents;
+     debugPrint('ORDER_SERVICE_EPIC - OrderRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+     statisticsState.orderRequestServiceRead = reads;
+     statisticsState.orderRequestServiceWrite = writes;
+     statisticsState.orderRequestServiceDocuments = documents;
+
+    }).expand((element) => [
+      OrderRequestResponse(orderState),
+      UpdateStatistics(statisticsState),
+    ]);
   }
 }
 
@@ -79,10 +115,10 @@ class OrderUpdateService implements EpicClass<AppState> {
 }
 
 class OrderCreateService implements EpicClass<AppState> {
-
   String stripeTestKey = "pk_test_51HS20eHr13hxRBpCZl1V0CKFQ7XzJbku7UipKLLIcuNGh3rp4QVsEDCThtV0l2AQ3jMtLsDN2zdC0fQ4JAK6yCOp003FIf3Wjz";
   String stripeKey = "pk_live_51HS20eHr13hxRBpCLHzfi0SXeqw8Efu911cWdYEE96BAV0zSOesvE83OiqqzRucKIxgCcKHUvTCJGY6cXRtkDVCm003CmGXYzy";
-
+  StatisticsState statisticsState;
+  String state = '';
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
      return actions.whereType<CreateOrder>().asyncMap((event) async {
@@ -97,19 +133,21 @@ class OrderCreateService implements EpicClass<AppState> {
       // send document to orders collection
       var addedOrder = await FirebaseFirestore.instance.collection("order/").add(orderState.toJson());
       final http.Response response = await http.post('https://europe-west1-buytime-458a1.cloudfunctions.net/StripePIOnOrder?orderId=' + addedOrder.id);
-      print("order_service epic - response is done");
-      print(response);
+      print("ORDER_SERVICE_EPIC - OrderCreateService => Order_service epic - response is done");
+      print('ORDER_SERVICE_EPIC - OrderCreateService => RESPONSE: $response');
+      int write = 0;
       if (response != null && response.body == "Error: could not handle the request\n") {
         // verify why this happens.
-        var updatedOrder = await FirebaseFirestore.instance.collection("order/").doc(addedOrder.id.toString()).update({
+        var updatedOrder = await FirebaseFirestore.instance /// 1 WRITE
+            .collection("order/").doc(addedOrder.id.toString()).update({
           'progress': "paid"
         });
-
-        return SetOrderProgress("paid");
+        state = 'paid';
+        //return SetOrderProgress("paid");
       } else {
         var jsonResponse = jsonDecode(response.body);
         if(jsonResponse!= null && response.body != "error") {
-          print(jsonResponse);
+          print('ORDER_SERVICE_EPIC - OrderCreateService => JSON RESPONSE: $jsonResponse');
           // if an action is required, send the user to the confirmation link
           if (jsonResponse != null && jsonResponse["next_action_url"] != null ) {
             final Stripe stripe = Stripe(
@@ -120,24 +158,45 @@ class OrderCreateService implements EpicClass<AppState> {
             var clientSecret = jsonResponse["client_secret"];
             var paymentIntentRes = await confirmPayment3DSecure(clientSecret, jsonResponse["payment_method_id"], stripe);
             if (paymentIntentRes["status"] == "succeeded") {
-              var updatedOrder = await FirebaseFirestore.instance.collection("order/").doc(addedOrder.id.toString()).update({
+              ++write;
+              var updatedOrder = await FirebaseFirestore.instance.collection("order/").doc(addedOrder.id.toString()).update({ /// 1 WRITE
                 'progress': "paid"
               });
-              return SetOrderProgress("paid");
+              state = 'paid';
+              //return SetOrderProgress("paid");
             } else {
-              return SetOrderProgress("failed");
+              state = 'failed';
+              //return SetOrderProgress("failed");
             }
           } else {
-            var updatedOrder = await FirebaseFirestore.instance.collection("order/").doc(addedOrder.id.toString()).update({
+            ++write;
+            var updatedOrder = await FirebaseFirestore.instance.collection("order/").doc(addedOrder.id.toString()).update({ /// 1 WRITE
               'progress': "paid"
             });
-            return SetOrderProgress("paid");
+            state = 'paid';
+            //return SetOrderProgress("paid");
           }
         }else {
-          return SetOrderProgress("failed");
+          state = 'failed';
+          //return SetOrderProgress("failed");
         }
       }
-     });
+
+      statisticsState = store.state.statistics;
+      int reads = statisticsState.orderCreateServiceRead;
+      int writes = statisticsState.orderCreateServiceWrite;
+      int documents = statisticsState.orderCreateServiceDocuments;
+      debugPrint('ORDER_SERVICE_EPIC - OrderCreateService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      writes = writes + write;
+      debugPrint('ORDER_SERVICE_EPIC - OrderCreateService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      statisticsState.orderCreateServiceRead = reads;
+      statisticsState.orderCreateServiceWrite = writes;
+      statisticsState.orderCreateServiceDocuments = documents;
+
+     }).expand((element) => [
+       SetOrderProgress(state),
+       UpdateStatistics(statisticsState),
+     ]);
   }
 }
 

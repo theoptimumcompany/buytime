@@ -147,7 +147,7 @@ class _BookingCardWidgetState extends State<BookingCardWidget> {
                         child: FittedBox(
                           fit: BoxFit.scaleDown,
                           child: Text(
-                            widget.bookingState.status,
+                            widget.bookingState.status.substring(0,1).toUpperCase() + widget.bookingState.status.substring(1,widget.bookingState.status.length),
                             style: TextStyle(
                                 fontFamily: BuytimeTheme.FontFamily,
                                 color: widget.bookingState.status == 'opened' ? BuytimeTheme.TextWhite : BuytimeTheme.TextWhite.withOpacity(.8),

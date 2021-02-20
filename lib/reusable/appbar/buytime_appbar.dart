@@ -8,12 +8,12 @@ class BuytimeAppbar extends StatelessWidget implements PreferredSizeWidget {
   final double _preferredHeight = 70.0;
   double width;
   double height;
-  Color background = BuytimeTheme.ManagerPrimary; //Color.fromRGBO(0, 103, 145, 1.0);
+  Color background = Color.fromRGBO(0, 103, 145, 1.0); //BuytimeTheme.ManagerPrimary;
 
   BuytimeAppbar({
     @required this.children,
     @required this.width,
-    @required this.height,
+    this.height,
     this.background
   });
 

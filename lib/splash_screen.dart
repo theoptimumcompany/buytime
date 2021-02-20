@@ -40,12 +40,12 @@ class _SplashScreenState extends State<SplashScreen>  with WidgetsBindingObserve
   void didChangeAppLifecycleState(AppLifecycleState state){
     print('state = $state');
     if(state == AppLifecycleState.paused){
-      debugPrint('paused: Calls: ${StoreProvider.of<AppState>(context).state.statistics.numberOfCalls}, Documents: ${StoreProvider.of<AppState>(context).state.statistics.numberOfDocuments}');
+      StatisticsState().log('PAUSED', StoreProvider.of<AppState>(context).state.statistics);
       StatisticsState().writeToStorage(StoreProvider.of<AppState>(context).state.statistics);
     }
 
     if(state == AppLifecycleState.detached){
-      debugPrint('detached: Calls: ${StoreProvider.of<AppState>(context).state.statistics.numberOfCalls}, Documents: ${StoreProvider.of<AppState>(context).state.statistics.numberOfDocuments}');
+      //debugPrint('detached: Calls: ${StoreProvider.of<AppState>(context).state.statistics.numberOfCalls}, Documents: ${StoreProvider.of<AppState>(context).state.statistics.numberOfDocuments}');
       //StatisticsState().writeToStorage(StoreProvider.of<AppState>(context).state.statistics);
     }
   }
@@ -53,7 +53,7 @@ class _SplashScreenState extends State<SplashScreen>  with WidgetsBindingObserve
   StatisticsState statisticsState;
   readFromStorage() async{
     statisticsState = await StatisticsState().readFromStorage();
-    debugPrint('splash_screen: Calls: ${statisticsState.numberOfCalls}, Documents: ${statisticsState.numberOfDocuments}');
+    StatisticsState().log('INITIALIZE', statisticsState);
     StoreProvider.of<AppState>(context).dispatch(UpdateStatistics(statisticsState));
   }
 

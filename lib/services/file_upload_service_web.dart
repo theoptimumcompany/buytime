@@ -7,6 +7,7 @@ import 'package:uuid/uuid.dart';
 import 'package:mime/mime.dart';
 
 Future<Uri> uploadToFirebaseStorage(OptimumFileToUpload optimumFileToUpload) async {
+
   print("file_upload_service_web: starting upload");
   PickedFile pickedFile = PickedFile(optimumFileToUpload.localPath);
   print("file_upload_service_web: file " + pickedFile.path);
