@@ -1,5 +1,5 @@
 import 'package:Buytime/UI/management/service/widget/W_service_step_availabile_time.dart';
-import 'package:Buytime/reblox/model/service/tab_availability_state.dart';
+import 'package:Buytime/reblox/model/service/service_time_slot_state.dart';
 
 import '../file/optimum_file_to_upload.dart';
 
@@ -21,7 +21,7 @@ class ServiceState {
   bool switchSlots;
   bool switchAutoConfirm;
   bool switchMultiPrice;
-  TabAvailabilityStoreState tabAvailability;
+  ServiceSlot serviceSlot;
   bool spinnerVisibility = false;
 
   ServiceState({
@@ -42,7 +42,7 @@ class ServiceState {
     this.switchSlots,
     this.switchAutoConfirm,
     this.switchMultiPrice,
-    this.tabAvailability,
+    this.serviceSlot,
     this.spinnerVisibility,
   });
 
@@ -83,7 +83,7 @@ class ServiceState {
       switchSlots: false,
       switchAutoConfirm: false,
       switchMultiPrice: false,
-      tabAvailability: TabAvailabilityStoreState().toEmpty(),
+      serviceSlot: ServiceSlot().toEmpty(),
       spinnerVisibility: false,
     );
   }
@@ -106,7 +106,7 @@ class ServiceState {
     this.switchSlots = service.switchSlots;
     this.switchAutoConfirm = service.switchAutoConfirm;
     this.switchMultiPrice = service.switchMultiPrice;
-    this.tabAvailability = service.tabAvailability;
+    this.serviceSlot = service.serviceSlot;
     this.spinnerVisibility = service.spinnerVisibility;
   }
 
@@ -128,8 +128,8 @@ class ServiceState {
     bool switchSlots,
     bool switchAutoConfirm,
     bool switchMultiPrice,
-    TabAvailabilityStoreState tabAvailability,
-      bool spinnerVisibility,
+    ServiceSlot serviceSlot,
+    bool spinnerVisibility,
   ) {
     ServiceState(
       serviceId: serviceId ?? this.serviceId,
@@ -149,7 +149,7 @@ class ServiceState {
       switchSlots: switchSlots ?? this.switchSlots,
       switchAutoConfirm: switchAutoConfirm ?? this.switchAutoConfirm,
       switchMultiPrice: switchMultiPrice ?? this.switchMultiPrice,
-      tabAvailability: tabAvailability ?? this.tabAvailability,
+      serviceSlot: serviceSlot ?? this.serviceSlot,
       spinnerVisibility: spinnerVisibility ?? this.spinnerVisibility,
     );
   }
@@ -172,7 +172,7 @@ class ServiceState {
     bool switchSlots,
     bool switchAutoConfirm,
     bool switchMultiPrice,
-    TabAvailabilityStoreState tabAvailability,
+    ServiceSlot serviceSlot,
     bool spinnerVisibility,
   }) {
     return ServiceState(
@@ -193,7 +193,7 @@ class ServiceState {
       switchSlots: switchSlots ?? this.switchSlots,
       switchAutoConfirm: switchAutoConfirm ?? this.switchAutoConfirm,
       switchMultiPrice: switchMultiPrice ?? this.switchMultiPrice,
-      tabAvailability: tabAvailability ?? this.tabAvailability,
+      serviceSlot: serviceSlot ?? this.serviceSlot,
       spinnerVisibility: spinnerVisibility ?? this.spinnerVisibility,
     );
   }
@@ -223,7 +223,7 @@ class ServiceState {
         switchSlots = json.containsKey('switchSlots') ? json['switchSlots'] : false,
         switchAutoConfirm = json.containsKey('switchAutoConfirm') ? json['switchAutoConfirm'] : false,
         switchMultiPrice = json.containsKey('switchMultiPrice') ? json['switchMultiPrice'] : false,
-        tabAvailability = json['tabAvailability'] != null ? TabAvailabilityStoreState.fromJson(json['tabAvailability']) : TabAvailabilityStoreState().toEmpty();
+        serviceSlot = json['serviceSlot'] != null ? ServiceSlot.fromJson(json['serviceSlot']) : ServiceSlot().toEmpty();
 
   Map<String, dynamic> toJson() => {
         'serviceId': serviceId,
@@ -242,6 +242,6 @@ class ServiceState {
         'switchSlots': switchSlots,
         'switchAutoConfirm': switchAutoConfirm,
         'switchMultiPrice': switchMultiPrice,
-        'tabAvailability': tabAvailability.toJson(),
+        'serviceSlot': serviceSlot.toJson(),
       };
 }

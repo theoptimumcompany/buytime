@@ -1,7 +1,7 @@
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:Buytime/reblox/model/service/tab_availability_state.dart';
+import 'package:Buytime/reblox/model/service/service_time_slot_state.dart';
 import 'package:Buytime/reblox/reducer/service_reducer.dart';
 import 'package:Buytime/utils/size_config.dart';
 
@@ -24,8 +24,11 @@ class StepPrice extends StatefulWidget {
 }
 
 class StepPriceState extends State<StepPrice> {
+
   ///Price vars
-  final TextEditingController _priceController = TextEditingController();
+  TextEditingController _priceController = TextEditingController();
+  final _formSlotPriceKey = GlobalKey<FormState>();
+  int indexStepper;
 
   @override
   void initState() {
@@ -35,65 +38,84 @@ class StepPriceState extends State<StepPrice> {
   @override
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
+    indexStepper = StoreProvider.of<AppState>(context).state.serviceState.serviceSlot.actualSlotIndex;
+    _priceController = StoreProvider.of<AppState>(context).state.serviceState.serviceSlot.priceController[indexStepper];
     return StoreConnector<AppState, AppState>(
         converter: (store) => store.state,
         builder: (context, snapshot) {
-          return Container(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  ///Price TextFormField
-                  Flexible(
-                      child: GestureDetector(
-                    onTap: () async {},
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 5.0),
-                      child: TextFormField(
-                        enabled: true,
-                        controller: _priceController,
-                        textAlign: TextAlign.start,
-                        keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
-                            filled: true,
-                            fillColor: BuytimeTheme.DividerGrey,
-                            enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                            focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                            labelText: 'Slot Price',
-                            labelStyle: TextStyle(
+          return Form(
+            key:  _formSlotPriceKey,
+            child: Container(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    ///Price TextFormField
+                    Flexible(
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 5.0),
+                          child: TextFormField(
+                            enabled: true,
+                            controller: _priceController,
+                            onChanged: (value) {
+                              setState(() {
+                                _priceController.text = value;
+                                StoreProvider.of<AppState>(context).dispatch(SetServiceSlotPriceController(_priceController.text, indexStepper));
+                              });
+                            },
+                            onSaved: (value) {
+                              setState(() {
+                                _priceController.text = value;
+                                StoreProvider.of<AppState>(context).dispatch(SetServiceSlotPriceController(_priceController.text, indexStepper));
+                              });
+                            },
+                            textAlign: TextAlign.start,
+                            keyboardType: TextInputType.number,
+                            decoration: InputDecoration(
+                                filled: true,
+                                fillColor: BuytimeTheme.DividerGrey,
+                                enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                labelText: 'Slot Price',
+                                labelStyle: TextStyle(
+                                  fontFamily: BuytimeTheme.FontFamily,
+                                  color: Color(0xff666666),
+                                  fontWeight: FontWeight.w400,
+                                ),
+                                errorMaxLines: 2,
+                                errorStyle: TextStyle(
+                                  color: BuytimeTheme.ErrorRed,
+                                  fontSize: 12.0,
+                                ),
+                                suffixText: '€'),
+                            style: TextStyle(
                               fontFamily: BuytimeTheme.FontFamily,
                               color: Color(0xff666666),
-                              fontWeight: FontWeight.w400,
+                              fontWeight: FontWeight.w800,
                             ),
-                            suffixText: '€'),
-                        style: TextStyle(
-                          fontFamily: BuytimeTheme.FontFamily,
-                          color: Color(0xff666666),
-                          fontWeight: FontWeight.w800,
-                        ),
-                        validator: (String value) {
-                          if (value.isEmpty) {
-                            return AppLocalizations.of(context).pleaseEnterAValidDateInterval;
-                          }
-                          return null;
-                        },
-                      ),
+                            validator: (value) {
+                              if (value.isEmpty) {
+                                return 'Please insert a price';
+                              }
+                              return null;
+                            },
+                          ),
+                        )),
+                    Container(
+                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 1, right: SizeConfig.blockSizeHorizontal * 1),
                     ),
-                  )),
-                  Container(
-                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 1, right: SizeConfig.blockSizeHorizontal * 1),
-                  ),
 
-                  ///Empty
-                  Flexible(
-                      child: GestureDetector(
-                    onTap: () async {},
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 5.0),
-                      child: Container(),
-                    ),
-                  ))
-                ],
-              ));
+                    ///Empty
+                    Flexible(
+                        child: GestureDetector(
+                      onTap: () async {},
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 5.0),
+                        child: Container(),
+                      ),
+                    ))
+                  ],
+                )),
+          );
         });
   }
 }
