@@ -30,7 +30,7 @@ class StepLengthState extends State<StepLength> {
   TextEditingController _hourController = TextEditingController();
   TextEditingController _minuteController = TextEditingController();
   TextEditingController _limitBookingController = TextEditingController();
-  var _formSlotLengthKey = GlobalKey<FormState>();
+  var _formSlotLengthKey;
 
   @override
   void initState() {
@@ -39,11 +39,13 @@ class StepLengthState extends State<StepLength> {
 
   @override
   Widget build(BuildContext context) {
+
     indexStepper = StoreProvider.of<AppState>(context).state.serviceState.serviceSlot.actualSlotIndex;
     _hourController = StoreProvider.of<AppState>(context).state.serviceState.serviceSlot.hourController[indexStepper];
     _minuteController = StoreProvider.of<AppState>(context).state.serviceState.serviceSlot.minuteController[indexStepper];
     _limitBookingController = StoreProvider.of<AppState>(context).state.serviceState.serviceSlot.limitBookingController[indexStepper];
     _formSlotLengthKey = StoreProvider.of<AppState>(context).state.serviceState.serviceSlot.formSlotLengthKey[indexStepper];
+
     var media = MediaQuery.of(context).size;
     return StoreConnector<AppState, AppState>(
         converter: (store) => store.state,

@@ -213,6 +213,11 @@ class SetServiceSlot {
   ServiceSlot get tab => _tab;
 }
 
+
+class SetServiceSlotIncrementDaysInterval {
+  SetServiceSlotIncrementDaysInterval();
+}
+
 class SetServiceSlotDaysInterval {
   List<ListEveryDay> _daysInterval;
 
@@ -221,12 +226,20 @@ class SetServiceSlotDaysInterval {
   List<ListEveryDay> get daysInterval => _daysInterval;
 }
 
+class SetServiceSlotIncrementNumberOfAvailableInterval {
+  SetServiceSlotIncrementNumberOfAvailableInterval();
+}
+
 class SetServiceSlotNumberOfInterval {
   List<int> _numberOfInterval;
 
   SetServiceSlotNumberOfInterval(this._numberOfInterval);
 
   List<int> get numberOfInterval => _numberOfInterval;
+}
+
+class SetServiceSlotIncrementSwitchWeek {
+  SetServiceSlotIncrementSwitchWeek();
 }
 
 class SetServiceSlotSwitchWeek {
@@ -243,10 +256,18 @@ class SetServiceSlotSwitchDay {
 
 }
 
+class SetServiceSlotIncrementStartController {
+  SetServiceSlotIncrementStartController();
+}
+
 class SetServiceSlotStartController {
   List<ListTextEditingController> _controller;
   SetServiceSlotStartController(this._controller);
   List<ListTextEditingController>  get controller => _controller;
+}
+
+class SetServiceSlotIncrementStopController {
+  SetServiceSlotIncrementStopController();
 }
 
 class SetServiceSlotStopController {
@@ -255,16 +276,27 @@ class SetServiceSlotStopController {
   List<ListTextEditingController>  get controller => _controller;
 }
 
+class SetServiceSlotIncrementStartTime {
+  SetServiceSlotIncrementStartTime();
+}
 class SetServiceSlotStartTime {
   List<EveryTime> _time;
   SetServiceSlotStartTime(this._time);
   List<EveryTime>  get time => _time;
 }
 
+class SetServiceSlotIncrementStopTime {
+  SetServiceSlotIncrementStopTime();
+}
+
 class SetServiceSlotStopTime {
   List<EveryTime> _time;
   SetServiceSlotStopTime(this._time);
   List<EveryTime>  get time => _time;
+}
+
+class SetServiceSlotIncrementCheckInController {
+  SetServiceSlotIncrementCheckInController();
 }
 
 class SetServiceSlotCheckInController {
@@ -275,12 +307,20 @@ class SetServiceSlotCheckInController {
   int get index => _index;
 }
 
+class SetServiceSlotIncrementCheckOutController {
+  SetServiceSlotIncrementCheckOutController();
+}
+
 class SetServiceSlotCheckOutController {
   String _text;
   int _index;
   SetServiceSlotCheckOutController(this._text, this._index);
   String get text => _text;
   int get index => _index;
+}
+
+class SetServiceSlotIncrementCheckIn {
+  SetServiceSlotIncrementCheckIn();
 }
 
 class SetServiceSlotCheckIn {
@@ -291,12 +331,20 @@ class SetServiceSlotCheckIn {
   int get index => _index;
 }
 
+class SetServiceSlotIncrementCheckOut {
+  SetServiceSlotIncrementCheckOut();
+}
+
 class SetServiceSlotCheckOut{
   DateTime _date;
   int _index;
   SetServiceSlotCheckOut(this._date, this._index);
   DateTime get date => _date;
   int get index => _index;
+}
+
+class SetServiceSlotIncrementHourController {
+  SetServiceSlotIncrementHourController();
 }
 
 class SetServiceSlotHourController {
@@ -307,6 +355,10 @@ class SetServiceSlotHourController {
   int get index => _index;
 }
 
+class SetServiceSlotIncrementMinuteController {
+  SetServiceSlotIncrementMinuteController();
+}
+
 class SetServiceSlotMinuteController {
   String _text;
   int _index;
@@ -315,12 +367,20 @@ class SetServiceSlotMinuteController {
   int get index => _index;
 }
 
+class SetServiceSlotIncrementLimitBookingController {
+  SetServiceSlotIncrementLimitBookingController();
+}
+
 class SetServiceSlotLimitBookingController {
   String _text;
   int _index;
   SetServiceSlotLimitBookingController(this._text, this._index);
   String get text => _text;
   int get index => _index;
+}
+
+class SetServiceSlotIncrementPriceController {
+  SetServiceSlotIncrementPriceController();
 }
 
 class SetServiceSlotPriceController {
@@ -347,6 +407,18 @@ class SetServiceSlotFormSlotPriceKey {
   List<GlobalKey<FormState>> _global;
   SetServiceSlotFormSlotPriceKey(this._global);
   List<GlobalKey<FormState>> get global => _global;
+}
+
+class SetServiceSlotActualIndex {
+  int _index;
+  SetServiceSlotActualIndex(this._index);
+  int get index => _index;
+}
+
+class SetServiceSlotNumber {
+  int _index;
+  SetServiceSlotNumber(this._index);
+  int get index => _index;
 }
 
 
@@ -400,12 +472,24 @@ ServiceState serviceReducer(ServiceState state, action) {
     serviceState.serviceSlot = action.tab.copyWith();
     return serviceState;
   }
+  if (action is SetServiceSlotIncrementDaysInterval) {
+    serviceState.serviceSlot.daysInterval.add(ListEveryDay().toEmpty());
+    return serviceState;
+  }
   if (action is SetServiceSlotDaysInterval) {
     serviceState.serviceSlot.daysInterval = action.daysInterval;
     return serviceState;
   }
+  if (action is SetServiceSlotIncrementNumberOfAvailableInterval) {
+    serviceState.serviceSlot.numberOfInterval.add(1);
+    return serviceState;
+  }
   if (action is SetServiceSlotNumberOfInterval) {
     serviceState.serviceSlot.numberOfInterval = action.numberOfInterval;
+    return serviceState;
+  }
+  if (action is SetServiceSlotIncrementSwitchWeek) {
+    serviceState.serviceSlot.switchWeek.add(ListWeek().toEmpty());
     return serviceState;
   }
   if (action is SetServiceSlotSwitchWeek) {
@@ -416,48 +500,98 @@ ServiceState serviceReducer(ServiceState state, action) {
     serviceState.serviceSlot.daysInterval = action.everyDay;
     return serviceState;
   }
+  if (action is SetServiceSlotIncrementCheckInController) {
+    serviceState.serviceSlot.checkInController.add(TextEditingController());
+    return serviceState;
+  }
   if (action is SetServiceSlotCheckInController) {
     serviceState.serviceSlot.checkInController[action.index].text = action.text;
+    return serviceState;
+  }
+  if (action is SetServiceSlotIncrementCheckOutController) {
+    serviceState.serviceSlot.checkOutController.add(TextEditingController());
     return serviceState;
   }
   if (action is SetServiceSlotCheckOutController) {
     serviceState.serviceSlot.checkOutController[action.index].text = action.text;
     return serviceState;
   }
+  if (action is SetServiceSlotIncrementStartController) {
+    ListTextEditingController list = ListTextEditingController().toEmpty();
+    serviceState.serviceSlot.startController.add(list);
+    return serviceState;
+  }
   if (action is SetServiceSlotStartController) {
     serviceState.serviceSlot.startController = action.controller;
+    return serviceState;
+  }
+  if (action is SetServiceSlotIncrementStopController) {
+    ListTextEditingController list = ListTextEditingController().toEmpty();
+    serviceState.serviceSlot.stopController.add(list);
     return serviceState;
   }
   if (action is SetServiceSlotStopController) {
     serviceState.serviceSlot.stopController = action.controller;
     return serviceState;
   }
+  if (action is SetServiceSlotIncrementStartTime) {
+    serviceState.serviceSlot.startTime.add(EveryTime().toEmpty());
+    return serviceState;
+  }
   if (action is SetServiceSlotStartTime) {
     serviceState.serviceSlot.startTime = action.time;
+    return serviceState;
+  }
+  if (action is SetServiceSlotIncrementStopTime) {
+    serviceState.serviceSlot.stopTime.add(EveryTime().toEmpty());
     return serviceState;
   }
   if (action is SetServiceSlotStopTime) {
     serviceState.serviceSlot.stopTime = action.time;
     return serviceState;
   }
+  if (action is SetServiceSlotIncrementCheckIn) {
+    serviceState.serviceSlot.checkIn.add(DateTime.now());
+    return serviceState;
+  }
   if (action is SetServiceSlotCheckIn) {
     serviceState.serviceSlot.checkIn[action.index] = action.date;
+    return serviceState;
+  }
+  if (action is SetServiceSlotIncrementCheckOut) {
+    serviceState.serviceSlot.checkOut.add(DateTime.now());
     return serviceState;
   }
   if (action is SetServiceSlotCheckOut) {
     serviceState.serviceSlot.checkOut[action.index] = action.date;
     return serviceState;
   }
+  if (action is SetServiceSlotIncrementHourController) {
+    serviceState.serviceSlot.hourController.add(TextEditingController());
+    return serviceState;
+  }
   if (action is SetServiceSlotHourController) {
     serviceState.serviceSlot.hourController[action.index].text = action.text;
+    return serviceState;
+  }
+  if (action is SetServiceSlotIncrementMinuteController) {
+    serviceState.serviceSlot.minuteController.add(TextEditingController());
     return serviceState;
   }
   if (action is SetServiceSlotMinuteController) {
     serviceState.serviceSlot.minuteController[action.index].text = action.text;
     return serviceState;
   }
+  if (action is SetServiceSlotIncrementLimitBookingController) {
+    serviceState.serviceSlot.limitBookingController.add(TextEditingController());
+    return serviceState;
+  }
   if (action is SetServiceSlotLimitBookingController) {
     serviceState.serviceSlot.limitBookingController[action.index].text = action.text;
+    return serviceState;
+  }
+  if (action is SetServiceSlotIncrementPriceController) {
+    serviceState.serviceSlot.priceController.add(TextEditingController());
     return serviceState;
   }
   if (action is SetServiceSlotPriceController) {
@@ -474,6 +608,14 @@ ServiceState serviceReducer(ServiceState state, action) {
   }
   if (action is SetServiceSlotFormSlotPriceKey) {
     serviceState.serviceSlot.formSlotPriceKey = action.global;
+    return serviceState;
+  }
+  if (action is SetServiceSlotActualIndex) {
+    serviceState.serviceSlot.actualSlotIndex = action.index;
+    return serviceState;
+  }
+  if (action is SetServiceSlotNumber) {
+    serviceState.serviceSlot.numberOfSlot = action.index;
     return serviceState;
   }
   if (action is SetServiceSelectedCategories) {
