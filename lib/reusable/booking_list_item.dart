@@ -6,6 +6,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:share/share.dart';
+import 'package:Buytime/reusable/material_design_icons.dart';
 
 class BookingListItem extends StatefulWidget {
 
@@ -103,7 +104,7 @@ class _BookingListItemState extends State<BookingListItem> {
                               Container(
                                 child: IconButton(
                                   icon: Icon(
-                                    widget.booking.status == 'created' ? Icons.bookmark_border : widget.booking.status == 'opened' ? Icons.check_circle : Icons.check_circle_outline,
+                                    widget.booking.status == 'created' ? Icons.bookmark_border : widget.booking.status == 'opened' ? MaterialDesignIcons.done_all : MaterialDesignIcons.done,
                                     color: BuytimeTheme.ActionButton,
                                   ),
                                 ),
