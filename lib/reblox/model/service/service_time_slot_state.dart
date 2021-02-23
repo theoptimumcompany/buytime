@@ -4,16 +4,16 @@ import 'package:flutter/material.dart';
 
 class ServiceSlot {
   ///External Interval (Stepper) vars
-  int numberOfSlot; //todo
-  int actualSlotIndex; //todo
+  int numberOfSlot;
+  int actualSlotIndex;
 
   List<GlobalKey<FormState>> formSlotTimeKey =
-      []; //todo: lista di globalKey non vengono salvate su db, vanno ricostruite prima di entrare nella edit service(azzerato alla create) in base al numero di stepper
-  List<GlobalKey<FormState>> formSlotLengthKey = [];
-  List<GlobalKey<FormState>> formSlotPriceKey = [];
+      [GlobalKey<FormState>()]; //todo: lista di globalKey non vengono salvate su db, vanno ricostruite prima di entrare nella edit service(azzerato alla create) in base al numero di stepper
+  List<GlobalKey<FormState>> formSlotLengthKey = [GlobalKey<FormState>()];
+  List<GlobalKey<FormState>> formSlotPriceKey = [GlobalKey<FormState>()];
 
   ///Time Slot Inner Interval vars
-  List<int> numberOfInterval; //todo
+  List<int> numberOfInterval;
   List<ListWeek> switchWeek;
   List<ListEveryDay> daysInterval;
 

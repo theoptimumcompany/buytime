@@ -27,7 +27,7 @@ class StepPriceState extends State<StepPrice> {
 
   ///Price vars
   TextEditingController _priceController = TextEditingController();
-  final _formSlotPriceKey = GlobalKey<FormState>();
+  var _formSlotPriceKey;
   int indexStepper;
 
   @override
@@ -40,6 +40,7 @@ class StepPriceState extends State<StepPrice> {
     var media = MediaQuery.of(context).size;
     indexStepper = StoreProvider.of<AppState>(context).state.serviceState.serviceSlot.actualSlotIndex;
     _priceController = StoreProvider.of<AppState>(context).state.serviceState.serviceSlot.priceController[indexStepper];
+    _formSlotPriceKey = StoreProvider.of<AppState>(context).state.serviceState.serviceSlot.formSlotPriceKey[indexStepper];
     return StoreConnector<AppState, AppState>(
         converter: (store) => store.state,
         builder: (context, snapshot) {

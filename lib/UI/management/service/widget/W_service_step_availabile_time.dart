@@ -26,7 +26,6 @@ class StepAvailableTime extends StatefulWidget {
 
 class StepAvailableTimeState extends State<StepAvailableTime> {
   List<int> numberOfAvailableInterval = [1];
-  int indexStepper;
   ServiceSlot baseAvailability = ServiceSlot().toEmpty();
   List<ListWeek> switchWeek = [];
   List<ListEveryDay> daysInterval = [];
@@ -34,7 +33,9 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
   List<ListTextEditingController> _stopController = [ListTextEditingController().toEmpty()];
   List<EveryTime> startTime = [EveryTime().toEmpty()];
   List<EveryTime> stopTime = [EveryTime().toEmpty()];
-  var _formSlotTimeKey = GlobalKey<FormState>();
+
+  int indexStepper;
+  var _formSlotTimeKey;
 
   @override
   void initState() {
