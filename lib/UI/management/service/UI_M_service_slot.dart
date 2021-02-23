@@ -24,6 +24,7 @@ class UI_M_ServiceSlotState extends State<UI_M_ServiceSlot> {
   bool editServiceRequest = false;
   List<Widget> listOfSteppers = [];
   int actualIndexStepper = 0;
+  bool canCreateStep = false;
 
   @override
   void initState() {
@@ -79,50 +80,51 @@ class UI_M_ServiceSlotState extends State<UI_M_ServiceSlot> {
                           ),
                         ],
                       ),
-                      floatingActionButton: FloatingActionButton(
-                        onPressed: () {
-                          print("ADD STEP");
+                      floatingActionButton: canCreateStep
+                          ? FloatingActionButton(
+                              onPressed: () {
+                                print("ADD STEP");
 
-                          setState(() {
-                            List<GlobalKey<FormState>> listGlobalLength = StoreProvider.of<AppState>(context).state.serviceState.serviceSlot.formSlotLengthKey;
-                            listGlobalLength.add(GlobalKey<FormState>());
-                            StoreProvider.of<AppState>(context).dispatch(SetServiceSlotFormSlotLengthKey(listGlobalLength));
+                                setState(() {
+                                  List<GlobalKey<FormState>> listGlobalLength = StoreProvider.of<AppState>(context).state.serviceState.serviceSlot.formSlotLengthKey;
+                                  listGlobalLength.add(GlobalKey<FormState>());
+                                  StoreProvider.of<AppState>(context).dispatch(SetServiceSlotFormSlotLengthKey(listGlobalLength));
 
-                            List<GlobalKey<FormState>> listGlobalPrice = StoreProvider.of<AppState>(context).state.serviceState.serviceSlot.formSlotPriceKey;
-                            listGlobalPrice.add(GlobalKey<FormState>());
-                            StoreProvider.of<AppState>(context).dispatch(SetServiceSlotFormSlotPriceKey(listGlobalPrice));
+                                  List<GlobalKey<FormState>> listGlobalPrice = StoreProvider.of<AppState>(context).state.serviceState.serviceSlot.formSlotPriceKey;
+                                  listGlobalPrice.add(GlobalKey<FormState>());
+                                  StoreProvider.of<AppState>(context).dispatch(SetServiceSlotFormSlotPriceKey(listGlobalPrice));
 
-                            List<GlobalKey<FormState>> listGlobalTime = snapshot.serviceState.serviceSlot.formSlotTimeKey;
-                            listGlobalTime.add(GlobalKey<FormState>());
-                            StoreProvider.of<AppState>(context).dispatch(SetServiceSlotFormSlotTimeKey(listGlobalTime));
+                                  List<GlobalKey<FormState>> listGlobalTime = snapshot.serviceState.serviceSlot.formSlotTimeKey;
+                                  listGlobalTime.add(GlobalKey<FormState>());
+                                  StoreProvider.of<AppState>(context).dispatch(SetServiceSlotFormSlotTimeKey(listGlobalTime));
 
+                                  ///Incremento Controller
+                                  StoreProvider.of<AppState>(context).dispatch(SetServiceSlotIncrementHourController());
+                                  StoreProvider.of<AppState>(context).dispatch(SetServiceSlotIncrementMinuteController());
+                                  StoreProvider.of<AppState>(context).dispatch(SetServiceSlotIncrementLimitBookingController());
+                                  StoreProvider.of<AppState>(context).dispatch(SetServiceSlotIncrementPriceController());
+                                  StoreProvider.of<AppState>(context).dispatch(SetServiceSlotIncrementCheckInController());
+                                  StoreProvider.of<AppState>(context).dispatch(SetServiceSlotIncrementCheckOutController());
+                                  StoreProvider.of<AppState>(context).dispatch(SetServiceSlotIncrementCheckIn());
+                                  StoreProvider.of<AppState>(context).dispatch(SetServiceSlotIncrementCheckOut());
 
-                            ///Incremento Controller
-                            StoreProvider.of<AppState>(context).dispatch(SetServiceSlotIncrementHourController());
-                            StoreProvider.of<AppState>(context).dispatch(SetServiceSlotIncrementMinuteController());
-                            StoreProvider.of<AppState>(context).dispatch(SetServiceSlotIncrementLimitBookingController());
-                            StoreProvider.of<AppState>(context).dispatch(SetServiceSlotIncrementPriceController());
-                            StoreProvider.of<AppState>(context).dispatch(SetServiceSlotIncrementCheckInController());
-                            StoreProvider.of<AppState>(context).dispatch(SetServiceSlotIncrementCheckOutController());
-                            StoreProvider.of<AppState>(context).dispatch(SetServiceSlotIncrementCheckIn());
-                            StoreProvider.of<AppState>(context).dispatch(SetServiceSlotIncrementCheckOut());
+                                  StoreProvider.of<AppState>(context).dispatch(SetServiceSlotIncrementNumberOfAvailableInterval());
+                                  StoreProvider.of<AppState>(context).dispatch(SetServiceSlotIncrementSwitchWeek());
+                                  StoreProvider.of<AppState>(context).dispatch(SetServiceSlotIncrementDaysInterval());
+                                  StoreProvider.of<AppState>(context).dispatch(SetServiceSlotIncrementStartController());
+                                  StoreProvider.of<AppState>(context).dispatch(SetServiceSlotIncrementStopController());
+                                  StoreProvider.of<AppState>(context).dispatch(SetServiceSlotIncrementStartTime());
+                                  StoreProvider.of<AppState>(context).dispatch(SetServiceSlotIncrementStopTime());
 
-                            StoreProvider.of<AppState>(context).dispatch(SetServiceSlotIncrementNumberOfAvailableInterval());
-                            StoreProvider.of<AppState>(context).dispatch(SetServiceSlotIncrementSwitchWeek());
-                            StoreProvider.of<AppState>(context).dispatch(SetServiceSlotIncrementDaysInterval());
-                            StoreProvider.of<AppState>(context).dispatch(SetServiceSlotIncrementStartController());
-                            StoreProvider.of<AppState>(context).dispatch(SetServiceSlotIncrementStopController());
-                            StoreProvider.of<AppState>(context).dispatch(SetServiceSlotIncrementStartTime());
-                            StoreProvider.of<AppState>(context).dispatch(SetServiceSlotIncrementStopTime());
-
-                            currentStep.add(0);
-                            listOfSteppers.add(Container());
-                            StoreProvider.of<AppState>(context).dispatch(SetServiceSlotNumber(listOfSteppers.length));
-                          });
-                        },
-                        child: Icon(Icons.add),
-                        backgroundColor: BuytimeTheme.Secondary,
-                      ),
+                                  currentStep.add(0);
+                                  listOfSteppers.add(Container());
+                                  StoreProvider.of<AppState>(context).dispatch(SetServiceSlotNumber(listOfSteppers.length));
+                                });
+                              },
+                              child: Icon(Icons.add),
+                              backgroundColor: BuytimeTheme.Secondary,
+                            )
+                          : Container(),
                       body: SafeArea(
                         child: SingleChildScrollView(
                           child: ConstrainedBox(

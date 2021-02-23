@@ -52,7 +52,7 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
           child: Container(
             child: Padding(
               padding: const EdgeInsets.only(bottom: 10.0),
-              child: Switch(
+              child: Checkbox(
                   value: daysInterval[indexStepper].listEveryDay[listNumber].everyDay[dayNumber],
                   onChanged: (value) {
                     setState(() {
@@ -328,18 +328,24 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
 
                             ///Switch Every Day
                             Padding(
-                              padding: const EdgeInsets.only(top: 8.0, left: 20.0, right: 20.0),
+                              padding: const EdgeInsets.only(top: 8.0, left: 0.0, right: 20.0),
                               child: Container(
                                 child: Row(
                                   children: [
-                                    Switch(
-                                        value: switchWeek[indexStepper].listWeek[i],
-                                        onChanged: (value) {
-                                          setState(() {
-                                            switchWeek[indexStepper].listWeek[i] = value;
-                                            StoreProvider.of<AppState>(context).dispatch(SetServiceSlotSwitchWeek(switchWeek));
-                                          });
-                                        }),
+                                    Padding(
+                                      padding: const EdgeInsets.only(right : 10.0),
+                                      child: SizedBox(
+                                        width: 20,
+                                        child: Checkbox(
+                                            value: switchWeek[indexStepper].listWeek[i],
+                                            onChanged: (value) {
+                                              setState(() {
+                                                switchWeek[indexStepper].listWeek[i] = value;
+                                                StoreProvider.of<AppState>(context).dispatch(SetServiceSlotSwitchWeek(switchWeek));
+                                              });
+                                            }),
+                                      ),
+                                    ),
                                     Expanded(
                                       child: Container(
                                         decoration: BoxDecoration(

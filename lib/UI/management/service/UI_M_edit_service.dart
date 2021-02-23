@@ -818,106 +818,76 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                   ),
                                 ),
 
-                                ///Divider under visibility block
-                                Container(
-                                  child: Divider(
-                                    indent: 0.0,
-                                    color: BuytimeTheme.DividerGrey,
-                                    thickness: 20.0,
-                                  ),
-                                ),
-
-                                ///Switch Auto Confirm
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 10.0, bottom: 0.0, left: 20.0, right: 20.0),
-                                  child: Container(
-                                    child: Row(
-                                      children: [
-                                        Switch(
-                                            value: snapshot.serviceState.switchAutoConfirm,
-                                            onChanged: (value) {
-                                              setState(() {
-                                                StoreProvider.of<AppState>(context).dispatch(SetServiceSwitchAutoConfirm(value));
-                                              });
-                                            }),
-                                        Expanded(
-                                          child: Text(
-                                            "Allow users to get this service without manager confirmation",
-                                            //  AppLocalizations.of(context).  todo : aggiungere alle lingue
-                                            textAlign: TextAlign.start,
-                                            overflow: TextOverflow.clip,
-                                            style: TextStyle(
-                                              fontSize: media.height * 0.018,
-                                              color: BuytimeTheme.TextGrey,
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-
-                                ///Switch Slots
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 0.0, bottom: 0.0, left: 20.0, right: 20.0),
-                                  child: Container(
-                                    child: Row(
-                                      children: [
-                                        Switch(
-                                            value: snapshot.serviceState.switchSlots,
-                                            onChanged: (value) {
-                                              setState(() {
-                                                StoreProvider.of<AppState>(context).dispatch(SetServiceSwitchSlots(value));
-                                              });
-                                            }),
-                                        Expanded(
-                                          child: Text(
-                                            "The service can be reserved ",
-                                            //  AppLocalizations.of(context).  todo : aggiungere alle lingue
-                                            textAlign: TextAlign.start,
-                                            overflow: TextOverflow.clip,
-                                            style: TextStyle(
-                                              fontSize: media.height * 0.018,
-                                              color: BuytimeTheme.TextGrey,
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                ///Switch MultiPrice
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 0.0, bottom: 10.0, left: 20.0, right: 20.0),
-                                  child: Container(
-                                    child: Row(
-                                      children: [
-                                        Switch(
-                                            value: snapshot.serviceState.switchMultiPrice,
-                                            onChanged: (value) {
-                                              setState(() {
-                                                StoreProvider.of<AppState>(context).dispatch(SetServiceSwitchMultiPrice(value));
-                                              });
-                                            }),
-                                        Expanded(
-                                          child: Text(
-                                            "The service can have different price per slot",
-                                            //  AppLocalizations.of(context).  todo : aggiungere alle lingue
-                                            textAlign: TextAlign.start,
-                                            overflow: TextOverflow.clip,
-                                            style: TextStyle(
-                                              fontSize: media.height * 0.018,
-                                              color: BuytimeTheme.TextGrey,
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
+                                // ///Divider under visibility block
+                                // Container(
+                                //   child: Divider(
+                                //     indent: 0.0,
+                                //     color: BuytimeTheme.DividerGrey,
+                                //     thickness: 20.0,
+                                //   ),
+                                // ),
+                                //
+                                // ///Switch Auto Confirm
+                                // Padding(
+                                //   padding: const EdgeInsets.only(top: 10.0, bottom: 0.0, left: 20.0, right: 20.0),
+                                //   child: Container(
+                                //     child: Row(
+                                //       children: [
+                                //         Switch(
+                                //             value: snapshot.serviceState.switchAutoConfirm,
+                                //             onChanged: (value) {
+                                //               setState(() {
+                                //                 StoreProvider.of<AppState>(context).dispatch(SetServiceSwitchAutoConfirm(value));
+                                //               });
+                                //             }),
+                                //         Expanded(
+                                //           child: Text(
+                                //             "Allow users to get this service without manager confirmation",
+                                //             //  AppLocalizations.of(context).  todo : aggiungere alle lingue
+                                //             textAlign: TextAlign.start,
+                                //             overflow: TextOverflow.clip,
+                                //             style: TextStyle(
+                                //               fontSize: media.height * 0.018,
+                                //               color: BuytimeTheme.TextGrey,
+                                //               fontWeight: FontWeight.w500,
+                                //             ),
+                                //           ),
+                                //         ),
+                                //       ],
+                                //     ),
+                                //   ),
+                                // ),
+                                //
+                                // ///Switch Slots
+                                // Padding(
+                                //   padding: const EdgeInsets.only(top: 0.0, bottom: 0.0, left: 20.0, right: 20.0),
+                                //   child: Container(
+                                //     child: Row(
+                                //       children: [
+                                //         Switch(
+                                //             value: snapshot.serviceState.switchSlots,
+                                //             onChanged: (value) {
+                                //               setState(() {
+                                //                 StoreProvider.of<AppState>(context).dispatch(SetServiceSwitchSlots(value));
+                                //               });
+                                //             }),
+                                //         Expanded(
+                                //           child: Text(
+                                //             "The service can be reserved ",
+                                //             //  AppLocalizations.of(context).  todo : aggiungere alle lingue
+                                //             textAlign: TextAlign.start,
+                                //             overflow: TextOverflow.clip,
+                                //             style: TextStyle(
+                                //               fontSize: media.height * 0.018,
+                                //               color: BuytimeTheme.TextGrey,
+                                //               fontWeight: FontWeight.w500,
+                                //             ),
+                                //           ),
+                                //         ),
+                                //       ],
+                                //     ),
+                                //   ),
+                                // ),
 
                                 ///Divider under switch booking block
                                 Container(

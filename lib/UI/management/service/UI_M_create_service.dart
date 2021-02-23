@@ -40,7 +40,6 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
   TabController bookingController;
 
   int numberCalendarIntervalAvailability = 1;
-
   bool errorCategoryListEmpty = false;
   bool resumeServiceBooking = true;
   TextEditingController _tagServiceController = TextEditingController();
@@ -772,7 +771,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
 
                                 ///Switch Slots
                                 Padding(
-                                  padding: const EdgeInsets.only(top: 0.0, bottom: 0.0, left: 20.0, right: 20.0),
+                                  padding: const EdgeInsets.only(top: 0.0, bottom: 10.0, left: 20.0, right: 20.0),
                                   child: Container(
                                     child: Row(
                                       children: [
@@ -786,37 +785,6 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                         Expanded(
                                           child: Text(
                                             "The service can be reserved ",
-                                            //  AppLocalizations.of(context).  todo : aggiungere alle lingue
-                                            textAlign: TextAlign.start,
-                                            overflow: TextOverflow.clip,
-                                            style: TextStyle(
-                                              fontSize: media.height * 0.018,
-                                              color: BuytimeTheme.TextGrey,
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-
-                                ///Switch MultiPrice
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 0.0, bottom: 10.0, left: 20.0, right: 20.0),
-                                  child: Container(
-                                    child: Row(
-                                      children: [
-                                        Switch(
-                                            value: snapshot.serviceState.switchMultiPrice,
-                                            onChanged: (value) {
-                                              setState(() {
-                                                StoreProvider.of<AppState>(context).dispatch(SetServiceSwitchMultiPrice(value));
-                                              });
-                                            }),
-                                        Expanded(
-                                          child: Text(
-                                            "The service can have different price per slot",
                                             //  AppLocalizations.of(context).  todo : aggiungere alle lingue
                                             textAlign: TextAlign.start,
                                             overflow: TextOverflow.clip,
@@ -846,8 +814,12 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                     ///Resume block for booking settings
                                     resumeServiceBooking
                                         ? Padding(
-                                          padding: const EdgeInsets.only(left: 20.0, right:20.0,bottom: 20.0,),
-                                          child: Column(
+                                            padding: const EdgeInsets.only(
+                                              left: 20.0,
+                                              right: 20.0,
+                                              bottom: 20.0,
+                                            ),
+                                            child: Column(
                                               children: [
                                                 Padding(
                                                   padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 15.0),
@@ -890,7 +862,8 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                                     children: [
                                                       Container(
                                                         child: Text(
-                                                          "No availability set, tap on edit to manage it",
+                                                          (snapshot.serviceState.name != null && snapshot.serviceState.name != "" ? snapshot.serviceState.name : "The service") +
+                                                              " has not reservable slots",
                                                           //  AppLocalizations.of(context).  todo : aggiungere alle lingue
                                                           textAlign: TextAlign.start,
                                                           overflow: TextOverflow.clip,
@@ -906,7 +879,8 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                                 ),
                                               ],
                                             ),
-                                        ):Container()
+                                          )
+                                        : Container()
                                     : Container()
                               ],
                             ),
