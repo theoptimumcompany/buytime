@@ -25,7 +25,7 @@ class ServiceListRequestService implements EpicClass<AppState> {
       int read = 0;
       if (event.permission == "user") {
         var servicesFirebaseShadow = await FirebaseFirestore.instance
-            .collection("service").where("businessId", isEqualTo: event.businessId).where("visibility", isEqualTo: 'Shadow').get(); /// 1 READ - ? DOC
+            .collection("service").where("businessId", isEqualTo: event.businessId).where("visibility", isEqualTo: 'Deactivated').get(); /// 1 READ - ? DOC
 
         docs = servicesFirebaseShadow.docs.length;
         servicesFirebaseShadow.docs.forEach((element) {
@@ -33,7 +33,7 @@ class ServiceListRequestService implements EpicClass<AppState> {
           serviceStateList.add(serviceState);
         });
         var servicesFirebaseVisible = await FirebaseFirestore.instance
-            .collection("service").where("businessId", isEqualTo: event.businessId).where("visibility", isEqualTo: 'Visible').get(); /// 1 READ - ? DOC
+            .collection("service").where("businessId", isEqualTo: event.businessId).where("visibility", isEqualTo: 'Active').get(); /// 1 READ - ? DOC
         serviceStateList.clear();
 
         docs = docs + servicesFirebaseVisible.docs.length;
@@ -141,7 +141,7 @@ class ServiceListAndNavigateRequestService implements EpicClass<AppState> {
     }).expand((element) => [
       ServiceListReturned(serviceStateList),
       UpdateStatistics(statisticsState),
-      RequestListCategory(businessId)
+      UserRequestListCategory(businessId)
     ]);
   }
 }

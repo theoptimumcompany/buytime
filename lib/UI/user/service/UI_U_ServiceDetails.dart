@@ -59,7 +59,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
       body: SafeArea(
         child: Center(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 ///Background Image
                 Expanded(
@@ -103,7 +103,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                       ],
                     )
                 ),
-                ///Sign up & Sign in & ToS % Privacy policy
+                ///Service Name
                 Expanded(
                   flex: 2,
                   child: Column(
@@ -211,30 +211,21 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                           )
                       ),
                       ///Description
-                      Container(
-                          margin: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 10),
+                      Flexible(
+                        child: Container(
+                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, bottom: SizeConfig.safeBlockVertical * 1),
                           alignment: Alignment.center,
-                          child: Material(
-                            color: Colors.transparent,
-                            child: InkWell(
-                                onTap: (){
-                                },
-                                borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                                child: Container(
-                                  padding: EdgeInsets.all(5.0),
-                                  child: Text(
-                                    serviceState.description != null ? serviceState.description : 'Lorem Ipsum ...',
-                                    style: TextStyle(
-                                        fontFamily: BuytimeTheme.FontFamily,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: SizeConfig.safeBlockHorizontal * 4
-                                    ),
-                                  ),
-                                )
+                          child: Text(
+                            serviceState.description != null ? serviceState.description : 'Lorem Ipsum ...',
+                            style: TextStyle(
+                                fontFamily: BuytimeTheme.FontFamily,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500,
+                                fontSize: SizeConfig.safeBlockHorizontal * 4
                             ),
-                          )
-                      ),
+                          ),
+                        ),
+                      )
                     ],
                   ),
                 ),

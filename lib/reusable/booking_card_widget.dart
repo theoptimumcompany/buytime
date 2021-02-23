@@ -22,11 +22,31 @@ class BookingCardWidget extends StatefulWidget {
 
 class _BookingCardWidgetState extends State<BookingCardWidget> {
 
+  String bookingStatus = '';
+  bool closed = false;
+
   @override
   void initState() {
     super.initState();
     if(widget.bookingState.status == 'opened')
       readDynamicLink(widget.bookingState.booking_code);
+
+    /*WidgetsBinding.instance.addPostFrameCallback((_) {
+      if(widget.bookingState.end_date.isBefore(DateTime.now())){
+        widget.bookingState.status = widget.bookingState.enumToString(BookingStatus.closed);
+        StoreProvider.of<AppState>(context).dispatch(UpdateBooking(widget.bookingState));
+      }
+    });*/
+
+    if(widget.bookingState.end_date.isBefore(DateTime.now())){
+      bookingStatus = 'Closed';
+      closed = true;
+    }else if(widget.bookingState.start_date.isAfter(DateTime.now()))
+      bookingStatus = 'Upcoming';
+    else
+      bookingStatus = 'Active';
+
+
   }
 
   Future<Uri> createDynamicLink(String id) async {
@@ -58,6 +78,7 @@ class _BookingCardWidgetState extends State<BookingCardWidget> {
     }
   }
 
+  ///Grey scale
   ColorFilter greyscale = ColorFilter.matrix(<double>[
     0.2126, 0.7152, 0.0722, 0, 0,
     0.2126, 0.7152, 0.0722, 0, 0,
@@ -65,6 +86,7 @@ class _BookingCardWidgetState extends State<BookingCardWidget> {
     0,      0,      0,      1, 0,
   ]);
 
+  ///Normal scale
   ColorFilter identity = ColorFilter.matrix(<double>[
     1, 0, 0, 0, 0,
     0, 1, 0, 0, 0,
@@ -76,7 +98,7 @@ class _BookingCardWidgetState extends State<BookingCardWidget> {
   Widget build(BuildContext context) {
 
     return ColorFiltered(
-      colorFilter: widget.bookingState.status == 'opened' ? identity: greyscale,
+      colorFilter: !closed ? identity: greyscale,
       child: Container(
         height: SizeConfig.safeBlockVertical * 28,
         width: SizeConfig.safeBlockHorizontal * 80,
@@ -93,7 +115,7 @@ class _BookingCardWidgetState extends State<BookingCardWidget> {
           color: Colors.transparent,
           child: InkWell(
             splashColor: Colors.black.withOpacity(.3),
-            onTap: widget.bookingState.status == 'opened' ? (){
+            onTap: !closed ? (){
               StoreProvider.of<AppState>(context).dispatch(BookingRequestResponse(widget.bookingState));
               StoreProvider.of<AppState>(context).dispatch(BusinessAndNavigateRequest(widget.bookingState.business_id));
             } : null,
@@ -103,7 +125,7 @@ class _BookingCardWidgetState extends State<BookingCardWidget> {
               width: SizeConfig.safeBlockHorizontal * 50,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(10)),
-                  color: widget.bookingState.status == 'opened' ? Colors.black.withOpacity(.2) : BuytimeTheme.TextWhite.withOpacity(0.1)
+                  color: !closed ? Colors.black.withOpacity(.2) : BuytimeTheme.TextWhite.withOpacity(0.1)
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -120,7 +142,7 @@ class _BookingCardWidgetState extends State<BookingCardWidget> {
                             widget.bookingState.business_name,
                             style: TextStyle(
                                 fontFamily: BuytimeTheme.FontFamily,
-                                color: widget.bookingState.status == 'opened' ? BuytimeTheme.TextWhite : BuytimeTheme.TextWhite.withOpacity(.8),
+                                color: !closed ? BuytimeTheme.TextWhite : BuytimeTheme.TextWhite.withOpacity(.8),
                                 fontWeight: FontWeight.bold,
                                 fontSize: SizeConfig.safeBlockHorizontal * 4
                             ),
@@ -135,7 +157,7 @@ class _BookingCardWidgetState extends State<BookingCardWidget> {
                             '${DateFormat('dd MMMM').format(widget.bookingState.start_date)} - ${DateFormat('dd MMMM yyyy').format(widget.bookingState.end_date)}',
                             style: TextStyle(
                                 fontFamily: BuytimeTheme.FontFamily,
-                                color: widget.bookingState.status == 'opened' ? BuytimeTheme.TextWhite : BuytimeTheme.TextWhite.withOpacity(.8),
+                                color: !closed ? BuytimeTheme.TextWhite : BuytimeTheme.TextWhite.withOpacity(.8),
                                 fontWeight: FontWeight.bold,
                                 fontSize: SizeConfig.safeBlockHorizontal * 4
                             ),
@@ -147,10 +169,10 @@ class _BookingCardWidgetState extends State<BookingCardWidget> {
                         child: FittedBox(
                           fit: BoxFit.scaleDown,
                           child: Text(
-                            widget.bookingState.status.substring(0,1).toUpperCase() + widget.bookingState.status.substring(1,widget.bookingState.status.length),
+                            bookingStatus,
                             style: TextStyle(
                                 fontFamily: BuytimeTheme.FontFamily,
-                                color: widget.bookingState.status == 'opened' ? BuytimeTheme.TextWhite : BuytimeTheme.TextWhite.withOpacity(.8),
+                                color: !closed ? BuytimeTheme.TextWhite : BuytimeTheme.TextWhite.withOpacity(.8),
                                 fontWeight: FontWeight.bold,
                                 fontSize: SizeConfig.safeBlockHorizontal * 4
                             ),
@@ -166,7 +188,7 @@ class _BookingCardWidgetState extends State<BookingCardWidget> {
                       alignment: Alignment.bottomRight,
                       margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, right: SizeConfig.safeBlockHorizontal * 0),
                       child: IconButton(
-                        onPressed: widget.bookingState.status == 'opened' ?  (){
+                        onPressed: !closed ? (){
                           final RenderBox box = context.findRenderObject();
                           Share.share('check out Buytime App at $link', subject: 'Take your Time!', sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
                         } : null,

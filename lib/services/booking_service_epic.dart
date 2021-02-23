@@ -106,7 +106,7 @@ class BookingRequestService implements EpicClass<AppState> {
           .collection("booking")
           .where("userEmail", arrayContains: store.state.user.email)
           .where('booking_code', isEqualTo: event.bookingId)
-          .where('status', isEqualTo: 'sent')
+          //.where('status', isEqualTo: 'sent')
           .get();
 
       int bookingSnapshotDocs = bookingSnapshot.docs.length;
@@ -154,7 +154,7 @@ class UserBookingListRequestService implements EpicClass<AppState> {
           .get();
 
       int openedBookingSnapshotDocs = openedBookingSnapshot.docs.length;
-
+      print("BOOKING_SERVICE_EPIC - UserBookingListRequestService => OPENED BOOKING LIST: $openedBookingSnapshotDocs");
       QuerySnapshot closedBookingSnapshot = await FirebaseFirestore.instance /// 1 READ - ? DOC
           .collection("booking")
           .where("userEmail", arrayContains: event.userEmail)
@@ -162,21 +162,22 @@ class UserBookingListRequestService implements EpicClass<AppState> {
           .get();
 
       int closedBookingSnapshotDocs = closedBookingSnapshot.docs.length;
-
+      print("BOOKING_SERVICE_EPIC - UserBookingListRequestService => CLOSED BOOKING LIST: $closedBookingSnapshotDocs");
       bookingListState = [];
       List<BookingState> openedBookingListState = [];
       List<BookingState> closedBookingListState = [];
 
       openedBookingSnapshot.docs.forEach((element) {
         openedBookingListState.add(BookingState.fromJson(element.data()));
+        print("BOOKING_SERVICE_EPIC - UserBookingListRequestService => BOOKING: ${openedBookingListState.last.start_date}");
       });
-      openedBookingListState.sort((a,b) => DateFormat('dd').format(a.start_date).compareTo(DateFormat('dd').format(b.start_date)));
-
+      openedBookingListState.sort((a,b) => a.start_date.isBefore(b.start_date) ? -1 : a.start_date.isAtSameMomentAs(b.start_date) ? 0 : 1);
+      //DateFormat('dd').format(a.start_date).compareTo(DateFormat('dd').format(b.start_date))
       closedBookingSnapshot.docs.forEach((element) {
         closedBookingListState.add(BookingState.fromJson(element.data()));
       });
 
-      closedBookingListState.sort((a,b) => DateFormat('dd').format(a.start_date).compareTo(DateFormat('dd').format(b.start_date)));
+      closedBookingListState.sort((a,b) => a.start_date.isBefore(b.start_date) ? -1 : a.start_date.isAtSameMomentAs(b.start_date) ? 0 : 1);
 
       bookingListState.addAll(openedBookingListState);
       bookingListState.addAll(closedBookingListState);

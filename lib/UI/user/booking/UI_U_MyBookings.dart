@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:Buytime/UI/user/booking/UI_U_BookingPage.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
+import 'package:Buytime/reblox/reducer/booking_reducer.dart';
 import 'package:Buytime/reblox/reducer/business_reducer.dart';
 import 'package:Buytime/reusable/custom_bottom_button_widget.dart';
 import 'package:Buytime/reusable/booking_card_widget.dart';
@@ -50,13 +51,40 @@ class _MyBookingsState extends State<MyBookings> {
     super.dispose();
   }
 
+  List<BookingState> bookings;
+
   @override
   Widget build(BuildContext context) {
 
     return StoreConnector<AppState, AppState>(
       converter: (store) => store.state,
+      onInit: (store){
+        debugPrint('UI_U_MyBookings => onInit');
+        bookings = store.state.bookingList.bookingListState;
+        List<BookingState> tmpOpened = [];
+        List<BookingState> tmpClosed = [];
+        bookings.forEach((element) {
+          if(element.end_date.isBefore(DateTime.now()) && element.status != 'closed'){
+            debugPrint('UI_U_MyBookings => ${element.end_date}');
+            element.status = element.enumToString(BookingStatus.closed);
+            StoreProvider.of<AppState>(context).dispatch(UpdateBooking(element));
+          }
+          if(element.status == 'opened'){
+            tmpOpened.add(element);
+          }
+          if(element.status == 'closed'){
+            tmpClosed.add(element);
+          }
+        });
+
+        tmpOpened.sort((a,b) => a.start_date.isBefore(b.start_date) ? -1 : a.start_date.isAtSameMomentAs(b.start_date) ? 0 : 1);
+        tmpClosed.sort((a,b) => a.start_date.isBefore(b.start_date) ? -1 : a.start_date.isAtSameMomentAs(b.start_date) ? 0 : 1);
+        bookings.clear();
+        bookings.addAll(tmpOpened);
+        bookings.addAll(tmpClosed);
+      },
       builder: (context, snapshot) {
-        List<BookingState> bookings = snapshot.bookingList.bookingListState;
+        //bookings = snapshot.bookingList.bookingListState;
 
         if(bookings.isNotEmpty)
           showList = true;
@@ -141,8 +169,6 @@ class _MyBookingsState extends State<MyBookings> {
                                         delegate: SliverChildBuilderDelegate(
                                               (context, index){
                                             BookingState booking = bookings.elementAt(index);
-
-
                                             return Container(
                                               margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 8, right: SizeConfig.safeBlockHorizontal * 8, bottom: SizeConfig.safeBlockVertical * 3),
                                               child: BookingCardWidget(booking),

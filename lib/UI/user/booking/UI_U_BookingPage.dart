@@ -105,7 +105,7 @@ class _BookingPageState extends State<BookingPage> {
         serviceList = serviceListState.serviceListState;
         categoryListState = snapshot.categoryList;
         categoryList = categoryListState.categoryListState;
-
+        debugPrint('UI_U_BookingPage: category list lenght => ${categoryList.length}');
         //debugPrint('UI_U_BookingPage: business logo => ${businessState.logo}');
         //debugPrint('UI_U_BookingPage: service list lenght => ${serviceList.length}');
         String startMonth = DateFormat('MM').format(bookingState.start_date);
@@ -286,7 +286,7 @@ class _BookingPageState extends State<BookingPage> {
                                 Container(
                                   margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                   child: Text(
-                                    'Your holiday in Portoferraio', //TODO Make it Global
+                                    'Your holiday in ${bookingState.business_name}', //TODO Make it Global
                                     style: TextStyle(
                                         fontFamily: BuytimeTheme.FontFamily,
                                         color: BuytimeTheme.TextGrey,
@@ -616,7 +616,7 @@ class _BookingPageState extends State<BookingPage> {
                                       ),
                                     ),
                                   ),
-                                  categoryList.isNotEmpty ? Container(
+                                  categoryList.length != 0 ? Container(
                                     margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 2, right: SizeConfig.safeBlockHorizontal * 2),
                                     //height: SizeConfig.safeBlockVertical * 50,
                                     width: double.infinity,
@@ -625,12 +625,12 @@ class _BookingPageState extends State<BookingPage> {
                                         Row(
                                           children: [
                                             ///First showcase
-                                            Flexible(
+                                            categoryList.length >= 1 ?  Flexible(
                                               flex: 1,
                                               child: FindYourInspirationCardWidget(
                                                   18,18, categoryList[0].categoryImage, categoryList[0].name
                                               ),
-                                            ),
+                                            ) : Container(),
                                             ///Second showcase
                                             categoryList.length >= 2 ? Flexible(
                                               flex: 1,

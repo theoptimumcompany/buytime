@@ -67,7 +67,7 @@ class UserCategoryListRequestService implements EpicClass<AppState> {
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     debugPrint("CATEGORY_SERVICE_EPIC - UserCategoryListRequestService => CATCHED ACTION");
-    return actions.whereType<RequestListCategory>().asyncMap((event) async{
+    return actions.whereType<UserRequestListCategory>().asyncMap((event) async{
 
       QuerySnapshot snapshot = await FirebaseFirestore.instance /// 1 READ - ? DOC
           .collection("business")
