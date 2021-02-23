@@ -102,11 +102,10 @@ class _BookingListItemState extends State<BookingListItem> {
                             children: [
                               ///Check Mark
                               Container(
-                                child: IconButton(
-                                  icon: Icon(
-                                    widget.booking.status == 'created' ? Icons.bookmark_border : widget.booking.status == 'opened' ? MaterialDesignIcons.done_all : MaterialDesignIcons.done,
-                                    color: BuytimeTheme.ActionButton,
-                                  ),
+                                margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 2),
+                                child: Icon(
+                                  widget.booking.status == 'created' ? Icons.bookmark_border : widget.booking.status == 'opened' ? MaterialDesignIcons.done_all : MaterialDesignIcons.done,
+                                  color: BuytimeTheme.ActionButton,
                                 ),
                               ),
                               ///Status
