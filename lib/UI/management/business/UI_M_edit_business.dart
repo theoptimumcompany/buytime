@@ -576,7 +576,7 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
                                                   maxPhoto: 1,
                                                   maxWidth: 800,
                                                   minHeight: 200,
-                                                  minWidth: 600,
+                                                  minWidth: 500,
                                                   cropAspectRatioPreset: CropAspectRatioPreset.square,
                                                   image: snapshot.logo == null || snapshot.logo.isEmpty ? null : Image.network(snapshot.logo, width: media.width * 0.3),
                                                   onFilePicked: (fileToUpload) {

@@ -97,7 +97,7 @@ class OptimumFormMultiPhotoState extends State<OptimumFormMultiPhoto> {
             (ImageInfo image, bool synchronousCall){
           completer.complete(image.image);
           debugPrint('optimum_from_multi_photo: image -> width: ${image.image.width} - height: ${image.image.height}');
-          if(image.image.height < 1000 && image.image.width < 1000){
+          if(image.image.height < (minHeight ?? 1000) && image.image.width < (minWidth ?? 1000)){
             debugPrint('optimum_from_multi_photo: no crop');
             setState(() {
               underReqSize = true;
@@ -124,7 +124,7 @@ class OptimumFormMultiPhotoState extends State<OptimumFormMultiPhoto> {
      print('optimum_from_multi_photo: ${decodedImage.width}');
      print('optimum_from_multi_photo: ${decodedImage.height}');
 
-     if(decodedImage.width < 1000 && decodedImage.height < 1000){
+     if(decodedImage.width < (minWidth ?? 1000) && decodedImage.height < (minHeight ?? 1000)){
        debugPrint('optimum_from_multi_photo: no crop');
        setState(() {
          underReqSize = true;
