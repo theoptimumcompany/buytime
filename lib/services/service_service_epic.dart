@@ -24,18 +24,14 @@ class ServiceListRequestService implements EpicClass<AppState> {
       int docs = 0;
       int read = 0;
       if (event.permission == "user") {
-        var servicesFirebaseShadow = await FirebaseFirestore.instance
-            .collection("service").where("businessId", isEqualTo: event.businessId).where("visibility", isEqualTo: 'Deactivated').get(); /// 1 READ - ? DOC
-
+        serviceStateList.clear();
+        var servicesFirebaseShadow = await FirebaseFirestore.instance.collection("service").where("businessId", isEqualTo: event.businessId).where("visibility", isEqualTo: 'Deactivated').get(); /// 1 READ - ? DOC
         docs = servicesFirebaseShadow.docs.length;
         servicesFirebaseShadow.docs.forEach((element) {
           ServiceState serviceState = ServiceState.fromJson(element.data());
           serviceStateList.add(serviceState);
         });
-        var servicesFirebaseVisible = await FirebaseFirestore.instance
-            .collection("service").where("businessId", isEqualTo: event.businessId).where("visibility", isEqualTo: 'Active').get(); /// 1 READ - ? DOC
-        serviceStateList.clear();
-
+        var servicesFirebaseVisible = await FirebaseFirestore.instance.collection("service").where("businessId", isEqualTo: event.businessId).where("visibility", isEqualTo: 'Active').get(); /// 1 READ - ? DOC
         docs = docs + servicesFirebaseVisible.docs.length;
         servicesFirebaseVisible.docs.forEach((element) {
           ServiceState serviceState = ServiceState.fromJson(element.data());

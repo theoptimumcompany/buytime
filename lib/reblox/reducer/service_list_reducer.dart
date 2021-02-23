@@ -109,6 +109,7 @@ ServiceListState serviceListReducer(ServiceListState state, action) {
   }
   if (action is ServiceListReturned) {
     serviceListState = ServiceListState(serviceListState: action.serviceListState).copyWith();
+    print("service_list_reducer" + action.serviceListState.length.toString());
     return serviceListState;
   }
   return state;
