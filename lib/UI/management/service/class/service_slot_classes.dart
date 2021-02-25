@@ -1,44 +1,5 @@
 import 'package:flutter/material.dart';
 
-class ListEveryDay {
-  List<EveryDay> listEveryDay;
-
-  ListEveryDay({this.listEveryDay});
-
-  ListEveryDay toEmpty() {
-    return ListEveryDay(
-      listEveryDay: [EveryDay().toEmpty()],
-    );
-  }
-
-  ListEveryDay copyWith({
-    List<EveryDay> listEveryDay,
-  }) {
-    return ListEveryDay(
-      listEveryDay: listEveryDay ?? this.listEveryDay,
-    );
-  }
-
-  List<dynamic> convertToJson(var objectStateList) {
-    List<dynamic> list = [];
-    objectStateList.forEach((element) {
-      list.add(element.toJson());
-    });
-    return list;
-  }
-
-  ListEveryDay.fromJson(Map<String, dynamic> json)
-      : listEveryDay = List<EveryDay>.from(json["listEveryDay"].map((item) {
-    return EveryDay(
-      everyDay: item["everyDay"] != null ? List<bool>.from(item["everyDay"]) : EveryDay().toEmpty(),
-    );
-  }));
-
-  Map<String, dynamic> toJson() => {
-    'listEveryDay': convertToJson(listEveryDay),
-  };
-}
-
 class EveryDay {
   List<bool> everyDay;
 
@@ -72,52 +33,6 @@ class EveryDay {
     'everyDay': everyDay,
   };
 }
-
-class ListTextEditingController {
-  List<TextEditingController> listTextEditingController;
-
-  ListTextEditingController({this.listTextEditingController});
-
-  ListTextEditingController toEmpty() {
-    return ListTextEditingController(
-      listTextEditingController: [TextEditingController()],
-    );
-  }
-
-  ListTextEditingController copyWith({
-    List<TextEditingController> listTextEditingController,
-  }) {
-    return ListTextEditingController(
-      listTextEditingController: listTextEditingController ?? this.listTextEditingController,
-    );
-  }
-
-  List<String> convertTextEditingControllerToString(List<TextEditingController> controllers) {
-    List<String> list = [];
-    controllers.forEach((element) {
-      list.add(element.text);
-    });
-    return list;
-  }
-
-  ListTextEditingController.convertStringToTextEditingController(List<String> strings) {
-    List<TextEditingController> list = [];
-    strings.forEach((element) {
-      TextEditingController tec = TextEditingController();
-      tec.text = element;
-      list.add(tec);
-    });
-    listTextEditingController = list;
-  }
-
-  ListTextEditingController.fromJson(Map<String, dynamic> json)
-      : listTextEditingController = ListTextEditingController.convertStringToTextEditingController(List<String>.from(json['listTextEditingController'])).listTextEditingController;
-
-  Map<String, dynamic> toJson() => {
-    'listTextEditingController': convertTextEditingControllerToString(listTextEditingController),
-  };
-}
-
 
 class EveryTime {
   List<TimeOfDay> everyTime;
@@ -164,33 +79,5 @@ class EveryTime {
 
   Map<String, dynamic> toJson() => {
     'everyTime': convertTimeOfDayToString(everyTime),
-  };
-}
-
-
-class ListWeek {
-  List<bool> listWeek;
-
-  ListWeek({this.listWeek});
-
-  ListWeek toEmpty() {
-    return ListWeek(
-      listWeek: [true],
-    );
-  }
-
-  ListWeek copyWith({
-    List<bool> listWeek,
-  }) {
-    return ListWeek(
-      listWeek: listWeek ?? this.listWeek,
-    );
-  }
-
-  ListWeek.fromJson(Map<String, dynamic> json) : listWeek = List<bool>.from(json['listWeek']);
-
-
-  Map<String, dynamic> toJson() => {
-    'listWeek': listWeek,
   };
 }

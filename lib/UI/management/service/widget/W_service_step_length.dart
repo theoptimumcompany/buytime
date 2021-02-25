@@ -1,18 +1,10 @@
 import 'package:Buytime/reblox/model/app_state.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:Buytime/reblox/model/service/service_time_slot_state.dart';
 import 'package:Buytime/reblox/reducer/service_reducer.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:Buytime/utils/size_config.dart';
-
 import 'package:Buytime/utils/theme/buytime_theme.dart';
-
 import 'package:flutter_redux/flutter_redux.dart';
-
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-
-typedef OnFilePickedCallback = void Function();
 
 class StepLength extends StatefulWidget {
   StepLength({this.media});
@@ -24,13 +16,12 @@ class StepLength extends StatefulWidget {
 }
 
 class StepLengthState extends State<StepLength> {
-  int indexStepper;
 
   ///Length vars
-  TextEditingController _hourController = TextEditingController();
-  TextEditingController _minuteController = TextEditingController();
-  TextEditingController _limitBookingController = TextEditingController();
-  var _formSlotLengthKey;
+  TextEditingController hourController = TextEditingController();
+  TextEditingController minuteController = TextEditingController();
+  TextEditingController limitBookingController = TextEditingController();
+  GlobalKey<FormState> _formSlotLengthKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -39,13 +30,9 @@ class StepLengthState extends State<StepLength> {
 
   @override
   Widget build(BuildContext context) {
-
-    indexStepper = StoreProvider.of<AppState>(context).state.serviceState.serviceSlot.actualSlotIndex;
-    _hourController = StoreProvider.of<AppState>(context).state.serviceState.serviceSlot.hourController[indexStepper];
-    _minuteController = StoreProvider.of<AppState>(context).state.serviceState.serviceSlot.minuteController[indexStepper];
-    _limitBookingController = StoreProvider.of<AppState>(context).state.serviceState.serviceSlot.limitBookingController[indexStepper];
-    _formSlotLengthKey = StoreProvider.of<AppState>(context).state.serviceState.serviceSlot.formSlotLengthKey[indexStepper];
-
+    hourController.text = StoreProvider.of<AppState>(context).state.serviceState.serviceSlot.hour.toString();
+    minuteController.text = StoreProvider.of<AppState>(context).state.serviceState.serviceSlot.minute.toString();
+    limitBookingController.text = StoreProvider.of<AppState>(context).state.serviceState.serviceSlot.limitBooking.toString();
     var media = MediaQuery.of(context).size;
     return StoreConnector<AppState, AppState>(
         converter: (store) => store.state,
@@ -85,17 +72,17 @@ class StepLengthState extends State<StepLength> {
                         padding: const EdgeInsets.only(top: 5.0),
                         child: TextFormField(
                           enabled: true,
-                          controller: _hourController,
+                          controller: hourController,
                           onChanged: (value) {
                             setState(() {
-                              _hourController.text = value;
-                              StoreProvider.of<AppState>(context).dispatch(SetServiceSlotHourController(_hourController.text, indexStepper));
+                              hourController.text = value;
+                              StoreProvider.of<AppState>(context).dispatch(SetServiceSlotHour(int.parse(hourController.text)));
                             });
                           },
                           onSaved: (value) {
                             setState(() {
-                              _hourController.text = value;
-                              StoreProvider.of<AppState>(context).dispatch(SetServiceSlotHourController(_hourController.text, indexStepper));
+                              hourController.text = value;
+                              StoreProvider.of<AppState>(context).dispatch(SetServiceSlotHour(int.parse(hourController.text)));
                             });
                           },
                           textAlign: TextAlign.start,
@@ -140,18 +127,17 @@ class StepLengthState extends State<StepLength> {
                         padding: const EdgeInsets.only(top: 5.0),
                         child: TextFormField(
                           enabled: true,
-                          controller: _minuteController,
+                          controller: minuteController,
                           onChanged: (value) {
                             setState(() {
-                              _minuteController.text = value;
-                              StoreProvider.of<AppState>(context).dispatch(SetServiceSlotMinuteController(_minuteController.text, indexStepper));
+                              minuteController.text = value;
+                              StoreProvider.of<AppState>(context).dispatch(SetServiceSlotMinute(int.parse(minuteController.text)));
                             });
                           },
                           onSaved: (value) {
                             setState(() {
-                              _minuteController.text = value;
-                              StoreProvider.of<AppState>(context).dispatch(SetServiceSlotMinuteController(_minuteController.text, indexStepper));
-                            });
+                              minuteController.text = value;
+                              StoreProvider.of<AppState>(context).dispatch(SetServiceSlotMinute(int.parse(minuteController.text)));                            });
                           },
                           textAlign: TextAlign.start,
                           keyboardType: TextInputType.number,
@@ -247,17 +233,17 @@ class StepLengthState extends State<StepLength> {
                         padding: const EdgeInsets.only(top: 5.0),
                         child: TextFormField(
                           enabled: true,
-                          controller: _limitBookingController,
+                          controller: limitBookingController,
                           onChanged: (value) {
                             setState(() {
-                              _limitBookingController.text = value;
-                              StoreProvider.of<AppState>(context).dispatch(SetServiceSlotMinuteController(_limitBookingController.text, indexStepper));
+                              limitBookingController.text = value;
+                              StoreProvider.of<AppState>(context).dispatch(SetServiceSlotLimitBooking(int.parse(limitBookingController.text)));
                             });
                           },
                           onSaved: (value) {
                             setState(() {
-                              _limitBookingController.text = value;
-                              StoreProvider.of<AppState>(context).dispatch(SetServiceSlotMinuteController(_limitBookingController.text, indexStepper));
+                              limitBookingController.text = value;
+                              StoreProvider.of<AppState>(context).dispatch(SetServiceSlotLimitBooking(int.parse(limitBookingController.text)));
                             });
                           },
                           textAlign: TextAlign.start,
@@ -315,7 +301,7 @@ class StepLengthState extends State<StepLength> {
                       Container(
                         child: Flexible(
                           child: Text(
-                            'This service has a limit of bookings of ' + _limitBookingController.text, //TODO: <-- ADD TO LANGUAGE TRANSLATE
+                            'This service has a limit of bookings of ' + limitBookingController.text, //TODO: <-- ADD TO LANGUAGE TRANSLATE
                             textAlign: TextAlign.start,
                             overflow: TextOverflow.clip,
                             style: TextStyle(

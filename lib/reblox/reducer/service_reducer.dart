@@ -45,8 +45,6 @@ class ServiceRequestResponse {
   ServiceState get serviceState => _serviceState;
 }
 
-class UnlistenCategory {}
-
 class UpdateService {
   ServiceState _serviceState;
 
@@ -189,14 +187,6 @@ class SetServiceSwitchSlots {
   bool get enabled => _enabled;
 }
 
-class SetServiceSwitchMultiPrice {
-  bool _enabled;
-
-  SetServiceSwitchMultiPrice(this._enabled);
-
-  bool get enabled => _enabled;
-}
-
 class SetServiceSwitchAutoConfirm {
   bool _enabled;
 
@@ -214,211 +204,81 @@ class SetServiceSlot {
 }
 
 
-class SetServiceSlotIncrementDaysInterval {
-  SetServiceSlotIncrementDaysInterval();
-}
-
 class SetServiceSlotDaysInterval {
-  List<ListEveryDay> _daysInterval;
+  List<EveryDay> _daysInterval;
 
   SetServiceSlotDaysInterval(this._daysInterval);
 
-  List<ListEveryDay> get daysInterval => _daysInterval;
-}
-
-class SetServiceSlotIncrementNumberOfAvailableInterval {
-  SetServiceSlotIncrementNumberOfAvailableInterval();
+  List<EveryDay> get daysInterval => _daysInterval;
 }
 
 class SetServiceSlotNumberOfInterval {
-  List<int> _numberOfInterval;
-
+  int _numberOfInterval;
   SetServiceSlotNumberOfInterval(this._numberOfInterval);
-
-  List<int> get numberOfInterval => _numberOfInterval;
-}
-
-class SetServiceSlotIncrementSwitchWeek {
-  SetServiceSlotIncrementSwitchWeek();
+  int get numberOfInterval => _numberOfInterval;
 }
 
 class SetServiceSlotSwitchWeek {
-  List<ListWeek>  _switchWeek;
+  List<bool>  _switchWeek;
   SetServiceSlotSwitchWeek(this._switchWeek);
-  List<ListWeek> get switchWeek => _switchWeek;
+  List<bool> get switchWeek => _switchWeek;
 
 }
 
-class SetServiceSlotSwitchDay {
-  List<ListEveryDay> _everyDay;
-  SetServiceSlotSwitchDay(this._everyDay);
-  List<ListEveryDay> get everyDay => _everyDay;
-
-}
-
-class SetServiceSlotIncrementStartController {
-  SetServiceSlotIncrementStartController();
-}
-
-class SetServiceSlotStartController {
-  List<ListTextEditingController> _controller;
-  SetServiceSlotStartController(this._controller);
-  List<ListTextEditingController>  get controller => _controller;
-}
-
-class SetServiceSlotIncrementStopController {
-  SetServiceSlotIncrementStopController();
-}
-
-class SetServiceSlotStopController {
-  List<ListTextEditingController> _controller;
-  SetServiceSlotStopController(this._controller);
-  List<ListTextEditingController>  get controller => _controller;
-}
-
-class SetServiceSlotIncrementStartTime {
-  SetServiceSlotIncrementStartTime();
-}
 class SetServiceSlotStartTime {
-  List<EveryTime> _time;
+  List<String> _time;
   SetServiceSlotStartTime(this._time);
-  List<EveryTime>  get time => _time;
-}
-
-class SetServiceSlotIncrementStopTime {
-  SetServiceSlotIncrementStopTime();
+  List<String>  get time => _time;
 }
 
 class SetServiceSlotStopTime {
-  List<EveryTime> _time;
+  List<String> _time;
   SetServiceSlotStopTime(this._time);
-  List<EveryTime>  get time => _time;
+  List<String>  get time => _time;
 }
 
-class SetServiceSlotIncrementCheckInController {
-  SetServiceSlotIncrementCheckInController();
-}
-
-class SetServiceSlotCheckInController {
-  String _text;
-  int _index;
-  SetServiceSlotCheckInController(this._text, this._index);
-  String get text => _text;
-  int get index => _index;
-}
-
-class SetServiceSlotIncrementCheckOutController {
-  SetServiceSlotIncrementCheckOutController();
-}
-
-class SetServiceSlotCheckOutController {
-  String _text;
-  int _index;
-  SetServiceSlotCheckOutController(this._text, this._index);
-  String get text => _text;
-  int get index => _index;
-}
-
-class SetServiceSlotIncrementCheckIn {
-  SetServiceSlotIncrementCheckIn();
-}
 
 class SetServiceSlotCheckIn {
-  DateTime _date;
-  int _index;
-  SetServiceSlotCheckIn(this._date, this._index);
-  DateTime get date => _date;
-  int get index => _index;
+  String _date;
+  SetServiceSlotCheckIn(this._date);
+  String get date => _date;
 }
 
-class SetServiceSlotIncrementCheckOut {
-  SetServiceSlotIncrementCheckOut();
-}
 
 class SetServiceSlotCheckOut{
-  DateTime _date;
-  int _index;
-  SetServiceSlotCheckOut(this._date, this._index);
-  DateTime get date => _date;
-  int get index => _index;
+  String _date;
+  SetServiceSlotCheckOut(this._date);
+  String get date => _date;
 }
 
-class SetServiceSlotIncrementHourController {
-  SetServiceSlotIncrementHourController();
+class SetServiceSlotHour {
+  int _hour;
+  SetServiceSlotHour(this._hour);
+  int get hour => _hour;
 }
 
-class SetServiceSlotHourController {
-  String _text;
-  int _index;
-  SetServiceSlotHourController(this._text, this._index);
-  String get text => _text;
-  int get index => _index;
+class SetServiceSlotMinute {
+  int _minute;
+  SetServiceSlotMinute(this._minute);
+  int get minute => _minute;
 }
 
-class SetServiceSlotIncrementMinuteController {
-  SetServiceSlotIncrementMinuteController();
+class SetServiceSlotLimitBooking {
+  int _limit;
+  SetServiceSlotLimitBooking(this._limit);
+  int get limit => _limit;
 }
 
-class SetServiceSlotMinuteController {
-  String _text;
-  int _index;
-  SetServiceSlotMinuteController(this._text, this._index);
-  String get text => _text;
-  int get index => _index;
-}
-
-class SetServiceSlotIncrementLimitBookingController {
-  SetServiceSlotIncrementLimitBookingController();
-}
-
-class SetServiceSlotLimitBookingController {
-  String _text;
-  int _index;
-  SetServiceSlotLimitBookingController(this._text, this._index);
-  String get text => _text;
-  int get index => _index;
-}
-
-class SetServiceSlotIncrementPriceController {
-  SetServiceSlotIncrementPriceController();
-}
-
-class SetServiceSlotPriceController {
-  String _text;
-  int _index;
-  SetServiceSlotPriceController(this._text, this._index);
-  String get text => _text;
-  int get index => _index;
-}
-
-class SetServiceSlotFormSlotTimeKey {
-  List<GlobalKey<FormState>> _global;
-  SetServiceSlotFormSlotTimeKey(this._global);
-  List<GlobalKey<FormState>> get global => _global;
-}
-
-class SetServiceSlotFormSlotLengthKey {
-  List<GlobalKey<FormState>> _global;
-  SetServiceSlotFormSlotLengthKey(this._global);
-  List<GlobalKey<FormState>> get global => _global;
-}
-
-class SetServiceSlotFormSlotPriceKey {
-  List<GlobalKey<FormState>> _global;
-  SetServiceSlotFormSlotPriceKey(this._global);
-  List<GlobalKey<FormState>> get global => _global;
-}
-
-class SetServiceSlotActualIndex {
-  int _index;
-  SetServiceSlotActualIndex(this._index);
-  int get index => _index;
+class SetServiceSlotPrice {
+  double _price;
+  SetServiceSlotPrice(this._price);
+  double get price => _price;
 }
 
 class SetServiceSlotNumber {
-  int _index;
-  SetServiceSlotNumber(this._index);
-  int get index => _index;
+  int _number;
+  SetServiceSlotNumber(this._number);
+  int get number => _number;
 }
 
 
@@ -464,158 +324,56 @@ ServiceState serviceReducer(ServiceState state, action) {
     serviceState.switchAutoConfirm = action.enabled;
     return serviceState;
   }
-  if (action is SetServiceSwitchMultiPrice) {
-    serviceState.switchMultiPrice = action.enabled;
-    return serviceState;
-  }
   if (action is SetServiceSlot) {
     serviceState.serviceSlot = action.tab.copyWith();
-    return serviceState;
-  }
-  if (action is SetServiceSlotIncrementDaysInterval) {
-    serviceState.serviceSlot.daysInterval.add(ListEveryDay().toEmpty());
     return serviceState;
   }
   if (action is SetServiceSlotDaysInterval) {
     serviceState.serviceSlot.daysInterval = action.daysInterval;
     return serviceState;
   }
-  if (action is SetServiceSlotIncrementNumberOfAvailableInterval) {
-    serviceState.serviceSlot.numberOfInterval.add(1);
-    return serviceState;
-  }
   if (action is SetServiceSlotNumberOfInterval) {
     serviceState.serviceSlot.numberOfInterval = action.numberOfInterval;
-    return serviceState;
-  }
-  if (action is SetServiceSlotIncrementSwitchWeek) {
-    serviceState.serviceSlot.switchWeek.add(ListWeek().toEmpty());
     return serviceState;
   }
   if (action is SetServiceSlotSwitchWeek) {
     serviceState.serviceSlot.switchWeek = action.switchWeek;
     return serviceState;
   }
-  if (action is SetServiceSlotSwitchDay) {
-    serviceState.serviceSlot.daysInterval = action.everyDay;
+  if (action is SetServiceSlotCheckIn) {
+    serviceState.serviceSlot.checkIn = action.date;
     return serviceState;
   }
-  if (action is SetServiceSlotIncrementCheckInController) {
-    serviceState.serviceSlot.checkInController.add(TextEditingController());
-    return serviceState;
-  }
-  if (action is SetServiceSlotCheckInController) {
-    serviceState.serviceSlot.checkInController[action.index].text = action.text;
-    return serviceState;
-  }
-  if (action is SetServiceSlotIncrementCheckOutController) {
-    serviceState.serviceSlot.checkOutController.add(TextEditingController());
-    return serviceState;
-  }
-  if (action is SetServiceSlotCheckOutController) {
-    serviceState.serviceSlot.checkOutController[action.index].text = action.text;
-    return serviceState;
-  }
-  if (action is SetServiceSlotIncrementStartController) {
-    ListTextEditingController list = ListTextEditingController().toEmpty();
-    serviceState.serviceSlot.startController.add(list);
-    return serviceState;
-  }
-  if (action is SetServiceSlotStartController) {
-    serviceState.serviceSlot.startController = action.controller;
-    return serviceState;
-  }
-  if (action is SetServiceSlotIncrementStopController) {
-    ListTextEditingController list = ListTextEditingController().toEmpty();
-    serviceState.serviceSlot.stopController.add(list);
-    return serviceState;
-  }
-  if (action is SetServiceSlotStopController) {
-    serviceState.serviceSlot.stopController = action.controller;
-    return serviceState;
-  }
-  if (action is SetServiceSlotIncrementStartTime) {
-    serviceState.serviceSlot.startTime.add(EveryTime().toEmpty());
+  if (action is SetServiceSlotCheckOut) {
+    serviceState.serviceSlot.checkOut = action.date;
     return serviceState;
   }
   if (action is SetServiceSlotStartTime) {
     serviceState.serviceSlot.startTime = action.time;
     return serviceState;
   }
-  if (action is SetServiceSlotIncrementStopTime) {
-    serviceState.serviceSlot.stopTime.add(EveryTime().toEmpty());
-    return serviceState;
-  }
   if (action is SetServiceSlotStopTime) {
     serviceState.serviceSlot.stopTime = action.time;
     return serviceState;
   }
-  if (action is SetServiceSlotIncrementCheckIn) {
-    serviceState.serviceSlot.checkIn.add(DateTime.now());
+  if (action is SetServiceSlotHour) {
+    serviceState.serviceSlot.hour = action.hour;
     return serviceState;
   }
-  if (action is SetServiceSlotCheckIn) {
-    serviceState.serviceSlot.checkIn[action.index] = action.date;
+  if (action is SetServiceSlotMinute) {
+    serviceState.serviceSlot.minute = action.minute;
     return serviceState;
   }
-  if (action is SetServiceSlotIncrementCheckOut) {
-    serviceState.serviceSlot.checkOut.add(DateTime.now());
+  if (action is SetServiceSlotLimitBooking) {
+    serviceState.serviceSlot.limitBooking = action.limit;
     return serviceState;
   }
-  if (action is SetServiceSlotCheckOut) {
-    serviceState.serviceSlot.checkOut[action.index] = action.date;
-    return serviceState;
-  }
-  if (action is SetServiceSlotIncrementHourController) {
-    serviceState.serviceSlot.hourController.add(TextEditingController());
-    return serviceState;
-  }
-  if (action is SetServiceSlotHourController) {
-    serviceState.serviceSlot.hourController[action.index].text = action.text;
-    return serviceState;
-  }
-  if (action is SetServiceSlotIncrementMinuteController) {
-    serviceState.serviceSlot.minuteController.add(TextEditingController());
-    return serviceState;
-  }
-  if (action is SetServiceSlotMinuteController) {
-    serviceState.serviceSlot.minuteController[action.index].text = action.text;
-    return serviceState;
-  }
-  if (action is SetServiceSlotIncrementLimitBookingController) {
-    serviceState.serviceSlot.limitBookingController.add(TextEditingController());
-    return serviceState;
-  }
-  if (action is SetServiceSlotLimitBookingController) {
-    serviceState.serviceSlot.limitBookingController[action.index].text = action.text;
-    return serviceState;
-  }
-  if (action is SetServiceSlotIncrementPriceController) {
-    serviceState.serviceSlot.priceController.add(TextEditingController());
-    return serviceState;
-  }
-  if (action is SetServiceSlotPriceController) {
-    serviceState.serviceSlot.priceController[action.index].text = action.text;
-    return serviceState;
-  }
-  if (action is SetServiceSlotFormSlotTimeKey) {
-    serviceState.serviceSlot.formSlotTimeKey = action.global;
-    return serviceState;
-  }
-  if (action is SetServiceSlotFormSlotLengthKey) {
-    serviceState.serviceSlot.formSlotLengthKey = action.global;
-    return serviceState;
-  }
-  if (action is SetServiceSlotFormSlotPriceKey) {
-    serviceState.serviceSlot.formSlotPriceKey = action.global;
-    return serviceState;
-  }
-  if (action is SetServiceSlotActualIndex) {
-    serviceState.serviceSlot.actualSlotIndex = action.index;
+  if (action is SetServiceSlotPrice) {
+    serviceState.serviceSlot.price = action.price;
     return serviceState;
   }
   if (action is SetServiceSlotNumber) {
-    serviceState.serviceSlot.numberOfSlot = action.index;
+    serviceState.numberOfServiceSlot = action.number;
     return serviceState;
   }
   if (action is SetServiceSelectedCategories) {

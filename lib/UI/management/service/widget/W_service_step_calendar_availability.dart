@@ -1,18 +1,12 @@
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:Buytime/reblox/model/service/service_time_slot_state.dart';
 import 'package:Buytime/reblox/reducer/service_reducer.dart';
 import 'package:Buytime/utils/size_config.dart';
-
 import 'package:Buytime/utils/theme/buytime_theme.dart';
-
 import 'package:flutter_redux/flutter_redux.dart';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
-typedef OnFilePickedCallback = void Function();
 
 class CalendarAvailability extends StatefulWidget {
   CalendarAvailability({this.media});
@@ -25,8 +19,8 @@ class CalendarAvailability extends StatefulWidget {
 
 class CalendarAvailabilityState extends State<CalendarAvailability> {
   ///Calendar vars
-  TextEditingController _checkInController = TextEditingController();
-  TextEditingController _checkOutController = TextEditingController();
+  TextEditingController checkInController = TextEditingController();
+  TextEditingController checkOutController = TextEditingController();
   DateTime checkIn;
   DateTime checkOut;
   int indexStepper;
@@ -41,17 +35,14 @@ class CalendarAvailabilityState extends State<CalendarAvailability> {
         context: context, initialDateRange: DateTimeRange(start: cIn, end: cOut), firstDate: new DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day), lastDate: new DateTime(2025));
     if (picked != null && picked.start != null && picked.end != null) {
       setState(() {
-        _checkInController.text = DateFormat('dd/MM/yyyy').format(picked.start);
-        print( _checkInController.text);
-        _checkOutController.text = DateFormat('dd/MM/yyyy').format(picked.end);
-        print( _checkOutController.text);
+        checkInController.text = DateFormat('dd/MM/yyyy').format(picked.start);
+        print(checkInController.text);
+        checkOutController.text = DateFormat('dd/MM/yyyy').format(picked.end);
+        print(checkOutController.text);
         checkIn = picked.start;
         checkOut = picked.end;
-        StoreProvider.of<AppState>(context).dispatch(SetServiceSlotCheckInController(_checkInController.text,indexStepper));
-        StoreProvider.of<AppState>(context).dispatch(SetServiceSlotCheckOutController(_checkOutController.text,indexStepper));
-        StoreProvider.of<AppState>(context).dispatch(SetServiceSlotCheckIn(checkIn,indexStepper));
-        StoreProvider.of<AppState>(context).dispatch(SetServiceSlotCheckOut(checkOut,indexStepper));
-
+        StoreProvider.of<AppState>(context).dispatch(SetServiceSlotCheckIn(checkInController.text));
+        StoreProvider.of<AppState>(context).dispatch(SetServiceSlotCheckOut(checkOutController.text));
       });
     }
     return null;
@@ -59,12 +50,9 @@ class CalendarAvailabilityState extends State<CalendarAvailability> {
 
   @override
   Widget build(BuildContext context) {
-    var media = MediaQuery.of(context).size;
-    indexStepper = StoreProvider.of<AppState>(context).state.serviceState.serviceSlot.actualSlotIndex;
-    _checkInController = StoreProvider.of<AppState>(context).state.serviceState.serviceSlot.checkInController[indexStepper];
-    _checkOutController = StoreProvider.of<AppState>(context).state.serviceState.serviceSlot.checkOutController[indexStepper];
-    checkIn = StoreProvider.of<AppState>(context).state.serviceState.serviceSlot.checkIn[indexStepper];
-    checkOut = StoreProvider.of<AppState>(context).state.serviceState.serviceSlot.checkOut[indexStepper];
+    checkInController.text = StoreProvider.of<AppState>(context).state.serviceState.serviceSlot.checkIn;
+    checkOutController.text = StoreProvider.of<AppState>(context).state.serviceState.serviceSlot.checkOut;
+    //TODO:Assegnare a checkin&out i datetime
     return StoreConnector<AppState, AppState>(
         converter: (store) => store.state,
         builder: (context, snapshot) {
@@ -80,7 +68,7 @@ class CalendarAvailabilityState extends State<CalendarAvailability> {
                 },
                 child: TextFormField(
                   enabled: false,
-                  controller: _checkInController,
+                  controller: checkInController,
                   textAlign: TextAlign.start,
                   keyboardType: TextInputType.datetime,
                   decoration: InputDecoration(
@@ -124,7 +112,7 @@ class CalendarAvailabilityState extends State<CalendarAvailability> {
                 },
                 child: TextFormField(
                   enabled: false,
-                  controller: _checkOutController,
+                  controller: checkOutController,
                   textAlign: TextAlign.start,
                   keyboardType: TextInputType.datetime,
                   decoration: InputDecoration(
