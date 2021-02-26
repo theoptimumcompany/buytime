@@ -1,17 +1,17 @@
 import 'package:Buytime/UI/management/service/class/service_slot_classes.dart';
+import 'package:Buytime/reblox/reducer/service/service_slot_time_reducer.dart';
 import 'package:Buytime/reusable/checkbox/W_checkbox_parent_child.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:Buytime/reblox/model/service/service_time_slot_state.dart';
-import 'package:Buytime/reblox/reducer/service_reducer.dart';
+import 'package:Buytime/reblox/model/service/service_slot_time_state.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter/material.dart';
 
 class StepAvailableTime extends StatefulWidget {
-  StepAvailableTime({this.media});
-
   Size media;
+
+  StepAvailableTime({this.media});
 
   @override
   State<StatefulWidget> createState() => StepAvailableTimeState();
@@ -27,7 +27,6 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
   List<TimeOfDay> startTime = [];
   List<TimeOfDay> stopTime = [];
   List<String> daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-  List<bool> daysOfWeekValue = [false, false, false, false, false, false, false];
   final List<GlobalKey<FormState>> _formSlotTimeKey = [GlobalKey<FormState>()];
 
   @override
@@ -47,22 +46,26 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
     setState(() {
       if (value) {
         // selected
-        daysOfWeekValue[indexDay] = true;
+        daysInterval[indexInterval].everyDay[indexDay] = true;
+        StoreProvider.of<AppState>(context).dispatch(SetServiceSlotDaysInterval(daysInterval));
         // Checking if all other children are also selected -
-        if (daysOfWeekValue.contains(false)) {
+        if (daysInterval[indexInterval].everyDay.contains(false)) {
           // No. Parent -> tristate.
           switchWeek[indexInterval] = null;
+          StoreProvider.of<AppState>(context).dispatch(SetServiceSlotSwitchWeek(switchWeek));
         } else {
           // Yes. Select all.
           _checkAll(true, indexInterval);
         }
       } else {
         // unselected
-        daysOfWeekValue[indexDay] = false;
+        daysInterval[indexInterval].everyDay[indexDay] = false;
+        StoreProvider.of<AppState>(context).dispatch(SetServiceSlotDaysInterval(daysInterval));
         // Checking if all other children are also unselected -
-        if (daysOfWeekValue.contains(true)) {
+        if (daysInterval[indexInterval].everyDay.contains(true)) {
           // No. Parent -> tristate.
           switchWeek[indexInterval] = null;
+          StoreProvider.of<AppState>(context).dispatch(SetServiceSlotSwitchWeek(switchWeek));
         } else {
           // Yes. Unselect all.
           _checkAll(false, indexInterval);
@@ -74,8 +77,10 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
   void _checkAll(bool value, int index) {
     setState(() {
       switchWeek[index] = value;
+      StoreProvider.of<AppState>(context).dispatch(SetServiceSlotSwitchWeek(switchWeek));
       for (int i = 0; i < daysOfWeek.length; i++) {
-        daysOfWeekValue[i] = value;
+        daysInterval[index].everyDay[i] = value;
+        StoreProvider.of<AppState>(context).dispatch(SetServiceSlotDaysInterval(daysInterval));
       }
     });
   }
@@ -143,40 +148,49 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
     return null;
   }
 
+
+  ///Todo: non aggancia stato iniziale e timeofday cambiato
   void setStartAndStopTime() {
-    List<String> start = StoreProvider.of<AppState>(context).state.serviceState.serviceSlot.startTime;
-    List<String> stop = StoreProvider.of<AppState>(context).state.serviceState.serviceSlot.stopTime;
-    if(start.length == 0){
+    List<String> start = StoreProvider.of<AppState>(context).state.serviceSlot.startTime;
+    List<String> stop = StoreProvider.of<AppState>(context).state.serviceSlot.stopTime;
+    TimeOfDay timeOfDayStart;
+    TimeOfDay timeOfDayStop;
+    if (start.length == 0) {
       TextEditingController textEditingControllerStart = TextEditingController();
-      TextEditingController textEditingControllerStop = TextEditingController();
       startController.add(textEditingControllerStart);
-      stopController.add(textEditingControllerStop);
-      TimeOfDay timeOfDayStart = TimeOfDay.now();
-      TimeOfDay timeOfDayStop = TimeOfDay.now();
-      startTime.add(timeOfDayStart);
-      stopTime.add(timeOfDayStop);
+      timeOfDayStart = TimeOfDay.now();
+    } else {
+      for (int i = 0; i < start.length; i++) {
+        TextEditingController textEditingControllerStart = TextEditingController();
+        textEditingControllerStart.text = start[i];
+        startController.add(textEditingControllerStart);
+        List<String> startString = start[i].split(":");
+        print("Indice " + i.toString());
+        timeOfDayStart = TimeOfDay(hour: int.parse(startString[0]), minute: int.parse(startString[1]));
+      }
     }
-    for (int i = 0; i < start.length; i++) {
-      TextEditingController textEditingControllerStart = TextEditingController();
+    startTime.add(timeOfDayStart);
+    if (stop.length == 0) {
       TextEditingController textEditingControllerStop = TextEditingController();
-      textEditingControllerStart.text = start[i];
-      textEditingControllerStop.text = stop[i];
-      startController.add(textEditingControllerStart);
       stopController.add(textEditingControllerStop);
-      List<String> startString = start[i].split(":");
-      List<String> stopString = stop[i].split(":");
-      TimeOfDay timeOfDayStart = TimeOfDay(hour: int.parse(startString[0]), minute: int.parse(startString[1]));
-      TimeOfDay timeOfDayStop = TimeOfDay(hour: int.parse(stopString[0]), minute: int.parse(stopString[1]));
-      startTime.add(timeOfDayStart);
-      stopTime.add(timeOfDayStop);
+      timeOfDayStop = TimeOfDay.now();
+    } else {
+      for (int i = 0; i < stop.length; i++) {
+        TextEditingController textEditingControllerStop = TextEditingController();
+        textEditingControllerStop.text = stop[i];
+        stopController.add(textEditingControllerStop);
+        List<String> stopString = stop[i].split(":");
+        timeOfDayStop = TimeOfDay(hour: int.parse(stopString[0]), minute: int.parse(stopString[1]));
+      }
     }
+    stopTime.add(timeOfDayStop);
   }
 
   @override
   Widget build(BuildContext context) {
-    switchWeek = StoreProvider.of<AppState>(context).state.serviceState.serviceSlot.switchWeek;
-    daysInterval = StoreProvider.of<AppState>(context).state.serviceState.serviceSlot.daysInterval;
-    numberOfSlotTimeInterval = StoreProvider.of<AppState>(context).state.serviceState.serviceSlot.numberOfInterval;
+    switchWeek = StoreProvider.of<AppState>(context).state.serviceSlot.switchWeek;
+    daysInterval = StoreProvider.of<AppState>(context).state.serviceSlot.daysInterval;
+    numberOfSlotTimeInterval = StoreProvider.of<AppState>(context).state.serviceSlot.numberOfInterval;
     setStartAndStopTime();
     return StoreConnector<AppState, AppState>(
         converter: (store) => store.state,
@@ -340,10 +354,6 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
                                   label: 'Every day',
                                   value: switchWeek[i],
                                   onChanged: (value) {
-                                    setState(() {
-                                      switchWeek[i] = value;
-                                      StoreProvider.of<AppState>(context).dispatch(SetServiceSlotSwitchWeek(switchWeek));
-                                    });
                                     if (value != null) {
                                       // Checked/Unchecked
                                       _checkAll(value, i);
@@ -369,10 +379,6 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
                                       value: daysInterval[i].everyDay[index],
                                       onChanged: (value) {
                                         _manageTristate(index, value, i);
-                                        setState(() {
-                                          daysInterval[i].everyDay[index] = value;
-                                          StoreProvider.of<AppState>(context).dispatch(SetServiceSlotDaysInterval(daysInterval));
-                                        });
                                       },
                                       checkboxType: CheckboxType.Child,
                                       activeColor: Colors.indigo,

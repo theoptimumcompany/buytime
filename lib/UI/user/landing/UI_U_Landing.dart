@@ -1,8 +1,6 @@
 import 'dart:core';
-
 import 'package:Buytime/UI/management/business/UI_M_business_list.dart';
 import 'package:Buytime/UI/user/UI_U_Tabs.dart';
-import 'package:Buytime/UI/user/booking/UI_U_MyBookings.dart';
 import 'package:Buytime/UI/user/landing/invite_guest_form.dart';
 import 'package:Buytime/UI/user/login/UI_U_Home.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
@@ -18,8 +16,9 @@ import 'package:Buytime/reblox/reducer/order_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reblox/reducer/pipeline_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/pipeline_reducer.dart';
-import 'package:Buytime/reblox/reducer/service_list_reducer.dart';
-import 'package:Buytime/reblox/reducer/service_reducer.dart';
+import 'package:Buytime/reblox/reducer/service/service_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/service/service_reducer.dart';
+import 'package:Buytime/reblox/reducer/service/service_slot_time_reducer.dart';
 import 'package:Buytime/reblox/reducer/stripe_payment_reducer.dart';
 import 'package:Buytime/reblox/reducer/user_reducer.dart';
 import 'package:Buytime/reusable/custom_bottom_button_widget.dart';
@@ -395,6 +394,7 @@ class LandingState extends State<Landing> {
                                                     StoreProvider.of<AppState>(context).dispatch(SetBusinessListToEmpty());
                                                     StoreProvider.of<AppState>(context).dispatch(SetServiceToEmpty());
                                                     StoreProvider.of<AppState>(context).dispatch(SetServiceListToEmpty());
+                                                    StoreProvider.of<AppState>(context).dispatch(SetServiceSlotToEmpty());
                                                     StoreProvider.of<AppState>(context).dispatch(SetPipelineToEmpty());
                                                     StoreProvider.of<AppState>(context).dispatch(SetPipelineListToEmpty());
                                                     StoreProvider.of<AppState>(context).dispatch(SetStripeToEmpty());

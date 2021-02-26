@@ -1,5 +1,8 @@
 import 'package:Buytime/UI/management/business/UI_M_business_list.dart';
 import 'package:Buytime/reblox/reducer/category_tree_reducer.dart';
+import 'package:Buytime/reblox/reducer/service/service_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/service/service_reducer.dart';
+import 'package:Buytime/reblox/reducer/service/service_slot_time_reducer.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/UI/user/UI_U_Tabs.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
@@ -14,8 +17,6 @@ import 'package:Buytime/reblox/reducer/order_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reblox/reducer/pipeline_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/pipeline_reducer.dart';
-import 'package:Buytime/reblox/reducer/service_list_reducer.dart';
-import 'package:Buytime/reblox/reducer/service_reducer.dart';
 import 'package:Buytime/reblox/reducer/stripe_payment_reducer.dart';
 import 'package:Buytime/reblox/reducer/user_reducer.dart';
 import 'package:flutter/material.dart';
@@ -169,6 +170,8 @@ class MenuDrawer extends StatelessWidget {
                             .dispatch(SetServiceToEmpty());
                         StoreProvider.of<AppState>(context)
                             .dispatch(SetServiceListToEmpty());
+                        StoreProvider.of<AppState>(context)
+                            .dispatch(SetServiceSlotToEmpty());
                         StoreProvider.of<AppState>(context)
                             .dispatch(SetPipelineToEmpty());
                         StoreProvider.of<AppState>(context)

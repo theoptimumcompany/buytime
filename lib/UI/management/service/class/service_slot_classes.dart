@@ -8,13 +8,13 @@ class EveryDay {
   EveryDay toEmpty() {
     return EveryDay(
       everyDay: [
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
       ],
     );
   }

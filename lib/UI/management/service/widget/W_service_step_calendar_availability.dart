@@ -1,7 +1,7 @@
 import 'package:Buytime/reblox/model/app_state.dart';
+import 'package:Buytime/reblox/reducer/service/service_slot_time_reducer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:Buytime/reblox/reducer/service_reducer.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -9,9 +9,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class CalendarAvailability extends StatefulWidget {
-  CalendarAvailability({this.media});
-
   Size media;
+
+  CalendarAvailability({this.media});
 
   @override
   State<StatefulWidget> createState() => CalendarAvailabilityState();
@@ -50,9 +50,24 @@ class CalendarAvailabilityState extends State<CalendarAvailability> {
 
   @override
   Widget build(BuildContext context) {
-    checkInController.text = StoreProvider.of<AppState>(context).state.serviceState.serviceSlot.checkIn;
-    checkOutController.text = StoreProvider.of<AppState>(context).state.serviceState.serviceSlot.checkOut;
-    //TODO:Assegnare a checkin&out i datetime
+    checkInController.text = StoreProvider.of<AppState>(context).state.serviceSlot.checkIn;
+    checkOutController.text = StoreProvider.of<AppState>(context).state.serviceSlot.checkOut;
+    List<String> checkInString = checkInController.text.split('/');
+    List<String> checkOutString = checkOutController.text.split('/');
+    checkIn = checkInController.text == ''
+        ? DateTime.now()
+        : DateTime(
+            int.parse(checkInString[2]),
+            int.parse(checkInString[1]),
+            int.parse(checkInString[0]),
+          );
+    checkOut = checkOutController.text == ''
+        ? DateTime.now()
+        : DateTime(
+            int.parse(checkOutString[2]),
+            int.parse(checkOutString[1]),
+            int.parse(checkOutString[0]),
+          );
     return StoreConnector<AppState, AppState>(
         converter: (store) => store.state,
         builder: (context, snapshot) {
@@ -121,8 +136,6 @@ class CalendarAvailabilityState extends State<CalendarAvailability> {
                       enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
                       focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
                       labelText: AppLocalizations.of(context).checkOut,
-                      //hintText: "email *",
-                      //hintStyle: TextStyle(color: Color(0xff666666)),
                       labelStyle: TextStyle(
                         fontFamily: BuytimeTheme.FontFamily,
                         fontSize: 12,

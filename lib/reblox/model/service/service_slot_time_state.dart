@@ -80,6 +80,20 @@ class ServiceSlot {
     );
   }
 
+  ServiceSlot.fromState(ServiceSlot serviceSlot) {
+    this.numberOfInterval = serviceSlot.numberOfInterval;
+    this.switchWeek = serviceSlot.switchWeek;
+    this.daysInterval = serviceSlot.daysInterval;
+    this.startTime = serviceSlot.startTime;
+    this.stopTime = serviceSlot.stopTime;
+    this.checkIn = serviceSlot.checkIn;
+    this.checkOut = serviceSlot.checkOut;
+    this.hour = serviceSlot.hour;
+    this.minute = serviceSlot.minute;
+    this.limitBooking = serviceSlot.limitBooking;
+    this.price = serviceSlot.price;
+  }
+
   // List<dynamic> convertToJsonEveryDay(List<EveryDay> objectStateList) {
   //   List<dynamic> list = [];
   //   objectStateList.forEach((element) {

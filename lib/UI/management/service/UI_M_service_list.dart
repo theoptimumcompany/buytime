@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:core';
-
 import 'package:Buytime/UI/management/business/UI_M_business.dart';
 import 'package:Buytime/UI/management/service/UI_M_create_service.dart';
 import 'package:Buytime/UI/management/service/UI_M_edit_service.dart';
@@ -8,18 +7,15 @@ import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/business/snippet/business_snippet_state.dart';
 import 'package:Buytime/reblox/model/category/category_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
-import 'package:Buytime/reblox/model/order/order_entry.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
-import 'package:Buytime/reblox/reducer/service_list_reducer.dart';
-import 'package:Buytime/reblox/reducer/service_reducer.dart';
+import 'package:Buytime/reblox/reducer/service/service_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/service/service_reducer.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
-import 'package:Buytime/reusable/service/optimum_service_card_medium.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class UI_M_ServiceList extends StatefulWidget {
   @override

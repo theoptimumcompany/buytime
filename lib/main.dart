@@ -10,6 +10,7 @@ import 'package:Buytime/UI/user/landing/UI_U_Landing.dart';
 import 'package:Buytime/reblox/model/booking/booking_list_state.dart';
 import 'package:Buytime/reblox/model/category/invitation/category_invite_state.dart';
 import 'package:Buytime/reblox/model/category/tree/category_tree_state.dart';
+import 'package:Buytime/reblox/model/service/service_slot_time_state.dart';
 import 'package:Buytime/reblox/model/statistics_state.dart';
 import 'package:Buytime/reblox/reducer/statistics_reducer.dart';
 import 'package:Buytime/services/category_invite_service_epic.dart';
@@ -120,6 +121,7 @@ void main(){
     bookingList: BookingListState().toEmpty(),
     categoryList: CategoryListState().toEmpty(),
     serviceList: ServiceListState().toEmpty(),
+    serviceSlot: ServiceSlot().toEmpty(),
     pipelineList: PipelineList().toEmpty(),
     user: UserState().toEmpty(),
     serviceState: ServiceState().toEmpty(),

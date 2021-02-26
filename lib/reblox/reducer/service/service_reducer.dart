@@ -1,7 +1,7 @@
 import 'package:Buytime/UI/management/service/class/service_slot_classes.dart';
 import 'package:Buytime/reblox/model/file/optimum_file_to_upload.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
-import 'package:Buytime/reblox/model/service/service_time_slot_state.dart';
+import 'package:Buytime/reblox/model/service/service_slot_time_state.dart';
 import 'package:Buytime/reblox/model/snippet/parent.dart';
 import 'package:flutter/material.dart';
 
@@ -195,92 +195,13 @@ class SetServiceSwitchAutoConfirm {
   bool get enabled => _enabled;
 }
 
-class SetServiceSlot {
-  ServiceSlot _tab;
+class AddServiceSlot {
+  ServiceSlot _serviceSlot;
 
-  SetServiceSlot(this._tab);
+  AddServiceSlot(this._serviceSlot);
 
-  ServiceSlot get tab => _tab;
+  ServiceSlot get serviceSlot => _serviceSlot;
 }
-
-
-class SetServiceSlotDaysInterval {
-  List<EveryDay> _daysInterval;
-
-  SetServiceSlotDaysInterval(this._daysInterval);
-
-  List<EveryDay> get daysInterval => _daysInterval;
-}
-
-class SetServiceSlotNumberOfInterval {
-  int _numberOfInterval;
-  SetServiceSlotNumberOfInterval(this._numberOfInterval);
-  int get numberOfInterval => _numberOfInterval;
-}
-
-class SetServiceSlotSwitchWeek {
-  List<bool>  _switchWeek;
-  SetServiceSlotSwitchWeek(this._switchWeek);
-  List<bool> get switchWeek => _switchWeek;
-
-}
-
-class SetServiceSlotStartTime {
-  List<String> _time;
-  SetServiceSlotStartTime(this._time);
-  List<String>  get time => _time;
-}
-
-class SetServiceSlotStopTime {
-  List<String> _time;
-  SetServiceSlotStopTime(this._time);
-  List<String>  get time => _time;
-}
-
-
-class SetServiceSlotCheckIn {
-  String _date;
-  SetServiceSlotCheckIn(this._date);
-  String get date => _date;
-}
-
-
-class SetServiceSlotCheckOut{
-  String _date;
-  SetServiceSlotCheckOut(this._date);
-  String get date => _date;
-}
-
-class SetServiceSlotHour {
-  int _hour;
-  SetServiceSlotHour(this._hour);
-  int get hour => _hour;
-}
-
-class SetServiceSlotMinute {
-  int _minute;
-  SetServiceSlotMinute(this._minute);
-  int get minute => _minute;
-}
-
-class SetServiceSlotLimitBooking {
-  int _limit;
-  SetServiceSlotLimitBooking(this._limit);
-  int get limit => _limit;
-}
-
-class SetServiceSlotPrice {
-  double _price;
-  SetServiceSlotPrice(this._price);
-  double get price => _price;
-}
-
-class SetServiceSlotNumber {
-  int _number;
-  SetServiceSlotNumber(this._number);
-  int get number => _number;
-}
-
 
 ServiceState serviceReducer(ServiceState state, action) {
   ServiceState serviceState = ServiceState.fromState(state);
@@ -324,56 +245,9 @@ ServiceState serviceReducer(ServiceState state, action) {
     serviceState.switchAutoConfirm = action.enabled;
     return serviceState;
   }
-  if (action is SetServiceSlot) {
-    serviceState.serviceSlot = action.tab.copyWith();
-    return serviceState;
-  }
-  if (action is SetServiceSlotDaysInterval) {
-    serviceState.serviceSlot.daysInterval = action.daysInterval;
-    return serviceState;
-  }
-  if (action is SetServiceSlotNumberOfInterval) {
-    serviceState.serviceSlot.numberOfInterval = action.numberOfInterval;
-    return serviceState;
-  }
-  if (action is SetServiceSlotSwitchWeek) {
-    serviceState.serviceSlot.switchWeek = action.switchWeek;
-    return serviceState;
-  }
-  if (action is SetServiceSlotCheckIn) {
-    serviceState.serviceSlot.checkIn = action.date;
-    return serviceState;
-  }
-  if (action is SetServiceSlotCheckOut) {
-    serviceState.serviceSlot.checkOut = action.date;
-    return serviceState;
-  }
-  if (action is SetServiceSlotStartTime) {
-    serviceState.serviceSlot.startTime = action.time;
-    return serviceState;
-  }
-  if (action is SetServiceSlotStopTime) {
-    serviceState.serviceSlot.stopTime = action.time;
-    return serviceState;
-  }
-  if (action is SetServiceSlotHour) {
-    serviceState.serviceSlot.hour = action.hour;
-    return serviceState;
-  }
-  if (action is SetServiceSlotMinute) {
-    serviceState.serviceSlot.minute = action.minute;
-    return serviceState;
-  }
-  if (action is SetServiceSlotLimitBooking) {
-    serviceState.serviceSlot.limitBooking = action.limit;
-    return serviceState;
-  }
-  if (action is SetServiceSlotPrice) {
-    serviceState.serviceSlot.price = action.price;
-    return serviceState;
-  }
-  if (action is SetServiceSlotNumber) {
-    serviceState.numberOfServiceSlot = action.number;
+  if (action is AddServiceSlot) {
+    ServiceSlot serviceSlot = action.serviceSlot;
+    serviceState.serviceSlot.add(serviceSlot);
     return serviceState;
   }
   if (action is SetServiceSelectedCategories) {
