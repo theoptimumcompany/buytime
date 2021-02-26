@@ -3,6 +3,8 @@ import 'package:Buytime/reblox/model/booking/booking_list_state.dart';
 import 'package:Buytime/reblox/model/business/business_list_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
+import 'package:Buytime/reblox/model/card/card_list_state.dart';
+import 'package:Buytime/reblox/model/card/card_state.dart';
 import 'package:Buytime/reblox/model/category/category_list_state.dart';
 import 'package:Buytime/reblox/model/category/category_state.dart';
 import 'package:Buytime/reblox/model/category/invitation/category_invite_state.dart';
@@ -58,6 +60,8 @@ class AppState {
   PipelineList pipelineList;
   List<String> route;
   StatisticsState statistics;
+  CardState cardState;
+  CardListState cardListState;
 
   AppState({
     @required this.filterSearch,
@@ -79,7 +83,9 @@ class AppState {
     @required this.pipeline,
     @required this.pipelineList,
     this.route = const [AppRoutes.home],
-    this.statistics
+    this.statistics,
+    this.cardState,
+    this.cardListState
   });
 
   AppState.initialState() {
@@ -102,6 +108,8 @@ class AppState {
     pipeline = Pipeline();
     pipelineList = PipelineList();
     statistics = StatisticsState();
+    cardState = CardState();
+    cardListState = CardListState();
   }
 
   AppState.copyWith(
@@ -124,7 +132,10 @@ class AppState {
       Pipeline pipeline,
       PipelineList pipelineList,
       List<String> route,
-      StatisticsState statistics}) {
+      StatisticsState statistics,
+        CardState cardState,
+        CardListState cardListState
+      }) {
     this.filterSearch = filterSearch;
     this.business = business;
     this.booking = booking;
@@ -145,6 +156,8 @@ class AppState {
     this.pipelineList = pipelineList;
     this.route = route;
     this.statistics = statistics;
+    this.cardState = cardState;
+    this.cardListState = cardListState;
   }
 
   AppState.fromJson(Map json) {
@@ -168,6 +181,8 @@ class AppState {
     pipelineList = json['pipelineList'];
     route = json['route'];
     statistics = json['statistics'];
+    cardState = json['cardState'];
+    cardListState = json['cardListState'];
   }
 
   Map toJson() => {
@@ -191,5 +206,7 @@ class AppState {
         'pipelineList': pipelineList,
         'route': route,
         'statistics': statistics,
+        'cardState': cardState,
+        'cardListState': cardListState,
       };
 }

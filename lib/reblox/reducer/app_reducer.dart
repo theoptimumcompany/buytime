@@ -3,6 +3,8 @@ import 'package:Buytime/reblox/model/business/business_list_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_list_state.dart';
+import 'package:Buytime/reblox/model/card/card_list_state.dart';
+import 'package:Buytime/reblox/model/card/card_state.dart';
 import 'package:Buytime/reblox/model/category/category_list_state.dart';
 import 'package:Buytime/reblox/model/category/category_state.dart';
 import 'package:Buytime/reblox/model/category/invitation/category_invite_state.dart';
@@ -25,6 +27,8 @@ import 'package:Buytime/reblox/reducer/order_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reblox/reducer/pipeline_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/pipeline_reducer.dart';
+import 'package:Buytime/reblox/reducer/service/card_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/service/card_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/service_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/service_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/service_slot_time_reducer.dart';
@@ -63,6 +67,8 @@ AppState appReducer(AppState state, dynamic action) {
   Pipeline pipeline = pipelineReducer(state.pipeline, action);
   PipelineList pipelineList = pipelineListReducer(state.pipelineList, action);
   StatisticsState statisticsState = statisticsReducer(state.statistics, action);
+  CardState cardState = cardReducer(state.cardState, action);
+  CardListState cardListState = cardListReducer(state.cardListState, action);
 
   AppState newState = AppState.copyWith(
       filterSearch: filterSearchState,
@@ -84,7 +90,10 @@ AppState appReducer(AppState state, dynamic action) {
       pipeline: pipeline,
       pipelineList: pipelineList,
       route: navigationReducer(state.route, action),
-      statistics: statisticsState);
+      statistics: statisticsState,
+      cardState: cardState,
+      cardListState: cardListState
+  );
 
   if (action is ClickOnBusinessState) {
     // reset the store before going to the service list

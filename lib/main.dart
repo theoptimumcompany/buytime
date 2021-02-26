@@ -8,6 +8,8 @@ import 'package:Buytime/UI/user/booking/UI_U_ConfirmBooking.dart';
 import 'package:Buytime/UI/user/booking/UI_U_MyBookings.dart';
 import 'package:Buytime/UI/user/landing/UI_U_Landing.dart';
 import 'package:Buytime/reblox/model/booking/booking_list_state.dart';
+import 'package:Buytime/reblox/model/card/card_list_state.dart';
+import 'package:Buytime/reblox/model/card/card_state.dart';
 import 'package:Buytime/reblox/model/category/invitation/category_invite_state.dart';
 import 'package:Buytime/reblox/model/category/tree/category_tree_state.dart';
 import 'package:Buytime/reblox/model/service/service_slot_time_state.dart';
@@ -127,6 +129,8 @@ void main(){
     serviceState: ServiceState().toEmpty(),
     pipeline: Pipeline().toEmpty(),
     statistics: StatisticsState().toEmpty(),
+    cardState: CardState().toEmpty(),
+    cardListState: CardListState().toEmpty()
   );
   final store = new Store<AppState>(
     appReducer,
