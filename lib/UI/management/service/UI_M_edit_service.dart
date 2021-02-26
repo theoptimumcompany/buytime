@@ -389,56 +389,58 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                           ),
                                         ),
                                       ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(bottom: 15.0),
-                                        child: Center(
-                                          child: Container(
-                                            width: media.width * 0.9,
-                                            //decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(top: 0.0, bottom: 5.0, left: 10.0, right: 10.0),
-                                              child: TextFormField(
-                                                initialValue: snapshot.serviceState.price.toString(),
-                                                keyboardType: TextInputType.number,
-                                                inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d*)'))],
-                                                validator: (value) => value.isEmpty
-                                                    ? 'Service price is blank'
-                                                    : validatePrice(value)
-                                                        ? null
-                                                        : 'Not a valid price',
-                                                onChanged: (value) {
-                                                  if (value == "") {
-                                                    setState(() {
-                                                      _servicePrice = 0.0;
-                                                    });
-                                                  } else {
-                                                    setState(() {
-                                                      _servicePrice = double.parse(value);
-                                                    });
-                                                  }
-                                                  validateAndSave();
-                                                  StoreProvider.of<AppState>(context).dispatch(SetServicePrice(_servicePrice));
-                                                },
-                                                onSaved: (value) {
-                                                  if (value == "") {
-                                                    setState(() {
-                                                      _servicePrice = 0.0;
-                                                    });
-                                                  } else {
-                                                    setState(() {
-                                                      _servicePrice = double.parse(value);
-                                                    });
-                                                  }
-                                                  StoreProvider.of<AppState>(context).dispatch(SetServicePrice(_servicePrice));
-                                                },
-                                                decoration: InputDecoration(
-                                                  labelText: AppLocalizations.of(context).price,
+                                      snapshot.serviceState.switchSlots
+                                          ? Container()
+                                          : Padding(
+                                              padding: const EdgeInsets.only(bottom: 15.0),
+                                              child: Center(
+                                                child: Container(
+                                                  width: media.width * 0.9,
+                                                  //decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
+                                                  child: Padding(
+                                                    padding: const EdgeInsets.only(top: 0.0, bottom: 5.0, left: 10.0, right: 10.0),
+                                                    child: TextFormField(
+                                                      initialValue: snapshot.serviceState.price.toString(),
+                                                      keyboardType: TextInputType.number,
+                                                      inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d*)'))],
+                                                      validator: (value) => value.isEmpty
+                                                          ? 'Service price is blank'
+                                                          : validatePrice(value)
+                                                              ? null
+                                                              : 'Not a valid price',
+                                                      onChanged: (value) {
+                                                        if (value == "") {
+                                                          setState(() {
+                                                            _servicePrice = 0.0;
+                                                          });
+                                                        } else {
+                                                          setState(() {
+                                                            _servicePrice = double.parse(value);
+                                                          });
+                                                        }
+                                                        validateAndSave();
+                                                        StoreProvider.of<AppState>(context).dispatch(SetServicePrice(_servicePrice));
+                                                      },
+                                                      onSaved: (value) {
+                                                        if (value == "") {
+                                                          setState(() {
+                                                            _servicePrice = 0.0;
+                                                          });
+                                                        } else {
+                                                          setState(() {
+                                                            _servicePrice = double.parse(value);
+                                                          });
+                                                        }
+                                                        StoreProvider.of<AppState>(context).dispatch(SetServicePrice(_servicePrice));
+                                                      },
+                                                      decoration: InputDecoration(
+                                                        labelText: AppLocalizations.of(context).price,
+                                                      ),
+                                                    ),
+                                                  ),
                                                 ),
                                               ),
                                             ),
-                                          ),
-                                        ),
-                                      ),
                                       Padding(
                                         padding: const EdgeInsets.only(left: 20.0, top: 0.0),
                                         child: Container(
@@ -774,9 +776,11 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                                               Text(snapshot.serviceState.serviceSlot[index].checkIn + " - " + snapshot.serviceState.serviceSlot[index].checkOut),
                                                                             ],
                                                                           ),
-                                                                          Row(children: [
-                                                                            Text(snapshot.serviceState.serviceSlot[index].price.toString() + " euro"),
-                                                                          ],),
+                                                                          Row(
+                                                                            children: [
+                                                                              Text(snapshot.serviceState.serviceSlot[index].price.toString() + " euro"),
+                                                                            ],
+                                                                          ),
                                                                           //showSlotInterval(snapshot.serviceState.serviceSlot[index].numberOfInterval, media, index),
                                                                         ],
                                                                       ),
