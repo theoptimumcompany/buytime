@@ -151,6 +151,7 @@ class ConfirmedOrderState extends State<ConfirmedOrder> with SingleTickerProvide
                                                     key: ObjectKey(item),
                                                     orderEntry: snapshot.itemList[index],
                                                     mediaSize: media,
+                                                    show: false,
                                                   );
                                                 },
                                                   childCount: snapshot.itemList.length,

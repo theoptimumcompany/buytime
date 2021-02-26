@@ -23,6 +23,8 @@ class Cart extends StatefulWidget {
 }
 
 class CartState extends State<Cart> {
+
+  OrderState orderState;
   @override
   void initState() {
     super.initState();
@@ -38,6 +40,34 @@ class CartState extends State<Cart> {
         cartCounter = cartCounter - snapshot.itemList[index].number;
         snapshot.removeItem(snapshot.itemList[index]);
         snapshot.itemList.removeAt(index);
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ServiceList()),);
+      }
+      StoreProvider.of<AppState>(context).dispatch(UpdateOrder(OrderState(
+          itemList: snapshot.itemList, date: snapshot.date, position: snapshot.position, total: snapshot.total, business: snapshot.business, user: snapshot.user, businessId: snapshot.businessId, userId: snapshot.userId)));
+    });
+  }
+
+  void deleteOneItem(OrderState snapshot, int index) {
+    setState(() {
+      if(snapshot.itemList.length >= 1){
+        if (snapshot.itemList[index].number > 1) {
+          --cartCounter;
+          int itemCount =  snapshot.itemList[index].number;
+          debugPrint('UI_U_Cart => BEFORE| ${snapshot.itemList[index].name} ITEM COUNT: ${snapshot.itemList[index].number}');
+          debugPrint('UI_U_Cart => BEFORE| TOTAL: ${snapshot.total}');
+          --itemCount;
+          snapshot.itemList[index].number = itemCount;
+          double serviceTotal =  snapshot.total;
+          serviceTotal = serviceTotal - snapshot.itemList[index].price;
+          snapshot.total = serviceTotal;
+          debugPrint('UI_U_Cart => AFTER| ${snapshot.itemList[index].name} ITEM COUNT: ${snapshot.itemList[index].number}');
+          debugPrint('UI_U_Cart => AFTER| TOTAL: ${snapshot.total}');
+
+
+          /*snapshot.removeItem(snapshot.itemList[index]);
+        snapshot.itemList.removeAt(index);*/
+        }
+      }else{
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ServiceList()),);
       }
       StoreProvider.of<AppState>(context).dispatch(UpdateOrder(OrderState(
@@ -131,7 +161,8 @@ class CartState extends State<Cart> {
                                       converter: (store) => store.state.order,
                                       rebuildOnChange: true,
                                       builder: (context, snapshot) {
-                                        print("UI_U_cart => " + snapshot.itemList.length.toString());
+                                        orderState = snapshot;
+                                        print("UI_U_cart => CART COUNT: ${orderState.itemList.length}");
                                         return Column(
                                           children: [
                                             Flexible(
@@ -140,28 +171,47 @@ class CartState extends State<Cart> {
                                                 SliverList(
                                                   delegate: SliverChildBuilderDelegate((context, index) {
                                                     //MenuItemModel menuItem = menuItems.elementAt(index);
-                                                    final item = (index != snapshot.itemList.length ? snapshot.itemList[index] : null);
+                                                    debugPrint('UI_U_Cart => LIST| ${orderState.itemList[index].name} ITEM COUNT: ${orderState.itemList[index].number}');
+                                                    var item = (index != orderState.itemList.length ? orderState.itemList[index] : null);
+                                                    int itemCount = orderState.itemList[index].number;
                                                     return OptimumOrderItemCardMedium(
                                                       key: ObjectKey(item),
-                                                      orderEntry: snapshot.itemList[index],
+                                                      orderEntry: orderState.itemList[index],
                                                       mediaSize: media,
-                                                      rightWidget1: Column(
+                                                      orderState: orderState,
+                                                      index: index,
+                                                      show: true,
+                                                      /*rightWidget1: Column(
                                                         children: [
-                                                          IconButton(
-                                                            icon: Icon(
-                                                              Icons.remove_shopping_cart,
-                                                              color: BuytimeTheme.SymbolGrey,
-                                                              //size: SizeConfig.safeBlockHorizontal * 15,
-                                                            ),
-                                                            onPressed: () {
-                                                              deleteItem(snapshot, index);
-                                                            },
+                                                          Row(
+                                                            children: [
+                                                              itemCount >= 2 ? IconButton(
+                                                                icon: Icon(
+                                                                  Icons.remove_circle_outline,
+                                                                  color: BuytimeTheme.AccentRed,
+                                                                  //size: SizeConfig.safeBlockHorizontal * 15,
+                                                                ),
+                                                                onPressed: () {
+                                                                  deleteOneItem(orderState, index);
+                                                                },
+                                                              ) : Container(),
+                                                              IconButton(
+                                                                icon: Icon(
+                                                                  Icons.remove_shopping_cart,
+                                                                  color: BuytimeTheme.SymbolGrey,
+                                                                  //size: SizeConfig.safeBlockHorizontal * 15,
+                                                                ),
+                                                                onPressed: () {
+                                                                  deleteItem(orderState, index);
+                                                                },
+                                                              ),
+                                                            ],
                                                           )
                                                         ],
-                                                      ),
+                                                      ),*/
                                                     );
                                                   },
-                                                    childCount: snapshot.itemList.length,
+                                                    childCount: orderState.itemList.length,
                                                   ),
                                                 ),
                                               ]),

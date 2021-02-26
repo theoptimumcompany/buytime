@@ -1,7 +1,11 @@
+import 'package:Buytime/UI/user/service/UI_U_service_list.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
+import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/snippet/generic.dart';
 import 'package:Buytime/reblox/model/order/order_entry.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
+import 'package:Buytime/reblox/reducer/order_reducer.dart';
+import 'package:Buytime/utils/globals.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:flutter/material.dart';
@@ -15,17 +19,23 @@ class OptimumOrderItemCardMedium extends StatefulWidget {
   Size mediaSize;
   Widget rightWidget1;
   ObjectKey key;
+  OrderState orderState;
+  int index;
+  bool show;
 
-  OptimumOrderItemCardMedium({this.orderEntry, this.onOrderItemCardTap, this.rightWidget1, @required this.mediaSize, @required this.key}) {
+  OptimumOrderItemCardMedium({this.orderEntry, this.onOrderItemCardTap, this.rightWidget1, @required this.mediaSize, @required this.key, this.orderState, this.index, this.show}) {
     this.orderEntry = orderEntry;
     this.onOrderItemCardTap = onOrderItemCardTap;
     this.rightWidget1 = rightWidget1;
     this.mediaSize = mediaSize;
     this.key = key;
+    this.orderState = orderState;
+    this.index = index;
+    this.show = show;
   }
 
   @override
-  _OptimumOrderItemCardMediumState createState() => _OptimumOrderItemCardMediumState(orderEntry: orderEntry, onOrderItemCardTap: onOrderItemCardTap, rightWidget1: rightWidget1, mediaSize: mediaSize, key: key);
+  _OptimumOrderItemCardMediumState createState() => _OptimumOrderItemCardMediumState(orderEntry: orderEntry, onOrderItemCardTap: onOrderItemCardTap, rightWidget1: rightWidget1, mediaSize: mediaSize, key: key, orderState: orderState, index: index, show: show);
 }
 
 class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium> {
@@ -34,9 +44,57 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
   Size mediaSize;
   OrderEntry orderEntry;
   ObjectKey key;
+  OrderState orderState;
+  int index;
+  bool show;
 
 
-  _OptimumOrderItemCardMediumState({this.orderEntry, this.onOrderItemCardTap, this.rightWidget1, this.mediaSize, this.key});
+  _OptimumOrderItemCardMediumState({this.orderEntry, this.onOrderItemCardTap, this.rightWidget1, this.mediaSize, this.key, this.orderState, this.index, this.show});
+
+  void deleteItem(OrderState snapshot, int index) {
+    setState(() {
+      if (snapshot.itemList.length > 1) {
+        cartCounter = cartCounter - snapshot.itemList[index].number;
+        snapshot.removeItem(snapshot.itemList[index]);
+        snapshot.itemList.removeAt(index);
+      } else {
+        cartCounter = cartCounter - snapshot.itemList[index].number;
+        snapshot.removeItem(snapshot.itemList[index]);
+        snapshot.itemList.removeAt(index);
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ServiceList()),);
+      }
+      StoreProvider.of<AppState>(context).dispatch(UpdateOrder(OrderState(
+          itemList: snapshot.itemList, date: snapshot.date, position: snapshot.position, total: snapshot.total, business: snapshot.business, user: snapshot.user, businessId: snapshot.businessId, userId: snapshot.userId)));
+    });
+  }
+
+  void deleteOneItem(OrderState snapshot, int index) {
+    setState(() {
+      if(snapshot.itemList.length >= 1){
+        if (snapshot.itemList[index].number > 1) {
+          --cartCounter;
+          int itemCount =  snapshot.itemList[index].number;
+          debugPrint('UI_U_Cart => BEFORE| ${snapshot.itemList[index].name} ITEM COUNT: ${snapshot.itemList[index].number}');
+          debugPrint('UI_U_Cart => BEFORE| TOTAL: ${snapshot.total}');
+          --itemCount;
+          snapshot.itemList[index].number = itemCount;
+          double serviceTotal =  snapshot.total;
+          serviceTotal = serviceTotal - snapshot.itemList[index].price;
+          snapshot.total = serviceTotal;
+          debugPrint('UI_U_Cart => AFTER| ${snapshot.itemList[index].name} ITEM COUNT: ${snapshot.itemList[index].number}');
+          debugPrint('UI_U_Cart => AFTER| TOTAL: ${snapshot.total}');
+
+
+          /*snapshot.removeItem(snapshot.itemList[index]);
+        snapshot.itemList.removeAt(index);*/
+        }
+      }else{
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ServiceList()),);
+      }
+      StoreProvider.of<AppState>(context).dispatch(UpdateOrder(OrderState(
+          itemList: snapshot.itemList, date: snapshot.date, position: snapshot.position, total: snapshot.total, business: snapshot.business, user: snapshot.user, businessId: snapshot.businessId, userId: snapshot.userId)));
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +157,36 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
                             ],
                           ),
                         ),
-                        rightWidget1 != null ? rightWidget1 : SizedBox()
+                        show ?
+                        Column(
+                          children: [
+                            Row(
+                              children: [
+                                orderEntry.number >= 2 ? IconButton(
+                                  icon: Icon(
+                                    Icons.remove_circle_outline,
+                                    color: BuytimeTheme.AccentRed,
+                                    //size: SizeConfig.safeBlockHorizontal * 15,
+                                  ),
+                                  onPressed: () {
+                                    deleteOneItem(orderState, index);
+                                  },
+                                ) : Container(),
+                                IconButton(
+                                  icon: Icon(
+                                    Icons.remove_shopping_cart,
+                                    color: BuytimeTheme.SymbolGrey,
+                                    //size: SizeConfig.safeBlockHorizontal * 15,
+                                  ),
+                                  onPressed: () {
+                                    deleteItem(orderState, index);
+                                  },
+                                ),
+                              ],
+                            )
+                          ],
+                        ) :
+                            Container()
                       ],
                     ),
                     /*Container(
@@ -126,6 +213,6 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
     if (orderEntry.number == 1) {
       return "€ " + orderEntry.price.toStringAsFixed(2);
     }
-    return "€ " + orderEntry.price.toString() + " x " +  orderEntry.number.toString() + " = € " + (orderEntry.price * orderEntry.number).toStringAsFixed(2);
+    return "€ " + orderEntry.price.toStringAsFixed(2) + " x " +  orderEntry.number.toString() + " = € " + (orderEntry.price * orderEntry.number).toStringAsFixed(2);
   }
 }
