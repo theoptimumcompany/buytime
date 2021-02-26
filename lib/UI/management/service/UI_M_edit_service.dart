@@ -178,7 +178,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
       }
       week = week.substring(0, week.length - 2);
       if (indexInterval < (StoreProvider.of<AppState>(context).state.serviceState.serviceSlot[indexSlot].numberOfInterval - 1)) {
-        week = week + "/";
+        week = week + " / ";
       }
       return week;
     }
@@ -711,7 +711,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                             textAlign: TextAlign.start,
                                                             overflow: TextOverflow.clip,
                                                             style: TextStyle(
-                                                              fontSize: media.height * 0.02,
+                                                              fontSize: media.height * 0.021,
                                                               color: BuytimeTheme.TextBlack,
                                                               fontWeight: FontWeight.w500,
                                                             ),
@@ -760,7 +760,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                                             'Time Availability ' + (index + 1).toString(),
                                                                             style: TextStyle(
                                                                               fontSize: media.height * 0.020,
-                                                                              color: BuytimeTheme.TextGrey,
+                                                                              color: BuytimeTheme.TextBlack,
                                                                               fontWeight: FontWeight.w500,
                                                                             ),
                                                                           ),
@@ -774,7 +774,10 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                                               Text(snapshot.serviceState.serviceSlot[index].checkIn + " - " + snapshot.serviceState.serviceSlot[index].checkOut),
                                                                             ],
                                                                           ),
-                                                                          showSlotInterval(snapshot.serviceState.serviceSlot[index].numberOfInterval, media, index),
+                                                                          Row(children: [
+                                                                            Text(snapshot.serviceState.serviceSlot[index].price.toString() + " euro"),
+                                                                          ],),
+                                                                          //showSlotInterval(snapshot.serviceState.serviceSlot[index].numberOfInterval, media, index),
                                                                         ],
                                                                       ),
                                                                     ),

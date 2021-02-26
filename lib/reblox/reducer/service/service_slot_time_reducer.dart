@@ -141,5 +141,9 @@ ServiceSlot serviceSlotReducer(ServiceSlot state, action) {
     serviceSlot.price = action.price;
     return serviceSlot;
   }
+  if (action is SetServiceSlotToEmpty) {
+    serviceSlot = ServiceSlot().toEmpty();
+    return serviceSlot;
+  }
   return state;
 }
