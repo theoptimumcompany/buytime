@@ -22,7 +22,7 @@ class _BookingListServiceListItemState extends State<BookingListServiceListItem>
     //debugPrint('image: ${widget.serviceState.image1}');
     return Container(
         //margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 4, right: SizeConfig.safeBlockHorizontal * 4),
-        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1),
+        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 0),
         child: Material(
             color: Colors.transparent,
             child: InkWell(
@@ -35,7 +35,7 @@ class _BookingListServiceListItemState extends State<BookingListServiceListItem>
               },
               child: Container(
                 height: SizeConfig.safeBlockVertical * 15,
-                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1),
+                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 2.5, top: 1, bottom: 1),
                 child: Row(
                   children: [
                     ///Service Image
@@ -45,7 +45,7 @@ class _BookingListServiceListItemState extends State<BookingListServiceListItem>
                       //margin: EdgeInsets.all(SizeConfig.safeBlockVertical * 2),
                       decoration: BoxDecoration(
                           color: Colors.black,
-                          borderRadius: BorderRadius.all(Radius.circular(5)),
+                          borderRadius: BorderRadius.all(Radius.circular(0)),
                           image: DecorationImage(
                             image: widget.serviceState.image1.isNotEmpty ? NetworkImage(widget.serviceState.image1) : AssetImage('assets/img/image_placeholder.png'),
                             fit: BoxFit.cover,

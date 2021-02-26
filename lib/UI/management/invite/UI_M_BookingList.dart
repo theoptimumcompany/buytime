@@ -91,6 +91,7 @@ class _BookingListState extends State<BookingList> {
             debugPrint('UI_M_BookingList: value booking status: ${element.user.first.surname} ${element.status}');
           });*/
           value.sort((a,b) => DateFormat('dd').format(a.start_date).compareTo(DateFormat('dd').format(b.start_date)));
+          //value.sort((a,b) => DateFormat('dd').format(a.end_date).compareTo(DateFormat('dd').format(b.end_date)));
           bookingsList.add(value);
         });
 

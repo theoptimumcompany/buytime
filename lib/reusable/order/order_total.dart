@@ -1,4 +1,6 @@
 import 'package:Buytime/reblox/model/order/order_state.dart';
+import 'package:Buytime/utils/size_config.dart';
+import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -15,35 +17,50 @@ class OrderTotal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
+    SizeConfig().init(context);
     return Container(
       width: media.width,
-      decoration: BoxDecoration(
-        color: Color.fromRGBO(246, 246, 246, 1.0),
-        border: Border(
-          bottom: BorderSide(width: 1.0, color: Color.fromRGBO(33, 33, 33, 0.1)),
-        ),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(15.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              AppLocalizations.of(context).total + orderState.total.toStringAsFixed(2),
+      height: SizeConfig.safeBlockVertical * 10,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        //crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ///Total Price Text
+          Text(
+            /*AppLocalizations.of(context).total*/ 'Total price',
+            style: TextStyle(
+              fontFamily: BuytimeTheme.FontFamily,
+              fontWeight: FontWeight.w500,
+              fontSize: SizeConfig.safeBlockHorizontal * 4,
+              color: BuytimeTheme.TextGrey
+            ),
+          ),
+          ///Total Value
+          Container(
+            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 20),
+            child: Text(
+              '€ ${orderState.total.toStringAsFixed(2)}',
               style: TextStyle(
+                fontFamily: BuytimeTheme.FontFamily,
                 fontWeight: FontWeight.w700,
-                fontSize: media.height * 0.026,
+                fontSize: SizeConfig.safeBlockHorizontal * 7,
               ),
             ),
-            Text(
+          ),
+          ///Tax
+          Container(
+            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 8),
+            child: Text(
               AppLocalizations.of(context).tax + (orderState.total != null ? (orderState.total * 0.25).toStringAsFixed(2) : "0"),
               style: TextStyle(
+                fontFamily: BuytimeTheme.FontFamily,
                 fontWeight: FontWeight.w400,
                 fontSize: media.height * 0.020,
+                  color: BuytimeTheme.TextGrey
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

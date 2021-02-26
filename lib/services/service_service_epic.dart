@@ -145,25 +145,27 @@ class ServiceListAndNavigateRequestService implements EpicClass<AppState> {
 class ServiceListAndNavigateOnConfirmRequestService implements EpicClass<AppState> {
   List<ServiceState> serviceStateList;
   StatisticsState statisticsState;
+  String businessId;
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     debugPrint("SERVICE_SERVICE_EPIC - ServiceListAndNavigateOnConfirmRequestService => CATCHED ACTION");
     return actions.whereType<ServiceListAndNavigateOnConfirmRequest>().asyncMap((event) async {
       debugPrint("SERVICE_SERVICE_EPIC - ServiceListAndNavigateOnConfirmRequestService => Firestore request business Id: ${event.businessId}, permission: ${event.permission}");
+      businessId = event.businessId;
       serviceStateList = [];
       int docs = 0;
       int read = 0;
       if (event.permission == "user") {
         debugPrint("SERVICE_SERVICE_EPIC - ServiceListAndNavigateOnConfirmRequestService => Permission as user");
         var servicesFirebaseShadow = await FirebaseFirestore.instance /// 1 READ - ? DOC
-            .collection("service").where("businessId", isEqualTo: event.businessId).where("visibility", isEqualTo: 'Deactivated').get();
+            .collection("service").where("businessId", isEqualTo: event.businessId).where("visibility", isEqualTo: 'Deactivated').limit(20).get();
         docs = servicesFirebaseShadow.docs.length;
         servicesFirebaseShadow.docs.forEach((element) {
           ServiceState serviceState = ServiceState.fromJson(element.data());
           serviceStateList.add(serviceState);
         });
         var servicesFirebaseActive = await FirebaseFirestore.instance /// 1 READ - ? DOC
-            .collection("service").where("businessId", isEqualTo: event.businessId).where("visibility", isEqualTo: 'Active').get();
+            .collection("service").where("businessId", isEqualTo: event.businessId).where("visibility", isEqualTo: 'Active').limit(20).get();
         docs = docs + servicesFirebaseActive.docs.length;
         servicesFirebaseActive.docs.forEach((element) {
           ServiceState serviceState = ServiceState.fromJson(element.data());
@@ -200,7 +202,7 @@ class ServiceListAndNavigateOnConfirmRequestService implements EpicClass<AppStat
     }).expand((element) => [
           ServiceListReturned(serviceStateList),
           UpdateStatistics(statisticsState),
-          NavigatePushAction(AppRoutes.confirmBooking),
+          UserRequestListCategory(businessId)
         ]);
   }
 }

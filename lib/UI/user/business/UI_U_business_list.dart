@@ -84,7 +84,7 @@ class UI_U_BusinessListState extends State<UI_U_BusinessList> {
                                                 StoreProvider.of<AppState>(context).dispatch(new SetBusiness(businessListState[index]));
                                                 Navigator.push(
                                                   context,
-                                                  MaterialPageRoute(builder: (context) => UI_U_ServiceList()),
+                                                  MaterialPageRoute(builder: (context) => ServiceList()),
                                                 );
                                               },
                                               imageUrl: businessListState[index].profile,

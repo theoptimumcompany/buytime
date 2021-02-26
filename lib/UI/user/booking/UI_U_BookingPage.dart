@@ -323,7 +323,7 @@ class _BookingPageState extends State<BookingPage> {
                                 children: [
                                   ///Top Services
                                   Container(
-                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
+                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical*1),
                                     child: Text(
                                       'Top Services', //TODO Make it Global
                                       style: TextStyle(
@@ -334,18 +334,12 @@ class _BookingPageState extends State<BookingPage> {
                                       ),
                                     ),
                                   ),
-                                  serviceList.isNotEmpty ? CustomScrollView(shrinkWrap: true, slivers: [
-                                    SliverList(
-                                      delegate: SliverChildBuilderDelegate((context, index) {
-                                        //MenuItemModel menuItem = menuItems.elementAt(index);
-                                        ServiceState service = serviceList.elementAt(index);
-
-                                        return BookingListServiceListItem(service);
-                                      },
-                                        childCount: serviceList.length > 5 ? serviceList.getRange(0, 5).length : serviceList.length,
-                                      ),
-                                    ),
-                                  ]) : Container(
+                                  serviceList.isNotEmpty ?
+                                  Column(
+                                    children: serviceList.map((ServiceState service) =>
+                                        BookingListServiceListItem(service)).toList(),
+                                  ) :
+                                  Container(
                                     height: SizeConfig.safeBlockVertical * 8,
                                     margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                     decoration: BoxDecoration(
@@ -368,6 +362,42 @@ class _BookingPageState extends State<BookingPage> {
                                         )
                                     ),
                                   )
+                                  /*serviceList.isNotEmpty ?
+                                  CustomScrollView(shrinkWrap: true, slivers: [
+                                    SliverList(
+                                      delegate: SliverChildBuilderDelegate((context, index) {
+                                        //MenuItemModel menuItem = menuItems.elementAt(index);
+                                        ServiceState service = serviceList.elementAt(index);
+
+                                        return BookingListServiceListItem(service);
+                                      },
+                                        childCount: serviceList.length > 5 ? serviceList.getRange(0, 5).length : serviceList.length,
+                                      ),
+                                    ),
+                                  ]) :
+                                  Container(
+                                    height: SizeConfig.safeBlockVertical * 8,
+                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                    decoration: BoxDecoration(
+                                        color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2),
+                                        borderRadius: BorderRadius.circular(10)
+                                    ),
+                                    child: Center(
+                                        child: Container(
+                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 4),
+                                          alignment: Alignment.centerLeft,
+                                          child:  Text(
+                                            'No active service found', //TODO Make it Global
+                                            style: TextStyle(
+                                                fontFamily: BuytimeTheme.FontFamily,
+                                                color: BuytimeTheme.TextGrey,
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 16
+                                            ),
+                                          ),
+                                        )
+                                    ),
+                                  )*/
                                 ],
                               ),
                             ),
@@ -388,6 +418,7 @@ class _BookingPageState extends State<BookingPage> {
                                     child: TextFormField(
                                       controller: _searchController,
                                       textAlign: TextAlign.start,
+                                      keyboardType: TextInputType.url,
                                       decoration: InputDecoration(
                                         enabledBorder: OutlineInputBorder(
                                             borderSide: BorderSide(color: Color(0xffe0e0e0)),
@@ -415,10 +446,18 @@ class _BookingPageState extends State<BookingPage> {
                                           color: Color(0xff666666),
                                           fontWeight: FontWeight.w400,
                                         ),
-                                        suffixIcon: Icon(
-                                          // Based on passwordVisible state choose the icon
-                                          Icons.search,
-                                          color: Color(0xff666666),
+                                        suffixIcon: InkWell(
+                                          onTap: (){
+                                            debugPrint('done');
+                                            FocusScope.of(context).unfocus();
+                                            if(_searchController.text.isNotEmpty)
+                                              Navigator.push(context, MaterialPageRoute(builder: (context) => SearchPage()));
+                                          },
+                                          child: Icon(
+                                            // Based on passwordVisible state choose the icon
+                                            Icons.search,
+                                            color: Color(0xff666666),
+                                          ),
                                         ),
                                       ),
                                       style: TextStyle(
@@ -429,7 +468,8 @@ class _BookingPageState extends State<BookingPage> {
                                       onEditingComplete: (){
                                         debugPrint('done');
                                         FocusScope.of(context).unfocus();
-                                        Navigator.push(context, MaterialPageRoute(builder: (context) => SearchPage()));
+                                        if(_searchController.text.isNotEmpty)
+                                          Navigator.push(context, MaterialPageRoute(builder: (context) => SearchPage()));
                                       },
                                     ),
                                   ),

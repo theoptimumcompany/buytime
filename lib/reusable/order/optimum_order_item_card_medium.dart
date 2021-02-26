@@ -2,6 +2,8 @@ import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/snippet/generic.dart';
 import 'package:Buytime/reblox/model/order/order_entry.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
+import 'package:Buytime/utils/size_config.dart';
+import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -38,7 +40,9 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     return Container(
+      height: SizeConfig.safeBlockVertical * 10,
       key: key,
       child: GestureDetector(
         onTap: () {
@@ -59,6 +63,7 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    ///Quantity & Service Name & Price
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -66,22 +71,28 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              ///Quantity & Service Name
                               Padding(
                                 padding: const EdgeInsets.only(bottom:5.0),
                                 child: Text(
                                   orderEntry.number.toString() + " x " +  orderEntry.name,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
-                                      fontWeight: FontWeight.w700,
+                                    fontFamily: BuytimeTheme.FontFamily,
+                                      fontWeight: FontWeight.w600,
+                                      color: BuytimeTheme.TextDark.withOpacity(.8),
                                       fontSize: mediaSize.height * 0.024,
                                   ),
                                 ),
                               ),
+                              ///Price
                               Text(
                                 price(),
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
+                                  fontFamily: BuytimeTheme.FontFamily,
                                     fontSize: mediaSize.height * 0.021,
+                                    fontWeight: FontWeight.w600,
                                     color: Colors.black.withOpacity(0.6)
                                 ),
                               ),
@@ -91,6 +102,11 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
                         rightWidget1 != null ? rightWidget1 : SizedBox()
                       ],
                     ),
+                    /*Container(
+                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
+                      height: SizeConfig.safeBlockVertical * .25,
+                      color: BuytimeTheme.DividerGrey,
+                    )*/
                     // rowWidget1 != null || rowWidget2 != null || rowWidget3 != null ? Row(children: [
                     //   rowWidget1,
                     //   rowWidget2,
@@ -108,7 +124,7 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
 
   String price() {
     if (orderEntry.number == 1) {
-      return "€ " + orderEntry.price.toString();
+      return "€ " + orderEntry.price.toStringAsFixed(2);
     }
     return "€ " + orderEntry.price.toString() + " x " +  orderEntry.number.toString() + " = € " + (orderEntry.price * orderEntry.number).toStringAsFixed(2);
   }

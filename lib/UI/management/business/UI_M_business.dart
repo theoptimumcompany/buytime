@@ -201,9 +201,7 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                         ],
                       ),
                     ),
-
                     ///Categories & Manage
-
                     Container(
                         margin: EdgeInsets.only(left: 20.0, top: 20.0, right: 10.0),
                         child: Row(
@@ -239,7 +237,6 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                             ),
                           ],
                         )),
-
                     ///Categories list top part
                     Container(
                       padding: EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0, bottom: 10),
@@ -270,7 +267,6 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                         ],
                       ),
                     ),
-
                     ///Categories list & Invite user
                     Expanded(
                       child: GestureDetector(
@@ -284,7 +280,6 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                           children: [
                             categoryRootList.length > 0
                                 ?
-
                                 ///Categories list
                                 Positioned.fill(
                                     child: Align(
@@ -408,9 +403,6 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                         ),
                       ),
                     ),
-
-                    ///Invite user
-
                   ],
                 ),
               ),

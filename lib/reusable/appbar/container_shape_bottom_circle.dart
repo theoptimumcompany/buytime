@@ -9,8 +9,9 @@ class ContainerShapeBottomCircle extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final Paint paint = new Paint()
-    ..color = BuytimeTheme.ManagerPrimary;
+    final Paint paint = new Paint();
+    paint.color = colour;
+    //..color = BuytimeTheme.ManagerPrimary;
 
     Path path = Path();
     path.moveTo(size.width, 0);

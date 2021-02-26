@@ -176,7 +176,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                               ),
                               ///Booking Code & Email & Name & Surname & Check In & Check Out & Number Of Guests
                               Container(
-                                height: view ? SizeConfig.safeBlockVertical * 50 : SizeConfig.safeBlockVertical * 55,
+                                height: SizeConfig.safeBlockVertical * 55,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -229,29 +229,34 @@ class _BookingDetailsState extends State<BookingDetails> {
                                         child: Column(
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
+                                            ///Full Name Text
                                             Container(
                                               child: Text(
                                                 'Full Name',
                                                 style: TextStyle(
                                                     fontFamily: BuytimeTheme.FontFamily,
-                                                    color: BuytimeTheme.DividerGrey,
+                                                    color: BuytimeTheme.TextMedium,
                                                     fontWeight: FontWeight.w500,
                                                     fontSize: 18
                                                 ),
                                               ),
                                             ),
-                                            Container(
-                                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
-                                              child: Text(
-                                                '${bookingState.user.first.name} ${bookingState.user.first.surname}',
-                                                style: TextStyle(
-                                                    fontFamily: BuytimeTheme.FontFamily,
-                                                    color: BuytimeTheme.TextDark,
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 18
-                                                ),
-                                              ),
-                                            )
+                                            ///Full Name
+                                           Flexible(child:  Container(
+                                             margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
+                                             child: FittedBox(
+                                               fit: BoxFit.scaleDown,
+                                               child: Text(
+                                                 '${bookingState.user.first.name} ${bookingState.user.first.surname}',
+                                                 style: TextStyle(
+                                                     fontFamily: BuytimeTheme.FontFamily,
+                                                     color: BuytimeTheme.TextDark,
+                                                     fontWeight: FontWeight.bold,
+                                                     fontSize: 18
+                                                 ),
+                                               ),
+                                             ),
+                                           ))
                                           ],
                                         ),
                                       ),
@@ -263,26 +268,33 @@ class _BookingDetailsState extends State<BookingDetails> {
                                         child: Column(
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
+                                            ///Email Text
                                             Container(
                                               child: Text(
                                                 'Email',
                                                 style: TextStyle(
                                                     fontFamily: BuytimeTheme.FontFamily,
-                                                    color: BuytimeTheme.DividerGrey,
+                                                    color: BuytimeTheme.TextMedium,
                                                     fontWeight: FontWeight.w500,
                                                     fontSize: 18
                                                 ),
                                               ),
                                             ),
-                                            Container(
-                                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
-                                              child: Text(
-                                                bookingState.user.first.email ?? 'sample@gmail.com',
-                                                style: TextStyle(
-                                                    fontFamily: BuytimeTheme.FontFamily,
-                                                    color: BuytimeTheme.TextDark,
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 18
+                                            ///Email
+                                            Flexible(
+                                              child: Container(
+                                                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
+                                                child: FittedBox(
+                                                  fit: BoxFit.scaleDown,
+                                                  child: Text(
+                                                    bookingState.user.first.email ?? 'sample@gmail.com',
+                                                    style: TextStyle(
+                                                        fontFamily: BuytimeTheme.FontFamily,
+                                                        color: BuytimeTheme.TextDark,
+                                                        fontWeight: FontWeight.bold,
+                                                        fontSize: 18
+                                                    ),
+                                                  ),
                                                 ),
                                               ),
                                             )
@@ -310,6 +322,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                                                       textAlign: TextAlign.start,
                                                       keyboardType: TextInputType.datetime,
                                                       decoration: InputDecoration(
+                                                        isDense: true,
                                                           filled: true,
                                                           fillColor: BuytimeTheme.DividerGrey,
                                                           enabledBorder: OutlineInputBorder(
@@ -361,6 +374,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                                                       textAlign: TextAlign.start,
                                                       keyboardType: TextInputType.datetime,
                                                       decoration: InputDecoration(
+                                                          isDense: true,
                                                           filled: true,
                                                           fillColor: BuytimeTheme.DividerGrey,
                                                           enabledBorder: OutlineInputBorder(
@@ -411,6 +425,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                                             controller: _numberOfGuestsController,
                                             textAlign: TextAlign.start,
                                             decoration: InputDecoration(
+                                              isDense: true,
                                               filled: true,
                                               fillColor: BuytimeTheme.DividerGrey,
                                               enabledBorder: OutlineInputBorder(
@@ -449,11 +464,13 @@ class _BookingDetailsState extends State<BookingDetails> {
                               Expanded(
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
+                                  //crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
                                     Container(
-                                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 4, bottom: view ? SizeConfig.safeBlockVertical * 4 : SizeConfig.safeBlockVertical * 0),
+                                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5, bottom: SizeConfig.safeBlockVertical * 0),
                                       //color: Colors.black,
                                       child: QrImage(
+                                        //size: SizeConfig.safeBlockHorizontal * 50,
                                         data: '$link',
                                         version: QrVersions.auto,
                                         padding: EdgeInsets.all(0),
@@ -464,13 +481,14 @@ class _BookingDetailsState extends State<BookingDetails> {
                                 ),
                               ),
                               ///Send invitation
-                              Expanded(
+                              Flexible(
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Container(
                                         width: media.width * .5,
-                                        //margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 4),
+                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5, bottom: SizeConfig.safeBlockVertical * 2.5),
+                                        alignment: Alignment.bottomCenter,
                                         child: RaisedButton(
                                           onPressed: () async{
                                             if(view){

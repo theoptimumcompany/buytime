@@ -21,13 +21,14 @@ class _FindYourInspirationCardWidgetState extends State<FindYourInspirationCardW
   @override
   void initState() {
     super.initState();
+    //debugPrint('${widget.imageUrl}');
   }
 
   @override
   Widget build(BuildContext context) {
 
     return  CachedNetworkImage(
-      imageUrl: widget.imageUrl,
+      imageUrl: widget.imageUrl.isNotEmpty ? widget.imageUrl:  'https://firebasestorage.googleapis.com/v0/b/buytime-458a1.appspot.com/o/general%2Fimage_placeholder_200x200_1000x1000.png?alt=media&token=082a1896-32d8-4750-b7cc-141f00bc060c',
       imageBuilder: (context, imageProvider) => Container(
         margin: EdgeInsets.all(SizeConfig.safeBlockVertical*.25),
         //width: double.infinity,
@@ -35,7 +36,7 @@ class _FindYourInspirationCardWidgetState extends State<FindYourInspirationCardW
         width: SizeConfig.safeBlockVertical * widget.width,
         height: SizeConfig.safeBlockVertical * widget.heigth,
         decoration: BoxDecoration(
-            color: BuytimeTheme.Secondary,
+            color: BuytimeTheme.BackgroundWhite,
             borderRadius: BorderRadius.all(Radius.circular(5)),
             image: DecorationImage(
               image: imageProvider,

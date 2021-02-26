@@ -85,12 +85,12 @@ class UpdateBooking {
   //String get bookingId => _bookingId;
   BookingState get bookingState => _bookingState;
 }
-class UpdateBookingNavigate {
+class UpdateBookingOnConfirm {
   //BookingStatus _bookingStatus;
   //String _bookingId;
   BookingState _bookingState;
 
-  UpdateBookingNavigate(this._bookingState);
+  UpdateBookingOnConfirm(this._bookingState);
 
   //BookingStatus get bookingStatus => _bookingStatus;
   //String get bookingId => _bookingId;

@@ -1,6 +1,6 @@
 import 'dart:core';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:Buytime/UI/user/cart/UI_U_cart.dart';
+import 'package:Buytime/UI/user/cart/UI_U_Cart.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/business/snippet/business_snippet_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
@@ -17,12 +17,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
-class UI_U_ServiceList extends StatefulWidget {
+class ServiceList extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => UI_U_ServiceListState();
+  State<StatefulWidget> createState() => ServiceListState();
 }
 
-class UI_U_ServiceListState extends State<UI_U_ServiceList> {
+class ServiceListState extends State<ServiceList> {
   OrderState order = OrderState(itemList: List<OrderEntry>(), date: DateTime.now(), position: "", total: 0.0, business: BusinessSnippet().toEmpty(), user: UserSnippet().toEmpty(), businessId: "");
 
   @override
@@ -179,9 +179,9 @@ class CartIconAppBar extends StatelessWidget {
           // dispatch the order
           StoreProvider.of<AppState>(context).dispatch(SetOrder(order));
           // go to the cart page
-          Navigator.pushReplacement(
+          Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => UI_U_Cart()),
+            MaterialPageRoute(builder: (context) => Cart()),
           );
         } else {
           showDialog(
