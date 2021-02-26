@@ -1,6 +1,7 @@
-import 'package:Buytime/UI/user/cart/tab/T_credit_cards.dart';
+
 import 'package:Buytime/UI/user/UI_U_Tabs.dart';
 import 'package:Buytime/UI/user/cart/tab/T_room.dart';
+import 'package:Buytime/reblox/model/card/card_state.dart';
 import 'package:Buytime/utils/b_cube_grid_spinner.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
@@ -32,6 +33,8 @@ class ConfirmedOrderState extends State<ConfirmedOrder> with SingleTickerProvide
 
   TabController _controller;
   int _selectedIndex = 0;
+  CardState cardState = CardState().toEmpty();
+
   @override
   void initState() {
     super.initState();
@@ -43,11 +46,21 @@ class ConfirmedOrderState extends State<ConfirmedOrder> with SingleTickerProvide
       });
       print("Selected Index: " + _controller.index.toString());
     });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+
+    });
+
   }
 
   @override
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
+    List<CardState> tmpList = StoreProvider.of<AppState>(context).state.cardListState.cardListState;
+    tmpList.forEach((element) {
+      if(element.selected)
+        cardState = element;
+    });
     return WillPopScope(
         onWillPop: () async {
           FocusScope.of(context).unfocus();
@@ -215,7 +228,7 @@ class ConfirmedOrderState extends State<ConfirmedOrder> with SingleTickerProvide
                                                     Container(
                                                       margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 5),
                                                       child: Text(
-                                                        widget.from == 0 ? 'CardType ****0000' : 'Room Number', ///TODO Make it Global
+                                                        widget.from == 0 ? '${cardState.cardResponse.brand} **** ${cardState.cardResponse.last4}' : 'Room Number', ///TODO Make it Global
                                                         textAlign: TextAlign.start,
                                                         style: TextStyle(
                                                           fontFamily: BuytimeTheme.FontFamily,

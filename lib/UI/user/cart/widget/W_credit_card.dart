@@ -2,8 +2,10 @@ import 'dart:math';
 
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
+import 'package:Buytime/reblox/model/card/card_state.dart';
 import 'package:Buytime/reblox/reducer/booking_reducer.dart';
 import 'package:Buytime/reblox/reducer/business_reducer.dart';
+import 'package:Buytime/reblox/reducer/service/card_list_reducer.dart';
 import 'package:Buytime/reusable/material_design_icons.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
@@ -16,7 +18,8 @@ import 'package:share/share.dart';
 
 class CreditCard extends StatefulWidget {
 
-  CreditCard();
+  CardState cardState;
+  CreditCard(this.cardState);
 
   @override
   _CreditCardState createState() => _CreditCardState();
@@ -28,10 +31,18 @@ class _CreditCardState extends State<CreditCard> {
   bool selected = false;
   String card = '';
   List<String> cc = ['v','mc'];
+
+  String ownerCard ='';
+  String cardName = '';
+  String cardEndWith = '';
+
   @override
   void initState() {
     super.initState();
-    card = cc.elementAt(Random().nextInt(2));
+    card = widget.cardState.cardResponse.brand.toLowerCase().substring(0,1) == 'v' ? 'v' : 'mc';
+    ownerCard = widget.cardState.cardOwner ?? '';
+    cardName = widget.cardState.cardResponse.brand;
+    cardEndWith = widget.cardState.cardResponse.last4;
   }
 
   @override
@@ -74,7 +85,7 @@ class _CreditCardState extends State<CreditCard> {
                         children: [
                           ///Card Name
                           Text(
-                            'Card Name',//AppLocalizations.of(context).logBack, ///TODO Make it Global
+                            '$cardName',//AppLocalizations.of(context).logBack, ///TODO Make it Global
                             style: TextStyle(
                                 fontSize: SizeConfig.safeBlockHorizontal * 4,
                                 fontFamily: BuytimeTheme.FontFamily,
@@ -84,7 +95,7 @@ class _CreditCardState extends State<CreditCard> {
                           ),
                           ///Ending **** ....
                           Text(
-                            'ending **** ....',//AppLocalizations.of(context).logBack, ///TODO Make it Global
+                            'ending **** $cardEndWith',//AppLocalizations.of(context).logBack, ///TODO Make it Global
                             style: TextStyle(
                                 fontSize: SizeConfig.safeBlockHorizontal * 4,
                                 fontFamily: BuytimeTheme.FontFamily,
@@ -103,11 +114,20 @@ class _CreditCardState extends State<CreditCard> {
                           color: Colors.transparent,
                           child: InkWell(
                               onTap: (){
-                                setState(() {
+                                /*setState(() {
                                   //tmpList.add('scemo');
                                   // creditCards.add(CreditCard());
                                   selected = !selected;
+                                });*/
+                                List<CardState> tmpList = StoreProvider.of<AppState>(context).state.cardListState.cardListState;
+                                tmpList.forEach((element) {
+                                  if(element.cardResponse.secretToken == widget.cardState.cardResponse.secretToken){
+                                    element.selected = true;
+                                  }else{
+                                    element.selected = false;
+                                  }
                                 });
+                                StoreProvider.of<AppState>(context).dispatch(AddCardToList(tmpList));
                                 //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ServiceList()),);
                               },
                               borderRadius: BorderRadius.all(Radius.circular(5.0)),
@@ -116,15 +136,15 @@ class _CreditCardState extends State<CreditCard> {
                                 child: Row(
                                   children: [
                                     Icon(
-                                      !selected ? Icons.add : MaterialDesignIcons.done,
-                                      color: !selected ? BuytimeTheme.TextGrey : BuytimeTheme.ActionButton,
+                                      !widget.cardState.selected ? Icons.add : MaterialDesignIcons.done,
+                                      color: !widget.cardState.selected ? BuytimeTheme.TextGrey : BuytimeTheme.ActionButton,
                                     ),
                                     Text(
-                                      !selected ? 'select' : 'selected',//AppLocalizations.of(context).somethingIsNotRight,
+                                      !widget.cardState.selected ? 'select' : 'selected',//AppLocalizations.of(context).somethingIsNotRight,
                                       style: TextStyle(
                                           letterSpacing: SizeConfig.safeBlockHorizontal * .2,
                                           fontFamily: BuytimeTheme.FontFamily,
-                                          color: !selected ? BuytimeTheme.TextGrey : BuytimeTheme.ActionButton,
+                                          color: !widget.cardState.selected ? BuytimeTheme.TextGrey : BuytimeTheme.ActionButton,
                                           fontWeight: FontWeight.w600,
                                           fontSize: SizeConfig.safeBlockHorizontal * 4
                                       ),

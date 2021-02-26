@@ -86,6 +86,7 @@ class _UI_U_StripePaymentState extends State<UI_U_StripePayment> {
                       ),
                       Container(
                         child: snapshot?.order?.progress == "in_progress" ? // no
+                        ///Proccessing Payment
                         Padding(
                           padding: const EdgeInsets.only(top:20.0),
                           child: Column(
@@ -95,12 +96,12 @@ class _UI_U_StripePaymentState extends State<UI_U_StripePayment> {
                               CircularProgressIndicator(),
                             ],
                           ),
-                        )
-                            :
+                        ) :
                         Column(
                           children: [
                             Container(
                               child: snapshot?.stripe?.stripeCard?.last4 != null ? // no
+                              ///Pay With
                               Container(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -133,8 +134,8 @@ class _UI_U_StripePaymentState extends State<UI_U_StripePayment> {
                                         SizedBox()
                                   ],
                                 ),
-                              )
-                                  :
+                              ) :
+                              ///Add Card
                               Column(
                                 children: [
                                   Container(
@@ -142,6 +143,7 @@ class _UI_U_StripePaymentState extends State<UI_U_StripePayment> {
                                         padding: const EdgeInsets.all(12.0),
                                         child: Column(
                                           children: [
+                                            ///Card Form
                                             CardForm(
                                               formKey: formKey,
                                               card: card,
@@ -155,6 +157,7 @@ class _UI_U_StripePaymentState extends State<UI_U_StripePayment> {
                                             SizedBox(
                                               height: media.height * 0.05,
                                             ),
+                                            ///Add Card Button
                                             GestureDetector(
                                               onTap: () {
                                                 formKey.currentState.validate();
@@ -178,11 +181,7 @@ class _UI_U_StripePaymentState extends State<UI_U_StripePayment> {
 
                           ],
                         ),
-
                       ),
-
-
-
                     ],
                   ),
                 );

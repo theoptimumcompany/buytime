@@ -1,5 +1,8 @@
+import 'package:Buytime/UI/user/cart/UI_U_AddCard.dart';
 import 'package:Buytime/UI/user/cart/UI_U_ConfirmOrder.dart';
 import 'package:Buytime/UI/user/cart/widget/W_credit_card.dart';
+import 'package:Buytime/reblox/model/card/card_list_state.dart';
+import 'package:Buytime/reblox/model/card/card_state.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/UI/user/service/UI_U_service_list.dart';
@@ -23,6 +26,7 @@ class CreditCards extends StatefulWidget {
   State<StatefulWidget> createState() => CreditCardsState();
 }
 
+
 class CreditCardsState extends State<CreditCards> {
   @override
   void initState() {
@@ -30,7 +34,7 @@ class CreditCardsState extends State<CreditCards> {
   }
 
   List<String> tmpList = ['ciao', 'come'];
-  List<Widget> creditCards = [];
+  List<CardState> creditCards = [];
   @override
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
@@ -40,22 +44,31 @@ class CreditCardsState extends State<CreditCards> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Flexible(
-              //height: SizeConfig.safeBlockVertical * 30,
-              flex: 1,
-              child: CustomScrollView(
-                  shrinkWrap: true,
-                  scrollDirection: Axis.vertical,
-                  slivers: [
-                    SliverList(
-                      delegate: SliverChildBuilderDelegate((context, index) {
-                        //MenuItemModel menuItem = menuItems.elementAt(index);
-                        return creditCards.elementAt(index);
-                      },
-                        childCount: creditCards.length,
-                      ),
-                    ),
-                  ]),
+            StoreConnector<AppState, AppState>(
+                converter: (store) => store.state,
+                rebuildOnChange: true,
+                builder: (context, snapshot) {
+                  creditCards = snapshot.cardListState != null ? snapshot.cardListState.cardListState : [];
+                  print("UI_U_AddCard => CARD COUNT: ${creditCards.length}");
+                  return Flexible(
+                    //height: SizeConfig.safeBlockVertical * 30,
+                    flex: 1,
+                    child: CustomScrollView(
+                        shrinkWrap: true,
+                        scrollDirection: Axis.vertical,
+                        slivers: [
+                          SliverList(
+                            delegate: SliverChildBuilderDelegate((context, index) {
+                              //MenuItemModel menuItem = menuItems.elementAt(index);
+                              CardState card = creditCards.elementAt(index);
+                              return CreditCard(card);
+                            },
+                              childCount: creditCards.length,
+                            ),
+                          ),
+                        ]),
+                  );
+                }
             ),
             ///Add Card
             Row(
@@ -74,7 +87,7 @@ class CreditCardsState extends State<CreditCards> {
                             });*/
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => UI_U_StripePayment()),
+                              MaterialPageRoute(builder: (context) => UI_U_AddCard()),
                             );
                             //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ServiceList()),);
                           },
