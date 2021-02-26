@@ -139,6 +139,79 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
     return choices;
   }
 
+  String showDaysInterval(int indexSlot, int indexInterval) {
+    if (StoreProvider.of<AppState>(context).state.serviceState.serviceSlot[indexSlot].switchWeek[indexInterval] == true &&
+        StoreProvider.of<AppState>(context).state.serviceState.serviceSlot[indexSlot].switchWeek[indexInterval] != null) {
+      String week = 'Every Day';
+      if (indexInterval < (StoreProvider.of<AppState>(context).state.serviceState.serviceSlot[indexSlot].numberOfInterval - 1)) {
+        week = week + "/";
+      }
+      return week;
+    } else {
+      String week = '';
+      for (int z = 0; z < StoreProvider.of<AppState>(context).state.serviceState.serviceSlot[indexSlot].daysInterval[indexInterval].everyDay.length; z++) {
+        if (StoreProvider.of<AppState>(context).state.serviceState.serviceSlot[indexSlot].daysInterval[indexInterval].everyDay[z]) {
+          switch (z) {
+            case 0:
+              week = week + "Mon, ";
+              break;
+            case 1:
+              week = week + "Tue, ";
+              break;
+            case 2:
+              week = week + "Wed, ";
+              break;
+            case 3:
+              week = week + "Thu, ";
+              break;
+            case 4:
+              week = week + "Fri, ";
+              break;
+            case 5:
+              week = week + "Sat, ";
+              break;
+            case 6:
+              week = week + "Sun, ";
+              break;
+          }
+        }
+      }
+      week = week.substring(0, week.length - 2);
+      if (indexInterval < (StoreProvider.of<AppState>(context).state.serviceState.serviceSlot[indexSlot].numberOfInterval - 1)) {
+        week = week + " / ";
+      }
+      return week;
+    }
+  }
+
+  Widget showSlotInterval(int numberOfInterval, Size media, int indexSlot) {
+    List<Widget> listWidget = [];
+    Widget singleWidget;
+    String text = '';
+    for (int i = 0; i < numberOfInterval; i++) {
+      text = text +
+          StoreProvider.of<AppState>(context).state.serviceState.serviceSlot[indexSlot].startTime[i] +
+          "-" +
+          StoreProvider.of<AppState>(context).state.serviceState.serviceSlot[indexSlot].stopTime[i] +
+          " " +
+          showDaysInterval(indexSlot, i);
+    }
+    listWidget.add(Flexible(
+      child: Container(
+        child: Text(
+          text,
+          overflow: TextOverflow.clip,
+          style: TextStyle(
+            fontSize: media.height * 0.020,
+            color: BuytimeTheme.TextGrey,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ),
+    ));
+    return Row(mainAxisAlignment: MainAxisAlignment.start, children: listWidget);
+  }
+
   @override
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
@@ -316,56 +389,58 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                           ),
                                         ),
                                       ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(bottom: 15.0),
-                                        child: Center(
-                                          child: Container(
-                                            width: media.width * 0.9,
-                                            //decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(top: 0.0, bottom: 5.0, left: 10.0, right: 10.0),
-                                              child: TextFormField(
-                                                initialValue: snapshot.serviceState.price.toString(),
-                                                keyboardType: TextInputType.number,
-                                                inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d*)'))],
-                                                validator: (value) => value.isEmpty
-                                                    ? 'Service price is blank'
-                                                    : validatePrice(value)
-                                                        ? null
-                                                        : 'Not a valid price',
-                                                onChanged: (value) {
-                                                  if (value == "") {
-                                                    setState(() {
-                                                      _servicePrice = 0.0;
-                                                    });
-                                                  } else {
-                                                    setState(() {
-                                                      _servicePrice = double.parse(value);
-                                                    });
-                                                  }
-                                                  validateAndSave();
-                                                  StoreProvider.of<AppState>(context).dispatch(SetServicePrice(_servicePrice));
-                                                },
-                                                onSaved: (value) {
-                                                  if (value == "") {
-                                                    setState(() {
-                                                      _servicePrice = 0.0;
-                                                    });
-                                                  } else {
-                                                    setState(() {
-                                                      _servicePrice = double.parse(value);
-                                                    });
-                                                  }
-                                                  StoreProvider.of<AppState>(context).dispatch(SetServicePrice(_servicePrice));
-                                                },
-                                                decoration: InputDecoration(
-                                                  labelText: AppLocalizations.of(context).price,
+                                      snapshot.serviceState.switchSlots
+                                          ? Container()
+                                          : Padding(
+                                              padding: const EdgeInsets.only(bottom: 15.0),
+                                              child: Center(
+                                                child: Container(
+                                                  width: media.width * 0.9,
+                                                  //decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
+                                                  child: Padding(
+                                                    padding: const EdgeInsets.only(top: 0.0, bottom: 5.0, left: 10.0, right: 10.0),
+                                                    child: TextFormField(
+                                                      initialValue: snapshot.serviceState.price.toString(),
+                                                      keyboardType: TextInputType.number,
+                                                      inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d*)'))],
+                                                      validator: (value) => value.isEmpty
+                                                          ? 'Service price is blank'
+                                                          : validatePrice(value)
+                                                              ? null
+                                                              : 'Not a valid price',
+                                                      onChanged: (value) {
+                                                        if (value == "") {
+                                                          setState(() {
+                                                            _servicePrice = 0.0;
+                                                          });
+                                                        } else {
+                                                          setState(() {
+                                                            _servicePrice = double.parse(value);
+                                                          });
+                                                        }
+                                                        validateAndSave();
+                                                        StoreProvider.of<AppState>(context).dispatch(SetServicePrice(_servicePrice));
+                                                      },
+                                                      onSaved: (value) {
+                                                        if (value == "") {
+                                                          setState(() {
+                                                            _servicePrice = 0.0;
+                                                          });
+                                                        } else {
+                                                          setState(() {
+                                                            _servicePrice = double.parse(value);
+                                                          });
+                                                        }
+                                                        StoreProvider.of<AppState>(context).dispatch(SetServicePrice(_servicePrice));
+                                                      },
+                                                      decoration: InputDecoration(
+                                                        labelText: AppLocalizations.of(context).price,
+                                                      ),
+                                                    ),
+                                                  ),
                                                 ),
                                               ),
                                             ),
-                                          ),
-                                        ),
-                                      ),
                                       Padding(
                                         padding: const EdgeInsets.only(left: 20.0, top: 0.0),
                                         child: Container(
@@ -638,7 +713,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                             textAlign: TextAlign.start,
                                                             overflow: TextOverflow.clip,
                                                             style: TextStyle(
-                                                              fontSize: media.height * 0.02,
+                                                              fontSize: media.height * 0.021,
                                                               color: BuytimeTheme.TextBlack,
                                                               fontWeight: FontWeight.w500,
                                                             ),
@@ -661,7 +736,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                   ),
                                                   snapshot.serviceState.serviceSlot.length > 0
                                                       ? Padding(
-                                                          padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 15.0),
+                                                          padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
                                                           child: ConstrainedBox(
                                                             constraints: BoxConstraints(),
                                                             child: ListView.builder(
@@ -669,21 +744,46 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                               physics: const NeverScrollableScrollPhysics(),
                                                               itemCount: snapshot.serviceState.serviceSlot.length,
                                                               itemBuilder: (context, index) {
-                                                                return Padding(
-                                                                  padding: const EdgeInsets.only(bottom: 5.0),
-                                                                  child: ListTile(
-                                                                    title: Row(
-                                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                      children: [
-                                                                        Text('Time Availability ' + (index + 1).toString()),
-                                                                        Text("Prezzo"),
-                                                                      ],
-                                                                    ),
-                                                                    subtitle: Column(
-                                                                      children: [
-                                                                        Text("Data 1 - Data 2"),
-                                                                        Text("ora 1 - ora 2   EveryDay / intervallo 2"),
-                                                                      ],
+                                                                return GestureDetector(
+                                                                  onTap: () {
+                                                                    StoreProvider.of<AppState>(context).dispatch(SetServiceSlot(snapshot.serviceState.serviceSlot[index]));
+                                                                    Navigator.push(
+                                                                      context,
+                                                                      MaterialPageRoute(builder: (context) => UI_M_ServiceSlot()),
+                                                                    );
+                                                                  },
+                                                                  child: Padding(
+                                                                    padding: const EdgeInsets.only(bottom: 5.0),
+                                                                    child: ListTile(
+                                                                      title: Row(
+                                                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                        children: [
+                                                                          Text(
+                                                                            'Time Availability ' + (index + 1).toString(),
+                                                                            style: TextStyle(
+                                                                              fontSize: media.height * 0.020,
+                                                                              color: BuytimeTheme.TextBlack,
+                                                                              fontWeight: FontWeight.w500,
+                                                                            ),
+                                                                          ),
+                                                                          // Text("Prezzo"),
+                                                                        ],
+                                                                      ),
+                                                                      subtitle: Column(
+                                                                        children: [
+                                                                          Row(
+                                                                            children: [
+                                                                              Text(snapshot.serviceState.serviceSlot[index].checkIn + " - " + snapshot.serviceState.serviceSlot[index].checkOut),
+                                                                            ],
+                                                                          ),
+                                                                          Row(
+                                                                            children: [
+                                                                              Text(snapshot.serviceState.serviceSlot[index].price.toString() + " euro"),
+                                                                            ],
+                                                                          ),
+                                                                          //showSlotInterval(snapshot.serviceState.serviceSlot[index].numberOfInterval, media, index),
+                                                                        ],
+                                                                      ),
                                                                     ),
                                                                   ),
                                                                 );
