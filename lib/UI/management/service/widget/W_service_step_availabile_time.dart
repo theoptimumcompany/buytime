@@ -1,19 +1,12 @@
 import 'package:Buytime/UI/management/service/class/service_slot_classes.dart';
+import 'package:Buytime/reusable/checkbox/W_checkbox_parent_child.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:Buytime/reblox/model/service/service_time_slot_state.dart';
 import 'package:Buytime/reblox/reducer/service_reducer.dart';
-import 'package:Buytime/utils/size_config.dart';
-
 import 'package:Buytime/utils/theme/buytime_theme.dart';
-
 import 'package:flutter_redux/flutter_redux.dart';
-
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-
-typedef OnFilePickedCallback = void Function();
 
 class StepAvailableTime extends StatefulWidget {
   StepAvailableTime({this.media});
@@ -25,77 +18,70 @@ class StepAvailableTime extends StatefulWidget {
 }
 
 class StepAvailableTimeState extends State<StepAvailableTime> {
-  List<int> numberOfAvailableInterval = [1];
+  int numberOfSlotTimeInterval = 1;
   ServiceSlot baseAvailability = ServiceSlot().toEmpty();
-  List<ListWeek> switchWeek = [];
-  List<ListEveryDay> daysInterval = [];
-  List<ListTextEditingController> _startController = [ListTextEditingController().toEmpty()];
-  List<ListTextEditingController> _stopController = [ListTextEditingController().toEmpty()];
-  List<EveryTime> startTime = [EveryTime().toEmpty()];
-  List<EveryTime> stopTime = [EveryTime().toEmpty()];
-
-  int indexStepper;
-  var _formSlotTimeKey;
+  List<bool> switchWeek = [false];
+  List<EveryDay> daysInterval = [];
+  List<TextEditingController> startController = [];
+  List<TextEditingController> stopController = [];
+  List<TimeOfDay> startTime = [];
+  List<TimeOfDay> stopTime = [];
+  List<String> daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+  List<bool> daysOfWeekValue = [false, false, false, false, false, false, false];
+  final List<GlobalKey<FormState>> _formSlotTimeKey = [GlobalKey<FormState>()];
 
   @override
   void initState() {
     super.initState();
   }
 
-  Widget weekSwitchDay(Size media, String dayName, int listNumber, int dayNumber) {
-    return Row(
-      children: [
-        Padding(
-          padding: EdgeInsets.only(
-            left: media.width * 0.05,
-          ),
-          child: Container(
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: 10.0),
-              child: Checkbox(
-                  value: daysInterval[indexStepper].listEveryDay[listNumber].everyDay[dayNumber],
-                  onChanged: (value) {
-                    setState(() {
-                      daysInterval[indexStepper].listEveryDay[listNumber].everyDay[dayNumber] = value;
-                      StoreProvider.of<AppState>(context).dispatch(SetServiceSlotSwitchDay(daysInterval));
-                    });
-                  }),
-            ),
-          ),
-        ),
-        Expanded(
-          child: Container(
-            decoration: BoxDecoration(
-              border: Border(
-                bottom: BorderSide(width: 1.0, color: BuytimeTheme.DividerGrey),
-              ),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Container(
-                    child: Padding(
-                  padding: const EdgeInsets.only(bottom: 10.0),
-                  child: Text(
-                    dayName,
-                    textAlign: TextAlign.start,
-                    style: TextStyle(
-                      color: BuytimeTheme.TextBlack,
-                      fontSize: media.height * 0.018,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                )),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
+  List<String> convertListTextEditingControllerToListString(List<TextEditingController> controllerList) {
+    List<String> list = [];
+    controllerList.forEach((element) {
+      list.add(element.text);
+    });
+    return list;
   }
 
-  bool validate() {
-    final FormState form = _formSlotTimeKey.currentState;
+  void _manageTristate(int indexDay, bool value, int indexInterval) {
+    setState(() {
+      if (value) {
+        // selected
+        daysOfWeekValue[indexDay] = true;
+        // Checking if all other children are also selected -
+        if (daysOfWeekValue.contains(false)) {
+          // No. Parent -> tristate.
+          switchWeek[indexInterval] = null;
+        } else {
+          // Yes. Select all.
+          _checkAll(true, indexInterval);
+        }
+      } else {
+        // unselected
+        daysOfWeekValue[indexDay] = false;
+        // Checking if all other children are also unselected -
+        if (daysOfWeekValue.contains(true)) {
+          // No. Parent -> tristate.
+          switchWeek[indexInterval] = null;
+        } else {
+          // Yes. Unselect all.
+          _checkAll(false, indexInterval);
+        }
+      }
+    });
+  }
+
+  void _checkAll(bool value, int index) {
+    setState(() {
+      switchWeek[index] = value;
+      for (int i = 0; i < daysOfWeek.length; i++) {
+        daysOfWeekValue[i] = value;
+      }
+    });
+  }
+
+  bool validate(int indexInterval) {
+    final FormState form = _formSlotTimeKey[indexInterval].currentState;
     if (form.validate()) {
       return true;
     } else {
@@ -119,12 +105,12 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
       String minute = picked.minute < 10 ? "0" + picked.minute.toString() : picked.minute.toString();
       String hour = picked.hour < 10 ? "0" + picked.hour.toString() : picked.hour.toString();
       String format24 = hour + ":" + minute;
-      _startController[indexStepper].listTextEditingController[indexController].text = format24;
-      StoreProvider.of<AppState>(context).dispatch(SetServiceSlotStartController(_startController));
+      startController[indexController].text = format24;
+      List<String> controllerList = convertListTextEditingControllerToListString(startController);
+      StoreProvider.of<AppState>(context).dispatch(SetServiceSlotStartTime(controllerList));
 
       setState(() {
-        startTime[indexStepper].everyTime[indexController] = picked;
-        StoreProvider.of<AppState>(context).dispatch(SetServiceSlotStartTime(startTime));
+        startTime[indexController] = picked;
       });
     }
     return null;
@@ -146,45 +132,68 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
       String minute = picked.minute < 10 ? "0" + picked.minute.toString() : picked.minute.toString();
       String hour = picked.hour < 10 ? "0" + picked.hour.toString() : picked.hour.toString();
       String format24 = hour + ":" + minute;
-      _stopController[indexStepper].listTextEditingController[indexController].text = format24;
-      StoreProvider.of<AppState>(context).dispatch(SetServiceSlotStopController(_stopController));
+      stopController[indexController].text = format24;
+      List<String> controllerList = convertListTextEditingControllerToListString(stopController);
+      StoreProvider.of<AppState>(context).dispatch(SetServiceSlotStartTime(controllerList));
       setState(() {
-        stopTime[indexStepper].everyTime[indexController] = picked;
-        StoreProvider.of<AppState>(context).dispatch(SetServiceSlotStopTime(stopTime));
-        _formSlotTimeKey.currentState.validate();
+        stopTime[indexController] = picked;
+        _formSlotTimeKey[indexController].currentState.validate();
       });
     }
     return null;
   }
 
+  void setStartAndStopTime() {
+    List<String> start = StoreProvider.of<AppState>(context).state.serviceState.serviceSlot.startTime;
+    List<String> stop = StoreProvider.of<AppState>(context).state.serviceState.serviceSlot.stopTime;
+    if(start.length == 0){
+      TextEditingController textEditingControllerStart = TextEditingController();
+      TextEditingController textEditingControllerStop = TextEditingController();
+      startController.add(textEditingControllerStart);
+      stopController.add(textEditingControllerStop);
+      TimeOfDay timeOfDayStart = TimeOfDay.now();
+      TimeOfDay timeOfDayStop = TimeOfDay.now();
+      startTime.add(timeOfDayStart);
+      stopTime.add(timeOfDayStop);
+    }
+    for (int i = 0; i < start.length; i++) {
+      TextEditingController textEditingControllerStart = TextEditingController();
+      TextEditingController textEditingControllerStop = TextEditingController();
+      textEditingControllerStart.text = start[i];
+      textEditingControllerStop.text = stop[i];
+      startController.add(textEditingControllerStart);
+      stopController.add(textEditingControllerStop);
+      List<String> startString = start[i].split(":");
+      List<String> stopString = stop[i].split(":");
+      TimeOfDay timeOfDayStart = TimeOfDay(hour: int.parse(startString[0]), minute: int.parse(startString[1]));
+      TimeOfDay timeOfDayStop = TimeOfDay(hour: int.parse(stopString[0]), minute: int.parse(stopString[1]));
+      startTime.add(timeOfDayStart);
+      stopTime.add(timeOfDayStop);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    var media = MediaQuery.of(context).size;
-    indexStepper = StoreProvider.of<AppState>(context).state.serviceState.serviceSlot.actualSlotIndex;
     switchWeek = StoreProvider.of<AppState>(context).state.serviceState.serviceSlot.switchWeek;
     daysInterval = StoreProvider.of<AppState>(context).state.serviceState.serviceSlot.daysInterval;
-    numberOfAvailableInterval = StoreProvider.of<AppState>(context).state.serviceState.serviceSlot.numberOfInterval;
-    _startController = StoreProvider.of<AppState>(context).state.serviceState.serviceSlot.startController;
-    _stopController = StoreProvider.of<AppState>(context).state.serviceState.serviceSlot.stopController;
-    startTime = StoreProvider.of<AppState>(context).state.serviceState.serviceSlot.startTime;
-    stopTime = StoreProvider.of<AppState>(context).state.serviceState.serviceSlot.stopTime;
-    _formSlotTimeKey = StoreProvider.of<AppState>(context).state.serviceState.serviceSlot.formSlotTimeKey[indexStepper];
+    numberOfSlotTimeInterval = StoreProvider.of<AppState>(context).state.serviceState.serviceSlot.numberOfInterval;
+    setStartAndStopTime();
     return StoreConnector<AppState, AppState>(
         converter: (store) => store.state,
         builder: (context, snapshot) {
-          return Form(
-            key: _formSlotTimeKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Flexible(
-                  child: ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: numberOfAvailableInterval[indexStepper],
-                      itemBuilder: (context, i) {
-                        return Column(
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Flexible(
+                child: ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: numberOfSlotTimeInterval,
+                    itemBuilder: (context, i) {
+                      return Form(
+                        key: _formSlotTimeKey[i],
+                        child: Column(
                           children: [
                             Container(
                                 child: Row(
@@ -222,7 +231,7 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
                                             child: Container(
                                               child: TextFormField(
                                                 enabled: false,
-                                                controller: _startController[indexStepper].listTextEditingController[i],
+                                                controller: startController[i],
                                                 textAlign: TextAlign.start,
                                                 keyboardType: TextInputType.number,
                                                 decoration: InputDecoration(
@@ -268,8 +277,8 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
                                       children: [
                                         GestureDetector(
                                           onTap: () async {
-                                            if (_startController[indexStepper].listTextEditingController[i].text.isEmpty) {
-                                              validate();
+                                            if (startController[i].text.isEmpty) {
+                                              validate(i);
                                               return;
                                             }
                                             await _selectStopTime(context, i);
@@ -278,7 +287,7 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
                                             padding: const EdgeInsets.only(left: 5.0),
                                             child: TextFormField(
                                               enabled: false,
-                                              controller: _stopController[indexStepper].listTextEditingController[i],
+                                              controller: stopController[i],
                                               textAlign: TextAlign.start,
                                               keyboardType: TextInputType.datetime,
                                               decoration: InputDecoration(
@@ -307,11 +316,9 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
                                                 fontWeight: FontWeight.w800,
                                               ),
                                               validator: (value) {
-                                                if (_startController[indexStepper].listTextEditingController[i].text.isEmpty) {
+                                                if (startController[i].text.isEmpty) {
                                                   return "Insert start time first";
-                                                } else if ((stopTime[indexStepper].everyTime[i].hour + stopTime[indexStepper].everyTime[i].minute / 60.0) -
-                                                        (startTime[indexStepper].everyTime[i].hour + startTime[indexStepper].everyTime[i].minute / 60.0) <=
-                                                    0) {
+                                                } else if ((stopTime[i].hour + stopTime[i].minute / 60.0) - (startTime[i].hour + startTime[i].minute / 60.0) <= 0) {
                                                   return "Stop time is shorter than start";
                                                 }
                                                 return '';
@@ -326,127 +333,119 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
                               )),
                             ),
 
-                            ///Switch Every Day
-                            Padding(
-                              padding: const EdgeInsets.only(top: 8.0, left: 0.0, right: 20.0),
-                              child: Container(
-                                child: Row(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(right : 10.0),
-                                      child: SizedBox(
-                                        width: 20,
-                                        child: Checkbox(
-                                            value: switchWeek[indexStepper].listWeek[i],
-                                            onChanged: (value) {
-                                              setState(() {
-                                                switchWeek[indexStepper].listWeek[i] = value;
-                                                StoreProvider.of<AppState>(context).dispatch(SetServiceSlotSwitchWeek(switchWeek));
-                                              });
-                                            }),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          border: Border(
-                                            bottom: BorderSide(width: 1.0, color: BuytimeTheme.DividerGrey),
-                                          ),
-                                        ),
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          children: [
-                                            Container(
-                                                child: Padding(
-                                              padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
-                                              child: Text(
-                                                'Every day',
-                                                textAlign: TextAlign.start,
-                                                style: TextStyle(
-                                                  color: BuytimeTheme.TextBlack,
-                                                  fontSize: widget.media.height * 0.02,
-                                                  fontWeight: FontWeight.w400,
-                                                ),
-                                              ),
-                                            )),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                            Row(
+                              children: <Widget>[
+                                // Parent
+                                CustomLabeledCheckbox(
+                                  label: 'Every day',
+                                  value: switchWeek[i],
+                                  onChanged: (value) {
+                                    setState(() {
+                                      switchWeek[i] = value;
+                                      StoreProvider.of<AppState>(context).dispatch(SetServiceSlotSwitchWeek(switchWeek));
+                                    });
+                                    if (value != null) {
+                                      // Checked/Unchecked
+                                      _checkAll(value, i);
+                                    } else {
+                                      // Tristate
+                                      _checkAll(true, i);
+                                    }
+                                  },
+                                  checkboxType: CheckboxType.Parent,
+                                  activeColor: Colors.indigo,
                                 ),
-                              ),
+                              ],
                             ),
-                            !switchWeek[indexStepper].listWeek[i]
-                                ? Column(
-                                    children: [
-                                      weekSwitchDay(widget.media, 'Monday', i, 0), //todo: lang
-                                      weekSwitchDay(widget.media, 'Tuesday', i, 1), //todo: lang
-                                      weekSwitchDay(widget.media, 'Wednesday', i, 2), //todo: lang
-                                      weekSwitchDay(widget.media, 'Thursday', i, 3), //todo: lang
-                                      weekSwitchDay(widget.media, 'Friday', i, 4), //todo: lang
-                                      weekSwitchDay(widget.media, 'Saturday', i, 5), //todo: lang
-                                      weekSwitchDay(widget.media, 'Sunday', i, 6), //todo: lang
-                                    ],
-                                  )
-                                : Container(),
-                          ],
-                        );
-                      }),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.00),
-                  child: Container(
-                    width: widget.media.width * 0.50,
-                    child: OutlinedButton(
-                      onPressed: () {
-                        setState(() {
-                          ///Update Switch EveryDay
-                          switchWeek[indexStepper].listWeek.add(true);
-                          StoreProvider.of<AppState>(context).dispatch(SetServiceSlotSwitchWeek(switchWeek));
-                          ///Update List Of Days
-                          daysInterval[indexStepper].listEveryDay.add(EveryDay().toEmpty());
-                          StoreProvider.of<AppState>(context).dispatch(SetServiceSlotDaysInterval(daysInterval));
-                          ///Update Number of Internal Interval
-                          numberOfAvailableInterval[indexStepper] = numberOfAvailableInterval[indexStepper] + 1;
-                          StoreProvider.of<AppState>(context).dispatch(SetServiceSlotNumberOfInterval(numberOfAvailableInterval));
-                          ///Update startController
-                          _startController[indexStepper].listTextEditingController.add(TextEditingController());
-                          StoreProvider.of<AppState>(context).dispatch(SetServiceSlotStartController(_startController));
-                          ///Update startTime
-                          startTime[indexStepper].everyTime.add(TimeOfDay());
-                          StoreProvider.of<AppState>(context).dispatch(SetServiceSlotStartTime(startTime));
-                          ///Update stopController
-                          _stopController[indexStepper].listTextEditingController.add(TextEditingController());
-                          StoreProvider.of<AppState>(context).dispatch(SetServiceSlotStopController(_stopController));
-                          ///Update stopTime
-                          stopTime[indexStepper].everyTime.add(TimeOfDay());
-                          StoreProvider.of<AppState>(context).dispatch(SetServiceSlotStopTime(stopTime));
-                        });
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Icon(Icons.add, color: BuytimeTheme.ManagerPrimary, size: widget.media.width * 0.06),
-                            Text(
-                              "ADD TIME SLOT", //todo: lang
-                              textAlign: TextAlign.start,
-                              style: TextStyle(
-                                fontSize: widget.media.height * 0.022,
-                                color: BuytimeTheme.ManagerPrimary,
-                                fontWeight: FontWeight.w900,
-                              ),
+                            // Children
+                            ///TODO: sE everyday true metter tutti a true
+                            Row(
+                              children: [
+                                Flexible(
+                                  child: ListView.builder(
+                                    itemCount: daysOfWeek.length,
+                                    itemBuilder: (context, index) => CustomLabeledCheckbox(
+                                      label: daysOfWeek[index],
+                                      value: daysInterval[i].everyDay[index],
+                                      onChanged: (value) {
+                                        _manageTristate(index, value, i);
+                                        setState(() {
+                                          daysInterval[i].everyDay[index] = value;
+                                          StoreProvider.of<AppState>(context).dispatch(SetServiceSlotDaysInterval(daysInterval));
+                                        });
+                                      },
+                                      checkboxType: CheckboxType.Child,
+                                      activeColor: Colors.indigo,
+                                    ),
+                                    shrinkWrap: true,
+                                    physics: ClampingScrollPhysics(),
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
+                      );
+                    }),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.00),
+                child: Container(
+                  width: widget.media.width * 0.50,
+                  child: OutlinedButton(
+                    onPressed: () {
+                      setState(() {
+                        ///Update Switch EveryDay
+                        switchWeek.add(true);
+                        StoreProvider.of<AppState>(context).dispatch(SetServiceSlotSwitchWeek(switchWeek));
+
+                        ///Update List Of Days
+                        daysInterval.add(EveryDay().toEmpty());
+                        StoreProvider.of<AppState>(context).dispatch(SetServiceSlotDaysInterval(daysInterval));
+
+                        ///Update Number of Internal Interval
+                        numberOfSlotTimeInterval = numberOfSlotTimeInterval + 1;
+                        StoreProvider.of<AppState>(context).dispatch(SetServiceSlotNumberOfInterval(numberOfSlotTimeInterval));
+
+                        ///Update startController
+                        startController.add(TextEditingController());
+                        List<String> listStart = convertListTextEditingControllerToListString(startController);
+                        StoreProvider.of<AppState>(context).dispatch(SetServiceSlotStartTime(listStart));
+
+                        ///Update startTime
+                        startTime.add(TimeOfDay());
+
+                        ///Update stopController
+                        stopController.add(TextEditingController());
+                        List<String> listStop = convertListTextEditingControllerToListString(stopController);
+                        StoreProvider.of<AppState>(context).dispatch(SetServiceSlotStopTime(listStop));
+
+                        ///Update stopTime
+                        stopTime.add(TimeOfDay());
+                      });
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Icon(Icons.add, color: BuytimeTheme.ManagerPrimary, size: widget.media.width * 0.06),
+                          Text(
+                            "ADD TIME SLOT", //todo: lang
+                            textAlign: TextAlign.start,
+                            style: TextStyle(
+                              fontSize: widget.media.height * 0.022,
+                              color: BuytimeTheme.ManagerPrimary,
+                              fontWeight: FontWeight.w900,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           );
         });
   }

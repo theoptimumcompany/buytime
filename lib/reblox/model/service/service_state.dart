@@ -20,8 +20,8 @@ class ServiceState {
   List<String> tag;
   bool switchSlots;
   bool switchAutoConfirm;
-  bool switchMultiPrice;
   ServiceSlot serviceSlot;
+  int numberOfServiceSlot;
   bool spinnerVisibility = false;
 
   ServiceState({
@@ -41,8 +41,8 @@ class ServiceState {
     this.tag,
     this.switchSlots,
     this.switchAutoConfirm,
-    this.switchMultiPrice,
     this.serviceSlot,
+    this.numberOfServiceSlot,
     this.spinnerVisibility,
   });
 
@@ -82,8 +82,8 @@ class ServiceState {
       tag: [],
       switchSlots: false,
       switchAutoConfirm: false,
-      switchMultiPrice: false,
       serviceSlot: ServiceSlot().toEmpty(),
+      numberOfServiceSlot: 0,
       spinnerVisibility: false,
     );
   }
@@ -105,8 +105,8 @@ class ServiceState {
     this.tag = service.tag;
     this.switchSlots = service.switchSlots;
     this.switchAutoConfirm = service.switchAutoConfirm;
-    this.switchMultiPrice = service.switchMultiPrice;
     this.serviceSlot = service.serviceSlot;
+    this.numberOfServiceSlot = service.numberOfServiceSlot;
     this.spinnerVisibility = service.spinnerVisibility;
   }
 
@@ -127,8 +127,8 @@ class ServiceState {
     List<String> tag,
     bool switchSlots,
     bool switchAutoConfirm,
-    bool switchMultiPrice,
     ServiceSlot serviceSlot,
+    int numberOfServiceSlot,
     bool spinnerVisibility,
   ) {
     ServiceState(
@@ -148,8 +148,8 @@ class ServiceState {
       tag: tag ?? this.tag,
       switchSlots: switchSlots ?? this.switchSlots,
       switchAutoConfirm: switchAutoConfirm ?? this.switchAutoConfirm,
-      switchMultiPrice: switchMultiPrice ?? this.switchMultiPrice,
       serviceSlot: serviceSlot ?? this.serviceSlot,
+      numberOfServiceSlot: numberOfServiceSlot ?? this.numberOfServiceSlot,
       spinnerVisibility: spinnerVisibility ?? this.spinnerVisibility,
     );
   }
@@ -171,8 +171,8 @@ class ServiceState {
     List<String> tag,
     bool switchSlots,
     bool switchAutoConfirm,
-    bool switchMultiPrice,
     ServiceSlot serviceSlot,
+    int numberOfServiceSlot,
     bool spinnerVisibility,
   }) {
     return ServiceState(
@@ -192,8 +192,8 @@ class ServiceState {
       tag: tag ?? this.tag,
       switchSlots: switchSlots ?? this.switchSlots,
       switchAutoConfirm: switchAutoConfirm ?? this.switchAutoConfirm,
-      switchMultiPrice: switchMultiPrice ?? this.switchMultiPrice,
       serviceSlot: serviceSlot ?? this.serviceSlot,
+      numberOfServiceSlot: numberOfServiceSlot ?? this.numberOfServiceSlot,
       spinnerVisibility: spinnerVisibility ?? this.spinnerVisibility,
     );
   }
@@ -212,17 +212,17 @@ class ServiceState {
         categoryId = List<String>.from(json['categoryId']),
         categoryRootId = List<String>.from(json['categoryRootId']),
         name = json['name'],
-        image1 = json['image1'],
-        image2 = json['image2'],
-        image3 = json['image3'],
+        image1 = json.containsKey('image1') ? json['image1'] : '',
+        image2 = json.containsKey('image2') ? json['image2'] : '',
+        image3 = json.containsKey('image3') ? json['image3'] : '',
         description = json['description'],
-        visibility = json['visibility'],
-        price = json['price'],
-        timesSold = json['timesSold'],
-        tag = json['tag'] != null ? List<String>.from(json['tag']) : [],
+        visibility = json.containsKey('visibility') ? json['visibility'] : 'Invisible',
+        price = json.containsKey('price') ? json['price'] : 0.0,
+        timesSold = json.containsKey('switchSlots') ? json['timesSold'] : 0,
+        tag = json.containsKey('tag') && json['tag'] != null ? List<String>.from(json['tag']) : [],
         switchSlots = json.containsKey('switchSlots') ? json['switchSlots'] : false,
         switchAutoConfirm = json.containsKey('switchAutoConfirm') ? json['switchAutoConfirm'] : false,
-        switchMultiPrice = json.containsKey('switchMultiPrice') ? json['switchMultiPrice'] : false,
+        numberOfServiceSlot = json.containsKey('numberOfServiceSlot') ? json['numberOfServiceSlot'] : 0,
         serviceSlot = json['serviceSlot'] != null ? ServiceSlot.fromJson(json['serviceSlot']) : ServiceSlot().toEmpty();
 
   Map<String, dynamic> toJson() => {
@@ -241,7 +241,7 @@ class ServiceState {
         'tag': tag,
         'switchSlots': switchSlots,
         'switchAutoConfirm': switchAutoConfirm,
-        'switchMultiPrice': switchMultiPrice,
         'serviceSlot': serviceSlot.toJson(),
+        'numberOfServiceSlot': numberOfServiceSlot,
       };
 }

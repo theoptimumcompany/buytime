@@ -1,18 +1,10 @@
 import 'package:Buytime/reblox/model/app_state.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:Buytime/reblox/model/service/service_time_slot_state.dart';
 import 'package:Buytime/reblox/reducer/service_reducer.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:Buytime/utils/size_config.dart';
-
 import 'package:Buytime/utils/theme/buytime_theme.dart';
-
 import 'package:flutter_redux/flutter_redux.dart';
-
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-
-typedef OnFilePickedCallback = void Function();
 
 class StepPrice extends StatefulWidget {
   StepPrice({this.media});
@@ -26,9 +18,8 @@ class StepPrice extends StatefulWidget {
 class StepPriceState extends State<StepPrice> {
 
   ///Price vars
-  TextEditingController _priceController = TextEditingController();
-  var _formSlotPriceKey;
-  int indexStepper;
+  TextEditingController priceController = TextEditingController();
+  GlobalKey<FormState> _formSlotPriceKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -37,10 +28,7 @@ class StepPriceState extends State<StepPrice> {
 
   @override
   Widget build(BuildContext context) {
-    var media = MediaQuery.of(context).size;
-    indexStepper = StoreProvider.of<AppState>(context).state.serviceState.serviceSlot.actualSlotIndex;
-    _priceController = StoreProvider.of<AppState>(context).state.serviceState.serviceSlot.priceController[indexStepper];
-    _formSlotPriceKey = StoreProvider.of<AppState>(context).state.serviceState.serviceSlot.formSlotPriceKey[indexStepper];
+    priceController.text = StoreProvider.of<AppState>(context).state.serviceState.serviceSlot.price.toString();
     return StoreConnector<AppState, AppState>(
         converter: (store) => store.state,
         builder: (context, snapshot) {
@@ -56,17 +44,17 @@ class StepPriceState extends State<StepPrice> {
                           padding: const EdgeInsets.only(top: 5.0),
                           child: TextFormField(
                             enabled: true,
-                            controller: _priceController,
+                            controller: priceController,
                             onChanged: (value) {
                               setState(() {
-                                _priceController.text = value;
-                                StoreProvider.of<AppState>(context).dispatch(SetServiceSlotPriceController(_priceController.text, indexStepper));
+                                priceController.text = value;
+                                StoreProvider.of<AppState>(context).dispatch(SetServiceSlotPrice(double.parse(priceController.text)));
                               });
                             },
                             onSaved: (value) {
                               setState(() {
-                                _priceController.text = value;
-                                StoreProvider.of<AppState>(context).dispatch(SetServiceSlotPriceController(_priceController.text, indexStepper));
+                                priceController.text = value;
+                                StoreProvider.of<AppState>(context).dispatch(SetServiceSlotPrice(double.parse(priceController.text)));
                               });
                             },
                             textAlign: TextAlign.start,
