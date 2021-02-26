@@ -101,7 +101,7 @@ class BusinessAndNavigateRequestService implements EpicClass<AppState> {
           .get();
 
      businessState =  BusinessState.fromJson(businessSnapshot.data());
-
+      debugPrint("BUSINESS_SERVICE_EPIC - BusinessAndNavigateRequestService => DOCUMENT ID from Request: ${businessState.id_firestore}");
       statisticsState = store.state.statistics;
       int reads = statisticsState.businessAndNavigateRequestServiceRead;
       int writes = statisticsState.businessAndNavigateRequestServiceWrite;
@@ -268,6 +268,9 @@ class BusinessCreateService implements EpicClass<AppState> {
           businessState.business_type.length > 1) {
         businessState.business_type = businessState.business_type.sublist(1);
       }
+
+      businessState.id_firestore = docReference.id;
+
       if (store.state.user.salesman) {
         businessState.salesmanId = store.state.user.uid;
       } else {

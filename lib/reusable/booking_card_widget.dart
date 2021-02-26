@@ -41,7 +41,9 @@ class _BookingCardWidgetState extends State<BookingCardWidget> {
     if(widget.bookingState.end_date.isBefore(DateTime.now())){
       bookingStatus = 'Closed';
       closed = true;
-    }else if(widget.bookingState.start_date.isAfter(DateTime.now()))
+    }else if(widget.bookingState.start_date.isAtSameMomentAs(DateTime.now()))
+      bookingStatus = 'Active';
+    else if(widget.bookingState.start_date.isAfter(DateTime.now()))
       bookingStatus = 'Upcoming';
     else
       bookingStatus = 'Active';

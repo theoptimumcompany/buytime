@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:Buytime/UI/user/booking/UI_U_BookingPage.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/reducer/booking_reducer.dart';
+import 'package:Buytime/reblox/reducer/business_reducer.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/utils/b_cube_grid_spinner.dart';
@@ -213,8 +214,8 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                                           });*/
 
                                       bookingState.status = bookingState.enumToString(BookingStatus.opened);
-                                      StoreProvider.of<AppState>(context).dispatch(UpdateBookingNavigate(bookingState));
-
+                                      StoreProvider.of<AppState>(context).dispatch(UpdateBookingOnConfirm(bookingState));
+                                      StoreProvider.of<AppState>(context).dispatch(BusinessAndNavigateOnConfirmRequest(bookingState.business_id));
                                       /*Timer(Duration(milliseconds: 5000), (){
                                         Navigator.of(context).pop();
                                         Navigator.push(

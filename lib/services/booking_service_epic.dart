@@ -68,6 +68,11 @@ class BookingCreateRequestService implements EpicClass<AppState> {
       bookingState = event.bookingState;
       bookingState.booking_id = bookingId;
 
+      await FirebaseFirestore.instance /// 1 WRITE
+          .collection("booking")
+          .doc(bookingState.booking_id)
+          .update(event.bookingState.toJson());
+
       tmpBookingList = store.state.bookingList.copyWith();
       tmpBookingList.bookingListState.add(bookingState);
 
@@ -77,7 +82,7 @@ class BookingCreateRequestService implements EpicClass<AppState> {
       int documents = statisticsState.bookingCreateRequestServiceDocuments;
       debugPrint('BOOKING_SERVICE_EPIC - BookingCreateRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       reads = reads + read;
-      ++writes;
+      writes = writes + 2;
       documents = documents + bookingCodeCollisionDocs;
       debugPrint('BOOKING_SERVICE_EPIC - BookingCreateRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       statisticsState.bookingCreateRequestServiceRead = reads;
@@ -110,7 +115,7 @@ class BookingRequestService implements EpicClass<AppState> {
           .get();
 
       int bookingSnapshotDocs = bookingSnapshot.docs.length;
-
+      print("BOOKING_SERVICE_EPIC - BookingRequestService => BOOKINGS LENGTH: $bookingSnapshotDocs");
       if(bookingSnapshot.docs.isNotEmpty)
         bookingState =  BookingState.fromJson(bookingSnapshot.docs.first.data());
       else{
@@ -133,7 +138,7 @@ class BookingRequestService implements EpicClass<AppState> {
     }).expand((element) => [
       BookingRequestResponse(bookingState),
       UpdateStatistics(statisticsState),
-      bookingState.booking_code != 'error' ? BusinessAndNavigateOnConfirmRequest(bookingState.business_id) : null,
+      bookingState.booking_code != 'error' ? NavigatePushAction(AppRoutes.confirmBooking)/*BusinessAndNavigateOnConfirmRequest(bookingState.business_id)*/ : null,
     ]);
   }
 }
@@ -304,7 +309,7 @@ class BookingUpdateAndNavigateRequestService implements EpicClass<AppState> {
   StatisticsState statisticsState;
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    return actions.whereType<UpdateBookingNavigate>().asyncMap((event) async {
+    return actions.whereType<UpdateBookingOnConfirm>().asyncMap((event) async {
 
       print("BOOKING_SERVICE_EPIC - BookingUpdateAndNavigateRequestService => BOOKING ID: ${event.bookingState.booking_id}");
 
@@ -347,7 +352,7 @@ class BookingUpdateAndNavigateRequestService implements EpicClass<AppState> {
     }).expand((element) => [
       UpdatedBooking(bookingState),
       UpdateStatistics(statisticsState),
-      NavigatePushAction(AppRoutes.bookingPage),
+      //NavigatePushAction(AppRoutes.bookingPage),
     ]);
   }
 }

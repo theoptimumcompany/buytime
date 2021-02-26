@@ -25,6 +25,7 @@ import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/services.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
@@ -891,39 +892,35 @@ class LoginState extends State<Login> {
       responseMessage = '';
     });
 
-    showDialog(
-        context: context,
-        builder: (context) {
-          return  WillPopScope(
-              onWillPop: () async {
-                FocusScope.of(context).unfocus();
-                return false;
-              },
-              child: Container(
-                  height: SizeConfig.safeBlockVertical * 100,
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(.8),
-                  ),
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Container(
-                          width: SizeConfig.safeBlockVertical * 20,
-                          height: SizeConfig.safeBlockVertical * 20,
-                          child: Center(
-                            child: BCubeGridSpinner(
-                              color: Colors.transparent,
-                              size: SizeConfig.safeBlockVertical * 15,
-                            ),
-                          ),
-                        ),
-                      ],
+    showDialog(context: context, builder: (context) {return  WillPopScope(
+        onWillPop: () async {
+          FocusScope.of(context).unfocus();
+          return false;
+        },
+        child: Container(
+            height: SizeConfig.safeBlockVertical * 100,
+            decoration: BoxDecoration(
+              color: BuytimeTheme.BackgroundCerulean.withOpacity(.8),
+            ),
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                    width: SizeConfig.safeBlockVertical * 20,
+                    height: SizeConfig.safeBlockVertical * 20,
+                    child: Center(
+                      child: SpinKitRipple(
+                        color: Colors.white,
+                        size: SizeConfig.safeBlockVertical * 18,
+                      ),
                     ),
-                  )
-              )
-          );
-        });
+                  ),
+                ],
+              ),
+            )
+        )
+    );});
 
     setState(() {
       _isRequestFlying = true;
