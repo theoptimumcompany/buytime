@@ -28,6 +28,7 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
   List<TimeOfDay> stopTime = [];
   List<String> daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
   final List<GlobalKey<FormState>> _formSlotTimeKey = [GlobalKey<FormState>()];
+  bool setStartAndStop = true;
 
   @override
   void initState() {
@@ -139,7 +140,7 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
       String format24 = hour + ":" + minute;
       stopController[indexController].text = format24;
       List<String> controllerList = convertListTextEditingControllerToListString(stopController);
-      StoreProvider.of<AppState>(context).dispatch(SetServiceSlotStartTime(controllerList));
+      StoreProvider.of<AppState>(context).dispatch(SetServiceSlotStopTime(controllerList));
       setState(() {
         stopTime[indexController] = picked;
         _formSlotTimeKey[indexController].currentState.validate();
@@ -163,6 +164,7 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
       for (int i = 0; i < start.length; i++) {
         TextEditingController textEditingControllerStart = TextEditingController();
         textEditingControllerStart.text = start[i];
+        print(start[i]);
         startController.add(textEditingControllerStart);
         List<String> startString = start[i].split(":");
         print("Indice " + i.toString());
@@ -191,7 +193,10 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
     switchWeek = StoreProvider.of<AppState>(context).state.serviceSlot.switchWeek;
     daysInterval = StoreProvider.of<AppState>(context).state.serviceSlot.daysInterval;
     numberOfSlotTimeInterval = StoreProvider.of<AppState>(context).state.serviceSlot.numberOfInterval;
-    setStartAndStopTime();
+    if(setStartAndStop) {
+      setStartAndStop = false;
+      setStartAndStopTime();
+    }
     return StoreConnector<AppState, AppState>(
         converter: (store) => store.state,
         builder: (context, snapshot) {
@@ -205,6 +210,10 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: numberOfSlotTimeInterval,
                     itemBuilder: (context, i) {
+                      if(i > 0){
+                        ///Update keyForm
+                        _formSlotTimeKey.add(GlobalKey<FormState>());
+                      }
                       return Form(
                         key: _formSlotTimeKey[i],
                         child: Column(
@@ -428,6 +437,9 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
 
                         ///Update stopTime
                         stopTime.add(TimeOfDay());
+
+                        ///Update keyForm
+                        _formSlotTimeKey.add(GlobalKey<FormState>());
                       });
                     },
                     child: Padding(

@@ -1,4 +1,4 @@
-import 'file:///C:/Users/ruksh/StudioProjects/buytime/lib/UI/user/cart/tab/T_credit_cards.dart';
+import 'package:Buytime/UI/user/cart/tab/T_credit_cards.dart';
 import 'package:Buytime/UI/user/UI_U_Tabs.dart';
 import 'package:Buytime/UI/user/cart/tab/T_room.dart';
 import 'package:Buytime/utils/b_cube_grid_spinner.dart';

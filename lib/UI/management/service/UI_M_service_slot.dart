@@ -5,6 +5,7 @@ import 'package:Buytime/UI/management/service/widget/W_service_step_length.dart'
 import 'package:Buytime/UI/management/service/widget/W_service_step_price.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/reducer/service/service_reducer.dart';
+import 'package:Buytime/reblox/reducer/service/service_slot_time_reducer.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
@@ -160,7 +161,9 @@ class UI_M_ServiceSlotState extends State<UI_M_ServiceSlot> {
                                         ///TODO: Validazione
                                         ///Aggiungo uno slot alla lista del service
                                         StoreProvider.of<AppState>(context).dispatch(AddServiceSlot(snapshot.serviceSlot));
-                                       // Navigator.pop(context);
+                                        StoreProvider.of<AppState>(context).dispatch(SetServiceSlotToEmpty());
+                                        StoreProvider.of<AppState>(context).dispatch(UpdateService(snapshot.serviceState));
+                                        Navigator.pop(context);
                                       }
                                     });
                                   },
