@@ -346,7 +346,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                           width: media.width * 0.9,
                                           // decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
                                           child: Padding(
-                                            padding: const EdgeInsets.only(top: 0.0, bottom: 5.0, left: 10.0, right: 10.0),
+                                            padding: const EdgeInsets.only(top: 0.0, bottom: 10.0, left: 10.0, right: 10.0),
                                             child: TextFormField(
                                               initialValue: snapshot.serviceState.name,
                                               validator: (value) => value.isEmpty ? 'Service name is blank' : null,
@@ -372,7 +372,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                           width: media.width * 0.9,
                                           //decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
                                           child: Padding(
-                                            padding: const EdgeInsets.only(top: 0.0, bottom: 5.0, left: 10.0, right: 10.0),
+                                            padding: const EdgeInsets.only(top: 0.0, bottom: 10.0, left: 10.0, right: 10.0),
                                             child: TextFormField(
                                               keyboardType: TextInputType.multiline,
                                               maxLines: null,
@@ -442,7 +442,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                               ),
                                             ),
                                       Padding(
-                                        padding: const EdgeInsets.only(left: 20.0, top: 0.0),
+                                        padding: const EdgeInsets.only(left: 20.0, top: 10.0),
                                         child: Container(
                                           child: Column(
                                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -702,7 +702,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                               child: Column(
                                                 children: [
                                                   Padding(
-                                                    padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 15.0),
+                                                    padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
                                                     child: Row(
                                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                       children: [
@@ -720,9 +720,9 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                           ),
                                                         ),
                                                         Container(
-                                                            child: IconButton(
-                                                          icon: Icon(Icons.add, color: BuytimeTheme.SymbolGrey, size: media.width * 0.06),
-                                                          onPressed: () {
+                                                            child: GestureDetector(
+                                                          child: Icon(Icons.add, color: BuytimeTheme.SymbolGrey, size: media.width * 0.06),
+                                                          onTap: () {
                                                             ///Svuoto lo stato dello slot
                                                             StoreProvider.of<AppState>(context).dispatch(SetServiceSlotToEmpty());
                                                             Navigator.push(
@@ -744,45 +744,68 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                               physics: const NeverScrollableScrollPhysics(),
                                                               itemCount: snapshot.serviceState.serviceSlot.length,
                                                               itemBuilder: (context, index) {
-                                                                return GestureDetector(
-                                                                  onTap: () {
-                                                                    StoreProvider.of<AppState>(context).dispatch(SetServiceSlot(snapshot.serviceState.serviceSlot[index]));
-                                                                    Navigator.push(
-                                                                      context,
-                                                                      MaterialPageRoute(builder: (context) => UI_M_ServiceSlot()),
-                                                                    );
+                                                                return Dismissible(
+                                                                  key: UniqueKey(),
+                                                                  direction: DismissDirection.endToStart,
+                                                                  background: Container(
+                                                                    color: Colors.red,
+                                                                    margin: EdgeInsets.symmetric(horizontal: 15),
+                                                                    alignment: Alignment.centerRight,
+                                                                    child: Icon(
+                                                                      Icons.delete,
+                                                                      color: BuytimeTheme.SymbolWhite,
+                                                                    ),
+                                                                  ),
+                                                                  onDismissed: (direction) {
+                                                                    setState(() {
+                                                                      ///Deleting Slot
+                                                                      print("Delete Slot " + index.toString());
+                                                                      StoreProvider.of<AppState>(context).dispatch(DeleteServiceSlot(index));
+                                                                    });
                                                                   },
-                                                                  child: Padding(
-                                                                    padding: const EdgeInsets.only(bottom: 5.0),
-                                                                    child: ListTile(
-                                                                      title: Row(
-                                                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                        children: [
-                                                                          Text(
-                                                                            'Time Availability ' + (index + 1).toString(),
-                                                                            style: TextStyle(
-                                                                              fontSize: media.height * 0.020,
-                                                                              color: BuytimeTheme.TextBlack,
-                                                                              fontWeight: FontWeight.w500,
-                                                                            ),
-                                                                          ),
-                                                                          // Text("Prezzo"),
-                                                                        ],
-                                                                      ),
-                                                                      subtitle: Column(
-                                                                        children: [
-                                                                          Row(
+                                                                  child: GestureDetector(
+                                                                    onTap: () {
+                                                                      StoreProvider.of<AppState>(context).dispatch(SetServiceSlot(snapshot.serviceState.serviceSlot[index]));
+                                                                      Navigator.push(
+                                                                        context,
+                                                                        MaterialPageRoute(builder: (context) => UI_M_ServiceSlot()),
+                                                                      );
+                                                                    },
+                                                                    child: Padding(
+                                                                      padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 10.0),
+                                                                      child: Card(
+                                                                        elevation: 1.0,
+                                                                        child: ListTile(
+                                                                          title: Row(
+                                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                                             children: [
-                                                                              Text(snapshot.serviceState.serviceSlot[index].checkIn + " - " + snapshot.serviceState.serviceSlot[index].checkOut),
+                                                                              Text(
+                                                                                'Time Availability ' + (index + 1).toString(),
+                                                                                style: TextStyle(
+                                                                                  fontSize: media.height * 0.020,
+                                                                                  color: BuytimeTheme.TextBlack,
+                                                                                  fontWeight: FontWeight.w500,
+                                                                                ),
+                                                                              ),
+                                                                              // Text("Prezzo"),
                                                                             ],
                                                                           ),
-                                                                          Row(
+                                                                          subtitle: Column(
                                                                             children: [
-                                                                              Text(snapshot.serviceState.serviceSlot[index].price.toString() + " euro"),
+                                                                              Row(
+                                                                                children: [
+                                                                                  Text(snapshot.serviceState.serviceSlot[index].checkIn + " - " + snapshot.serviceState.serviceSlot[index].checkOut),
+                                                                                ],
+                                                                              ),
+                                                                              Row(
+                                                                                children: [
+                                                                                  Text(snapshot.serviceState.serviceSlot[index].price.toString() + " euro"),
+                                                                                ],
+                                                                              ),
+                                                                              //showSlotInterval(snapshot.serviceState.serviceSlot[index].numberOfInterval, media, index),
                                                                             ],
                                                                           ),
-                                                                          //showSlotInterval(snapshot.serviceState.serviceSlot[index].numberOfInterval, media, index),
-                                                                        ],
+                                                                        ),
                                                                       ),
                                                                     ),
                                                                   ),

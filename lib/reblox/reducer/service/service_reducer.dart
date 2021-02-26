@@ -197,10 +197,14 @@ class SetServiceSwitchAutoConfirm {
 
 class AddServiceSlot {
   ServiceSlot _serviceSlot;
-
   AddServiceSlot(this._serviceSlot);
-
   ServiceSlot get serviceSlot => _serviceSlot;
+}
+
+class DeleteServiceSlot {
+  int _index;
+  DeleteServiceSlot(this._index);
+  int get index => _index;
 }
 
 ServiceState serviceReducer(ServiceState state, action) {
@@ -248,6 +252,10 @@ ServiceState serviceReducer(ServiceState state, action) {
   if (action is AddServiceSlot) {
     ServiceSlot serviceSlot = action.serviceSlot;
     serviceState.serviceSlot.add(serviceSlot);
+    return serviceState;
+  }
+  if (action is DeleteServiceSlot) {
+    serviceState.serviceSlot.removeAt(action.index);
     return serviceState;
   }
   if (action is SetServiceSelectedCategories) {
