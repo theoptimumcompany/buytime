@@ -1,8 +1,6 @@
 import 'package:Buytime/UI/management/business/UI_M_business_list.dart';
-import 'package:Buytime/UI/user/UI_U_Tabs.dart';
 import 'package:Buytime/UI/user/landing/UI_U_Landing.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
-import 'package:Buytime/reblox/model/user/user_state.dart';
 import 'package:Buytime/reblox/reducer/business_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/business_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_list_reducer.dart';
@@ -13,8 +11,9 @@ import 'package:Buytime/reblox/reducer/order_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reblox/reducer/pipeline_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/pipeline_reducer.dart';
-import 'package:Buytime/reblox/reducer/service_list_reducer.dart';
-import 'package:Buytime/reblox/reducer/service_reducer.dart';
+import 'package:Buytime/reblox/reducer/service/service_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/service/service_reducer.dart';
+import 'package:Buytime/reblox/reducer/service/service_slot_time_reducer.dart';
 import 'package:Buytime/reblox/reducer/stripe_payment_reducer.dart';
 import 'package:Buytime/reblox/reducer/user_reducer.dart';
 import 'package:flutter/material.dart';
@@ -212,6 +211,8 @@ class _UI_M_BusinessListDrawerState extends State<UI_M_BusinessListDrawer> {
                             .dispatch(SetServiceToEmpty());
                         StoreProvider.of<AppState>(context)
                             .dispatch(SetServiceListToEmpty());
+                        StoreProvider.of<AppState>(context)
+                            .dispatch(SetServiceSlotToEmpty());
                         StoreProvider.of<AppState>(context)
                             .dispatch(SetPipelineToEmpty());
                         StoreProvider.of<AppState>(context)

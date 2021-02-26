@@ -13,6 +13,7 @@ import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/pipeline/pipeline.dart';
 import 'package:Buytime/reblox/model/pipeline/pipeline_list_state.dart';
 import 'package:Buytime/reblox/model/service/service_list_state.dart';
+import 'package:Buytime/reblox/model/service/service_slot_time_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/model/statistics_state.dart';
 import 'package:Buytime/reblox/model/stripe/stripe_state.dart';
@@ -24,8 +25,9 @@ import 'package:Buytime/reblox/reducer/order_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reblox/reducer/pipeline_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/pipeline_reducer.dart';
-import 'package:Buytime/reblox/reducer/service_list_reducer.dart';
-import 'package:Buytime/reblox/reducer/service_reducer.dart';
+import 'package:Buytime/reblox/reducer/service/service_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/service/service_reducer.dart';
+import 'package:Buytime/reblox/reducer/service/service_slot_time_reducer.dart';
 import 'package:Buytime/reblox/reducer/statistics_reducer.dart';
 import 'package:Buytime/reblox/reducer/stripe_payment_reducer.dart';
 import 'package:Buytime/reblox/reducer/user_reducer.dart';
@@ -39,8 +41,7 @@ import 'category_reducer.dart';
 import 'category_tree_reducer.dart';
 import 'filter_reducer.dart';
 
-class ClickOnBusinessState {
-}
+class ClickOnBusinessState {}
 
 AppState appReducer(AppState state, dynamic action) {
   FilterSearchState filterSearchState = filterReducer(state.filterSearch, action);
@@ -58,40 +59,40 @@ AppState appReducer(AppState state, dynamic action) {
   CategoryTree categoryTree = categoryTreeReducer(state.categoryTree, action);
   ServiceState serviceState = serviceReducer(state.serviceState, action);
   ServiceListState serviceListState = serviceListReducer(state.serviceList, action);
+  ServiceSlot serviceSlot = serviceSlotReducer(state.serviceSlot, action);
   Pipeline pipeline = pipelineReducer(state.pipeline, action);
   PipelineList pipelineList = pipelineListReducer(state.pipelineList, action);
   StatisticsState statisticsState = statisticsReducer(state.statistics, action);
 
   AppState newState = AppState.copyWith(
-    filterSearch: filterSearchState,
-    business: businessState,
-    booking: bookingState,
-    order: orderState,
-    orderList: orderListState,
-    businessList: businessListState,
-    bookingList: bookingListState,
-    user: userState,
-    stripe: stripeState,
-    category: categoryState,
-    categoryInvite: categoryInviteState,
-    categoryList: categoryListState,
-    categoryTree: categoryTree,
-    serviceState: serviceState,
-    serviceList: serviceListState,
-    pipeline: pipeline,
-    pipelineList: pipelineList,
-    route: navigationReducer(state.route, action),
-    statistics: statisticsState
-  );
+      filterSearch: filterSearchState,
+      business: businessState,
+      booking: bookingState,
+      order: orderState,
+      orderList: orderListState,
+      businessList: businessListState,
+      bookingList: bookingListState,
+      user: userState,
+      stripe: stripeState,
+      category: categoryState,
+      categoryInvite: categoryInviteState,
+      categoryList: categoryListState,
+      categoryTree: categoryTree,
+      serviceState: serviceState,
+      serviceList: serviceListState,
+      serviceSlot: serviceSlot,
+      pipeline: pipeline,
+      pipelineList: pipelineList,
+      route: navigationReducer(state.route, action),
+      statistics: statisticsState);
 
-  if (action is ClickOnBusinessState) { // reset the store before going to the service list
+  if (action is ClickOnBusinessState) {
+    // reset the store before going to the service list
     newState.order = OrderState().toEmpty();
     newState.serviceList = ServiceListState().toEmpty();
     newState.serviceState = ServiceState().toEmpty();
     cartCounter = 0;
   }
 
-
   return newState;
 }
-

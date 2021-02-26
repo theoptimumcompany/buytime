@@ -95,7 +95,7 @@ class BookingState {
     DateTime end_date,
     String booking_code,
     List<String> userEmail,
-    List<GenericState> user,
+    List<UserSnippet> user,
     String status,
     String wide,
   ) {

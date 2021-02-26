@@ -4,7 +4,7 @@ import 'package:Buytime/UI/management/service/widget/W_service_step_calendar_ava
 import 'package:Buytime/UI/management/service/widget/W_service_step_length.dart';
 import 'package:Buytime/UI/management/service/widget/W_service_step_price.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
-import 'package:Buytime/reblox/reducer/service_reducer.dart';
+import 'package:Buytime/reblox/reducer/service/service_reducer.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
@@ -15,6 +15,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 
 class UI_M_ServiceSlot extends StatefulWidget {
+
   @override
   State<StatefulWidget> createState() => UI_M_ServiceSlotState();
 }
@@ -157,7 +158,8 @@ class UI_M_ServiceSlotState extends State<UI_M_ServiceSlot> {
                                         }
                                       } else {
                                         ///TODO: Validazione
-                                        StoreProvider.of<AppState>(context).dispatch(SetServiceSlotNumber(snapshot.serviceState.numberOfServiceSlot + 1));
+                                        ///Aggiungo uno slot alla lista del service
+                                        StoreProvider.of<AppState>(context).dispatch(AddServiceSlot(snapshot.serviceSlot));
                                        // Navigator.pop(context);
                                       }
                                     });

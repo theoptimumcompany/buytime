@@ -1,5 +1,5 @@
 import 'package:Buytime/reblox/model/app_state.dart';
-import 'package:Buytime/reblox/reducer/service_reducer.dart';
+import 'package:Buytime/reblox/reducer/service/service_slot_time_reducer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
@@ -7,9 +7,8 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter/material.dart';
 
 class StepPrice extends StatefulWidget {
-  StepPrice({this.media});
-
   Size media;
+  StepPrice({this.media});
 
   @override
   State<StatefulWidget> createState() => StepPriceState();
@@ -28,7 +27,7 @@ class StepPriceState extends State<StepPrice> {
 
   @override
   Widget build(BuildContext context) {
-    priceController.text = StoreProvider.of<AppState>(context).state.serviceState.serviceSlot.price.toString();
+    priceController.text = StoreProvider.of<AppState>(context).state.serviceSlot.price.toString();
     return StoreConnector<AppState, AppState>(
         converter: (store) => store.state,
         builder: (context, snapshot) {

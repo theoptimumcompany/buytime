@@ -11,6 +11,7 @@ import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/pipeline/pipeline.dart';
 import 'package:Buytime/reblox/model/pipeline/pipeline_list_state.dart';
 import 'package:Buytime/reblox/model/service/service_list_state.dart';
+import 'package:Buytime/reblox/model/service/service_slot_time_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/model/statistics_state.dart';
 import 'package:Buytime/reblox/model/stripe/stripe_state.dart';
@@ -52,6 +53,7 @@ class AppState {
   CategoryTree categoryTree;
   ServiceState serviceState;
   ServiceListState serviceList;
+  ServiceSlot serviceSlot;
   Pipeline pipeline;
   PipelineList pipelineList;
   List<String> route;
@@ -73,6 +75,7 @@ class AppState {
     @required this.categoryTree,
     @required this.serviceState,
     @required this.serviceList,
+    @required this.serviceSlot,
     @required this.pipeline,
     @required this.pipelineList,
     this.route = const [AppRoutes.home],
@@ -95,6 +98,7 @@ class AppState {
     categoryTree = CategoryTree();
     serviceState = ServiceState();
     serviceList = ServiceListState();
+    serviceSlot = ServiceSlot();
     pipeline = Pipeline();
     pipelineList = PipelineList();
     statistics = StatisticsState();
@@ -116,6 +120,7 @@ class AppState {
       CategoryTree categoryTree,
       ServiceState serviceState,
       ServiceListState serviceList,
+      ServiceSlot serviceSlot,
       Pipeline pipeline,
       PipelineList pipelineList,
       List<String> route,
@@ -135,6 +140,7 @@ class AppState {
     this.categoryTree = categoryTree;
     this.serviceState = serviceState;
     this.serviceList = serviceList;
+    this.serviceSlot = serviceSlot;
     this.pipeline = pipeline;
     this.pipelineList = pipelineList;
     this.route = route;
@@ -157,6 +163,7 @@ class AppState {
     categoryTree = json['categoryTree'];
     serviceState = json['serviceState'];
     serviceList = json['serviceList'];
+    serviceSlot = json['serviceSlot'];
     pipeline = json['pipeline'];
     pipelineList = json['pipelineList'];
     route = json['route'];
@@ -179,6 +186,7 @@ class AppState {
         'categoryTree': categoryTree,
         'serviceState': serviceState,
         'serviceList': serviceList,
+        'serviceSlot': serviceSlot,
         'pipeline': pipeline,
         'pipelineList': pipelineList,
         'route': route,

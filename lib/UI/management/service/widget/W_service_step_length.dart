@@ -1,5 +1,5 @@
 import 'package:Buytime/reblox/model/app_state.dart';
-import 'package:Buytime/reblox/reducer/service_reducer.dart';
+import 'package:Buytime/reblox/reducer/service/service_slot_time_reducer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
@@ -7,16 +7,14 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter/material.dart';
 
 class StepLength extends StatefulWidget {
-  StepLength({this.media});
-
   Size media;
+  StepLength({this.media});
 
   @override
   State<StatefulWidget> createState() => StepLengthState();
 }
 
 class StepLengthState extends State<StepLength> {
-
   ///Length vars
   TextEditingController hourController = TextEditingController();
   TextEditingController minuteController = TextEditingController();
@@ -30,9 +28,9 @@ class StepLengthState extends State<StepLength> {
 
   @override
   Widget build(BuildContext context) {
-    hourController.text = StoreProvider.of<AppState>(context).state.serviceState.serviceSlot.hour.toString();
-    minuteController.text = StoreProvider.of<AppState>(context).state.serviceState.serviceSlot.minute.toString();
-    limitBookingController.text = StoreProvider.of<AppState>(context).state.serviceState.serviceSlot.limitBooking.toString();
+    hourController.text = StoreProvider.of<AppState>(context).state.serviceSlot.hour.toString();
+    minuteController.text = StoreProvider.of<AppState>(context).state.serviceSlot.minute.toString();
+    limitBookingController.text = StoreProvider.of<AppState>(context).state.serviceSlot.limitBooking.toString();
     var media = MediaQuery.of(context).size;
     return StoreConnector<AppState, AppState>(
         converter: (store) => store.state,
@@ -137,7 +135,8 @@ class StepLengthState extends State<StepLength> {
                           onSaved: (value) {
                             setState(() {
                               minuteController.text = value;
-                              StoreProvider.of<AppState>(context).dispatch(SetServiceSlotMinute(int.parse(minuteController.text)));                            });
+                              StoreProvider.of<AppState>(context).dispatch(SetServiceSlotMinute(int.parse(minuteController.text)));
+                            });
                           },
                           textAlign: TextAlign.start,
                           keyboardType: TextInputType.number,

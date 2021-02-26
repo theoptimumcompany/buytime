@@ -1,4 +1,5 @@
 import 'dart:core';
+import 'package:Buytime/reblox/reducer/service/service_list_reducer.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:Buytime/UI/user/cart/UI_U_Cart.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
@@ -8,7 +9,6 @@ import 'package:Buytime/reblox/model/order/order_entry.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
-import 'package:Buytime/reblox/reducer/service_list_reducer.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
 import 'package:Buytime/utils/globals.dart';
 import 'package:Buytime/reusable/service/optimum_service_card_medium.dart';

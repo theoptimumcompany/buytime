@@ -1,5 +1,5 @@
 import 'package:Buytime/UI/management/service/widget/W_service_step_availabile_time.dart';
-import 'package:Buytime/reblox/model/service/service_time_slot_state.dart';
+import 'package:Buytime/reblox/model/service/service_slot_time_state.dart';
 
 import '../file/optimum_file_to_upload.dart';
 
@@ -20,8 +20,7 @@ class ServiceState {
   List<String> tag;
   bool switchSlots;
   bool switchAutoConfirm;
-  ServiceSlot serviceSlot;
-  int numberOfServiceSlot;
+  List<ServiceSlot> serviceSlot;
   bool spinnerVisibility = false;
 
   ServiceState({
@@ -42,7 +41,6 @@ class ServiceState {
     this.switchSlots,
     this.switchAutoConfirm,
     this.serviceSlot,
-    this.numberOfServiceSlot,
     this.spinnerVisibility,
   });
 
@@ -82,8 +80,7 @@ class ServiceState {
       tag: [],
       switchSlots: false,
       switchAutoConfirm: false,
-      serviceSlot: ServiceSlot().toEmpty(),
-      numberOfServiceSlot: 0,
+      serviceSlot: [],
       spinnerVisibility: false,
     );
   }
@@ -106,7 +103,6 @@ class ServiceState {
     this.switchSlots = service.switchSlots;
     this.switchAutoConfirm = service.switchAutoConfirm;
     this.serviceSlot = service.serviceSlot;
-    this.numberOfServiceSlot = service.numberOfServiceSlot;
     this.spinnerVisibility = service.spinnerVisibility;
   }
 
@@ -127,8 +123,7 @@ class ServiceState {
     List<String> tag,
     bool switchSlots,
     bool switchAutoConfirm,
-    ServiceSlot serviceSlot,
-    int numberOfServiceSlot,
+    List<ServiceSlot> serviceSlot,
     bool spinnerVisibility,
   ) {
     ServiceState(
@@ -149,7 +144,6 @@ class ServiceState {
       switchSlots: switchSlots ?? this.switchSlots,
       switchAutoConfirm: switchAutoConfirm ?? this.switchAutoConfirm,
       serviceSlot: serviceSlot ?? this.serviceSlot,
-      numberOfServiceSlot: numberOfServiceSlot ?? this.numberOfServiceSlot,
       spinnerVisibility: spinnerVisibility ?? this.spinnerVisibility,
     );
   }
@@ -171,8 +165,7 @@ class ServiceState {
     List<String> tag,
     bool switchSlots,
     bool switchAutoConfirm,
-    ServiceSlot serviceSlot,
-    int numberOfServiceSlot,
+    List<ServiceSlot> serviceSlot,
     bool spinnerVisibility,
   }) {
     return ServiceState(
@@ -193,18 +186,17 @@ class ServiceState {
       switchSlots: switchSlots ?? this.switchSlots,
       switchAutoConfirm: switchAutoConfirm ?? this.switchAutoConfirm,
       serviceSlot: serviceSlot ?? this.serviceSlot,
-      numberOfServiceSlot: numberOfServiceSlot ?? this.numberOfServiceSlot,
       spinnerVisibility: spinnerVisibility ?? this.spinnerVisibility,
     );
   }
 
-  // List<dynamic> convertToJson(List<GenericState> objectStateList) {
-  //   List<dynamic> list = [];
-  //   objectStateList.forEach((element) {
-  //     list.add(element.toJson());
-  //   });
-  //   return list;
-  // }
+  List<dynamic> convertToJson(List<ServiceSlot> objectStateList) {
+    List<dynamic> list = [];
+    objectStateList.forEach((element) {
+      list.add(element.toJson());
+    });
+    return list;
+  }
 
   ServiceState.fromJson(Map<String, dynamic> json)
       : serviceId = json['serviceId'],
@@ -222,8 +214,11 @@ class ServiceState {
         tag = json.containsKey('tag') && json['tag'] != null ? List<String>.from(json['tag']) : [],
         switchSlots = json.containsKey('switchSlots') ? json['switchSlots'] : false,
         switchAutoConfirm = json.containsKey('switchAutoConfirm') ? json['switchAutoConfirm'] : false,
-        numberOfServiceSlot = json.containsKey('numberOfServiceSlot') ? json['numberOfServiceSlot'] : 0,
-        serviceSlot = json['serviceSlot'] != null ? ServiceSlot.fromJson(json['serviceSlot']) : ServiceSlot().toEmpty();
+        serviceSlot = json.containsKey('serviceSlot')
+            ? List<ServiceSlot>.from(json["serviceSlot"].map((item) {
+                return ServiceSlot.fromJson(item);
+              }))
+            : [];
 
   Map<String, dynamic> toJson() => {
         'serviceId': serviceId,
@@ -241,7 +236,6 @@ class ServiceState {
         'tag': tag,
         'switchSlots': switchSlots,
         'switchAutoConfirm': switchAutoConfirm,
-        'serviceSlot': serviceSlot.toJson(),
-        'numberOfServiceSlot': numberOfServiceSlot,
+        'serviceSlot': convertToJson(serviceSlot),
       };
 }

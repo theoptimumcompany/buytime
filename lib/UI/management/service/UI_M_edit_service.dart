@@ -1,13 +1,12 @@
 import 'package:Buytime/UI/management/service/UI_M_service_list.dart';
 import 'package:Buytime/UI/management/service/UI_M_service_slot.dart';
 import 'package:Buytime/UI/management/service/widget/W_service_photo.dart';
-import 'package:Buytime/UI/management/service/widget/W_service_step_availabile_time.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/category/tree/category_tree_state.dart';
-import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/model/snippet/parent.dart';
 import 'package:Buytime/reblox/reducer/category_tree_reducer.dart';
-import 'package:Buytime/reblox/reducer/service_reducer.dart';
+import 'package:Buytime/reblox/reducer/service/service_reducer.dart';
+import 'package:Buytime/reblox/reducer/service/service_slot_time_reducer.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
@@ -649,7 +648,8 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                             child: IconButton(
                                                           icon: Icon(Icons.add, color: BuytimeTheme.SymbolGrey, size: media.width * 0.06),
                                                           onPressed: () {
-                                                            print("Create New Slot");
+                                                            ///Svuoto lo stato dello slot
+                                                            StoreProvider.of<AppState>(context).dispatch(SetServiceSlotToEmpty());
                                                             Navigator.push(
                                                               context,
                                                               MaterialPageRoute(builder: (context) => UI_M_ServiceSlot()),
@@ -659,7 +659,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                       ],
                                                     ),
                                                   ),
-                                                  snapshot.serviceState.numberOfServiceSlot > 0
+                                                  snapshot.serviceState.serviceSlot.length > 0
                                                       ? Padding(
                                                           padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 15.0),
                                                           child: ConstrainedBox(
@@ -667,7 +667,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                             child: ListView.builder(
                                                               shrinkWrap: true,
                                                               physics: const NeverScrollableScrollPhysics(),
-                                                              itemCount: snapshot.serviceState.numberOfServiceSlot,
+                                                              itemCount: snapshot.serviceState.serviceSlot.length,
                                                               itemBuilder: (context, index) {
                                                                 return Padding(
                                                                   padding: const EdgeInsets.only(bottom: 5.0),
