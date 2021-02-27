@@ -15,13 +15,18 @@ class ServiceState {
   String description;
   String visibility;
   double price;
-  List<OptimumFileToUpload> fileToUploadList;
   int timesSold;
   List<String> tag;
   bool switchSlots;
   bool switchAutoConfirm;
   List<ServiceSlot> serviceSlot;
+
+
+  ///Out Database
+  List<OptimumFileToUpload> fileToUploadList;
   bool spinnerVisibility = false;
+  bool serviceCreated = false;
+  bool serviceEdited = false;
 
   ServiceState({
     this.serviceId,
@@ -42,6 +47,8 @@ class ServiceState {
     this.switchAutoConfirm,
     this.serviceSlot,
     this.spinnerVisibility,
+    this.serviceCreated,
+    this.serviceEdited,
   });
 
   // String enumToString(ServiceVisibility serviceVisibility) {
@@ -82,6 +89,8 @@ class ServiceState {
       switchAutoConfirm: false,
       serviceSlot: [],
       spinnerVisibility: false,
+      serviceCreated: false,
+      serviceEdited: false,
     );
   }
 
@@ -104,6 +113,8 @@ class ServiceState {
     this.switchAutoConfirm = service.switchAutoConfirm;
     this.serviceSlot = service.serviceSlot;
     this.spinnerVisibility = service.spinnerVisibility;
+    this.serviceCreated = service.serviceCreated;
+    this.serviceEdited = service.serviceEdited;
   }
 
   serviceStateFieldUpdate(
@@ -125,6 +136,8 @@ class ServiceState {
     bool switchAutoConfirm,
     List<ServiceSlot> serviceSlot,
     bool spinnerVisibility,
+    bool serviceCreated,
+    bool serviceEdited,
   ) {
     ServiceState(
       serviceId: serviceId ?? this.serviceId,
@@ -145,6 +158,8 @@ class ServiceState {
       switchAutoConfirm: switchAutoConfirm ?? this.switchAutoConfirm,
       serviceSlot: serviceSlot ?? this.serviceSlot,
       spinnerVisibility: spinnerVisibility ?? this.spinnerVisibility,
+      serviceCreated: serviceCreated ?? this.serviceCreated,
+      serviceEdited: serviceEdited ?? this.serviceEdited,
     );
   }
 
@@ -167,6 +182,8 @@ class ServiceState {
     bool switchAutoConfirm,
     List<ServiceSlot> serviceSlot,
     bool spinnerVisibility,
+    bool serviceCreated,
+    bool serviceEdited,
   }) {
     return ServiceState(
       serviceId: serviceId ?? this.serviceId,
@@ -187,6 +204,8 @@ class ServiceState {
       switchAutoConfirm: switchAutoConfirm ?? this.switchAutoConfirm,
       serviceSlot: serviceSlot ?? this.serviceSlot,
       spinnerVisibility: spinnerVisibility ?? this.spinnerVisibility,
+      serviceCreated: serviceCreated ?? this.serviceCreated,
+      serviceEdited: serviceEdited ?? this.serviceEdited,
     );
   }
 

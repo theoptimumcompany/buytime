@@ -24,12 +24,12 @@ class UI_M_ServiceList extends StatefulWidget {
 
 class UI_M_ServiceListState extends State<UI_M_ServiceList> {
   OrderState order = OrderState(itemList: [], date: DateTime.now(), position: "", total: 0.0, business: BusinessSnippet().toEmpty(), user: UserSnippet().toEmpty(), businessId: "");
-
   var iconVisibility = Image.asset('assets/img/icon/service_visible.png');
   bool uploadServiceVisibility = false;
   List<List<ServiceState>> listOfServiceEachRoot = [];
 
   void setServiceLists(List<CategoryState> categoryRootList, List<ServiceState> serviceList) {
+    listOfServiceEachRoot = [];
     for (int c = 0; c < categoryRootList.length; c++) {
       List<ServiceState> listRoot = [];
       List<bool> internalSpinnerVisibility = [];
@@ -63,6 +63,24 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
     var mediaHeight = media.height;
     return StoreConnector<AppState, AppState>(
         converter: (store) => store.state,
+        rebuildOnChange: true,
+        onDidChange: (store) {
+          if (store.serviceState.serviceCreated) {
+            store.serviceState.serviceCreated = false;
+            StoreProvider.of<AppState>(context).dispatch(SetCreatedService(false));
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text('Service Created'),
+              duration: Duration(seconds: 3),
+            ));
+          } else if (store.serviceState.serviceEdited) {
+            store.serviceState.serviceEdited = false;
+            StoreProvider.of<AppState>(context).dispatch(SetEditedService(false));
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text('Service Edited'),
+              duration: Duration(seconds: 3),
+            ));
+          }
+        },
         onInit: (store) => {store.dispatch(ServiceListRequest(store.state.business.id_firestore, 'manager'))},
         onWillChange: (store, storeNew) => setServiceLists(storeNew.categoryList.categoryListState, storeNew.serviceList.serviceListState),
         builder: (context, snapshot) {
@@ -70,6 +88,7 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
           categoryRootList.sort((a, b) => a.name.compareTo(b.name));
           List<ServiceState> serviceList = StoreProvider.of<AppState>(context).state.serviceList.serviceListState;
           order = snapshot.order.itemList != null ? (snapshot.order.itemList.length > 0 ? snapshot.order : order) : order;
+
           return WillPopScope(
               onWillPop: _onWillPop,
               child: Scaffold(

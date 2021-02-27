@@ -29,6 +29,18 @@ class SetService {
   ServiceState get serviceState => _serviceState;
 }
 
+class SetCreatedService {
+  bool _value;
+  SetCreatedService(this._value);
+  bool get value => _value;
+}
+
+class SetEditedService {
+  bool _value;
+  SetEditedService(this._value);
+  bool get value => _value;
+}
+
 class SetServiceToEmpty {
   ServiceState _serviceState;
 
@@ -209,6 +221,14 @@ class DeleteServiceSlot {
 
 ServiceState serviceReducer(ServiceState state, action) {
   ServiceState serviceState = ServiceState.fromState(state);
+  if (action is SetCreatedService) {
+    serviceState.serviceCreated = action.value;
+    return serviceState;
+  }
+  if (action is SetEditedService) {
+    serviceState.serviceEdited = action.value;
+    return serviceState;
+  }
   if (action is SetServiceId) {
     serviceState.serviceId = action.id;
     return serviceState;
@@ -278,6 +298,10 @@ ServiceState serviceReducer(ServiceState state, action) {
     return serviceState;
   }
   if (action is CreatedService) {
+    serviceState = action.serviceState.copyWith();
+    return serviceState;
+  }
+  if (action is UpdatedService) {
     serviceState = action.serviceState.copyWith();
     return serviceState;
   }
