@@ -96,6 +96,9 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
   }
 
   Future<void> _selectStartTime(BuildContext context, int indexController) async {
+    List<String> start = StoreProvider.of<AppState>(context).state.serviceSlot.startTime[indexController].split(":");
+    int startHour = int.parse(start[0]);
+    int startMinute = int.parse(start[1]);
     final TimeOfDay picked = await showTimePicker(
       builder: (BuildContext context, Widget child) {
         return MediaQuery(
@@ -105,7 +108,7 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
       },
       context: context,
       initialEntryMode: TimePickerEntryMode.dial,
-      initialTime: TimeOfDay(hour: 0, minute: 0),
+      initialTime: TimeOfDay(hour: startHour, minute: startMinute),
     );
     if (picked != null) {
       String minute = picked.minute < 10 ? "0" + picked.minute.toString() : picked.minute.toString();
@@ -123,6 +126,10 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
   }
 
   Future<void> _selectStopTime(BuildContext context, int indexController) async {
+    List<String> stop = StoreProvider.of<AppState>(context).state.serviceSlot.stopTime[indexController].split(":");
+    int stopHour = int.parse(stop[0]);
+    int stopMinute = int.parse(stop[1]);
+
     final TimeOfDay picked = await showTimePicker(
       builder: (BuildContext context, Widget child) {
         return MediaQuery(
@@ -132,15 +139,13 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
       },
       context: context,
       initialEntryMode: TimePickerEntryMode.dial,
-      initialTime: TimeOfDay(hour: 0, minute: 0),
+      initialTime: TimeOfDay(hour: stopHour, minute: stopMinute),
     );
     if (picked != null) {
       String minute = picked.minute < 10 ? "0" + picked.minute.toString() : picked.minute.toString();
       String hour = picked.hour < 10 ? "0" + picked.hour.toString() : picked.hour.toString();
       String format24 = hour + ":" + minute;
       stopController[indexController].text = format24;
-      List<String> controllerList = convertListTextEditingControllerToListString(stopController);
-      StoreProvider.of<AppState>(context).dispatch(SetServiceSlotStopTime(controllerList));
       setState(() {
         stopTime[indexController] = picked;
         _formSlotTimeKey[indexController].currentState.validate();
@@ -149,8 +154,6 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
     return null;
   }
 
-
-  ///Todo: non aggancia stato iniziale e timeofday cambiato
   void setStartAndStopTime() {
     List<String> start = StoreProvider.of<AppState>(context).state.serviceSlot.startTime;
     List<String> stop = StoreProvider.of<AppState>(context).state.serviceSlot.stopTime;
@@ -160,22 +163,23 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
       TextEditingController textEditingControllerStart = TextEditingController();
       startController.add(textEditingControllerStart);
       timeOfDayStart = TimeOfDay.now();
+      startTime.add(timeOfDayStart);
     } else {
       for (int i = 0; i < start.length; i++) {
         TextEditingController textEditingControllerStart = TextEditingController();
         textEditingControllerStart.text = start[i];
-        print(start[i]);
         startController.add(textEditingControllerStart);
         List<String> startString = start[i].split(":");
-        print("Indice " + i.toString());
         timeOfDayStart = TimeOfDay(hour: int.parse(startString[0]), minute: int.parse(startString[1]));
+        startTime.add(timeOfDayStart);
       }
     }
-    startTime.add(timeOfDayStart);
+
     if (stop.length == 0) {
       TextEditingController textEditingControllerStop = TextEditingController();
       stopController.add(textEditingControllerStop);
       timeOfDayStop = TimeOfDay.now();
+      stopTime.add(timeOfDayStop);
     } else {
       for (int i = 0; i < stop.length; i++) {
         TextEditingController textEditingControllerStop = TextEditingController();
@@ -183,9 +187,10 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
         stopController.add(textEditingControllerStop);
         List<String> stopString = stop[i].split(":");
         timeOfDayStop = TimeOfDay(hour: int.parse(stopString[0]), minute: int.parse(stopString[1]));
+        stopTime.add(timeOfDayStop);
       }
     }
-    stopTime.add(timeOfDayStop);
+
   }
 
   @override
@@ -222,7 +227,7 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
                                 child: Row(
                               children: [
                                 Text(
-                                  (i + 1).toString() + ". Available time",
+                                  (i + 1).toString() + ". working hours",
                                   textAlign: TextAlign.start,
                                   style: TextStyle(
                                     fontSize: widget.media.height * 0.018,
@@ -232,6 +237,9 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
                                 ),
                               ],
                             )),
+//TODO: Controllo che lesettimane si accorpino quando si scelgono i giorni complementari per stessi orari
+                          //TODO: Controllo cghe durata non sia maggiore dello slot orario scelto
+                            //TODO
 
                             ///Time Range
                             Padding(
@@ -247,6 +255,7 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
                                       children: [
                                         GestureDetector(
                                           onTap: () async {
+                                            validate(i);
                                             await _selectStartTime(context, i);
                                           },
                                           child: Padding(
@@ -281,10 +290,24 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
                                                   fontWeight: FontWeight.w800,
                                                 ),
                                                 validator: (value) {
-                                                  if (value.isEmpty) {
-                                                    return 'Please insert time';
+                                                  if (startController[i].text.isEmpty) {
+                                                    return "Insert start time first";
+                                                  } else if ((stopTime[i].hour + stopTime[i].minute / 60.0) - (startTime[i].hour + startTime[i].minute / 60.0) <= 0) {
+                                                    print("Ora fine " + stopTime[i].hour.toString());
+                                                    print("Minuto fine " + stopTime[i].minute.toString());
+                                                    print("Ora inizio " + startTime[i].hour.toString());
+                                                    print("Minuto inizio " + startTime[i].minute.toString());
+                                                    return "Start time is higher than start";
                                                   }
-                                                  return null;
+                                                  else{
+                                                    List<String> controllerList = convertListTextEditingControllerToListString(startController);
+                                                    StoreProvider.of<AppState>(context).dispatch(SetServiceSlotStartTime(controllerList));
+                                                    print("Ora fine " + stopTime[i].hour.toString());
+                                                    print("Minuto fine " + stopTime[i].minute.toString());
+                                                    print("Ora inizio " + startTime[i].hour.toString());
+                                                    print("Minuto inizio " + startTime[i].minute.toString());
+                                                  }
+                                                  return '';
                                                 },
                                               ),
                                             ),
@@ -342,7 +365,19 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
                                                 if (startController[i].text.isEmpty) {
                                                   return "Insert start time first";
                                                 } else if ((stopTime[i].hour + stopTime[i].minute / 60.0) - (startTime[i].hour + startTime[i].minute / 60.0) <= 0) {
+                                                  print("Ora fine " + stopTime[i].hour.toString());
+                                                  print("Minuto fine " + stopTime[i].minute.toString());
+                                                  print("Ora inizio " + startTime[i].hour.toString());
+                                                  print("Minuto inizio " + startTime[i].minute.toString());
                                                   return "Stop time is shorter than start";
+                                                }
+                                                else{
+                                                  List<String> controllerList = convertListTextEditingControllerToListString(stopController);
+                                                  StoreProvider.of<AppState>(context).dispatch(SetServiceSlotStopTime(controllerList));
+                                                  print("Ora fine " + stopTime[i].hour.toString());
+                                                  print("Minuto fine " + stopTime[i].minute.toString());
+                                                  print("Ora inizio " + startTime[i].hour.toString());
+                                                  print("Minuto inizio " + startTime[i].minute.toString());
                                                 }
                                                 return '';
                                               },

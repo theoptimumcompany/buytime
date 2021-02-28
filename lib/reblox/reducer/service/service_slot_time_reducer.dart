@@ -78,6 +78,12 @@ class SetServiceSlotMinute {
   int get minute => _minute;
 }
 
+class SetServiceSlotDuration {
+  int _duration;
+  SetServiceSlotDuration(this._duration);
+  int get duration => _duration;
+}
+
 class SetServiceSlotLimitBooking {
   int _limit;
   SetServiceSlotLimitBooking(this._limit);
@@ -131,6 +137,10 @@ ServiceSlot serviceSlotReducer(ServiceSlot state, action) {
   }
   if (action is SetServiceSlotMinute) {
     serviceSlot.minute = action.minute;
+    return serviceSlot;
+  }
+  if (action is SetServiceSlotDuration) {
+    serviceSlot.duration = action.duration;
     return serviceSlot;
   }
   if (action is SetServiceSlotLimitBooking) {

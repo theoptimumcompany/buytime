@@ -22,6 +22,9 @@ class ServiceSlot {
   ///Price vars
   double price = 0.0;
 
+  ///Vars not managed on DB
+  int duration = 0;
+
   ServiceSlot({
     this.numberOfInterval,
     this.switchWeek,
@@ -34,6 +37,7 @@ class ServiceSlot {
     this.minute,
     this.limitBooking,
     this.price,
+    this.duration,
   });
 
   ServiceSlot copyWith({
@@ -48,6 +52,7 @@ class ServiceSlot {
     int minute,
     int limitBooking,
     double price,
+    int duration,
   }) {
     return ServiceSlot(
       numberOfInterval: numberOfInterval ?? this.numberOfInterval,
@@ -61,6 +66,7 @@ class ServiceSlot {
       minute: minute ?? this.minute,
       limitBooking: limitBooking ?? this.limitBooking,
       price: price ?? this.price,
+      duration: duration ?? this.duration,
     );
   }
 
@@ -77,6 +83,7 @@ class ServiceSlot {
       minute: 0,
       limitBooking: 1,
       price: 0.0,
+      duration: 0,
     );
   }
 
@@ -92,6 +99,7 @@ class ServiceSlot {
     this.minute = serviceSlot.minute;
     this.limitBooking = serviceSlot.limitBooking;
     this.price = serviceSlot.price;
+    this.duration = serviceSlot.duration;
   }
 
   // List<dynamic> convertToJsonEveryDay(List<EveryDay> objectStateList) {

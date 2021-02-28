@@ -90,7 +90,14 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
           order = snapshot.order.itemList != null ? (snapshot.order.itemList.length > 0 ? snapshot.order : order) : order;
 
           return WillPopScope(
-              onWillPop: _onWillPop,
+          onWillPop: () async {
+            ///Block iOS Back Swipe
+            if (Navigator.of(context).userGestureInProgress)
+              return false;
+            else
+              _onWillPop();
+              return true;
+          },
               child: Scaffold(
                 resizeToAvoidBottomInset: false,
                 appBar: BuytimeAppbar(

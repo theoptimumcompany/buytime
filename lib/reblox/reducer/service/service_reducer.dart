@@ -213,6 +213,14 @@ class AddServiceSlot {
   ServiceSlot get serviceSlot => _serviceSlot;
 }
 
+class UpdateServiceSlot {
+  ServiceSlot _serviceSlot;
+  int _index;
+  UpdateServiceSlot(this._serviceSlot, this._index);
+  ServiceSlot get serviceSlot => _serviceSlot;
+  int get index => _index;
+}
+
 class DeleteServiceSlot {
   int _index;
   DeleteServiceSlot(this._index);
@@ -270,8 +278,12 @@ ServiceState serviceReducer(ServiceState state, action) {
     return serviceState;
   }
   if (action is AddServiceSlot) {
-    ServiceSlot serviceSlot = action.serviceSlot;
+    ServiceSlot serviceSlot = action.serviceSlot.copyWith();
     serviceState.serviceSlot.add(serviceSlot);
+    return serviceState;
+  }
+  if (action is UpdateServiceSlot) {
+    serviceState.serviceSlot[action.index] = action.serviceSlot.copyWith();
     return serviceState;
   }
   if (action is DeleteServiceSlot) {
