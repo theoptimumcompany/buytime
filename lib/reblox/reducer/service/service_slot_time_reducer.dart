@@ -84,6 +84,12 @@ class SetServiceSlotMinDuration {
   int get minDuration => _minDuration;
 }
 
+class SetServiceSlotIntervalVisibility {
+  List<bool> _intervalVisibility;
+  SetServiceSlotIntervalVisibility(this._intervalVisibility);
+  List<bool> get intervalVisibility => _intervalVisibility;
+}
+
 class SetServiceSlotLimitBooking {
   int _limit;
   SetServiceSlotLimitBooking(this._limit);
@@ -147,6 +153,10 @@ ServiceSlot serviceSlotReducer(ServiceSlot state, action) {
   }
   if (action is SetServiceSlotMinDuration) {
     serviceSlot.minDuration = action.minDuration;
+    return serviceSlot;
+  }
+  if (action is SetServiceSlotIntervalVisibility) {
+    serviceSlot.intervalVisibility = action.intervalVisibility;
     return serviceSlot;
   }
   if (action is SetServiceSlotLimitBooking) {

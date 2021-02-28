@@ -25,6 +25,7 @@ class ServiceSlot {
 
   ///Vars out of DB
   int minDuration = 10;
+  List<bool> intervalVisibility = [];
 
   ServiceSlot({
     this.numberOfInterval,
@@ -40,6 +41,7 @@ class ServiceSlot {
     this.noLimitBooking,
     this.price,
     this.minDuration,
+    this.intervalVisibility,
   });
 
   ServiceSlot copyWith({
@@ -56,6 +58,7 @@ class ServiceSlot {
     bool noLimitBooking,
     double price,
     int minDuration,
+    int intervalVisibility,
   }) {
     return ServiceSlot(
       numberOfInterval: numberOfInterval ?? this.numberOfInterval,
@@ -71,6 +74,7 @@ class ServiceSlot {
       noLimitBooking: noLimitBooking ?? this.noLimitBooking,
       price: price ?? this.price,
       minDuration: minDuration ?? this.minDuration,
+      intervalVisibility: intervalVisibility ?? this.intervalVisibility,
     );
   }
 
@@ -89,6 +93,7 @@ class ServiceSlot {
       noLimitBooking: false,
       price: 0.0,
       minDuration: 10,
+      intervalVisibility: [true],
     );
   }
 
@@ -106,6 +111,7 @@ class ServiceSlot {
     this.noLimitBooking = serviceSlot.noLimitBooking;
     this.price = serviceSlot.price;
     this.minDuration = serviceSlot.minDuration;
+    this.intervalVisibility = serviceSlot.intervalVisibility;
   }
 
   // List<dynamic> convertToJsonEveryDay(List<EveryDay> objectStateList) {

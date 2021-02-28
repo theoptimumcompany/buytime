@@ -55,12 +55,10 @@ class UI_M_ServiceSlotState extends State<UI_M_ServiceSlot> {
       print("Error week");
       return false;
     } else if (StoreProvider.of<AppState>(context).state.serviceSlot.minDuration == null || StoreProvider.of<AppState>(context).state.serviceSlot.minDuration < 10) {
-      print(StoreProvider.of<AppState>(context).state.serviceSlot.minDuration);
       print("Error duration");
       return false;
     } else
-      print(StoreProvider.of<AppState>(context).state.serviceSlot.minDuration);
-      return false;
+      return true;
   }
 
   @override
