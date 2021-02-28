@@ -34,6 +34,8 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
   var size;
   bool errorCategoryListEmpty = false;
   bool rippleLoading = false;
+  bool errorSwitchSlots = false;
+  bool submit = false;
   TextEditingController _tagServiceController = TextEditingController(); //todo: per quando si useranno tag
 
   bool validateAndSave() {
@@ -61,6 +63,23 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
         errorCategoryListEmpty = true;
       });
       return false;
+    }
+  }
+
+  bool validateReservableService() {
+    if (submit) {
+      if (StoreProvider.of<AppState>(context).state.serviceState.switchSlots && StoreProvider.of<AppState>(context).state.serviceState.serviceSlot.length == 0) {
+        setState(() {
+          errorSwitchSlots = true;
+        });
+        return false;
+      } else {
+        setState(() {
+          errorSwitchSlots = false;
+          submit = false;
+        });
+        return true;
+      }
     }
   }
 
@@ -105,11 +124,6 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
     return items;
   }
 
-  @override
-  void initState() {
-    super.initState();
-  }
-
   _buildChoiceList() {
     List<Widget> choices = [];
     categoryList.forEach((item) {
@@ -137,6 +151,26 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
       ));
     });
     return choices;
+  }
+
+  String returnTextSwitchers() {
+    String text = 'The service requires a manual confirmation by the staff';
+    bool switchManual = StoreProvider.of<AppState>(context).state.serviceState.switchAutoConfirm;
+    bool switchBookable = StoreProvider.of<AppState>(context).state.serviceState.switchSlots;
+    if (switchManual && switchBookable) {
+      text = 'The reservable service no requires a manual confirmation by the staff';
+      return text;
+    } else if (switchManual && !switchBookable) {
+      text = 'The purchasable service no requires a manual confirmation by the staff';
+      return text;
+    } else if (!switchManual && switchBookable) {
+      text = 'The reservable service requires a manual confirmation by the staff';
+      return text;
+    } else if (!switchManual && !switchBookable) {
+      text = 'The purchasable service requires a manual confirmation by the staff';
+      return text;
+    }
+    return text;
   }
 
   String showDaysInterval(int indexSlot, int indexInterval) {
@@ -226,6 +260,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
       child: StoreConnector<AppState, AppState>(
           converter: (store) => store.state,
           onInit: (store) => store.dispatch(CategoryTreeRequest()),
+          onDidChange: (store) => validateReservableService(),
           builder: (context, snapshot) {
             ///Popolo le categorie
             setCategoryList();
@@ -266,7 +301,10 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                 child: IconButton(
                                     icon: Icon(Icons.check, color: Colors.white, size: media.width * 0.07),
                                     onPressed: () {
-                                      if (validateChosenCategories() && validateAndSave() && validatePrice(_servicePrice.toString())) {
+                                      setState(() {
+                                        submit = true;
+                                      });
+                                      if (validateReservableService() && validateChosenCategories() && validateAndSave() && validatePrice(_servicePrice.toString())) {
                                         setState(() {
                                           rippleLoading = true;
                                         });
@@ -625,67 +663,112 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                             ),
                                           ),
                                         ),
-
-                                        ///Switch Auto Confirm
-                                        Padding(
-                                          padding: const EdgeInsets.only(top: 10.0, bottom: 0.0, left: 20.0, right: 20.0),
-                                          child: Container(
-                                            child: Row(
-                                              children: [
-                                                Switch(
-                                                    value: snapshot.serviceState.switchAutoConfirm,
-                                                    onChanged: (value) {
-                                                      setState(() {
-                                                        StoreProvider.of<AppState>(context).dispatch(SetServiceSwitchAutoConfirm(value));
-                                                      });
-                                                    }),
-                                                Expanded(
-                                                  child: Text(
-                                                    "Allow users to get this service without manager confirmation",
-                                                    //  AppLocalizations.of(context).  todo : aggiungere alle lingue
-                                                    textAlign: TextAlign.start,
-                                                    overflow: TextOverflow.clip,
-                                                    style: TextStyle(
-                                                      fontSize: media.height * 0.018,
-                                                      color: BuytimeTheme.TextGrey,
-                                                      fontWeight: FontWeight.w500,
+                                        Column(
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 30.0),
+                                              child: Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  Flexible(
+                                                    child: Text(
+                                                      returnTextSwitchers(),
+                                                      //  AppLocalizations.of(context).  todo : aggiungere alle lingue
+                                                      textAlign: TextAlign.start,
+                                                      overflow: TextOverflow.clip,
+                                                      style: TextStyle(
+                                                        fontSize: media.height * 0.020,
+                                                        color: BuytimeTheme.TextBlack,
+                                                        fontWeight: FontWeight.w500,
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
-                                              ],
+                                                ],
+                                              ),
                                             ),
-                                          ),
-                                        ),
 
-                                        ///Switch Service Bookable
-                                        Padding(
-                                          padding: const EdgeInsets.only(top: 0.0, bottom: 10.0, left: 20.0, right: 20.0),
-                                          child: Container(
-                                            child: Row(
-                                              children: [
-                                                Switch(
-                                                    value: snapshot.serviceState.switchSlots,
-                                                    onChanged: (value) {
-                                                      setState(() {
-                                                        StoreProvider.of<AppState>(context).dispatch(SetServiceSwitchSlots(value));
-                                                      });
-                                                    }),
-                                                Expanded(
-                                                  child: Text(
-                                                    "The service can be reserved ",
-                                                    //  AppLocalizations.of(context).  todo : aggiungere alle lingue
-                                                    textAlign: TextAlign.start,
-                                                    overflow: TextOverflow.clip,
-                                                    style: TextStyle(
-                                                      fontSize: media.height * 0.018,
-                                                      color: BuytimeTheme.TextGrey,
-                                                      fontWeight: FontWeight.w500,
+                                            ///Switch Auto Confirm
+                                            Padding(
+                                              padding: const EdgeInsets.only(top: 10.0, bottom: 0.0, left: 20.0, right: 20.0),
+                                              child: Container(
+                                                child: Row(
+                                                  children: [
+                                                    Switch(
+                                                        value: snapshot.serviceState.switchAutoConfirm,
+                                                        onChanged: (value) {
+                                                          setState(() {
+                                                            StoreProvider.of<AppState>(context).dispatch(SetServiceSwitchAutoConfirm(value));
+                                                          });
+                                                        }),
+                                                    Expanded(
+                                                      child: Text(
+                                                        "Allow users to get this service without manager confirmation",
+                                                        //  AppLocalizations.of(context).  todo : aggiungere alle lingue
+                                                        textAlign: TextAlign.start,
+                                                        overflow: TextOverflow.clip,
+                                                        style: TextStyle(
+                                                          fontSize: media.height * 0.018,
+                                                          color: BuytimeTheme.TextGrey,
+                                                          fontWeight: FontWeight.w500,
+                                                        ),
+                                                      ),
                                                     ),
-                                                  ),
+                                                  ],
                                                 ),
-                                              ],
+                                              ),
                                             ),
-                                          ),
+
+                                            ///Switch Service Bookable
+                                            Padding(
+                                              padding: const EdgeInsets.only(top: 0.0, bottom: 10.0, left: 20.0, right: 20.0),
+                                              child: Container(
+                                                child: Row(
+                                                  children: [
+                                                    Switch(
+                                                        value: snapshot.serviceState.switchSlots,
+                                                        onChanged: (value) {
+                                                          setState(() {
+                                                            StoreProvider.of<AppState>(context).dispatch(SetServiceSwitchSlots(value));
+                                                          });
+                                                        }),
+                                                    Expanded(
+                                                      child: Text(
+                                                        "The service can be reserved ",
+                                                        //  AppLocalizations.of(context).  todo : aggiungere alle lingue
+                                                        textAlign: TextAlign.start,
+                                                        overflow: TextOverflow.clip,
+                                                        style: TextStyle(
+                                                          fontSize: media.height * 0.018,
+                                                          color: BuytimeTheme.TextGrey,
+                                                          fontWeight: FontWeight.w500,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+
+                                            ///Error message Empty CategoryList
+                                            errorSwitchSlots
+                                                ? Padding(
+                                                    padding: const EdgeInsets.only(left: 30.0, bottom: 10),
+                                                    child: Container(
+                                                        child: Row(
+                                                      children: [
+                                                        Text(
+                                                          'You have to create at least a slot for a reservable service',
+                                                          style: TextStyle(
+                                                            fontSize: media.height * 0.018,
+                                                            color: BuytimeTheme.ErrorRed,
+                                                            fontWeight: FontWeight.w500,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    )),
+                                                  )
+                                                : Container(),
+                                          ],
                                         ),
 
                                         ///Divider under switch booking block
@@ -735,7 +818,11 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                               StoreProvider.of<AppState>(context).dispatch(SetServiceSlotToEmpty());
                                                               Navigator.push(
                                                                 context,
-                                                                MaterialPageRoute(builder: (context) => UI_M_ServiceSlot(createSlot: true,editSlot: false,)),
+                                                                MaterialPageRoute(
+                                                                    builder: (context) => UI_M_ServiceSlot(
+                                                                          createSlot: true,
+                                                                          editSlot: false,
+                                                                        )),
                                                               );
                                                             },
                                                           )),
@@ -776,7 +863,12 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                                         StoreProvider.of<AppState>(context).dispatch(SetServiceSlot(snapshot.serviceState.serviceSlot[index]));
                                                                         Navigator.push(
                                                                           context,
-                                                                          MaterialPageRoute(builder: (context) => UI_M_ServiceSlot(createSlot:false,editSlot: true,indexSlot: index,)),
+                                                                          MaterialPageRoute(
+                                                                              builder: (context) => UI_M_ServiceSlot(
+                                                                                    createSlot: false,
+                                                                                    editSlot: true,
+                                                                                    indexSlot: index,
+                                                                                  )),
                                                                         );
                                                                       },
                                                                       child: Padding(

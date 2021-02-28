@@ -29,6 +29,8 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
   List<String> daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
   final List<GlobalKey<FormState>> _formSlotTimeKey = [GlobalKey<FormState>()];
   bool setStartAndStop = true;
+  int duration = 0;
+  List<bool> intervalIndexVisibility = [true];
 
   @override
   void initState() {
@@ -96,9 +98,16 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
   }
 
   Future<void> _selectStartTime(BuildContext context, int indexController) async {
-    List<String> start = StoreProvider.of<AppState>(context).state.serviceSlot.startTime[indexController].split(":");
-    int startHour = int.parse(start[0]);
-    int startMinute = int.parse(start[1]);
+    String initStart = StoreProvider.of<AppState>(context).state.serviceSlot.startTime[indexController];
+    List<String> start = [];
+    int startHour = 0;
+    int startMinute = 0;
+    if (initStart.contains('null')) {
+    } else {
+      start = initStart.split(":");
+      startHour = int.parse(start[0]);
+      startMinute = int.parse(start[1]);
+    }
     final TimeOfDay picked = await showTimePicker(
       builder: (BuildContext context, Widget child) {
         return MediaQuery(
@@ -120,16 +129,23 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
 
       setState(() {
         startTime[indexController] = picked;
+        _formSlotTimeKey[indexController].currentState.validate();
       });
     }
     return null;
   }
 
   Future<void> _selectStopTime(BuildContext context, int indexController) async {
-    List<String> stop = StoreProvider.of<AppState>(context).state.serviceSlot.stopTime[indexController].split(":");
-    int stopHour = int.parse(stop[0]);
-    int stopMinute = int.parse(stop[1]);
-
+    String initStop = StoreProvider.of<AppState>(context).state.serviceSlot.stopTime[indexController];
+    List<String> stop = [];
+    int stopHour = 0;
+    int stopMinute = 0;
+    if (initStop.contains('null')) {
+    } else {
+      stop = initStop.split(":");
+      stopHour = int.parse(stop[0]);
+      stopMinute = int.parse(stop[1]);
+    }
     final TimeOfDay picked = await showTimePicker(
       builder: (BuildContext context, Widget child) {
         return MediaQuery(
@@ -146,6 +162,8 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
       String hour = picked.hour < 10 ? "0" + picked.hour.toString() : picked.hour.toString();
       String format24 = hour + ":" + minute;
       stopController[indexController].text = format24;
+      List<String> controllerList = convertListTextEditingControllerToListString(stopController);
+      StoreProvider.of<AppState>(context).dispatch(SetServiceSlotStopTime(controllerList));
       setState(() {
         stopTime[indexController] = picked;
         _formSlotTimeKey[indexController].currentState.validate();
@@ -162,8 +180,10 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
     if (start.length == 0) {
       TextEditingController textEditingControllerStart = TextEditingController();
       startController.add(textEditingControllerStart);
-      timeOfDayStart = TimeOfDay.now();
+      timeOfDayStart = TimeOfDay();
       startTime.add(timeOfDayStart);
+      start.add(timeOfDayStart.hour.toString() + ":" + timeOfDayStart.minute.toString());
+      StoreProvider.of<AppState>(context).dispatch(SetServiceSlotStartTime(start));
     } else {
       for (int i = 0; i < start.length; i++) {
         TextEditingController textEditingControllerStart = TextEditingController();
@@ -178,8 +198,10 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
     if (stop.length == 0) {
       TextEditingController textEditingControllerStop = TextEditingController();
       stopController.add(textEditingControllerStop);
-      timeOfDayStop = TimeOfDay.now();
+      timeOfDayStop = TimeOfDay();
       stopTime.add(timeOfDayStop);
+      stop.add(timeOfDayStop.hour.toString() + ":" + timeOfDayStop.minute.toString());
+      StoreProvider.of<AppState>(context).dispatch(SetServiceSlotStopTime(stop));
     } else {
       for (int i = 0; i < stop.length; i++) {
         TextEditingController textEditingControllerStop = TextEditingController();
@@ -190,7 +212,36 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
         stopTime.add(timeOfDayStop);
       }
     }
+  }
 
+  void setDuration() {
+    if (StoreProvider.of<AppState>(context).state.serviceSlot.startTime.contains('null:null') || StoreProvider.of<AppState>(context).state.serviceSlot.stopTime.contains('null:null')) {
+      return;
+    } else {
+      for (int i = 0; i < StoreProvider.of<AppState>(context).state.serviceSlot.numberOfInterval; i++) {
+        List<String> start = StoreProvider.of<AppState>(context).state.serviceSlot.startTime[i].split(":");
+        int startHour = int.parse(start[0]);
+        int startMinute = int.parse(start[1]);
+        List<String> stop = StoreProvider.of<AppState>(context).state.serviceSlot.stopTime[i].split(":");
+        int stopHour = int.parse(stop[0]);
+        int stopMinute = int.parse(stop[1]);
+        int localDuration = (((stopHour * 60) + stopMinute) - ((startHour * 60) + startMinute));
+        if (localDuration <= 9) {
+          StoreProvider.of<AppState>(context).dispatch(SetServiceSlotMinDuration(localDuration));
+        } else if (duration == 10) {
+          setState(() {
+            duration = localDuration;
+            StoreProvider.of<AppState>(context).dispatch(SetServiceSlotMinDuration(duration));
+          });
+        } else if (localDuration < duration) {
+          setState(() {
+            duration = localDuration;
+            StoreProvider.of<AppState>(context).dispatch(SetServiceSlotMinDuration(duration));
+          });
+        }
+        ;
+      }
+    }
   }
 
   @override
@@ -198,10 +249,12 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
     switchWeek = StoreProvider.of<AppState>(context).state.serviceSlot.switchWeek;
     daysInterval = StoreProvider.of<AppState>(context).state.serviceSlot.daysInterval;
     numberOfSlotTimeInterval = StoreProvider.of<AppState>(context).state.serviceSlot.numberOfInterval;
-    if(setStartAndStop) {
+    duration = StoreProvider.of<AppState>(context).state.serviceSlot.minDuration;
+    if (setStartAndStop) {
       setStartAndStop = false;
       setStartAndStopTime();
     }
+    bool intervalIndexVisibility = true;
     return StoreConnector<AppState, AppState>(
         converter: (store) => store.state,
         builder: (context, snapshot) {
@@ -215,225 +268,250 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: numberOfSlotTimeInterval,
                     itemBuilder: (context, i) {
-                      if(i > 0){
+                      // if(i == 0 && numberOfSlotTimeInterval == 1){
+                      //   intervalIndexVisibility[i] = true;
+                      // }
+                      if (i > 0) {
                         ///Update keyForm
                         _formSlotTimeKey.add(GlobalKey<FormState>());
+                        // intervalIndexVisibility.add(false);
+                        // if(i == numberOfSlotTimeInterval - 1){
+                        //   intervalIndexVisibility[i] = true;
+                        // }
                       }
-                      return Form(
-                        key: _formSlotTimeKey[i],
-                        child: Column(
-                          children: [
-                            Container(
-                                child: Row(
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical:10.0),
+                        child: GestureDetector(
+                          onTap: () {
+                            print("Tap su intervallo " + i.toString());
+                            setState(() {
+                              // for(int z = 0; z< intervalIndexVisibility.length; z++){
+                              //   intervalIndexVisibility[z] = false;
+                              // }s
+                              // print(intervalIndexVisibility);
+                            });
+                            // setState(() {
+                            //   intervalIndexVisibility[i] = !intervalIndexVisibility[i];
+                            // });
+
+
+
+                            print(intervalIndexVisibility);
+
+                          },
+                          child: Form(
+                            key: _formSlotTimeKey[i],
+                            child: Column(
                               children: [
-                                Text(
-                                  (i + 1).toString() + ". working hours",
-                                  textAlign: TextAlign.start,
-                                  style: TextStyle(
-                                    fontSize: widget.media.height * 0.018,
-                                    color: BuytimeTheme.TextBlack,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ],
-                            )),
+                                Container(
+                                    child: Row(
+                                  children: [
+                                    Text(
+                                      (i + 1).toString() + ". working hours",
+                                      textAlign: TextAlign.start,
+                                      style: TextStyle(
+                                        fontSize: widget.media.height * 0.018,
+                                        color: BuytimeTheme.TextBlack,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ],
+                                )),
 //TODO: Controllo che lesettimane si accorpino quando si scelgono i giorni complementari per stessi orari
-                          //TODO: Controllo cghe durata non sia maggiore dello slot orario scelto
-                            //TODO
-
-                            ///Time Range
-                            Padding(
-                              padding: const EdgeInsets.only(top: 5.0),
-                              child: Container(
-                                  child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  ///Start Time
-                                  Flexible(
-                                    child: Column(
-                                      children: [
-                                        GestureDetector(
-                                          onTap: () async {
-                                            validate(i);
-                                            await _selectStartTime(context, i);
-                                          },
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(right: 5.0),
+                                //TODO: Controllo cghe durata non sia maggiore dello slot orario scelto
+                                intervalIndexVisibility
+                                    ? Column(
+                                        children: [
+                                          ///Time Range
+                                          Padding(
+                                            padding: const EdgeInsets.only(top: 5.0),
                                             child: Container(
-                                              child: TextFormField(
-                                                enabled: false,
-                                                controller: startController[i],
-                                                textAlign: TextAlign.start,
-                                                keyboardType: TextInputType.number,
-                                                decoration: InputDecoration(
-                                                    filled: true,
-                                                    fillColor: BuytimeTheme.DividerGrey,
-                                                    enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                                    focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                                    labelText: "Start",
-                                                    //todo trans
-                                                    labelStyle: TextStyle(
-                                                      fontFamily: BuytimeTheme.FontFamily,
-                                                      color: Color(0xff666666),
-                                                      fontWeight: FontWeight.w400,
-                                                    ),
-                                                    errorMaxLines: 2,
-                                                    errorStyle: TextStyle(
-                                                      color: BuytimeTheme.ErrorRed,
-                                                      fontSize: 12.0,
-                                                    ),
-                                                    suffixIcon: Icon(Icons.av_timer_outlined)),
-                                                style: TextStyle(
-                                                  fontFamily: BuytimeTheme.FontFamily,
-                                                  color: Color(0xff666666),
-                                                  fontWeight: FontWeight.w800,
+                                                child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                ///Start Time
+                                                Flexible(
+                                                  child: Column(
+                                                    children: [
+                                                      GestureDetector(
+                                                        onTap: () async {
+                                                          await _selectStartTime(context, i);
+                                                        },
+                                                        child: Padding(
+                                                          padding: const EdgeInsets.only(right: 5.0),
+                                                          child: Container(
+                                                            child: TextFormField(
+                                                              enabled: false,
+                                                              controller: startController[i],
+                                                              textAlign: TextAlign.start,
+                                                              keyboardType: TextInputType.number,
+                                                              decoration: InputDecoration(
+                                                                  filled: true,
+                                                                  fillColor: BuytimeTheme.DividerGrey,
+                                                                  enabledBorder:
+                                                                      OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                                                  focusedBorder:
+                                                                      OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                                                  labelText: "Start",
+                                                                  //todo trans
+                                                                  labelStyle: TextStyle(
+                                                                    fontFamily: BuytimeTheme.FontFamily,
+                                                                    color: Color(0xff666666),
+                                                                    fontWeight: FontWeight.w400,
+                                                                  ),
+                                                                  errorMaxLines: 2,
+                                                                  errorStyle: TextStyle(
+                                                                    color: BuytimeTheme.ErrorRed,
+                                                                    fontSize: 12.0,
+                                                                  ),
+                                                                  suffixIcon: Icon(Icons.av_timer_outlined)),
+                                                              style: TextStyle(
+                                                                fontFamily: BuytimeTheme.FontFamily,
+                                                                color: Color(0xff666666),
+                                                                fontWeight: FontWeight.w800,
+                                                              ),
+                                                              validator: (value) {
+                                                                setDuration();
+                                                                if (startController[i].text.isEmpty) {
+                                                                  return "Insert start time first";
+                                                                } else if (stopController[i].text.isEmpty) {
+                                                                } else if ((stopTime[i].hour + stopTime[i].minute / 60.0) - (startTime[i].hour + startTime[i].minute / 60.0) <= 0) {
+                                                                  return "Start time is higher than start";
+                                                                } else {
+                                                                  List<String> controllerList = convertListTextEditingControllerToListString(startController);
+                                                                  StoreProvider.of<AppState>(context).dispatch(SetServiceSlotStartTime(controllerList));
+                                                                }
+                                                                return '';
+                                                              },
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
-                                                validator: (value) {
-                                                  if (startController[i].text.isEmpty) {
-                                                    return "Insert start time first";
-                                                  } else if ((stopTime[i].hour + stopTime[i].minute / 60.0) - (startTime[i].hour + startTime[i].minute / 60.0) <= 0) {
-                                                    print("Ora fine " + stopTime[i].hour.toString());
-                                                    print("Minuto fine " + stopTime[i].minute.toString());
-                                                    print("Ora inizio " + startTime[i].hour.toString());
-                                                    print("Minuto inizio " + startTime[i].minute.toString());
-                                                    return "Start time is higher than start";
+
+                                                ///Stop Time
+                                                Flexible(
+                                                  child: Column(
+                                                    children: [
+                                                      GestureDetector(
+                                                        onTap: () async {
+                                                          if (startController[i].text.isEmpty) {
+                                                            validate(i);
+                                                            return;
+                                                          }
+
+                                                          await _selectStopTime(context, i);
+                                                        },
+                                                        child: Padding(
+                                                          padding: const EdgeInsets.only(left: 5.0),
+                                                          child: TextFormField(
+                                                            enabled: false,
+                                                            controller: stopController[i],
+                                                            textAlign: TextAlign.start,
+                                                            keyboardType: TextInputType.datetime,
+                                                            decoration: InputDecoration(
+                                                                filled: true,
+                                                                fillColor: BuytimeTheme.DividerGrey,
+                                                                enabledBorder:
+                                                                    OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                                                focusedBorder:
+                                                                    OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                                                labelText: "Stop",
+                                                                //todo: trans
+                                                                //hintText: "email *",
+                                                                //hintStyle: TextStyle(color: Color(0xff666666)),
+                                                                labelStyle: TextStyle(
+                                                                  fontFamily: BuytimeTheme.FontFamily,
+                                                                  color: Color(0xff666666),
+                                                                  fontWeight: FontWeight.w400,
+                                                                ),
+                                                                errorMaxLines: 2,
+                                                                errorStyle: TextStyle(
+                                                                  color: BuytimeTheme.ErrorRed,
+                                                                  fontSize: 12.0,
+                                                                ),
+                                                                suffixIcon: Icon(Icons.av_timer_outlined)),
+                                                            style: TextStyle(
+                                                              fontFamily: BuytimeTheme.FontFamily,
+                                                              color: Color(0xff666666),
+                                                              fontWeight: FontWeight.w800,
+                                                            ),
+                                                            validator: (value) {
+                                                              setDuration();
+
+                                                              if (startController[i].text.isEmpty) {
+                                                                return "Insert start time first";
+                                                              } else if (stopController[i].text.isEmpty) {
+                                                              } else if ((stopTime[i].hour + stopTime[i].minute / 60.0) - (startTime[i].hour + startTime[i].minute / 60.0) <= 0) {
+                                                                return "Stop time is shorter than start";
+                                                              } else {
+                                                                List<String> controllerList = convertListTextEditingControllerToListString(stopController);
+
+                                                                StoreProvider.of<AppState>(context).dispatch(SetServiceSlotStopTime(controllerList));
+                                                              }
+                                                              return '';
+                                                            },
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                )
+                                              ],
+                                            )),
+                                          ),
+
+                                          Row(
+                                            children: <Widget>[
+                                              // Parent
+                                              CustomLabeledCheckbox(
+                                                label: 'Every day',
+                                                value: switchWeek[i],
+                                                onChanged: (value) {
+                                                  if (value != null) {
+                                                    // Checked/Unchecked
+                                                    _checkAll(value, i);
+                                                  } else {
+                                                    // Tristate
+                                                    _checkAll(true, i);
                                                   }
-                                                  else{
-                                                    List<String> controllerList = convertListTextEditingControllerToListString(startController);
-                                                    StoreProvider.of<AppState>(context).dispatch(SetServiceSlotStartTime(controllerList));
-                                                    print("Ora fine " + stopTime[i].hour.toString());
-                                                    print("Minuto fine " + stopTime[i].minute.toString());
-                                                    print("Ora inizio " + startTime[i].hour.toString());
-                                                    print("Minuto inizio " + startTime[i].minute.toString());
-                                                  }
-                                                  return '';
                                                 },
+                                                checkboxType: CheckboxType.Parent,
+                                                activeColor: Colors.indigo,
                                               ),
-                                            ),
+                                            ],
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-
-                                  ///Stop Time
-                                  Flexible(
-                                    child: Column(
-                                      children: [
-                                        GestureDetector(
-                                          onTap: () async {
-                                            if (startController[i].text.isEmpty) {
-                                              validate(i);
-                                              return;
-                                            }
-                                            await _selectStopTime(context, i);
-                                          },
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(left: 5.0),
-                                            child: TextFormField(
-                                              enabled: false,
-                                              controller: stopController[i],
-                                              textAlign: TextAlign.start,
-                                              keyboardType: TextInputType.datetime,
-                                              decoration: InputDecoration(
-                                                  filled: true,
-                                                  fillColor: BuytimeTheme.DividerGrey,
-                                                  enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                                  focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                                  labelText: "Stop",
-                                                  //todo: trans
-                                                  //hintText: "email *",
-                                                  //hintStyle: TextStyle(color: Color(0xff666666)),
-                                                  labelStyle: TextStyle(
-                                                    fontFamily: BuytimeTheme.FontFamily,
-                                                    color: Color(0xff666666),
-                                                    fontWeight: FontWeight.w400,
+                                          // Children
+                                          ///TODO: sE everyday true metter tutti a true
+                                          Row(
+                                            children: [
+                                              Flexible(
+                                                child: ListView.builder(
+                                                  itemCount: daysOfWeek.length,
+                                                  itemBuilder: (context, index) => CustomLabeledCheckbox(
+                                                    label: daysOfWeek[index],
+                                                    value: daysInterval[i].everyDay[index],
+                                                    onChanged: (value) {
+                                                      _manageTristate(index, value, i);
+                                                    },
+                                                    checkboxType: CheckboxType.Child,
+                                                    activeColor: Colors.indigo,
                                                   ),
-                                                  errorMaxLines: 2,
-                                                  errorStyle: TextStyle(
-                                                    color: BuytimeTheme.ErrorRed,
-                                                    fontSize: 12.0,
-                                                  ),
-                                                  suffixIcon: Icon(Icons.av_timer_outlined)),
-                                              style: TextStyle(
-                                                fontFamily: BuytimeTheme.FontFamily,
-                                                color: Color(0xff666666),
-                                                fontWeight: FontWeight.w800,
+                                                  shrinkWrap: true,
+                                                  physics: ClampingScrollPhysics(),
+                                                ),
                                               ),
-                                              validator: (value) {
-                                                if (startController[i].text.isEmpty) {
-                                                  return "Insert start time first";
-                                                } else if ((stopTime[i].hour + stopTime[i].minute / 60.0) - (startTime[i].hour + startTime[i].minute / 60.0) <= 0) {
-                                                  print("Ora fine " + stopTime[i].hour.toString());
-                                                  print("Minuto fine " + stopTime[i].minute.toString());
-                                                  print("Ora inizio " + startTime[i].hour.toString());
-                                                  print("Minuto inizio " + startTime[i].minute.toString());
-                                                  return "Stop time is shorter than start";
-                                                }
-                                                else{
-                                                  List<String> controllerList = convertListTextEditingControllerToListString(stopController);
-                                                  StoreProvider.of<AppState>(context).dispatch(SetServiceSlotStopTime(controllerList));
-                                                  print("Ora fine " + stopTime[i].hour.toString());
-                                                  print("Minuto fine " + stopTime[i].minute.toString());
-                                                  print("Ora inizio " + startTime[i].hour.toString());
-                                                  print("Minuto inizio " + startTime[i].minute.toString());
-                                                }
-                                                return '';
-                                              },
-                                            ),
+                                            ],
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                ],
-                              )),
-                            ),
-
-                            Row(
-                              children: <Widget>[
-                                // Parent
-                                CustomLabeledCheckbox(
-                                  label: 'Every day',
-                                  value: switchWeek[i],
-                                  onChanged: (value) {
-                                    if (value != null) {
-                                      // Checked/Unchecked
-                                      _checkAll(value, i);
-                                    } else {
-                                      // Tristate
-                                      _checkAll(true, i);
-                                    }
-                                  },
-                                  checkboxType: CheckboxType.Parent,
-                                  activeColor: Colors.indigo,
-                                ),
+                                        ],
+                                      )
+                                    : Container(),
                               ],
                             ),
-                            // Children
-                            ///TODO: sE everyday true metter tutti a true
-                            Row(
-                              children: [
-                                Flexible(
-                                  child: ListView.builder(
-                                    itemCount: daysOfWeek.length,
-                                    itemBuilder: (context, index) => CustomLabeledCheckbox(
-                                      label: daysOfWeek[index],
-                                      value: daysInterval[i].everyDay[index],
-                                      onChanged: (value) {
-                                        _manageTristate(index, value, i);
-                                      },
-                                      checkboxType: CheckboxType.Child,
-                                      activeColor: Colors.indigo,
-                                    ),
-                                    shrinkWrap: true,
-                                    physics: ClampingScrollPhysics(),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
+                          ),
                         ),
                       );
                     }),
@@ -475,6 +553,7 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
 
                         ///Update keyForm
                         _formSlotTimeKey.add(GlobalKey<FormState>());
+
                       });
                     },
                     child: Padding(

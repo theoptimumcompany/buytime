@@ -271,75 +271,98 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                                                       }
                                                       break;
                                                   }
-                                                  return Row(
-                                                    children: [
-                                                      GestureDetector(
-                                                        onTap: () {
-                                                          // listOfServiceEachRoot[i][index].spinnerVisibility = true;
-                                                          setState(() {
-                                                            switch (listOfServiceEachRoot[i][index].visibility) {
-                                                              case 'Active':
-                                                                listOfServiceEachRoot[i][index].visibility = 'Deactivated';
-                                                                break;
-                                                              case 'Deactivated':
-                                                                listOfServiceEachRoot[i][index].visibility = 'Invisible';
-                                                                break;
-                                                              case 'Invisible':
-                                                                listOfServiceEachRoot[i][index].visibility = 'Active';
-                                                                break;
-                                                            }
-
-                                                            ///Aggiorno Database
-                                                            StoreProvider.of<AppState>(context)
-                                                                .dispatch(SetServiceListVisibilityOnFirebase(listOfServiceEachRoot[i][index].serviceId, listOfServiceEachRoot[i][index].visibility));
-                                                          });
-                                                        },
-                                                        child: Padding(
-                                                            padding: EdgeInsets.only(left: mediaWidth * 0.12, right: mediaWidth * 0.07),
-                                                            child: Container(
-                                                              child: iconVisibility,
-                                                            )),
-                                                      ),
-                                                      Expanded(
-                                                        child: GestureDetector(
-                                                          onTap: () {
-                                                            StoreProvider.of<AppState>(context).dispatch(SetService(listOfServiceEachRoot[i][index]));
-                                                            Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(builder: (context) => UI_EditService()),
-                                                            );
-                                                          },
-                                                          child: Container(
-                                                            decoration: BoxDecoration(
-                                                              border: Border(
-                                                                bottom: BorderSide(width: 1.0, color: BuytimeTheme.DividerGrey),
-                                                              ),
-                                                            ),
-                                                            child: Row(
-                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                              children: [
-                                                                Flexible(
-                                                                  child: Container(
-                                                                      child: Text(
-                                                                    listOfServiceEachRoot[i][index].name,
-                                                                    textAlign: TextAlign.start,
-                                                                    overflow: TextOverflow.ellipsis,
-                                                                    style: TextStyle(
-                                                                      color: BuytimeTheme.TextBlack,
-                                                                      fontSize: media.height * 0.018,
-                                                                      fontWeight: FontWeight.w400,
-                                                                    ),
-                                                                  )),
-                                                                ),
-                                                                Container(
-                                                                  child: Icon(Icons.chevron_right, color: BuytimeTheme.SymbolGrey, size: media.width * 0.1),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ),
+                                                  return AbsorbPointer(
+                                                    absorbing: !(snapshot.user.owner ||  snapshot.user.admin ||  snapshot.user.salesman),
+                                                    child: Dismissible( key: UniqueKey(),
+                                                      direction: DismissDirection.endToStart,
+                                                      background: Container(
+                                                        color: Colors.red,
+                                                        margin: EdgeInsets.symmetric(horizontal: 15),
+                                                        alignment: Alignment.centerRight,
+                                                        child: Icon(
+                                                          Icons.delete,
+                                                          color: BuytimeTheme.SymbolWhite,
                                                         ),
                                                       ),
-                                                    ],
+                                                      onDismissed: (direction) {
+
+                                                        setState(() {
+                                                          ///Deleting Service
+                                                          print("Delete Service " + index.toString());
+                                                          StoreProvider.of<AppState>(context).dispatch(DeleteService(listOfServiceEachRoot[i][index].serviceId));
+                                                        });
+                                                      },
+
+                                                      child: Row(
+                                                        children: [
+                                                          GestureDetector(
+                                                            onTap: () {
+                                                              setState(() {
+                                                                switch (listOfServiceEachRoot[i][index].visibility) {
+                                                                  case 'Active':
+                                                                    listOfServiceEachRoot[i][index].visibility = 'Deactivated';
+                                                                    break;
+                                                                  case 'Deactivated':
+                                                                    listOfServiceEachRoot[i][index].visibility = 'Invisible';
+                                                                    break;
+                                                                  case 'Invisible':
+                                                                    listOfServiceEachRoot[i][index].visibility = 'Active';
+                                                                    break;
+                                                                }
+
+                                                                ///Aggiorno Database
+                                                                StoreProvider.of<AppState>(context)
+                                                                    .dispatch(SetServiceListVisibilityOnFirebase(listOfServiceEachRoot[i][index].serviceId, listOfServiceEachRoot[i][index].visibility));
+                                                              });
+                                                            },
+                                                            child: Padding(
+                                                                padding: EdgeInsets.only(left: mediaWidth * 0.12, right: mediaWidth * 0.07),
+                                                                child: Container(
+                                                                  child: iconVisibility,
+                                                                )),
+                                                          ),
+                                                          Expanded(
+                                                            child: GestureDetector(
+                                                              onTap: () {
+                                                                StoreProvider.of<AppState>(context).dispatch(SetService(listOfServiceEachRoot[i][index]));
+                                                                Navigator.push(
+                                                                  context,
+                                                                  MaterialPageRoute(builder: (context) => UI_EditService()),
+                                                                );
+                                                              },
+                                                              child: Container(
+                                                                decoration: BoxDecoration(
+                                                                  border: Border(
+                                                                    bottom: BorderSide(width: 1.0, color: BuytimeTheme.DividerGrey),
+                                                                  ),
+                                                                ),
+                                                                child: Row(
+                                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                  children: [
+                                                                    Flexible(
+                                                                      child: Container(
+                                                                          child: Text(
+                                                                        listOfServiceEachRoot[i][index].name,
+                                                                        textAlign: TextAlign.start,
+                                                                        overflow: TextOverflow.ellipsis,
+                                                                        style: TextStyle(
+                                                                          color: BuytimeTheme.TextBlack,
+                                                                          fontSize: media.height * 0.018,
+                                                                          fontWeight: FontWeight.w400,
+                                                                        ),
+                                                                      )),
+                                                                    ),
+                                                                    Container(
+                                                                      child: Icon(Icons.chevron_right, color: BuytimeTheme.SymbolGrey, size: media.width * 0.1),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
                                                   );
                                                 },
                                               ),

@@ -36,6 +36,33 @@ class UI_M_ServiceSlotState extends State<UI_M_ServiceSlot> {
     super.initState();
   }
 
+  bool validateStepper() {
+    if (StoreProvider.of<AppState>(context).state.serviceSlot.checkIn == null || StoreProvider.of<AppState>(context).state.serviceSlot.checkIn == '') {
+      print(StoreProvider.of<AppState>(context).state.serviceSlot.checkIn);
+      print("Error CheckIn");
+      return false;
+    } else if (StoreProvider.of<AppState>(context).state.serviceSlot.checkOut == null || StoreProvider.of<AppState>(context).state.serviceSlot.checkOut == '') {
+      print(StoreProvider.of<AppState>(context).state.serviceSlot.checkOut);
+      print("Error CheckOut");
+      return false;
+    } else if (StoreProvider.of<AppState>(context).state.serviceSlot.startTime == null || StoreProvider.of<AppState>(context).state.serviceSlot.startTime.isEmpty || StoreProvider.of<AppState>(context).state.serviceSlot.startTime.contains('null:null')) {
+      print("Error startTime");
+      return false;
+    } else if (StoreProvider.of<AppState>(context).state.serviceSlot.stopTime == null || StoreProvider.of<AppState>(context).state.serviceSlot.stopTime.isEmpty || StoreProvider.of<AppState>(context).state.serviceSlot.stopTime.contains('null:null')) {
+      print("Error stopTime");
+      return false;
+    } else if (StoreProvider.of<AppState>(context).state.serviceSlot.switchWeek == null || StoreProvider.of<AppState>(context).state.serviceSlot.switchWeek.contains(false)) {
+      print("Error week");
+      return false;
+    } else if (StoreProvider.of<AppState>(context).state.serviceSlot.minDuration == null || StoreProvider.of<AppState>(context).state.serviceSlot.minDuration < 10) {
+      print(StoreProvider.of<AppState>(context).state.serviceSlot.minDuration);
+      print("Error duration");
+      return false;
+    } else
+      print(StoreProvider.of<AppState>(context).state.serviceSlot.minDuration);
+      return false;
+  }
+
   @override
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
@@ -170,16 +197,23 @@ class UI_M_ServiceSlotState extends State<UI_M_ServiceSlot> {
                                             currentStep = currentStep + 1;
                                           }
                                         } else {
-                                          ///TODO: Validazione
-                                          ///Aggiungo uno slot alla lista del service
-                                          if (widget.createSlot) {
-                                            StoreProvider.of<AppState>(context).dispatch(AddServiceSlot(snapshot.serviceSlot));
-                                            StoreProvider.of<AppState>(context).dispatch(SetServiceSlotToEmpty());
-                                            Navigator.pop(context);
-                                          } else if (widget.editSlot) {
-                                            StoreProvider.of<AppState>(context).dispatch(UpdateServiceSlot(snapshot.serviceSlot, widget.indexSlot));
-                                            StoreProvider.of<AppState>(context).dispatch(SetServiceSlotToEmpty());
-                                            Navigator.pop(context);
+                                          if (validateStepper()) {
+                                            ///Aggiungo uno slot alla lista del service
+                                            if (widget.createSlot) {
+                                              StoreProvider.of<AppState>(context).dispatch(AddServiceSlot(snapshot.serviceSlot));
+                                              StoreProvider.of<AppState>(context).dispatch(SetServiceSlotToEmpty());
+                                              Navigator.pop(context);
+                                            } else if (widget.editSlot) {
+                                              StoreProvider.of<AppState>(context).dispatch(UpdateServiceSlot(snapshot.serviceSlot, widget.indexSlot));
+                                              StoreProvider.of<AppState>(context).dispatch(SetServiceSlotToEmpty());
+                                              Navigator.pop(context);
+                                            }
+                                          } else {
+                                            print("Complete all fields");
+                                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                              content: Text('Complete all fields to save'),
+                                              duration: Duration(seconds: 3),
+                                            ));
                                           }
                                         }
                                       });

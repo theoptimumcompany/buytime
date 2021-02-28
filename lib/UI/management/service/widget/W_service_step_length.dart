@@ -36,31 +36,11 @@ class StepLengthState extends State<StepLength> {
     super.initState();
   }
 
-  void setDuration(){
-   for(int i = 0; i < StoreProvider.of<AppState>(context).state.serviceSlot.numberOfInterval; i++){
-     List<String> start = StoreProvider.of<AppState>(context).state.serviceSlot.startTime[i].split(":");
-     int startHour = int.parse(start[0]);
-     int startMinute = int.parse(start[1]);
-     List<String> stop = StoreProvider.of<AppState>(context).state.serviceSlot.stopTime[i].split(":");
-     int stopHour = int.parse(stop[0]);
-     int stopMinute = int.parse(stop[1]);
-     int localDuration = (((stopHour * 60) + stopMinute) - ((startHour * 60) + startMinute));
-     if(duration == 0){
-       duration = localDuration;
-     }
-     else{
-       if(localDuration < duration){
-         duration = localDuration;
-       }
-     }
-   };
-  }
-
   @override
   Widget build(BuildContext context) {
-    setDuration();
     hour = StoreProvider.of<AppState>(context).state.serviceSlot.hour.toString();
     minute = StoreProvider.of<AppState>(context).state.serviceSlot.minute.toString();
+    duration = StoreProvider.of<AppState>(context).state.serviceSlot.minDuration < 10 ? 60 : StoreProvider.of<AppState>(context).state.serviceSlot.minDuration ;
     limitBooking = StoreProvider.of<AppState>(context).state.serviceSlot.limitBooking.toString();
     hourController.text = hour;
     minuteController.text = minute;
@@ -129,7 +109,7 @@ class StepLengthState extends State<StepLength> {
                           child: Slider(
                             min: 10,
                             max: duration.toDouble(),
-                            divisions: duration~/10,
+                            divisions: duration ~/ 10,
                             label: '$durationSlider',
                             value: durationSlider.toDouble(),
                             onChanged: (value) {
@@ -459,7 +439,7 @@ class StepLengthState extends State<StepLength> {
                         onChanged: (value) {
                           setState(() {
                             bookingInfinity = value;
-                            //TODO: Var no duration
+                            StoreProvider.of<AppState>(context).dispatch(SetServiceSlotNoLimitBooking(bookingInfinity));
                           });
                         },
                         checkboxType: CheckboxType.Child,
@@ -475,7 +455,8 @@ class StepLengthState extends State<StepLength> {
                       Container(
                         child: Flexible(
                           child: Text(
-                            !bookingInfinity?'This service has a limit of bookings of ' + bookingSlider.toString(): 'This service has no limit of bookings', //TODO: <-- ADD TO LANGUAGE TRANSLATE
+                            !bookingInfinity ? 'This service has a limit of bookings of ' + bookingSlider.toString() : 'This service has no limit of bookings',
+                            //TODO: <-- ADD TO LANGUAGE TRANSLATE
                             textAlign: TextAlign.start,
                             overflow: TextOverflow.clip,
                             style: TextStyle(

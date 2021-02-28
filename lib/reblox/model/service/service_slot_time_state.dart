@@ -18,12 +18,13 @@ class ServiceSlot {
   int hour = 0;
   int minute = 0;
   int limitBooking = 1;
+  bool noLimitBooking = false;
 
   ///Price vars
   double price = 0.0;
 
-  ///Vars not managed on DB
-  int duration = 0;
+  ///Vars out of DB
+  int minDuration = 10;
 
   ServiceSlot({
     this.numberOfInterval,
@@ -36,8 +37,9 @@ class ServiceSlot {
     this.hour,
     this.minute,
     this.limitBooking,
+    this.noLimitBooking,
     this.price,
-    this.duration,
+    this.minDuration,
   });
 
   ServiceSlot copyWith({
@@ -51,8 +53,9 @@ class ServiceSlot {
     int hour,
     int minute,
     int limitBooking,
+    bool noLimitBooking,
     double price,
-    int duration,
+    int minDuration,
   }) {
     return ServiceSlot(
       numberOfInterval: numberOfInterval ?? this.numberOfInterval,
@@ -65,8 +68,9 @@ class ServiceSlot {
       hour: hour ?? this.hour,
       minute: minute ?? this.minute,
       limitBooking: limitBooking ?? this.limitBooking,
+      noLimitBooking: noLimitBooking ?? this.noLimitBooking,
       price: price ?? this.price,
-      duration: duration ?? this.duration,
+      minDuration: minDuration ?? this.minDuration,
     );
   }
 
@@ -82,8 +86,9 @@ class ServiceSlot {
       hour: 0,
       minute: 0,
       limitBooking: 1,
+      noLimitBooking: false,
       price: 0.0,
-      duration: 0,
+      minDuration: 10,
     );
   }
 
@@ -98,8 +103,9 @@ class ServiceSlot {
     this.hour = serviceSlot.hour;
     this.minute = serviceSlot.minute;
     this.limitBooking = serviceSlot.limitBooking;
+    this.noLimitBooking = serviceSlot.noLimitBooking;
     this.price = serviceSlot.price;
-    this.duration = serviceSlot.duration;
+    this.minDuration = serviceSlot.minDuration;
   }
 
   // List<dynamic> convertToJsonEveryDay(List<EveryDay> objectStateList) {
@@ -128,6 +134,7 @@ class ServiceSlot {
         hour = json.containsKey('hour') ? json['hour'] : 0,
         minute = json.containsKey('minute') ? json['minute'] : 0,
         limitBooking = json.containsKey('limitBooking') ? json['limitBooking'] : 1,
+        noLimitBooking = json.containsKey('noLimitBooking') ? json['noLimitBooking'] : false,
         price = json.containsKey('price') ? json['price'] : 0,
         daysInterval = json.containsKey('daysInterval')
             ? List<EveryDay>.from(json["daysInterval"].map((item) {
@@ -148,6 +155,7 @@ class ServiceSlot {
         'hour': hour,
         'minute': minute,
         'limitBooking': limitBooking,
+        'noLimitBooking': noLimitBooking,
         'price': price,
       };
 }

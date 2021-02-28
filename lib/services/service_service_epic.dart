@@ -433,18 +433,18 @@ Future<ServiceState> uploadFiles(List<OptimumFileToUpload> fileToUploadList, Ser
 
 class ServiceDeleteService implements EpicClass<AppState> {
   StatisticsState statisticsState;
+  List<ServiceState> serviceList = [];
 
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<DeleteService>().asyncMap((event) {
       String serviceId = event.serviceId;
       print("Deleting Service Id : " + serviceId);
-
-      return FirebaseFirestore.instance.collection('service').doc(serviceId).delete();
+      FirebaseFirestore.instance.collection('service').doc(serviceId).delete();
+      serviceList = store.state.serviceList.serviceListState;
+      serviceList.removeWhere((element) => element.serviceId == serviceId);
 
       /// 1 DELETE
-    }).expand((element) => [
-          UpdateStatistics(statisticsState),
-        ]);
+    }).expand((element) => [UpdateStatistics(statisticsState), ServiceListReturned(serviceList)]);
   }
 }

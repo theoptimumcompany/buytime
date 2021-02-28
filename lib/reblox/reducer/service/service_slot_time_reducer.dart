@@ -78,16 +78,22 @@ class SetServiceSlotMinute {
   int get minute => _minute;
 }
 
-class SetServiceSlotDuration {
-  int _duration;
-  SetServiceSlotDuration(this._duration);
-  int get duration => _duration;
+class SetServiceSlotMinDuration {
+  int _minDuration;
+  SetServiceSlotMinDuration(this._minDuration);
+  int get minDuration => _minDuration;
 }
 
 class SetServiceSlotLimitBooking {
   int _limit;
   SetServiceSlotLimitBooking(this._limit);
   int get limit => _limit;
+}
+
+class SetServiceSlotNoLimitBooking {
+  bool _noLimit;
+  SetServiceSlotNoLimitBooking(this._noLimit);
+  bool get noLimit => _noLimit;
 }
 
 class SetServiceSlotPrice {
@@ -139,12 +145,16 @@ ServiceSlot serviceSlotReducer(ServiceSlot state, action) {
     serviceSlot.minute = action.minute;
     return serviceSlot;
   }
-  if (action is SetServiceSlotDuration) {
-    serviceSlot.duration = action.duration;
+  if (action is SetServiceSlotMinDuration) {
+    serviceSlot.minDuration = action.minDuration;
     return serviceSlot;
   }
   if (action is SetServiceSlotLimitBooking) {
     serviceSlot.limitBooking = action.limit;
+    return serviceSlot;
+  }
+  if (action is SetServiceSlotNoLimitBooking) {
+    serviceSlot.noLimitBooking = action.noLimit;
     return serviceSlot;
   }
   if (action is SetServiceSlotPrice) {

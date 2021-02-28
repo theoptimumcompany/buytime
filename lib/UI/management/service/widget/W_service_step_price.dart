@@ -63,6 +63,7 @@ class StepPriceState extends State<StepPrice> {
                               if (value == "") {
                                 setState(() {
                                   price = 0.0;
+                                  value = "0.0";
                                 });
                               } else {
                                 setState(() {
@@ -76,6 +77,7 @@ class StepPriceState extends State<StepPrice> {
                               if (value == "") {
                                 setState(() {
                                   price = 0.0;
+                                  value = "0.0";
                                 });
                               } else {
                                 setState(() {
@@ -93,12 +95,6 @@ class StepPriceState extends State<StepPrice> {
                                 fillColor: BuytimeTheme.DividerGrey,
                                 enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
                                 focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                // labelText: 'Slot Price',
-                                // labelStyle: TextStyle(
-                                //   fontFamily: BuytimeTheme.FontFamily,
-                                //   color: Color(0xff666666),
-                                //   fontWeight: FontWeight.w400,
-                                // ),
                                 errorMaxLines: 2,
                                 errorStyle: TextStyle(
                                   color: BuytimeTheme.ErrorRed,
@@ -110,11 +106,11 @@ class StepPriceState extends State<StepPrice> {
                               color: Color(0xff666666),
                               fontWeight: FontWeight.w800,
                             ),
-                            validator: (value) => value.isEmpty
-                                ? 'Service price is blank'
-                                : validatePrice(value)
-                                ? null
-                                : 'Not a valid price',
+                            // validator: (value) => value.isEmpty
+                            //     ? 'Service price is blank'
+                            //     : validatePrice(value)
+                            //     ? null
+                            //     : 'Not a valid price',
                           ),
                         )),
                     Container(
