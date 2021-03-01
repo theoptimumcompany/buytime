@@ -18,6 +18,7 @@ import 'package:Buytime/reblox/model/service/service_list_state.dart';
 import 'package:Buytime/reblox/model/service/service_slot_time_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/model/statistics_state.dart';
+import 'package:Buytime/reblox/model/stripe/stripe_list_state.dart';
 import 'package:Buytime/reblox/model/stripe/stripe_state.dart';
 import 'package:Buytime/reblox/model/user/user_state.dart';
 import 'package:Buytime/reblox/navigation/navigation_reducer.dart';
@@ -33,6 +34,7 @@ import 'package:Buytime/reblox/reducer/service/service_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/service_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/service_slot_time_reducer.dart';
 import 'package:Buytime/reblox/reducer/statistics_reducer.dart';
+import 'package:Buytime/reblox/reducer/stripe_list_payment_reducer.dart';
 import 'package:Buytime/reblox/reducer/stripe_payment_reducer.dart';
 import 'package:Buytime/reblox/reducer/user_reducer.dart';
 import 'package:Buytime/reblox/reducer/booking_reducer.dart';
@@ -56,6 +58,7 @@ AppState appReducer(AppState state, dynamic action) {
   BusinessListState businessListState = businessListReducer(state.businessList, action);
   BookingListState bookingListState = bookingListReducer(state.bookingList, action);
   StripeState stripeState = stripePaymentReducer(state.stripe, action);
+  StripeListState stripeListState = stripeListPaymentReducer(state.stripeListState, action);
   UserState userState = userReducer(state.user, action);
   CategoryState categoryState = categoryReducer(state.category, action);
   CategoryInviteState categoryInviteState = categoryInviteReducer(state.categoryInvite, action);
@@ -80,6 +83,7 @@ AppState appReducer(AppState state, dynamic action) {
       bookingList: bookingListState,
       user: userState,
       stripe: stripeState,
+      stripeListState: stripeListState,
       category: categoryState,
       categoryInvite: categoryInviteState,
       categoryList: categoryListState,

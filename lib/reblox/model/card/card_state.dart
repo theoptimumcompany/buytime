@@ -1,10 +1,19 @@
+import 'dart:convert';
+
 import 'package:Buytime/reblox/model/stripe/stripe_card_response.dart';
+import 'package:Buytime/reblox/model/stripe/stripe_state.dart';
 import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class CardState {
+
+  ///Storage
+  final storage = new FlutterSecureStorage();
+
   String cardId;
   String cardOwner;
-  StripeCardResponse cardResponse;
+  StripeState stripeState;
   bool selected;
 
   List<dynamic> convertToJson(List<UserSnippet> objectStateList) {
@@ -18,7 +27,7 @@ class CardState {
   CardState({
     this.cardId,
     this.cardOwner,
-    this.cardResponse,
+    this.stripeState,
     this.selected
   });
 
@@ -26,7 +35,7 @@ class CardState {
     return CardState(
       cardId: "",
       cardOwner: "",
-      cardResponse: StripeCardResponse(),
+      stripeState: StripeState(),
       selected: false,
     );
   }
@@ -35,20 +44,20 @@ class CardState {
   CardState.fromState(CardState state) {
     this.cardId = state.cardId;
     this.cardOwner = state.cardOwner;
-    this.cardResponse = state.cardResponse;
+    this.stripeState = state.stripeState;
     this.selected = state.selected;
   }
 
   companyStateFieldUpdate(
     String cardId,
     String cardOwner,
-    StripeCardResponse cardResponse,
+    StripeState stripeState,
     bool selected,
   ) {
     CardState(
       cardId: cardId ?? this.cardId,
       cardOwner: cardOwner ?? this.cardOwner,
-      cardResponse: cardResponse ?? this.cardResponse,
+      stripeState: stripeState ?? this.stripeState,
       selected: selected ?? this.selected,
     );
   }
@@ -56,27 +65,62 @@ class CardState {
   CardState copyWith({
     String cardId,
     String cardOwner,
-    StripeCardResponse cardResponse,
+    StripeState stripeState,
     bool selected,
   }) {
     return CardState(
       cardId: cardId ?? this.cardId,
       cardOwner: cardOwner ?? this.cardOwner,
-      cardResponse: cardResponse ?? this.cardResponse,
+      stripeState: stripeState ?? this.stripeState,
       selected: selected ?? this.selected,
     );
   }
 
   CardState.fromJson(Map<String, dynamic> json)
-      : cardId = json['cardId'],
-        cardOwner = json['cardOwner'],
-        cardResponse = json['cardResponse'],
+      : cardId = json.containsKey('cardId') ? json['cardId'] :  '',
+        cardOwner = json.containsKey('cardOwner') ? json['cardOwner'] :  '',
+        stripeState = json['stripeState'],
         selected = json['selected'];
 
   Map<String, dynamic> toJson() => {
         'cardId': cardId,
         'cardOwner': cardOwner,
-        'cardResponse': cardResponse,
+        'stripeState': stripeState,
         'selected': selected,
       };
+
+  writeToStorage(List<CardState> state) async{
+
+    //List<CardState> list = await readFromStorage();
+    String append = '';
+    state.forEach((element) {
+      String read = jsonEncode(element.toJson());
+      debugPrint('card_state => JSON: $read');
+      append = append.isNotEmpty ? append + '|' + read : read;
+    });
+
+    debugPrint('card_state => CCS: $append');
+    await storage.write(key: 'ccs', value: append);
+  }
+
+  Future<List<CardState>> readFromStorage() async{
+    List<CardState> list = [];
+    String tmpString = await storage.read(key: 'ccs') ?? '';
+    debugPrint('card_state => CARDS: $tmpString');
+
+    if(tmpString.isNotEmpty){
+      List<String> cards = tmpString.split('|');
+      cards.forEach((element) {
+        Map<String, dynamic> map = jsonDecode(element);
+        debugPrint('card_state => SECRET TOKEN: ${map['secretToken']}');
+        if(element.isNotEmpty){
+          CardState state = CardState.fromJson(map);
+          list.add(state);
+        }
+      });
+    }
+
+    return list;
+  }
+
 }

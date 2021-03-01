@@ -112,6 +112,7 @@ class UI_U_OrderDetailState extends State<UI_U_OrderDetail> {
                                         key: ObjectKey(item),
                                         orderEntry: confirmedOrder.itemList[index],
                                         mediaSize: media,
+                                        show: false,
                                       )
                                     : Container(
                                         decoration: BoxDecoration(

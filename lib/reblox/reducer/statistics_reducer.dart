@@ -13,7 +13,6 @@ class UpdateStatistics {
 }
 
 
-
 StatisticsState statisticsReducer(StatisticsState state, action) {
   StatisticsState statisticsState = new StatisticsState.fromState(state);
   

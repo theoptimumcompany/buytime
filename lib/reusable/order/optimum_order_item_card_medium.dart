@@ -61,7 +61,8 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
         cartCounter = cartCounter - snapshot.itemList[index].number;
         snapshot.removeItem(snapshot.itemList[index]);
         snapshot.itemList.removeAt(index);
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ServiceList()),);
+        //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ServiceList()),);
+        Navigator.of(context).pop();
       }
       StoreProvider.of<AppState>(context).dispatch(UpdateOrder(OrderState(
           itemList: snapshot.itemList, date: snapshot.date, position: snapshot.position, total: snapshot.total, business: snapshot.business, user: snapshot.user, businessId: snapshot.businessId, userId: snapshot.userId)));
@@ -89,7 +90,8 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
         snapshot.itemList.removeAt(index);*/
         }
       }else{
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ServiceList()),);
+        //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ServiceList()),);
+        Navigator.of(context).pop();
       }
       StoreProvider.of<AppState>(context).dispatch(UpdateOrder(OrderState(
           itemList: snapshot.itemList, date: snapshot.date, position: snapshot.position, total: snapshot.total, business: snapshot.business, user: snapshot.user, businessId: snapshot.businessId, userId: snapshot.userId)));

@@ -184,6 +184,9 @@ flutter:
   - family: MaterialDesignIcons
     fonts:
       - asset: fonts/MaterialDesignIcons.ttf
+  - family: CartIcon
+    fonts:
+      - asset: fonts/Cart.ttf
 
   #   - family: Trajan Pro
   #     fonts:

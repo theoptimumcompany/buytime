@@ -1,4 +1,4 @@
-import 'package:Buytime/UI/user/category/UI_U_CategoryDetails.dart';
+import 'package:Buytime/UI/user/category/UI_U_FilterByCategory.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +10,8 @@ class FindYourInspirationCardWidget extends StatefulWidget {
   double heigth;
   String imageUrl;
   String categoryName;
-  FindYourInspirationCardWidget(this.width, this.heigth, this.imageUrl,this.categoryName);
+  bool fromBookingPage;
+  FindYourInspirationCardWidget(this.width, this.heigth, this.imageUrl,this.categoryName, this.fromBookingPage);
 
   @override
   _FindYourInspirationCardWidgetState createState() => _FindYourInspirationCardWidgetState();
@@ -48,7 +49,9 @@ class _FindYourInspirationCardWidgetState extends State<FindYourInspirationCardW
           child: InkWell(
             splashColor: Colors.black.withOpacity(.3),
             onTap: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context) => CategoryDetails()));
+              widget.fromBookingPage ?
+              Navigator.push(context, MaterialPageRoute(builder: (context) => FilterByCategory(fromBookingPage: true,))) :
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => FilterByCategory(fromBookingPage: false,)));
             },
             borderRadius: BorderRadius.all(Radius.circular(10)),
             child: Container(
@@ -56,23 +59,35 @@ class _FindYourInspirationCardWidgetState extends State<FindYourInspirationCardW
               height: SizeConfig.safeBlockVertical * widget.heigth,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(5)),
-                  color: Colors.black.withOpacity(.2)
+                  //color: Colors.black.withOpacity(.2)
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, bottom: SizeConfig.safeBlockVertical * 2),
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Text(
-                        widget.categoryName,
-                        style: TextStyle(
-                            fontFamily: BuytimeTheme.FontFamily,
-                            color: BuytimeTheme.TextWhite,
-                            fontWeight: FontWeight.bold,
-                            fontSize: SizeConfig.safeBlockHorizontal * 4
+                    width: SizeConfig.safeBlockVertical * widget.width,
+                    height: SizeConfig.safeBlockVertical * widget.heigth/3,
+                    alignment: Alignment.centerLeft,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(5),
+                        bottomRight: Radius.circular(5)),
+                        color: Colors.black.withOpacity(.2)
+                    ),
+                    //margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, bottom: SizeConfig.safeBlockVertical * 2),
+                    child: Container(
+                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5),
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          widget.categoryName,
+                          style: TextStyle(
+                              fontFamily: BuytimeTheme.FontFamily,
+                              color: BuytimeTheme.TextWhite,
+                              fontWeight: FontWeight.bold,
+                              fontSize: SizeConfig.safeBlockHorizontal * 4
+                          ),
                         ),
                       ),
                     ),

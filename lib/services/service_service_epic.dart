@@ -77,6 +77,7 @@ class ServiceListRequestService implements EpicClass<AppState> {
       statisticsState.serviceListRequestServiceRead = reads;
       statisticsState.serviceListRequestServiceWrite = writes;
       statisticsState.serviceListRequestServiceDocuments = documents;
+
     }).expand((element) => [
           ServiceListReturned(serviceStateList),
           UpdateStatistics(statisticsState),
@@ -106,6 +107,7 @@ class ServiceListAndNavigateRequestService implements EpicClass<AppState> {
             .collection("service")
             .where("businessId", isEqualTo: event.businessId)
             .where("visibility", isEqualTo: 'Deactivated')
+            .limit(50)
             .get();
         docs = servicesFirebaseShadow.docs.length;
         servicesFirebaseShadow.docs.forEach((element) {
@@ -118,6 +120,7 @@ class ServiceListAndNavigateRequestService implements EpicClass<AppState> {
             .collection("service")
             .where("businessId", isEqualTo: event.businessId)
             .where("visibility", isEqualTo: 'Active')
+            .limit(50)
             .get();
         docs = docs + servicesFirebaseActive.docs.length;
         servicesFirebaseActive.docs.forEach((element) {
@@ -133,6 +136,7 @@ class ServiceListAndNavigateRequestService implements EpicClass<AppState> {
             /// 1 READ - ? DOC
             .collection("service")
             .where("businessId", isEqualTo: event.businessId)
+            .limit(50)
             .get();
         docs = servicesFirebase.docs.length;
         servicesFirebase.docs.forEach((element) {
@@ -180,7 +184,7 @@ class ServiceListAndNavigateOnConfirmRequestService implements EpicClass<AppStat
             .collection("service")
             .where("businessId", isEqualTo: event.businessId)
             .where("visibility", isEqualTo: 'Deactivated')
-            .limit(20)
+            .limit(50)
             .get();
         docs = servicesFirebaseShadow.docs.length;
         servicesFirebaseShadow.docs.forEach((element) {
@@ -193,7 +197,7 @@ class ServiceListAndNavigateOnConfirmRequestService implements EpicClass<AppStat
             .collection("service")
             .where("businessId", isEqualTo: event.businessId)
             .where("visibility", isEqualTo: 'Active')
-            .limit(20)
+            .limit(50)
             .get();
         docs = docs + servicesFirebaseActive.docs.length;
         servicesFirebaseActive.docs.forEach((element) {
@@ -204,7 +208,7 @@ class ServiceListAndNavigateOnConfirmRequestService implements EpicClass<AppStat
         read = 2;
       } else {
         debugPrint("SERVICE_SERVICE_EPIC - ServiceListAndNavigateOnConfirmRequestService => Permission as manager");
-        var servicesFirebase = await FirebaseFirestore.instance.collection("service").where("businessId", isEqualTo: event.businessId).get();
+        var servicesFirebase = await FirebaseFirestore.instance.collection("service").where("businessId", isEqualTo: event.businessId).limit(50).get();
         docs = servicesFirebase.docs.length;
         servicesFirebase.docs.forEach((element) {
           ServiceState serviceState = ServiceState.fromJson(element.data());
@@ -443,6 +447,8 @@ class ServiceDeleteService implements EpicClass<AppState> {
       FirebaseFirestore.instance.collection('service').doc(serviceId).delete();
       serviceList = store.state.serviceList.serviceListState;
       serviceList.removeWhere((element) => element.serviceId == serviceId);
+
+      statisticsState = StatisticsState().toEmpty();
 
       /// 1 DELETE
     }).expand((element) => [UpdateStatistics(statisticsState), ServiceListReturned(serviceList)]);

@@ -3,6 +3,9 @@ import 'package:Buytime/UI/user/cart/UI_U_ConfirmOrder.dart';
 import 'package:Buytime/UI/user/cart/widget/W_credit_card.dart';
 import 'package:Buytime/reblox/model/card/card_list_state.dart';
 import 'package:Buytime/reblox/model/card/card_state.dart';
+import 'package:Buytime/reblox/model/stripe/stripe_card_response.dart';
+import 'package:Buytime/reblox/reducer/service/card_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/stripe_payment_reducer.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/UI/user/service/UI_U_service_list.dart';
@@ -44,12 +47,43 @@ class CreditCardsState extends State<CreditCards> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            /*StoreConnector<AppState, AppState>(
+                onInit: (store) => store?.dispatch(StripeCardListRequest(store?.state?.user?.uid)), // no
+                converter: (store) => store.state,
+                builder: (context, snapshot) {
+                  StripeCardResponse cardResponse;
+                  cardResponse = snapshot.stripe.stripeCard;
+                  CardState card = CardState().toEmpty();
+                  card.cardResponse = cardResponse;
+                  debugPrint('T_credit_cards => CARD BRAND: ${card.cardResponse.brand}');
+                  return Flexible(
+                    //height: SizeConfig.safeBlockVertical * 30,
+                    flex: 1,
+                    child: CustomScrollView(
+                        shrinkWrap: true,
+                        scrollDirection: Axis.vertical,
+                        slivers: [
+                          SliverList(
+                            delegate: SliverChildBuilderDelegate((context, index) {
+                              //MenuItemModel menuItem = menuItems.elementAt(index);
+
+                              return CreditCard(card);
+                            },
+                              childCount: card.cardResponse.brand != null  ? 1 : 0,
+                            ),
+                          ),
+                        ]),
+                  );
+                }),*/
             StoreConnector<AppState, AppState>(
                 converter: (store) => store.state,
                 rebuildOnChange: true,
                 builder: (context, snapshot) {
                   creditCards = snapshot.cardListState != null ? snapshot.cardListState.cardListState : [];
-                  print("UI_U_AddCard => CARD COUNT: ${creditCards.length}");
+
+                  print("T_credit_cards => CARD COUNT: ${snapshot.cardListState.cardListState.length}");
+                  //creditCards.addAll(tmpList);
+                  //store?.dispatch(AddCardToList(tmpList));
                   return Flexible(
                     //height: SizeConfig.safeBlockVertical * 30,
                     flex: 1,
@@ -85,10 +119,8 @@ class CreditCardsState extends State<CreditCards> {
                               //tmpList.add('scemo');
                               creditCards.add(CreditCard());
                             });*/
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => UI_U_AddCard()),
-                            );
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => UI_U_AddCard()),);
+                            //Navigator.push(context, MaterialPageRoute(builder: (context) => UI_U_StripePayment()),);
                             //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ServiceList()),);
                           },
                           borderRadius: BorderRadius.all(Radius.circular(5.0)),

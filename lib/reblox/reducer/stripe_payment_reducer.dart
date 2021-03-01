@@ -2,6 +2,7 @@ import 'package:Buytime/reblox/model/snippet/generic.dart';
 import 'package:Buytime/reblox/model/stripe/stripe_card_response.dart';
 import 'package:Buytime/reblox/model/stripe/stripe_state.dart';
 import 'package:Buytime/UI/user/cart/UI_U_stripe_payment.dart';
+import 'package:flutter/material.dart';
 
 class SetStripeState {
   StripeState _stripeState;
@@ -93,8 +94,11 @@ StripeState stripePaymentReducer(StripeState state, action) {
 
   if (action is StripeCardListResult) {
     stripeState.stripeCard = action.stripeCardResponse;
-    return stripeState.copyWith();
+    stripeState.copyWith();
+    debugPrint('stripe_payment_reducer => CARD BRANC: ${stripeState.stripeCard.brand}');
+    return stripeState;
   }
+
   if (action is DisposedPaymentMethodIntent) {
     stripeState.stripeCard = null;
     stripeState.error = 'none';

@@ -16,6 +16,7 @@ import 'package:Buytime/reblox/model/service/service_list_state.dart';
 import 'package:Buytime/reblox/model/service/service_slot_time_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/model/statistics_state.dart';
+import 'package:Buytime/reblox/model/stripe/stripe_list_state.dart';
 import 'package:Buytime/reblox/model/stripe/stripe_state.dart';
 import 'package:Buytime/reblox/model/user/user_state.dart';
 import 'package:flutter/foundation.dart';
@@ -36,6 +37,7 @@ class AppRoutes {
   static const landing = "/landing";
   static const managerServiceList = "/managerServiceList";
   static const myBookings = "/myBookings";
+  static const confirmOrder = "/confirmOrder";
 
 }
 
@@ -48,6 +50,7 @@ class AppState {
   OrderState order;
   OrderListState orderList;
   StripeState stripe;
+  StripeListState stripeListState;
   UserState user;
   CategoryState category;
   CategoryInviteState categoryInvite;
@@ -70,6 +73,7 @@ class AppState {
     @required this.order,
     @required this.orderList,
     @required this.stripe,
+    this.stripeListState,
     @required this.businessList,
     @required this.bookingList,
     @required this.user,
@@ -94,6 +98,7 @@ class AppState {
     booking = BookingState();
     order = OrderState();
     stripe = StripeState();
+    stripeListState = StripeListState();
     orderList = OrderListState();
     businessList = BusinessListState();
     bookingList = BookingListState();
@@ -119,6 +124,7 @@ class AppState {
       OrderState order,
       OrderListState orderList,
       StripeState stripe,
+        StripeListState stripeListState,
       BusinessListState businessList,
         BookingListState bookingList,
       UserState user,
@@ -142,6 +148,7 @@ class AppState {
     this.order = order;
     this.orderList = orderList;
     this.stripe = stripe;
+    this.stripeListState = stripeListState;
     this.businessList = businessList;
     this.bookingList = bookingList;
     this.user = user;
@@ -167,6 +174,7 @@ class AppState {
     order = json['order'];
     orderList = json['orderList'];
     stripe = json['stripe'];
+    stripeListState = json['stripeListState'];
     businessList = json['businessList'];
     bookingList = json['bookingList'];
     user = json['user'];
@@ -192,6 +200,7 @@ class AppState {
         'order': order,
         'orderList': orderList,
         'stripe': stripe,
+        'stripeListState': stripeListState,
         'businessList': businessList,
         'bookingList': bookingList,
         'user': user,

@@ -6,6 +6,7 @@ import 'package:Buytime/UI/management/service/UI_M_service_list.dart';
 import 'package:Buytime/UI/user/booking/UI_U_BookingPage.dart';
 import 'package:Buytime/UI/user/booking/UI_U_ConfirmBooking.dart';
 import 'package:Buytime/UI/user/booking/UI_U_MyBookings.dart';
+import 'package:Buytime/UI/user/cart/UI_U_ConfirmOrder.dart';
 import 'package:Buytime/UI/user/landing/UI_U_Landing.dart';
 import 'package:Buytime/reblox/model/booking/booking_list_state.dart';
 import 'package:Buytime/reblox/model/card/card_list_state.dart';
@@ -14,6 +15,7 @@ import 'package:Buytime/reblox/model/category/invitation/category_invite_state.d
 import 'package:Buytime/reblox/model/category/tree/category_tree_state.dart';
 import 'package:Buytime/reblox/model/service/service_slot_time_state.dart';
 import 'package:Buytime/reblox/model/statistics_state.dart';
+import 'package:Buytime/reblox/model/stripe/stripe_list_state.dart';
 import 'package:Buytime/reblox/reducer/statistics_reducer.dart';
 import 'package:Buytime/services/category_invite_service_epic.dart';
 import 'package:Buytime/utils/size_config.dart';
@@ -94,6 +96,7 @@ void main(){
     CategoryTreeDeleteService(),
     StripePaymentAddPaymentMethod(),
     StripePaymentCardListRequest(),
+    StripeListPaymentCardListRequest(),
     StripeDetachPaymentMethodRequest(),
     ServiceUpdateService(),
     ServiceUpdateServiceVisibility(),
@@ -108,6 +111,7 @@ void main(){
     OrderRequestService(),
     OrderUpdateService(),
     OrderCreateService(),
+    AddingStripePaymentMethodRequest()
   ]);
   final _initialState = AppState(
     category: CategoryState().toEmpty(),
@@ -119,6 +123,7 @@ void main(){
     order: OrderState().toEmpty(),
     orderList: OrderListState().toEmpty(),
     stripe: StripeState().toEmpty(),
+    stripeListState: StripeListState().toEmpty(),
     businessList: BusinessListState().toEmpty(),
     bookingList: BookingListState().toEmpty(),
     categoryList: CategoryListState().toEmpty(),
@@ -172,6 +177,8 @@ class Buytime extends StatelessWidget {
         return FabRoute(UI_M_ServiceList(), settings: settings);
       case AppRoutes.myBookings:
         return FabRoute(MyBookings(), settings: settings);
+      case AppRoutes.confirmOrder:
+        return FabRoute(ConfirmOrder(), settings: settings);
     }
   }
 

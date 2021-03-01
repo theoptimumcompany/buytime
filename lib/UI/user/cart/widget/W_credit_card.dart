@@ -6,6 +6,7 @@ import 'package:Buytime/reblox/model/card/card_state.dart';
 import 'package:Buytime/reblox/reducer/booking_reducer.dart';
 import 'package:Buytime/reblox/reducer/business_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/card_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/stripe_payment_reducer.dart';
 import 'package:Buytime/reusable/material_design_icons.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
@@ -39,10 +40,11 @@ class _CreditCardState extends State<CreditCard> {
   @override
   void initState() {
     super.initState();
-    card = widget.cardState.cardResponse.brand.toLowerCase().substring(0,1) == 'v' ? 'v' : 'mc';
+    card = widget.cardState.stripeState.stripeCard.brand.toLowerCase().substring(0,1) == 'v' ? 'v' : 'mc';
+    //card = 'v';
     ownerCard = widget.cardState.cardOwner ?? '';
-    cardName = widget.cardState.cardResponse.brand;
-    cardEndWith = widget.cardState.cardResponse.last4;
+    cardName = widget.cardState.stripeState.stripeCard.brand;
+    cardEndWith = widget.cardState.stripeState.stripeCard.last4;
   }
 
   @override
@@ -53,13 +55,39 @@ class _CreditCardState extends State<CreditCard> {
       width: SizeConfig.screenWidth,
       margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+          ///Delete
+          Container(
+            //alignment: Alignment.centerRight,
+              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2, right: SizeConfig.safeBlockHorizontal * 2),
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                    onTap: (){
+                      //StoreProvider.of<AppState>(context).dispatch(CreateDisposePaymentMethodIntent(stripeCreditCardResponse, snapshot.user.uid);
+                      //StoreProvider.of<AppState>(context).dispatch(AddCardToList(tmpList));
+                    },
+                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                    child: Container(
+                      // /padding: EdgeInsets.all(5.0),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.remove_circle_outline,
+                            color: BuytimeTheme.AccentRed,
+                          ),
+                        ],
+                      ),
+                    )
+                ),
+              )
+          ),
           ///Card Image
           Container(
             height: SizeConfig.safeBlockVertical * 8,
             width: SizeConfig.safeBlockHorizontal * 18,
-            margin: EdgeInsets.all(SizeConfig.safeBlockHorizontal * 5),
+            margin: EdgeInsets.all(SizeConfig.safeBlockHorizontal * 2.5),
             decoration: BoxDecoration(
                 image: DecorationImage(
                     image: AssetImage(
@@ -70,6 +98,7 @@ class _CreditCardState extends State<CreditCard> {
           ),
           ///Card Name & Ending **** .... & Select
           Expanded(
+            flex: 3,
               child: Container(
                 //width: SizeConfig.safeBlockHorizontal * 50,
                 //color: Colors.black87,
@@ -109,7 +138,7 @@ class _CreditCardState extends State<CreditCard> {
                     ///Select
                     Container(
                         //alignment: Alignment.centerRight,
-                        margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 5),
+                        margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 5, left: SizeConfig.safeBlockHorizontal * 2),
                         child: Material(
                           color: Colors.transparent,
                           child: InkWell(
@@ -121,8 +150,8 @@ class _CreditCardState extends State<CreditCard> {
                                 });*/
                                 List<CardState> tmpList = StoreProvider.of<AppState>(context).state.cardListState.cardListState;
                                 tmpList.forEach((element) {
-                                  if(element.cardResponse.secretToken == widget.cardState.cardResponse.secretToken){
-                                    element.selected = true;
+                                  if(element.stripeState.stripeCard.last4 == widget.cardState.stripeState.stripeCard.last4){
+                                    element.selected = !element.selected;
                                   }else{
                                     element.selected = false;
                                   }
@@ -154,11 +183,11 @@ class _CreditCardState extends State<CreditCard> {
                               )
                           ),
                         )
-                    )
+                    ),
                   ],
                 ),
               )
-          )
+          ),
         ],
       ),
     );

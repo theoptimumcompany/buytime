@@ -106,13 +106,23 @@ class SetOrderUser
   UserSnippet get user => _user;
 }
 
-class AddingStripePaymentMethod
-{
+class AddingStripePaymentMethod {
   AddingStripePaymentMethod();
+}
+
+class AddingStripePaymentMethodWithNavigation {
+  String _userId;
+  AddingStripePaymentMethodWithNavigation(this._userId);
+  String get userId => _userId;
 }
 class AddedStripePaymentMethod
 {
   AddedStripePaymentMethod();
+}
+
+class AddedStripePaymentMethodAndNavigate
+{
+  AddedStripePaymentMethodAndNavigate();
 }
 
 OrderState orderReducer(OrderState state, action) {
@@ -153,8 +163,17 @@ OrderState orderReducer(OrderState state, action) {
     orderState.addCardProgress = true;
     return orderState;
   }
+  if (action is AddingStripePaymentMethodWithNavigation) {
+    orderState.addCardProgress = true;
+    return orderState;
+  }
   if (action is AddedStripePaymentMethod) {
     orderState.addCardProgress = false;
+    return orderState;
+  }
+  if (action is AddedStripePaymentMethodAndNavigate) {
+    orderState.addCardProgress = false;
+    orderState.navigate = true;
     return orderState;
   }
   if (action is AddItemToOrder) {

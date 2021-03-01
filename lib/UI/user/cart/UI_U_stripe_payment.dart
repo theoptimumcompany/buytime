@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:Buytime/UI/user/order/UI_U_OrderDetail.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
+import 'package:Buytime/reblox/reducer/stripe_list_payment_reducer.dart';
 import 'package:Buytime/reblox/reducer/stripe_payment_reducer.dart';
 import 'package:Buytime/reusable/order/order_total.dart';
 import 'package:Buytime/reusable/stripe/optimum_credit_card_button.dart';
@@ -33,7 +34,7 @@ class _UI_U_StripePaymentState extends State<UI_U_StripePayment> {
 
   bool addCard = false;
   final Stripe stripe = Stripe(
-    "pk_live_51HS20eHr13hxRBpCLHzfi0SXeqw8Efu911cWdYEE96BAV0zSOesvE83OiqqzRucKIxgCcKHUvTCJGY6cXRtkDVCm003CmGXYzy",
+    "pk_test_51HS20eHr13hxRBpCZl1V0CKFQ7XzJbku7UipKLLIcuNGh3rp4QVsEDCThtV0l2AQ3jMtLsDN2zdC0fQ4JAK6yCOp003FIf3Wjz",
     stripeAccount: "acct_1HS20eHr13hxRBpC",
     returnUrlForSca: "stripesdk://3ds.stripesdk.io", //Return URL for SCA
   );
@@ -289,7 +290,7 @@ class _UI_U_StripePaymentState extends State<UI_U_StripePayment> {
     }
     // TODO take remotes requests away from this file.
     // TODO show spinner on tap.
-    var stripeCustomerSetupIntentCreationReference = await FirebaseFirestore.instance.collection("stripeCustomer/" + userId + "/setupIntent").doc()
+    var stripeCustomerSetupIntentCreationReference = await FirebaseFirestore.instance.collection("stripeCustomer/" + userId + "_test/setupIntent").doc()
         .set({
       'status': "create request"
     });

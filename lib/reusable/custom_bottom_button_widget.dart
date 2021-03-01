@@ -55,8 +55,8 @@ class _CustomBottomButtonWidgetState extends State<CustomBottomButtonWidget> {
           ),
           Container(
             width: double.infinity,
-            height: 1,
-            color: Colors.grey,
+            height: SizeConfig.safeBlockVertical * .2,
+            color: BuytimeTheme.DividerGrey,
           )
         ],
       ),

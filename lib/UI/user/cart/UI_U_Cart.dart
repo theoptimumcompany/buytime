@@ -40,7 +40,8 @@ class CartState extends State<Cart> {
         cartCounter = cartCounter - snapshot.itemList[index].number;
         snapshot.removeItem(snapshot.itemList[index]);
         snapshot.itemList.removeAt(index);
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ServiceList()),);
+        //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ServiceList()),);
+        Navigator.of(context).pop();
       }
       StoreProvider.of<AppState>(context).dispatch(UpdateOrder(OrderState(
           itemList: snapshot.itemList, date: snapshot.date, position: snapshot.position, total: snapshot.total, business: snapshot.business, user: snapshot.user, businessId: snapshot.businessId, userId: snapshot.userId)));
@@ -68,7 +69,8 @@ class CartState extends State<Cart> {
         snapshot.itemList.removeAt(index);*/
         }
       }else{
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ServiceList()),);
+        //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ServiceList()),);
+        Navigator.of(context).pop();
       }
       StoreProvider.of<AppState>(context).dispatch(UpdateOrder(OrderState(
           itemList: snapshot.itemList, date: snapshot.date, position: snapshot.position, total: snapshot.total, business: snapshot.business, user: snapshot.user, businessId: snapshot.businessId, userId: snapshot.userId)));
@@ -150,7 +152,7 @@ class CartState extends State<Cart> {
                           ),
                         ),
                       ),*/
-                            ///Serice List
+                            ///Service List
                             Expanded(
                               flex: 2,
                               child: Container(
@@ -165,6 +167,7 @@ class CartState extends State<Cart> {
                                         print("UI_U_cart => CART COUNT: ${orderState.itemList.length}");
                                         return Column(
                                           children: [
+                                            ///Service List
                                             Flexible(
                                               flex: 1,
                                               child: CustomScrollView(shrinkWrap: true, slivers: [
@@ -216,7 +219,9 @@ class CartState extends State<Cart> {
                                                 ),
                                               ]),
                                             ),
+                                            ///Total Order
                                             OrderTotal(media: media, orderState: snapshot),
+                                            ///Divider
                                             Container(
                                               color: BuytimeTheme.DividerGrey,
                                               height: SizeConfig.safeBlockVertical * 2,
@@ -268,6 +273,7 @@ class CartState extends State<Cart> {
                                 ),
                               ),
                             ),
+                            ///Buy Button & Continue Shooping
                             Align(
                               alignment: Alignment.bottomCenter,
                               child: Container(
@@ -310,7 +316,8 @@ class CartState extends State<Cart> {
                                           color: Colors.transparent,
                                           child: InkWell(
                                               onTap: (){
-                                                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ServiceList()),);
+                                                //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ServiceList()),);
+                                                Navigator.of(context).pop();
                                               },
                                               borderRadius: BorderRadius.all(Radius.circular(5.0)),
                                               child: Container(

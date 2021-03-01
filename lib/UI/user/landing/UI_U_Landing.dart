@@ -23,6 +23,7 @@ import 'package:Buytime/reblox/reducer/stripe_payment_reducer.dart';
 import 'package:Buytime/reblox/reducer/user_reducer.dart';
 import 'package:Buytime/reusable/custom_bottom_button_widget.dart';
 import 'package:Buytime/reusable/landing_card_widget.dart';
+import 'package:Buytime/reusable/material_design_icons.dart';
 import 'package:Buytime/reusable/menu/UI_M_business_list_drawer.dart';
 import 'package:Buytime/utils/globals.dart';
 import 'package:Buytime/utils/size_config.dart';
@@ -418,7 +419,7 @@ class LandingState extends State<Landing> {
                                                     ),
                                                     '',
                                                     Icon(
-                                                      Icons.logout,
+                                                      MaterialDesignIcons.exit_to_app,
                                                       color: BuytimeTheme.SymbolGrey,
                                                     ))),
                                           ),

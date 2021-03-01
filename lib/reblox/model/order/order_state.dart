@@ -16,6 +16,7 @@ class OrderState {
   int amount = 0;
   String progress = "unpaid";
   bool addCardProgress = false;
+  bool navigate = false;
   BusinessSnippet business;
   UserSnippet user;
   String businessId;
@@ -32,6 +33,7 @@ class OrderState {
     this.amount,
     this.progress,
     this.addCardProgress = false,
+    this.navigate = false,
     this.business,
     this.user,
     this.businessId,
@@ -54,6 +56,7 @@ class OrderState {
         date = json['date'].toDate(),
         progress = json['progress'],
         addCardProgress = false,
+        navigate = false,
         tip = json['tip'],
         tax = json['tax'],
         taxPercent = json['taxPercent'],
@@ -75,6 +78,7 @@ class OrderState {
     this.amount = state.amount;
     this.progress = state.progress;
     this.addCardProgress = state.addCardProgress;
+    this.navigate = state.navigate;
     this.business = state.business;
     this.businessId = state.businessId;
     this.userId = state.userId;
@@ -92,6 +96,7 @@ class OrderState {
         'amount': amount,
         'progress': progress,
         'addCardProgress': addCardProgress,
+        'navigate': navigate,
         'businessId': businessId,
         'userId': userId,
         'business': business.toJson(),
@@ -117,6 +122,7 @@ class OrderState {
     int amount,
     String progress,
     String addCardProgress,
+    String navigate,
     String businessId,
     String userId,
     BusinessSnippet business,
@@ -133,6 +139,7 @@ class OrderState {
       amount: amount ?? this.amount,
       progress: progress ?? this.progress,
       addCardProgress: addCardProgress ?? this.addCardProgress,
+      navigate: navigate ?? this.navigate,
       businessId: businessId ?? this.businessId,
       userId: userId ?? this.userId,
       business: business ?? this.business,
@@ -152,6 +159,7 @@ class OrderState {
       amount: 0,
       progress: "unpaid",
       addCardProgress: false,
+      navigate: false,
       businessId: "",
       userId: "",
       business: BusinessSnippet().toEmpty(),

@@ -2,6 +2,9 @@
 import 'package:Buytime/UI/user/cart/UI_U_ConfirmedOrder.dart';
 import 'package:Buytime/UI/user/cart/tab/T_credit_cards.dart';
 import 'package:Buytime/UI/user/cart/tab/T_room.dart';
+import 'package:Buytime/reblox/model/card/card_state.dart';
+import 'package:Buytime/reblox/reducer/stripe_list_payment_reducer.dart';
+import 'package:Buytime/reblox/reducer/stripe_payment_reducer.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/UI/user/service/UI_U_service_list.dart';
@@ -19,7 +22,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
 class ConfirmOrder extends StatefulWidget{
-  final String title = 'Cart';
+  final String title = 'confirmOrder';
 
   @override
   State<StatefulWidget> createState() => ConfirmOrderState();
@@ -51,8 +54,19 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
           return false;
         },
         child: StoreConnector<AppState, AppState>(
+            onInit: (store) {
+              store?.dispatch(StripeListCardListRequest('${store?.state?.user?.uid}_test'));
+              debugPrint('UI_U_ConfirmOrder => ON INIT');
+            }, ///TODO Rememebr _test
             converter: (store) => store.state,
             builder: (context, snapshot) {
+              bool selected = false;
+              List<CardState> tmpList = StoreProvider.of<AppState>(context).state.cardListState.cardListState;
+              tmpList.forEach((element) {
+                if(element.selected){
+                  selected = true;
+                }
+              });
               return Scaffold(
                   appBar: BuytimeAppbar(
                     background: BuytimeTheme.UserPrimary,
@@ -139,6 +153,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                           }
                                       )
                                   ),
+                                  ///Divider
                                   Container(
                                     margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 10, right: SizeConfig.safeBlockHorizontal * 10),
                                     color: BuytimeTheme.BackgroundLightGrey,
@@ -168,6 +183,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                       ),
                                     ),
                                   ),
+                                  ///Divider
                                   Container(
                                     color: BuytimeTheme.BackgroundLightGrey,
                                     height: SizeConfig.safeBlockVertical * 2,
@@ -212,6 +228,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                       ),
                                     ),
                                   ),
+                                  ///Tab
                                   _controller.index == 0 ?
                                   CreditCards() :
                                   Room(),
@@ -234,6 +251,14 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                         width: media.width * .4,
                                         child: RaisedButton(
                                           onPressed: () {
+
+
+                                            if(selected){
+                                              StoreProvider.of<AppState>(context).dispatch(SetOrderProgress("in_progress"));
+                                              StoreProvider.of<AppState>(context).dispatch(CreateOrder(snapshot.order));
+                                              Navigator.push(context, MaterialPageRoute(builder: (context) => ConfirmedOrder(_controller.index)),);
+                                            }
+
                                             Navigator.push(context, MaterialPageRoute(builder: (context) => ConfirmedOrder(_controller.index)),);
                                           },
                                           textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
@@ -396,7 +421,6 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                 ),
                               ),
                             )*/
-
                           ],
                         ),
                       ),

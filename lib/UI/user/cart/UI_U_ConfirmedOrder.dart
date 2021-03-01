@@ -228,7 +228,7 @@ class ConfirmedOrderState extends State<ConfirmedOrder> with SingleTickerProvide
                                                     Container(
                                                       margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 5),
                                                       child: Text(
-                                                        widget.from == 0 ? '${cardState.cardResponse.brand} **** ${cardState.cardResponse.last4}' : 'Room Number', ///TODO Make it Global
+                                                        widget.from == 0 ? '${cardState.stripeState.stripeCard.brand} **** ${cardState.stripeState.stripeCard.last4}' : 'Room Number', ///TODO Make it Global
                                                         textAlign: TextAlign.start,
                                                         style: TextStyle(
                                                           fontFamily: BuytimeTheme.FontFamily,
@@ -257,7 +257,7 @@ class ConfirmedOrderState extends State<ConfirmedOrder> with SingleTickerProvide
                                                   child: FittedBox(
                                                     fit: BoxFit.scaleDown,
                                                     child: Text(
-                                                       widget.from == 0 ? 'WE ARE CONFIRMING YOUR ORDER' : 'ORDER CONFIRMED',//AppLocalizations.of(context).somethingIsNotRight,
+                                                      snapshot.progress == "in_progress" ? 'WE ARE CONFIRMING YOUR ORDER' : 'ORDER CONFIRMED',//AppLocalizations.of(context).somethingIsNotRight,
                                                       style: TextStyle(
                                                           letterSpacing: SizeConfig.safeBlockHorizontal * .2,
                                                           fontFamily: BuytimeTheme.FontFamily,
@@ -345,10 +345,8 @@ class ConfirmedOrderState extends State<ConfirmedOrder> with SingleTickerProvide
                                         child: RaisedButton(
                                           onPressed: () {
                                             //Navigator.push(context, MaterialPageRoute(builder: (context) => ConfirmedOrder()),);
-                                           /* Navigator.pushReplacement(
-                                              context,
-                                              MaterialPageRoute(builder: (context) => UI_U_Tabs()),
-                                            );*/
+                                            //StoreProvider.of<AppState>(context).state.orderList.orderListState = [];
+                                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ServiceList()));
                                           },
                                           textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
                                           color: BuytimeTheme.UserPrimary,

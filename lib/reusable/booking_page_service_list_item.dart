@@ -54,41 +54,49 @@ class _BookingListServiceListItemState extends State<BookingListServiceListItem>
                     ),
                     ///Service Name & Description
                     Container(
-                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1),
+                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1),
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          FittedBox(
-                            fit: BoxFit.scaleDown,
-                            child: Container(
-                              width: SizeConfig.safeBlockHorizontal * 50,
-                              child: Text(
-                                widget.serviceState.name ?? '',
-                                style: TextStyle(
-                                    fontFamily: BuytimeTheme.FontFamily,
-                                    color: BuytimeTheme.TextBlack,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: SizeConfig.safeBlockHorizontal * 4
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              ///Service Name
+                              FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Container(
+                                  width: SizeConfig.safeBlockHorizontal * 50,
+                                  child: Text(
+                                    widget.serviceState.name ?? '',
+                                    style: TextStyle(
+                                        fontFamily: BuytimeTheme.FontFamily,
+                                        color: BuytimeTheme.TextBlack,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: SizeConfig.safeBlockHorizontal * 4
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ),
-                          FittedBox(
-                            fit: BoxFit.scaleDown,
-                            child: Container(
-                              width: SizeConfig.safeBlockHorizontal * 50,
-                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
-                              child: Text(
-                                widget.serviceState.description ?? '',
-                                style: TextStyle(
-                                    fontFamily: BuytimeTheme.FontFamily,
-                                    color: BuytimeTheme.TextGrey,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: SizeConfig.safeBlockHorizontal * 4
+                              ///Description
+                              FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Container(
+                                  width: SizeConfig.safeBlockHorizontal * 50,
+                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
+                                  child: Text(
+                                    widget.serviceState.description ?? '',
+                                    style: TextStyle(
+                                        fontFamily: BuytimeTheme.FontFamily,
+                                        color: BuytimeTheme.TextGrey,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: SizeConfig.safeBlockHorizontal * 4
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
+                            ],
                           ),
                         ],
                       ),
