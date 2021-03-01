@@ -257,6 +257,10 @@ class UI_M_CreateCategoryState extends State<UI_M_CreateCategory> {
                                       StoreProvider.of<AppState>(context).dispatch(new AddCategoryTree(newCategoryParent));
                                     } else {
                                       CategoryState categoryCreate = snapshot.category != null ? snapshot.category : CategoryState().toEmpty();
+
+                                      if(categoryCreate.parent.id == 'no_parent'){
+                                        categoryCreate.level = 0;
+                                      }
                                       StoreProvider.of<AppState>(context).dispatch(new CreateCategory(categoryCreate));
                                       StoreProvider.of<AppState>(context).dispatch(new AddCategoryTree(newParent));
                                     }
