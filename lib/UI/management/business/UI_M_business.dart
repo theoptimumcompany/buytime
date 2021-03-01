@@ -51,7 +51,6 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
       converter: (store) => store.state,
       onInit: (store) => {
         print("On Init Business : Request List of Root Categories"),
-        print("Nome business " + store.state.business.name),
         store.dispatch(RequestRootListCategory(store.state.business.id_firestore)),
       },
       builder: (context, snapshot) {

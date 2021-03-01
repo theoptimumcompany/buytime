@@ -18,12 +18,14 @@ import 'package:rxdart/rxdart.dart';
 class CategoryListRequestService implements EpicClass<AppState> {
   StatisticsState statisticsState;
   List<CategoryState> categoryStateList;
+
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     debugPrint("CATEGORY_SERVICE_EPIC - CategoryListRequestService => CATCHED ACTION");
     return actions.whereType<RequestListCategory>().asyncMap((event) async {
+      QuerySnapshot snapshot = await FirebaseFirestore.instance
 
-      QuerySnapshot snapshot = await FirebaseFirestore.instance /// 1 READ - ? DOC
+          /// 1 READ - ? DOC
           .collection("business")
           .doc(event.businessId)
           .collection("category")
@@ -53,23 +55,24 @@ class CategoryListRequestService implements EpicClass<AppState> {
       statisticsState.categoryListRequestServiceRead = reads;
       statisticsState.categoryListRequestServiceWrite = writes;
       statisticsState.categoryListRequestServiceDocuments = documents;
-
     }).expand((element) => [
-      CategoryListReturned(categoryStateList),
-      UpdateStatistics(statisticsState),
-    ]);
+          CategoryListReturned(categoryStateList),
+          UpdateStatistics(statisticsState),
+        ]);
   }
 }
 
 class UserCategoryListRequestService implements EpicClass<AppState> {
   List<CategoryState> categoryStateList;
   StatisticsState statisticsState;
+
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     debugPrint("CATEGORY_SERVICE_EPIC - UserCategoryListRequestService => CATCHED ACTION");
-    return actions.whereType<UserRequestListCategory>().asyncMap((event) async{
+    return actions.whereType<UserRequestListCategory>().asyncMap((event) async {
+      QuerySnapshot snapshot = await FirebaseFirestore.instance
 
-      QuerySnapshot snapshot = await FirebaseFirestore.instance /// 1 READ - ? DOC
+          /// 1 READ - ? DOC
           .collection("business")
           .doc(event.businessId)
           .collection("category")
@@ -101,23 +104,25 @@ class UserCategoryListRequestService implements EpicClass<AppState> {
       statisticsState.userCategoryListRequestServiceRead = reads;
       statisticsState.userCategoryListRequestServiceWrite = writes;
       statisticsState.userCategoryListRequestServiceDocuments = documents;
-
     }).expand((element) => [
-      CategoryListReturned(categoryStateList),
-      UpdateStatistics(statisticsState),
-      NavigatePushAction(AppRoutes.bookingPage),
-    ]);
+          CategoryListReturned(categoryStateList),
+          UpdateStatistics(statisticsState),
+          NavigatePushAction(AppRoutes.bookingPage),
+        ]);
   }
 }
 
 class CategoryRootListRequestService implements EpicClass<AppState> {
   StatisticsState statisticsState;
   List<CategoryState> categoryStateList;
+
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     debugPrint("CATEGORY_SERVICE_EPIC - CategoryRootListRequestService => CATCHED ACTION");
-    return actions.whereType<RequestRootListCategory>().asyncMap((event) async{
-      QuerySnapshot snapshot = await FirebaseFirestore.instance /// 1 READ - ? DOC
+    return actions.whereType<RequestRootListCategory>().asyncMap((event) async {
+      QuerySnapshot snapshot = await FirebaseFirestore.instance
+
+          /// 1 READ - ? DOC
           .collection("business")
           .doc(event.businessId)
           .collection("category")
@@ -147,24 +152,26 @@ class CategoryRootListRequestService implements EpicClass<AppState> {
       statisticsState.categoryRootListRequestServiceRead = reads;
       statisticsState.categoryRootListRequestServiceWrite = writes;
       statisticsState.categoryRootListRequestServiceDocuments = documents;
-
     }).expand((element) => [
-      CategoryListReturned(categoryStateList),
-      UpdateStatistics(statisticsState),
-    ]);
+          CategoryListReturned(categoryStateList),
+          UpdateStatistics(statisticsState),
+        ]);
   }
 }
 
 class CategoryRequestService implements EpicClass<AppState> {
   CategoryState categoryState = CategoryState().toEmpty();
   StatisticsState statisticsState;
+
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<CategoryRequest>().asyncMap((event) async {
       debugPrint("CATEGORY_SERVICE_EPIC - CategoryRequestService => CATEGORY ID: ${event.id}");
       String categoryId = event.id;
 
-      QuerySnapshot query = await FirebaseFirestore.instance /// 1 READ - ? DOC
+      QuerySnapshot query = await FirebaseFirestore.instance
+
+          /// 1 READ - ? DOC
           .collection("business")
           .doc(store.state.business.id_firestore)
           .collection("category")
@@ -188,16 +195,16 @@ class CategoryRequestService implements EpicClass<AppState> {
       statisticsState.categoryRequestServiceRead = reads;
       statisticsState.categoryRequestServiceWrite = writes;
       statisticsState.categoryRequestServiceDocuments = documents;
-
     }).expand((element) => [
-      CategoryRequestResponse(categoryState),
-      UpdateStatistics(statisticsState),
-    ]);
+          CategoryRequestResponse(categoryState),
+          UpdateStatistics(statisticsState),
+        ]);
   }
 }
 
 class CategoryInviteManagerService implements EpicClass<AppState> {
   StatisticsState statisticsState;
+
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<CategoryInviteManager>().asyncMap((event) async {
@@ -208,7 +215,9 @@ class CategoryInviteManagerService implements EpicClass<AppState> {
       debugPrint("CATEGORY_SERVICE_EPIC - CategoryInviteManagerService => Inizia elaborazione per inserire Oggetto Manager nel Database");
       Manager manager = event.manager;
       int write = 0;
-      FirebaseFirestore.instance /// ? WRITE
+      FirebaseFirestore.instance
+
+          /// ? WRITE
           .collection("business")
           .doc(store.state.business.id_firestore)
           .collection("category")
@@ -219,8 +228,9 @@ class CategoryInviteManagerService implements EpicClass<AppState> {
         debugPrint("CATEGORY_SERVICE_EPIC - CategoryInviteManagerService => Category Service added Manager to field manager");
       });
 
+      FirebaseFirestore.instance
 
-      FirebaseFirestore.instance /// ? WRITE
+          /// ? WRITE
           .collection("business")
           .doc(store.state.business.id_firestore)
           .collection("category")
@@ -241,15 +251,15 @@ class CategoryInviteManagerService implements EpicClass<AppState> {
       statisticsState.categoryInviteManagerServiceRead = reads;
       statisticsState.categoryInviteManagerServiceWrite = writes;
       statisticsState.categoryInviteManagerServiceDocuments = documents;
-
     }).expand((element) => [
-      UpdateStatistics(statisticsState),
-    ]);
+          UpdateStatistics(statisticsState),
+        ]);
   }
 }
 
 class CategoryInviteWorkerService implements EpicClass<AppState> {
   StatisticsState statisticsState;
+
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<CategoryInviteWorker>().asyncMap((event) async {
@@ -258,7 +268,9 @@ class CategoryInviteWorkerService implements EpicClass<AppState> {
       ///In seguito partirà una cloud function che fa gli opportuni controlli sui permessi dell'utente che aggiunge la nuova mail, e scrive i permessi della mail aggiunta per quella categoria
 
       Worker worker = event.worker;
-      FirebaseFirestore.instance /// 1 WRITE
+      FirebaseFirestore.instance
+
+          /// 1 WRITE
           .collection("business")
           .doc(store.state.business.id_firestore)
           .collection("category")
@@ -269,7 +281,9 @@ class CategoryInviteWorkerService implements EpicClass<AppState> {
         debugPrint("CATEGORY_SERVICE_EPIC - CategoryInviteWorkerService => Category Service added Worker to field worker");
       });
 
-      FirebaseFirestore.instance /// 1 WRITE
+      FirebaseFirestore.instance
+
+          /// 1 WRITE
           .collection("business")
           .doc(store.state.business.id_firestore)
           .collection("category")
@@ -290,21 +304,22 @@ class CategoryInviteWorkerService implements EpicClass<AppState> {
       statisticsState.categoryInviteWorkerServiceRead = reads;
       statisticsState.categoryInviteWorkerServiceWrite = writes;
       statisticsState.categoryInviteWorkerServiceDocuments = documents;
-
     }).expand((element) => [
-      UpdateStatistics(statisticsState),
-    ]);
+          UpdateStatistics(statisticsState),
+        ]);
   }
 }
 
 class CategoryDeleteManagerService implements EpicClass<AppState> {
   StatisticsState statisticsState;
+
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<DeleteCategoryManager>().asyncMap((event) async {
-
       Manager manager = event.manager;
-      FirebaseFirestore.instance /// 1 WRITE
+      FirebaseFirestore.instance
+
+          /// 1 WRITE
           .collection("business")
           .doc(store.state.business.id_firestore)
           .collection("category")
@@ -315,7 +330,9 @@ class CategoryDeleteManagerService implements EpicClass<AppState> {
         debugPrint("CATEGORY_SERVICE_EPIC - CategoryDeleteManagerService => Category Service deleted Manager to field manager");
       });
 
-      FirebaseFirestore.instance /// 1 WRITE
+      FirebaseFirestore.instance
+
+          /// 1 WRITE
           .collection("business")
           .doc(store.state.business.id_firestore)
           .collection("category")
@@ -339,19 +356,21 @@ class CategoryDeleteManagerService implements EpicClass<AppState> {
 
       //return;
     }).expand((element) => [
-      UpdateStatistics(statisticsState),
-    ]);
+          UpdateStatistics(statisticsState),
+        ]);
   }
 }
 
 class CategoryDeleteWorkerService implements EpicClass<AppState> {
   StatisticsState statisticsState;
+
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<DeleteCategoryWorker>().asyncMap((event) async {
-
       Worker worker = event.worker;
-      FirebaseFirestore.instance /// 1 WRITE
+      FirebaseFirestore.instance
+
+          /// 1 WRITE
           .collection("business")
           .doc(store.state.business.id_firestore)
           .collection("category")
@@ -362,7 +381,9 @@ class CategoryDeleteWorkerService implements EpicClass<AppState> {
         print("CATEGORY_SERVICE_EPIC - CategoryDeleteWorkerService => Category Service deleted Worker to field worker");
       });
 
-      FirebaseFirestore.instance /// 1 WRITE
+      FirebaseFirestore.instance
+
+          /// 1 WRITE
           .collection("business")
           .doc(store.state.business.id_firestore)
           .collection("category")
@@ -386,64 +407,59 @@ class CategoryDeleteWorkerService implements EpicClass<AppState> {
 
       //return;
     }).expand((element) => [
-      UpdateStatistics(statisticsState),
-    ]);
+          UpdateStatistics(statisticsState),
+        ]);
   }
 }
 
 ///Scorro Albero e una volta trovato nodo con id passato, controllo se ha figli, se li ha modifico il parent nuovo
-seekNode(List<dynamic> list, String id, String id_business, String rootId) {
+seekNode(List<dynamic> list, String id, String id_business, String rootId, int level, String oldRootId) {
   if (list != null) {
     for (int i = 0; i < list.length; i++) {
       if (list[i]['nodeId'] == id) {
         print("Trovato ID nella ricerca");
         if (list[i]['nodeCategory'] != null && list[i]['nodeCategory'].length != 0) {
-          openTreeToUpdateSon(list[i]['nodeCategory'],id_business, rootId);
+          openTreeToUpdateSon(list[i]['nodeCategory'], id_business, rootId, level, oldRootId);
         }
       }
       if (list[i]['nodeCategory'] != null) {
-        seekNode(list[i]['nodeCategory'], id,id_business,rootId);
+        seekNode(list[i]['nodeCategory'], id, id_business, rootId, level, oldRootId);
       }
     }
   }
 }
 
-openTreeToUpdateSon(List<dynamic> list,  String id_business, String rootId) async {
-  CategoryState cat;
+openTreeToUpdateSon(List<dynamic> list, String id_business, String rootId, int level, String oldRootId) async {
   for (int i = 0; i < list.length; i++) {
-    ///Qui ho il figlio da aggiornare
-    var query = await FirebaseFirestore.instance
+    ///Qui ho il figlio da aggiornare nelle categorie
+    FirebaseFirestore.instance
         .collection("business")
         .doc(id_business)
         .collection("category")
-        .where("id", isEqualTo: list[i]['nodeId']).limit(1)
-        .get();
+        .doc(list[i]['nodeId'])
+        .update({"categoryRootId": rootId, "parent.parentRootId": rootId, "level": level + 1});
 
-    print("Firebase-Read : categoryServiceEpic");
+    print("Root Nuova " + rootId);
+    print("Root Vecchia " + oldRootId);
+    print("Id  categoria da cercare " + list[i]['nodeId']);
 
-    query.docs.forEach((snapshot) {
-      cat = CategoryState.fromJson(snapshot.data());
+    ///Qui ho il figlio da aggiornare nei servizi
+    QuerySnapshot snapshot = await FirebaseFirestore.instance.collection("service").where("categoryId", arrayContains: list[i]['nodeId']).get();
+
+    ///Qui ho agganciato i servizi con categoryId a cui è variato il categoryRootId
+    snapshot.docs.forEach((element) {
+      FirebaseFirestore.instance.collection("service").doc(element.id).update({
+        "categoryRootId": FieldValue.arrayUnion([rootId]),
+      });
+      FirebaseFirestore.instance.collection("service").doc(element.id).update({
+        "categoryRootId": FieldValue.arrayRemove([oldRootId]),
+      });
     });
-    if(cat.categoryRootId != rootId){
 
-
-      cat.categoryRootId = rootId;
-      cat.parent.parentRootId = rootId;
-
-      FirebaseFirestore.instance
-          .collection("business")
-          .doc(id_business)
-          .collection("category")
-          .doc(cat.id)
-          .update(cat.toJson());
-
-      print("Firebase-Update : categoryServiceEpic");
-
-    }
-
+    print("Firebase-Update : categoryServiceEpic");
 
     if (list[i]['nodeCategory'] != null) {
-      openTreeToUpdateSon(list[i]['nodeCategory'],id_business, rootId);
+      openTreeToUpdateSon(list[i]['nodeCategory'], id_business, rootId, level, oldRootId);
     }
   }
 }
@@ -451,23 +467,52 @@ openTreeToUpdateSon(List<dynamic> list,  String id_business, String rootId) asyn
 class CategoryUpdateService implements EpicClass<AppState> {
   CategoryState categoryState;
   StatisticsState statisticsState;
+
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    return actions.whereType<UpdateCategory>().asyncMap((event) async{
+    return actions.whereType<UpdateCategory>().asyncMap((event) async {
       categoryState = event.categoryState;
-      DocumentReference docReference = FirebaseFirestore.instance /// 1 READ - 1 DOC
+      DocumentReference docReference = FirebaseFirestore.instance
+
+          /// 1 READ - 1 DOC
           .collection('business')
           .doc(store.state.business.id_firestore)
           .collection('category')
           .doc();
       debugPrint("CATEGORY_SERVICE_EPIC - CategoryUpdateService => CategoryService updating category: " + categoryState.name);
 
-      categoryState.categoryRootId = categoryState.parent.parentRootId;
-      ///Va controllato se ha figli, e se li ha vanno aggiornati i categoryRootId e parent.parentRootId a cascata
-      seekNode(store.state.categoryTree.categoryNodeList, categoryState.id, store.state.business.id_firestore, categoryState.categoryRootId);
+      String oldRootId = categoryState.categoryRootId;
 
-      if (event.categoryState.fileToUpload != null){
-        categoryState = await uploadFile(event.categoryState.fileToUpload, event.categoryState).catchError((error, stackTrace) { /// ? WRITE
+      if (categoryState.parent.id == "no_parent") {
+        categoryState.categoryRootId = categoryState.id;
+      } else {
+        categoryState.categoryRootId = categoryState.parent.parentRootId;
+      }
+
+      ///Aggiorno servizi associati a questa categoria
+
+      ///Qui ho la categoria da aggiornare nei servizi
+      QuerySnapshot snapshot = await FirebaseFirestore.instance.collection("service").where("categoryId", arrayContains: categoryState.id).get();
+
+      ///Qui ho agganciato i servizi con categoryId a cui è variato il categoryRootId
+      snapshot.docs.forEach((element) {
+        FirebaseFirestore.instance.collection("service").doc(element.id).update({
+          "categoryRootId": FieldValue.arrayUnion([categoryState.categoryRootId]),
+        });
+        FirebaseFirestore.instance.collection("service").doc(element.id).update({
+          "categoryRootId": FieldValue.arrayRemove([oldRootId]),
+        });
+      });
+
+
+      ///Va controllato se ha figli, e se li ha vanno aggiornati i categoryRootId e parent.parentRootId e livello a cascata
+      seekNode(store.state.categoryTree.categoryNodeList, categoryState.id, store.state.business.id_firestore, categoryState.categoryRootId, categoryState.level, oldRootId);
+
+
+
+      if (event.categoryState.fileToUpload != null) {
+        categoryState = await uploadFile(event.categoryState.fileToUpload, event.categoryState).catchError((error, stackTrace) {
+          /// ? WRITE
           debugPrint("CATEGORY_SERVICE_EPIC - CategoryUpdateService => category_service_epic: uploadFiles failed: $error");
           return null;
         });
@@ -475,7 +520,9 @@ class CategoryUpdateService implements EpicClass<AppState> {
         debugPrint('CATEGORY_SERVICE_EPIC - CategoryUpdateService => category_service_epic: categoryImage in: ${categoryState.categoryImage}');
       }
 
-      await FirebaseFirestore.instance /// 1 WRITE
+      await FirebaseFirestore.instance
+
+          /// 1 WRITE
           .collection("business")
           .doc(event.categoryState.businessId)
           .collection("category")
@@ -497,34 +544,37 @@ class CategoryUpdateService implements EpicClass<AppState> {
       statisticsState.categoryUpdateServiceRead = reads;
       statisticsState.categoryUpdateServiceWrite = writes;
       statisticsState.categoryUpdateServiceDocuments = documents;
-
     }).expand((element) => [
-      UpdatedCategory(categoryState),
-      UpdateStatistics(statisticsState),
-      NavigatePushAction(AppRoutes.categories),
-    ]);
+          UpdatedCategory(categoryState),
+          UpdateStatistics(statisticsState),
+          NavigatePushAction(AppRoutes.categories),
+        ]);
   }
 }
+
+///Epic che aggiorna un categoria figlia quando viene spostato il padre
 
 class CategoryCreateService implements EpicClass<AppState> {
   CategoryState categoryState;
   StatisticsState statisticsState;
+
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    return actions.whereType<CreateCategory>().asyncMap((event) async{
+    return actions.whereType<CreateCategory>().asyncMap((event) async {
       categoryState = event.categoryState;
-      DocumentReference docReference = FirebaseFirestore.instance /// 1 READ - 1 DOC
+      DocumentReference docReference = FirebaseFirestore.instance
+
+          /// 1 READ - 1 DOC
           .collection('business')
           .doc(store.state.business.id_firestore)
           .collection('category')
           .doc();
 
       store.state.category.id = docReference.id;
-      if(categoryState.parent.id == 'no_parent'){
+      if (categoryState.parent.id == 'no_parent') {
         categoryState.categoryRootId = docReference.id;
         categoryState.parent.parentRootId = docReference.id;
-      }
-      else{
+      } else {
         categoryState.categoryRootId = categoryState.parent.parentRootId;
       }
       //categoryState.categoryImage = store.state.category.categoryImage;
@@ -533,8 +583,9 @@ class CategoryCreateService implements EpicClass<AppState> {
       ServiceState serviceState = ServiceState().toEmpty();
       categoryState.categorySnippet.mostSoldService = serviceState;
 
-      if (event.categoryState.fileToUpload != null){
-        categoryState = await uploadFile(event.categoryState.fileToUpload, event.categoryState).catchError((error, stackTrace) { /// ? WRITE
+      if (event.categoryState.fileToUpload != null) {
+        categoryState = await uploadFile(event.categoryState.fileToUpload, event.categoryState).catchError((error, stackTrace) {
+          /// ? WRITE
           debugPrint("CATEGORY_SERVICE_EPIC - CategoryCreateService => Category_service_epic: uploadFiles failed: $error");
           return null;
         });
@@ -542,7 +593,8 @@ class CategoryCreateService implements EpicClass<AppState> {
         debugPrint('CATEGORY_SERVICE_EPIC - CategoryCreateService => category_service_epic: categoryImage in: ${categoryState.categoryImage}');
       }
 
-      await docReference.set(categoryState.toJson()).then((value) async{ /// 1 WRITE
+      await docReference.set(categoryState.toJson()).then((value) async {
+        /// 1 WRITE
         debugPrint("CATEGORY_SERVICE_EPIC - CategoryCreateService => CategoryService has created new category " + docReference.id);
       }).catchError((error) {
         debugPrint('CATEGORY_SERVICE_EPIC - CategoryCreateService => ERROR: $error');
@@ -562,12 +614,11 @@ class CategoryCreateService implements EpicClass<AppState> {
       statisticsState.categoryCreateServiceRead = reads;
       statisticsState.categoryCreateServiceWrite = writes;
       statisticsState.categoryCreateServiceDocuments = documents;
-
     }).expand((element) => [
-      CreatedCategory(categoryState),
-      UpdateStatistics(statisticsState),
-      NavigatePushAction(AppRoutes.categories),
-    ]);
+          CreatedCategory(categoryState),
+          UpdateStatistics(statisticsState),
+          NavigatePushAction(AppRoutes.categories),
+        ]);
   }
 }
 
@@ -582,11 +633,14 @@ Future<CategoryState> uploadFile(OptimumFileToUpload fileToUpload, CategoryState
 
 class CategoryDeleteService implements EpicClass<AppState> {
   StatisticsState statisticsState;
+
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<DeleteCategory>().asyncMap((event) async {
       String idCategoryToDelete = event.idCategory;
-      await FirebaseFirestore.instance /// 1 DELETE
+      await FirebaseFirestore.instance
+
+          /// 1 DELETE
           .collection('business')
           .doc(store.state.business.id_firestore)
           .collection('category')
@@ -602,9 +656,8 @@ class CategoryDeleteService implements EpicClass<AppState> {
       statisticsState.categoryDeleteServiceRead = reads;
       statisticsState.categoryDeleteServiceWrite = writes;
       statisticsState.categoryDeleteServiceDocuments = documents;
-
     }).expand((element) => [
-      UpdateStatistics(statisticsState),
-    ]);
+          UpdateStatistics(statisticsState),
+        ]);
   }
 }

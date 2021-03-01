@@ -82,7 +82,14 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
       StoreProvider.of<AppState>(context).dispatch(SetCategoryLevel(0));
       StoreProvider.of<AppState>(context).dispatch(SetCategoryParent(parentInitial));
     } else if (list != null && list.length > 0) {
-      StoreProvider.of<AppState>(context).dispatch(SetCategoryLevel(contentSelectDrop.level + 1));
+      int nestedLevel = 0;
+      if(contentSelectDrop.id == 'no_parent'){
+        StoreProvider.of<AppState>(context).dispatch(SetCategoryLevel(0));
+      }
+      else{
+        StoreProvider.of<AppState>(context).dispatch(SetCategoryLevel(contentSelectDrop.level + 1));
+        nestedLevel = contentSelectDrop.level + 1;
+      }
       StoreProvider.of<AppState>(context).dispatch(SetCategoryParent(contentSelectDrop));
     }
   }
@@ -561,19 +568,13 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
 
                                         Parent newCategoryParent = selectedParentCategory;
                                         print("Aggiorno " + newCategoryParent.name);
+                                        ///aggiorno singola categoria
                                         StoreProvider.of<AppState>(context).dispatch(new UpdateCategory(snapshot.category));
 
+                                        
+                                        ///aggiorno category tree
                                         StoreProvider.of<AppState>(context).dispatch(new UpdateCategoryTree(newCategoryParent));
 
-                                        /*Future.delayed(const Duration(milliseconds: 500), () {
-                                          Navigator.pushReplacement(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) => ManageCategory(
-                                                  edited: true,
-                                                )),
-                                          );
-                                        });*/
                                       } else {
                                         showDialog(
                                           context: context,
