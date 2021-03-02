@@ -69,6 +69,14 @@ class _BookingPageState extends State<BookingPage> {
   CategoryListState categoryListState;
   List<CategoryState> categoryList = [];
 
+  List<CategoryState> row1 = [];
+  List<CategoryState> row2 = [];
+  List<CategoryState> row3 = [];
+  List<CategoryState> row4 = [];
+
+  List<CategoryState> rowLess1 = [];
+  List<CategoryState> rowLess2 = [];
+
   bool sameMonth = false;
   String searched = '';
   OrderState order = OrderState(itemList: List<OrderEntry>(), date: DateTime.now(), position: "", total: 0.0, business: BusinessSnippet().toEmpty(), user: UserSnippet().toEmpty(), businessId: "");
@@ -97,12 +105,108 @@ class _BookingPageState extends State<BookingPage> {
   String _selected = '';
   bool isManagerOrAbove = false;
 
+  void grid(List<CategoryState> l){
+    setState(() {
+      if(l.length == 1){
+        row1 = [l[0]];
+        rowLess1 = [l[0]];
+      }else if(l.length == 2){
+        row1 = [l[0], l[1]];
+        rowLess1 = [l[0], l[1]];
+      }else if(l.length == 3){
+        row1 = [l[0], l[1], l[2]];
+        rowLess1 = [l[0], l[1], l[2]];
+      }else if(l.length == 4){
+        row1 = [l[0], l[1]];
+        row2 = [l[2], l[3]];
+        rowLess1 = [l[0], l[1]];
+        rowLess2 = [l[2], l[3]];
+      }else if(l.length == 5){
+        row1 = [l[0], l[1], l[2]];
+        row2 = [l[3], l[4]];
+        rowLess1 = [l[0], l[1], l[2]];
+        rowLess2 = [l[3], l[4]];
+      }else if(l.length == 6){
+        row1 = [l[0], l[1], l[2]];
+        row2 = [l[3], l[4], l[5]];
+        rowLess1 = [l[0], l[1], l[2]];
+        rowLess2 = [l[3], l[4]];
+      }else if(l.length == 7){
+        row1 = [l[0], l[1], l[2]];
+        row2 = [l[3], l[4]];
+        row3 = [l[5], l[6]];
+        rowLess1 = [l[0], l[1], l[2]];
+        rowLess2 = [l[3], l[4]];
+      }else if(l.length == 8){
+        row1 = [l[0], l[1], l[2]];
+        row2 = [l[3], l[4]];
+        row3 = [l[5], l[6], l[7]];
+        rowLess1 = [l[0], l[1], l[2]];
+        rowLess2 = [l[3], l[4]];
+      }else if(l.length == 9){
+        row1 = [l[0], l[1], l[2]];
+        row2 = [l[3], l[4]];
+        row3 = [l[5], l[6]];
+        row4 = [l[7], l[8]];
+        rowLess1 = [l[0], l[1], l[2]];
+        rowLess2 = [l[3], l[4]];
+      }else{
+        row1 = [l[0], l[1], l[2]];
+        row2 = [l[3], l[4]];
+        row3 = [l[5], l[6], l[7]];
+        row4 = [l[8], l[9]];
+        rowLess1 = [l[0], l[1], l[2]];
+        rowLess2 = [l[3], l[4]];
+      }
+    });
+  }
+
+  Widget inspiration(List<CategoryState> list){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        ///First showcase for each Row
+        list.length >= 1 ? Flexible(
+          flex: 1,
+          child: FindYourInspirationCardWidget(
+              list.length <= 2 ? 26 : 18, list.length <= 2 ? 26 : 18, list[0], true
+          ),
+        ) : Container(),
+        ///Second showcase for each Row
+        list.length >= 2 ? Flexible(
+          flex: 1,
+          child: FindYourInspirationCardWidget(
+              list.length <= 2 ? 26 : 18, list.length <= 2 ? 26 : 18, list[1], true
+          ),
+        ) : Container(),
+        ///Third showcase for each Row
+        list.length == 3 ? Flexible(
+          flex: 1,
+          child: FindYourInspirationCardWidget(
+              list.length <= 2 ? 26 : 18, list.length <= 2 ? 26 : 18, list[2], true
+          ),
+        ) : Container(),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
     SizeConfig().init(context);
     return StoreConnector<AppState, AppState>(
       converter: (store) => store.state,
+      onInit: (store){
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          // no
+          //grid(store.state.categoryList.categoryListState);
+          List<CategoryState> l = store.state.categoryList.categoryListState;
+          setState(() {
+            if(l.isNotEmpty)
+              grid(l);
+          });
+        });
+      },
       builder: (context, snapshot) {
 
         bookingState = snapshot.booking;
@@ -111,6 +215,7 @@ class _BookingPageState extends State<BookingPage> {
         serviceList = serviceListState.serviceListState;
         categoryListState = snapshot.categoryList;
         categoryList = categoryListState.categoryListState;
+
         debugPrint('UI_U_BookingPage: category list lenght => ${categoryList.length}');
         //debugPrint('UI_U_BookingPage: business logo => ${businessState.logo}');
         //debugPrint('UI_U_BookingPage: service list lenght => ${serviceList.length}');
@@ -713,103 +818,23 @@ class _BookingPageState extends State<BookingPage> {
                                       ],
                                     ),
                                   ),
-                                  categoryList.length != 0 ?
                                       ///Category List
-                                  Container(
+                                  categoryList.isNotEmpty ? Container(
                                     margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 2, right: SizeConfig.safeBlockHorizontal * 2),
                                     //height: SizeConfig.safeBlockVertical * 50,
                                     width: double.infinity,
-                                    child: categoryList.length % 4 == 0 ?
-                                    Column(
+                                    child: Column(
                                       children: [
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            ///Fourth showcase
-                                            categoryList.length >= 1 ? Flexible(
-                                              flex: 1,
-                                              child: FindYourInspirationCardWidget(
-                                                  28,28, categoryList[0].categoryImage, categoryList[0].name, true
-                                              ),
-                                            ) : Container(),
-                                            ///Fifth showcase
-                                            categoryList.length >= 2 ? Flexible(
-                                              flex: 1,
-                                              child: FindYourInspirationCardWidget(
-                                                  28,28, categoryList[1].categoryImage, categoryList[1].name, true
-                                              ),
-                                            ) : Container(),
-                                          ],
-                                        ),
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            ///Fourth showcase
-                                            categoryList.length >= 3 ? Flexible(
-                                              flex: 1,
-                                              child: FindYourInspirationCardWidget(
-                                                  28,28, categoryList[2].categoryImage, categoryList[2].name, true
-                                              ),
-                                            ) : Container(),
-                                            ///Fifth showcase
-                                            categoryList.length >= 4 ? Flexible(
-                                              flex: 1,
-                                              child: FindYourInspirationCardWidget(
-                                                  28,28, categoryList[3].categoryImage, categoryList[3].name, true
-                                              ),
-                                            ) : Container(),
-                                          ],
-                                        ),
+                                        row1.isNotEmpty ?
+                                         inspiration(row1) : Container(),
+                                        row2.isNotEmpty ?
+                                        inspiration(row2)  : Container(),
+                                        showAll && row3.isNotEmpty ?
+                                        inspiration(row3)  : Container(),
+                                        showAll && row4.isNotEmpty ?
+                                        inspiration(row4): Container(),
                                       ],
-                                    ) :
-                                    Column(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            ///First showcase
-                                            categoryList.length >= 1 ?  Flexible(
-                                              flex: 1,
-                                              child: FindYourInspirationCardWidget(
-                                                  18,18, categoryList[0].categoryImage, categoryList[0].name, true
-                                              ),
-                                            ) : Container(),
-                                            ///Second showcase
-                                            categoryList.length >= 2 ? Flexible(
-                                              flex: 1,
-                                              child: FindYourInspirationCardWidget(
-                                                  18,18, categoryList[1].categoryImage, categoryList[1].name, true
-                                              ),
-                                            ) : Container(),
-                                            ///third showcase
-                                            categoryList.length >= 3 ? Flexible(
-                                              flex: 1,
-                                              child: FindYourInspirationCardWidget(
-                                                  18,18, categoryList[2].categoryImage, categoryList[2].name, true
-                                              ),
-                                            ) : Container()
-                                          ],
-                                        ),
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            ///Fourth showcase
-                                            categoryList.length >= 4 ? Flexible(
-                                              flex: 1,
-                                              child: FindYourInspirationCardWidget(
-                                                  28,28, categoryList[3].categoryImage, categoryList[3].name, true
-                                              ),
-                                            ) : Container(),
-                                            ///Fifth showcase
-                                            categoryList.length >= 5 ? Flexible(
-                                              flex: 1,
-                                              child: FindYourInspirationCardWidget(
-                                                  28,28, categoryList[4].categoryImage, categoryList[4].name, true
-                                              ),
-                                            ) : Container(),
-                                          ],
-                                        )
-                                      ],
-                                    ),
+                                    )
                                   ) :
                                       ///No Category
                                   Container(

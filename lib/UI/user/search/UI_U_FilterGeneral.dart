@@ -359,7 +359,8 @@ class _FilterGeneralState extends State<FilterGeneral> {
                           Flexible(
                             child: Container(
                               margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
-                              child: tmpServiceList.isNotEmpty ?
+                              child:
+                              tmpServiceList.isNotEmpty ?
                               ListView.builder(
                                 itemCount: tmpServiceList.length,
                                 shrinkWrap: true,
@@ -399,6 +400,7 @@ class _FilterGeneralState extends State<FilterGeneral> {
                                         });
                                         undoDeletion(index, service);
                                       }
+
                                     },
                                     child: Column(
                                       children: [
@@ -411,7 +413,7 @@ class _FilterGeneralState extends State<FilterGeneral> {
                                       ],
                                     ),
                                     background: Container(
-                                      color: BuytimeTheme.AccentRed.withOpacity(.5),
+                                      color: BuytimeTheme.AccentRed,
                                       //margin: EdgeInsets.symmetric(horizontal: 15),
                                       alignment: Alignment.centerLeft,
                                       child: Container(
@@ -424,7 +426,7 @@ class _FilterGeneralState extends State<FilterGeneral> {
                                       ),
                                     ),
                                     secondaryBackground: Container(
-                                      color: BuytimeTheme.ActionButton.withOpacity(.5),
+                                      color: BuytimeTheme.UserPrimary,
                                       //margin: EdgeInsets.symmetric(horizontal: 15),
                                       alignment: Alignment.centerRight,
                                       child: Container(
@@ -438,7 +440,8 @@ class _FilterGeneralState extends State<FilterGeneral> {
                                     ),
                                   );
                                 },
-                              ): _searchController.text.isNotEmpty ?
+                              ):
+                              _searchController.text.isNotEmpty ?
                               Container(
                                 height: SizeConfig.safeBlockVertical * 8,
                                 margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
@@ -461,7 +464,32 @@ class _FilterGeneralState extends State<FilterGeneral> {
                                       ),
                                     )
                                 ),
-                              ) : Container(),
+                              ) :
+                              tmpServiceList.isEmpty ?
+                              Container(
+                                height: SizeConfig.safeBlockVertical * 8,
+                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                decoration: BoxDecoration(
+                                    color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2),
+                                    borderRadius: BorderRadius.circular(10)
+                                ),
+                                child: Center(
+                                    child: Container(
+                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 4),
+                                      alignment: Alignment.centerLeft,
+                                      child:  Text(
+                                        'No service found', //TODO Make it Global
+                                        style: TextStyle(
+                                            fontFamily: BuytimeTheme.FontFamily,
+                                            color: BuytimeTheme.TextGrey,
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 16
+                                        ),
+                                      ),
+                                    )
+                                ),
+                              ) :
+                              Container(),
                             ),
                           )
                         ],

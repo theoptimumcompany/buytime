@@ -2,6 +2,7 @@ import 'package:Buytime/UI/management/business/UI_M_business.dart';
 import 'package:Buytime/UI/management/business/UI_M_business_list.dart';
 import 'package:Buytime/UI/management/category/UI_M_manage_category.dart';
 import 'package:Buytime/UI/management/invite/UI_M_BookingDetails.dart';
+import 'package:Buytime/UI/management/invite/UI_M_BookingList.dart';
 import 'package:Buytime/UI/management/service/UI_M_service_list.dart';
 import 'package:Buytime/UI/user/booking/UI_U_BookingPage.dart';
 import 'package:Buytime/UI/user/booking/UI_U_ConfirmBooking.dart';
@@ -179,6 +180,8 @@ class Buytime extends StatelessWidget {
         return FabRoute(MyBookings(), settings: settings);
       case AppRoutes.confirmOrder:
         return FabRoute(ConfirmOrder(), settings: settings);
+      case AppRoutes.bookingList:
+        return FabRoute(BookingList(), settings: settings);
     }
   }
 

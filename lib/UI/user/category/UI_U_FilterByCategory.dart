@@ -25,7 +25,8 @@ class FilterByCategory extends StatefulWidget {
 
   static String route = '/filterByCategory';
   bool fromBookingPage;
-  FilterByCategory({Key key, this.fromBookingPage}) : super(key: key);
+  CategoryState categoryState;
+  FilterByCategory({Key key, this.fromBookingPage, this.categoryState}) : super(key: key);
   @override
   _FilterByCategoryState createState() => _FilterByCategoryState();
 }
@@ -36,6 +37,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
   List<Widget> subCategories = [];
   CategoryListState categoryListState;
   List<CategoryState> categoryList = [];
+  List<CategoryState> subCategoryList = [];
   List<ServiceState> serviceState = [];
   List<ServiceState> tmpServiceList = [];
   String searched = '';
@@ -44,6 +46,13 @@ class _FilterByCategoryState extends State<FilterByCategory> {
   OrderState order = OrderState(itemList: List<OrderEntry>(), date: DateTime.now(), position: "", total: 0.0, business: BusinessSnippet().toEmpty(), user: UserSnippet().toEmpty(), businessId: "");
 
   bool showAll = false;
+  List<CategoryState> row1 = [];
+  List<CategoryState> row2 = [];
+  List<CategoryState> row3 = [];
+  List<CategoryState> row4 = [];
+
+  List<CategoryState> rowLess1 = [];
+  List<CategoryState> rowLess2 = [];
 
   @override
   void initState() {
@@ -74,6 +83,91 @@ class _FilterByCategoryState extends State<FilterByCategory> {
     });
   }
 
+  void grid(List<CategoryState> l){
+    setState(() {
+      if(l.length == 1){
+        row1 = [l[0]];
+        rowLess1 = [l[0]];
+      }else if(l.length == 2){
+        row1 = [l[0], l[1]];
+        rowLess1 = [l[0], l[1]];
+      }else if(l.length == 3){
+        row1 = [l[0], l[1], l[2]];
+        rowLess1 = [l[0], l[1], l[2]];
+      }else if(l.length == 4){
+        row1 = [l[0], l[1]];
+        row2 = [l[2], l[3]];
+        rowLess1 = [l[0], l[1]];
+        rowLess2 = [l[2], l[3]];
+      }else if(l.length == 5){
+        row1 = [l[0], l[1], l[2]];
+        row2 = [l[3], l[4]];
+        rowLess1 = [l[0], l[1], l[2]];
+        rowLess2 = [l[3], l[4]];
+      }else if(l.length == 6){
+        row1 = [l[0], l[1], l[2]];
+        row2 = [l[3], l[4], l[5]];
+        rowLess1 = [l[0], l[1], l[2]];
+        rowLess2 = [l[3], l[4]];
+      }else if(l.length == 7){
+        row1 = [l[0], l[1], l[2]];
+        row2 = [l[3], l[4]];
+        row3 = [l[5], l[6]];
+        rowLess1 = [l[0], l[1], l[2]];
+        rowLess2 = [l[3], l[4]];
+      }else if(l.length == 8){
+        row1 = [l[0], l[1], l[2]];
+        row2 = [l[3], l[4]];
+        row3 = [l[5], l[6], l[7]];
+        rowLess1 = [l[0], l[1], l[2]];
+        rowLess2 = [l[3], l[4]];
+      }else if(l.length == 9){
+        row1 = [l[0], l[1], l[2]];
+        row2 = [l[3], l[4]];
+        row3 = [l[5], l[6]];
+        row4 = [l[7], l[8]];
+        rowLess1 = [l[0], l[1], l[2]];
+        rowLess2 = [l[3], l[4]];
+      }else{
+        row1 = [l[0], l[1], l[2]];
+        row2 = [l[3], l[4]];
+        row3 = [l[5], l[6], l[7]];
+        row4 = [l[8], l[9]];
+        rowLess1 = [l[0], l[1], l[2]];
+        rowLess2 = [l[3], l[4]];
+      }
+    });
+  }
+
+  Widget inspiration(List<CategoryState> list){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        ///First showcase for each Row
+        list.length >= 1 ? Flexible(
+          flex: 1,
+          child: FindYourInspirationCardWidget(
+              list.length <= 2 ? 28 : 18, list.length <= 2 ? 28 : 18, list[0], false
+          ),
+        ) : Container(),
+        ///Second showcase for each Row
+        list.length >= 2 ? Flexible(
+          flex: 1,
+          child: FindYourInspirationCardWidget(
+              list.length <= 2 ? 28 : 18, list.length <= 2 ? 28 : 18, list[1], false
+          ),
+        ) : Container(),
+        ///Third showcase for each Row
+        list.length == 3 ? Flexible(
+          flex: 1,
+          child: FindYourInspirationCardWidget(
+              list.length <= 2 ? 28 : 18, list.length <= 2 ? 28 : 18, list[2], false
+          ),
+        ) : Container(),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
@@ -85,13 +179,40 @@ class _FilterByCategoryState extends State<FilterByCategory> {
         WidgetsBinding.instance.addPostFrameCallback((_) { // no
           //search(store.state.serviceList.serviceListState);
           setState(() {
-            tmpServiceList.addAll(store.state.serviceList.serviceListState);
+
+            List<CategoryState> l = [];
+            l.addAll(store.state.categoryList.categoryListState);
+
+            l.remove(widget.categoryState);
+            if(l.isNotEmpty){
+              grid(l);
+              l.forEach((element) {
+                if(element.parent != null && element.parent.id == widget.categoryState.id){
+                  subCategoryList.add(element);
+                }
+              });
+            }
+
+
           });
         });
       },
       builder: (context, snapshot) {
+        List<ServiceState> s = [];
+
         categoryListState = snapshot.categoryList;
         categoryList = categoryListState.categoryListState;
+        if(_searchController.text.isEmpty){
+          tmpServiceList.clear();
+          s.addAll(snapshot.serviceList.serviceListState);
+          s.forEach((element) {
+            element.categoryId.forEach((element2) {
+              if(element2 == widget.categoryState.id){
+                tmpServiceList.add(element);
+              }
+            });
+          });
+        }
         order = snapshot.order.itemList != null ? (snapshot.order.itemList.length > 0 ? snapshot.order : order) : order;
         return  GestureDetector(
           onTap: (){
@@ -130,7 +251,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                     child: Padding(
                       padding: const EdgeInsets.only(left: 10.0),
                       child: Text(
-                        'Buytime', //TODO Make it Global
+                        widget.categoryState.name, //TODO Make it Global
                         textAlign: TextAlign.start,
                         style: TextStyle(
                           fontSize: SizeConfig.safeBlockHorizontal * 5,
@@ -220,7 +341,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                           child: Container(
                             margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
                             padding: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2),
-                            height: SizeConfig.safeBlockVertical * 25,
+                            height: subCategoryList.isNotEmpty ? SizeConfig.safeBlockVertical * 25 : SizeConfig.safeBlockVertical * 17,
                             color: BuytimeTheme.BackgroundWhite,
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.start,
@@ -240,31 +361,32 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                     ),
                                   ),
                                 ),
-                                categoryList.isNotEmpty ?
-                                Flexible(
-                                  child: Container(
-                                    height: SizeConfig.safeBlockVertical * 18,
-                                    child: CustomScrollView(
-                                        shrinkWrap: true,
-                                        scrollDirection: Axis.horizontal,
-                                        slivers: [
-                                          SliverList(
-                                            delegate: SliverChildBuilderDelegate((context, index) {
-                                              //MenuItemModel menuItem = menuItems.elementAt(index);
-                                              CategoryState category = categoryList.elementAt(index);
-                                              return Container(
-                                                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 2),
-                                                child: FindYourInspirationCardWidget(
-                                                    16,16, category.categoryImage, category.name, false
-                                                ),
-                                              );
-                                            },
-                                              childCount: categoryList.length,
-                                            ),
+                                subCategoryList.isNotEmpty ?
+                                    ///List
+                                Container(
+                                  height: SizeConfig.safeBlockVertical * 18,
+                                  width: double.infinity,
+                                  child: CustomScrollView(
+                                      shrinkWrap: true,
+                                      scrollDirection: Axis.horizontal,
+                                      slivers: [
+                                        SliverList(
+                                          delegate: SliverChildBuilderDelegate((context, index) {
+                                            //MenuItemModel menuItem = menuItems.elementAt(index);
+                                            CategoryState category = subCategoryList.elementAt(index);
+                                            return Container(
+                                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 2),
+                                              child: FindYourInspirationCardWidget(
+                                                  16,16, category, false
+                                              ),
+                                            );
+                                          },
+                                            childCount: subCategoryList.length,
                                           ),
-                                        ]),
-                                  ),
+                                        ),
+                                      ]),
                                 ) :
+                                    ///No List
                                 Container(
                                   height: SizeConfig.safeBlockVertical * 8,
                                   margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
@@ -277,7 +399,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                         margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 4),
                                         alignment: Alignment.centerLeft,
                                         child:  Text(
-                                          'No active service found', //TODO Make it Global
+                                          'No sub category found', //TODO Make it Global
                                           style: TextStyle(
                                               fontFamily: BuytimeTheme.FontFamily,
                                               color: BuytimeTheme.TextGrey,
@@ -455,7 +577,8 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                 Flexible(
                                   child: Container(
                                     margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
-                                    child: tmpServiceList.isNotEmpty ?
+                                    child:
+                                    tmpServiceList.isNotEmpty ?
                                     ListView.builder(
                                       itemCount: tmpServiceList.length,
                                       shrinkWrap: true,
@@ -508,7 +631,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                             ],
                                           ),
                                           background: Container(
-                                            color: BuytimeTheme.AccentRed.withOpacity(.5),
+                                            color: BuytimeTheme.AccentRed,
                                             //margin: EdgeInsets.symmetric(horizontal: 15),
                                             alignment: Alignment.centerLeft,
                                             child: Container(
@@ -521,7 +644,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                             ),
                                           ),
                                           secondaryBackground: Container(
-                                            color: BuytimeTheme.ActionButton.withOpacity(.5),
+                                            color: BuytimeTheme.UserPrimary,
                                             //margin: EdgeInsets.symmetric(horizontal: 15),
                                             alignment: Alignment.centerRight,
                                             child: Container(
@@ -535,7 +658,8 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                           ),
                                         );
                                       },
-                                    ): _searchController.text.isNotEmpty ?
+                                    ):
+                                    _searchController.text.isNotEmpty ?
                                     Container(
                                       height: SizeConfig.safeBlockVertical * 8,
                                       margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
@@ -558,7 +682,32 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                             ),
                                           )
                                       ),
-                                    ) : Container(),
+                                    ) :
+                                    tmpServiceList.isEmpty ?
+                                    Container(
+                                      height: SizeConfig.safeBlockVertical * 8,
+                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                      decoration: BoxDecoration(
+                                          color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2),
+                                          borderRadius: BorderRadius.circular(10)
+                                      ),
+                                      child: Center(
+                                          child: Container(
+                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 4),
+                                            alignment: Alignment.centerLeft,
+                                            child:  Text(
+                                              'No service found', //TODO Make it Global
+                                              style: TextStyle(
+                                                  fontFamily: BuytimeTheme.FontFamily,
+                                                  color: BuytimeTheme.TextGrey,
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 16
+                                              ),
+                                            ),
+                                          )
+                                      ),
+                                    ) :
+                                    Container(),
                                   ),
                                 ),
                               ],
@@ -636,94 +785,22 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                   margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 2, right: SizeConfig.safeBlockHorizontal * 2),
                                   //height: SizeConfig.safeBlockVertical * 50,
                                   width: double.infinity,
-                                  child: categoryList.length % 4 == 0 ?
-                                  Column(
+                                  child: Column(
                                     children: [
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          ///Fourth showcase
-                                          categoryList.length >= 1 ? Flexible(
-                                            flex: 1,
-                                            child: FindYourInspirationCardWidget(
-                                                28,28, categoryList[0].categoryImage, categoryList[0].name, false
-                                            ),
-                                          ) : Container(),
-                                          ///Fifth showcase
-                                          categoryList.length >= 2 ? Flexible(
-                                            flex: 1,
-                                            child: FindYourInspirationCardWidget(
-                                                28,28, categoryList[1].categoryImage, categoryList[1].name, false
-                                            ),
-                                          ) : Container(),
-                                        ],
-                                      ),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          ///Fourth showcase
-                                          categoryList.length >= 3 ? Flexible(
-                                            flex: 1,
-                                            child: FindYourInspirationCardWidget(
-                                                28,28, categoryList[2].categoryImage, categoryList[2].name, false
-                                            ),
-                                          ) : Container(),
-                                          ///Fifth showcase
-                                          categoryList.length >= 4 ? Flexible(
-                                            flex: 1,
-                                            child: FindYourInspirationCardWidget(
-                                                28,28, categoryList[3].categoryImage, categoryList[3].name, false
-                                            ),
-                                          ) : Container(),
-                                        ],
-                                      ),
-                                    ],
-                                  ) : Column(
-                                    children: [
-                                      Row(
-                                        children: [
-                                          ///First showcase
-                                          categoryList.length >= 1 ?  Flexible(
-                                            flex: 1,
-                                            child: FindYourInspirationCardWidget(
-                                                18,18, categoryList[0].categoryImage, categoryList[0].name, false
-                                            ),
-                                          ) : Container(),
-                                          ///Second showcase
-                                          categoryList.length >= 2 ? Flexible(
-                                            flex: 1,
-                                            child: FindYourInspirationCardWidget(
-                                                18,18, categoryList[1].categoryImage, categoryList[1].name, false
-                                            ),
-                                          ) : Container(),
-                                          ///third showcase
-                                          categoryList.length >= 3 ? Flexible(
-                                            flex: 1,
-                                            child: FindYourInspirationCardWidget(
-                                                18,18, categoryList[2].categoryImage, categoryList[2].name, false
-                                            ),
-                                          ) : Container()
-                                        ],
-                                      ),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          ///Fourth showcase
-                                          categoryList.length >= 4 ? Flexible(
-                                            flex: 1,
-                                            child: FindYourInspirationCardWidget(
-                                                28,28, categoryList[3].categoryImage, categoryList[3].name, false
-                                            ),
-                                          ) : Container(),
-                                          ///Fifth showcase
-                                          categoryList.length >= 5 ? Flexible(
-                                            flex: 1,
-                                            child: FindYourInspirationCardWidget(
-                                                28,28, categoryList[4].categoryImage, categoryList[4].name, false
-                                            ),
-                                          ) : Container(),
-                                        ],
-                                      )
+                                      ///Standard Grid
+                                      !showAll && rowLess1.isNotEmpty ?
+                                      inspiration(rowLess1) : Container(),
+                                      !showAll && rowLess2.isNotEmpty ?
+                                      inspiration(rowLess2) : Container(),
+                                      ///Show all Grid
+                                      showAll && row1.isNotEmpty ?
+                                      inspiration(row1) : Container(),
+                                      showAll && row2.isNotEmpty ?
+                                      inspiration(row2)  : Container(),
+                                      showAll && row3.isNotEmpty ?
+                                      inspiration(row3)  : Container(),
+                                      showAll && row4.isNotEmpty ?
+                                      inspiration(row4): Container(),
                                     ],
                                   ),
                                 ) :

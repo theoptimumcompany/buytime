@@ -81,12 +81,15 @@ class _BookingListServiceListItemState extends State<BookingListServiceListItem>
                               ),
                               ///Description
                               FittedBox(
-                                fit: BoxFit.scaleDown,
+                                fit: BoxFit.fitHeight,
                                 child: Container(
                                   width: SizeConfig.safeBlockHorizontal * 50,
+                                  height: SizeConfig.safeBlockVertical * 10,
                                   margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
                                   child: Text(
                                     widget.serviceState.description ?? '',
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 3,
                                     style: TextStyle(
                                         fontFamily: BuytimeTheme.FontFamily,
                                         color: BuytimeTheme.TextGrey,

@@ -73,6 +73,9 @@ class BookingCreateRequestService implements EpicClass<AppState> {
           .doc(bookingState.booking_id)
           .update(event.bookingState.toJson());
 
+      debugPrint('BOOKING_SERVICE_EPIC => Start date: ${bookingState.start_date}');
+      debugPrint('BOOKING_SERVICE_EPIC => End date: ${bookingState.end_date}');
+
       tmpBookingList = store.state.bookingList.copyWith();
       tmpBookingList.bookingListState.add(bookingState);
 
@@ -246,6 +249,7 @@ class BookingListRequestService implements EpicClass<AppState> {
     }).expand((element) => [
       BookingListReturned(bookingStateList),
       UpdateStatistics(statisticsState),
+      NavigatePushAction(AppRoutes.bookingList)
     ]);
   }
 }

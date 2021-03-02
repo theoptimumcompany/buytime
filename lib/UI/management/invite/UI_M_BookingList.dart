@@ -3,6 +3,7 @@ import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_list_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/reducer/booking_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/booking_reducer.dart';
 import 'package:Buytime/reusable/booking_list_item.dart';
 import 'package:Buytime/reusable/booking_month_list.dart';
 import 'package:Buytime/reusable/custom_bottom_button_widget.dart';
@@ -57,11 +58,18 @@ class _BookingListState extends State<BookingList> {
 
     return StoreConnector<AppState, AppState>(
       converter: (store) => store.state,
-      onInit: (store) => {
-        print("Oninitbookinglist"),
-        store.dispatch(BookingListRequest(store.state.business.id_firestore)),
+      onInit: (store) {
+        print("Oninitbookinglist");
+        List<BookingState> bookings = store.state.bookingList.bookingListState;
+        debugPrint('UI_M_BookingList => BOOKING LENGTH: ${bookings.length}');
+        bookings.forEach((element) {
+          if(element.end_date.isBefore(DateTime.now()) && element.status != 'closed'){
+            debugPrint('UI_M_BookingList => ${element.end_date}');
+            element.status = element.enumToString(BookingStatus.closed);
+            StoreProvider.of<AppState>(context).dispatch(UpdateBooking(element));
+          }
+        });
       },
-
       builder: (context, snapshot) {
         //bookingList.clear();
         bookingsMap.clear();
@@ -70,12 +78,12 @@ class _BookingListState extends State<BookingList> {
         checkedOutBookingsList.clear();
 
         debugPrint('UI_M_BookingList: snapshot: ${snapshot.bookingList.bookingListState.length}');
-        bookingList = snapshot.bookingList.bookingListState;
+        bookingList.addAll(snapshot.bookingList.bookingListState);
 
         bookingList.sort((a,b) => DateFormat('MM').format(a.start_date).compareTo(DateFormat('MM').format(b.start_date)));
         //DateFormat('dd/MM').format(widget.booking.start_date)
         bookingList.forEach((element) {
-          //debugPrint('UI_M_BookingList: snapshot booking status: ${element.user.first.surname} ${element.status}');
+          debugPrint('UI_M_BookingList: snapshot booking status: ${element.user.first.surname} ${element.status}');
           if(element.status != 'closed'){
             bookingsMap.putIfAbsent(DateFormat('MMM yyyy').format(element.start_date), () => []);
             bookingsMap[DateFormat('MMM yyyy').format(element.start_date)].add(element);

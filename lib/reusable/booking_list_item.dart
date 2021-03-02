@@ -82,7 +82,7 @@ class _BookingListItemState extends State<BookingListItem> {
                             Container(
                               margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
                               child: Text(
-                                '${DateFormat('dd/MM').format(widget.booking.start_date)} - ${DateFormat('dd/MM').format(widget.booking.end_date)}',
+                                '${DateFormat('dd/MM').format(widget.booking.start_date.toLocal())} - ${DateFormat('dd/MM').format(widget.booking.end_date.toUtc())}',
                                 style: TextStyle(
                                     fontFamily: BuytimeTheme.FontFamily,
                                     color: BuytimeTheme.TextGrey,

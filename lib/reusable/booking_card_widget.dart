@@ -38,12 +38,16 @@ class _BookingCardWidgetState extends State<BookingCardWidget> {
       }
     });*/
 
-    if(widget.bookingState.end_date.isBefore(DateTime.now())){
+    DateTime time = DateTime.now();
+    time = time.toLocal();
+    time = new DateTime(time.year, time.month, time.day, 0, 0, 0, 0, 0);
+
+    if(widget.bookingState.end_date.isBefore(time)){
       bookingStatus = 'Closed';
       closed = true;
-    }else if(widget.bookingState.start_date.isAtSameMomentAs(DateTime.now()))
+    }else if(widget.bookingState.start_date.isAtSameMomentAs(time))
       bookingStatus = 'Active';
-    else if(widget.bookingState.start_date.isAfter(DateTime.now()))
+    else if(widget.bookingState.start_date.isAfter(time))
       bookingStatus = 'Upcoming';
     else
       bookingStatus = 'Active';

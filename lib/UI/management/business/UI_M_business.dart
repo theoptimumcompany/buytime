@@ -1,4 +1,5 @@
 import 'package:Buytime/UI/management/business/UI_M_edit_business.dart';
+import 'package:Buytime/reblox/reducer/booking_list_reducer.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
 import 'package:Buytime/UI/management/category/UI_M_manage_category.dart';
 import 'package:Buytime/UI/management/category/W_category_list_item.dart';
@@ -339,8 +340,8 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
 
                                         /*final RenderBox box = context.findRenderObject();
                                               Share.share('Share', subject: 'Test', sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);*/
-
-                                        Navigator.push(context, MaterialPageRoute(builder: (context) => BookingList(bookingList: bookingList)));
+                                              StoreProvider.of<AppState>(context).dispatch(BookingListRequest(snapshot.business.id_firestore));
+                                              //Navigator.push(context, MaterialPageRoute(builder: (context) => BookingList(bookingList: bookingList)));
                                       },
                                       child: Container(
                                         height: 70,

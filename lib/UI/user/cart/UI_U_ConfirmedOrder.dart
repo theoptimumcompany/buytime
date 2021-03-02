@@ -1,5 +1,5 @@
-
 import 'package:Buytime/UI/user/UI_U_Tabs.dart';
+import 'package:Buytime/UI/user/booking/UI_U_BookingPage.dart';
 import 'package:Buytime/UI/user/cart/tab/T_room.dart';
 import 'package:Buytime/reblox/model/card/card_state.dart';
 import 'package:Buytime/utils/b_cube_grid_spinner.dart';
@@ -346,7 +346,7 @@ class ConfirmedOrderState extends State<ConfirmedOrder> with SingleTickerProvide
                                           onPressed: () {
                                             //Navigator.push(context, MaterialPageRoute(builder: (context) => ConfirmedOrder()),);
                                             //StoreProvider.of<AppState>(context).state.orderList.orderListState = [];
-                                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ServiceList()));
+                                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BookingPage()));
                                           },
                                           textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
                                           color: BuytimeTheme.UserPrimary,

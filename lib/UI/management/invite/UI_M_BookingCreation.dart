@@ -42,8 +42,8 @@ class _BookingCreationState extends State<BookingCreation> {
   final TextEditingController _numberOfGuestsController = TextEditingController();
 
 
-  DateTime checkIn = DateTime.now();
-  DateTime checkOut = DateTime.now();
+  DateTime checkIn = DateTime.now().toUtc();
+  DateTime checkOut = DateTime.now().toUtc();
 
   String bookingRequest = '';
 
@@ -70,8 +70,10 @@ class _BookingCreationState extends State<BookingCreation> {
       _checkInController.text = DateFormat('dd/MM/yyyy').format(picked.start);
       _checkOutController.text = DateFormat('dd/MM/yyyy').format(picked.end);
       setState(() {
-        checkIn = picked.start;
-        checkOut = picked.end;
+        /*checkIn = picked.start.toUtc();
+        checkOut = picked.end.toUtc();*/
+        checkIn = DateTime(picked.start.year, picked.start.month, picked.start.day, 0, 0, 0, 0, 0).toUtc();
+        checkOut = DateTime(picked.end.year, picked.end.month, picked.end.day, 0, 0, 0, 0, 0).toUtc();
       });
     }
     return null;
@@ -529,6 +531,9 @@ class _BookingCreationState extends State<BookingCreation> {
 
                                                     bookingState.start_date = checkIn;
                                                     bookingState.end_date = checkOut;
+
+                                                    debugPrint('UI_M_BookingCreation => Start date: ${bookingState.start_date}');
+                                                    debugPrint('UI_M_BookingCreation => End date: ${bookingState.end_date}');
 
                                                     bookingState.status = bookingState.enumToString(BookingStatus.created);
 
