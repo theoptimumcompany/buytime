@@ -151,8 +151,10 @@ class BookingState {
         business_name = json['business_name'],
         business_address = json['business_address'],
         guest_number_booked_for = json['guest_number_booked_for'],
-        start_date = json['start_date'].toDate(),
-        end_date = json['end_date'].toDate(),
+        /*start_date = DateTime(json['start_date'].toDate().year,json['start_date'].toDate().month, json['start_date'].toDate().day).toUtc(),
+        end_date = DateTime(json['end_date'].toDate().year,json['end_date'].toDate().month, json['end_date'].toDate().day).toUtc(),*/
+        start_date = DateTime.fromMillisecondsSinceEpoch(json['start_date'].seconds * 1000).toUtc(),
+        end_date = DateTime.fromMillisecondsSinceEpoch(json['end_date'].seconds * 1000).toUtc(),
         booking_code = json['booking_code'],
         userEmail = json["userEmail"] != null ? List<String>.from(json["userEmail"]) : [],
         user = List<UserSnippet>.from(json["user"].map((item) {

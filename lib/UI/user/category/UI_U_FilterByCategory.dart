@@ -193,7 +193,6 @@ class _FilterByCategoryState extends State<FilterByCategory> {
               });
             }
 
-
           });
         });
       },
@@ -213,6 +212,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
             });
           });
         }
+
         order = snapshot.order.itemList != null ? (snapshot.order.itemList.length > 0 ? snapshot.order : order) : order;
         return  GestureDetector(
           onTap: (){

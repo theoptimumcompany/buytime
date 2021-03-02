@@ -113,6 +113,8 @@ class _BookingDetailsState extends State<BookingDetails> {
 
         readDynamicLink(bookingState.booking_code);
 
+        debugPrint('UI_M_BookingDetails => BOOKING CODE: ${bookingState.booking_code}');
+
         return WillPopScope(
           onWillPop: () async => false,
           child: Scaffold(

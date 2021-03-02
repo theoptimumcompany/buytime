@@ -34,11 +34,11 @@ class _BookingListState extends State<BookingList> {
 
   List<BookingState> bookingList = [];
 
-  Map<String, List<BookingState>> bookingsMap = new Map();
-  List<List<BookingState>> bookingsList = [];
+  Map<String, List<BookingState>> bookingMap = new Map();
+  List<List<BookingState>> activeBookingList = [];
 
-  Map<String, List<BookingState>> checkedOutBookingsMap = new Map();
-  List<List<BookingState>> checkedOutBookingsList = [];
+  Map<String, List<BookingState>> checkedOutBookingMap = new Map();
+  List<List<BookingState>> checkedOutBookingList = [];
 
   @override
   void initState() {
@@ -72,43 +72,44 @@ class _BookingListState extends State<BookingList> {
       },
       builder: (context, snapshot) {
         //bookingList.clear();
-        bookingsMap.clear();
-        bookingsList.clear();
-        checkedOutBookingsMap.clear();
-        checkedOutBookingsList.clear();
+        bookingMap.clear();
+        activeBookingList.clear();
+        checkedOutBookingMap.clear();
+        checkedOutBookingList.clear();
 
         debugPrint('UI_M_BookingList: snapshot: ${snapshot.bookingList.bookingListState.length}');
-        bookingList.addAll(snapshot.bookingList.bookingListState);
+        bookingList = snapshot.bookingList.bookingListState;
 
         bookingList.sort((a,b) => DateFormat('MM').format(a.start_date).compareTo(DateFormat('MM').format(b.start_date)));
         //DateFormat('dd/MM').format(widget.booking.start_date)
         bookingList.forEach((element) {
-          debugPrint('UI_M_BookingList: snapshot booking status: ${element.user.first.surname} ${element.status}');
+          debugPrint('UI_M_BookingList: snapshot booking Date Time: ${element.start_date} - ${element.end_date} | ${element.start_date.isUtc} - ${element.end_date.isUtc} | ${element.start_date.timeZoneName} - ${element.end_date.timeZoneName} | ${element.start_date.timeZoneOffset} - ${element.end_date.timeZoneOffset}');
+          //debugPrint('UI_M_BookingList: snapshot booking status: ${element.user.first.surname} ${element.status}');
           if(element.status != 'closed'){
-            bookingsMap.putIfAbsent(DateFormat('MMM yyyy').format(element.start_date), () => []);
-            bookingsMap[DateFormat('MMM yyyy').format(element.start_date)].add(element);
+            bookingMap.putIfAbsent(DateFormat('MMM yyyy').format(element.start_date), () => []);
+            bookingMap[DateFormat('MMM yyyy').format(element.start_date)].add(element);
           }else{
-            checkedOutBookingsMap.putIfAbsent(DateFormat('MMM yyyy').format(element.start_date), () => []);
-            checkedOutBookingsMap[DateFormat('MMM yyyy').format(element.start_date)].add(element);
+            checkedOutBookingMap.putIfAbsent(DateFormat('MMM yyyy').format(element.start_date), () => []);
+            checkedOutBookingMap[DateFormat('MMM yyyy').format(element.start_date)].add(element);
           }
 
         });
 
-        bookingsMap.forEach((key, value) {
+        bookingMap.forEach((key, value) {
           /*value.forEach((element) {
             debugPrint('UI_M_BookingList: value booking status: ${element.user.first.surname} ${element.status}');
           });*/
           value.sort((a,b) => DateFormat('dd').format(a.start_date).compareTo(DateFormat('dd').format(b.start_date)));
           //value.sort((a,b) => DateFormat('dd').format(a.end_date).compareTo(DateFormat('dd').format(b.end_date)));
-          bookingsList.add(value);
+          activeBookingList.add(value);
         });
 
-        checkedOutBookingsMap.forEach((key, value) {
+        checkedOutBookingMap.forEach((key, value) {
           /*value.forEach((element) {
             debugPrint('UI_M_BookingList: value booking status: ${element.user.first.surname} ${element.status}');
           });*/
           value.sort((a,b) => DateFormat('dd').format(a.start_date).compareTo(DateFormat('dd').format(b.start_date)));
-          checkedOutBookingsList.add(value);
+          checkedOutBookingList.add(value);
         });
 
         //debugPrint('UI_M_BookingList: bookingsList: ${bookingsList.length}');
@@ -149,7 +150,7 @@ class _BookingListState extends State<BookingList> {
                       Expanded(
                         child: Stack(
                           children: [
-                            bookingsList.length > 0 ?
+                            activeBookingList.length > 0 ?
                             ///Booking list
                             Positioned.fill(
                               child: Align(
@@ -162,13 +163,13 @@ class _BookingListState extends State<BookingList> {
                                     SliverList(
                                       delegate: SliverChildBuilderDelegate((context, index) {
                                         //MenuItemModel menuItem = menuItems.elementAt(index);
-                                        List<BookingState> bookings = bookingsList.elementAt(index);
+                                        List<BookingState> bookings = activeBookingList.elementAt(index);
                                         bookings.forEach((element) {
                                           debugPrint('UI_M_BookingList: bookings booking status: ${element.user.first.surname} ${element.status}');
                                         });
                                         return BookingMonthList(bookings);
                                       },
-                                        childCount: bookingsList.length,
+                                        childCount: activeBookingList.length,
                                       ),
                                     ),
                                   ]),
@@ -240,7 +241,7 @@ class _BookingListState extends State<BookingList> {
                                     color: Colors.transparent,
                                     child: InkWell(
                                         onTap: () async {
-                                          Navigator.push(context, MaterialPageRoute(builder: (context) => CheckedOutBookingList(checkedOutBookingsList: checkedOutBookingsList)));
+                                          Navigator.push(context, MaterialPageRoute(builder: (context) => CheckedOutBookingList(checkedOutBookingsList: checkedOutBookingList)));
                                         },
                                         child: CustomBottomButtonWidget(
                                             Text(
