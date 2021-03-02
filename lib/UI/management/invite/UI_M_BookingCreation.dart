@@ -72,8 +72,8 @@ class _BookingCreationState extends State<BookingCreation> {
       setState(() {
         /*checkIn = picked.start.toUtc();
         checkOut = picked.end.toUtc();*/
-        checkIn = DateTime(picked.start.year, picked.start.month, picked.start.day, 0, 0, 0, 0, 0).toUtc();
-        checkOut = DateTime(picked.end.year, picked.end.month, picked.end.day, 0, 0, 0, 0, 0).toUtc();
+        checkIn = DateTime.utc(picked.start.year, picked.start.month, picked.start.day);
+        checkOut = DateTime.utc(picked.end.year, picked.end.month, picked.end.day);
       });
     }
     return null;
