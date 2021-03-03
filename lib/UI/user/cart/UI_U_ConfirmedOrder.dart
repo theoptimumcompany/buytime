@@ -77,7 +77,9 @@ class ConfirmedOrderState extends State<ConfirmedOrder> with SingleTickerProvide
                       ///Back Button
                       IconButton(
                         icon: Icon(Icons.chevron_left, color: BuytimeTheme.TextWhite),
-                        onPressed: () => Navigator.of(context).pop(),
+                        onPressed: () => Future.delayed(Duration.zero, () {
+                          Navigator.of(context).pop();
+                        }),
                       ),
                       ///Order ConfirmedTitle
                       Container(

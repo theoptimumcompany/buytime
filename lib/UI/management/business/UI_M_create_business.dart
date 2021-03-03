@@ -163,7 +163,11 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
               alignment: Alignment.topCenter,
               child: WillPopScope(
                   onWillPop: () async {
-                    FocusScope.of(context).unfocus();
+                    FocusScopeNode currentFocus = FocusScope.of(context);
+
+                    if (!currentFocus.hasPrimaryFocus) {
+                      currentFocus.unfocus();
+                    }
                     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_BusinessList()));
                     return false;
                   },

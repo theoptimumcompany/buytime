@@ -14,6 +14,7 @@ import 'package:Buytime/reblox/model/role/role.dart';
 import 'package:Buytime/reblox/model/service/service_list_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
+import 'package:Buytime/reblox/navigation/navigation_reducer.dart';
 import 'package:Buytime/reblox/reducer/business_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/business_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_list_reducer.dart';
@@ -205,18 +206,26 @@ class _BookingPageState extends State<BookingPage> {
             if(l.isNotEmpty)
               grid(l);
           });
+
+
         });
+        bookingState = store.state.booking;
+        businessState = store.state.business;
+        serviceListState = store.state.serviceList;
+        serviceList = serviceListState.serviceListState;
+        categoryListState = store.state.categoryList;
+        categoryList = categoryListState.categoryListState;
       },
       builder: (context, snapshot) {
-
-        bookingState = snapshot.booking;
+        /*bookingState = snapshot.booking;
         businessState = snapshot.business;
         serviceListState = snapshot.serviceList;
         serviceList = serviceListState.serviceListState;
         categoryListState = snapshot.categoryList;
-        categoryList = categoryListState.categoryListState;
+        categoryList = categoryListState.categoryListState;*/
 
-        debugPrint('UI_U_BookingPage: category list lenght => ${categoryList.length}');
+
+        //debugPrint('UI_U_BookingPage: category list lenght => ${categoryList.length}');
         //debugPrint('UI_U_BookingPage: business logo => ${businessState.logo}');
         //debugPrint('UI_U_BookingPage: service list lenght => ${serviceList.length}');
         String startMonth = DateFormat('MM').format(bookingState.start_date);
@@ -251,7 +260,11 @@ class _BookingPageState extends State<BookingPage> {
                         tooltip: AppLocalizations.of(context).comeBack,
                         onPressed: () {
                           //widget.fromConfirm != null ? Navigator.of(context).pop() : Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Landing()),);
-                          Navigator.of(context).pop();
+                          Future.delayed(Duration.zero, () {
+                            Navigator.of(context).pop();
+                          });
+
+                          //StoreProvider.of<AppState>(context).dispatch(NavigatePopAction());
                         },
                       ),
                     ),

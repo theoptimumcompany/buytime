@@ -69,11 +69,18 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
 
     return StoreConnector<AppState, AppState>(
       converter: (store) => store.state,
+      onInit: (store){
+        //order = store.state.order.itemList != null ? (store.state.order.itemList.length > 0 ? store.state.order : order) : order;
+      },
       builder: (context, snapshot) {
         order = snapshot.order.itemList != null ? (snapshot.order.itemList.length > 0 ? snapshot.order : order) : order;
         return  GestureDetector(
           onTap: (){
-            FocusScope.of(context).unfocus();
+            FocusScopeNode currentFocus = FocusScope.of(context);
+
+            if (!currentFocus.hasPrimaryFocus) {
+              currentFocus.unfocus();
+            }
           },
           child: WillPopScope(
             onWillPop: () async => false,
@@ -97,7 +104,9 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                           tooltip: AppLocalizations.of(context).comeBack,
                           onPressed: () {
                             //widget.fromConfirm != null ? Navigator.of(context).pop() : Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Landing()),);
-                            Navigator.of(context).pop();
+                            Future.delayed(Duration.zero, () {
+                              Navigator.of(context).pop();
+                            });
                           },
                         ),
                       ),

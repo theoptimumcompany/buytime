@@ -102,7 +102,9 @@ class CartState extends State<Cart> {
                             context,
                             MaterialPageRoute(builder: (context) => ServiceList()),
                           );*/
-                          Navigator.of(context).pop();
+                          Future.delayed(Duration.zero, () {
+                            Navigator.of(context).pop();
+                          });
                         }
                       ),
                       ///Cart Title

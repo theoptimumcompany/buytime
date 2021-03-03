@@ -134,7 +134,11 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
               alignment: Alignment.topCenter,
               child: WillPopScope(
                 onWillPop: () async {
-                  FocusScope.of(context).unfocus();
+                  FocusScopeNode currentFocus = FocusScope.of(context);
+
+                  if (!currentFocus.hasPrimaryFocus) {
+                    currentFocus.unfocus();
+                  }
                   Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_Business()));
                   return false;
                 },

@@ -86,7 +86,11 @@ class _FilterGeneralState extends State<FilterGeneral> {
         order = snapshot.order.itemList != null ? (snapshot.order.itemList.length > 0 ? snapshot.order : order) : order;
         return  GestureDetector(
           onTap: (){
-            FocusScope.of(context).unfocus();
+            FocusScopeNode currentFocus = FocusScope.of(context);
+
+            if (!currentFocus.hasPrimaryFocus) {
+              currentFocus.unfocus();
+            }
           },
           child: WillPopScope(
             onWillPop: () async => false,
@@ -110,7 +114,9 @@ class _FilterGeneralState extends State<FilterGeneral> {
                           tooltip: AppLocalizations.of(context).comeBack,
                           onPressed: () {
                             //widget.fromConfirm != null ? Navigator.of(context).pop() : Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Landing()),);
-                            Navigator.of(context).pop();
+                            Future.delayed(Duration.zero, () {
+                              Navigator.of(context).pop();
+                            });
                           },
                         ),
                       ),

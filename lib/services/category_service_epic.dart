@@ -63,16 +63,13 @@ class CategoryListRequestService implements EpicClass<AppState> {
 }
 
 class UserCategoryListRequestService implements EpicClass<AppState> {
-  List<CategoryState> categoryStateList;
+  List<CategoryState> categoryStateList = [];
   StatisticsState statisticsState;
-
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     debugPrint("CATEGORY_SERVICE_EPIC - UserCategoryListRequestService => CATCHED ACTION");
     return actions.whereType<UserRequestListCategory>().asyncMap((event) async {
-      QuerySnapshot snapshot = await FirebaseFirestore.instance
-
-          /// 1 READ - ? DOC
+      QuerySnapshot snapshot = await FirebaseFirestore.instance /// 1 READ - ? DOC
           .collection("business")
           .doc(event.businessId)
           .collection("category")
@@ -82,7 +79,7 @@ class UserCategoryListRequestService implements EpicClass<AppState> {
       int snapshotDocs = snapshot.docs.length;
 
       debugPrint("CATEGORY_SERVICE_EPIC - UserCategoryListRequestService => Firestore request");
-      categoryStateList = [];
+      //categoryStateList = [];
       snapshot.docs.forEach((element) {
         CategoryState categoryState = CategoryState.fromJson(element.data());
         categoryState.businessId = event.businessId;

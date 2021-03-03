@@ -185,6 +185,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
 
             l.remove(widget.categoryState);
             if(l.isNotEmpty){
+              subCategoryList.clear();
               grid(l);
               l.forEach((element) {
                 if(element.parent != null && element.parent.id == widget.categoryState.id){
@@ -195,12 +196,12 @@ class _FilterByCategoryState extends State<FilterByCategory> {
 
           });
         });
+        categoryListState = store.state.categoryList;
+        categoryList = categoryListState.categoryListState;
       },
       builder: (context, snapshot) {
         List<ServiceState> s = [];
 
-        categoryListState = snapshot.categoryList;
-        categoryList = categoryListState.categoryListState;
         if(_searchController.text.isEmpty){
           tmpServiceList.clear();
           s.addAll(snapshot.serviceList.serviceListState);
@@ -216,7 +217,11 @@ class _FilterByCategoryState extends State<FilterByCategory> {
         order = snapshot.order.itemList != null ? (snapshot.order.itemList.length > 0 ? snapshot.order : order) : order;
         return  GestureDetector(
           onTap: (){
-            FocusScope.of(context).unfocus();
+            FocusScopeNode currentFocus = FocusScope.of(context);
+
+            if (!currentFocus.hasPrimaryFocus) {
+              currentFocus.unfocus();
+            }
           },
           child: WillPopScope(
             onWillPop: () async => false,
@@ -240,7 +245,9 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                           tooltip: AppLocalizations.of(context).comeBack,
                           onPressed: () {
                             //widget.fromConfirm != null ? Navigator.of(context).pop() : Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Landing()),);
-                            Navigator.of(context).pop();
+                            Future.delayed(Duration.zero, () {
+                              Navigator.of(context).pop();
+                            });
                           },
                         ),
                       ),

@@ -25,9 +25,9 @@ _navigate(Store<AppState> store, action, NextDispatcher next) {
   final routeName = (action as NavigatePushAction).routeName;
 
   ///Need when the global key will be updated inr eal time
-  if (store.state.route.last != routeName) {
+  /*if (store.state.route.last != routeName) {
 
-  }
+  }*/
   navigatorKey.currentState.pushNamed(routeName);
   next(action); //This need to be after name checks
 }
