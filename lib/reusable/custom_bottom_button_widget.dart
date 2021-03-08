@@ -6,7 +6,7 @@ class CustomBottomButtonWidget extends StatefulWidget {
 
   Widget topString;
   String bottomString;
-  Icon icon;
+  Widget icon;
   CustomBottomButtonWidget(this.topString, this.bottomString, this.icon);
 
 @override
@@ -17,9 +17,11 @@ class _CustomBottomButtonWidgetState extends State<CustomBottomButtonWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      //width: 375,
+      height: 64,
       margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -30,17 +32,15 @@ class _CustomBottomButtonWidgetState extends State<CustomBottomButtonWidget> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                      child: widget.topString,
-                    ),
+                    widget.topString,
                     widget.bottomString.isNotEmpty ? Container(
                       child: Text(
                         widget.bottomString,
                         style: TextStyle(
                             fontFamily: BuytimeTheme.FontFamily,
-                            color: Colors.black.withOpacity(.7),
-                            fontWeight: FontWeight.w500,
-                            fontSize: 16
+                            color: BuytimeTheme.TextBlack,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 14
                         ),
                       ),
                     ) : Container()
@@ -55,6 +55,7 @@ class _CustomBottomButtonWidgetState extends State<CustomBottomButtonWidget> {
           ),
           Container(
             width: double.infinity,
+            //margin: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 1),
             height: SizeConfig.safeBlockVertical * .2,
             color: BuytimeTheme.DividerGrey,
           )

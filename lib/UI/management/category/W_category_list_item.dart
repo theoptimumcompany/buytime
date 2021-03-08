@@ -1,5 +1,6 @@
 import 'package:Buytime/reblox/model/category/category_state.dart';
 import 'package:Buytime/utils/size_config.dart';
+import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -29,7 +30,7 @@ class _CategoryListItemWidgetState extends State<CategoryListItemWidget> {
     SizeConfig().init(context);
 
     return Container(
-      height: 40, ///Item size
+      height: 30, ///Item size
       width: SizeConfig.screenWidth, ///Screen width
       //color: Colors.blue,
       child: Row(
@@ -42,20 +43,24 @@ class _CategoryListItemWidgetState extends State<CategoryListItemWidget> {
                   ///Item count
                   Container(
                       margin: EdgeInsets.only(left: 20.0, right: 5.0, top: 2.5, bottom: 2.5),
-                      height: 40,
-                      width: 35,
+                      height: 28,
+                      width: 28,
                       decoration: BoxDecoration(
-                          color: Colors.lime[800].withOpacity(0.7)
+                          color: BuytimeTheme.SymbolLime
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(
-                            "100",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 20
+                          FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(
+                              "100",
+                              style: TextStyle(
+                                  color: BuytimeTheme.TextWhite,
+                                  fontWeight: FontWeight.w400,
+                                  fontFamily: BuytimeTheme.FontFamily,
+                                  fontSize: 16
+                              ),
                             ),
                           ),
                         ],
@@ -68,8 +73,10 @@ class _CategoryListItemWidgetState extends State<CategoryListItemWidget> {
                       child: Text(
                         widget.categoryItem.name,
                         style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 17
+                            color: BuytimeTheme.TextBlack,
+                            fontWeight: FontWeight.w400,
+                            fontFamily: BuytimeTheme.FontFamily,
+                            fontSize: 16
                         ),
                       ),
                     ),
@@ -91,8 +98,10 @@ class _CategoryListItemWidgetState extends State<CategoryListItemWidget> {
                       child: Text(
                         AppLocalizations.of(context).mostPopularService,
                         style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 17
+                            color: BuytimeTheme.TextBlack,
+                            fontWeight: FontWeight.w400,
+                            fontFamily: BuytimeTheme.FontFamily,
+                            fontSize: 16
                         ),
                       ),
                     ),

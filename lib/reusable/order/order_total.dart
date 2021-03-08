@@ -31,8 +31,9 @@ class OrderTotal extends StatelessWidget {
             style: TextStyle(
               fontFamily: BuytimeTheme.FontFamily,
               fontWeight: FontWeight.w500,
-              fontSize: SizeConfig.safeBlockHorizontal * 4,
-              color: BuytimeTheme.TextGrey
+              fontSize: 16, ///SizeConfig.safeBlockHorizontal * 4
+              color: BuytimeTheme.TextMedium,
+              letterSpacing: 0.25
             ),
           ),
           ///Total Value
@@ -42,8 +43,9 @@ class OrderTotal extends StatelessWidget {
               '€ ${orderState.total.toStringAsFixed(2)}',
               style: TextStyle(
                 fontFamily: BuytimeTheme.FontFamily,
-                fontWeight: FontWeight.w700,
-                fontSize: SizeConfig.safeBlockHorizontal * 7,
+                fontWeight: FontWeight.w600,
+                fontSize: 24, ///SizeConfig.safeBlockHorizontal * 7,
+                color: BuytimeTheme.TextBlack
               ),
             ),
           ),
@@ -53,10 +55,11 @@ class OrderTotal extends StatelessWidget {
             child: Text(
               AppLocalizations.of(context).tax + (orderState.total != null ? (orderState.total * 0.25).toStringAsFixed(2) : "0"),
               style: TextStyle(
-                fontFamily: BuytimeTheme.FontFamily,
-                fontWeight: FontWeight.w400,
-                fontSize: media.height * 0.020,
-                  color: BuytimeTheme.TextGrey
+                  fontFamily: BuytimeTheme.FontFamily,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16, ///SizeConfig.safeBlockHorizontal * 4
+                  color: BuytimeTheme.TextMedium,
+                  letterSpacing: 0.25
               ),
             ),
           ),

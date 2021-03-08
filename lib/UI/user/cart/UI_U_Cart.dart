@@ -114,12 +114,7 @@ class CartState extends State<Cart> {
                           child: Text(
                             'Cart', ///TODO Make it Global
                             textAlign: TextAlign.start,
-                            style: TextStyle(
-                              fontFamily: BuytimeTheme.FontFamily,
-                              color: Colors.white,
-                              fontSize: media.height * 0.025,
-                              fontWeight: FontWeight.w800,
-                            ),
+                            style: BuytimeTheme.appbarTitle,
                           ),
                         ),
                       ),
@@ -288,31 +283,33 @@ class CartState extends State<Cart> {
                                     ///Buy button
                                     Container(
                                         margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5),
-                                        width: media.width * .4,
+                                        width: 158, /// media.width * .4
+                                        height: 46,
                                         child: RaisedButton(
                                           onPressed: () {
                                             Navigator.push(context, MaterialPageRoute(builder: (context) => ConfirmOrder()),);
                                           },
                                           textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
                                           color: BuytimeTheme.UserPrimary,
-                                          padding: EdgeInsets.all(media.width * 0.03),
+                                          //padding: EdgeInsets.all(media.width * 0.03),
                                           shape: RoundedRectangleBorder(
                                             borderRadius: new BorderRadius.circular(5),
                                           ),
                                           child: Text(
                                             'BUY',//AppLocalizations.of(context).logBack, ///TODO Make it Global
                                             style: TextStyle(
-                                                fontSize: 18,
+                                                fontSize: 14,
                                                 fontFamily: BuytimeTheme.FontFamily,
                                                 fontWeight: FontWeight.w500,
-                                                color: BuytimeTheme.TextWhite
+                                                color: BuytimeTheme.TextWhite,
+                                              letterSpacing: 1.25
                                             ),
                                           ),
                                         )
                                     ),
                                     ///Continue Shopping
                                     Container(
-                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 5, bottom: SizeConfig.safeBlockVertical * 2.5),
+                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 5, bottom: SizeConfig.safeBlockVertical * 5),
                                         alignment: Alignment.center,
                                         child: Material(
                                           color: Colors.transparent,
@@ -327,11 +324,11 @@ class CartState extends State<Cart> {
                                                 child: Text(
                                                   'CONTINUE\nSHOPPING',//AppLocalizations.of(context).somethingIsNotRight,
                                                   style: TextStyle(
-                                                      letterSpacing: SizeConfig.safeBlockHorizontal * .2,
+                                                      letterSpacing: 1.25, ///SizeConfig.safeBlockHorizontal * .2
                                                       fontFamily: BuytimeTheme.FontFamily,
                                                       color: BuytimeTheme.UserPrimary,
                                                       fontWeight: FontWeight.w600,
-                                                      fontSize: SizeConfig.safeBlockHorizontal * 4
+                                                      fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
                                                   ),
                                                 ),
                                               )

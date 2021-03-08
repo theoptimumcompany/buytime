@@ -1,7 +1,11 @@
 import 'package:Buytime/UI/user/UI_U_Tabs.dart';
 import 'package:Buytime/UI/user/booking/UI_U_BookingPage.dart';
 import 'package:Buytime/UI/user/cart/tab/T_room.dart';
+import 'package:Buytime/reblox/model/business/snippet/business_snippet_state.dart';
 import 'package:Buytime/reblox/model/card/card_state.dart';
+import 'package:Buytime/reblox/model/order/order_entry.dart';
+import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
+import 'package:Buytime/reblox/reducer/order_list_reducer.dart';
 import 'package:Buytime/utils/b_cube_grid_spinner.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
@@ -53,6 +57,8 @@ class ConfirmedOrderState extends State<ConfirmedOrder> with SingleTickerProvide
 
   }
 
+  OrderState order = OrderState(itemList: List<OrderEntry>(), date: DateTime.now(), position: "", total: 0.0, business: BusinessSnippet().toEmpty(), user: UserSnippet().toEmpty(), businessId: "");
+
   @override
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
@@ -69,6 +75,7 @@ class ConfirmedOrderState extends State<ConfirmedOrder> with SingleTickerProvide
         child: StoreConnector<AppState, AppState>(
             converter: (store) => store.state,
             builder: (context, snapshot) {
+              //order = snapshot.order.itemList != null ? (snapshot.order.itemList.length > 0 ? snapshot.order : order) : order;
               return Scaffold(
                   appBar: BuytimeAppbar(
                     background: BuytimeTheme.UserPrimary,
@@ -88,12 +95,7 @@ class ConfirmedOrderState extends State<ConfirmedOrder> with SingleTickerProvide
                           child: Text(
                             'Order Confirmed', ///TODO Make it Global
                             textAlign: TextAlign.start,
-                            style: TextStyle(
-                              fontFamily: BuytimeTheme.FontFamily,
-                              color: Colors.white,
-                              fontSize: media.height * 0.025,
-                              fontWeight: FontWeight.w800,
-                            ),
+                            style: BuytimeTheme.appbarTitle,
                           ),
                         ),
                       ),
@@ -147,8 +149,8 @@ class ConfirmedOrderState extends State<ConfirmedOrder> with SingleTickerProvide
                                                       textAlign: TextAlign.start,
                                                       style: TextStyle(
                                                         fontFamily: BuytimeTheme.FontFamily,
-                                                        color: BuytimeTheme.TextDark,
-                                                        fontSize: SizeConfig.safeBlockHorizontal * 4,
+                                                        color: BuytimeTheme.TextBlack,
+                                                        fontSize: 14, /// SizeConfig.safeBlockHorizontal * 4
                                                         fontWeight: FontWeight.w600,
                                                       ),
                                                     )
@@ -194,7 +196,7 @@ class ConfirmedOrderState extends State<ConfirmedOrder> with SingleTickerProvide
                                                       style: TextStyle(
                                                         fontFamily: BuytimeTheme.FontFamily,
                                                         color: BuytimeTheme.TextWhite,
-                                                        fontSize: SizeConfig.safeBlockHorizontal * 4,
+                                                        fontSize: 14, /// SizeConfig.safeBlockHorizontal * 4
                                                         fontWeight: FontWeight.w500,
                                                       ),
                                                     ),
@@ -219,9 +221,10 @@ class ConfirmedOrderState extends State<ConfirmedOrder> with SingleTickerProvide
                                                         widget.from == 0 ? 'Credit Card:' : 'Room:', ///TODO Make it Global
                                                         textAlign: TextAlign.start,
                                                         style: TextStyle(
+                                                          letterSpacing: 0.25,
                                                           fontFamily: BuytimeTheme.FontFamily,
-                                                          color: BuytimeTheme.TextGrey,
-                                                          fontSize: SizeConfig.safeBlockHorizontal * 3.5,
+                                                          color: BuytimeTheme.TextMedium,
+                                                          fontSize: 14, ///SizeConfig.safeBlockHorizontal * 3.5
                                                           fontWeight: FontWeight.w500,
                                                         ),
                                                       ),
@@ -233,10 +236,11 @@ class ConfirmedOrderState extends State<ConfirmedOrder> with SingleTickerProvide
                                                         widget.from == 0 ? '${cardState.stripeState.stripeCard.brand} **** ${cardState.stripeState.stripeCard.last4}' : 'Room Number', ///TODO Make it Global
                                                         textAlign: TextAlign.start,
                                                         style: TextStyle(
+                                                          letterSpacing: 0.5,
                                                           fontFamily: BuytimeTheme.FontFamily,
-                                                          color: BuytimeTheme.TextDark,
-                                                          fontSize: SizeConfig.safeBlockHorizontal * 4,
-                                                          fontWeight: FontWeight.w800,
+                                                          color: BuytimeTheme.TextBlack,
+                                                          fontSize: 16, ///SizeConfig.safeBlockHorizontal * 3.5
+                                                          fontWeight: FontWeight.w600,
                                                         ),
                                                       ),
                                                     )
@@ -261,11 +265,11 @@ class ConfirmedOrderState extends State<ConfirmedOrder> with SingleTickerProvide
                                                     child: Text(
                                                       snapshot.progress == "in_progress" ? 'WE ARE CONFIRMING YOUR ORDER' : 'ORDER CONFIRMED',//AppLocalizations.of(context).somethingIsNotRight,
                                                       style: TextStyle(
-                                                          letterSpacing: SizeConfig.safeBlockHorizontal * .2,
-                                                          fontFamily: BuytimeTheme.FontFamily,
-                                                          color: BuytimeTheme.UserPrimary,
-                                                          fontWeight: FontWeight.w600,
-                                                          fontSize: SizeConfig.safeBlockHorizontal * 4
+                                                        letterSpacing: 1.25,
+                                                        fontFamily: BuytimeTheme.FontFamily,
+                                                        color: BuytimeTheme.UserPrimary,
+                                                        fontSize: 16, ///SizeConfig.safeBlockHorizontal * 3.5
+                                                        fontWeight: FontWeight.w600,
                                                       ),
                                                     ),
                                                   ),
@@ -343,12 +347,17 @@ class ConfirmedOrderState extends State<ConfirmedOrder> with SingleTickerProvide
                                     ///Back to home button
                                     Container(
                                         margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5, bottom: SizeConfig.safeBlockVertical * 2.5),
-                                        width: media.width * .4,
+                                        width: 158,
+                                        height: 44,
                                         child: RaisedButton(
                                           onPressed: () {
                                             //Navigator.push(context, MaterialPageRoute(builder: (context) => ConfirmedOrder()),);
                                             //StoreProvider.of<AppState>(context).state.orderList.orderListState = [];
-                                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BookingPage()));
+                                            //Navigator.popUntil(context, MaterialPageRoute(builder: (context) => BookingPage()));
+                                            //snapshot.order = OrderState(itemList: List<OrderEntry>(), date: DateTime.now(), position: "", total: 0.0, business: BusinessSnippet().toEmpty(), user: UserSnippet().toEmpty(), businessId: "");
+                                            //StoreProvider.of<AppState>(context).dispatch(SetOrderListToEmpty());
+                                            //StoreProvider.of<AppState>(context).dispatch(UpdateOrder(order));
+                                            Navigator.of(context).popUntil(ModalRoute.withName('/bookingPage'));
                                           },
                                           textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
                                           color: BuytimeTheme.UserPrimary,
@@ -359,10 +368,11 @@ class ConfirmedOrderState extends State<ConfirmedOrder> with SingleTickerProvide
                                           child: Text(
                                             'BACK TO HOME',//AppLocalizations.of(context).logBack, ///TODO Make it Global
                                             style: TextStyle(
-                                                fontSize: 18,
+                                                fontSize: 14,
                                                 fontFamily: BuytimeTheme.FontFamily,
                                                 fontWeight: FontWeight.w500,
-                                                color: BuytimeTheme.TextWhite
+                                                color: BuytimeTheme.TextWhite,
+                                              letterSpacing: 1.25
                                             ),
                                           ),
                                         )

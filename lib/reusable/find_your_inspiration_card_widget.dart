@@ -34,11 +34,11 @@ class _FindYourInspirationCardWidgetState extends State<FindYourInspirationCardW
         margin: EdgeInsets.all(SizeConfig.safeBlockVertical*.25),
         //width: double.infinity,
         //height: double.infinity,
-        width: SizeConfig.safeBlockVertical * widget.width,
-        height: SizeConfig.safeBlockVertical * widget.heigth,
+        width: widget.width, ///SizeConfig.safeBlockVertical * widget.width
+        height: widget.heigth, ///SizeConfig.safeBlockVertical * widget.width
         decoration: BoxDecoration(
             color: BuytimeTheme.BackgroundWhite,
-            borderRadius: BorderRadius.all(Radius.circular(5)),
+            //borderRadius: BorderRadius.all(Radius.circular(5)),
             image: DecorationImage(
               image: imageProvider,
               fit: BoxFit.cover,
@@ -58,7 +58,7 @@ class _FindYourInspirationCardWidgetState extends State<FindYourInspirationCardW
               width: SizeConfig.safeBlockVertical * widget.width,
               height: SizeConfig.safeBlockVertical * widget.heigth,
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                  //borderRadius: BorderRadius.all(Radius.circular(5)),
                   //color: Colors.black.withOpacity(.2)
               ),
               child: Column(
@@ -66,8 +66,8 @@ class _FindYourInspirationCardWidgetState extends State<FindYourInspirationCardW
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    width: SizeConfig.safeBlockVertical * widget.width,
-                    height: SizeConfig.safeBlockVertical * widget.heigth/3,
+                    width: widget.width,
+                    height: widget.heigth/3,
                     alignment: Alignment.centerLeft,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.only(
@@ -77,7 +77,7 @@ class _FindYourInspirationCardWidgetState extends State<FindYourInspirationCardW
                     ),
                     //margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, bottom: SizeConfig.safeBlockVertical * 2),
                     child: Container(
-                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5),
+                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5),
                       child: FittedBox(
                         fit: BoxFit.scaleDown,
                         child: Text(
@@ -85,8 +85,8 @@ class _FindYourInspirationCardWidgetState extends State<FindYourInspirationCardW
                           style: TextStyle(
                               fontFamily: BuytimeTheme.FontFamily,
                               color: BuytimeTheme.TextWhite,
-                              fontWeight: FontWeight.bold,
-                              fontSize: SizeConfig.safeBlockHorizontal * 4
+                              fontWeight: FontWeight.w400,
+                              fontSize: 16 ///SizeConfig.safeBlockHorizontal * 4
                           ),
                         ),
                       ),

@@ -170,21 +170,21 @@ class _BookingPageState extends State<BookingPage> {
         list.length >= 1 ? Flexible(
           flex: 1,
           child: FindYourInspirationCardWidget(
-              list.length <= 2 ? 26 : 18, list.length <= 2 ? 26 : 18, list[0], true
+              list.length <= 2 ? SizeConfig.screenWidth/2 - 2 : SizeConfig.screenWidth/3 - 2, list.length <= 2 ? SizeConfig.screenWidth/2 - 2 : SizeConfig.screenWidth/3 - 2, list[0], true
           ),
         ) : Container(),
         ///Second showcase for each Row
         list.length >= 2 ? Flexible(
           flex: 1,
           child: FindYourInspirationCardWidget(
-              list.length <= 2 ? 26 : 18, list.length <= 2 ? 26 : 18, list[1], true
+              list.length <= 2 ? SizeConfig.screenWidth/2 - 2 : SizeConfig.screenWidth/3 - 2, list.length <= 2 ? SizeConfig.screenWidth/2 - 2 : SizeConfig.screenWidth/3 - 2, list[1], true
           ),
         ) : Container(),
         ///Third showcase for each Row
         list.length == 3 ? Flexible(
           flex: 1,
           child: FindYourInspirationCardWidget(
-              list.length <= 2 ? 26 : 18, list.length <= 2 ? 26 : 18, list[2], true
+              list.length <= 2 ? SizeConfig.screenWidth/2 - 2 : SizeConfig.screenWidth/3 - 2, list.length <= 2 ? SizeConfig.screenWidth/2 - 2 : SizeConfig.screenWidth/3 - 2, list[2], true
           ),
         ) : Container(),
       ],
@@ -278,11 +278,7 @@ class _BookingPageState extends State<BookingPage> {
                     child: Text(
                       'Buytime', //TODO Make it Global
                       textAlign: TextAlign.start,
-                      style: TextStyle(
-                        fontSize: SizeConfig.safeBlockHorizontal * 5,
-                        color: BuytimeTheme.TextWhite,
-                        fontWeight: FontWeight.w400,
-                      ),
+                      style: BuytimeTheme.appbarTitle,
                     ),
                   ),
                 ),
@@ -429,8 +425,8 @@ class _BookingPageState extends State<BookingPage> {
                           ///Business Logo
                           Container(
                             //margin: EdgeInsets.only(left: SizeConfig.safeBlockVertical * 1, right: SizeConfig.safeBlockHorizontal * 1),
-                            width: SizeConfig.safeBlockVertical * 20, ///25%
-                            height: SizeConfig.safeBlockVertical * 20, ///25%
+                            width: 125, ///25% SizeConfig.safeBlockVertical * 20
+                            height: 125, ///25% SizeConfig.safeBlockVertical * 20
                             decoration: BoxDecoration(
                               color: Color(0xffE6E7E8),
                               /*borderRadius: BorderRadius.all(Radius.circular(SizeConfig.blockSizeHorizontal * 5)), ///12.5%
@@ -473,8 +469,8 @@ class _BookingPageState extends State<BookingPage> {
                                       style: TextStyle(
                                           fontFamily: BuytimeTheme.FontFamily,
                                           color: BuytimeTheme.TextBlack,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: SizeConfig.safeBlockHorizontal * 7
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: 24 ///SizeConfig.safeBlockHorizontal * 7
                                       ),
                                     ),
                                   ),
@@ -485,9 +481,9 @@ class _BookingPageState extends State<BookingPage> {
                                       'Your holiday in ${bookingState.business_name}', //TODO Make it Global
                                       style: TextStyle(
                                           fontFamily: BuytimeTheme.FontFamily,
-                                          color: BuytimeTheme.TextGrey,
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: SizeConfig.safeBlockHorizontal * 4
+                                          color: BuytimeTheme.TextMedium,
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 16 ///SizeConfig.safeBlockHorizontal * 4
                                       ),
                                     ),
                                   ),
@@ -501,9 +497,9 @@ class _BookingPageState extends State<BookingPage> {
                                           sameMonth ? '${DateFormat('dd').format(bookingState.start_date)}-${DateFormat('dd MMMM').format(bookingState.end_date)}' : '${DateFormat('dd MMMM').format(bookingState.start_date)}',
                                           style: TextStyle(
                                               fontFamily: BuytimeTheme.FontFamily,
-                                              color: BuytimeTheme.TextGrey,
-                                              fontWeight: FontWeight.w500,
-                                              fontSize: SizeConfig.safeBlockHorizontal * 4
+                                              color: BuytimeTheme.TextMedium,
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: 16 ///izeConfig.safeBlockHorizontal * 4
                                           ),
                                         ),
                                       ),
@@ -529,8 +525,8 @@ class _BookingPageState extends State<BookingPage> {
                                                         letterSpacing: SizeConfig.safeBlockHorizontal * .2,
                                                         fontFamily: BuytimeTheme.FontFamily,
                                                         color: BuytimeTheme.UserPrimary,
-                                                        fontWeight: FontWeight.w600,
-                                                        fontSize: SizeConfig.safeBlockHorizontal * 4
+                                                        fontWeight: FontWeight.w400,
+                                                        fontSize: 16 ///SizeConfig.safeBlockHorizontal * 4
                                                     ),
                                                   ),
                                                 )
@@ -541,7 +537,7 @@ class _BookingPageState extends State<BookingPage> {
                                   ),
                                   ///Search
                                   Container(
-                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, bottom:  SizeConfig.safeBlockVertical * 2),
+                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, bottom:  SizeConfig.safeBlockVertical * 0),
                                     height: SizeConfig.safeBlockHorizontal * 20,
                                     child: TextFormField(
                                       controller: _searchController,
@@ -594,8 +590,9 @@ class _BookingPageState extends State<BookingPage> {
                                       ),
                                       style: TextStyle(
                                         fontFamily: BuytimeTheme.FontFamily,
-                                        color: Color(0xff666666),
-                                        fontWeight: FontWeight.bold,
+                                        color: BuytimeTheme.TextMedium,
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 16
                                       ),
                                       onEditingComplete: (){
                                         debugPrint('done');
@@ -630,9 +627,9 @@ class _BookingPageState extends State<BookingPage> {
                                       'Top Services', //TODO Make it Global
                                       style: TextStyle(
                                           fontFamily: BuytimeTheme.FontFamily,
-                                          color: BuytimeTheme.TextDark,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: SizeConfig.safeBlockHorizontal * 4
+                                          color: BuytimeTheme.TextBlack,
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 18 ///SizeConfig.safeBlockHorizontal * 4
                                       ),
                                     ),
                                   ),
@@ -645,7 +642,7 @@ class _BookingPageState extends State<BookingPage> {
                                       children: [
                                         BookingListServiceListItem(service),
                                         Container(
-                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 38),
+                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 30),
                                           height: SizeConfig.safeBlockVertical * .2,
                                           color: BuytimeTheme.DividerGrey,
                                         )
@@ -792,9 +789,9 @@ class _BookingPageState extends State<BookingPage> {
                                           'Find your inspiration here', //TODO Make it Global
                                           style: TextStyle(
                                               fontFamily: BuytimeTheme.FontFamily,
-                                              color: BuytimeTheme.TextDark,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: SizeConfig.safeBlockHorizontal * 4
+                                              color: BuytimeTheme.TextBlack,
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 18 ///SizeConfig.safeBlockHorizontal * 4
                                           ),
                                         ),
                                         ///Show All
@@ -820,8 +817,8 @@ class _BookingPageState extends State<BookingPage> {
                                                           letterSpacing: SizeConfig.safeBlockHorizontal * .2,
                                                           fontFamily: BuytimeTheme.FontFamily,
                                                           color: BuytimeTheme.UserPrimary,
-                                                          fontWeight: FontWeight.w600,
-                                                          fontSize: SizeConfig.safeBlockHorizontal * 4
+                                                          fontWeight: FontWeight.w400,
+                                                          fontSize: 16 ///SizeConfig.safeBlockHorizontal * 4
                                                       ),
                                                     ),
                                                   )
@@ -917,8 +914,8 @@ class _BookingPageState extends State<BookingPage> {
                                                                 style: TextStyle(
                                                                     fontFamily: BuytimeTheme.FontFamily,
                                                                     color: BuytimeTheme.TextBlack,
-                                                                    fontWeight: FontWeight.bold,
-                                                                    fontSize: SizeConfig.safeBlockHorizontal * 4
+                                                                    fontWeight: FontWeight.w400,
+                                                                    fontSize: 16 ///SizeConfig.safeBlockHorizontal * 4
                                                                 ),
                                                               ),
                                                             ),
@@ -929,8 +926,8 @@ class _BookingPageState extends State<BookingPage> {
                                                                 style: TextStyle(
                                                                     fontFamily: BuytimeTheme.FontFamily,
                                                                     color: BuytimeTheme.TextGrey,
-                                                                    fontWeight: FontWeight.w500,
-                                                                    fontSize: SizeConfig.safeBlockHorizontal * 4
+                                                                    fontWeight: FontWeight.w400,
+                                                                    fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
                                                                 ),
                                                               ),
                                                             )
@@ -948,7 +945,7 @@ class _BookingPageState extends State<BookingPage> {
                                             )
                                         ),
                                         Container(
-                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 20),
+                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 10),
                                           height: SizeConfig.safeBlockVertical * .2,
                                           color: BuytimeTheme.DividerGrey,
                                         )
@@ -983,19 +980,25 @@ class _BookingPageState extends State<BookingPage> {
                                           );
                                         },
                                         child: CustomBottomButtonWidget(
-                                            Text(
-                                              AppLocalizations.of(context).goToBusiness,
-                                              style: TextStyle(
-                                                  fontFamily: BuytimeTheme.FontFamily,
-                                                  color: Colors.black.withOpacity(.7),
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 16
+                                            Container(
+                                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1.5),
+                                              child: Text(
+                                                AppLocalizations.of(context).goToBusiness,
+                                                style: TextStyle(
+                                                    fontFamily: BuytimeTheme.FontFamily,
+                                                    color: Colors.black.withOpacity(.7),
+                                                    fontWeight: FontWeight.w500,
+                                                    fontSize: 16
+                                                ),
                                               ),
                                             ),
                                             '',
-                                            Icon(
-                                              Icons.business_center,
-                                              color: BuytimeTheme.SymbolGrey,
+                                            Container(
+                                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1.5),
+                                              child: Icon(
+                                                Icons.business_center,
+                                                color: BuytimeTheme.SymbolGrey,
+                                              ),
                                             )),
                                       ),
                                     ),
@@ -1049,19 +1052,25 @@ class _BookingPageState extends State<BookingPage> {
                                       });
                                     },
                                     child: CustomBottomButtonWidget(
-                                        Text(
-                                          AppLocalizations.of(context).logOut,
-                                          style: TextStyle(
-                                              fontFamily: BuytimeTheme.FontFamily,
-                                              color: Colors.black.withOpacity(.7),
-                                              fontWeight: FontWeight.w500,
-                                              fontSize: 16
+                                        Container(
+                                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1.5),
+                                          child: Text(
+                                            AppLocalizations.of(context).logOut,
+                                            style: TextStyle(
+                                                fontFamily: BuytimeTheme.FontFamily,
+                                                color: Colors.black.withOpacity(.7),
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 16
+                                            ),
                                           ),
                                         ),
                                         '',
-                                        Icon(
-                                          MaterialDesignIcons.exit_to_app,
-                                          color: BuytimeTheme.SymbolGrey,
+                                        Container(
+                                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1.5),
+                                          child: Icon(
+                                            MaterialDesignIcons.exit_to_app,
+                                            color: BuytimeTheme.SymbolGrey,
+                                          ),
                                         ))),
                               ),
                             ),

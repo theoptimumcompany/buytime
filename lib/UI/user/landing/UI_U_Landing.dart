@@ -115,51 +115,62 @@ class LandingState extends State<Landing> {
         },
         child: Scaffold(
           body: SafeArea(
-            child: Center(
-              child: Container(
-                height: SizeConfig.safeBlockVertical * 100,
+            top: false,
+            child: SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                    minHeight: (SizeConfig.safeBlockVertical * 100)
+                ),
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     ///Celurian Part
-                    Expanded(
-                      flex: 4,
-                      child: Container(
-                        width: double.infinity,
-                        color: BuytimeTheme.BackgroundCerulean,
-                        child: Column(
-                          children: [
-                            ///Welcome text & Share icon
-                            Expanded(
-                              flex: 2,
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  ///Welcome text
-                                  Expanded(
-                                    flex: 3,
-                                    child: Container(
-                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 8),
-                                        width: double.infinity,
-                                        height: double.infinity,
-                                        child: Text(
-                                          AppLocalizations.of(context).welcomeToBuytime,
-                                          style: TextStyle(
-                                              fontFamily: BuytimeTheme.FontFamily,
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: SizeConfig.safeBlockHorizontal * 7.5),
-                                        )),
-                                  ),
-                                  ///Share icon
-                                  Expanded(
-                                    flex: 1,
-                                    child: Container(
-                                      alignment: Alignment.topRight,
-                                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, right: SizeConfig.safeBlockHorizontal * 4),
-                                      child: IconButton(
-                                        onPressed: () async{
-                                          /*final RenderBox box = context.findRenderObject();
+                    Flexible(
+                      //flex: 10,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          ///Welcome text & Share icon & Description
+                          Container(
+                            // margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
+                            width: double.infinity,
+                            //height: SizeConfig.safeBlockVertical * 40,
+                            color: BuytimeTheme.BackgroundCerulean,
+                            child: Column(
+                              //mainAxisSize: MainAxisSize.min,
+                              children: [
+                                ///Welcome text & Share icon
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    ///Welcome text
+                                    Flexible(
+                                      flex: 2,
+                                      child: Container(
+                                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 6, left: SizeConfig.safeBlockHorizontal * 8),
+                                          /*width: double.infinity,
+                                        height: double.infinity,*/
+                                          child: Text(
+                                            AppLocalizations.of(context).welcomeToBuytime,
+                                            style: TextStyle(
+                                                fontFamily: BuytimeTheme.FontFamily,
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.w700,
+                                                fontSize: 32//SizeConfig.safeBlockHorizontal * 7.5
+                                            ),
+                                          )),
+                                    ),
+                                    ///Share icon
+                                    Flexible(
+                                      flex: 1,
+                                      child: Container(
+                                        alignment: Alignment.topRight,
+                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 6, right: SizeConfig.safeBlockHorizontal * 4),
+                                        child: IconButton(
+                                          onPressed: () async{
+                                            /*final RenderBox box = context.findRenderObject();
                                           Uri link = await createDynamicLink('prova');
                                           Share.share(AppLocalizations.of(context).checkYourBuytimeApp + link.toString(), subject: AppLocalizations.of(context).takeYourTime, sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
                                           Share.share('Share', subject:
@@ -167,270 +178,261 @@ class LandingState extends State<Landing> {
                                               'https://play.google.com/store/apps/details?id=com.theoptimumcompany.buytime' :
                                           'Test'
                                               , sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);*/
-                                        },
-                                        icon: Icon(
-                                          Icons.share,
-                                          color: Colors.white,
+                                          },
+                                          icon: Icon(
+                                            Icons.share,
+                                            color: Colors.white,
+                                            size: 24,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-
-                            ///Description
-                            Expanded(
-                              flex: 3,
-                              child: Container(
-                                  margin: EdgeInsets.only(
-                                      bottom: SizeConfig.safeBlockVertical * 1,
-                                      left: SizeConfig.safeBlockHorizontal * 8,
-                                      right: SizeConfig.safeBlockHorizontal * 8),
-                                  child: Text(
-                                    AppLocalizations.of(context).whenYouBookWith,
-                                    style: TextStyle(
-                                        fontFamily: BuytimeTheme.FontFamily,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 18 //SizeConfig.safeBlockHorizontal * 4
-                                        ),
-                                  )),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-
-                    ///Card list & Booking history & Contact us & Log out
-                    Expanded(
-                      flex: 5,
-                      child: Column(
-                        children: [
-                          ///Card list & Booking history
-                          Expanded(
-                            flex: 3,
-                            child: Column(
-                              children: [
-                                ///Card list
-                                Flexible(
-                                  flex: 3,
-                                  child: Container(
-                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 4),
-                                      alignment: Alignment.centerLeft,
-                                      child: CustomScrollView(
-                                        shrinkWrap: true,
-                                        scrollDirection: Axis.horizontal,
-                                        slivers: [
-                                          SliverList(
-                                            delegate: SliverChildBuilderDelegate(
-                                              (context, index) {
-                                                LandingCardWidget landingCard = cards.elementAt(index);
-                                                return Container(
-                                                  margin: EdgeInsets.all(10),
-                                                  child: _OpenContainerWrapper(
-                                                    index: index,
-                                                    closedBuilder: (BuildContext _, VoidCallback openContainer) {
-                                                      landingCard.callback = openContainer;
-                                                      return landingCard;
-                                                    },
-                                                  ),
-                                                );
-                                              },
-                                              childCount: cards.length,
-                                            ),
-                                          ),
-                                        ],
-                                      )),
+                                    )
+                                  ],
                                 ),
-
-                                ///Booking history
+                                ///Description
                                 Container(
-                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 8, bottom: SizeConfig.safeBlockVertical * 1),
-                                    alignment: Alignment.centerLeft,
-                                    child: Material(
-                                      color: Colors.transparent,
-                                      child: InkWell(
-                                          onTap: () {
-                                            /*Navigator.push(
-                                              context,
-                                              MaterialPageRoute(builder: (context) => MyBookings()),
-                                            );*/
-                                            StoreProvider.of<AppState>(context).dispatch(UserBookingListRequest(StoreProvider.of<AppState>(context).state.user.email));
-                                          },
-                                          borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                                          child: Container(
-                                            padding: EdgeInsets.all(5.0),
-                                            child: Text(
-                                              AppLocalizations.of(context).viewBookings,
-                                              style: TextStyle(
-                                                  fontFamily: BuytimeTheme.FontFamily,
-                                                  color: BuytimeTheme.UserPrimary,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: SizeConfig.safeBlockHorizontal * 4),
-                                            ),
-                                          )),
-                                    )),
+                                    margin: EdgeInsets.only(
+                                        top: SizeConfig.safeBlockVertical * 5,
+                                        bottom: SizeConfig.safeBlockVertical * 5,
+                                        left: SizeConfig.safeBlockHorizontal * 8,
+                                        right: SizeConfig.safeBlockHorizontal * 16),
+                                    child: Text(
+                                      AppLocalizations.of(context).whenYouBookWith,
+                                      style: TextStyle(
+                                          fontFamily: BuytimeTheme.FontFamily,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 18 //SizeConfig.safeBlockHorizontal * 4
+                                      ),
+                                    ))
                               ],
                             ),
                           ),
-
-                          ///Contact us & Log out
-                          StoreConnector<AppState, AppState>(
-                              converter: (store) => store.state,
-                              builder: (context, snapshot) {
-                                isManagerOrAbove = snapshot.user != null && (snapshot.user.getRole() != Role.user) ? true : false;
-                                return Expanded(
-                                  flex: isManagerOrAbove ? 3 : 2,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      ///Go to business management IF manager role or above.
-                                      isManagerOrAbove ? Flexible(
-                                        flex: 1,
-                                        child: Container(
-                                          color: Colors.white,
-                                          height: 60,
-                                          child: Material(
-                                            color: Colors.transparent,
-                                            child: InkWell(
-                                              onTap: () async {
-                                                StoreProvider.of<AppState>(context).dispatch(SetBusinessListToEmpty());
-                                                StoreProvider.of<AppState>(context).dispatch(SetOrderListToEmpty());
-                                                Navigator.pushReplacement(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          UI_M_BusinessList()),
-                                                );
-                                              },
-                                              child: CustomBottomButtonWidget(
-                                                  Text(
-                                                    AppLocalizations.of(context).goToBusiness,
-                                                    style: TextStyle(
-                                                        fontFamily: BuytimeTheme.FontFamily,
-                                                        color: Colors.black.withOpacity(.7),
-                                                        fontWeight: FontWeight.w500,
-                                                        fontSize: 16
-                                                    ),
-                                                  ),
-                                                  '',
-                                                  Icon(
-                                                    Icons.business_center,
-                                                    color: BuytimeTheme.SymbolGrey,
-                                                  )),
-                                            ),
+                          ///Card list
+                          Container(
+                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 4, top: SizeConfig.safeBlockVertical * 4),
+                              alignment: Alignment.centerLeft,
+                              height: 190,
+                              child: CustomScrollView(
+                                shrinkWrap: true,
+                                scrollDirection: Axis.horizontal,
+                                slivers: [
+                                  SliverList(
+                                    delegate: SliverChildBuilderDelegate(
+                                          (context, index) {
+                                        LandingCardWidget landingCard = cards.elementAt(index);
+                                        return Container(
+                                          margin: EdgeInsets.all(10),
+                                          child: _OpenContainerWrapper(
+                                            index: index,
+                                            closedBuilder: (BuildContext _, VoidCallback openContainer) {
+                                              landingCard.callback = openContainer;
+                                              return landingCard;
+                                            },
                                           ),
-                                        ),
-                                      ): Container(),
-                                      ///Contact us
-                                      Flexible(
-                                        flex: 1,
-                                        child: Container(
-                                          color: Colors.white,
-                                          height: 60,
-                                          child: Material(
-                                            color: Colors.transparent,
-                                            child: InkWell(
-                                              onTap: () async {
-                                                String url = BuytimeConfig.FlaviosNumber.trim();
-                                                debugPrint('Restaurant phonenumber: ' + url);
-                                                if (await canLaunch('tel:$url')) {
-                                                  await launch('tel:$url');
-                                                } else {
-                                                  throw 'Could not launch $url';
-                                                }
-                                              },
-                                              child: CustomBottomButtonWidget(
-                                                  Text(
-                                                    AppLocalizations.of(context).contactUs,
-                                                    style: TextStyle(
-                                                        fontFamily: BuytimeTheme.FontFamily,
-                                                        color: Colors.black.withOpacity(.7),
-                                                        fontWeight: FontWeight.w500,
-                                                        fontSize: 16
-                                                    ),
-                                                  ),
-                                                  AppLocalizations.of(context).haveAnyQuestion,
-                                                  Icon(
-                                                    Icons.call,
-                                                    color: BuytimeTheme.SymbolGrey,
-                                                  )),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-
-                                      ///Log out
-                                      Flexible(
-                                        flex: 1,
-                                        child: Container(
-                                          color: Colors.white,
-                                          height: 60,
-                                          padding: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 1),
-                                          child: Material(
-                                            color: Colors.transparent,
-                                            child: InkWell(
-                                                onTap: () async {
-                                                  SharedPreferences prefs = await SharedPreferences.getInstance();
-
-                                                  await prefs.setBool('easy_check_in', false);
-                                                  await prefs.setBool('star_explanation', false);
-
-                                                  FirebaseAuth.instance.signOut().then((_) {
-                                                    googleSignIn.signOut();
-
-                                                    facebookSignIn.logOut();
-                                                    //Resetto il carrello
-                                                    cartCounter = 0;
-
-                                                    //Svuotare lo Store sul Logout
-                                                    StoreProvider.of<AppState>(context).dispatch(SetCategoryToEmpty());
-                                                    StoreProvider.of<AppState>(context).dispatch(SetCategoryListToEmpty());
-                                                    StoreProvider.of<AppState>(context).dispatch(SetCategoryTreeToEmpty());
-                                                    StoreProvider.of<AppState>(context).dispatch(SetFilterToEmpty());
-                                                    StoreProvider.of<AppState>(context).dispatch(SetOrderToEmpty(""));
-                                                    StoreProvider.of<AppState>(context).dispatch(SetOrderListToEmpty());
-                                                    StoreProvider.of<AppState>(context).dispatch(SetBusinessToEmpty());
-                                                    StoreProvider.of<AppState>(context).dispatch(SetBusinessListToEmpty());
-                                                    StoreProvider.of<AppState>(context).dispatch(SetServiceToEmpty());
-                                                    StoreProvider.of<AppState>(context).dispatch(SetServiceListToEmpty());
-                                                    StoreProvider.of<AppState>(context).dispatch(SetServiceSlotToEmpty());
-                                                    StoreProvider.of<AppState>(context).dispatch(SetPipelineToEmpty());
-                                                    StoreProvider.of<AppState>(context).dispatch(SetPipelineListToEmpty());
-                                                    StoreProvider.of<AppState>(context).dispatch(SetStripeToEmpty());
-                                                    StoreProvider.of<AppState>(context).dispatch(SetUserStateToEmpty());
-                                                    //Torno al Login
-                                                    Navigator.pushReplacement(
-                                                      context,
-                                                      MaterialPageRoute(builder: (context) => Home()),
-                                                    );
-                                                  });
-                                                },
-                                                child: CustomBottomButtonWidget(
-                                                    Text(
-                                                      AppLocalizations.of(context).logOut,
-                                                      style: TextStyle(
-                                                          fontFamily: BuytimeTheme.FontFamily,
-                                                          color: Colors.black.withOpacity(.7),
-                                                          fontWeight: FontWeight.w500,
-                                                          fontSize: 16
-                                                      ),
-                                                    ),
-                                                    '',
-                                                    Icon(
-                                                      MaterialDesignIcons.exit_to_app,
-                                                      color: BuytimeTheme.SymbolGrey,
-                                                    ))),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
+                                        );
+                                      },
+                                      childCount: cards.length,
+                                    ),
                                   ),
-                                );
-                              })
+                                ],
+                              )),
+                          ///Booking history
+                          Container(
+                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 6.5, bottom: SizeConfig.safeBlockVertical * 1, top: SizeConfig.safeBlockVertical * 1),
+                              alignment: Alignment.centerLeft,
+                              child: Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                    onTap: () {
+                                      /*Navigator.push(
+                                              context,
+                                              MaterialPageRoute(builder: (context) => MyBookings()),
+                                            );*/
+                                      StoreProvider.of<AppState>(context).dispatch(UserBookingListRequest(StoreProvider.of<AppState>(context).state.user.email));
+                                    },
+                                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                    child: Container(
+                                      padding: EdgeInsets.all(5.0),
+                                      child: Text(
+                                        AppLocalizations.of(context).viewBookings,
+                                        style: TextStyle(
+                                            letterSpacing: 1.25,
+                                            fontFamily: BuytimeTheme.FontFamily,
+                                            color: BuytimeTheme.TextMalibu,
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 14 //SizeConfig.safeBlockHorizontal * 4
+                                        ),
+                                      ),
+                                    )),
+                              )),
                         ],
-                      ),
+                      )
+                    ),
+                    ///Contact us & Log out
+                    StoreConnector<AppState, AppState>(
+                        converter: (store) => store.state,
+                        builder: (context, snapshot) {
+                          isManagerOrAbove = snapshot.user != null && (snapshot.user.getRole() != Role.user) ? true : false;
+                          return Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            //mainAxisSize: MainAxisSize.min,
+                            children: [
+                              ///Go to business management IF manager role or above.
+                              isManagerOrAbove ? Container(
+                                color: Colors.white,
+                                height: 64,
+                                child: Material(
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                    onTap: () async {
+                                      StoreProvider.of<AppState>(context).dispatch(SetBusinessListToEmpty());
+                                      StoreProvider.of<AppState>(context).dispatch(SetOrderListToEmpty());
+                                      Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                UI_M_BusinessList()),
+                                      );
+                                    },
+                                    child: CustomBottomButtonWidget(
+                                        Container(
+                                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5),
+                                          child: Text(
+                                            AppLocalizations.of(context).goToBusiness,
+                                            style: TextStyle(
+                                                fontFamily: BuytimeTheme.FontFamily,
+                                                color: BuytimeTheme.TextBlack,
+                                                fontWeight: FontWeight.w400,
+                                                fontSize: 16
+                                            ),
+                                          ),
+                                        ),
+                                        '',
+                                        Container(
+                                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5),
+                                          child: Icon(
+                                            Icons.business_center,
+                                            color: BuytimeTheme.SymbolGrey,
+                                          ),
+                                        )
+                                    ),
+                                  ),
+                                ),
+                              ) : Container(),
+                              ///Contact us
+                              Container(
+                                color: Colors.white,
+                                height: 64,
+                                child: Material(
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                    onTap: () async {
+                                      String url = BuytimeConfig.FlaviosNumber.trim();
+                                      debugPrint('Restaurant phonenumber: ' + url);
+                                      if (await canLaunch('tel:$url')) {
+                                        await launch('tel:$url');
+                                      } else {
+                                        throw 'Could not launch $url';
+                                      }
+                                    },
+                                    child: CustomBottomButtonWidget(
+                                        Container(
+                                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1.5),
+                                          child: Text(
+                                            AppLocalizations.of(context).contactUs,
+                                            style: TextStyle(
+                                                fontFamily: BuytimeTheme.FontFamily,
+                                                color: BuytimeTheme.TextBlack,
+                                                fontWeight: FontWeight.w400,
+                                                fontSize: 16
+                                            ),
+                                          ),
+                                        ),
+                                        AppLocalizations.of(context).haveAnyQuestion,
+                                        Container(
+                                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1.5),
+                                          child: Icon(
+                                            Icons.call,
+                                            color: BuytimeTheme.SymbolGrey,
+                                          ),
+                                        )
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              ///Log out
+                              Container(
+                                color: Colors.white,
+                                height: 64,
+                                //padding: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 1),
+                                child: Material(
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                      onTap: () async {
+                                        SharedPreferences prefs = await SharedPreferences.getInstance();
+
+                                        await prefs.setBool('easy_check_in', false);
+                                        await prefs.setBool('star_explanation', false);
+
+                                        FirebaseAuth.instance.signOut().then((_) {
+                                          googleSignIn.signOut();
+
+                                          facebookSignIn.logOut();
+                                          //Resetto il carrello
+                                          cartCounter = 0;
+
+                                          //Svuotare lo Store sul Logout
+                                          StoreProvider.of<AppState>(context).dispatch(SetCategoryToEmpty());
+                                          StoreProvider.of<AppState>(context).dispatch(SetCategoryListToEmpty());
+                                          StoreProvider.of<AppState>(context).dispatch(SetCategoryTreeToEmpty());
+                                          StoreProvider.of<AppState>(context).dispatch(SetFilterToEmpty());
+                                          StoreProvider.of<AppState>(context).dispatch(SetOrderToEmpty(""));
+                                          StoreProvider.of<AppState>(context).dispatch(SetOrderListToEmpty());
+                                          StoreProvider.of<AppState>(context).dispatch(SetBusinessToEmpty());
+                                          StoreProvider.of<AppState>(context).dispatch(SetBusinessListToEmpty());
+                                          StoreProvider.of<AppState>(context).dispatch(SetServiceToEmpty());
+                                          StoreProvider.of<AppState>(context).dispatch(SetServiceListToEmpty());
+                                          StoreProvider.of<AppState>(context).dispatch(SetServiceSlotToEmpty());
+                                          StoreProvider.of<AppState>(context).dispatch(SetPipelineToEmpty());
+                                          StoreProvider.of<AppState>(context).dispatch(SetPipelineListToEmpty());
+                                          StoreProvider.of<AppState>(context).dispatch(SetStripeToEmpty());
+                                          StoreProvider.of<AppState>(context).dispatch(SetUserStateToEmpty());
+                                          //Torno al Login
+                                          Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(builder: (context) => Home()),
+                                          );
+                                        });
+                                      },
+                                      child: CustomBottomButtonWidget(
+                                          Container(
+                                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5),
+                                            child: Text(
+                                              AppLocalizations.of(context).logOut,
+                                              style: TextStyle(
+                                                  fontFamily: BuytimeTheme.FontFamily,
+                                                  color: BuytimeTheme.TextBlack,
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 16
+                                              ),
+                                            ),
+                                          ),
+                                          '',
+                                         Container(
+                                           margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5),
+                                           child:  Icon(
+                                             MaterialDesignIcons.exit_to_app,
+                                             color: BuytimeTheme.SymbolGrey,
+                                           ),
+                                         )
+                                      )
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        }
                     )
                   ],
                 ),

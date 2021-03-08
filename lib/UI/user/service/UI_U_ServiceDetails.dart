@@ -120,11 +120,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                       child: Text(
                         widget.serviceState.name, //TODO Make it Global
                         textAlign: TextAlign.start,
-                        style: TextStyle(
-                          fontSize: SizeConfig.safeBlockHorizontal * 5,
-                          color: BuytimeTheme.TextWhite,
-                          fontWeight: FontWeight.w400,
-                        ),
+                        style: BuytimeTheme.appbarTitle,
                       ),
                     ),
                   ),
@@ -199,7 +195,9 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
               body: SafeArea(
                 child: SingleChildScrollView(
                   child: ConstrainedBox(
-                    constraints: BoxConstraints(),
+                    constraints: BoxConstraints(
+                      minHeight: (SizeConfig.safeBlockVertical * 100) - 60
+                    ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
@@ -263,22 +261,22 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                   serviceState.name ?? AppLocalizations.of(context).serviceName,
                                   style: TextStyle(
                                       fontFamily: BuytimeTheme.FontFamily,
-                                      color: BuytimeTheme.TextDark,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: SizeConfig.safeBlockHorizontal * 4
+                                      color: BuytimeTheme.TextBlack,
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 18 ///SizeConfig.safeBlockHorizontal * 4
                                   ),
                                 ),
                               ),
                               ///Service Name Text
                               Container(
-                                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
+                                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1.5),
                                 child: Text(
                                   serviceState.name ?? AppLocalizations.of(context).serviceName,
                                   style: TextStyle(
                                       fontFamily: BuytimeTheme.FontFamily,
-                                      color: BuytimeTheme.TextDark,
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: SizeConfig.safeBlockHorizontal * 4
+                                      color: BuytimeTheme.TextBlack,
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
                                   ),
                                 ),
                               ),
@@ -289,19 +287,19 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                   serviceState.price != null ? '€ ${serviceState.price}/1 Unit' : '€ 99/ ' + AppLocalizations.of(context).hour,
                                   style: TextStyle(
                                       fontFamily: BuytimeTheme.FontFamily,
-                                      color: BuytimeTheme.TextDark,
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: SizeConfig.safeBlockHorizontal * 4
+                                      color: BuytimeTheme.TextBlack,
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
                                   ),
                                 ),
                               ),
                               ///Buy
                               Container(
-                                  width: SizeConfig.safeBlockHorizontal * 40,
+                                  width: 158, ///SizeConfig.safeBlockHorizontal * 40
+                                  height: 44,
                                   margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, bottom: SizeConfig.safeBlockVertical * 2),
                                   child: RaisedButton(
                                     onPressed: () {
-
                                     },
                                     textColor: BuytimeTheme.TextWhite,
                                     color: BuytimeTheme.UserPrimary,
@@ -312,16 +310,18 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                     child: Text(
                                       'BUY',
                                       style: TextStyle(
-                                        fontSize: 18,
-                                        fontFamily: 'Roboto',
-                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14,
+                                        fontFamily: BuytimeTheme.FontFamily,
+                                        fontWeight: FontWeight.w800,
+                                        letterSpacing: 1.25
                                       ),
                                     ),
                                   )
                               ),
                               ///Add to card
                               Container(
-                                  width: SizeConfig.safeBlockHorizontal * 40,
+                                  width: 158, ///SizeConfig.safeBlockHorizontal * 40
+                                  height: 44,
                                   margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 2),
                                   child: FlatButton(
                                     onPressed: () {
@@ -343,9 +343,10 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                     child: Text(
                                       AppLocalizations.of(context).addToCart,
                                       style: TextStyle(
-                                        fontSize: 18,
-                                        fontFamily: 'Roboto',
-                                        fontWeight: FontWeight.bold,
+                                          fontSize: 14,
+                                          fontFamily: BuytimeTheme.FontFamily,
+                                          fontWeight: FontWeight.w500,
+                                          letterSpacing: 1.25
                                       ),
                                     ),
                                   )
@@ -364,9 +365,9 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                           'Service Description',
                                           style: TextStyle(
                                               fontFamily: BuytimeTheme.FontFamily,
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: SizeConfig.safeBlockHorizontal * 5
+                                              color: BuytimeTheme.TextBlack,
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 16 ///SizeConfig.safeBlockHorizontal * 5
                                           ),
                                         ),
                                       ),
@@ -376,9 +377,9 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                           serviceState.description.isNotEmpty ? serviceState.description : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In luctus laoreet tortor at rhoncus. Integer ac pretium ipsum, non faucibus elit. Curabitur nisi diam, lacinia sit amet accumsan nec, dictum tempus neque. Fusce et quam ante.',
                                           style: TextStyle(
                                               fontFamily: BuytimeTheme.FontFamily,
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.w500,
-                                              fontSize: SizeConfig.safeBlockHorizontal * 4
+                                              color: BuytimeTheme.TextBlack,
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
                                           ),
                                         ),
                                       )

@@ -139,9 +139,9 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                     fontFamily: BuytimeTheme.FontFamily,
-                                      fontWeight: FontWeight.w600,
-                                      color: BuytimeTheme.TextDark.withOpacity(.8),
-                                      fontSize: mediaSize.height * 0.024,
+                                      fontWeight: FontWeight.w500,
+                                      color: BuytimeTheme.TextBlack,
+                                      fontSize: 18 /// mediaSize.height * 0.024
                                   ),
                                 ),
                               ),
@@ -151,9 +151,9 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                   fontFamily: BuytimeTheme.FontFamily,
-                                    fontSize: mediaSize.height * 0.021,
                                     fontWeight: FontWeight.w600,
-                                    color: Colors.black.withOpacity(0.6)
+                                    color: BuytimeTheme.TextMedium,
+                                    fontSize: 14 /// mediaSize.height * 0.024
                                 ),
                               ),
                             ],

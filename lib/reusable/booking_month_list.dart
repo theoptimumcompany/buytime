@@ -36,8 +36,8 @@ class _BookingMonthListState extends State<BookingMonthList> {
                 fontFamily: BuytimeTheme.FontFamily,
                 color: Colors.black,
                 fontWeight: FontWeight.bold,
-                fontSize: 13,
-              letterSpacing: 2.5
+                fontSize: 12,
+              letterSpacing: 1.5
             ),
             textAlign: TextAlign.left,
           ),

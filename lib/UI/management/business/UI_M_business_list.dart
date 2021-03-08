@@ -52,6 +52,7 @@ class UI_M_BusinessListState extends State<UI_M_BusinessList> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
+                        ///Drawer
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
                           child: IconButton(
@@ -66,22 +67,20 @@ class UI_M_BusinessListState extends State<UI_M_BusinessList> {
                             },
                           ),
                         ),
+                        ///Title
                         Container(
                           child: Padding(
                             padding: const EdgeInsets.only(left: 20.0),
                             child: Text(
                               AppLocalizations.of(context).businessManagement,
                               textAlign: TextAlign.start,
-                              style: TextStyle(
-                                color: BuytimeTheme.TextWhite,
-                                fontSize: SizeConfig.safeBlockHorizontal * 5,
-                                fontWeight: FontWeight.w400, ///w400
-                              ),
+                              style: BuytimeTheme.appbarTitle,
                             ),
                           ),
                         )
                       ],
                     ),
+                    ///Add Icon
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
                       child: IconButton(

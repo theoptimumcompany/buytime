@@ -63,8 +63,14 @@ class _MyBookingsState extends State<MyBookings> {
         bookings = store.state.bookingList.bookingListState;
         List<BookingState> tmpOpened = [];
         List<BookingState> tmpClosed = [];
+
+        DateTime currentTime = DateTime.now();
+        currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0);
+
         bookings.forEach((element) {
-          if(element.end_date.isBefore(DateTime.now()) && element.status != 'closed'){
+          DateTime endTime = element.end_date;
+          endTime = new DateTime(endTime.year, endTime.month, endTime.day, 0, 0, 0, 0, 0);
+          if(endTime.isBefore(currentTime) && element.status != 'closed'){
             debugPrint('UI_U_MyBookings => ${element.end_date}');
             element.status = element.enumToString(BookingStatus.closed);
             StoreProvider.of<AppState>(context).dispatch(UpdateBooking(element));
@@ -125,7 +131,7 @@ class _MyBookingsState extends State<MyBookings> {
                 children: [
                   ///Bookings Text
                   Expanded(
-                    flex: 3,
+                    flex: 2,
                     child: Container(
                       color: BuytimeTheme.BackgroundCerulean,
                       //height: SizeConfig.safeBlockVertical * 15,
@@ -138,9 +144,9 @@ class _MyBookingsState extends State<MyBookings> {
                               AppLocalizations.of(context).myBookings,
                               style: TextStyle(
                                   fontFamily: BuytimeTheme.FontFamily,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: SizeConfig.safeBlockHorizontal * 7
+                                  color: BuytimeTheme.TextWhite,
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 26 ///SizeConfig.safeBlockHorizontal * 7
                               ),
                             ),
                           )
@@ -157,7 +163,7 @@ class _MyBookingsState extends State<MyBookings> {
                             flex: 7,
                             child: showList ?
                             Container(
-                              margin: EdgeInsets.only(top: SizeConfig.safeBlockHorizontal * 0),
+                              margin: EdgeInsets.only(top: SizeConfig.safeBlockHorizontal * 4),
                               alignment: Alignment.centerLeft,
                               child: MediaQuery.removePadding(
                                   removeTop: true,
@@ -185,8 +191,8 @@ class _MyBookingsState extends State<MyBookings> {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Container(
-                                  height: SizeConfig.safeBlockVertical * 28,
-                                  width: SizeConfig.safeBlockHorizontal * 80,
+                                  height: 197, ///SizeConfig.safeBlockVertical * 28
+                                  width: 310, ///SizeConfig.safeBlockHorizontal * 80
                                   margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
                                   decoration: BoxDecoration(
                                       color: Colors.white,
@@ -201,14 +207,14 @@ class _MyBookingsState extends State<MyBookings> {
                                 Expanded(
                                   flex: 3,
                                   child: Container(
-                                      margin: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 8, right: SizeConfig.safeBlockHorizontal * 8, top: SizeConfig.safeBlockVertical * 5),
+                                      margin: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 8, right: SizeConfig.safeBlockHorizontal * 8, top: SizeConfig.safeBlockVertical * 8),
                                       child: Text(
                                         AppLocalizations.of(context).yourBookingWill,
                                         style: TextStyle(
                                             fontFamily: BuytimeTheme.FontFamily,
-                                            color: Colors.black54,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 18//SizeConfig.safeBlockHorizontal * 4
+                                            color: BuytimeTheme.TextBlack,
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 16 ///SizeConfig.safeBlockHorizontal * 4
                                         ),
                                       )
                                   ),
@@ -217,43 +223,46 @@ class _MyBookingsState extends State<MyBookings> {
                             )
                         ),
                         ///Contact
-                        Expanded(
-                            flex: 1,
-                            child: Container(
-                              color: Colors.white,
-                              height: 60,
-                              padding: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 1),
-                              child: Material(
-                                color: Colors.transparent,
-                                child: InkWell(
-                                  onTap: () async{
-                                    String url = BuytimeConfig.FlaviosNumber.trim();
-                                    debugPrint('Restaurant phonenumber: ' + url);
-                                    if (await canLaunch('tel:$url')) {
-                                      await launch('tel:$url');
-                                    } else {
-                                      throw 'Could not launch $url';
-                                    }
-                                  },
-                                  child: CustomBottomButtonWidget(
-                                      Text(
-                                        AppLocalizations.of(context).contactUs,
-                                        style: TextStyle(
-                                            fontFamily: BuytimeTheme.FontFamily,
-                                            color: Colors.black.withOpacity(.7),
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 16
-                                        ),
+                        Container(
+                          color: Colors.white,
+                          height: 64,
+                          padding: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 1),
+                          child: Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              onTap: () async{
+                                String url = BuytimeConfig.FlaviosNumber.trim();
+                                debugPrint('Restaurant phonenumber: ' + url);
+                                if (await canLaunch('tel:$url')) {
+                                  await launch('tel:$url');
+                                } else {
+                                  throw 'Could not launch $url';
+                                }
+                              },
+                              child: CustomBottomButtonWidget(
+                                  Container(
+                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1.5),
+                                    child: Text(
+                                      AppLocalizations.of(context).contactUs,
+                                      style: TextStyle(
+                                          fontFamily: BuytimeTheme.FontFamily,
+                                          color: Colors.black.withOpacity(.7),
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 16
                                       ),
-                                      AppLocalizations.of(context).haveAnyQuestion,
-                                      Icon(
-                                        Icons.call,
-                                        color: BuytimeTheme.SymbolLightGrey,
-                                      )
+                                    ),
                                   ),
-                                ),
+                                  AppLocalizations.of(context).haveAnyQuestion,
+                                  Container(
+                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1.5),
+                                    child: Icon(
+                                      Icons.call,
+                                      color: BuytimeTheme.SymbolLightGrey,
+                                    ),
+                                  )
                               ),
-                            )
+                            ),
+                          ),
                         )
                       ],
                     ),

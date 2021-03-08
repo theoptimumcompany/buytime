@@ -1,4 +1,5 @@
 import 'package:Buytime/reblox/model/business/business_state.dart';
+import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -74,92 +75,107 @@ class _OptimumBusinessCardMediumManagerState extends State<OptimumBusinessCardMe
       );
     }
     return Container(
-      child: GestureDetector(
-        onTap: () {
-          businessCardTap(widget.businessState);
-        },
-        child: Row(
-          children: [
-            widget.image == null
-                ? Image.network(
+      child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            //borderRadius: BorderRadius.all(Radius.circular(10)),
+            onTap: () async {
+              businessCardTap(widget.businessState);
+            },
+            child: Container(
+              //height: 91,  ///SizeConfig.safeBlockVertical * 15
+              //margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 2.5, top: 1, bottom: 1),
+              child: Row(
+                children: [
+                  ///Image
+                  widget.image == null
+                      ? Image.network(
                     version200(widget.imageUrl),
                     height: widget.mediaSize != null
                         ? widget.mediaSize.height * 0.13
                         : 50.0,
                   )
-                : widget.image,
-            SizedBox(
-              width: widget.mediaSize.width * 0.025,
-            ),
-            Expanded(
-              child: Container(
-                height: mediaSize.height * 0.13,
-                decoration: BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(
-                        width: 1.0, color: Color.fromRGBO(33, 33, 33, 0.1)),
+                      : widget.image,
+                  SizedBox(
+                    width: widget.mediaSize.width * 0.025,
                   ),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                  Expanded(
+                    child: Container(
+                      height: mediaSize.height * 0.13,
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                              width: 1.0, color: Color.fromRGBO(33, 33, 33, 0.1)),
+                        ),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 5.0),
-                                child: Text(
-                                  widget.businessState.name,
-                                  overflow: TextOverflow.ellipsis,
-                                  textAlign: TextAlign.start,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: mediaSize.height * 0.0215,
-                                  ),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(bottom: 5.0),
+                                      child: Text(
+                                        widget.businessState.name,
+                                        overflow: TextOverflow.ellipsis,
+                                        textAlign: TextAlign.start,
+                                        style: TextStyle(
+                                          color: BuytimeTheme.TextBlack,
+                                          fontFamily: BuytimeTheme.FontFamily,
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 16, ///mediaSize.height * 0.0215
+                                        ),
+                                      ),
+                                    ),
+                                    Text(
+                                      AppLocalizations.of(context).employees,
+                                      overflow: TextOverflow.ellipsis,
+                                      textAlign: TextAlign.start,
+                                      style: TextStyle(
+                                        fontSize: 14, ///widget.mediaSize.height * 0.019
+                                        color: BuytimeTheme.TextMedium,
+                                        fontFamily: BuytimeTheme.FontFamily,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 3.0),
+                                      child: Text(
+                                        AppLocalizations.of(context).services5,
+                                        overflow: TextOverflow.ellipsis,
+                                        textAlign: TextAlign.start,
+                                        style: TextStyle(
+                                          fontSize: 14, ///widget.mediaSize.height * 0.019
+                                          color: BuytimeTheme.TextMedium,
+                                          fontFamily: BuytimeTheme.FontFamily,
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              Text(
-                                AppLocalizations.of(context).employees,
-                                overflow: TextOverflow.ellipsis,
-                                textAlign: TextAlign.start,
-                                style: TextStyle(
-                                    fontSize: widget.mediaSize.height * 0.019,
-                                    color: Colors.black.withOpacity(0.6)),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(top: 3.0),
-                                child: Text(
-                                  AppLocalizations.of(context).services5,
-                                  overflow: TextOverflow.ellipsis,
-                                  textAlign: TextAlign.start,
-                                  style: TextStyle(
-                                      fontSize: widget.mediaSize.height * 0.019,
-                                      color: Colors.black.withOpacity(0.6)),
-                                ),
-                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.keyboard_arrow_right,
+                                    size: widget.mediaSize.height * 0.035,
+                                    color: Colors.black.withOpacity(0.6),
+                                  )
+                                ],
+                              )
                             ],
                           ),
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.keyboard_arrow_right,
-                              size: widget.mediaSize.height * 0.035,
-                              color: Colors.black.withOpacity(0.6),
-                            )
-                          ],
-                        )
-                      ],
-                    ),
-                    widget.rowWidget1 != null ||
-                            widget.rowWidget2 != null ||
-                            widget.rowWidget3 != null
-                        ? Row(
+                          widget.rowWidget1 != null ||
+                              widget.rowWidget2 != null ||
+                              widget.rowWidget3 != null
+                              ? Row(
                             children: [
                               widget.rowWidget1 != null
                                   ? widget.rowWidget1
@@ -172,13 +188,15 @@ class _OptimumBusinessCardMediumManagerState extends State<OptimumBusinessCardMe
                                   : Container(),
                             ],
                           )
-                        : SizedBox()
-                  ],
-                ),
+                              : SizedBox()
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
+          )
       ),
     );
   }

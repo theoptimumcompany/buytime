@@ -75,6 +75,7 @@ dependencies:
   qr_flutter: ^3.2.0
   cached_network_image: ^2.5.0
   flutter_secure_storage: ^3.3.5
+  flutter_screenutil: ^4.0.3+2
 
 dependency_overrides:
   intl: ^0.17.0-nullsafety.2

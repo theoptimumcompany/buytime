@@ -66,9 +66,10 @@ class RoomState extends State<Room> {
                               'Room Number:', ///TODO Make it Global
                               textAlign: TextAlign.start,
                               style: TextStyle(
+                                letterSpacing: 0.25,
                                 fontFamily: BuytimeTheme.FontFamily,
-                                color: BuytimeTheme.TextGrey,
-                                fontSize: SizeConfig.safeBlockHorizontal * 3.5,
+                                color: BuytimeTheme.TextMedium,
+                                fontSize: 14, ///SizeConfig.safeBlockHorizontal * 3.5
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -80,10 +81,11 @@ class RoomState extends State<Room> {
                               room, ///TODO Make it Global
                               textAlign: TextAlign.start,
                               style: TextStyle(
+                                letterSpacing: 0.5,
                                 fontFamily: BuytimeTheme.FontFamily,
-                                color: BuytimeTheme.TextDark,
-                                fontSize: SizeConfig.safeBlockHorizontal * 4,
-                                fontWeight: FontWeight.w800,
+                                color: BuytimeTheme.TextBlack,
+                                fontSize: 16, ///SizeConfig.safeBlockHorizontal * 3.5
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
                           )
@@ -113,9 +115,10 @@ class RoomState extends State<Room> {
                               'Name:', ///TODO Make it Global
                               textAlign: TextAlign.start,
                               style: TextStyle(
+                                letterSpacing: 0.25,
                                 fontFamily: BuytimeTheme.FontFamily,
-                                color: BuytimeTheme.TextGrey,
-                                fontSize: SizeConfig.safeBlockHorizontal * 3.5,
+                                color: BuytimeTheme.TextMedium,
+                                fontSize: 14, ///SizeConfig.safeBlockHorizontal * 3.5
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -127,10 +130,11 @@ class RoomState extends State<Room> {
                               fullName, ///TODO Make it Global
                               textAlign: TextAlign.start,
                               style: TextStyle(
+                                letterSpacing: 0.5,
                                 fontFamily: BuytimeTheme.FontFamily,
-                                color: BuytimeTheme.TextDark,
-                                fontSize: SizeConfig.safeBlockHorizontal * 4,
-                                fontWeight: FontWeight.w800,
+                                color: BuytimeTheme.TextBlack,
+                                fontSize: 16, ///SizeConfig.safeBlockHorizontal * 3.5
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
                           )
@@ -153,11 +157,11 @@ class RoomState extends State<Room> {
                         child: Text(
                           'Please charge this amount to my hotel bill.',//AppLocalizations.of(context).somethingIsNotRight,
                           style: TextStyle(
-                              letterSpacing: SizeConfig.safeBlockHorizontal * .2,
-                              fontFamily: BuytimeTheme.FontFamily,
-                              color: BuytimeTheme.UserPrimary,
-                              fontWeight: FontWeight.w600,
-                              fontSize: SizeConfig.safeBlockHorizontal * 4
+                            letterSpacing: 0.5,
+                            fontFamily: BuytimeTheme.FontFamily,
+                            color: BuytimeTheme.UserPrimary,
+                            fontSize: 16, ///SizeConfig.safeBlockHorizontal * 3.5
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                       )

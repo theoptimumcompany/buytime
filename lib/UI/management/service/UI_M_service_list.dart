@@ -103,8 +103,9 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                 appBar: BuytimeAppbar(
                   width: media.width,
                   children: [
+                    ///Back Button
                     IconButton(
-                      icon: Icon(Icons.chevron_left, color: Colors.white, size: mediaWidth * 0.1),
+                      icon: Icon(Icons.keyboard_arrow_left, color: Colors.white),
                       onPressed: () => Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(builder: (context) => UI_M_Business()),
@@ -116,11 +117,7 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                         child: Text(
                           "Service List", //TODO: <-- ADD TO LANGUAGE TRANSLATE
                           textAlign: TextAlign.start,
-                          style: TextStyle(
-                            color: BuytimeTheme.TextWhite,
-                            fontSize: mediaHeight * 0.025,
-                            fontWeight: FontWeight.w400,
-                          ),
+                          style: BuytimeTheme.appbarTitle,
                         ),
                       ),
                     ),
@@ -148,9 +145,11 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                             itemCount: categoryRootList.length,
                             itemBuilder: (context, i) {
                               return Container(
+                                //height: 56,
                                 child: Padding(
                                   padding: const EdgeInsets.only(
                                     top: 15.0,
+                                    //bottom: 50
                                   ),
                                   child: Column(
                                     children: [
@@ -164,8 +163,9 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                                                 categoryRootList[i].name,
                                                 textAlign: TextAlign.start,
                                                 style: TextStyle(
+                                                  fontSize: 16, ///widget.mediaSize.height * 0.019
                                                   color: BuytimeTheme.TextBlack,
-                                                  fontSize: media.height * 0.018,
+                                                  fontFamily: BuytimeTheme.FontFamily,
                                                   fontWeight: FontWeight.w400,
                                                 ),
                                               )
@@ -173,63 +173,70 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                                           ),
                                         ),
                                       ),
-
                                       ///Divider under category name
                                       Divider(
                                         indent: 30.0,
                                         color: BuytimeTheme.DividerGrey,
                                         thickness: 1.0,
                                       ),
-
                                       ///Static add service to category
-                                      GestureDetector(
-                                        onTap: () {
-                                          StoreProvider.of<AppState>(context).dispatch(SetService(ServiceState().toEmpty()));
-                                          Navigator.pushReplacement(
-                                            context,
-                                            MaterialPageRoute(builder: (context) => UI_CreateService(categoryId: categoryRootList[i].id)),
-                                          );
-                                        },
-                                        child: Row(
-                                          // mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            Padding(
-                                              padding: EdgeInsets.only(left: mediaWidth * 0.12, right: mediaWidth * 0.07),
-                                              child: Container(
-                                                child: Icon(Icons.add_box_rounded, color: BuytimeTheme.SymbolGrey, size: mediaWidth * 0.07),
-                                              ),
-                                            ),
-                                            Expanded(
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  border: Border(
-                                                    bottom: BorderSide(width: 1.0, color: BuytimeTheme.DividerGrey),
-                                                  ),
-                                                ),
-                                                child: Row(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                  children: [
-                                                    Container(
-                                                        child: Text(
-                                                      "Add a " + categoryRootList[i].name, //todo translate
-                                                      textAlign: TextAlign.start,
-                                                      style: TextStyle(
-                                                        color: BuytimeTheme.TextBlack,
-                                                        fontSize: media.height * 0.018,
-                                                        fontWeight: FontWeight.w400,
-                                                      ),
-                                                    )),
-                                                    Container(
-                                                      child: Icon(Icons.chevron_right, color: BuytimeTheme.SymbolGrey, size: media.width * 0.1),
+                                      Material(
+                                          color: Colors.transparent,
+                                          child: InkWell(
+                                            //borderRadius: BorderRadius.all(Radius.circular(10)),
+                                            onTap: () async {
+                                              StoreProvider.of<AppState>(context).dispatch(SetService(ServiceState().toEmpty()));
+                                              Navigator.pushReplacement(
+                                                context,
+                                                MaterialPageRoute(builder: (context) => UI_CreateService(categoryId: categoryRootList[i].id)),
+                                              );
+                                            },
+                                            child: Container(
+                                              height: 56,
+                                              child:  Row(
+                                                // mainAxisAlignment: MainAxisAlignment.center,
+                                                children: [
+                                                  Padding(
+                                                    padding: EdgeInsets.only(left: mediaWidth * 0.12, right: mediaWidth * 0.07),
+                                                    child: Container(
+                                                      child: Icon(Icons.add_box_rounded, color: BuytimeTheme.SymbolGrey, size: mediaWidth * 0.07),
                                                     ),
-                                                  ],
-                                                ),
+                                                  ),
+                                                  Expanded(
+                                                    child: Container(
+                                                      height: 56,
+                                                      decoration: BoxDecoration(
+                                                        border: Border(
+                                                          bottom: BorderSide(width: 1.0, color: BuytimeTheme.DividerGrey),
+                                                        ),
+                                                      ),
+                                                      child: Row(
+                                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                        children: [
+                                                          Container(
+                                                              child: Text(
+                                                                "Add a " + categoryRootList[i].name, //todo translate
+                                                                textAlign: TextAlign.start,
+                                                                style: TextStyle(
+                                                                    fontSize: 16, ///widget.mediaSize.height * 0.019
+                                                                    color: BuytimeTheme.TextBlack,
+                                                                    fontFamily: BuytimeTheme.FontFamily,
+                                                                    fontWeight: FontWeight.w400,
+                                                                    letterSpacing: 0.15
+                                                                ),
+                                                              )),
+                                                          Container(
+                                                            child: Icon(Icons.keyboard_arrow_right, color: BuytimeTheme.SymbolGrey, size: 24),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
                                             ),
-                                          ],
-                                        ),
+                                          )
                                       ),
-
                                       ///Service List
                                       serviceList.length > 0
                                           ? Container(
@@ -271,98 +278,113 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                                                       }
                                                       break;
                                                   }
-                                                  return AbsorbPointer(
-                                                    absorbing: !(snapshot.user.owner ||  snapshot.user.admin ||  snapshot.user.salesman),
-                                                    child: Dismissible( key: UniqueKey(),
-                                                      direction: DismissDirection.endToStart,
-                                                      background: Container(
-                                                        color: Colors.red,
-                                                        margin: EdgeInsets.symmetric(horizontal: 15),
-                                                        alignment: Alignment.centerRight,
-                                                        child: Icon(
-                                                          Icons.delete,
-                                                          color: BuytimeTheme.SymbolWhite,
-                                                        ),
-                                                      ),
-                                                      onDismissed: (direction) {
+                                                  return Material(
+                                                      color: Colors.transparent,
+                                                      child: InkWell(
+                                                        //borderRadius: BorderRadius.all(Radius.circular(10)),
+                                                        onTap: () async {
 
-                                                        setState(() {
-                                                          ///Deleting Service
-                                                          print("Delete Service " + index.toString());
-                                                          StoreProvider.of<AppState>(context).dispatch(DeleteService(listOfServiceEachRoot[i][index].serviceId));
-                                                        });
-                                                      },
+                                                        },
+                                                        child: AbsorbPointer(
+                                                          absorbing: !(snapshot.user.owner ||  snapshot.user.admin ||  snapshot.user.salesman),
+                                                          child: Dismissible( key: UniqueKey(),
+                                                            direction: DismissDirection.endToStart,
+                                                            background: Container(
+                                                              height: 56,
+                                                              color: Colors.red,
+                                                              //margin: EdgeInsets.symmetric(horizontal: 15),
+                                                              alignment: Alignment.centerRight,
+                                                              child: Icon(
+                                                                Icons.delete,
+                                                                color: BuytimeTheme.SymbolWhite,
+                                                              ),
+                                                            ),
+                                                            onDismissed: (direction) {
 
-                                                      child: Row(
-                                                        children: [
-                                                          GestureDetector(
-                                                            onTap: () {
                                                               setState(() {
-                                                                switch (listOfServiceEachRoot[i][index].visibility) {
-                                                                  case 'Active':
-                                                                    listOfServiceEachRoot[i][index].visibility = 'Deactivated';
-                                                                    break;
-                                                                  case 'Deactivated':
-                                                                    listOfServiceEachRoot[i][index].visibility = 'Invisible';
-                                                                    break;
-                                                                  case 'Invisible':
-                                                                    listOfServiceEachRoot[i][index].visibility = 'Active';
-                                                                    break;
-                                                                }
-
-                                                                ///Aggiorno Database
-                                                                StoreProvider.of<AppState>(context)
-                                                                    .dispatch(SetServiceListVisibilityOnFirebase(listOfServiceEachRoot[i][index].serviceId, listOfServiceEachRoot[i][index].visibility));
+                                                                ///Deleting Service
+                                                                print("Delete Service " + index.toString());
+                                                                StoreProvider.of<AppState>(context).dispatch(DeleteService(listOfServiceEachRoot[i][index].serviceId));
                                                               });
                                                             },
-                                                            child: Padding(
-                                                                padding: EdgeInsets.only(left: mediaWidth * 0.12, right: mediaWidth * 0.07),
-                                                                child: Container(
-                                                                  child: iconVisibility,
-                                                                )),
-                                                          ),
-                                                          Expanded(
-                                                            child: GestureDetector(
-                                                              onTap: () {
-                                                                StoreProvider.of<AppState>(context).dispatch(SetService(listOfServiceEachRoot[i][index]));
-                                                                Navigator.push(
-                                                                  context,
-                                                                  MaterialPageRoute(builder: (context) => UI_EditService()),
-                                                                );
-                                                              },
-                                                              child: Container(
-                                                                decoration: BoxDecoration(
-                                                                  border: Border(
-                                                                    bottom: BorderSide(width: 1.0, color: BuytimeTheme.DividerGrey),
+                                                            child: Container(
+                                                              height: 56,
+                                                              child: Row(
+                                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                children: [
+                                                                  GestureDetector(
+                                                                    onTap: () {
+                                                                      setState(() {
+                                                                        switch (listOfServiceEachRoot[i][index].visibility) {
+                                                                          case 'Active':
+                                                                            listOfServiceEachRoot[i][index].visibility = 'Deactivated';
+                                                                            break;
+                                                                          case 'Deactivated':
+                                                                            listOfServiceEachRoot[i][index].visibility = 'Invisible';
+                                                                            break;
+                                                                          case 'Invisible':
+                                                                            listOfServiceEachRoot[i][index].visibility = 'Active';
+                                                                            break;
+                                                                        }
+
+                                                                        ///Aggiorno Database
+                                                                        StoreProvider.of<AppState>(context)
+                                                                            .dispatch(SetServiceListVisibilityOnFirebase(listOfServiceEachRoot[i][index].serviceId, listOfServiceEachRoot[i][index].visibility));
+                                                                      });
+                                                                    },
+                                                                    child: Padding(
+                                                                        padding: EdgeInsets.only(left: mediaWidth * 0.12, right: mediaWidth * 0.07),
+                                                                        child: Container(
+                                                                          child: iconVisibility,
+                                                                        )),
                                                                   ),
-                                                                ),
-                                                                child: Row(
-                                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                  children: [
-                                                                    Flexible(
+                                                                  Expanded(
+                                                                    child: GestureDetector(
+                                                                      onTap: () {
+                                                                        StoreProvider.of<AppState>(context).dispatch(SetService(listOfServiceEachRoot[i][index]));
+                                                                        Navigator.push(
+                                                                          context,
+                                                                          MaterialPageRoute(builder: (context) => UI_EditService()),
+                                                                        );
+                                                                      },
                                                                       child: Container(
-                                                                          child: Text(
-                                                                        listOfServiceEachRoot[i][index].name,
-                                                                        textAlign: TextAlign.start,
-                                                                        overflow: TextOverflow.ellipsis,
-                                                                        style: TextStyle(
-                                                                          color: BuytimeTheme.TextBlack,
-                                                                          fontSize: media.height * 0.018,
-                                                                          fontWeight: FontWeight.w400,
+                                                                        height: 56,
+                                                                        decoration: BoxDecoration(
+                                                                          border: Border(
+                                                                            bottom: BorderSide(width: 1.0, color: BuytimeTheme.DividerGrey),
+                                                                          ),
                                                                         ),
-                                                                      )),
+                                                                        child: Row(
+                                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                          children: [
+                                                                            Flexible(
+                                                                              child: Container(
+                                                                                  child: Text(
+                                                                                    listOfServiceEachRoot[i][index].name,
+                                                                                    textAlign: TextAlign.start,
+                                                                                    overflow: TextOverflow.ellipsis,
+                                                                                    style: TextStyle(
+                                                                                      fontSize: 16, ///widget.mediaSize.height * 0.019
+                                                                                      color: BuytimeTheme.TextBlack,
+                                                                                      fontFamily: BuytimeTheme.FontFamily,
+                                                                                      fontWeight: FontWeight.w400,
+                                                                                    ),
+                                                                                  )),
+                                                                            ),
+                                                                            Container(
+                                                                              child: Icon(Icons.keyboard_arrow_right, color: BuytimeTheme.SymbolGrey, size: 24),
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                      ),
                                                                     ),
-                                                                    Container(
-                                                                      child: Icon(Icons.chevron_right, color: BuytimeTheme.SymbolGrey, size: media.width * 0.1),
-                                                                    ),
-                                                                  ],
-                                                                ),
+                                                                  ),
+                                                                ],
                                                               ),
                                                             ),
                                                           ),
-                                                        ],
-                                                      ),
-                                                    ),
+                                                        ),
+                                                      )
                                                   );
                                                 },
                                               ),

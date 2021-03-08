@@ -1,4 +1,6 @@
 import 'package:Buytime/UI/management/invite/UI_M_BookingList.dart';
+import 'package:Buytime/reblox/model/autoComplete/auto_complete_list_state.dart';
+import 'package:Buytime/reblox/model/autoComplete/auto_complete_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_list_state.dart';
 import 'package:Buytime/reblox/model/business/business_list_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
@@ -66,6 +68,8 @@ class AppState {
   StatisticsState statistics;
   CardState cardState;
   CardListState cardListState;
+  AutoCompleteState autoCompleteState;
+  AutoCompleteListState autoCompleteListState;
 
   AppState({
     @required this.filterSearch,
@@ -90,7 +94,9 @@ class AppState {
     this.route = const [AppRoutes.home],
     this.statistics,
     this.cardState,
-    this.cardListState
+    this.cardListState,
+    this.autoCompleteState,
+    this.autoCompleteListState
   });
 
   AppState.initialState() {
@@ -116,6 +122,8 @@ class AppState {
     statistics = StatisticsState();
     cardState = CardState();
     cardListState = CardListState();
+    autoCompleteState = AutoCompleteState();
+    autoCompleteListState = AutoCompleteListState();
   }
 
   AppState.copyWith(
@@ -141,7 +149,9 @@ class AppState {
       List<String> route,
       StatisticsState statistics,
         CardState cardState,
-        CardListState cardListState
+        CardListState cardListState,
+        AutoCompleteState autoCompleteState,
+        AutoCompleteListState autoCompleteListState
       }) {
     this.filterSearch = filterSearch;
     this.business = business;
@@ -166,6 +176,8 @@ class AppState {
     this.statistics = statistics;
     this.cardState = cardState;
     this.cardListState = cardListState;
+    this.autoCompleteState = autoCompleteState;
+    this.autoCompleteListState = autoCompleteListState;
   }
 
   AppState.fromJson(Map json) {
@@ -192,6 +204,8 @@ class AppState {
     statistics = json['statistics'];
     cardState = json['cardState'];
     cardListState = json['cardListState'];
+    autoCompleteState = json['autoCompleteState'];
+    autoCompleteListState = json['autoCompleteListState'];
   }
 
   Map toJson() => {
@@ -218,5 +232,7 @@ class AppState {
         'statistics': statistics,
         'cardState': cardState,
         'cardListState': cardListState,
+        'autoCompleteState': autoCompleteState,
+        'autoCompleteListState': autoCompleteListState,
       };
 }

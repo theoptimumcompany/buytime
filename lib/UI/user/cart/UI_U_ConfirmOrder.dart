@@ -86,12 +86,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                           child: Text(
                             'Confirm Order', ///TODO Make it Global
                             textAlign: TextAlign.start,
-                            style: TextStyle(
-                              fontFamily: BuytimeTheme.FontFamily,
-                              color: Colors.white,
-                              fontSize: media.height * 0.025,
-                              fontWeight: FontWeight.w800,
-                            ),
+                            style: BuytimeTheme.appbarTitle,
                           ),
                         ),
                       ),
@@ -134,8 +129,8 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                             textAlign: TextAlign.start,
                                             style: TextStyle(
                                               fontFamily: BuytimeTheme.FontFamily,
-                                              color: BuytimeTheme.TextDark,
-                                              fontSize: SizeConfig.safeBlockHorizontal * 4,
+                                              color: BuytimeTheme.TextBlack,
+                                              fontSize: 14, /// SizeConfig.safeBlockHorizontal * 4
                                               fontWeight: FontWeight.w600,
                                             ),
                                           )
@@ -176,8 +171,8 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                             textAlign: TextAlign.start,
                                             style: TextStyle(
                                               fontFamily: BuytimeTheme.FontFamily,
-                                              color: BuytimeTheme.TextDark,
-                                              fontSize: SizeConfig.safeBlockHorizontal * 4,
+                                              color: BuytimeTheme.TextBlack,
+                                              fontSize: 14, /// SizeConfig.safeBlockHorizontal * 4
                                               fontWeight: FontWeight.w600,
                                             ),
                                           )
@@ -209,11 +204,11 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                         indicatorWeight: SizeConfig.safeBlockHorizontal * 1,
                                         indicatorColor: BuytimeTheme.BackgroundWhite,
                                         labelStyle: TextStyle(
-                                            letterSpacing: SizeConfig.safeBlockHorizontal * .2,
+                                            letterSpacing: 1.25, ///SizeConfig.safeBlockHorizontal * .2
                                             fontFamily: BuytimeTheme.FontFamily,
                                             color: BuytimeTheme.TextWhite,
                                             fontWeight: FontWeight.w600,
-                                            fontSize: SizeConfig.safeBlockHorizontal * 4
+                                            fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
                                         ),
                                         indicatorPadding: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2, right: SizeConfig.safeBlockHorizontal * 2),
                                         controller: _controller,
@@ -249,8 +244,9 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                   children: [
                                     ///Confirm button
                                     Container(
-                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5, bottom: SizeConfig.safeBlockVertical * 2.5),
-                                        width: media.width * .4,
+                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5, bottom: SizeConfig.safeBlockVertical *4),
+                                        width: 158, ///media.width * .4
+                                        height: 44,
                                         child: RaisedButton(
                                           onPressed: () {
 
@@ -272,10 +268,12 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                           child: Text(
                                             'CONFIRM',//AppLocalizations.of(context).logBack, ///TODO Make it Global
                                             style: TextStyle(
-                                                fontSize: 18,
+                                              letterSpacing: 1.25,
+                                                fontSize: 14,
                                                 fontFamily: BuytimeTheme.FontFamily,
                                                 fontWeight: FontWeight.w500,
-                                                color: BuytimeTheme.TextWhite
+                                                color: BuytimeTheme.TextWhite,
+
                                             ),
                                           ),
                                         )

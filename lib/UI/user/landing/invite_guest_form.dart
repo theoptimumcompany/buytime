@@ -130,101 +130,101 @@ class _InviteGuestFormState extends State<InviteGuestForm> {
                   ),
                 ),
                 body: SafeArea(
-                  child: Center(
-                    child: SingleChildScrollView(
-                      child: Container(
-                        width: double.infinity,
-                        height: SizeConfig.safeBlockVertical * 100 - 56,
-                        color: BuytimeTheme.BackgroundCerulean,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            ///Enter Booking Code Title
-                            Container(
-                              margin: EdgeInsets.only(top: 10.0, left: SizeConfig.safeBlockHorizontal * 10, right: SizeConfig.safeBlockHorizontal * 10),
-                              child: Text(
-                                AppLocalizations.of(context).bookingCode.toUpperCase(),
-                                style: TextStyle(
-                                    fontFamily: BuytimeTheme.FontFamily,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: SizeConfig.safeBlockHorizontal * 8
-                                ),
+                  child: SingleChildScrollView(
+                    child: Container(
+                      width: double.infinity,
+                      height: (SizeConfig.safeBlockVertical * 100) - 56,
+                      color: BuytimeTheme.BackgroundCerulean,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ///Enter Booking Code Title
+                          Container(
+                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5),
+                            child: Text(
+                              AppLocalizations.of(context).bookingCode.toUpperCase(),
+                              style: TextStyle(
+                                  fontFamily: BuytimeTheme.FontFamily,
+                                  color: BuytimeTheme.TextWhite,
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 26 ///SizeConfig.safeBlockHorizontal * 8
                               ),
                             ),
-                            ///Enter Booking Code Subtitle
-                            Container(
-                              margin: EdgeInsets.only(top: 50.0, left: SizeConfig.safeBlockHorizontal * 10, right: SizeConfig.safeBlockHorizontal * 10),
-                              child: Text(
-                                AppLocalizations.of(context).enterYourBookingCode,
-                                style: TextStyle(
-                                    fontFamily: BuytimeTheme.FontFamily,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: SizeConfig.safeBlockHorizontal * 5
-                                ),
+                          ),
+                          ///Enter Booking Code Subtitle
+                          Container(
+                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 6, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5),
+                            child: Text(
+                              AppLocalizations.of(context).enterYourBookingCode,
+                              style: TextStyle(
+                                  fontFamily: BuytimeTheme.FontFamily,
+                                  color: BuytimeTheme.TextWhite,
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 24 ///SizeConfig.safeBlockHorizontal * 5
                               ),
                             ),
-                            ///Booking Code
-                            Container(
-                              margin: EdgeInsets.only(top: 20.0, left: SizeConfig.safeBlockHorizontal * 10, right: SizeConfig.safeBlockHorizontal * 10),
-                              height: SizeConfig.safeBlockHorizontal * 40,
-                              child: TextFormField(
-                                autofocus: bookingCodeController.text.isNotEmpty ? false : true,
-                                controller: bookingCodeController,
-                                textAlign: TextAlign.center,
-                                maxLength: 6,
-                                decoration: InputDecoration(
-                                  counter: Offstage(),
-                                  fillColor: Colors.white,
-                                  filled: true,
-                                  enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(color: Color(0xffe0e0e0)),
-                                      borderRadius: BorderRadius.all(Radius.circular(10.0))
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.white),
-                                      borderRadius: BorderRadius.all(Radius.circular(10.0))
-                                  ),
-                                  errorBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.redAccent),
-                                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                                  ),
-                                  labelText: currentFocus.hasFocus ? '' : AppLocalizations.of(context).bookingCode,
-                                  //hintText: 'Booking Code',
-                                  helperText: StoreProvider.of<AppState>(context).state.booking.booking_code != 'error' ? AppLocalizations.of(context).yourBookingCodeIs : 'Your booking code does not appear to be valid.',
-                                  //hintText: "email *",
-                                  //hintStyle: TextStyle(color: Color(0xff666666)),
-                                  labelStyle: TextStyle(
-                                    fontFamily: BuytimeTheme.FontFamily,
-                                    color: Color(0xff666666),
-                                    fontWeight: FontWeight.w400,
-                                    letterSpacing: 0.0,
-                                  ),
-                                  helperMaxLines: 3,
-                                  helperStyle: TextStyle(
-                                    fontFamily: BuytimeTheme.FontFamily,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w400,
-                                    letterSpacing: 0.0,
-                                  ),
+                          ),
+                          ///Booking Code
+                          Container(
+                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5),
+                            height: SizeConfig.safeBlockHorizontal * 40, ///SizeConfig.safeBlockHorizontal * 40
+                            child: TextFormField(
+                              autofocus: bookingCodeController.text.isNotEmpty ? false : true,
+                              controller: bookingCodeController,
+                              textAlign: TextAlign.center,
+                              maxLength: 6,
+                             // maxLengthEnforced: false,
+                              //inputFormatters: [LengthLimitingTextInputFormatter(5)],
+                              decoration: InputDecoration(
+                                counter: Offstage(),
+                                fillColor: BuytimeTheme.TextWhite,
+                                filled: true,
+                                enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Color(0xffe0e0e0)),
+                                    borderRadius: BorderRadius.all(Radius.circular(5.0))
                                 ),
-                                style: TextStyle(
+                                focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.white),
+                                    borderRadius: BorderRadius.all(Radius.circular(5.0))
+                                ),
+                                errorBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.redAccent),
+                                  borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                ),
+                                labelText: currentFocus.hasFocus ? '' : AppLocalizations.of(context).bookingCode,
+                                //hintText: 'Booking Code',
+                                helperText: StoreProvider.of<AppState>(context).state.booking.booking_code != 'error' ? AppLocalizations.of(context).yourBookingCodeIs : 'Your booking code does not appear to be valid.',
+                                //hintText: "email *",
+                                //hintStyle: TextStyle(color: Color(0xff666666)),
+                                labelStyle: TextStyle(
                                   fontFamily: BuytimeTheme.FontFamily,
                                   color: Color(0xff666666),
-                                  fontWeight: FontWeight.w800,
-                                  fontSize: 20,
-                                  letterSpacing: 5.0,
+                                  fontWeight: FontWeight.w400,
+                                  letterSpacing: 0.0,
                                 ),
-                                onEditingComplete: (){
-                                  debugPrint('done');
-                                  onBookingCode();
-                                },
+                                helperMaxLines: 3,
+                                helperStyle: TextStyle(
+                                  fontFamily: BuytimeTheme.FontFamily,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w400,
+                                  letterSpacing: 0.0,
+                                ),
                               ),
+                              style: TextStyle(
+                                fontFamily: BuytimeTheme.FontFamily,
+                                color: Color(0xff666666),
+                                fontWeight: FontWeight.w800,
+                                fontSize: 20,
+                                letterSpacing: 5.0,
+                              ),
+                              onEditingComplete: (){
+                                debugPrint('done');
+                                onBookingCode();
+                              },
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                   ),

@@ -22,12 +22,12 @@ class _LandingCardWidgetState extends State<LandingCardWidget> {
 
 
     return Container(
-      height: SizeConfig.safeBlockVertical * 25,
-      width: SizeConfig.safeBlockHorizontal * 50,
+      height: 168, ///SizeConfig.safeBlockVertical * 25
+      width: 188, ///SizeConfig.safeBlockHorizontal * 50
       //margin: EdgeInsets.all(SizeConfig.safeBlockVertical * 2),
       decoration: BoxDecoration(
         color: Colors.black,
-          borderRadius: BorderRadius.all(Radius.circular(10)),
+          borderRadius: BorderRadius.all(Radius.circular(5)),
           image: DecorationImage(
             image: AssetImage(widget.imagePath),
             fit: BoxFit.cover,
@@ -38,44 +38,54 @@ class _LandingCardWidgetState extends State<LandingCardWidget> {
         child: InkWell(
           splashColor: Colors.black.withOpacity(.3),
           onTap: widget.callback,
-          borderRadius: BorderRadius.all(Radius.circular(10)),
+          borderRadius: BorderRadius.all(Radius.circular(5)),
           child: Container(
             height: SizeConfig.safeBlockVertical * 25,
             width: SizeConfig.safeBlockHorizontal * 50,
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(10)),
-                color: Colors.black.withOpacity(.2)
+                borderRadius: BorderRadius.all(Radius.circular(5)),
+                //color: Colors.black.withOpacity(.1),
+              gradient: LinearGradient(
+                  colors: [
+                    Colors.transparent,
+                    BuytimeTheme.BackgroundBlack.withOpacity(0.5),
+                  ],
+                  begin : Alignment.topCenter,
+                  end : Alignment.bottomCenter,
+                  stops: [0.0, 5.0],
+                  //tileMode: TileMode.
+              ),
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                ///Top text
                 Container(
-                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, bottom: SizeConfig.safeBlockVertical * 0),
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Text(
-                      widget.topString,
-                      style: TextStyle(
-                          fontFamily: BuytimeTheme.FontFamily,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: SizeConfig.safeBlockHorizontal * 4
-                      ),
+                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, bottom: SizeConfig.safeBlockVertical * .5),
+                  child: Text(
+                    widget.topString,
+                    style: TextStyle(
+                        letterSpacing: -.1,
+                        fontFamily: BuytimeTheme.FontFamily,
+                        color: BuytimeTheme.TextWhite,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
                     ),
                   ),
                 ),
+                ///Bottom text
                 Container(
-                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, bottom: SizeConfig.safeBlockVertical * 1),
+                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, bottom: SizeConfig.safeBlockVertical * 1.5),
                   child:  FittedBox(
                     fit: BoxFit.scaleDown,
                     child: Text(
                       widget.bottomString,
                       style: TextStyle(
                           fontFamily: BuytimeTheme.FontFamily,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: SizeConfig.safeBlockHorizontal * 4
+                          color:  BuytimeTheme.TextWhite,
+                          fontWeight: FontWeight.w800,
+                          fontSize: 12 ///SizeConfig.safeBlockHorizontal * 4
                       ),
                     ),
                   ),

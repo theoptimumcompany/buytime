@@ -130,11 +130,7 @@ class _FilterGeneralState extends State<FilterGeneral> {
                       child: Text(
                         'Search', //TODO Make it Global
                         textAlign: TextAlign.start,
-                        style: TextStyle(
-                          fontSize: SizeConfig.safeBlockHorizontal * 5,
-                          color: BuytimeTheme.TextWhite,
-                          fontWeight: FontWeight.w400,
-                        ),
+                        style: BuytimeTheme.appbarTitle,
                       ),
                     ),
                   ),
@@ -267,8 +263,9 @@ class _FilterGeneralState extends State<FilterGeneral> {
                               ),
                               style: TextStyle(
                                 fontFamily: BuytimeTheme.FontFamily,
-                                color: Color(0xff666666),
-                                fontWeight: FontWeight.bold,
+                                  color: BuytimeTheme.TextMedium,
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 16
                               ),
                               onEditingComplete: (){
                                 debugPrint('done');
@@ -279,30 +276,32 @@ class _FilterGeneralState extends State<FilterGeneral> {
                           ),
                           ///Sort By
                           Container(
+                            //width: SizeConfig.safeBlockHorizontal * 20,
+                            width: double.infinity,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 Container(
-                                  width: SizeConfig.safeBlockHorizontal * 25,
-                                  //margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 2),
+                                  //width: SizeConfig.safeBlockHorizontal * 20,
+                                  margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 2.5),
                                   child: DropdownButton(
                                     underline: Container(),
                                     hint: Row(
                                       children: [
                                         Icon(
                                           Icons.sort,
-                                          color: BuytimeTheme.TextGrey,
-                                          size: SizeConfig.safeBlockHorizontal * 5,
+                                          color: BuytimeTheme.TextMedium,
+                                          size: 24,
                                         ),
                                         Container(
                                           child: Padding(
                                             padding: const EdgeInsets.only(left: 10.0),
                                             child: Text(
-                                              'Sort By', //TODO Make it Global
+                                              'SORT BY', //TODO Make it Global
                                               textAlign: TextAlign.start,
                                               style: TextStyle(
-                                                fontSize: SizeConfig.safeBlockHorizontal * 4,
-                                                color: BuytimeTheme.TextGrey,
+                                                fontSize: 14, ///SizeConfig.safeBlockHorizontal * 4
+                                                color: BuytimeTheme.TextMedium,
                                                 fontWeight: FontWeight.w400,
                                               ),
                                             ),
@@ -327,8 +326,8 @@ class _FilterGeneralState extends State<FilterGeneral> {
                                                     val, //TODO Make it Global
                                                     textAlign: TextAlign.start,
                                                     style: TextStyle(
-                                                      fontSize: SizeConfig.safeBlockHorizontal * 4,
-                                                      color: BuytimeTheme.TextGrey,
+                                                      fontSize: 16,
+                                                      color: BuytimeTheme.TextMedium,
                                                       fontWeight: FontWeight.w400,
                                                     ),
                                                   ),
@@ -336,7 +335,7 @@ class _FilterGeneralState extends State<FilterGeneral> {
                                               ),
                                               sortBy == val ? Icon(
                                                 MaterialDesignIcons.done,
-                                                color: BuytimeTheme.TextGrey,
+                                                color: BuytimeTheme.TextMedium,
                                                 size: SizeConfig.safeBlockHorizontal * 5,
                                               ) : Container(),
                                             ],
@@ -367,7 +366,98 @@ class _FilterGeneralState extends State<FilterGeneral> {
                               margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
                               child:
                               tmpServiceList.isNotEmpty ?
-                              ListView.builder(
+                              Column(
+                                children: tmpServiceList.map((ServiceState service){
+                                  int index;
+                                  for(int i = 0; i < tmpServiceList.length; i++){
+                                    if(tmpServiceList[i].serviceId == service.serviceId)
+                                      index = i;
+                                  }
+                                 return  Column(
+                                   children: [
+                                     Dismissible(
+                                       // Each Dismissible must contain a Key. Keys allow Flutter to
+                                       // uniquely identify widgets.
+                                       key: UniqueKey(),
+                                       // Provide a function that tells the app
+                                       // what to do after an item has been swiped away.
+                                       onDismissed: (direction) {
+                                         // Remove the item from the data source.
+                                         setState(() {
+                                           tmpServiceList.removeAt(index);
+                                         });
+                                         if(direction == DismissDirection.startToEnd){
+                                           debugPrint('UI_U_SearchPage => DX to DELETE');
+                                           // Show a snackbar. This snackbar could also contain "Undo" actions.
+                                           Scaffold.of(context).showSnackBar(SnackBar(
+                                               content: Text("${service.name} removed"),
+                                               action: SnackBarAction(
+                                                   label: "UNDO",
+                                                   onPressed: () {
+                                                     //To undo deletion
+                                                     undoDeletion(index, service);
+                                                   })));
+                                         }else{
+                                           debugPrint('UI_U_SearchPage => SX to BOOK');
+                                           order.business.name = snapshot.business.name;
+                                           order.business.id = snapshot.business.id_firestore;
+                                           order.user.name = snapshot.user.name;
+                                           order.user.id = snapshot.user.uid;
+                                           order.addItem(service, snapshot.business.ownerId);
+                                           setState(() {
+                                             cartCounter++;
+                                           });
+                                           undoDeletion(index, service);
+                                         }
+
+                                       },
+                                       child: Column(
+                                         children: [
+                                           BookingListServiceListItem(service),
+                                           Container(
+                                             margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 30),
+                                             height: SizeConfig.safeBlockVertical * .2,
+                                             color: BuytimeTheme.DividerGrey,
+                                           )
+                                         ],
+                                       ),
+                                       background: Container(
+                                         color: BuytimeTheme.AccentRed,
+                                         //margin: EdgeInsets.symmetric(horizontal: 15),
+                                         alignment: Alignment.centerLeft,
+                                         child: Container(
+                                           margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5),
+                                           child: Icon(
+                                             MaterialDesignIcons.thumb_down,
+                                             size: 24, ///SizeConfig.safeBlockHorizontal * 7
+                                             color: BuytimeTheme.SymbolWhite,
+                                           ),
+                                         ),
+                                       ),
+                                       secondaryBackground: Container(
+                                         color: BuytimeTheme.UserPrimary,
+                                         //margin: EdgeInsets.symmetric(horizontal: 15),
+                                         alignment: Alignment.centerRight,
+                                         child: Container(
+                                           margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 2.5),
+                                           child: Icon(
+                                             Icons.add_shopping_cart,
+                                             size: 24, ///SizeConfig.safeBlockHorizontal * 7
+                                             color: BuytimeTheme.SymbolWhite,
+                                           ),
+                                         ),
+                                       ),
+                                     ),
+                                     Container(
+                                       margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 38),
+                                       height: SizeConfig.safeBlockVertical * .2,
+                                       color: BuytimeTheme.DividerGrey,
+                                     )
+                                   ],
+                                 );
+                                }).toList(),
+                              )
+                              /*ListView.builder(
                                 itemCount: tmpServiceList.length,
                                 shrinkWrap: true,
                                 itemBuilder: (context, index) {
@@ -446,7 +536,7 @@ class _FilterGeneralState extends State<FilterGeneral> {
                                     ),
                                   );
                                 },
-                              ):
+                              )*/:
                               _searchController.text.isNotEmpty ?
                               Container(
                                 height: SizeConfig.safeBlockVertical * 8,

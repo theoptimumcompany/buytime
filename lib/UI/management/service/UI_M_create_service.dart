@@ -184,7 +184,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                         children: [
                           Container(
                               child: IconButton(
-                                  icon: Icon(Icons.chevron_left, color: Colors.white, size: media.width * 0.09),
+                                  icon: Icon(Icons.keyboard_arrow_left, color: Colors.white, size: 24),
                                   onPressed: () {
                                     //Todo: POP o no?
                                     Navigator.pushReplacement(
@@ -199,11 +199,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                 "Create Service", //Todo: trans
                                 textAlign: TextAlign.start,
                                 overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  fontSize: media.height * 0.028,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w700,
-                                ),
+                                style: BuytimeTheme.appbarTitle,
                               ),
                             ),
                           ),
@@ -236,6 +232,8 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                         Expanded(
                                           flex: 2,
                                           child: Container(
+                                            color: BuytimeTheme.BackgroundLightGrey,
+                                            //height: double.infinity,
                                             child: WidgetServicePhoto(
                                               remotePath: "service/" + (snapshot.business.name != null ? snapshot.business.name + "/" : "") + snapshot.serviceState.name + "_1",
                                               maxPhoto: 1,
@@ -248,6 +246,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                           ),
                                         ),
                                         Expanded(
+                                          flex: 2,
                                           child: Column(
                                             children: [
                                               Container(
@@ -298,7 +297,18 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                             StoreProvider.of<AppState>(context).dispatch(SetServiceName(_serviceName));
                                           }
                                         },
-                                        decoration: InputDecoration(labelText: AppLocalizations.of(context).name),
+                                        decoration: InputDecoration(
+                                            labelText: AppLocalizations.of(context).name,
+                                        enabledBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(color: Color(0xffe0e0e0)),
+                                            borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                        focusedBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(color: Color(0xff666666)),
+                                            borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                        errorBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(color: Colors.redAccent),
+                                            borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                        )
                                       ),
                                     ),
                                   ),
@@ -306,6 +316,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                 Center(
                                   child: Container(
                                     width: media.width * 0.9,
+                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
                                     //decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
                                     child: Padding(
                                       padding: const EdgeInsets.only(top: 0.0, bottom: 5.0, left: 10.0, right: 10.0),
@@ -320,7 +331,18 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                         onSaved: (value) {
                                           _serviceDescription = value;
                                         },
-                                        decoration: InputDecoration(labelText: AppLocalizations.of(context).description),
+                                        decoration: InputDecoration(
+                                            labelText: AppLocalizations.of(context).description,
+                                          enabledBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(color: Color(0xffe0e0e0)),
+                                              borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                          focusedBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(color: Color(0xff666666)),
+                                              borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                          errorBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(color: Colors.redAccent),
+                                              borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -330,6 +352,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                   child: Center(
                                     child: Container(
                                       width: media.width * 0.9,
+                                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
                                       //decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
                                       child: Padding(
                                         padding: const EdgeInsets.only(top: 0.0, bottom: 5.0, left: 10.0, right: 10.0),
@@ -369,6 +392,15 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                           },
                                           decoration: InputDecoration(
                                             labelText: AppLocalizations.of(context).price,
+                                            enabledBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(color: Color(0xffe0e0e0)),
+                                                borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                            focusedBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(color: Color(0xff666666)),
+                                                borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                            errorBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(color: Colors.redAccent),
+                                                borderRadius: BorderRadius.all(Radius.circular(8.0))),
                                           ),
                                         ),
                                       ),

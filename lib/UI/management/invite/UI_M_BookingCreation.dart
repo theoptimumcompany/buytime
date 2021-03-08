@@ -141,7 +141,7 @@ class _BookingCreationState extends State<BookingCreation> {
                   child: ConstrainedBox(
                       constraints: BoxConstraints(),
                       child: Container(
-                        height: (SizeConfig.safeBlockVertical * 100) - 56,
+                        height: (SizeConfig.safeBlockVertical * 100) - 60,
                         child: Stack(
                           children: [
                             ///Booking Code
@@ -155,19 +155,24 @@ class _BookingCreationState extends State<BookingCreation> {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       ///Title
-                                      Container(
-                                        margin: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 5, top: SizeConfig.blockSizeVertical * 3),
-                                        child: Text(
-                                          AppLocalizations.of(context).enterGuestDetails,
-                                          style: TextStyle(
-                                              fontFamily: BuytimeTheme.FontFamily,
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 12,
-                                              letterSpacing: 2
-                                          ),
-                                          textAlign: TextAlign.left,
-                                        ),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            margin: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 5, top: SizeConfig.blockSizeVertical * 3),
+                                            child: Text(
+                                              AppLocalizations.of(context).enterGuestDetails,
+                                              style: TextStyle(
+                                                  fontFamily: BuytimeTheme.FontFamily,
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 10,
+                                                  letterSpacing: 1.5
+                                              ),
+                                              textAlign: TextAlign.left,
+                                            ),
+                                          )
+                                        ],
                                       ),
                                       ///Booking Code & Email & Name & Surname & Check In & Check Out & Number Of Guests
                                       Container(
@@ -175,7 +180,7 @@ class _BookingCreationState extends State<BookingCreation> {
                                         child: Column(
                                           children: [
                                             ///Booking code
-                                            Container(
+                                            /*Container(
                                               margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 4, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
                                               child:  Row(
                                                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -215,7 +220,7 @@ class _BookingCreationState extends State<BookingCreation> {
                                                   // )
                                                 ],
                                               ),
-                                            ),
+                                            ),*/
                                             ///Email address
                                             Expanded(
                                               child: Container(
@@ -252,8 +257,9 @@ class _BookingCreationState extends State<BookingCreation> {
                                                     ),
                                                     style: TextStyle(
                                                       fontFamily: BuytimeTheme.FontFamily,
-                                                      color: Color(0xff666666),
-                                                      fontWeight: FontWeight.w800,
+                                                      color: BuytimeTheme.TextMedium,
+                                                      fontWeight: FontWeight.w600,
+                                                      fontSize: 16
                                                     ),
                                                     validator: (String value) {
                                                       if (value.isEmpty && !EmailValidator.validate(value)) {
@@ -293,8 +299,9 @@ class _BookingCreationState extends State<BookingCreation> {
                                                     ),
                                                     style: TextStyle(
                                                       fontFamily: BuytimeTheme.FontFamily,
-                                                      color: Color(0xff666666),
-                                                      fontWeight: FontWeight.w800,
+                                                        color: BuytimeTheme.TextMedium,
+                                                        fontWeight: FontWeight.w600,
+                                                        fontSize: 16
                                                     ),
                                                     validator: (String value) {
                                                       if (value.isEmpty) {
@@ -334,8 +341,9 @@ class _BookingCreationState extends State<BookingCreation> {
                                                     ),
                                                     style: TextStyle(
                                                       fontFamily: BuytimeTheme.FontFamily,
-                                                      color: Color(0xff666666),
-                                                      fontWeight: FontWeight.w800,
+                                                        color: BuytimeTheme.TextMedium,
+                                                        fontWeight: FontWeight.w600,
+                                                        fontSize: 16
                                                     ),
                                                     validator: (String value) {
                                                       if (value.isEmpty) {
@@ -390,8 +398,9 @@ class _BookingCreationState extends State<BookingCreation> {
                                                               ),
                                                               style: TextStyle(
                                                                 fontFamily: BuytimeTheme.FontFamily,
-                                                                color: Color(0xff666666),
-                                                                fontWeight: FontWeight.w800,
+                                                                  color: BuytimeTheme.TextMedium,
+                                                                  fontWeight: FontWeight.w600,
+                                                                  fontSize: 16
                                                               ),
                                                               validator: (String value) {
                                                                 if (value.isEmpty) {
@@ -441,8 +450,9 @@ class _BookingCreationState extends State<BookingCreation> {
                                                               ),
                                                               style: TextStyle(
                                                                 fontFamily: BuytimeTheme.FontFamily,
-                                                                color: Color(0xff666666),
-                                                                fontWeight: FontWeight.w800,
+                                                                  color: BuytimeTheme.TextMedium,
+                                                                  fontWeight: FontWeight.w600,
+                                                                  fontSize: 16
                                                               ),
                                                               validator: (String value) {
                                                                 debugPrint('${checkIn.compareTo(checkOut)}');
@@ -491,8 +501,9 @@ class _BookingCreationState extends State<BookingCreation> {
                                                     ),
                                                     style: TextStyle(
                                                       fontFamily: BuytimeTheme.FontFamily,
-                                                      color: Color(0xff666666),
-                                                      fontWeight: FontWeight.w800,
+                                                        color: BuytimeTheme.TextMedium,
+                                                        fontWeight: FontWeight.w600,
+                                                        fontSize: 16
                                                     ),
                                                   )
                                               ),
@@ -505,7 +516,8 @@ class _BookingCreationState extends State<BookingCreation> {
                                         mainAxisAlignment: MainAxisAlignment.center,
                                         children: [
                                           Container(
-                                              width: media.width * .5,
+                                              width: 180, ///media.width * .5
+                                              height: 44,
                                               margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 4),
                                               child: RaisedButton(
                                                 onPressed: () {
@@ -559,15 +571,19 @@ class _BookingCreationState extends State<BookingCreation> {
                                                 shape: RoundedRectangleBorder(
                                                   borderRadius: new BorderRadius.circular(5),
                                                 ),
-                                                child: Text(
-                                                  AppLocalizations.of(context).createInvite.toUpperCase(),
-                                                  style: TextStyle(
-                                                      fontSize: 18,
-                                                      fontFamily: 'Roboto',
-                                                      fontWeight: FontWeight.bold,
-                                                      color: BuytimeTheme.TextDark,
-                                                    letterSpacing: 2
-                                                  ),
+                                                child: Row(
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  children: [
+                                                    Text(
+                                                      "CREATE INVITE", ///TODO make it Global
+                                                      style: TextStyle(
+                                                          fontSize: 14,
+                                                          fontFamily: BuytimeTheme.FontFamily,
+                                                          fontWeight: FontWeight.w600,
+                                                          color: BuytimeTheme.TextDark,
+                                                          letterSpacing: 1.25
+                                                      ),
+                                                    )],
                                                 ),
                                               )
                                           )

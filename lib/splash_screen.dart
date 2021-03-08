@@ -5,10 +5,12 @@ import 'dart:ui';
 
 import 'package:Buytime/UI/user/landing/UI_U_Landing.dart';
 import 'package:Buytime/UI/user/landing/invite_guest_form.dart';
+import 'package:Buytime/reblox/model/autoComplete/auto_complete_state.dart';
 import 'package:Buytime/reblox/model/card/card_state.dart';
 import 'package:Buytime/reblox/model/snippet/device.dart';
 import 'package:Buytime/reblox/model/snippet/token.dart';
 import 'package:Buytime/reblox/model/statistics_state.dart';
+import 'package:Buytime/reblox/reducer/auto_complete_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/booking_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/card_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/statistics_reducer.dart';
@@ -47,23 +49,27 @@ class _SplashScreenState extends State<SplashScreen>  with WidgetsBindingObserve
       StatisticsState().writeToStorage(StoreProvider.of<AppState>(context).state.statistics);
     }
 
-    if(state == AppLifecycleState.detached){
+    /*if(state == AppLifecycleState.detached){
       //debugPrint('detached: Calls: ${StoreProvider.of<AppState>(context).state.statistics.numberOfCalls}, Documents: ${StoreProvider.of<AppState>(context).state.statistics.numberOfDocuments}');
       //StatisticsState().writeToStorage(StoreProvider.of<AppState>(context).state.statistics);
-    }
+    }*/
   }
 
   StatisticsState statisticsState;
 
   readFromStorage() async{
-    await FlutterSecureStorage().delete(key: 'ccs');
+    //await FlutterSecureStorage().delete(key: 'ccs');
+    //await FlutterSecureStorage().delete(key: 'autoComplete');
     statisticsState = await StatisticsState().readFromStorage();
     StatisticsState().log('INITIALIZE', statisticsState);
     StoreProvider.of<AppState>(context).dispatch(UpdateStatistics(statisticsState));
 
-    List<CardState> tmpList = await CardState().readFromStorage();
-    StoreProvider.of<AppState>(context).dispatch(AddCardToList(tmpList));
+    List<CardState> cards = await CardState().readFromStorage();
+    StoreProvider.of<AppState>(context).dispatch(AddCardToList(cards));
 
+    List<AutoCompleteState> completes = await AutoCompleteState().readFromStorage();
+    debugPrint('splash_screen => AUTO COMPLETE LENGTH: ${completes.length}');
+    StoreProvider.of<AppState>(context).dispatch(AddAutoCompleteToList(completes));
   }
 
   @override

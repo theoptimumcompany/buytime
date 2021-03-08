@@ -38,16 +38,18 @@ class _BookingCardWidgetState extends State<BookingCardWidget> {
       }
     });*/
 
-    DateTime time = DateTime.now();
-    time = time.toLocal();
-    time = new DateTime(time.year, time.month, time.day, 0, 0, 0, 0, 0);
+    DateTime currentTime = DateTime.now();
+    currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0);
 
-    if(widget.bookingState.end_date.isBefore(time)){
+    DateTime endTime = widget.bookingState.end_date;
+    DateTime startTime = widget.bookingState.start_date;
+    endTime = new DateTime(endTime.year, endTime.month, endTime.day, 0, 0, 0, 0, 0);
+    if(endTime.isBefore(currentTime)){
       bookingStatus = 'Closed';
       closed = true;
-    }else if(widget.bookingState.start_date.isAtSameMomentAs(time))
+    }else if(startTime.isAtSameMomentAs(currentTime))
       bookingStatus = 'Active';
-    else if(widget.bookingState.start_date.isAfter(time))
+    else if(startTime.isAfter(currentTime))
       bookingStatus = 'Upcoming';
     else
       bookingStatus = 'Active';
@@ -106,12 +108,12 @@ class _BookingCardWidgetState extends State<BookingCardWidget> {
     return ColorFiltered(
       colorFilter: !closed ? identity: greyscale,
       child: Container(
-        height: SizeConfig.safeBlockVertical * 28,
-        width: SizeConfig.safeBlockHorizontal * 80,
-        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
+        height: 200, ///SizeConfig.safeBlockVertical * 28
+        width: 310, ///SizeConfig.safeBlockHorizontal * 80
+        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * .5, left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 2.5),
         decoration: BoxDecoration(
             color: Colors.black,
-            borderRadius: BorderRadius.all(Radius.circular(10)),
+            borderRadius: BorderRadius.all(Radius.circular(5.0)),
             image: DecorationImage(
               image: NetworkImage(widget.bookingState.wide),
               fit: BoxFit.cover,
@@ -125,12 +127,12 @@ class _BookingCardWidgetState extends State<BookingCardWidget> {
               StoreProvider.of<AppState>(context).dispatch(BookingRequestResponse(widget.bookingState));
               StoreProvider.of<AppState>(context).dispatch(BusinessAndNavigateRequest(widget.bookingState.business_id));
             } : null,
-            borderRadius: BorderRadius.all(Radius.circular(10)),
+            borderRadius: BorderRadius.all(Radius.circular(5.0)),
             child: Container(
-              height: SizeConfig.safeBlockVertical * 25,
-              width: SizeConfig.safeBlockHorizontal * 50,
+              height: 200, ///SizeConfig.safeBlockVertical * 25
+              width: 310, ///SizeConfig.safeBlockHorizontal * 50
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  borderRadius: BorderRadius.all(Radius.circular(5.0)),
                   color: !closed ? Colors.black.withOpacity(.2) : BuytimeTheme.TextWhite.withOpacity(0.1)
               ),
               child: Row(
@@ -141,22 +143,23 @@ class _BookingCardWidgetState extends State<BookingCardWidget> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
-                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, bottom: SizeConfig.safeBlockVertical * 0),
+                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, bottom: SizeConfig.safeBlockVertical * .5),
                         child: FittedBox(
                           fit: BoxFit.scaleDown,
                           child: Text(
                             widget.bookingState.business_name,
                             style: TextStyle(
+                              letterSpacing:  -.1,
                                 fontFamily: BuytimeTheme.FontFamily,
                                 color: !closed ? BuytimeTheme.TextWhite : BuytimeTheme.TextWhite.withOpacity(.8),
                                 fontWeight: FontWeight.bold,
-                                fontSize: SizeConfig.safeBlockHorizontal * 4
+                                fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
                             ),
                           ),
                         ),
                       ),
                       Container(
-                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, bottom: SizeConfig.safeBlockVertical * 0),
+                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, bottom: SizeConfig.safeBlockVertical * .5),
                         child:  FittedBox(
                           fit: BoxFit.scaleDown,
                           child: Text(
@@ -164,14 +167,14 @@ class _BookingCardWidgetState extends State<BookingCardWidget> {
                             style: TextStyle(
                                 fontFamily: BuytimeTheme.FontFamily,
                                 color: !closed ? BuytimeTheme.TextWhite : BuytimeTheme.TextWhite.withOpacity(.8),
-                                fontWeight: FontWeight.bold,
-                                fontSize: SizeConfig.safeBlockHorizontal * 4
+                                fontWeight: FontWeight.w600,
+                                fontSize: 12 ///SizeConfig.safeBlockHorizontal * 4
                             ),
                           ),
                         ),
                       ),
                       Container(
-                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, bottom: SizeConfig.safeBlockVertical * 1),
+                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, bottom: SizeConfig.safeBlockVertical * 1.5),
                         child: FittedBox(
                           fit: BoxFit.scaleDown,
                           child: Text(
@@ -179,8 +182,8 @@ class _BookingCardWidgetState extends State<BookingCardWidget> {
                             style: TextStyle(
                                 fontFamily: BuytimeTheme.FontFamily,
                                 color: !closed ? BuytimeTheme.TextWhite : BuytimeTheme.TextWhite.withOpacity(.8),
-                                fontWeight: FontWeight.bold,
-                                fontSize: SizeConfig.safeBlockHorizontal * 4
+                                fontWeight: FontWeight.w600,
+                                fontSize: 12 ///SizeConfig.safeBlockHorizontal * 4
                             ),
                           ),
                         ),
@@ -192,7 +195,7 @@ class _BookingCardWidgetState extends State<BookingCardWidget> {
                     flex: 1,
                     child: Container(
                       alignment: Alignment.bottomRight,
-                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, right: SizeConfig.safeBlockHorizontal * 0),
+                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, right: SizeConfig.safeBlockHorizontal * .5),
                       child: IconButton(
                         onPressed: !closed ? (){
                           final RenderBox box = context.findRenderObject();

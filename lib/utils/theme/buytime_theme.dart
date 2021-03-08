@@ -65,16 +65,23 @@ class BuytimeTheme {
 
   static TextStyle whiteTitle = TextStyle(
       fontFamily: FontFamily,
-      fontSize: SizeConfig.safeBlockVertical * 5,
-      fontWeight: FontWeight.normal,
+      fontSize: 32, //SizeConfig.safeBlockVertical * 5
+      fontWeight: FontWeight.w400,
       color: Colors.white
   );
 
   static TextStyle whiteSubtitle = TextStyle(
       fontFamily: FontFamily,
-      fontSize: 18,
+      fontSize: 20,
       fontWeight: FontWeight.w400,
       color: Colors.white
+  );
+
+  static TextStyle appbarTitle = TextStyle(
+      fontFamily: FontFamily,
+      fontSize: 20,
+      fontWeight: FontWeight.w700,
+      color: TextWhite
   );
 
   static const TextStyle menuEntry = TextStyle(

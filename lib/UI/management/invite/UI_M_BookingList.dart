@@ -62,8 +62,14 @@ class _BookingListState extends State<BookingList> {
         print("Oninitbookinglist");
         List<BookingState> bookings = store.state.bookingList.bookingListState;
         debugPrint('UI_M_BookingList => BOOKING LENGTH: ${bookings.length}');
+
+        DateTime currentTime = DateTime.now();
+        currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0);
+        debugPrint('UI_M_BookingList => ${currentTime}');
         bookings.forEach((element) {
-          if(element.end_date.isBefore(DateTime.now()) && element.status != 'closed'){
+          DateTime endTime = element.end_date;
+          endTime = new DateTime(endTime.year, endTime.month, endTime.day, 0, 0, 0, 0, 0);
+          if(endTime.isBefore(currentTime) && element.status != 'closed'){
             debugPrint('UI_M_BookingList => ${element.end_date}');
             element.status = element.enumToString(BookingStatus.closed);
             StoreProvider.of<AppState>(context).dispatch(UpdateBooking(element));
@@ -244,20 +250,28 @@ class _BookingListState extends State<BookingList> {
                                           Navigator.push(context, MaterialPageRoute(builder: (context) => CheckedOutBookingList(checkedOutBookingsList: checkedOutBookingList)));
                                         },
                                         child: CustomBottomButtonWidget(
-                                            Text(
-                                              AppLocalizations.of(context).viewCheckedOutBookings,
-                                              style: TextStyle(
-                                                  fontFamily: BuytimeTheme.FontFamily,
-                                                  color: BuytimeTheme.TextBlack,
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 16
+                                            Container(
+                                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1.5),
+                                              child: Text(
+                                                AppLocalizations.of(context).viewCheckedOutBookings,
+                                                style: TextStyle(
+                                                    fontFamily: BuytimeTheme.FontFamily,
+                                                    color: BuytimeTheme.TextBlack,
+                                                    fontWeight: FontWeight.w400,
+                                                    fontSize: 16
+                                                ),
                                               ),
                                             ),
                                             '',
-                                            Icon(
-                                              Icons.business_center,
-                                              color: BuytimeTheme.SymbolBlack,
-                                            ))),
+                                            Container(
+                                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1.5),
+                                              child: Icon(
+                                                Icons.business_center,
+                                                color: BuytimeTheme.SymbolBlack,
+                                              ),
+                                            )
+                                        )
+                                    ),
                                   ),
                                 ),
                               ),

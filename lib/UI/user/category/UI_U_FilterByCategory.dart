@@ -147,21 +147,21 @@ class _FilterByCategoryState extends State<FilterByCategory> {
         list.length >= 1 ? Flexible(
           flex: 1,
           child: FindYourInspirationCardWidget(
-              list.length <= 2 ? 28 : 18, list.length <= 2 ? 28 : 18, list[0], false
+              list.length <= 2 ? SizeConfig.screenWidth/2 - 2 : SizeConfig.screenWidth/3 - 2, list.length <= 2 ? SizeConfig.screenWidth/2 - 2 : SizeConfig.screenWidth/3 - 2, list[0], false
           ),
         ) : Container(),
         ///Second showcase for each Row
         list.length >= 2 ? Flexible(
           flex: 1,
           child: FindYourInspirationCardWidget(
-              list.length <= 2 ? 28 : 18, list.length <= 2 ? 28 : 18, list[1], false
+              list.length <= 2 ? SizeConfig.screenWidth/2 - 2 : SizeConfig.screenWidth/3 - 2, list.length <= 2 ? SizeConfig.screenWidth/2 - 2 : SizeConfig.screenWidth/3 - 2, list[1], false
           ),
         ) : Container(),
         ///Third showcase for each Row
         list.length == 3 ? Flexible(
           flex: 1,
           child: FindYourInspirationCardWidget(
-              list.length <= 2 ? 28 : 18, list.length <= 2 ? 28 : 18, list[2], false
+              list.length <= 2 ? SizeConfig.screenWidth/2 - 2 : SizeConfig.screenWidth/3 - 2, list.length <= 2 ? SizeConfig.screenWidth/2 - 2 : SizeConfig.screenWidth/3 - 2, list[2], false
           ),
         ) : Container(),
       ],
@@ -260,11 +260,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                       child: Text(
                         widget.categoryState.name, //TODO Make it Global
                         textAlign: TextAlign.start,
-                        style: TextStyle(
-                          fontSize: SizeConfig.safeBlockHorizontal * 5,
-                          color: BuytimeTheme.TextWhite,
-                          fontWeight: FontWeight.w400,
-                        ),
+                        style: BuytimeTheme.appbarTitle,
                       ),
                     ),
                   ),
@@ -348,7 +344,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                           child: Container(
                             margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
                             padding: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2),
-                            height: subCategoryList.isNotEmpty ? SizeConfig.safeBlockVertical * 25 : SizeConfig.safeBlockVertical * 17,
+                            height: subCategoryList.isNotEmpty ? SizeConfig.safeBlockVertical * 28 : SizeConfig.safeBlockVertical * 17,
                             color: BuytimeTheme.BackgroundWhite,
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.start,
@@ -362,16 +358,16 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                     style: TextStyle(
                                         //letterSpacing: SizeConfig.safeBlockVertical * .4,
                                         fontFamily: BuytimeTheme.FontFamily,
-                                        color: BuytimeTheme.TextDark,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: SizeConfig.safeBlockHorizontal * 4
+                                        color: BuytimeTheme.TextBlack,
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 18 ///SizeConfig.safeBlockHorizontal * 4
                                     ),
                                   ),
                                 ),
                                 subCategoryList.isNotEmpty ?
                                     ///List
                                 Container(
-                                  height: SizeConfig.safeBlockVertical * 18,
+                                  height: SizeConfig.screenWidth/3,
                                   width: double.infinity,
                                   child: CustomScrollView(
                                       shrinkWrap: true,
@@ -384,7 +380,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                             return Container(
                                               margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 2),
                                               child: FindYourInspirationCardWidget(
-                                                  16,16, category, false
+                                                  SizeConfig.screenWidth/3 - 2 ,SizeConfig.screenWidth/3 - 2, category, false
                                               ),
                                             );
                                           },
@@ -486,8 +482,9 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                     ),
                                     style: TextStyle(
                                       fontFamily: BuytimeTheme.FontFamily,
-                                      color: Color(0xff666666),
-                                      fontWeight: FontWeight.bold,
+                                        color: BuytimeTheme.TextMedium,
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 16
                                     ),
                                     onEditingComplete: (){
                                       debugPrint('done');
@@ -498,30 +495,32 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                 ),
                                 ///Sort
                                 Container(
+                                  //width: SizeConfig.safeBlockHorizontal * 20,
+                                  width: double.infinity,
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
                                       Container(
-                                        width: SizeConfig.safeBlockHorizontal * 25,
-                                        //margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 2),
+                                        //width: SizeConfig.safeBlockHorizontal * 20,
+                                        margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 2.5),
                                         child: DropdownButton(
                                           underline: Container(),
                                           hint: Row(
                                             children: [
                                               Icon(
                                                 Icons.sort,
-                                                color: BuytimeTheme.TextGrey,
-                                                size: SizeConfig.safeBlockHorizontal * 5,
+                                                color: BuytimeTheme.TextMedium,
+                                                size: 24,
                                               ),
                                               Container(
                                                 child: Padding(
                                                   padding: const EdgeInsets.only(left: 10.0),
                                                   child: Text(
-                                                    'Sort By', //TODO Make it Global
+                                                    'SORT BY', //TODO Make it Global
                                                     textAlign: TextAlign.start,
                                                     style: TextStyle(
-                                                      fontSize: SizeConfig.safeBlockHorizontal * 4,
-                                                      color: BuytimeTheme.TextGrey,
+                                                      fontSize: 14, ///SizeConfig.safeBlockHorizontal * 4
+                                                      color: BuytimeTheme.TextMedium,
                                                       fontWeight: FontWeight.w400,
                                                     ),
                                                   ),
@@ -546,8 +545,8 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                                           val, //TODO Make it Global
                                                           textAlign: TextAlign.start,
                                                           style: TextStyle(
-                                                            fontSize: SizeConfig.safeBlockHorizontal * 4,
-                                                            color: BuytimeTheme.TextGrey,
+                                                            fontSize: 16,
+                                                            color: BuytimeTheme.TextMedium,
                                                             fontWeight: FontWeight.w400,
                                                           ),
                                                         ),
@@ -555,7 +554,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                                     ),
                                                     sortBy == val ? Icon(
                                                       MaterialDesignIcons.done,
-                                                      color: BuytimeTheme.TextGrey,
+                                                      color: BuytimeTheme.TextMedium,
                                                       size: SizeConfig.safeBlockHorizontal * 5,
                                                     ) : Container(),
                                                   ],
@@ -586,85 +585,96 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                     margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
                                     child:
                                     tmpServiceList.isNotEmpty ?
-                                    ListView.builder(
-                                      itemCount: tmpServiceList.length,
-                                      shrinkWrap: true,
-                                      itemBuilder: (context, index) {
-                                        ServiceState service = tmpServiceList.elementAt(index);
-                                        return Dismissible(
-                                          // Each Dismissible must contain a Key. Keys allow Flutter to
-                                          // uniquely identify widgets.
-                                          key: UniqueKey(),
-                                          // Provide a function that tells the app
-                                          // what to do after an item has been swiped away.
-                                          onDismissed: (direction) {
-                                            // Remove the item from the data source.
-                                            setState(() {
-                                              tmpServiceList.removeAt(index);
-                                            });
-                                            if(direction == DismissDirection.startToEnd){
-                                              debugPrint('UI_U_SearchPage => DX to DELETE');
-                                              // Show a snackbar. This snackbar could also contain "Undo" actions.
-                                              Scaffold.of(context).showSnackBar(SnackBar(
-                                                  content: Text("${service.name} removed"),
-                                                  action: SnackBarAction(
-                                                      label: "UNDO",
-                                                      onPressed: () {
-                                                        //To undo deletion
-                                                        undoDeletion(index, service);
-                                                      })));
-                                            }else{
-                                              debugPrint('UI_U_SearchPage => SX to BOOK');
-                                              order.business.name = snapshot.business.name;
-                                              order.business.id = snapshot.business.id_firestore;
-                                              order.user.name = snapshot.user.name;
-                                              order.user.id = snapshot.user.uid;
-                                              order.addItem(service, snapshot.business.ownerId);
-                                              setState(() {
-                                                cartCounter++;
-                                              });
-                                              undoDeletion(index, service);
-                                            }
+                                    Column(
+                                      children: tmpServiceList.map((ServiceState service){
+                                        int index;
+                                        for(int i = 0; i < tmpServiceList.length; i++){
+                                          if(tmpServiceList[i].serviceId == service.serviceId)
+                                            index = i;
+                                        }
+                                        return  Column(
+                                          children: [
+                                            Dismissible(
+                                              // Each Dismissible must contain a Key. Keys allow Flutter to
+                                              // uniquely identify widgets.
+                                              key: UniqueKey(),
+                                              // Provide a function that tells the app
+                                              // what to do after an item has been swiped away.
+                                              onDismissed: (direction) {
+                                                // Remove the item from the data source.
+                                                setState(() {
+                                                  tmpServiceList.removeAt(index);
+                                                });
+                                                if(direction == DismissDirection.startToEnd){
+                                                  debugPrint('UI_U_SearchPage => DX to DELETE');
+                                                  // Show a snackbar. This snackbar could also contain "Undo" actions.
+                                                  Scaffold.of(context).showSnackBar(SnackBar(
+                                                      content: Text("${service.name} removed"),
+                                                      action: SnackBarAction(
+                                                          label: "UNDO",
+                                                          onPressed: () {
+                                                            //To undo deletion
+                                                            undoDeletion(index, service);
+                                                          })));
+                                                }else{
+                                                  debugPrint('UI_U_SearchPage => SX to BOOK');
+                                                  order.business.name = snapshot.business.name;
+                                                  order.business.id = snapshot.business.id_firestore;
+                                                  order.user.name = snapshot.user.name;
+                                                  order.user.id = snapshot.user.uid;
+                                                  order.addItem(service, snapshot.business.ownerId);
+                                                  setState(() {
+                                                    cartCounter++;
+                                                  });
+                                                  undoDeletion(index, service);
+                                                }
 
-                                          },
-                                          child: Column(
-                                            children: [
-                                              BookingListServiceListItem(service),
-                                              Container(
-                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 38),
-                                                height: SizeConfig.safeBlockVertical * .2,
-                                                color: BuytimeTheme.DividerGrey,
-                                              )
-                                            ],
-                                          ),
-                                          background: Container(
-                                            color: BuytimeTheme.AccentRed,
-                                            //margin: EdgeInsets.symmetric(horizontal: 15),
-                                            alignment: Alignment.centerLeft,
-                                            child: Container(
-                                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5),
-                                              child: Icon(
-                                                MaterialDesignIcons.thumb_down,
-                                                size: SizeConfig.safeBlockHorizontal * 7,
-                                                color: BuytimeTheme.SymbolWhite,
+                                              },
+                                              child: Column(
+                                                children: [
+                                                  BookingListServiceListItem(service),
+                                                  Container(
+                                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 30),
+                                                    height: SizeConfig.safeBlockVertical * .2,
+                                                    color: BuytimeTheme.DividerGrey,
+                                                  )
+                                                ],
+                                              ),
+                                              background: Container(
+                                                color: BuytimeTheme.AccentRed,
+                                                //margin: EdgeInsets.symmetric(horizontal: 15),
+                                                alignment: Alignment.centerLeft,
+                                                child: Container(
+                                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5),
+                                                  child: Icon(
+                                                    MaterialDesignIcons.thumb_down,
+                                                    size: 24, ///SizeConfig.safeBlockHorizontal * 7
+                                                    color: BuytimeTheme.SymbolWhite,
+                                                  ),
+                                                ),
+                                              ),
+                                              secondaryBackground: Container(
+                                                color: BuytimeTheme.UserPrimary,
+                                                //margin: EdgeInsets.symmetric(horizontal: 15),
+                                                alignment: Alignment.centerRight,
+                                                child: Container(
+                                                  margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 2.5),
+                                                  child: Icon(
+                                                    Icons.add_shopping_cart,
+                                                    size: 24, ///SizeConfig.safeBlockHorizontal * 7
+                                                    color: BuytimeTheme.SymbolWhite,
+                                                  ),
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                          secondaryBackground: Container(
-                                            color: BuytimeTheme.UserPrimary,
-                                            //margin: EdgeInsets.symmetric(horizontal: 15),
-                                            alignment: Alignment.centerRight,
-                                            child: Container(
-                                              margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 2.5),
-                                              child: Icon(
-                                                Icons.add_shopping_cart,
-                                                size: SizeConfig.safeBlockHorizontal * 7,
-                                                color: BuytimeTheme.SymbolWhite,
-                                              ),
-                                            ),
-                                          ),
+                                            Container(
+                                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 38),
+                                              height: SizeConfig.safeBlockVertical * .2,
+                                              color: BuytimeTheme.DividerGrey,
+                                            )
+                                          ],
                                         );
-                                      },
+                                      }).toList(),
                                     ):
                                     _searchController.text.isNotEmpty ?
                                     Container(
@@ -729,7 +739,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                         ///Inspiration
                         Flexible(
                           child: Container(
-                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0),
+                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
                             padding: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 1),
                             color: BuytimeTheme.BackgroundWhite,
                             child: Column(
@@ -737,6 +747,97 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 ///Inspiration
+                                /*Container(
+                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
+                                    child: Text(
+                                      'Find your inspiration here', //TODO Make it Global
+                                      style: TextStyle(
+                                          fontFamily: BuytimeTheme.FontFamily,
+                                          color: BuytimeTheme.TextDark,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: SizeConfig.safeBlockHorizontal * 4
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 2, right: SizeConfig.safeBlockHorizontal * 2),
+                                    height: SizeConfig.safeBlockVertical * 50,
+                                    width: double.infinity,
+                                    child: Column(
+                                      children: [
+                                        Flexible(
+                                          flex: 1,
+                                          child: Row(
+                                            children: [
+                                              Flexible(
+                                                flex: 1,
+                                                child: Container(
+                                                  margin: EdgeInsets.all(SizeConfig.safeBlockVertical*.25),
+                                                  //width: double.infinity,
+                                                  //height: double.infinity,
+                                                  width: SizeConfig.safeBlockVertical * 18,
+                                                  height: SizeConfig.safeBlockVertical * 18,
+                                                  color: BuytimeTheme.AccentRed,
+                                                ),
+                                              ),
+                                              Expanded(
+                                                flex: 1,
+                                                child: Container(
+                                                  margin: EdgeInsets.all(SizeConfig.safeBlockVertical*.25),
+                                                  //width: double.infinity,
+                                                  //height: double.infinity,
+                                                  width: SizeConfig.safeBlockVertical * 18,
+                                                  height: SizeConfig.safeBlockVertical * 18,
+                                                  color: BuytimeTheme.Secondary,
+                                                ),
+                                              ),
+                                              Expanded(
+                                                flex: 1,
+                                                child: Container(
+                                                  margin: EdgeInsets.all(SizeConfig.safeBlockVertical*.25),
+                                                  //width: double.infinity,
+                                                  //height: double.infinity,
+                                                  width: SizeConfig.safeBlockVertical * 18,
+                                                  height: SizeConfig.safeBlockVertical * 18,
+                                                  color: BuytimeTheme.ManagerPrimary,
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        Flexible(
+                                          flex: 1,
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              Flexible(
+                                                flex: 1,
+                                                child: Container(
+                                                  margin: EdgeInsets.all(SizeConfig.safeBlockVertical*.25),
+                                                  //width: double.infinity,
+                                                  //height: double.infinity,
+                                                  width: SizeConfig.safeBlockVertical * 28,
+                                                  height: SizeConfig.safeBlockVertical * 28,
+                                                  color: BuytimeTheme.BackgroundLightBlue,
+                                                ),
+                                              ),
+                                              Flexible(
+                                                flex: 1,
+                                                child: Container(
+                                                  margin: EdgeInsets.all(SizeConfig.safeBlockVertical*.25),
+                                                  //width: double.infinity,
+                                                  //height: double.infinity,
+                                                  width: SizeConfig.safeBlockVertical * 28,
+                                                  height: SizeConfig.safeBlockVertical * 28,
+                                                  color: BuytimeTheme.TextPurple,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  )*/
                                 Container(
                                   margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 3, bottom: SizeConfig.safeBlockVertical * 2),
                                   child: Row(
@@ -747,9 +848,9 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                         'Find your inspiration here', //TODO Make it Global
                                         style: TextStyle(
                                             fontFamily: BuytimeTheme.FontFamily,
-                                            color: BuytimeTheme.TextDark,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: SizeConfig.safeBlockHorizontal * 4
+                                            color: BuytimeTheme.TextBlack,
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 18 ///SizeConfig.safeBlockHorizontal * 4
                                         ),
                                       ),
                                       ///Show All
@@ -775,8 +876,8 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                                         letterSpacing: SizeConfig.safeBlockHorizontal * .2,
                                                         fontFamily: BuytimeTheme.FontFamily,
                                                         color: BuytimeTheme.UserPrimary,
-                                                        fontWeight: FontWeight.w600,
-                                                        fontSize: SizeConfig.safeBlockHorizontal * 4
+                                                        fontWeight: FontWeight.w400,
+                                                        fontSize: 16 ///SizeConfig.safeBlockHorizontal * 4
                                                     ),
                                                   ),
                                                 )
@@ -786,30 +887,23 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                     ],
                                   ),
                                 ),
-                                categoryList.length != 0 ?
                                 ///Category List
-                                Container(
-                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 2, right: SizeConfig.safeBlockHorizontal * 2),
-                                  //height: SizeConfig.safeBlockVertical * 50,
-                                  width: double.infinity,
-                                  child: Column(
-                                    children: [
-                                      ///Standard Grid
-                                      !showAll && rowLess1.isNotEmpty ?
-                                      inspiration(rowLess1) : Container(),
-                                      !showAll && rowLess2.isNotEmpty ?
-                                      inspiration(rowLess2) : Container(),
-                                      ///Show all Grid
-                                      showAll && row1.isNotEmpty ?
-                                      inspiration(row1) : Container(),
-                                      showAll && row2.isNotEmpty ?
-                                      inspiration(row2)  : Container(),
-                                      showAll && row3.isNotEmpty ?
-                                      inspiration(row3)  : Container(),
-                                      showAll && row4.isNotEmpty ?
-                                      inspiration(row4): Container(),
-                                    ],
-                                  ),
+                                categoryList.isNotEmpty ? Container(
+                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 2, right: SizeConfig.safeBlockHorizontal * 2),
+                                    //height: SizeConfig.safeBlockVertical * 50,
+                                    width: double.infinity,
+                                    child: Column(
+                                      children: [
+                                        row1.isNotEmpty ?
+                                        inspiration(row1) : Container(),
+                                        row2.isNotEmpty ?
+                                        inspiration(row2)  : Container(),
+                                        showAll && row3.isNotEmpty ?
+                                        inspiration(row3)  : Container(),
+                                        showAll && row4.isNotEmpty ?
+                                        inspiration(row4): Container(),
+                                      ],
+                                    )
                                 ) :
                                 ///No Category
                                 Container(

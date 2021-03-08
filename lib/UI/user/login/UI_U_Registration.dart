@@ -480,368 +480,254 @@ class RegistrationState extends State<Registration> {
         body: Form(
             key: _formKey,
             child: SafeArea(
-              child: Center(
+              child: SingleChildScrollView(
                 child: ConstrainedBox(
-                  constraints: BoxConstraints(),
-                  child: Column(mainAxisSize: MainAxisSize.min, children: [
-                    ///Logo & Email & Password & & Error message & Sign up button
-                    Expanded(
-                      flex: 6,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          ///Logo
-                          Container(
-                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.all(Radius.circular(20)),
-                              boxShadow: [
+                  constraints: BoxConstraints(
+                    minHeight: (SizeConfig.safeBlockVertical * 100) - 56
+                  ),
+                  child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ///Logo & Email & Password & & Error message & Sign up button
+                        Flexible(
+                          flex: 6,
+                          child:  Container(
+                            height: SizeConfig.safeBlockVertical * 75,
+                            child:  Column(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                ///Logo
+                                Container(
+                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                                    /*boxShadow: [
                                 BoxShadow(
                                   color: Colors.black54.withOpacity(0.3),
                                   spreadRadius: 2,
                                   blurRadius: 6,
                                   offset: Offset(0, 0), // changes position of shadow
                                 ),
+                              ],*/
+                                  ),
+                                  child: Image.asset('assets/img/img_buytime.png',
+                                    height: 96, ///media.height * 0.12
+                                  ),
+                                ),
+                                ///Email & Password & Error message
+                                Flexible(
+                                  flex: 3,
+                                  child: Container(
+                                      margin: EdgeInsets.only(
+                                          left: SizeConfig.safeBlockHorizontal * 10, right: SizeConfig.safeBlockHorizontal * 10),
+                                      ///8% - 8%
+                                      child: Column(
+                                        //mainAxisSize: MainAxisSize.min,
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        children: [
+                                          ///Sign up text
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            children: [
+                                              Container(
+                                                //width: 328,
+                                                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 8),
+                                                child: Text(
+                                                  /* AppLocalizations.of(context).createYourAccount*/ 'Please Register:',
+                                                  style: TextStyle(
+                                                    fontFamily: BuytimeTheme.FontFamily,
+                                                    color: BuytimeTheme.TextBlack,
+                                                    fontWeight: FontWeight.w400,
+                                                    fontSize: 16, ///SizeConfig.safeBlockHorizontal * 3
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          ///Email address
+                                          Container(
+                                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5),
+                                            height: 55, ///SizeConfig.safeBlockHorizontal * 14
+                                            //width: 328,
+                                            child: TextFormField(
+                                              controller: _emailController,
+                                              textAlign: TextAlign.start,
+                                              keyboardType: TextInputType.emailAddress,
+                                              autofillHints: [AutofillHints.email],
+                                              decoration: InputDecoration(
+                                                enabledBorder: OutlineInputBorder(
+                                                    borderSide: BorderSide(color: Color(0xffe0e0e0)),
+                                                    borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                focusedBorder: OutlineInputBorder(
+                                                    borderSide: BorderSide(color: Color(0xff666666)),
+                                                    borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                errorBorder: OutlineInputBorder(
+                                                    borderSide: BorderSide(color: Colors.redAccent),
+                                                    borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                labelText: AppLocalizations.of(context).emailAddress,
+                                                //hintText: "email *",
+                                                //hintStyle: TextStyle(color: Color(0xff666666)),
+                                                labelStyle: TextStyle(
+                                                  fontFamily: BuytimeTheme.FontFamily,
+                                                  color: Color(0xff666666),
+                                                  fontWeight: FontWeight.w400,
+                                                ),
+                                              ),
+                                              style: TextStyle(
+                                                fontFamily: BuytimeTheme.FontFamily,
+                                                color: Color(0xff666666),
+                                                fontWeight: FontWeight.w800,
+                                              ),
+                                              validator: (String value) {
+                                                setState(() {
+                                                  if (value.isNotEmpty && EmailValidator.validate(value)) {
+                                                    emailHasError = false;
+                                                  } else
+                                                    emailHasError = true;
+                                                });
+                                                return null;
+                                              },
+                                            ),
+                                          ),
+                                          ///Password
+                                          Container(
+                                            margin: EdgeInsets.only(top: SizeConfig.safeBlockHorizontal * 4),
+                                            height: 55, ///SizeConfig.safeBlockHorizontal * 14
+                                            //width: 328,
+                                            child: TextFormField(
+                                              controller: _passwordController,
+                                              textAlign: TextAlign.start,
+                                              obscureText: passwordVisible,
+                                              decoration: InputDecoration(
+                                                  enabledBorder: OutlineInputBorder(
+                                                      borderSide: BorderSide(color: Color(0xffe0e0e0)),
+                                                      borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                  focusedBorder: OutlineInputBorder(
+                                                      borderSide: BorderSide(color: Color(0xff666666)),
+                                                      borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                  errorBorder: OutlineInputBorder(
+                                                      borderSide: BorderSide(color: Colors.redAccent),
+                                                      borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                  labelText: AppLocalizations.of(context).password,
+                                                  //hintText: "email *",
+                                                  //hintStyle: TextStyle(color: Color(0xff666666)),
+                                                  labelStyle: TextStyle(
+                                                    fontFamily: BuytimeTheme.FontFamily,
+                                                    color: Color(0xff666666),
+                                                    fontWeight: FontWeight.w400,
+                                                  ),
+                                                  suffixIcon: IconButton(
+                                                    icon: Icon(
+                                                      // Based on passwordVisible state choose the icon
+                                                      passwordVisible ? Icons.visibility : Icons.visibility_off,
+                                                      color: Color(0xff666666),
+                                                    ),
+                                                    onPressed: () {
+                                                      // Update the state i.e. toogle the state of passwordVisible variable
+                                                      setState(() {
+                                                        passwordVisible = !passwordVisible;
+                                                      });
+                                                    },
+                                                  )),
+                                              style: TextStyle(
+                                                fontFamily: BuytimeTheme.FontFamily,
+                                                color: Color(0xff666666),
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                              validator: (String value) {
+                                                setState(() {
+                                                  if (passwordValidator(value)) {
+                                                    passwordHasError = false;
+                                                  } else
+                                                    passwordHasError = true;
+                                                });
+                                                return null;
+                                              },
+                                            ),
+                                          ),
+                                          ///Error message
+                                          Flexible(
+                                           child: Row(
+                                             mainAxisAlignment: MainAxisAlignment.start,
+                                             children: [
+                                               Container(
+                                                 width: SizeConfig.safeBlockHorizontal * 80,
+                                                 //alignment: Alignment.centerLeft,
+                                                 margin: EdgeInsets.only(top: 12.0),
+                                                 child: Text(
+                                                   responseMessage,
+                                                   style: TextStyle(
+                                                       color: _success != null
+                                                           ? _success
+                                                           ? Colors.greenAccent
+                                                           : Colors.redAccent
+                                                           : Colors.redAccent,
+                                                       fontWeight: FontWeight.bold,
+                                                       fontSize: 12),
+                                                 ),
+                                               ),
+                                             ],
+                                           ),
+                                          ),
+                                        ],
+                                      )
+                                  ),
+                                ),
+                                ///Register button
+                                Flexible(
+                                    flex: 1,
+                                    child: Container(
+                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5, bottom: SizeConfig.safeBlockVertical * 2.5, left: SizeConfig.safeBlockHorizontal * 8, right: SizeConfig.safeBlockHorizontal * 8),
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.end,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            FloatingActionButton(
+                                              onPressed: () async {
+                                                if (_formKey.currentState.validate() && !_isRequestFlying) {
+                                                  _register();
+                                                  checkFormValidation();
+                                                }
+                                              },
+                                              shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(500.0)),
+                                              child: Icon(
+                                                Icons.chevron_right,
+                                                size: 30,
+                                                color: BuytimeTheme.SymbolGrey,
+                                              ),
+                                            )
+                                          ],
+                                        )))
                               ],
                             ),
-                            child: Image.asset('assets/img/img_buytime.png', height: media.height * 0.12),
                           ),
-
-                          ///Email & Password & Error message
-                          Expanded(
-                            flex: 3,
-                            child: Container(
-                              margin: EdgeInsets.only(
-                                  left: SizeConfig.safeBlockHorizontal * 8, right: SizeConfig.safeBlockHorizontal * 8),
-
-                              ///8% - 8%
-                              child: SizeConfig.screenHeight < 537
-                                  ? Column(
-                                      children: [
-                                        ///Sign up text
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          children: [
-                                            Container(
-                                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 5),
-                                              child: Text(
-                                                AppLocalizations.of(context).createYourAccount,
-                                                style: TextStyle(
-                                                    fontFamily: BuytimeTheme.FontFamily,
-                                                    color: Colors.black,
-                                                    fontWeight: FontWeight.w600,
-                                                    fontSize: SizeConfig.safeBlockHorizontal * 3),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-
-                                        ///Email address
-                                        Container(
-                                          margin: EdgeInsets.only(top: 10.0),
-                                          height: SizeConfig.safeBlockHorizontal * 14,
-                                          child: TextFormField(
-                                            controller: _emailController,
-                                            textAlign: TextAlign.start,
-                                            keyboardType: TextInputType.emailAddress,
-                                            autofillHints: [AutofillHints.email],
-                                            decoration: InputDecoration(
-                                              enabledBorder: OutlineInputBorder(
-                                                  borderSide: BorderSide(color: Color(0xffe0e0e0)),
-                                                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                              focusedBorder: OutlineInputBorder(
-                                                  borderSide: BorderSide(color: Color(0xff666666)),
-                                                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                              errorBorder: OutlineInputBorder(
-                                                  borderSide: BorderSide(color: Colors.redAccent),
-                                                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                              labelText: AppLocalizations.of(context).emailAddress,
-                                              //hintText: "email *",
-                                              //hintStyle: TextStyle(color: Color(0xff666666)),
-                                              labelStyle: TextStyle(
-                                                fontFamily: BuytimeTheme.FontFamily,
-                                                color: Color(0xff666666),
-                                                fontWeight: FontWeight.w400,
-                                              ),
-                                            ),
-                                            style: TextStyle(
-                                              fontFamily: BuytimeTheme.FontFamily,
-                                              color: Color(0xff666666),
-                                              fontWeight: FontWeight.w800,
-                                            ),
-                                            validator: (String value) {
-                                              setState(() {
-                                                if (value.isNotEmpty && EmailValidator.validate(value)) {
-                                                  emailHasError = false;
-                                                } else
-                                                  emailHasError = true;
-                                              });
-                                              return null;
-                                            },
-                                          ),
-                                        ),
-
-                                        ///Password
-                                        Container(
-                                          margin: EdgeInsets.only(top: SizeConfig.safeBlockHorizontal * 1.5),
-                                          height: SizeConfig.safeBlockHorizontal * 14,
-                                          child: TextFormField(
-                                            controller: _passwordController,
-                                            textAlign: TextAlign.start,
-                                            obscureText: passwordVisible,
-                                            decoration: InputDecoration(
-                                                enabledBorder: OutlineInputBorder(
-                                                    borderSide: BorderSide(color: Color(0xffe0e0e0)),
-                                                    borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                                focusedBorder: OutlineInputBorder(
-                                                    borderSide: BorderSide(color: Color(0xff666666)),
-                                                    borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                                errorBorder: OutlineInputBorder(
-                                                    borderSide: BorderSide(color: Colors.redAccent),
-                                                    borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                                labelText: AppLocalizations.of(context).password,
-                                                //hintText: "email *",
-                                                //hintStyle: TextStyle(color: Color(0xff666666)),
-                                                labelStyle: TextStyle(
-                                                  fontFamily: BuytimeTheme.FontFamily,
-                                                  color: Color(0xff666666),
-                                                  fontWeight: FontWeight.w400,
-                                                ),
-                                                suffixIcon: IconButton(
-                                                  icon: Icon(
-                                                    // Based on passwordVisible state choose the icon
-                                                    passwordVisible ? Icons.visibility : Icons.visibility_off,
-                                                    color: Color(0xff666666),
-                                                  ),
-                                                  onPressed: () {
-                                                    // Update the state i.e. toogle the state of passwordVisible variable
-                                                    setState(() {
-                                                      passwordVisible = !passwordVisible;
-                                                    });
-                                                  },
-                                                )),
-                                            style: TextStyle(
-                                              fontFamily: BuytimeTheme.FontFamily,
-                                              color: Color(0xff666666),
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                            validator: (String value) {
-                                              setState(() {
-                                                if (passwordValidator(value)) {
-                                                  passwordHasError = false;
-                                                } else
-                                                  passwordHasError = true;
-                                              });
-                                              return null;
-                                            },
-                                          ),
-                                        ),
-
-                                        ///Error message
-                                        Container(
-                                          alignment: Alignment.center,
-                                          margin: EdgeInsets.only(top: 12.0),
-                                          child: Text(
-                                            responseMessage,
-                                            style: TextStyle(
-                                                color: _success != null
-                                                    ? _success
-                                                        ? Colors.greenAccent
-                                                        : Colors.redAccent
-                                                    : Colors.redAccent,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: SizeConfig.safeBlockHorizontal * 3),
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                  : Column(
-                                      children: [
-                                        ///Sign in text
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          children: [
-                                            Container(
-                                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 5),
-                                              child: Text(
-                                                AppLocalizations.of(context).createYourAccount,
-                                                style: TextStyle(
-                                                    fontFamily: BuytimeTheme.FontFamily,
-                                                    color: Colors.black,
-                                                    fontWeight: FontWeight.w600,
-                                                    fontSize: 16),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-
-                                        ///Email address
-                                        Container(
-                                          margin: EdgeInsets.only(top: 10.0),
-                                          child: TextFormField(
-                                            controller: _emailController,
-                                            textAlign: TextAlign.start,
-                                            keyboardType: TextInputType.emailAddress,
-                                            autofillHints: [AutofillHints.email],
-                                            decoration: InputDecoration(
-                                              enabledBorder: OutlineInputBorder(
-                                                  borderSide: BorderSide(color: Color(0xffe0e0e0)),
-                                                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                              focusedBorder: OutlineInputBorder(
-                                                  borderSide: BorderSide(color: Color(0xff666666)),
-                                                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                              errorBorder: OutlineInputBorder(
-                                                  borderSide: BorderSide(color: Colors.redAccent),
-                                                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                              labelText: AppLocalizations.of(context).emailAddress,
-                                              //hintText: "email *",
-                                              //hintStyle: TextStyle(color: Color(0xff666666)),
-                                              labelStyle: TextStyle(
-                                                fontFamily: BuytimeTheme.FontFamily,
-                                                color: Color(0xff666666),
-                                                fontWeight: FontWeight.w400,
-                                              ),
-                                            ),
-                                            style: TextStyle(
-                                              fontFamily: BuytimeTheme.FontFamily,
-                                              color: Color(0xff666666),
-                                              fontWeight: FontWeight.w800,
-                                            ),
-                                            validator: (String value) {
-                                              setState(() {
-                                                if (value.isNotEmpty && EmailValidator.validate(value)) {
-                                                  emailHasError = false;
-                                                } else
-                                                  emailHasError = true;
-                                              });
-                                              return null;
-                                            },
-                                          ),
-                                        ),
-
-                                        ///Password
-                                        Container(
-                                          margin: EdgeInsets.only(top: 10.0),
-                                          child: TextFormField(
-                                            controller: _passwordController,
-                                            textAlign: TextAlign.start,
-                                            obscureText: passwordVisible,
-                                            decoration: InputDecoration(
-                                                enabledBorder: OutlineInputBorder(
-                                                    borderSide: BorderSide(color: Color(0xffe0e0e0)),
-                                                    borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                                focusedBorder: OutlineInputBorder(
-                                                    borderSide: BorderSide(color: Color(0xff666666)),
-                                                    borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                                errorBorder: OutlineInputBorder(
-                                                    borderSide: BorderSide(color: Colors.redAccent),
-                                                    borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                                labelText: AppLocalizations.of(context).password,
-                                                //hintText: "email *",
-                                                //hintStyle: TextStyle(color: Color(0xff666666)),
-                                                labelStyle: TextStyle(
-                                                  fontFamily: BuytimeTheme.FontFamily,
-                                                  color: Color(0xff666666),
-                                                  fontWeight: FontWeight.w400,
-                                                ),
-                                                suffixIcon: IconButton(
-                                                  icon: Icon(
-                                                    // Based on passwordVisible state choose the icon
-                                                    passwordVisible ? Icons.visibility : Icons.visibility_off,
-                                                    color: Color(0xff666666),
-                                                  ),
-                                                  onPressed: () {
-                                                    // Update the state i.e. toogle the state of passwordVisible variable
-                                                    setState(() {
-                                                      passwordVisible = !passwordVisible;
-                                                    });
-                                                  },
-                                                )),
-                                            style: TextStyle(
-                                              fontFamily: BuytimeTheme.FontFamily,
-                                              color: Color(0xff666666),
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                            validator: (String value) {
-                                              setState(() {
-                                                if (passwordValidator(value)) {
-                                                  passwordHasError = false;
-                                                } else
-                                                  passwordHasError = true;
-                                              });
-                                              return null;
-                                            },
-                                          ),
-                                        ),
-
-                                        ///Error message
-                                        Container(
-                                          alignment: Alignment.center,
-                                          margin: EdgeInsets.only(top: 12.0),
-                                          child: Text(
-                                            responseMessage,
-                                            style: TextStyle(
-                                                color: _success != null
-                                                    ? _success
-                                                        ? Colors.greenAccent
-                                                        : Colors.redAccent
-                                                    : Colors.redAccent,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                            ),
+                        ),
+                        ///Google & Facebook & Apple Sign up buttons
+                        Flexible(
+                          flex: 3,
+                          child: Container(
+                            height: SizeConfig.safeBlockVertical * 30,
+                            //height: 243, ///285
+                            padding: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 5, bottom: SizeConfig.safeBlockVertical * 5),
+                            color: BuytimeTheme.BackgroundCerulean,
+                            child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  BrandedButton("assets/img/google_logo.png", /*AppLocalizations.of(context).signGoogle*/ 'Log In with Google', initiateGoogleSignIn), ///TODO Make it Global
+                                  BrandedButton("assets/img/apple_logo.png", /*AppLocalizations.of(context).signApple*/ 'Log In with Apple', initiateAppleSignIn), ///TODO Make it Global
+                                  //BrandedButton("assets/img/facebook_logo.png", AppLocalizations.of(context).signFacebook, initiateFacebookSignIn),
+                                ]),
                           ),
-
-                          ///Sign up button
-                          Expanded(
-                              flex: 1,
-                              child: Container(
-                                  margin: EdgeInsets.only(
-                                      left: SizeConfig.safeBlockHorizontal * 8,
-                                      right: SizeConfig.safeBlockHorizontal * 8),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      FloatingActionButton(
-                                        onPressed: () async {
-                                          if (_formKey.currentState.validate() && !_isRequestFlying) {
-                                            _register();
-                                            checkFormValidation();
-                                          }
-                                        },
-                                        shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(500.0)),
-                                        child: Icon(
-                                          Icons.chevron_right,
-                                          size: 30,
-                                          color: BuytimeTheme.UserPrimary,
-                                        ),
-                                      )
-                                    ],
-                                  )))
-                        ],
-                      ),
-                    ),
-
-                    ///Google & Facebook & Apple Sign up buttons
-                    Expanded(
-                      flex: 3,
-                      child: Container(
-                        color: Color(0xff7694aa),
-                        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                          BrandedButton("assets/img/google_logo.png", AppLocalizations.of(context).signGoogle, initiateGoogleSignIn),
-                          BrandedButton("assets/img/apple_logo.png", AppLocalizations.of(context).signApple, initiateAppleSignIn),
-                          //BrandedButton("assets/img/facebook_logo.png", AppLocalizations.of(context).signFacebook, initiateFacebookSignIn),
-                        ]),
-                      ),
-                    )
-                  ]),
+                        )
+                      ]),
                 ),
               ),
-            )));
+            )
+        )
+    );
   }
 
   @override

@@ -9,6 +9,8 @@ import 'package:Buytime/UI/user/booking/UI_U_ConfirmBooking.dart';
 import 'package:Buytime/UI/user/booking/UI_U_MyBookings.dart';
 import 'package:Buytime/UI/user/cart/UI_U_ConfirmOrder.dart';
 import 'package:Buytime/UI/user/landing/UI_U_Landing.dart';
+import 'package:Buytime/reblox/model/autoComplete/auto_complete_list_state.dart';
+import 'package:Buytime/reblox/model/autoComplete/auto_complete_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_list_state.dart';
 import 'package:Buytime/reblox/model/card/card_list_state.dart';
 import 'package:Buytime/reblox/model/card/card_state.dart';
@@ -17,6 +19,7 @@ import 'package:Buytime/reblox/model/category/tree/category_tree_state.dart';
 import 'package:Buytime/reblox/model/service/service_slot_time_state.dart';
 import 'package:Buytime/reblox/model/statistics_state.dart';
 import 'package:Buytime/reblox/model/stripe/stripe_list_state.dart';
+import 'package:Buytime/reblox/reducer/auto_complete_reducer.dart';
 import 'package:Buytime/reblox/reducer/statistics_reducer.dart';
 import 'package:Buytime/services/category_invite_service_epic.dart';
 import 'package:Buytime/utils/size_config.dart';
@@ -50,6 +53,8 @@ import 'package:Buytime/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_screenutil/screen_util.dart';
 import 'package:redux/redux.dart';
 import 'package:redux_epics/redux_epics.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
@@ -57,6 +62,7 @@ import 'package:Buytime/services/booking_service_epic.dart';
 import 'package:Buytime/reblox/navigation/navigation_middleware.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 void main(){
 
@@ -112,7 +118,7 @@ void main(){
     OrderRequestService(),
     OrderUpdateService(),
     OrderCreateService(),
-    AddingStripePaymentMethodRequest()
+    AddingStripePaymentMethodRequest(),
   ]);
   final _initialState = AppState(
     category: CategoryState().toEmpty(),
@@ -136,7 +142,9 @@ void main(){
     pipeline: Pipeline().toEmpty(),
     statistics: StatisticsState().toEmpty(),
     cardState: CardState().toEmpty(),
-    cardListState: CardListState().toEmpty()
+    cardListState: CardListState().toEmpty(),
+    autoCompleteState: AutoCompleteState().toEmpty(),
+    autoCompleteListState: AutoCompleteListState().toEmpty()
   );
   final store = new Store<AppState>(
     appReducer,
@@ -188,7 +196,8 @@ class Buytime extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
-
+    //SizeConfig().init(context);
+    //ScreenUtil.init(bcontext, width: 1125, height: 2436, allowFontScaling: true);
     return StoreProvider<AppState>(
       store: store,
       child: MaterialApp(

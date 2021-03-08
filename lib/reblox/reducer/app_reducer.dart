@@ -1,4 +1,6 @@
 import 'package:Buytime/reblox/model/app_state.dart';
+import 'package:Buytime/reblox/model/autoComplete/auto_complete_list_state.dart';
+import 'package:Buytime/reblox/model/autoComplete/auto_complete_state.dart';
 import 'package:Buytime/reblox/model/business/business_list_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
@@ -22,6 +24,8 @@ import 'package:Buytime/reblox/model/stripe/stripe_list_state.dart';
 import 'package:Buytime/reblox/model/stripe/stripe_state.dart';
 import 'package:Buytime/reblox/model/user/user_state.dart';
 import 'package:Buytime/reblox/navigation/navigation_reducer.dart';
+import 'package:Buytime/reblox/reducer/auto_complete_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/auto_complete_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_invite_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_list_reducer.dart';
@@ -72,6 +76,8 @@ AppState appReducer(AppState state, dynamic action) {
   StatisticsState statisticsState = statisticsReducer(state.statistics, action);
   CardState cardState = cardReducer(state.cardState, action);
   CardListState cardListState = cardListReducer(state.cardListState, action);
+  AutoCompleteState autoCompleteState = autoCompleteReducer(state.autoCompleteState, action);
+  AutoCompleteListState autoCompleteListState = autoCompleteListReducer(state.autoCompleteListState, action);
 
   AppState newState = AppState.copyWith(
       filterSearch: filterSearchState,
@@ -96,7 +102,9 @@ AppState appReducer(AppState state, dynamic action) {
       route: navigationReducer(state.route, action),
       statistics: statisticsState,
       cardState: cardState,
-      cardListState: cardListState
+      cardListState: cardListState,
+      autoCompleteState: autoCompleteState,
+      autoCompleteListState: autoCompleteListState
   );
 
   if (action is ClickOnBusinessState) {

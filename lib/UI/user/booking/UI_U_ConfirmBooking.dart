@@ -78,7 +78,7 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                 children: [
                   ///Confirm new booking Text
                   Expanded(
-                    flex: 3,
+                    flex: 2,
                     child: Container(
                       color: BuytimeTheme.BackgroundCerulean,
                       //height: SizeConfig.safeBlockVertical * 15,
@@ -92,9 +92,9 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                               AppLocalizations.of(context).confirmNewBooking,
                               style: TextStyle(
                                   fontFamily: BuytimeTheme.FontFamily,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: SizeConfig.safeBlockHorizontal * 7
+                                  color: BuytimeTheme.TextWhite,
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 26 ///SizeConfig.safeBlockHorizontal * 7
                               ),
                             ),
                           )
@@ -131,9 +131,9 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                                   bookingState.business_name ?? AppLocalizations.of(context).hotelName,
                                   style: TextStyle(
                                       fontFamily: BuytimeTheme.FontFamily,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: SizeConfig.safeBlockHorizontal * 4
+                                      color: BuytimeTheme.TextBlack,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 20 ///SizeConfig.safeBlockHorizontal * 4
                                   ),
                                 ),
                               ),
@@ -143,9 +143,9 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                                   bookingState.business_address ?? AppLocalizations.of(context).locationCountry,
                                   style: TextStyle(
                                       fontFamily: BuytimeTheme.FontFamily,
-                                      color: Colors.grey,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: SizeConfig.safeBlockHorizontal * 4
+                                      color: BuytimeTheme.TextBlack,
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
                                   ),
                                 ),
                               ),
@@ -155,9 +155,9 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                                   '${bookingState.user.first.name} ${bookingState.user.first.surname.substring(0,1).toUpperCase()}. and ${bookingState.guest_number_booked_for} guests' ?? AppLocalizations.of(context).guestsNumber,
                                   style: TextStyle(
                                       fontFamily: BuytimeTheme.FontFamily,
-                                      color: Colors.grey,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: SizeConfig.safeBlockHorizontal * 4
+                                      color: BuytimeTheme.TextBlack,
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
                                   ),
                                 ),
                               ),
@@ -167,15 +167,16 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                                   '${DateFormat('dd MMMM').format(bookingState.start_date)} - ${DateFormat('dd MMMM yyyy').format(bookingState.end_date)}' ?? '12 June - 18 June 2021',
                                   style: TextStyle(
                                       fontFamily: BuytimeTheme.FontFamily,
-                                      color: Colors.grey,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: SizeConfig.safeBlockHorizontal * 4
+                                      color: BuytimeTheme.TextBlack,
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
                                   ),
                                 ),
                               ),
                               ///Confirm Booking
                               Container(
-                                  width: SizeConfig.safeBlockHorizontal * 55,
+                                  width: 201, ///SizeConfig.safeBlockHorizontal * 55
+                                  height: 44,
                                   margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 5, bottom: SizeConfig.safeBlockVertical * 2),
                                   child: RaisedButton(
                                     onPressed: () {
@@ -233,9 +234,10 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                                     child: Text(
                                       AppLocalizations.of(context).confirmBooking,
                                       style: TextStyle(
-                                        fontSize: 18,
-                                        fontFamily: 'Roboto',
-                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14,
+                                        fontFamily: BuytimeTheme.FontFamily,
+                                        fontWeight: FontWeight.w500,
+                                        letterSpacing: 1.25
                                       ),
                                     ),
                                   )
@@ -257,8 +259,8 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                                             style: TextStyle(
                                                 fontFamily: BuytimeTheme.FontFamily,
                                                 color: BuytimeTheme.UserPrimary,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: SizeConfig.safeBlockHorizontal * 4
+                                                fontWeight: FontWeight.w600,
+                                                fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
                                             ),
                                           ),
                                         )

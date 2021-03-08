@@ -72,8 +72,8 @@ class _BookingListItemState extends State<BookingListItem> {
                                   style: TextStyle(
                                       fontFamily: BuytimeTheme.FontFamily,
                                       color: BuytimeTheme.TextBlack,
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: SizeConfig.safeBlockHorizontal * 4
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 16 ///SizeConfig.safeBlockHorizontal * 4
                                   ),
                                 ),
                               ),
@@ -86,8 +86,8 @@ class _BookingListItemState extends State<BookingListItem> {
                                 style: TextStyle(
                                     fontFamily: BuytimeTheme.FontFamily,
                                     color: BuytimeTheme.TextGrey,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: SizeConfig.safeBlockHorizontal * 4
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
                                 ),
                               ),
                             )
@@ -96,7 +96,7 @@ class _BookingListItemState extends State<BookingListItem> {
                         ///Share icon
                         widget.booking.status != 'closed' ?
                         Container(
-                          margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 0),
+                          margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
@@ -106,17 +106,18 @@ class _BookingListItemState extends State<BookingListItem> {
                                 child: Icon(
                                   widget.booking.status == 'created' ? Icons.bookmark_border : widget.booking.status == 'opened' ? MaterialDesignIcons.done_all : MaterialDesignIcons.done,
                                   color: BuytimeTheme.ActionButton,
+                                  size: 18,
                                 ),
                               ),
                               ///Status
                               Container(
                                 child: Text(
-                                  '${widget.booking.status}',
+                                  '${widget.booking.status.substring(0,1).toUpperCase()}${widget.booking.status.substring(1, widget.booking.status.length)}',
                                   style: TextStyle(
                                       fontFamily: BuytimeTheme.FontFamily,
                                       color: BuytimeTheme.TextBlack,
                                       fontWeight: FontWeight.w500,
-                                      fontSize: SizeConfig.safeBlockHorizontal * 4
+                                      fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
                                   ),
                                 ),
                               )

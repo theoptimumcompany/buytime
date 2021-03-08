@@ -274,7 +274,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                             children: [
                               Container(
                                   child: IconButton(
-                                      icon: Icon(Icons.chevron_left, color: Colors.white, size: media.width * 0.09),
+                                      icon: Icon(Icons.keyboard_arrow_left, color: Colors.white, size: 24),
                                       onPressed: () {
                                         //Todo: POP o no?
                                         Navigator.pushReplacement(
@@ -289,11 +289,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                     "Edit " + StoreProvider.of<AppState>(context).state.serviceState.name, //Todo: trans
                                     textAlign: TextAlign.start,
                                     overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      fontSize: media.height * 0.028,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w700,
-                                    ),
+                                    style: BuytimeTheme.appbarTitle,
                                   ),
                                 ),
                               ),
@@ -348,7 +344,9 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                   ),
                                                 ),
                                                 Expanded(
+                                                  flex: 2,
                                                   child: Column(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                     children: [
                                                       Container(
                                                         child: WidgetServicePhoto(
@@ -408,7 +406,18 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                     StoreProvider.of<AppState>(context).dispatch(SetServiceName(_serviceName));
                                                   }
                                                 },
-                                                decoration: InputDecoration(labelText: AppLocalizations.of(context).name),
+                                                decoration: InputDecoration(
+                                                    labelText: AppLocalizations.of(context).name,
+                                                  enabledBorder: OutlineInputBorder(
+                                                      borderSide: BorderSide(color: Color(0xffe0e0e0)),
+                                                      borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                  focusedBorder: OutlineInputBorder(
+                                                      borderSide: BorderSide(color: Color(0xff666666)),
+                                                      borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                  errorBorder: OutlineInputBorder(
+                                                      borderSide: BorderSide(color: Colors.redAccent),
+                                                      borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                ),
                                               ),
                                             ),
                                           ),
@@ -416,6 +425,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                         Center(
                                           child: Container(
                                             width: media.width * 0.9,
+                                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
                                             //decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
                                             child: Padding(
                                               padding: const EdgeInsets.only(top: 0.0, bottom: 10.0, left: 10.0, right: 10.0),
@@ -430,7 +440,18 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                 onSaved: (value) {
                                                   _serviceDescription = value;
                                                 },
-                                                decoration: InputDecoration(labelText: AppLocalizations.of(context).description),
+                                                decoration: InputDecoration(
+                                                    labelText: AppLocalizations.of(context).description,
+                                                  enabledBorder: OutlineInputBorder(
+                                                      borderSide: BorderSide(color: Color(0xffe0e0e0)),
+                                                      borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                  focusedBorder: OutlineInputBorder(
+                                                      borderSide: BorderSide(color: Color(0xff666666)),
+                                                      borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                  errorBorder: OutlineInputBorder(
+                                                      borderSide: BorderSide(color: Colors.redAccent),
+                                                      borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                ),
                                               ),
                                             ),
                                           ),
@@ -442,6 +463,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                 child: Center(
                                                   child: Container(
                                                     width: media.width * 0.9,
+                                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
                                                     //decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
                                                     child: Padding(
                                                       padding: const EdgeInsets.only(top: 0.0, bottom: 5.0, left: 10.0, right: 10.0),
@@ -481,6 +503,15 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                         },
                                                         decoration: InputDecoration(
                                                           labelText: AppLocalizations.of(context).price,
+                                                          enabledBorder: OutlineInputBorder(
+                                                              borderSide: BorderSide(color: Color(0xffe0e0e0)),
+                                                              borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                          focusedBorder: OutlineInputBorder(
+                                                              borderSide: BorderSide(color: Color(0xff666666)),
+                                                              borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                          errorBorder: OutlineInputBorder(
+                                                              borderSide: BorderSide(color: Colors.redAccent),
+                                                              borderRadius: BorderRadius.all(Radius.circular(8.0))),
                                                         ),
                                                       ),
                                                     ),

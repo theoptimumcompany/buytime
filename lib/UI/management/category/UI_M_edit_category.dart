@@ -515,6 +515,7 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
+                                ///Back button
                                 Padding(
                                   padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
                                   child: IconButton(
@@ -532,6 +533,7 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                                     },
                                   ),
                                 ),
+                                ///Title
                                 Container(
                                   child: Padding(
                                     padding: const EdgeInsets.only(left: 20.0),
@@ -539,11 +541,7 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                                       AppLocalizations.of(context).editSpace + snapshot.category.name,
                                       textAlign: TextAlign.start,
                                       overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: media.height * 0.028,
-                                        fontWeight: FontWeight.w400,
-                                      ),
+                                      style: BuytimeTheme.appbarTitle,
                                     ),
                                   ),
                                 ),
@@ -570,7 +568,6 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                                         print("Aggiorno " + newCategoryParent.name);
                                         ///aggiorno singola categoria
                                         StoreProvider.of<AppState>(context).dispatch(new UpdateCategory(snapshot.category));
-
                                         
                                         ///aggiorno category tree
                                         StoreProvider.of<AppState>(context).dispatch(new UpdateCategoryTree(newCategoryParent));
@@ -767,9 +764,10 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                                                             AppLocalizations.of(context).managers,
                                                             textAlign: TextAlign.start,
                                                             style: TextStyle(
-                                                              color: BuytimeTheme.TextDark,
-                                                              fontSize: media.height * 0.023,
-                                                              fontWeight: FontWeight.w500,
+                                                                color: BuytimeTheme.TextDark,
+                                                                fontSize: 16,
+                                                                fontWeight: FontWeight.w600,
+                                                                fontFamily: BuytimeTheme.FontFamily
                                                             ),
                                                           ),
                                                         ),
@@ -867,8 +865,9 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                                                               textAlign: TextAlign.start,
                                                               style: TextStyle(
                                                                 color: BuytimeTheme.TextDark,
-                                                                fontSize: media.height * 0.023,
-                                                                fontWeight: FontWeight.w500,
+                                                                fontSize: 16,
+                                                                fontWeight: FontWeight.w600,
+                                                                fontFamily: BuytimeTheme.FontFamily
                                                               ),
                                                             ),
                                                           ),
