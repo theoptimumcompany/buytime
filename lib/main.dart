@@ -55,6 +55,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_screenutil/screen_util.dart';
+import 'package:logger/logger.dart';
+import 'package:logger_flutter/logger_flutter.dart';
 import 'package:redux/redux.dart';
 import 'package:redux_epics/redux_epics.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
@@ -157,6 +159,29 @@ void main(){
   WidgetsFlutterBinding.ensureInitialized();
 
   runApp(Buytime(store: store));
+  log();
+}
+
+var logger = Logger(
+  printer: PrettyPrinter(),
+);
+
+var loggerNoStack = Logger(
+  printer: PrettyPrinter(methodCount: 0),
+);
+
+void log() {
+  logger.d("Log message with 2 methods");
+
+  loggerNoStack.i("Info message");
+
+  loggerNoStack.w("Just a warning!");
+
+  logger.e("Error! Something bad happened", "Test Error");
+
+  loggerNoStack.v({"key": 5, "value": "something"});
+
+  //Future.delayed(Duration(seconds: 5), log);
 }
 
 class Buytime extends StatelessWidget {
@@ -220,7 +245,10 @@ class Buytime extends StatelessWidget {
         title: 'Buytime',
         debugShowCheckedModeBanner: false,
         theme: BuytimeTheme().userTheme,
-        home: SplashScreen(),
+        home: SplashScreen()/*LogConsoleOnShake(
+          dark: true,
+          child: SplashScreen(),
+        )*/,
         /*routes: <String, WidgetBuilder>{
           // Set routes for using the Navigator.
           '/home': (BuildContext context) => Home(),

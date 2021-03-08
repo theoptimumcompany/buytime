@@ -42,6 +42,7 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
   }
 
   final GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
+  bool hotel = false;
 
   @override
   Widget build(BuildContext context) {
@@ -57,6 +58,10 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
       },
       builder: (context, snapshot) {
         List<CategoryState> categoryRootList = snapshot.categoryList.categoryListState;
+        snapshot.business.business_type.forEach((element) {
+          if(element.content == 'Hotel')
+            hotel = true;
+        });
         return WillPopScope(
           onWillPop: () async => false,
           child: Scaffold(
@@ -345,6 +350,7 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                                     ),
                                   ),
                                   ///Invite
+                                  hotel ?
                                   Positioned.fill(
                                     child: Align(
                                       alignment: Alignment.bottomCenter,
@@ -438,7 +444,8 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                                   ),
                                 ),
                               ),
-                            )
+                            ) :
+                                      Container()
                           ],
                         ),
                       ),

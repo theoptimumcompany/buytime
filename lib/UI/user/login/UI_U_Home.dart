@@ -534,7 +534,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                     ///By signing ...
                                     Container(
                                       child: Text(
-                                        /*AppLocalizations.of(context).youAccept*/ 'By signing up you agree to our', ///TODO Make it global
+                                        /*AppLocalizations.of(context).youAccept*/ 'By signing up you agree to our ', ///TODO Make it global
                                         style: TextStyle(
                                             color: Colors.grey,
                                             fontSize: 14,

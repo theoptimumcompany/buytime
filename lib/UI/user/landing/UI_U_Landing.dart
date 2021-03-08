@@ -35,6 +35,7 @@ import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:logger_flutter/logger_flutter.dart';
 import 'package:share/share.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -170,6 +171,7 @@ class LandingState extends State<Landing> {
                                         margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 6, right: SizeConfig.safeBlockHorizontal * 4),
                                         child: IconButton(
                                           onPressed: () async{
+                                            //LogConsole.init();
                                             /*final RenderBox box = context.findRenderObject();
                                           Uri link = await createDynamicLink('prova');
                                           Share.share(AppLocalizations.of(context).checkYourBuytimeApp + link.toString(), subject: AppLocalizations.of(context).takeYourTime, sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);

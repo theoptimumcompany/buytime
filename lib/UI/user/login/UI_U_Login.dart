@@ -809,14 +809,17 @@ class LoginState extends State<Login> {
                                                         ),
                                                         Container(
                                                           //padding: EdgeInsets.all(5.0),
-                                                          child: Text(
-                                                            'Save Credentials',//AppLocalizations.of(context).somethingIsNotRight,
-                                                            style: TextStyle(
-                                                                letterSpacing: 1.25,
-                                                                fontFamily: BuytimeTheme.FontFamily,
-                                                                color: BuytimeTheme.TextGrey,
-                                                                fontWeight: FontWeight.w500,
-                                                                fontSize: 16 ///SizeConfig.safeBlockHorizontal * 4
+                                                          child: FittedBox(
+                                                            fit: BoxFit.scaleDown,
+                                                            child: Text(
+                                                              'Save Credentials',//AppLocalizations.of(context).somethingIsNotRight,
+                                                              style: TextStyle(
+                                                                  letterSpacing: 1.25,
+                                                                  fontFamily: BuytimeTheme.FontFamily,
+                                                                  color: BuytimeTheme.TextGrey,
+                                                                  fontWeight: FontWeight.w500,
+                                                                  fontSize: 16 ///SizeConfig.safeBlockHorizontal * 4
+                                                              ),
                                                             ),
                                                           ),
                                                         )

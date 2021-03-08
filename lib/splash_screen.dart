@@ -5,6 +5,7 @@ import 'dart:ui';
 
 import 'package:Buytime/UI/user/landing/UI_U_Landing.dart';
 import 'package:Buytime/UI/user/landing/invite_guest_form.dart';
+import 'package:Buytime/main.dart';
 import 'package:Buytime/reblox/model/autoComplete/auto_complete_state.dart';
 import 'package:Buytime/reblox/model/card/card_state.dart';
 import 'package:Buytime/reblox/model/snippet/device.dart';
@@ -77,6 +78,7 @@ class _SplashScreenState extends State<SplashScreen>  with WidgetsBindingObserve
     WidgetsBinding.instance.addObserver(this);
     super.initState();
     readFromStorage();
+    logger.d("Init Splash screen");
     //DynamicLinkService().retrieveDynamicLink(context);
 
     Firebase.initializeApp().then((value) {
