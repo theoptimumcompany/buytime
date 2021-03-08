@@ -41,15 +41,15 @@ class _BookingCardWidgetState extends State<BookingCardWidget> {
     DateTime currentTime = DateTime.now();
     currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0);
 
-    DateTime endTime = widget.bookingState.end_date;
-    DateTime startTime = widget.bookingState.start_date;
-    endTime = new DateTime(endTime.year, endTime.month, endTime.day, 0, 0, 0, 0, 0);
+    DateTime endTime = DateTime.now();
+    //DateTime startTime = DateTime.now();
+    endTime = new DateTime(widget.bookingState.end_date.year, widget.bookingState.end_date.month, widget.bookingState.end_date.day, 0, 0, 0, 0, 0);
     if(endTime.isBefore(currentTime)){
       bookingStatus = 'Closed';
       closed = true;
-    }else if(startTime.isAtSameMomentAs(currentTime))
+    }else if(widget.bookingState.start_date.isAtSameMomentAs(currentTime))
       bookingStatus = 'Active';
-    else if(startTime.isAfter(currentTime))
+    else if(widget.bookingState.start_date.isAfter(currentTime))
       bookingStatus = 'Upcoming';
     else
       bookingStatus = 'Active';
