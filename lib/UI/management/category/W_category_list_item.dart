@@ -51,15 +51,19 @@ class _CategoryListItemWidgetState extends State<CategoryListItemWidget> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          FittedBox(
-                            fit: BoxFit.scaleDown,
-                            child: Text(
-                              "100",
-                              style: TextStyle(
-                                  color: BuytimeTheme.TextWhite,
-                                  fontWeight: FontWeight.w400,
-                                  fontFamily: BuytimeTheme.FontFamily,
-                                  fontSize: 16
+                          Container(
+                            height: 27,
+                            width: 27,
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(
+                                "100",
+                                style: TextStyle(
+                                    color: BuytimeTheme.TextWhite,
+                                    fontWeight: FontWeight.w400,
+                                    fontFamily: BuytimeTheme.FontFamily,
+                                    fontSize: 16
+                                ),
                               ),
                             ),
                           ),
