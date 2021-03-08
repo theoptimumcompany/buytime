@@ -31,11 +31,13 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
   void setServiceLists(List<CategoryState> categoryRootList, List<ServiceState> serviceList) {
     listOfServiceEachRoot = [];
     for (int c = 0; c < categoryRootList.length; c++) {
+      print(categoryRootList[c].name);
       List<ServiceState> listRoot = [];
       List<bool> internalSpinnerVisibility = [];
       for (int s = 0; s < serviceList.length; s++) {
         if (serviceList[s].categoryRootId.contains(categoryRootList[c].id)) {
           listRoot.add(serviceList[s]);
+          print(serviceList[s].name);
           internalSpinnerVisibility.add(false);
         }
       }
@@ -90,14 +92,14 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
           order = snapshot.order.itemList != null ? (snapshot.order.itemList.length > 0 ? snapshot.order : order) : order;
 
           return WillPopScope(
-          onWillPop: () async {
-            ///Block iOS Back Swipe
-            if (Navigator.of(context).userGestureInProgress)
-              return false;
-            else
-              _onWillPop();
-              return true;
-          },
+              onWillPop: () async {
+                ///Block iOS Back Swipe
+                if (Navigator.of(context).userGestureInProgress)
+                  return false;
+                else
+                  _onWillPop();
+                return true;
+              },
               child: Scaffold(
                 resizeToAvoidBottomInset: false,
                 appBar: BuytimeAppbar(
@@ -127,278 +129,289 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                         StoreProvider.of<AppState>(context).dispatch(SetService(ServiceState().toEmpty()));
                         Navigator.pushReplacement(
                           context,
-                          MaterialPageRoute(builder: (context) => UI_CreateService()),
+                          MaterialPageRoute(
+                              builder: (context) => UI_CreateService(
+                                    categoryId: "",
+                                  )),
                         );
                       },
                     ),
                   ],
                 ),
-                body: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 20.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ///Start Structure List of Services
-                      Expanded(
-                        child: Container(
-                          child: ListView.builder(
-                            itemCount: categoryRootList.length,
-                            itemBuilder: (context, i) {
-                              return Container(
-                                //height: 56,
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                    top: 15.0,
-                                    //bottom: 50
-                                  ),
-                                  child: Column(
-                                    children: [
-                                      ///Category Name
-                                      Padding(
-                                        padding: const EdgeInsets.only(left: 20.0),
-                                        child: Container(
-                                          child: Row(
-                                            children: [
-                                              Text(
-                                                categoryRootList[i].name,
-                                                textAlign: TextAlign.start,
-                                                style: TextStyle(
-                                                  fontSize: 16, ///widget.mediaSize.height * 0.019
-                                                  color: BuytimeTheme.TextBlack,
-                                                  fontFamily: BuytimeTheme.FontFamily,
-                                                  fontWeight: FontWeight.w400,
-                                                ),
-                                              )
-                                            ],
+                body: ConstrainedBox(
+                  constraints: BoxConstraints(),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 20.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ///Start Structure List of Services
+                        Flexible(
+                          child: Container(
+                            child: ListView.builder(
+                              itemCount: categoryRootList.length,
+                              itemBuilder: (context, i) {
+                                return Container(
+                                  //height: 56,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                      top: 15.0,
+                                      //bottom: 50
+                                    ),
+                                    child: Column(
+                                      children: [
+                                        ///Category Name
+                                        Padding(
+                                          padding: const EdgeInsets.only(left: 20.0),
+                                          child: Container(
+                                            child: Row(
+                                              children: [
+                                                Text(
+                                                  categoryRootList[i].name,
+                                                  textAlign: TextAlign.start,
+                                                  style: TextStyle(
+                                                    fontSize: 16,
+
+                                                    ///widget.mediaSize.height * 0.019
+                                                    color: BuytimeTheme.TextBlack,
+                                                    fontFamily: BuytimeTheme.FontFamily,
+                                                    fontWeight: FontWeight.w400,
+                                                  ),
+                                                )
+                                              ],
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                      ///Divider under category name
-                                      Divider(
-                                        indent: 30.0,
-                                        color: BuytimeTheme.DividerGrey,
-                                        thickness: 1.0,
-                                      ),
-                                      ///Static add service to category
-                                      Material(
-                                          color: Colors.transparent,
-                                          child: InkWell(
-                                            //borderRadius: BorderRadius.all(Radius.circular(10)),
-                                            onTap: () async {
-                                              StoreProvider.of<AppState>(context).dispatch(SetService(ServiceState().toEmpty()));
-                                              Navigator.pushReplacement(
-                                                context,
-                                                MaterialPageRoute(builder: (context) => UI_CreateService(categoryId: categoryRootList[i].id)),
-                                              );
-                                            },
-                                            child: Container(
-                                              height: 56,
-                                              child:  Row(
-                                                // mainAxisAlignment: MainAxisAlignment.center,
-                                                children: [
-                                                  Padding(
-                                                    padding: EdgeInsets.only(left: mediaWidth * 0.12, right: mediaWidth * 0.07),
-                                                    child: Container(
-                                                      child: Icon(Icons.add_box_rounded, color: BuytimeTheme.SymbolGrey, size: mediaWidth * 0.07),
+
+                                        ///Divider under category name
+                                        Divider(
+                                          indent: 30.0,
+                                          color: BuytimeTheme.DividerGrey,
+                                          thickness: 1.0,
+                                        ),
+
+                                        ///Static add service to category
+                                        Material(
+                                            color: Colors.transparent,
+                                            child: InkWell(
+                                              //borderRadius: BorderRadius.all(Radius.circular(10)),
+                                              onTap: () async {
+                                                StoreProvider.of<AppState>(context).dispatch(SetService(ServiceState().toEmpty()));
+                                                Navigator.pushReplacement(
+                                                  context,
+                                                  MaterialPageRoute(builder: (context) => UI_CreateService(categoryId: categoryRootList[i].id)),
+                                                );
+                                              },
+                                              child: Container(
+                                                height: 56,
+                                                child: Row(
+                                                  // mainAxisAlignment: MainAxisAlignment.center,
+                                                  children: [
+                                                    Padding(
+                                                      padding: EdgeInsets.only(left: mediaWidth * 0.12, right: mediaWidth * 0.07),
+                                                      child: Container(
+                                                        child: Icon(Icons.add_box_rounded, color: BuytimeTheme.SymbolGrey, size: mediaWidth * 0.07),
+                                                      ),
                                                     ),
-                                                  ),
-                                                  Expanded(
-                                                    child: Container(
-                                                      height: 56,
-                                                      decoration: BoxDecoration(
-                                                        border: Border(
-                                                          bottom: BorderSide(width: 1.0, color: BuytimeTheme.DividerGrey),
+                                                    Expanded(
+                                                      child: Container(
+                                                        height: 56,
+                                                        decoration: BoxDecoration(
+                                                          border: Border(
+                                                            bottom: BorderSide(width: 1.0, color: BuytimeTheme.DividerGrey),
+                                                          ),
+                                                        ),
+                                                        child: Row(
+                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                          children: [
+                                                            Container(
+                                                                child: Text(
+                                                              "Add a " + categoryRootList[i].name, //todo translate
+                                                              textAlign: TextAlign.start,
+                                                              style: TextStyle(
+                                                                  fontSize: 16,
+
+                                                                  ///widget.mediaSize.height * 0.019
+                                                                  color: BuytimeTheme.TextBlack,
+                                                                  fontFamily: BuytimeTheme.FontFamily,
+                                                                  fontWeight: FontWeight.w400,
+                                                                  letterSpacing: 0.15),
+                                                            )),
+                                                            Container(
+                                                              child: Icon(Icons.keyboard_arrow_right, color: BuytimeTheme.SymbolGrey, size: 24),
+                                                            ),
+                                                          ],
                                                         ),
                                                       ),
-                                                      child: Row(
-                                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                        children: [
-                                                          Container(
-                                                              child: Text(
-                                                                "Add a " + categoryRootList[i].name, //todo translate
-                                                                textAlign: TextAlign.start,
-                                                                style: TextStyle(
-                                                                    fontSize: 16, ///widget.mediaSize.height * 0.019
-                                                                    color: BuytimeTheme.TextBlack,
-                                                                    fontFamily: BuytimeTheme.FontFamily,
-                                                                    fontWeight: FontWeight.w400,
-                                                                    letterSpacing: 0.15
-                                                                ),
-                                                              )),
-                                                          Container(
-                                                            child: Icon(Icons.keyboard_arrow_right, color: BuytimeTheme.SymbolGrey, size: 24),
-                                                          ),
-                                                        ],
-                                                      ),
                                                     ),
-                                                  ),
-                                                ],
+                                                  ],
+                                                ),
                                               ),
-                                            ),
-                                          )
-                                      ),
-                                      ///Service List
-                                      serviceList.length > 0
-                                          ? Container(
-                                              height: listOfServiceEachRoot.length > 0 ? listOfServiceEachRoot[i].length * 44.00 : 50,
-                                              child: ListView.builder(
-                                                physics: const NeverScrollableScrollPhysics(),
-                                                itemCount: listOfServiceEachRoot.length > 0 ? listOfServiceEachRoot[i].length : 0,
-                                                itemBuilder: (context, index) {
-                                                  Widget iconVisibility;
-                                                  switch (listOfServiceEachRoot[i][index].visibility) {
-                                                    case 'Active':
-                                                      if (listOfServiceEachRoot[i][index].spinnerVisibility) {
-                                                        iconVisibility = Padding(
-                                                          padding: const EdgeInsets.only(left: 6.3),
-                                                          child: CircularProgressIndicator.adaptive(),
-                                                        );
-                                                      } else {
-                                                        iconVisibility = Icon(Icons.remove_red_eye, color: BuytimeTheme.SymbolGrey, size: mediaWidth * 0.07);
-                                                      }
-                                                      break;
-                                                    case 'Deactivated':
-                                                      if (listOfServiceEachRoot[i][index].spinnerVisibility) {
-                                                        iconVisibility = Padding(
-                                                          padding: const EdgeInsets.only(left: 6.3),
-                                                          child: CircularProgressIndicator.adaptive(),
-                                                        );
-                                                      } else {
-                                                        iconVisibility = Icon(Icons.visibility_off, color: BuytimeTheme.SymbolGrey, size: mediaWidth * 0.07);
-                                                      }
-                                                      break;
-                                                    case 'Invisible':
-                                                      if (listOfServiceEachRoot[i][index].spinnerVisibility) {
-                                                        iconVisibility = Padding(
-                                                          padding: const EdgeInsets.only(left: 6.3),
-                                                          child: CircularProgressIndicator.adaptive(),
-                                                        );
-                                                      } else {
-                                                        iconVisibility = Icon(Icons.do_disturb_alt_outlined, color: BuytimeTheme.SymbolGrey, size: mediaWidth * 0.07);
-                                                      }
-                                                      break;
-                                                  }
-                                                  return Material(
-                                                      color: Colors.transparent,
-                                                      child: InkWell(
-                                                        //borderRadius: BorderRadius.all(Radius.circular(10)),
-                                                        onTap: () async {
+                                            )),
 
-                                                        },
-                                                        child: AbsorbPointer(
-                                                          absorbing: !(snapshot.user.owner ||  snapshot.user.admin ||  snapshot.user.salesman),
-                                                          child: Dismissible( key: UniqueKey(),
-                                                            direction: DismissDirection.endToStart,
-                                                            background: Container(
-                                                              height: 56,
-                                                              color: Colors.red,
-                                                              //margin: EdgeInsets.symmetric(horizontal: 15),
-                                                              alignment: Alignment.centerRight,
-                                                              child: Icon(
-                                                                Icons.delete,
-                                                                color: BuytimeTheme.SymbolWhite,
-                                                              ),
-                                                            ),
-                                                            onDismissed: (direction) {
-
-                                                              setState(() {
-                                                                ///Deleting Service
-                                                                print("Delete Service " + index.toString());
-                                                                StoreProvider.of<AppState>(context).dispatch(DeleteService(listOfServiceEachRoot[i][index].serviceId));
-                                                              });
-                                                            },
-                                                            child: Container(
-                                                              height: 56,
-                                                              child: Row(
-                                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                children: [
-                                                                  GestureDetector(
-                                                                    onTap: () {
-                                                                      setState(() {
-                                                                        switch (listOfServiceEachRoot[i][index].visibility) {
-                                                                          case 'Active':
-                                                                            listOfServiceEachRoot[i][index].visibility = 'Deactivated';
-                                                                            break;
-                                                                          case 'Deactivated':
-                                                                            listOfServiceEachRoot[i][index].visibility = 'Invisible';
-                                                                            break;
-                                                                          case 'Invisible':
-                                                                            listOfServiceEachRoot[i][index].visibility = 'Active';
-                                                                            break;
-                                                                        }
-
-                                                                        ///Aggiorno Database
-                                                                        StoreProvider.of<AppState>(context)
-                                                                            .dispatch(SetServiceListVisibilityOnFirebase(listOfServiceEachRoot[i][index].serviceId, listOfServiceEachRoot[i][index].visibility));
-                                                                      });
-                                                                    },
-                                                                    child: Padding(
-                                                                        padding: EdgeInsets.only(left: mediaWidth * 0.12, right: mediaWidth * 0.07),
-                                                                        child: Container(
-                                                                          child: iconVisibility,
-                                                                        )),
+                                        ///Service List
+                                        serviceList.length > 0
+                                            ? Flexible(
+                                              child: Container(
+                                                //  height: listOfServiceEachRoot.length > 0 ? listOfServiceEachRoot[i].length * 44.00 : 50,
+                                                  child: ListView.builder(
+                                                    physics: const NeverScrollableScrollPhysics(),
+                                                    itemCount: listOfServiceEachRoot.length > 0 ? listOfServiceEachRoot[i].length : 0,
+                                                    itemBuilder: (context, index) {
+                                                      Widget iconVisibility;
+                                                      switch (listOfServiceEachRoot[i][index].visibility) {
+                                                        case 'Active':
+                                                          if (listOfServiceEachRoot[i][index].spinnerVisibility) {
+                                                            iconVisibility = Padding(
+                                                              padding: const EdgeInsets.only(left: 6.3),
+                                                              child: CircularProgressIndicator.adaptive(),
+                                                            );
+                                                          } else {
+                                                            iconVisibility = Icon(Icons.remove_red_eye, color: BuytimeTheme.SymbolGrey, size: mediaWidth * 0.07);
+                                                          }
+                                                          break;
+                                                        case 'Deactivated':
+                                                          if (listOfServiceEachRoot[i][index].spinnerVisibility) {
+                                                            iconVisibility = Padding(
+                                                              padding: const EdgeInsets.only(left: 6.3),
+                                                              child: CircularProgressIndicator.adaptive(),
+                                                            );
+                                                          } else {
+                                                            iconVisibility = Icon(Icons.visibility_off, color: BuytimeTheme.SymbolGrey, size: mediaWidth * 0.07);
+                                                          }
+                                                          break;
+                                                        case 'Invisible':
+                                                          if (listOfServiceEachRoot[i][index].spinnerVisibility) {
+                                                            iconVisibility = Padding(
+                                                              padding: const EdgeInsets.only(left: 6.3),
+                                                              child: CircularProgressIndicator.adaptive(),
+                                                            );
+                                                          } else {
+                                                            iconVisibility = Icon(Icons.do_disturb_alt_outlined, color: BuytimeTheme.SymbolGrey, size: mediaWidth * 0.07);
+                                                          }
+                                                          break;
+                                                      }
+                                                      return Material(
+                                                          color: Colors.transparent,
+                                                          child: InkWell(
+                                                            //borderRadius: BorderRadius.all(Radius.circular(10)),
+                                                            onTap: () async {},
+                                                            child: AbsorbPointer(
+                                                              absorbing: !(snapshot.user.owner || snapshot.user.admin || snapshot.user.salesman),
+                                                              child: Dismissible(
+                                                                key: UniqueKey(),
+                                                                direction: DismissDirection.endToStart,
+                                                                background: Container(
+                                                                  height: 56,
+                                                                  color: Colors.red,
+                                                                  //margin: EdgeInsets.symmetric(horizontal: 15),
+                                                                  alignment: Alignment.centerRight,
+                                                                  child: Icon(
+                                                                    Icons.delete,
+                                                                    color: BuytimeTheme.SymbolWhite,
                                                                   ),
-                                                                  Expanded(
-                                                                    child: GestureDetector(
-                                                                      onTap: () {
-                                                                        StoreProvider.of<AppState>(context).dispatch(SetService(listOfServiceEachRoot[i][index]));
-                                                                        Navigator.push(
-                                                                          context,
-                                                                          MaterialPageRoute(builder: (context) => UI_EditService()),
-                                                                        );
-                                                                      },
-                                                                      child: Container(
-                                                                        height: 56,
-                                                                        decoration: BoxDecoration(
-                                                                          border: Border(
-                                                                            bottom: BorderSide(width: 1.0, color: BuytimeTheme.DividerGrey),
-                                                                          ),
-                                                                        ),
-                                                                        child: Row(
-                                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                          children: [
-                                                                            Flexible(
-                                                                              child: Container(
-                                                                                  child: Text(
+                                                                ),
+                                                                onDismissed: (direction) {
+                                                                  setState(() {
+                                                                    ///Deleting Service
+                                                                    print("Delete Service " + index.toString());
+                                                                    StoreProvider.of<AppState>(context).dispatch(DeleteService(listOfServiceEachRoot[i][index].serviceId));
+                                                                  });
+                                                                },
+                                                                child: Container(
+                                                                  child: Row(
+                                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                    children: [
+                                                                      GestureDetector(
+                                                                        onTap: () {
+                                                                          setState(() {
+                                                                            switch (listOfServiceEachRoot[i][index].visibility) {
+                                                                              case 'Active':
+                                                                                listOfServiceEachRoot[i][index].visibility = 'Deactivated';
+                                                                                break;
+                                                                              case 'Deactivated':
+                                                                                listOfServiceEachRoot[i][index].visibility = 'Invisible';
+                                                                                break;
+                                                                              case 'Invisible':
+                                                                                listOfServiceEachRoot[i][index].visibility = 'Active';
+                                                                                break;
+                                                                            }
+
+                                                                            ///Aggiorno Database
+                                                                            StoreProvider.of<AppState>(context).dispatch(SetServiceListVisibilityOnFirebase(
+                                                                                listOfServiceEachRoot[i][index].serviceId, listOfServiceEachRoot[i][index].visibility));
+                                                                          });
+                                                                        },
+                                                                        child: Padding(
+                                                                            padding: EdgeInsets.only(left: mediaWidth * 0.12, right: mediaWidth * 0.07),
+                                                                            child: Container(
+                                                                              child: iconVisibility,
+                                                                            )),
+                                                                      ),
+                                                                      Expanded(
+                                                                        child: GestureDetector(
+                                                                          onTap: () {
+                                                                            StoreProvider.of<AppState>(context).dispatch(SetService(listOfServiceEachRoot[i][index]));
+                                                                            Navigator.push(
+                                                                              context,
+                                                                              MaterialPageRoute(builder: (context) => UI_EditService()),
+                                                                            );
+                                                                          },
+                                                                          child: Container(
+                                                                            height: 56,
+                                                                            decoration: BoxDecoration(
+                                                                              border: Border(
+                                                                                bottom: BorderSide(width: 1.0, color: BuytimeTheme.DividerGrey),
+                                                                              ),
+                                                                            ),
+                                                                            child: Row(
+                                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                              children: [
+                                                                                Flexible(
+                                                                                  child: Container(
+                                                                                      child: Text(
                                                                                     listOfServiceEachRoot[i][index].name,
                                                                                     textAlign: TextAlign.start,
                                                                                     overflow: TextOverflow.ellipsis,
                                                                                     style: TextStyle(
-                                                                                      fontSize: 16, ///widget.mediaSize.height * 0.019
+                                                                                      fontSize: 16,
+
+                                                                                      ///widget.mediaSize.height * 0.019
                                                                                       color: BuytimeTheme.TextBlack,
                                                                                       fontFamily: BuytimeTheme.FontFamily,
                                                                                       fontWeight: FontWeight.w400,
                                                                                     ),
                                                                                   )),
+                                                                                ),
+                                                                                Container(
+                                                                                  child: Icon(Icons.keyboard_arrow_right, color: BuytimeTheme.SymbolGrey, size: 24),
+                                                                                ),
+                                                                              ],
                                                                             ),
-                                                                            Container(
-                                                                              child: Icon(Icons.keyboard_arrow_right, color: BuytimeTheme.SymbolGrey, size: 24),
-                                                                            ),
-                                                                          ],
+                                                                          ),
                                                                         ),
                                                                       ),
-                                                                    ),
+                                                                    ],
                                                                   ),
-                                                                ],
+                                                                ),
                                                               ),
                                                             ),
-                                                          ),
-                                                        ),
-                                                      )
-                                                  );
-                                                },
-                                              ),
+                                                          ));
+                                                    },
+                                                  ),
+                                                ),
                                             )
-                                          : Container(),
-                                    ],
+                                            : Container(),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              );
-                            },
+                                );
+                              },
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ));
