@@ -779,14 +779,18 @@ class LoginState extends State<Login> {
                                                             borderRadius: BorderRadius.all(Radius.circular(5.0)),
                                                             child: Container(
                                                               //width: 328,
+                                                              width: 139,
+                                                              height: 28,
                                                               padding: EdgeInsets.all(5.0),
-                                                              child: Text(
-                                                                /* AppLocalizations.of(context).createYourAccount*/ 'Forgot Password?',
-                                                                style: TextStyle(
-                                                                  fontFamily: BuytimeTheme.FontFamily,
-                                                                  color: BuytimeTheme.ManagerPrimary,
-                                                                  fontWeight: FontWeight.w400,
-                                                                  fontSize: 16, ///SizeConfig.safeBlockHorizontal * 3
+                                                              child: FittedBox(
+                                                                child: Text(
+                                                                  /* AppLocalizations.of(context).createYourAccount*/ 'Forgot Password?',
+                                                                  style: TextStyle(
+                                                                    fontFamily: BuytimeTheme.FontFamily,
+                                                                    color: BuytimeTheme.ManagerPrimary,
+                                                                    fontWeight: FontWeight.w400,
+                                                                    fontSize: 16, ///SizeConfig.safeBlockHorizontal * 3
+                                                                  ),
                                                                 ),
                                                               ),
                                                             ),
@@ -794,36 +798,46 @@ class LoginState extends State<Login> {
                                                         )
                                                     ),
                                                     ///Remeber Me
-                                                    Row(
-                                                      mainAxisAlignment: MainAxisAlignment.start,
-                                                      children: [
-                                                        Checkbox(
-                                                          checkColor: BuytimeTheme.TextWhite,
-                                                          activeColor: BuytimeTheme.TextGrey,
-                                                          value: remeberMe,
-                                                          onChanged: (bool value) {
-                                                            setState(() {
-                                                              remeberMe = value;
-                                                            });
-                                                          },
-                                                        ),
-                                                        Container(
-                                                          //padding: EdgeInsets.all(5.0),
-                                                          child: FittedBox(
-                                                            fit: BoxFit.scaleDown,
-                                                            child: Text(
-                                                              'Save Credentials',//AppLocalizations.of(context).somethingIsNotRight,
-                                                              style: TextStyle(
-                                                                  letterSpacing: 1.25,
-                                                                  fontFamily: BuytimeTheme.FontFamily,
-                                                                  color: BuytimeTheme.TextGrey,
-                                                                  fontWeight: FontWeight.w500,
-                                                                  fontSize: 16 ///SizeConfig.safeBlockHorizontal * 4
-                                                              ),
+                                                    Container(
+                                                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
+                                                      child: Row(
+                                                        mainAxisAlignment: MainAxisAlignment.start,
+                                                        children: [
+                                                          SizedBox(
+                                                            width: 10,
+                                                            height: 10,
+                                                            child: Checkbox(
+                                                              checkColor: BuytimeTheme.TextWhite,
+                                                              activeColor: BuytimeTheme.TextGrey,
+                                                              value: remeberMe,
+                                                              onChanged: (bool value) {
+                                                                setState(() {
+                                                                  remeberMe = value;
+                                                                });
+                                                              },
                                                             ),
                                                           ),
-                                                        )
-                                                      ],
+                                                          Container(
+                                                            //padding: EdgeInsets.all(5.0),
+                                                            margin: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 3),
+                                                            width: 100,
+                                                            height: 28,
+                                                            child: FittedBox(
+                                                              fit: BoxFit.scaleDown,
+                                                              child: Text(
+                                                                'Save Credentials',//AppLocalizations.of(context).somethingIsNotRight,
+                                                                style: TextStyle(
+                                                                    letterSpacing: 1.25,
+                                                                    fontFamily: BuytimeTheme.FontFamily,
+                                                                    color: BuytimeTheme.TextGrey,
+                                                                    fontWeight: FontWeight.w500,
+                                                                    fontSize: 16 ///SizeConfig.safeBlockHorizontal * 4
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          )
+                                                        ],
+                                                      ),
                                                     ),
                                                   ],
                                                 ),

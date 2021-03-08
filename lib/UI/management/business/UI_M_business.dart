@@ -415,14 +415,17 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                                                         ),
                                                       ),
                                                       Container(
-                                                        child: Text(
-                                                          'Users join by scanning your QR code',
-                                                          style: TextStyle(
-                                                              color: BuytimeTheme.TextMedium,
-                                                              fontWeight: FontWeight.w400,
-                                                              fontFamily: BuytimeTheme.FontFamily,
-                                                              fontSize: 14,
-                                                            letterSpacing: 0.25
+                                                        child: FittedBox(
+                                                          fit: BoxFit.scaleDown,
+                                                          child: Text(
+                                                            'Users join by scanning your QR code',
+                                                            style: TextStyle(
+                                                                color: BuytimeTheme.TextMedium,
+                                                                fontWeight: FontWeight.w400,
+                                                                fontFamily: BuytimeTheme.FontFamily,
+                                                                fontSize: 14,
+                                                                letterSpacing: 0.25
+                                                            ),
                                                           ),
                                                         ),
                                                       )
