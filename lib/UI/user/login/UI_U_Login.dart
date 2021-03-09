@@ -515,7 +515,7 @@ class LoginState extends State<Login> {
               currentFocus.unfocus();
             }
             //Overlay.of(context).insert(overlayEntry);
-            if(overlayEntry != null){
+            if(overlayEntry != null && isMenuOpen){
               overlayEntry.remove();
               isMenuOpen = !isMenuOpen;
             }
@@ -804,8 +804,8 @@ class LoginState extends State<Login> {
                                                         mainAxisAlignment: MainAxisAlignment.start,
                                                         children: [
                                                           SizedBox(
-                                                            width: 10,
-                                                            height: 10,
+                                                            width: 15,
+                                                            height: 15,
                                                             child: Checkbox(
                                                               checkColor: BuytimeTheme.TextWhite,
                                                               activeColor: BuytimeTheme.TextGrey,

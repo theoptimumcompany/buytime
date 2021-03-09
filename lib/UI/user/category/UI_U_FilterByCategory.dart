@@ -894,9 +894,13 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                     width: double.infinity,
                                     child: Column(
                                       children: [
-                                        row1.isNotEmpty ?
+                                        !showAll &&rowLess1.isNotEmpty ?
+                                        inspiration(rowLess1) : Container(),
+                                        !showAll && rowLess2.isNotEmpty ?
+                                        inspiration(rowLess2) : Container(),
+                                        showAll && row1.isNotEmpty ?
                                         inspiration(row1) : Container(),
-                                        row2.isNotEmpty ?
+                                        showAll && row2.isNotEmpty ?
                                         inspiration(row2)  : Container(),
                                         showAll && row3.isNotEmpty ?
                                         inspiration(row3)  : Container(),

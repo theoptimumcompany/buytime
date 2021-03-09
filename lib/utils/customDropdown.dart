@@ -95,7 +95,7 @@ class _AutoCompleteMenuState extends State<AutoCompleteMenu> with SingleTickerPr
         ),
         child: IconButton(
           icon: Icon(
-            Icons.lock,
+            Icons.vpn_key_rounded,
             //progress: _animationController,
           ),
           color: widget.items.isEmpty ? BuytimeTheme.TextMedium : BuytimeTheme.ButtonMalibu,
@@ -116,6 +116,7 @@ class _AutoCompleteMenuState extends State<AutoCompleteMenu> with SingleTickerPr
         return Positioned(
           top: buttonPosition.dy + buttonSize.height,
           left: buttonPosition.dx - 268,
+          //right: buttonPosition.dx - 268,
           width: 300,
           child: Material(
             color: Colors.transparent,

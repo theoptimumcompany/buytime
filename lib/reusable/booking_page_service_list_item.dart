@@ -55,53 +55,49 @@ class _BookingListServiceListItemState extends State<BookingListServiceListItem>
                     ///Service Name & Description
                     Container(
                       margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      child:  Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              ///Service Name
-                              FittedBox(
-                                fit: BoxFit.scaleDown,
-                                child: Container(
-                                  width: SizeConfig.safeBlockHorizontal * 50,
-                                  child: Text(
-                                    widget.serviceState.name ?? '',
-                                    style: TextStyle(
-                                      letterSpacing: 0.15,
-                                        fontFamily: BuytimeTheme.FontFamily,
-                                        color: BuytimeTheme.TextBlack,
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 16 /// SizeConfig.safeBlockHorizontal * 4
-                                    ),
-                                  ),
+                          ///Service Name
+                          FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Container(
+                              width: SizeConfig.safeBlockHorizontal * 50,
+                              child: Text(
+                                widget.serviceState.name ?? '',
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                                style: TextStyle(
+                                    letterSpacing: 0.15,
+                                    fontFamily: BuytimeTheme.FontFamily,
+                                    color: BuytimeTheme.TextBlack,
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 16 /// SizeConfig.safeBlockHorizontal * 4
                                 ),
                               ),
-                              ///Description
-                              FittedBox(
-                                fit: BoxFit.fitHeight,
-                                child: Container(
-                                  width: 180, ///SizeConfig.safeBlockHorizontal * 50
-                                  height: 40, ///SizeConfig.safeBlockVertical * 10
-                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
-                                  child: Text(
-                                    widget.serviceState.description ?? '',
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 2,
-                                    style: TextStyle(
-                                      letterSpacing: 0.25,
-                                        fontFamily: BuytimeTheme.FontFamily,
-                                        color: BuytimeTheme.TextGrey,
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
-                                    ),
-                                  ),
+                            ),
+                          ),
+                          ///Description
+                          FittedBox(
+                            fit: BoxFit.fitHeight,
+                            child: Container(
+                              width: 180, ///SizeConfig.safeBlockHorizontal * 50
+                              height: 40, ///SizeConfig.safeBlockVertical * 10
+                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
+                              child: Text(
+                                widget.serviceState.description ?? '',
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 2,
+                                style: TextStyle(
+                                    letterSpacing: 0.25,
+                                    fontFamily: BuytimeTheme.FontFamily,
+                                    color: BuytimeTheme.TextGrey,
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
                                 ),
                               ),
-                            ],
+                            ),
                           ),
                         ],
                       ),
