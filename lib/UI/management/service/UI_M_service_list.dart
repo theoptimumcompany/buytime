@@ -31,13 +31,11 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
   void setServiceLists(List<CategoryState> categoryRootList, List<ServiceState> serviceList) {
     listOfServiceEachRoot = [];
     for (int c = 0; c < categoryRootList.length; c++) {
-      print(categoryRootList[c].name);
       List<ServiceState> listRoot = [];
       List<bool> internalSpinnerVisibility = [];
       for (int s = 0; s < serviceList.length; s++) {
         if (serviceList[s].categoryRootId.contains(categoryRootList[c].id)) {
           listRoot.add(serviceList[s]);
-          print(serviceList[s].name);
           internalSpinnerVisibility.add(false);
         }
       }
@@ -65,7 +63,6 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
     var mediaHeight = media.height;
     return StoreConnector<AppState, AppState>(
         converter: (store) => store.state,
-        rebuildOnChange: true,
         onDidChange: (store) {
           if (store.serviceState.serviceCreated) {
             store.serviceState.serviceCreated = false;

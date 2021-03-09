@@ -62,9 +62,9 @@
 	<key>FirebaseAppDelegateProxyEnabled</key>
 	<false/>
 	<key>FirebaseDynamicLinksCustomDomains</key>
-    <array>
-      <string>https://buytime.page.link/booking</string>
-    </array>
+	<array>
+		<string>https://buytime.page.link/booking</string>
+	</array>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>fbapi</string>

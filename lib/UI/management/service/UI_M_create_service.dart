@@ -36,7 +36,8 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
   var size;
   bool rippleLoading = false;
   bool errorCategoryListEmpty = false;
-  TextEditingController _tagServiceController = TextEditingController(); //todo: per quando si useranno tag
+  TextEditingController _tagServiceController = TextEditingController();
+  bool defaultCategory = true;
 
   bool validateAndSave() {
     final FormState form = _keyCreateServiceForm.currentState;
@@ -67,13 +68,13 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
   }
 
   void addDefaultCategory() {
-    if (widget.categoryId != null && widget.categoryId != "") {
-
+    if (widget.categoryId != null && widget.categoryId != "" && defaultCategory && StoreProvider.of<AppState>(context).state.categoryTree != null) {
       categoryList.forEach((element) {
         if (element.id == widget.categoryId) {
           selectedCategoryList.add(element);
           StoreProvider.of<AppState>(context).dispatch(SetServiceSelectedCategories(selectedCategoryList));
         }
+        defaultCategory = false;
       });
     }
   }
@@ -122,6 +123,9 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
   @override
   void initState() {
     super.initState();
+    selectedCategoryList = [];
+    // WidgetsBinding.instance
+    //     .addPostFrameCallback((_) => addDefaultCategory());
   }
 
   _buildChoiceList() {
@@ -247,7 +251,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                           ),
                                         ),
                                         Expanded(
-                                          flex: 2,
+                                          flex: 1,
                                           child: Column(
                                             children: [
                                               Container(
@@ -284,33 +288,26 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                     child: Padding(
                                       padding: const EdgeInsets.only(top: 0.0, bottom: 5.0, left: 10.0, right: 10.0),
                                       child: TextFormField(
-                                        initialValue: _serviceName,
-                                        validator: (value) => value.isEmpty ? 'Service name is blank' : null,
-                                        onChanged: (value) {
-                                          if (validateAndSave()) {
-                                            _serviceName = value;
-                                            StoreProvider.of<AppState>(context).dispatch(SetServiceName(_serviceName));
-                                          }
-                                        },
-                                        onSaved: (value) {
-                                          if (validateAndSave()) {
-                                            _serviceName = value;
-                                            StoreProvider.of<AppState>(context).dispatch(SetServiceName(_serviceName));
-                                          }
-                                        },
-                                        decoration: InputDecoration(
+                                          initialValue: _serviceName,
+                                          validator: (value) => value.isEmpty ? 'Service name is blank' : null,
+                                          onChanged: (value) {
+                                            if (validateAndSave()) {
+                                              _serviceName = value;
+                                              StoreProvider.of<AppState>(context).dispatch(SetServiceName(_serviceName));
+                                            }
+                                          },
+                                          onSaved: (value) {
+                                            if (validateAndSave()) {
+                                              _serviceName = value;
+                                              StoreProvider.of<AppState>(context).dispatch(SetServiceName(_serviceName));
+                                            }
+                                          },
+                                          decoration: InputDecoration(
                                             labelText: AppLocalizations.of(context).name,
-                                        enabledBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(color: Color(0xffe0e0e0)),
-                                            borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                        focusedBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(color: Color(0xff666666)),
-                                            borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                        errorBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(color: Colors.redAccent),
-                                            borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                        )
-                                      ),
+                                            enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                            focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                            errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                          )),
                                     ),
                                   ),
                                 ),
@@ -333,16 +330,10 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                           _serviceDescription = value;
                                         },
                                         decoration: InputDecoration(
-                                            labelText: AppLocalizations.of(context).description,
-                                          enabledBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(color: Color(0xffe0e0e0)),
-                                              borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                          focusedBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(color: Color(0xff666666)),
-                                              borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                          errorBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(color: Colors.redAccent),
-                                              borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                          labelText: AppLocalizations.of(context).description,
+                                          enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                          focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                          errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(8.0))),
                                         ),
                                       ),
                                     ),
@@ -393,15 +384,9 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                           },
                                           decoration: InputDecoration(
                                             labelText: AppLocalizations.of(context).price,
-                                            enabledBorder: OutlineInputBorder(
-                                                borderSide: BorderSide(color: Color(0xffe0e0e0)),
-                                                borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                            focusedBorder: OutlineInputBorder(
-                                                borderSide: BorderSide(color: Color(0xff666666)),
-                                                borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                            errorBorder: OutlineInputBorder(
-                                                borderSide: BorderSide(color: Colors.redAccent),
-                                                borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                            enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                            focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                            errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(8.0))),
                                           ),
                                         ),
                                       ),
@@ -454,116 +439,116 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                     : Container(),
 
                                 ///Tag Block
-                                // Padding(
-                                //   padding: const EdgeInsets.only(left: 30.0, top: 5.0, bottom: 10.0, right: 30.0),
-                                //   child: Container(
-                                //     child: Column(
-                                //       crossAxisAlignment: CrossAxisAlignment.start,
-                                //       children: [
-                                //         Text(
-                                //           'Tag', //TODO: trans lang
-                                //           textAlign: TextAlign.start,
-                                //           style: TextStyle(
-                                //             fontSize: media.height * 0.02,
-                                //             color: BuytimeTheme.TextBlack,
-                                //             fontWeight: FontWeight.w500,
-                                //           ),
-                                //         ),
-                                //
-                                //            ///Tags
-                                //         Padding(
-                                //           padding: const EdgeInsets.only(top: 5.0),
-                                //           child: Container(
-                                //             child: Column(
-                                //               children: [
-                                //                 Row(
-                                //                   children: [
-                                //                     ///Add Tag field & Add Tag Button
-                                //                     Container(
-                                //                       height: 45,
-                                //                       width: media.width * 0.55,
-                                //                       child: TextFormField(
-                                //                         controller: _tagServiceController,
-                                //                         textAlign: TextAlign.start,
-                                //                         decoration: InputDecoration(
-                                //                           enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                //                           focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                //                           errorBorder: OutlineInputBorder(borderSide: BorderSide(color: BuytimeTheme.ErrorRed), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                //                           labelText: 'Add new tag',
-                                //                           labelStyle: TextStyle(
-                                //                             fontSize: 14,
-                                //                             fontFamily: BuytimeTheme.FontFamily,
-                                //                             color: BuytimeTheme.TextGrey,
-                                //                             fontWeight: FontWeight.w400,
-                                //                           ),
-                                //                         ),
-                                //                         style: TextStyle(
-                                //                           fontFamily: BuytimeTheme.FontFamily,
-                                //                           color: BuytimeTheme.TextGrey,
-                                //                           fontWeight: FontWeight.w800,
-                                //                         ),
-                                //                       ),
-                                //                     ),
-                                //
-                                //                     ///Add tag button
-                                //                     Container(
-                                //                       child: IconButton(
-                                //                         icon: Icon(
-                                //                           Icons.add_circle_rounded,
-                                //                           size: 30,
-                                //                           color: BuytimeTheme.TextGrey,
-                                //                         ),
-                                //                         onPressed: () {
-                                //                           setState(() {
-                                //                             if (_tagServiceController.text.isNotEmpty) {
-                                //                               snapshot.serviceState.tag.add(_tagServiceController.text); //TODO : Check if is possible without errors
-                                //                               _tagServiceController.clear();
-                                //                             }
-                                //                           });
-                                //                         },
-                                //                       ),
-                                //                     ),
-                                //                   ],
-                                //                 ),
-                                //                 (snapshot.serviceState.tag.length > 0 && snapshot.serviceState.tag != null)
-                                //                     ? Align(
-                                //                         alignment: Alignment.topLeft,
-                                //                         child: Wrap(
-                                //                           spacing: 3.0,
-                                //                           runSpacing: 3.0,
-                                //                           children: List<Widget>.generate(snapshot.serviceState.tag.length, (int index) {
-                                //                             return InputChip(
-                                //                               selected: false,
-                                //                               label: Text(
-                                //                                 snapshot.serviceState.tag[index],
-                                //                                 style: TextStyle(
-                                //                                   fontSize: 13.0,
-                                //                                   fontWeight: FontWeight.w500,
-                                //                                 ),
-                                //                               ),
-                                //                               onDeleted: () {
-                                //                                 setState(() {
-                                //                                   snapshot.serviceState.tag.remove(snapshot.serviceState.tag[index]);
-                                //                                 });
-                                //                               },
-                                //                             );
-                                //                           }),
-                                //                         ),
-                                //                       )
-                                //                     : Container()
-                                //               ],
-                                //             ),
-                                //           ),
-                                //         ),
-                                //         Container(
-                                //             width: media.width * 0.9,
-                                //             child: Wrap(
-                                //               children: [Container()],
-                                //             )),
-                                //       ],
-                                //     ),
-                                //   ),
-                                // ),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 30.0, top: 5.0, bottom: 10.0, right: 30.0),
+                                  child: Container(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Tag', //TODO: trans lang
+                                          textAlign: TextAlign.start,
+                                          style: TextStyle(
+                                            fontSize: media.height * 0.02,
+                                            color: BuytimeTheme.TextBlack,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+
+                                        ///Tags
+                                        Padding(
+                                          padding: const EdgeInsets.only(top: 5.0),
+                                          child: Container(
+                                            child: Column(
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    ///Add Tag field & Add Tag Button
+                                                    Container(
+                                                      height: 45,
+                                                      width: media.width * 0.55,
+                                                      child: TextFormField(
+                                                        controller: _tagServiceController,
+                                                        textAlign: TextAlign.start,
+                                                        decoration: InputDecoration(
+                                                          enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                                          focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                                          errorBorder: OutlineInputBorder(borderSide: BorderSide(color: BuytimeTheme.ErrorRed), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                                          labelText: 'Add new tag',
+                                                          labelStyle: TextStyle(
+                                                            fontSize: 14,
+                                                            fontFamily: BuytimeTheme.FontFamily,
+                                                            color: BuytimeTheme.TextGrey,
+                                                            fontWeight: FontWeight.w400,
+                                                          ),
+                                                        ),
+                                                        style: TextStyle(
+                                                          fontFamily: BuytimeTheme.FontFamily,
+                                                          color: BuytimeTheme.TextGrey,
+                                                          fontWeight: FontWeight.w800,
+                                                        ),
+                                                      ),
+                                                    ),
+
+                                                    ///Add tag button
+                                                    Container(
+                                                      child: IconButton(
+                                                        icon: Icon(
+                                                          Icons.add_circle_rounded,
+                                                          size: 30,
+                                                          color: BuytimeTheme.TextGrey,
+                                                        ),
+                                                        onPressed: () {
+                                                          setState(() {
+                                                            if (_tagServiceController.text.isNotEmpty) {
+                                                              snapshot.serviceState.tag.add(_tagServiceController.text); //TODO : Check if is possible without errors
+                                                              _tagServiceController.clear();
+                                                            }
+                                                          });
+                                                        },
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                (snapshot.serviceState.tag.length > 0 && snapshot.serviceState.tag != null)
+                                                    ? Align(
+                                                        alignment: Alignment.topLeft,
+                                                        child: Wrap(
+                                                          spacing: 3.0,
+                                                          runSpacing: 3.0,
+                                                          children: List<Widget>.generate(snapshot.serviceState.tag.length, (int index) {
+                                                            return InputChip(
+                                                              selected: false,
+                                                              label: Text(
+                                                                snapshot.serviceState.tag[index],
+                                                                style: TextStyle(
+                                                                  fontSize: 13.0,
+                                                                  fontWeight: FontWeight.w500,
+                                                                ),
+                                                              ),
+                                                              onDeleted: () {
+                                                                setState(() {
+                                                                  snapshot.serviceState.tag.remove(snapshot.serviceState.tag[index]);
+                                                                });
+                                                              },
+                                                            );
+                                                          }),
+                                                        ),
+                                                      )
+                                                    : Container()
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        Container(
+                                            width: media.width * 0.9,
+                                            child: Wrap(
+                                              children: [Container()],
+                                            )),
+                                      ],
+                                    ),
+                                  ),
+                                ),
                               ],
                             ),
                           ),

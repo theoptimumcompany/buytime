@@ -36,7 +36,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
   bool rippleLoading = false;
   bool errorSwitchSlots = false;
   bool submit = false;
-  TextEditingController _tagServiceController = TextEditingController(); //todo: per quando si useranno tag
+  TextEditingController _tagServiceController = TextEditingController();
 
   bool validateAndSave() {
     final FormState form = _keyEditServiceForm.currentState;
@@ -344,7 +344,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                   ),
                                                 ),
                                                 Expanded(
-                                                  flex: 2,
+                                                  flex: 1,
                                                   child: Column(
                                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                     children: [
@@ -563,126 +563,126 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                               )
                                             : Container(),
 
-                                        // ///Divider under category selection
-                                        // Container(
-                                        //   child: Divider(
-                                        //     indent: 0.0,
-                                        //     color: BuytimeTheme.DividerGrey,
-                                        //     thickness: 5.0,
-                                        //   ),
-                                        // ),
+                                        ///Divider under category selection
+                                        Container(
+                                          child: Divider(
+                                            indent: 0.0,
+                                            color: BuytimeTheme.DividerGrey,
+                                            thickness: 5.0,
+                                          ),
+                                        ),
 
-                                        // ///Tag Block
-                                        // Padding(
-                                        //   padding: const EdgeInsets.only(left: 30.0, top: 5.0, bottom: 10.0, right: 30.0),
-                                        //   child: Container(
-                                        //     child: Column(
-                                        //       crossAxisAlignment: CrossAxisAlignment.start,
-                                        //       children: [
-                                        //         Text(
-                                        //           'Tag', //TODO: trans lang
-                                        //           textAlign: TextAlign.start,
-                                        //           style: TextStyle(
-                                        //             fontSize: media.height * 0.02,
-                                        //             color: BuytimeTheme.TextBlack,
-                                        //             fontWeight: FontWeight.w500,
-                                        //           ),
-                                        //         ),
-                                        //
-                                        //         ///Tags
-                                        //         Padding(
-                                        //           padding: const EdgeInsets.only(top: 5.0),
-                                        //           child: Container(
-                                        //             child: Column(
-                                        //               children: [
-                                        //                 Row(
-                                        //                   children: [
-                                        //                     ///Add Tag field & Add Tag Button
-                                        //                     Container(
-                                        //                       height: 45,
-                                        //                       width: media.width * 0.55,
-                                        //                       child: TextFormField(
-                                        //                         controller: _tagServiceController,
-                                        //                         textAlign: TextAlign.start,
-                                        //                         decoration: InputDecoration(
-                                        //                           enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                        //                           focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                        //                           errorBorder: OutlineInputBorder(borderSide: BorderSide(color: BuytimeTheme.ErrorRed), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                        //                           labelText: 'Add new tag',
-                                        //                           labelStyle: TextStyle(
-                                        //                             fontSize: 14,
-                                        //                             fontFamily: BuytimeTheme.FontFamily,
-                                        //                             color: BuytimeTheme.TextGrey,
-                                        //                             fontWeight: FontWeight.w400,
-                                        //                           ),
-                                        //                         ),
-                                        //                         style: TextStyle(
-                                        //                           fontFamily: BuytimeTheme.FontFamily,
-                                        //                           color: BuytimeTheme.TextGrey,
-                                        //                           fontWeight: FontWeight.w800,
-                                        //                         ),
-                                        //                       ),
-                                        //                     ),
-                                        //
-                                        //                     ///Add tag button
-                                        //                     Container(
-                                        //                       child: IconButton(
-                                        //                         icon: Icon(
-                                        //                           Icons.add_circle_rounded,
-                                        //                           size: 30,
-                                        //                           color: BuytimeTheme.TextGrey,
-                                        //                         ),
-                                        //                         onPressed: () {
-                                        //                           setState(() {
-                                        //                             if (_tagServiceController.text.isNotEmpty) {
-                                        //                               snapshot.serviceState.tag.add(_tagServiceController.text); //TODO : Check if is possible without errors
-                                        //                               _tagServiceController.clear();
-                                        //                             }
-                                        //                           });
-                                        //                         },
-                                        //                       ),
-                                        //                     ),
-                                        //                   ],
-                                        //                 ),
-                                        //                 (snapshot.serviceState.tag.length > 0 && snapshot.serviceState.tag != null)
-                                        //                     ? Align(
-                                        //                         alignment: Alignment.topLeft,
-                                        //                         child: Wrap(
-                                        //                           spacing: 3.0,
-                                        //                           runSpacing: 3.0,
-                                        //                           children: List<Widget>.generate(snapshot.serviceState.tag.length, (int index) {
-                                        //                             return InputChip(
-                                        //                               selected: false,
-                                        //                               label: Text(
-                                        //                                 snapshot.serviceState.tag[index],
-                                        //                                 style: TextStyle(
-                                        //                                   fontSize: 13.0,
-                                        //                                   fontWeight: FontWeight.w500,
-                                        //                                 ),
-                                        //                               ),
-                                        //                               onDeleted: () {
-                                        //                                 setState(() {
-                                        //                                   snapshot.serviceState.tag.remove(snapshot.serviceState.tag[index]);
-                                        //                                 });
-                                        //                               },
-                                        //                             );
-                                        //                           }),
-                                        //                         ),
-                                        //                       )
-                                        //                     : Container()
-                                        //               ],
-                                        //             ),
-                                        //           ),
-                                        //         ),
-                                        //         Container(
-                                        //             width: media.width * 0.9,
-                                        //             child: Wrap(
-                                        //               children: [Container()],
-                                        //             )),
-                                        //       ],
-                                        //     ),
-                                        //   ),
-                                        // ),
+                                        ///Tag Block
+                                        Padding(
+                                          padding: const EdgeInsets.only(left: 30.0, top: 5.0, bottom: 10.0, right: 30.0),
+                                          child: Container(
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  'Tag', //TODO: trans lang
+                                                  textAlign: TextAlign.start,
+                                                  style: TextStyle(
+                                                    fontSize: media.height * 0.02,
+                                                    color: BuytimeTheme.TextBlack,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                                ),
+
+                                                ///Tags
+                                                Padding(
+                                                  padding: const EdgeInsets.only(top: 5.0),
+                                                  child: Container(
+                                                    child: Column(
+                                                      children: [
+                                                        Row(
+                                                          children: [
+                                                            ///Add Tag field & Add Tag Button
+                                                            Container(
+                                                              height: 45,
+                                                              width: media.width * 0.55,
+                                                              child: TextFormField(
+                                                                controller: _tagServiceController,
+                                                                textAlign: TextAlign.start,
+                                                                decoration: InputDecoration(
+                                                                  enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                                                  focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                                                  errorBorder: OutlineInputBorder(borderSide: BorderSide(color: BuytimeTheme.ErrorRed), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                                                  labelText: 'Add new tag',
+                                                                  labelStyle: TextStyle(
+                                                                    fontSize: 14,
+                                                                    fontFamily: BuytimeTheme.FontFamily,
+                                                                    color: BuytimeTheme.TextGrey,
+                                                                    fontWeight: FontWeight.w400,
+                                                                  ),
+                                                                ),
+                                                                style: TextStyle(
+                                                                  fontFamily: BuytimeTheme.FontFamily,
+                                                                  color: BuytimeTheme.TextGrey,
+                                                                  fontWeight: FontWeight.w800,
+                                                                ),
+                                                              ),
+                                                            ),
+
+                                                            ///Add tag button
+                                                            Container(
+                                                              child: IconButton(
+                                                                icon: Icon(
+                                                                  Icons.add_circle_rounded,
+                                                                  size: 30,
+                                                                  color: BuytimeTheme.TextGrey,
+                                                                ),
+                                                                onPressed: () {
+                                                                  setState(() {
+                                                                    if (_tagServiceController.text.isNotEmpty) {
+                                                                      snapshot.serviceState.tag.add(_tagServiceController.text); //TODO : Check if is possible without errors
+                                                                      _tagServiceController.clear();
+                                                                    }
+                                                                  });
+                                                                },
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        (snapshot.serviceState.tag.length > 0 && snapshot.serviceState.tag != null)
+                                                            ? Align(
+                                                                alignment: Alignment.topLeft,
+                                                                child: Wrap(
+                                                                  spacing: 3.0,
+                                                                  runSpacing: 3.0,
+                                                                  children: List<Widget>.generate(snapshot.serviceState.tag.length, (int index) {
+                                                                    return InputChip(
+                                                                      selected: false,
+                                                                      label: Text(
+                                                                        snapshot.serviceState.tag[index],
+                                                                        style: TextStyle(
+                                                                          fontSize: 13.0,
+                                                                          fontWeight: FontWeight.w500,
+                                                                        ),
+                                                                      ),
+                                                                      onDeleted: () {
+                                                                        setState(() {
+                                                                          snapshot.serviceState.tag.remove(snapshot.serviceState.tag[index]);
+                                                                        });
+                                                                      },
+                                                                    );
+                                                                  }),
+                                                                ),
+                                                              )
+                                                            : Container()
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                                Container(
+                                                    width: media.width * 0.9,
+                                                    child: Wrap(
+                                                      children: [Container()],
+                                                    )),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
 
                                         Padding(
                                           padding: const EdgeInsets.only(top: 10.0),
