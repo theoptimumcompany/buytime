@@ -169,7 +169,7 @@ class UI_M_ServiceSlotState extends State<UI_M_ServiceSlot> {
                                                 child: Padding(
                                                   padding: const EdgeInsets.all(15.0),
                                                   child: Text(
-                                                    currentStep < 3 ? "NEXT" : "SAVE", //todo: lang
+                                                    currentStep < 3 ? "NEXT" : "SAVE", //todo: trans
                                                     textAlign: TextAlign.start,
                                                     style: TextStyle(
                                                       fontSize: media.width * 0.04,
