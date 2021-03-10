@@ -68,14 +68,14 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
             store.serviceState.serviceCreated = false;
             StoreProvider.of<AppState>(context).dispatch(SetCreatedService(false));
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text('Service Created'),
+              content: Text('Service Created'), //TODO: trans
               duration: Duration(seconds: 3),
             ));
           } else if (store.serviceState.serviceEdited) {
             store.serviceState.serviceEdited = false;
             StoreProvider.of<AppState>(context).dispatch(SetEditedService(false));
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text('Service Edited'),
+              content: Text('Service Edited'), //TODO: trans
               duration: Duration(seconds: 3),
             ));
           }
@@ -114,7 +114,7 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                       child: Padding(
                         padding: const EdgeInsets.only(left: 0.0),
                         child: Text(
-                          "Service List", //TODO: <-- ADD TO LANGUAGE TRANSLATE
+                          "Service List", //TODO: trans
                           textAlign: TextAlign.start,
                           style: BuytimeTheme.appbarTitle,
                         ),
@@ -218,7 +218,7 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                                                   children: [
                                                     Container(
                                                         child: Text(
-                                                          "Add a " + categoryRootList[i].name, //todo translate
+                                                          "Add a " + categoryRootList[i].name, //TODO: trans
                                                           textAlign: TextAlign.start,
                                                           style: TextStyle(
                                                               fontSize: 16,

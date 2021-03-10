@@ -100,7 +100,7 @@ class StepPriceState extends State<StepPrice> {
                                   color: BuytimeTheme.ErrorRed,
                                   fontSize: 12.0,
                                 ),
-                                suffixText: '€'),
+                                suffixText: '€'), //TODO: trans
                             style: TextStyle(
                               fontFamily: BuytimeTheme.FontFamily,
                               color: Color(0xff666666),

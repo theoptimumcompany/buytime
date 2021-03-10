@@ -60,7 +60,7 @@ class StepLengthState extends State<StepLength> {
                     Container(
                       child: Flexible(
                         child: Text(
-                          'Service duration', //TODO: <-- ADD TO LANGUAGE TRANSLATE
+                          'Service duration', //TODO: trans
                           textAlign: TextAlign.start,
                           overflow: TextOverflow.clip,
                           style: TextStyle(
@@ -265,7 +265,7 @@ class StepLengthState extends State<StepLength> {
                         child: Flexible(
                           child: Text(
                             'This service offered to guests that lasts $durationSlider minutes',
-                            //TODO: <-- ADD TO LANGUAGE TRANSLATE
+                            //TODO: trans
                             textAlign: TextAlign.start,
                             overflow: TextOverflow.clip,
                             style: TextStyle(
@@ -288,7 +288,7 @@ class StepLengthState extends State<StepLength> {
                       Container(
                         child: Flexible(
                           child: Text(
-                            'Multiple Bookings', //TODO: <-- ADD TO LANGUAGE TRANSLATE
+                            'Multiple Bookings', //TODO: trans
                             textAlign: TextAlign.start,
                             overflow: TextOverflow.clip,
                             style: TextStyle(
@@ -456,7 +456,7 @@ class StepLengthState extends State<StepLength> {
                         child: Flexible(
                           child: Text(
                             !bookingInfinity ? 'This service has a limit of bookings of ' + bookingSlider.toString() : 'This service has no limit of bookings',
-                            //TODO: <-- ADD TO LANGUAGE TRANSLATE
+                            //TODO: trans
                             textAlign: TextAlign.start,
                             overflow: TextOverflow.clip,
                             style: TextStyle(

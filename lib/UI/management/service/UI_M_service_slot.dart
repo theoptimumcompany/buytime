@@ -92,7 +92,7 @@ class UI_M_ServiceSlotState extends State<UI_M_ServiceSlot> {
                             ),
                             Container(
                               child: Text(
-                                "Slot Management",
+                                "Slot Management", //TODO: trans
                                 textAlign: TextAlign.start,
                                 style: TextStyle(
                                   fontSize: media.height * 0.028,
@@ -119,26 +119,26 @@ class UI_M_ServiceSlotState extends State<UI_M_ServiceSlot> {
                                     currentStep: currentStep,
                                     steps: [
                                       Step(
-                                        title: Text("Define period"),
+                                        title: Text("Define period"), //TODO: trans
                                         content: CalendarAvailability(media: media),
                                         state: currentStep == 0 ? StepState.editing : StepState.indexed,
                                         isActive: true,
                                       ),
                                       Step(
-                                        title: Text("Define weekly slots"),
+                                        title: Text("Define weekly slots"),//TODO: trans
                                         content: StepAvailableTime(media: media),
                                         state: currentStep == 1 ? StepState.editing : StepState.indexed,
                                         isActive: true,
                                       ),
                                       Step(
-                                        title: Text("Provide service duration"),
+                                        title: Text("Provide service duration"),//TODO: trans
                                         content: StepLength(media: media),
                                         state: currentStep == 2 ? StepState.editing : StepState.indexed,
                                         //state: StepState.complete,
                                         isActive: true,
                                       ),
                                       Step(
-                                        title: Text("Price"),
+                                        title: Text("Price"),//TODO: trans
                                         content: StepPrice(media: media),
                                         state: currentStep == 3 ? StepState.editing : StepState.indexed,
                                         isActive: true,
@@ -207,9 +207,8 @@ class UI_M_ServiceSlotState extends State<UI_M_ServiceSlot> {
                                               Navigator.pop(context);
                                             }
                                           } else {
-                                            print("Complete all fields");
                                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                              content: Text('Complete all fields to save'),
+                                              content: Text('Complete all fields to save'),  //TOdo:trans
                                               duration: Duration(seconds: 3),
                                             ));
                                           }

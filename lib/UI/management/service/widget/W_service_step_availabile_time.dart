@@ -26,7 +26,7 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
   List<TextEditingController> stopController = [];
   List<TimeOfDay> startTime = [];
   List<TimeOfDay> stopTime = [];
-  List<String> daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+  List<String> daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']; //TODO: trans
   final List<GlobalKey<FormState>> _formSlotTimeKey = [GlobalKey<FormState>()];
   bool setStartAndStop = true;
   int duration = 0;
@@ -416,10 +416,10 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
                                                                     validator: (value) {
                                                                       setDuration();
                                                                       if (startController[i].text.isEmpty) {
-                                                                        return "Insert start time first";
+                                                                        return "Insert start time first";//TODO: trans
                                                                       } else if (stopController[i].text.isEmpty) {
                                                                       } else if ((stopTime[i].hour + stopTime[i].minute / 60.0) - (startTime[i].hour + startTime[i].minute / 60.0) <= 0) {
-                                                                        return "Start time is higher than start";
+                                                                        return "Start time is higher than start"; //TODO: trans
                                                                       } else {
                                                                         List<String> controllerList = convertListTextEditingControllerToListString(startController);
                                                                         StoreProvider.of<AppState>(context).dispatch(SetServiceSlotStartTime(controllerList));
@@ -485,10 +485,10 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
                                                                     setDuration();
 
                                                                     if (startController[i].text.isEmpty) {
-                                                                      return "Insert start time first";
+                                                                      return "Insert start time first";//TODO: trans
                                                                     } else if (stopController[i].text.isEmpty) {
                                                                     } else if ((stopTime[i].hour + stopTime[i].minute / 60.0) - (startTime[i].hour + startTime[i].minute / 60.0) <= 0) {
-                                                                      return "Stop time is shorter than start";
+                                                                      return "Stop time is shorter than start";//TODO: trans
                                                                     } else {
                                                                       List<String> controllerList = convertListTextEditingControllerToListString(stopController);
 
@@ -510,7 +510,7 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
                                                   children: <Widget>[
                                                     // Parent
                                                     CustomLabeledCheckbox(
-                                                      label: 'Every day',
+                                                      label: 'Every day',//TODO: trans
                                                       value: switchWeek[i],
                                                       onChanged: (value) {
                                                         if (value != null) {
@@ -620,7 +620,7 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
                         children: [
                           Icon(Icons.add, color: BuytimeTheme.ManagerPrimary, size: widget.media.width * 0.06),
                           Text(
-                            "ADD TIME SLOT", //todo: lang
+                            "ADD TIME SLOT", //TODO: trans
                             textAlign: TextAlign.start,
                             style: TextStyle(
                               fontSize: widget.media.width * 0.04,

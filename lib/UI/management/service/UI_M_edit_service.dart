@@ -154,20 +154,20 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
   }
 
   String returnTextSwitchers() {
-    String text = 'The service requires a manual confirmation by the staff';
+    String text = 'The service requires a manual confirmation by the staff'; //TODO: trans
     bool switchManual = StoreProvider.of<AppState>(context).state.serviceState.switchAutoConfirm;
     bool switchBookable = StoreProvider.of<AppState>(context).state.serviceState.switchSlots;
     if (switchManual && switchBookable) {
-      text = 'The reservable service no requires a manual confirmation by the staff';
+      text = 'The reservable service no requires a manual confirmation by the staff';//TODO: trans
       return text;
     } else if (switchManual && !switchBookable) {
-      text = 'The purchasable service no requires a manual confirmation by the staff';
+      text = 'The purchasable service no requires a manual confirmation by the staff';//TODO: trans
       return text;
     } else if (!switchManual && switchBookable) {
-      text = 'The reservable service requires a manual confirmation by the staff';
+      text = 'The reservable service requires a manual confirmation by the staff';//TODO: trans
       return text;
     } else if (!switchManual && !switchBookable) {
-      text = 'The purchasable service requires a manual confirmation by the staff';
+      text = 'The purchasable service requires a manual confirmation by the staff';//TODO: trans
       return text;
     }
     return text;
@@ -176,7 +176,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
   String showDaysInterval(int indexSlot, int indexInterval) {
     if (StoreProvider.of<AppState>(context).state.serviceState.serviceSlot[indexSlot].switchWeek[indexInterval] == true &&
         StoreProvider.of<AppState>(context).state.serviceState.serviceSlot[indexSlot].switchWeek[indexInterval] != null) {
-      String week = 'Every Day';
+      String week = 'Every Day';//TODO: trans
       if (indexInterval < (StoreProvider.of<AppState>(context).state.serviceState.serviceSlot[indexSlot].numberOfInterval - 1)) {
         week = week + "/";
       }
@@ -187,22 +187,22 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
         if (StoreProvider.of<AppState>(context).state.serviceState.serviceSlot[indexSlot].daysInterval[indexInterval].everyDay[z]) {
           switch (z) {
             case 0:
-              week = week + "Mon, ";
+              week = week + "Mon, ";//TODO: trans
               break;
             case 1:
-              week = week + "Tue, ";
+              week = week + "Tue, ";//TODO: trans
               break;
             case 2:
-              week = week + "Wed, ";
+              week = week + "Wed, ";//TODO: trans
               break;
             case 3:
-              week = week + "Thu, ";
+              week = week + "Thu, ";//TODO: trans
               break;
             case 4:
-              week = week + "Fri, ";
+              week = week + "Fri, ";//TODO: trans
               break;
             case 5:
-              week = week + "Sat, ";
+              week = week + "Sat, ";//TODO: trans
               break;
             case 6:
               week = week + "Sun, ";
@@ -233,7 +233,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
     listWidget.add(Flexible(
       child: Container(
         child: Text(
-          text,
+          text, //TODO: trans
           overflow: TextOverflow.clip,
           style: TextStyle(
             fontSize: media.height * 0.020,
@@ -834,7 +834,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                           Container(
                                                             child: Text(
                                                               "Service time availability",
-                                                              //  AppLocalizations.of(context).  todo : aggiungere alle lingue
+                                                              //  AppLocalizations.of(context).  //TODO: trans
                                                               textAlign: TextAlign.start,
                                                               overflow: TextOverflow.clip,
                                                               style: TextStyle(
@@ -914,7 +914,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                                               children: [
                                                                                 Text(
-                                                                                  'Time Availability ' + (index + 1).toString(),
+                                                                                  'Time Availability ' + (index + 1).toString(), //TODO: trans
                                                                                   style: TextStyle(
                                                                                     fontSize: media.height * 0.020,
                                                                                     color: BuytimeTheme.TextBlack,
@@ -933,7 +933,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                                                 ),
                                                                                 Row(
                                                                                   children: [
-                                                                                    Text(snapshot.serviceState.serviceSlot[index].price.toString() + " euro"),
+                                                                                    Text(snapshot.serviceState.serviceSlot[index].price.toString() + " euro"), //TODO: trans
                                                                                   ],
                                                                                 ),
                                                                                 //showSlotInterval(snapshot.serviceState.serviceSlot[index].numberOfInterval, media, index),
@@ -956,7 +956,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                                   child: Text(
                                                                     (snapshot.serviceState.name != null && snapshot.serviceState.name != "" ? snapshot.serviceState.name : "The service") +
                                                                         " has not reservable slots",
-                                                                    //  AppLocalizations.of(context).  todo : aggiungere alle lingue
+                                                                    //  AppLocalizations.of(context). //TODO: trans
                                                                     textAlign: TextAlign.start,
                                                                     overflow: TextOverflow.clip,
                                                                     style: TextStyle(

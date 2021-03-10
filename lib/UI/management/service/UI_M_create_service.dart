@@ -426,7 +426,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                             child: Row(
                                           children: [
                                             Text(
-                                              'You have to select at least one category',
+                                              'You have to select at least one category', //TODO: trans
                                               style: TextStyle(
                                                 fontSize: media.height * 0.018,
                                                 color: BuytimeTheme.ErrorRed,
