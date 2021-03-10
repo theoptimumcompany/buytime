@@ -172,7 +172,7 @@ class UI_M_ServiceSlotState extends State<UI_M_ServiceSlot> {
                                                     currentStep < 3 ? "NEXT" : "SAVE", //todo: lang
                                                     textAlign: TextAlign.start,
                                                     style: TextStyle(
-                                                      fontSize: media.height * 0.023,
+                                                      fontSize: media.width * 0.04,
                                                       color: BuytimeTheme.TextWhite,
                                                       fontWeight: FontWeight.w900,
                                                     ),

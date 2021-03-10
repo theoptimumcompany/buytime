@@ -307,7 +307,7 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
                                   ///Deleting Interval
                                   print(startController);
                                   print(snapshot.serviceSlot.startTime);
-                                  if(numberOfSlotTimeInterval > 1){
+                                  if (numberOfSlotTimeInterval > 1) {
                                     print("Delete Interval " + i.toString());
                                     numberOfSlotTimeInterval = numberOfSlotTimeInterval - 1;
                                     StoreProvider.of<AppState>(context).dispatch(SetServiceSlotNumberOfInterval(numberOfSlotTimeInterval));
@@ -337,7 +337,6 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
                                     StoreProvider.of<AppState>(context).dispatch(SetServiceSlotIntervalVisibility(intervalIndexVisibility));
                                     _formSlotTimeKey.removeAt(i);
                                   }
-
                                 });
                               },
                               child: Card(
@@ -360,8 +359,8 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
                                           ),
                                         ],
                                       )),
-//TODO: Controllo che le settimane si accorpino quando si scelgono i giorni complementari per stessi orari
-                                      //TODO: Controllo cghe durata non sia maggiore dello slot orario scelto
+                                      //TODO: Controllo che le settimane si accorpino quando si scelgono i giorni complementari per stessi orari
+                                      //TODO: Controllo che durata non sia maggiore dello slot orario scelto
                                       intervalIndexVisibility[i]
                                           ? Column(
                                               children: [
@@ -591,7 +590,6 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
                         listStart.add(timeOfDayStart.hour.toString() + ":" + timeOfDayStart.minute.toString());
                         StoreProvider.of<AppState>(context).dispatch(SetServiceSlotStartTime(listStart));
 
-
                         ///Update stopController
                         stopController.add(TextEditingController());
 
@@ -625,7 +623,7 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
                             "ADD TIME SLOT", //todo: lang
                             textAlign: TextAlign.start,
                             style: TextStyle(
-                              fontSize: widget.media.height * 0.022,
+                              fontSize: widget.media.width * 0.04,
                               color: BuytimeTheme.ManagerPrimary,
                               fontWeight: FontWeight.w900,
                             ),

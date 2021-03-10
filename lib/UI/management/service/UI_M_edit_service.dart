@@ -551,7 +551,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                     child: Row(
                                                   children: [
                                                     Text(
-                                                      'You have to select at least one category',
+                                                      'You have to select at least one category',  //TODO: trans
                                                       style: TextStyle(
                                                         fontSize: media.height * 0.018,
                                                         color: BuytimeTheme.ErrorRed,
@@ -608,7 +608,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                                   enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
                                                                   focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
                                                                   errorBorder: OutlineInputBorder(borderSide: BorderSide(color: BuytimeTheme.ErrorRed), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                                                  labelText: 'Add new tag',
+                                                                  labelText: 'Add new tag', //TODO: trans
                                                                   labelStyle: TextStyle(
                                                                     fontSize: 14,
                                                                     fontFamily: BuytimeTheme.FontFamily,
@@ -704,7 +704,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                   Flexible(
                                                     child: Text(
                                                       returnTextSwitchers(),
-                                                      //  AppLocalizations.of(context).  todo : aggiungere alle lingue
+                                                      //  AppLocalizations.of(context).  todo : trans
                                                       textAlign: TextAlign.start,
                                                       overflow: TextOverflow.clip,
                                                       style: TextStyle(
@@ -734,7 +734,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                     Expanded(
                                                       child: Text(
                                                         "Allow users to get this service without manager confirmation",
-                                                        //  AppLocalizations.of(context).  todo : aggiungere alle lingue
+                                                        //  AppLocalizations.of(context).  todo : trans
                                                         textAlign: TextAlign.start,
                                                         overflow: TextOverflow.clip,
                                                         style: TextStyle(
@@ -765,7 +765,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                     Expanded(
                                                       child: Text(
                                                         "The service can be reserved ",
-                                                        //  AppLocalizations.of(context).  todo : aggiungere alle lingue
+                                                        //  AppLocalizations.of(context).  todo : trans
                                                         textAlign: TextAlign.start,
                                                         overflow: TextOverflow.clip,
                                                         style: TextStyle(
@@ -787,12 +787,15 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                     child: Container(
                                                         child: Row(
                                                       children: [
-                                                        Text(
-                                                          'You have to create at least a slot for a reservable service',
-                                                          style: TextStyle(
-                                                            fontSize: media.height * 0.018,
-                                                            color: BuytimeTheme.ErrorRed,
-                                                            fontWeight: FontWeight.w500,
+                                                        Flexible(
+                                                          child: Text(
+                                                            'You have to create at least a slot for a reservable service', //TODO: trans
+                                                            style: TextStyle(
+                                                              fontSize: media.height * 0.018,
+                                                              color: BuytimeTheme.ErrorRed,
+                                                              fontWeight: FontWeight.w500,
+                                                            ),
+                                                            overflow: TextOverflow.clip,
                                                           ),
                                                         ),
                                                       ],

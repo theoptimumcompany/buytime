@@ -25,7 +25,7 @@ class ServiceSlot {
 
   ///Vars out of DB
   int minDuration = 10;
-  List<bool> intervalVisibility = [];
+  List<bool> intervalVisibility = [true];
 
   ServiceSlot({
     this.numberOfInterval,
