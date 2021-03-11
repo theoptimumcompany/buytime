@@ -188,7 +188,7 @@ class _UI_M_BusinessListDrawerState extends State<UI_M_BusinessListDrawer> {
 
                         facebookSignIn.logOut();
                         //Resetto il carrello
-                        cartCounter = 0;
+                        //cartCounter = 0;
 
                         //Svuotare lo Store sul Logout
                         StoreProvider.of<AppState>(context)

@@ -86,7 +86,7 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
           List<CategoryState> categoryRootList = snapshot.categoryList.categoryListState;
           categoryRootList.sort((a, b) => a.name.compareTo(b.name));
           List<ServiceState> serviceList = StoreProvider.of<AppState>(context).state.serviceList.serviceListState;
-          order = snapshot.order.itemList != null ? (snapshot.order.itemList.length > 0 ? snapshot.order : order) : order;
+          order = snapshot.order.itemList != null ? (snapshot.order.itemList.length > 0 ? snapshot.order : OrderState().toEmpty()) : OrderState().toEmpty();
 
           return WillPopScope(
               onWillPop: () async {

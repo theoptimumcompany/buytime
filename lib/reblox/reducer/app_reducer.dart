@@ -112,7 +112,7 @@ AppState appReducer(AppState state, dynamic action) {
     newState.order = OrderState().toEmpty();
     newState.serviceList = ServiceListState().toEmpty();
     newState.serviceState = ServiceState().toEmpty();
-    cartCounter = 0;
+    //cartCounter = 0;
   }
 
   return newState;

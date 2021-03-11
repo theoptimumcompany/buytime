@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:Buytime/UI/user/cart/UI_U_Cart.dart';
+import 'package:Buytime/UI/user/service/UI_U_ServiceReserve.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/business/snippet/business_snippet_state.dart';
 import 'package:Buytime/reblox/model/order/order_entry.dart';
@@ -21,7 +22,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 
 class ServiceDetails extends StatefulWidget {
   final ServiceState serviceState;
-
+  static String route = '/serviceDetails';
   ServiceDetails({@required this.serviceState});
 
   @override
@@ -32,7 +33,7 @@ class ServiceDetails extends StatefulWidget {
 class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProviderStateMixin {
 
   ServiceState serviceState;
-  OrderState order = OrderState(itemList: List<OrderEntry>(), date: DateTime.now(), position: "", total: 0.0, business: BusinessSnippet().toEmpty(), user: UserSnippet().toEmpty(), businessId: "");
+  OrderState order = OrderState().toEmpty();
 
   @override
   void initState() {
@@ -73,7 +74,9 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
         //order = store.state.order.itemList != null ? (store.state.order.itemList.length > 0 ? store.state.order : order) : order;
       },
       builder: (context, snapshot) {
-        order = snapshot.order.itemList != null ? (snapshot.order.itemList.length > 0 ? snapshot.order : order) : order;
+        debugPrint('UI_U_ServiceDetails => SNAPSHOT CART COUNT: ${snapshot.order}');
+        order = snapshot.order.itemList != null ? (snapshot.order.itemList.length > 0 ? snapshot.order : OrderState().toEmpty()) : OrderState().toEmpty();
+        debugPrint('UI_U_ServiceDetails => CART COUNT: ${order.cartCounter}');
         return  GestureDetector(
           onTap: (){
             FocusScopeNode currentFocus = FocusScope.of(context);
@@ -104,7 +107,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                           tooltip: AppLocalizations.of(context).comeBack,
                           onPressed: () {
                             //widget.fromConfirm != null ? Navigator.of(context).pop() : Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Landing()),);
-                            Future.delayed(Duration.zero, () {
+                            Future.delayed(Duration(seconds: 1), () {
                               Navigator.of(context).pop();
                             });
                           },
@@ -142,7 +145,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                   size: 24.0,
                                 ),
                                 onPressed: (){
-                                  if (cartCounter > 0) {
+                                  if (order.cartCounter > 0) {
                                     // dispatch the order
                                     StoreProvider.of<AppState>(context).dispatch(SetOrder(order));
                                     // go to the cart page
@@ -170,13 +173,13 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                               ),
                             ),
                           ),
-                          cartCounter > 0 ? Positioned.fill(
+                          order.cartCounter > 0 ? Positioned.fill(
                             top: 5,
                             left: 2.5,
                             child: Align(
                               alignment: Alignment.topCenter,
                               child: Text(
-                                '$cartCounter', //TODO Make it Global
+                                '${order.cartCounter}', //TODO Make it Global
                                 textAlign: TextAlign.start,
                                 style: TextStyle(
                                   fontSize: SizeConfig.safeBlockHorizontal * 3,
@@ -281,7 +284,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                 ),
                               ),
                               ///Amount
-                              Container(
+                              !serviceState.switchSlots ? Container(
                                 margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
                                 child: Text(
                                   serviceState.price != null ? '€ ${serviceState.price}/1 Unit' : '€ 99/ ' + AppLocalizations.of(context).hour,
@@ -292,14 +295,92 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                       fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
                                   ),
                                 ),
+                              ) : Container(
+                                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
+                                child: Text(
+                                  '€ ${serviceState.serviceSlot.first.price.toStringAsFixed(0)} / ${serviceState.serviceSlot.first.minDuration} minutes',
+                                  style: TextStyle(
+                                      fontFamily: BuytimeTheme.FontFamily,
+                                      color: BuytimeTheme.TextBlack,
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
+                                  ),
+                                ),
                               ),
-                              ///Buy
+                              !serviceState.switchSlots ? Column(
+                                children: [
+                                  ///Buy
+                                  Container(
+                                      width: 158, ///SizeConfig.safeBlockHorizontal * 40
+                                      height: 44,
+                                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 4, bottom: SizeConfig.safeBlockVertical * 2),
+                                      child: RaisedButton(
+                                        onPressed: () {
+                                        },
+                                        textColor: BuytimeTheme.TextWhite,
+                                        color: BuytimeTheme.UserPrimary,
+                                        padding: EdgeInsets.all(15),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: new BorderRadius.circular(5),
+                                        ),
+                                        child: Text(
+                                          'BUY',
+                                          style: TextStyle(
+                                              fontSize: 14,
+                                              fontFamily: BuytimeTheme.FontFamily,
+                                              fontWeight: FontWeight.w800,
+                                              letterSpacing: 1.25
+                                          ),
+                                        ),
+                                      )
+                                  ),
+                                  ///Add to card
+                                  Container(
+                                      width: 158, ///SizeConfig.safeBlockHorizontal * 40
+                                      height: 44,
+                                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 2),
+                                      child: FlatButton(
+                                        onPressed: () {
+                                          order.business.name = snapshot.business.name;
+                                          order.business.id = snapshot.business.id_firestore;
+                                          order.user.name = snapshot.user.name;
+                                          order.user.id = snapshot.user.uid;
+                                          order.addItem(widget.serviceState, snapshot.business.ownerId);
+                                          order.cartCounter++;
+                                          //StoreProvider.of<AppState>(context).dispatch(SetOrderCartCounter(order.cartCounter));
+                                          StoreProvider.of<AppState>(context).dispatch(SetOrder(order));
+                                          
+                                        },
+                                        textColor: BuytimeTheme.UserPrimary,
+                                        color: BuytimeTheme.BackgroundWhite,
+                                        padding: EdgeInsets.all(15),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: new BorderRadius.circular(5),
+                                        ),
+                                        child: Text(
+                                          AppLocalizations.of(context).addToCart,
+                                          style: TextStyle(
+                                              fontSize: 14,
+                                              fontFamily: BuytimeTheme.FontFamily,
+                                              fontWeight: FontWeight.w500,
+                                              letterSpacing: 1.25
+                                          ),
+                                        ),
+                                      )
+                                  ),
+                                ],
+                              ) :
+                              ///Reserve
                               Container(
                                   width: 158, ///SizeConfig.safeBlockHorizontal * 40
                                   height: 44,
-                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, bottom: SizeConfig.safeBlockVertical * 2),
+                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 4, bottom: SizeConfig.safeBlockVertical * 2),
                                   child: RaisedButton(
                                     onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => ServiceReserve(serviceState: serviceState)),
+                                      );
                                     },
                                     textColor: BuytimeTheme.TextWhite,
                                     color: BuytimeTheme.UserPrimary,
@@ -308,44 +389,11 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                       borderRadius: new BorderRadius.circular(5),
                                     ),
                                     child: Text(
-                                      'BUY',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontFamily: BuytimeTheme.FontFamily,
-                                        fontWeight: FontWeight.w800,
-                                        letterSpacing: 1.25
-                                      ),
-                                    ),
-                                  )
-                              ),
-                              ///Add to card
-                              Container(
-                                  width: 158, ///SizeConfig.safeBlockHorizontal * 40
-                                  height: 44,
-                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 2),
-                                  child: FlatButton(
-                                    onPressed: () {
-                                      order.business.name = snapshot.business.name;
-                                      order.business.id = snapshot.business.id_firestore;
-                                      order.user.name = snapshot.user.name;
-                                      order.user.id = snapshot.user.uid;
-                                      order.addItem(widget.serviceState, snapshot.business.ownerId);
-                                      setState(() {
-                                        cartCounter++;
-                                      });
-                                    },
-                                    textColor: BuytimeTheme.UserPrimary,
-                                    color: BuytimeTheme.BackgroundWhite,
-                                    padding: EdgeInsets.all(15),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: new BorderRadius.circular(5),
-                                    ),
-                                    child: Text(
-                                      AppLocalizations.of(context).addToCart,
+                                      'RESERVE', ///TODO Make it global
                                       style: TextStyle(
                                           fontSize: 14,
                                           fontFamily: BuytimeTheme.FontFamily,
-                                          fontWeight: FontWeight.w500,
+                                          fontWeight: FontWeight.w800,
                                           letterSpacing: 1.25
                                       ),
                                     ),

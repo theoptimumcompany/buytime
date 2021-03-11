@@ -75,7 +75,7 @@ class ConfirmedOrderState extends State<ConfirmedOrder> with SingleTickerProvide
         child: StoreConnector<AppState, AppState>(
             converter: (store) => store.state,
             builder: (context, snapshot) {
-              //order = snapshot.order.itemList != null ? (snapshot.order.itemList.length > 0 ? snapshot.order : order) : order;
+              //order = snapshot.order.itemList != null ? (snapshot.order.itemList.length > 0 ? snapshot.order : OrderState().toEmpty()) : OrderState().toEmpty();
               return Scaffold(
                   appBar: BuytimeAppbar(
                     background: BuytimeTheme.UserPrimary,
@@ -159,22 +159,16 @@ class ConfirmedOrderState extends State<ConfirmedOrder> with SingleTickerProvide
                                               ),
                                             ),
                                             ///Service List
-                                            CustomScrollView(shrinkWrap: true, slivers: [
-                                              SliverList(
-                                                delegate: SliverChildBuilderDelegate((context, index) {
-                                                  //MenuItemModel menuItem = menuItems.elementAt(index);
-                                                  final item = (index != snapshot.itemList.length ? snapshot.itemList[index] : null);
-                                                  return OptimumOrderItemCardMedium(
-                                                    key: ObjectKey(item),
-                                                    orderEntry: snapshot.itemList[index],
-                                                    mediaSize: media,
-                                                    show: false,
-                                                  );
-                                                },
-                                                  childCount: snapshot.itemList.length,
-                                                ),
-                                              ),
-                                            ]),
+                                            Column(
+                                              children: snapshot.itemList.map((item){
+                                                return OptimumOrderItemCardMedium(
+                                                  key: ObjectKey(item),
+                                                  orderEntry: item,
+                                                  mediaSize: media,
+                                                  show: false,
+                                                );
+                                              }).toList(),
+                                            ),
                                             ///Total order
                                             OrderTotal(media: media, orderState: snapshot),
                                             Container(
@@ -357,6 +351,7 @@ class ConfirmedOrderState extends State<ConfirmedOrder> with SingleTickerProvide
                                             //snapshot.order = OrderState(itemList: List<OrderEntry>(), date: DateTime.now(), position: "", total: 0.0, business: BusinessSnippet().toEmpty(), user: UserSnippet().toEmpty(), businessId: "");
                                             //StoreProvider.of<AppState>(context).dispatch(SetOrderListToEmpty());
                                             //StoreProvider.of<AppState>(context).dispatch(UpdateOrder(order));
+                                            StoreProvider.of<AppState>(context).dispatch(SetOrder(OrderState().toEmpty()));
                                             Navigator.of(context).popUntil(ModalRoute.withName('/bookingPage'));
                                           },
                                           textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
@@ -377,72 +372,6 @@ class ConfirmedOrderState extends State<ConfirmedOrder> with SingleTickerProvide
                                           ),
                                         )
                                     ),
-                                    /*Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () {
-                                          // trigger payment information page
-                                          Navigator.pushReplacement(
-                                            context,
-                                            MaterialPageRoute(builder: (context) => UI_U_StripePayment()),
-                                          );
-                                        },
-                                        child: Padding(
-                                          padding: EdgeInsets.only(top: (media.height * 0.05)),
-                                          child: Container(
-                                            width: media.width * 0.55,
-                                            decoration: BoxDecoration(color: Color.fromRGBO(1, 175, 81, 1.0), borderRadius: BorderRadius.all(Radius.circular(5.0))),
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(8.0),
-                                              child: Row(
-                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                children: [Icon(Icons.credit_card, color: Colors.white), SizedBox(width: 10.0), Text(AppLocalizations.of(context).orderAndPay, style: TextStyle(color: Colors.white))],
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  // Row(
-                                  //   mainAxisAlignment: MainAxisAlignment.center,
-                                  //   children: [
-                                  //     GestureDetector(
-                                  //       onTap: () {
-                                  //         // trigger payment information page
-                                  //         print("Dispatch Order create!");
-                                  //         StoreProvider.of<AppState>(context).dispatch(CreateOrder(OrderState(
-                                  //             itemList: snapshot.order.itemList,
-                                  //             date: snapshot.order.date,
-                                  //             progress: "paid",
-                                  //             position: snapshot.order.position,
-                                  //             total: snapshot.order.total,
-                                  //             business: snapshot.order.business,
-                                  //             user: snapshot.order.user,
-                                  //             businessId: snapshot.business.id_firestore)));
-                                  //         StoreProvider.of<AppState>(context).dispatch(OrderListRequest());
-                                  //       },
-                                  //       child: Padding(
-                                  //         padding: EdgeInsets.only(top: (media.height * 0.05)),
-                                  //         child: Container(
-                                  //           width: media.width * 0.55,
-                                  //           decoration: BoxDecoration(color: Color.fromRGBO(1, 175, 81, 1.0), borderRadius: BorderRadius.all(Radius.circular(5.0))),
-                                  //           child: Padding(
-                                  //             padding: const EdgeInsets.all(8.0),
-                                  //             child: Row(
-                                  //               mainAxisAlignment: MainAxisAlignment.center,
-                                  //               children: [Icon(Icons.credit_card, color: Colors.white), SizedBox(width: 10.0), Text("Test Order Create", style: TextStyle(color: Colors.white))],
-                                  //             ),
-                                  //           ),
-                                  //         ),
-                                  //       ),
-                                  //     ),
-                                  //   ],
-                                  // ),
-                                  SizedBox(
-                                    height: media.height * 0.05,
-                                  )*/
                                   ],
                                 ),
                               ),

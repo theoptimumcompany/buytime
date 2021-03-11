@@ -11,6 +11,7 @@ import 'package:Buytime/reblox/model/snippet/device.dart';
 import 'package:Buytime/reblox/model/snippet/token.dart';
 import 'package:Buytime/reblox/reducer/auto_complete_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/booking_reducer.dart';
+import 'package:Buytime/utils/arrowClipper.dart';
 import 'package:Buytime/utils/b_cube_grid_spinner.dart';
 import 'package:Buytime/utils/customDropdown.dart';
 import 'package:Buytime/utils/size_config.dart';
@@ -31,6 +32,7 @@ import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import '../../../reblox/model/app_state.dart';
@@ -62,7 +64,7 @@ String sha256ofString(String input) {
 OverlayEntry overlayEntry;
 bool isMenuOpen = false;
 
-class LoginState extends State<Login> {
+class LoginState extends State<Login> with SingleTickerProviderStateMixin{
   ///Global key
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -94,6 +96,7 @@ class LoginState extends State<Login> {
 
   ///Init platform
   Future<void> initPlatformState() async {
+
     Map<String, dynamic> deviceData;
     if (!kIsWeb) {
       try {
@@ -449,6 +452,12 @@ class LoginState extends State<Login> {
 
   @override
   void initState() {
+    _animationController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 250),
+    );
+    _key = LabeledGlobalKey("button_icon");
+
     super.initState();
     Firebase.initializeApp().then((value) {
       firebaseMessaging.requestNotificationPermissions();
@@ -465,6 +474,13 @@ class LoginState extends State<Login> {
       print("error on firebase application start: " + onError.toString());
     });
     initPlatformState();
+    //checkAuth();
+  }
+
+  var localAuth = LocalAuthentication();
+  void checkAuth() async{
+    bool didAuthenticate = await localAuth.authenticateWithBiometrics(localizedReason: 'Please authenticate to show account balance');
+    debugPrint('UI_U_Login => $didAuthenticate');
   }
 
   ///Validation
@@ -495,6 +511,166 @@ class LoginState extends State<Login> {
     return regExp.hasMatch(value);
   }
 
+  ///Autocomplete section
+  GlobalKey _key;
+  Offset buttonPosition;
+  Size buttonSize;
+  OverlayEntry _overlayEntry;
+  AnimationController _animationController;
+  bool didAuthenticate = false;
+
+  findButton() {
+    RenderBox renderBox = _key.currentContext.findRenderObject();
+    buttonSize = renderBox.size;
+    buttonPosition = renderBox.localToGlobal(Offset.zero);
+  }
+
+  void closeMenu() {
+    if(autoCompleteList.isNotEmpty){
+      overlayEntry.remove();
+      _animationController.reverse();
+      isMenuOpen = !isMenuOpen;
+    }
+  }
+
+  void openMenu() {
+    if(autoCompleteList.isNotEmpty){
+      findButton();
+      _animationController.forward();
+      overlayEntry = _overlayEntryBuilder();
+      Overlay.of(context).insert(overlayEntry);
+      isMenuOpen = !isMenuOpen;
+    }
+  }
+
+  //var localAuth = LocalAuthentication();
+  OverlayEntry _overlayEntryBuilder() {
+    return OverlayEntry(
+      builder: (context) {
+        return Positioned(
+          top: buttonPosition.dy + buttonSize.height,
+          left: buttonPosition.dx,
+          //right: buttonPosition.dx - 268,
+          width: SizeConfig.screenWidth - (SizeConfig.safeBlockHorizontal * 10 * 2),
+          child: Material(
+            color: Colors.transparent,
+            child: Stack(
+              children: <Widget>[
+                autoCompleteList.isNotEmpty ? Align(
+                  alignment: Alignment.topCenter,
+                  child: ClipPath(
+                    clipper: ArrowClipper(),
+                    child: Container(
+                      width: 17,
+                      height: 17,
+                      color: BuytimeTheme.ButtonMalibu,
+                    ),
+                  ),
+                ) : Container(),
+                Padding(
+                  padding: const EdgeInsets.only(top: 15.0),
+                  child: Container(
+                    height: autoCompleteList.length * 60.0,
+                    decoration: BoxDecoration(
+                      color:BuytimeTheme.BackgroundWhite,
+                      border: Border.all(
+                          color: BuytimeTheme.ButtonMalibu,
+                          width: 2
+                      ),
+                      borderRadius: BorderRadius.all(
+                        const Radius.circular(5.0),
+                      ),
+                    ),
+                    child: Theme(
+                      data: ThemeData(
+                        iconTheme: IconThemeData(
+                          color: BuytimeTheme.TextBlack,
+                        ),
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: List.generate(
+                            autoCompleteList.length, (index) {
+                          return GestureDetector(
+                            onTap: ()async {
+                              /*if(!didAuthenticate){
+                                didAuthenticate = await localAuth.authenticateWithBiometrics(localizedReason: 'Please authenticate to show account balance');
+                                if(!didAuthenticate)
+                                  didAuthenticate = true;
+                              }*/
+
+                              didAuthenticate = true;
+
+                              //didAuthenticate = true;
+                              if(didAuthenticate){
+                                _emailController.text = autoCompleteList.elementAt(index).email;
+                                _passwordController.text = autoCompleteList.elementAt(index).password;
+                                closeMenu();
+                              }
+                            },
+                            child: Container(
+                                width: SizeConfig.screenWidth - (SizeConfig.safeBlockHorizontal * 10 * 2),
+                                height: 60 - 4.0,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: <Widget>[
+                                    ///Email Icon & Email
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: [
+                                        ///Email Icon
+                                        Container(
+                                          margin: EdgeInsets.only(left: 10.0, top: 0),
+                                          child: Icon(
+                                            Icons.email,
+                                            color: BuytimeTheme.ButtonMalibu,
+                                          ),
+                                        ),
+                                        ///Email
+                                        Container(
+                                          margin: EdgeInsets.only(left: 10.0, top: 0),
+                                          child: FittedBox(
+                                            fit: BoxFit.scaleDown,
+                                            child:  Text(
+                                              '${autoCompleteList[index].email}',
+                                              style: TextStyle(
+                                                  color: BuytimeTheme.TextBlack,
+                                                  fontWeight: FontWeight.w600
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    ///Buytime Logo
+                                    Container(
+                                      margin: EdgeInsets.only(right: 10.0, top: 0),
+                                      width: 24,
+                                      height: 24,
+                                      decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                            image: AssetImage(
+                                                'assets/img/img_buytime.png'),
+                                          )
+                                      ),
+                                    ),
+                                  ],
+                                )
+                            ),
+                          );
+                        }),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 
 
   @override
@@ -507,8 +683,22 @@ class LoginState extends State<Login> {
       converter: (store) => store.state,
       builder: (context, snapshot) {
         autoCompleteList = snapshot.autoCompleteListState.autoCompleteListState;
+        debugPrint('UI_U_Login => Auto complete List LENGTH: ${autoCompleteList.length}');
         return GestureDetector(
           onTap: (){
+            FocusScopeNode currentFocus = FocusScope.of(context);
+
+            if (!currentFocus.hasPrimaryFocus) {
+              currentFocus.unfocus();
+            }
+            //Overlay.of(context).insert(overlayEntry);
+            if(overlayEntry != null && isMenuOpen){
+              overlayEntry.remove();
+              isMenuOpen = !isMenuOpen;
+            }
+          },
+          onPanDown: (d){
+
             FocusScopeNode currentFocus = FocusScope.of(context);
 
             if (!currentFocus.hasPrimaryFocus) {
@@ -615,6 +805,7 @@ class LoginState extends State<Login> {
                                                   crossAxisAlignment: CrossAxisAlignment.center,
                                                   children: [
                                                     Flexible(child: Container(
+                                                      key: _key,
                                                       margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5),
                                                       height: 55, ///SizeConfig.safeBlockHorizontal * 14
                                                       //width: 2,
@@ -622,6 +813,7 @@ class LoginState extends State<Login> {
                                                         controller: _emailController,
                                                         textAlign: TextAlign.start,
                                                         keyboardType: TextInputType.emailAddress,
+                                                        textInputAction: TextInputAction.next,
                                                         autofillHints: [AutofillHints.email],
                                                         decoration: InputDecoration(
                                                           enabledBorder: OutlineInputBorder(
@@ -656,9 +848,22 @@ class LoginState extends State<Login> {
                                                           });
                                                           return null;
                                                         },
+                                                        onTap: autoCompleteList.isNotEmpty ? () async{
+                                                          if (isMenuOpen) {
+                                                            closeMenu();
+                                                          } else {
+                                                            openMenu();
+                                                          }
+                                                        } : null,
+                                                        onFieldSubmitted: (submit){
+                                                          if(overlayEntry != null && isMenuOpen){
+                                                            overlayEntry.remove();
+                                                            isMenuOpen = !isMenuOpen;
+                                                          }
+                                                        },
                                                       ),
                                                     )),
-                                                    Container(
+                                                    /*Container(
                                                       //width: 10,
                                                       //margin: EdgeInsets.only(left: 1),
                                                       margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5),
@@ -677,7 +882,7 @@ class LoginState extends State<Login> {
                                                           _passwordController.text = autoCompleteList.elementAt(index).password;
                                                         },
                                                       ),
-                                                    )
+                                                    )*/
                                                   ],
                                                 ),
                                                 ///Password

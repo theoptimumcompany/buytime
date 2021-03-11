@@ -21,6 +21,8 @@ class OrderState {
   UserSnippet user;
   String businessId;
   String userId;
+  List<List<int>> selected;
+  int cartCounter = 0;
 
   OrderState({
     @required this.itemList,
@@ -38,6 +40,8 @@ class OrderState {
     this.user,
     this.businessId,
     this.userId,
+    this.selected,
+    this.cartCounter,
   });
 
   OrderState.fromJson(Map<String, dynamic> json)
@@ -67,6 +71,7 @@ class OrderState {
         user = UserSnippet.fromJson(json["user"]),
         total = json['total'].toDouble();
 
+
   OrderState.fromState(OrderState state) {
     this.itemList = state.itemList;
     this.date = state.date;
@@ -83,6 +88,8 @@ class OrderState {
     this.businessId = state.businessId;
     this.userId = state.userId;
     this.user = state.user;
+    this.selected = state.selected;
+    this.cartCounter = state.cartCounter;
   }
 
   Map<String, dynamic> toJson() => {
@@ -127,6 +134,8 @@ class OrderState {
     String userId,
     BusinessSnippet business,
     UserSnippet user,
+    List<List<int>> selected,
+    int cartCounter
   }) {
     return OrderState(
       itemList: itemList ?? this.itemList,
@@ -144,6 +153,8 @@ class OrderState {
       userId: userId ?? this.userId,
       business: business ?? this.business,
       user: user ?? this.user,
+      selected: selected ?? this.selected,
+      cartCounter: cartCounter ?? this.cartCounter,
     );
   }
 
@@ -164,6 +175,8 @@ class OrderState {
       userId: "",
       business: BusinessSnippet().toEmpty(),
       user: UserSnippet().toEmpty(),
+      selected: [],
+        cartCounter: 0
     );
   }
 
@@ -189,14 +202,43 @@ class OrderState {
     this.total += itemToAdd.price;
   }
 
+  addReserveItem(ServiceState itemToAdd, String idOwner, String time, String minutes, DateTime date) {
+    /*bool added = false;
+    itemList.forEach((element) {
+      if (!added && element.id == itemToAdd.serviceId) {
+        element.number++;
+        added = true;
+      }
+    });*/
+    itemList.add(OrderEntry(
+        number: 1,
+        name: itemToAdd.name,
+        description: itemToAdd.description,
+        price: itemToAdd.serviceSlot.first.price,
+        thumbnail: itemToAdd.image1,
+        id: itemToAdd.serviceId,
+        id_business: itemToAdd.businessId,
+        id_owner: idOwner,
+      time: time,
+      minutes: minutes,
+      date: date
+    ));
+    this.total += itemToAdd.serviceSlot.first.price;
+  }
+
   void removeItem(OrderEntry entry) {
     bool deleted = false;
     itemList.forEach((element) {
+      //debugPrint('order_state => DATES: ${element.date} - ${entry.date}');
       if (!deleted && element.id == entry.id) {
         this.total -= (entry.price * element.number);
         element.number = 0;
         deleted = true;
       }
     });
+  }
+
+  void removeReserveItem(OrderEntry entry) {
+    this.total -= (entry.price);
   }
 }

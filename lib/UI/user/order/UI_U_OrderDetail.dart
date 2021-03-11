@@ -19,6 +19,9 @@ class UI_U_OrderDetail extends StatefulWidget {
 }
 
 class UI_U_OrderDetailState extends State<UI_U_OrderDetail> {
+
+  OrderState order = OrderState().toEmpty();
+
   @override
   void initState() {
     super.initState();
@@ -30,20 +33,17 @@ class UI_U_OrderDetailState extends State<UI_U_OrderDetail> {
     var confirmedOrder = OrderState(itemList: null);
     return WillPopScope(
       onWillPop: () async {
-        cartCounter = 0;
         StoreProvider.of<AppState>(context).dispatch(SetOrderToEmpty(""));
         return true;
       },
       child: StoreConnector<AppState, AppState>(
           converter: (store) => store.state,
           onInit: (store) {
-            cartCounter = 0;
             confirmedOrder = store.state.order;
-            StoreProvider.of<AppState>(context).dispatch(SetOrderToEmpty(""));
+            //StoreProvider.of<AppState>(context).dispatch(SetOrderToEmpty(""));
           },
           onDispose: (store) {
-            cartCounter = 0;
-            StoreProvider.of<AppState>(context).dispatch(SetOrderToEmpty(""));
+            //StoreProvider.of<AppState>(context).dispatch(SetOrderToEmpty(""));
           },
           builder: (context, snapshot) {
             Timestamp stamp = Timestamp.now(); //TODO snapshot.order.date; Salvare bene timestamp sul navigation

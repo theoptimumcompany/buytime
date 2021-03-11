@@ -1,4 +1,8 @@
 import 'package:Buytime/UI/user/cart/UI_U_ConfirmOrder.dart';
+import 'package:Buytime/UI/user/service/UI_U_ServiceReserve.dart';
+import 'package:Buytime/reblox/model/order/order_entry.dart';
+import 'package:Buytime/reblox/model/service/service_state.dart';
+import 'package:Buytime/reusable/vector_icon.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/UI/user/service/UI_U_service_list.dart';
@@ -17,7 +21,8 @@ import 'package:flutter_redux/flutter_redux.dart';
 
 class Cart extends StatefulWidget {
   final String title = 'Cart';
-
+  ServiceState serviceState;
+  Cart({Key key, this.serviceState}) : super(key: key);
   @override
   State<StatefulWidget> createState() => CartState();
 }
@@ -30,7 +35,7 @@ class CartState extends State<Cart> {
     super.initState();
   }
 
-  void deleteItem(OrderState snapshot, int index) {
+  /*void deleteItem(OrderState snapshot, int index) {
     setState(() {
       if (snapshot.itemList.length > 1) {
         cartCounter = cartCounter - snapshot.itemList[index].number;
@@ -65,8 +70,8 @@ class CartState extends State<Cart> {
           debugPrint('UI_U_Cart => AFTER| TOTAL: ${snapshot.total}');
 
 
-          /*snapshot.removeItem(snapshot.itemList[index]);
-        snapshot.itemList.removeAt(index);*/
+          *//*snapshot.removeItem(snapshot.itemList[index]);
+        snapshot.itemList.removeAt(index);*//*
         }
       }else{
         //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ServiceList()),);
@@ -75,7 +80,33 @@ class CartState extends State<Cart> {
       StoreProvider.of<AppState>(context).dispatch(UpdateOrder(OrderState(
           itemList: snapshot.itemList, date: snapshot.date, position: snapshot.position, total: snapshot.total, business: snapshot.business, user: snapshot.user, businessId: snapshot.businessId, userId: snapshot.userId)));
     });
+  }*/
+
+  void undoDeletion(index, OrderEntry item){
+    /*
+  This method accepts the parameters index and item and re-inserts the {item} at
+  index {index}
+  */
+    setState((){
+      //orderState.addReserveItem(item., snapshot.business.ownerId, widget.serviceState.serviceSlot.first.startTime[i], widget.serviceState.serviceSlot.first.minDuration.toString(), dates[index]);
+      orderState.itemList.insert(index, item);
+      orderState.total += item.price;
+    });
   }
+  void deleteItem(OrderState snapshot, OrderEntry entry, int index) {
+    setState(() {
+      orderState.cartCounter = orderState.cartCounter - entry.number;
+      orderState.removeReserveItem(entry);
+      orderState.selected.removeAt(index);
+      orderState.itemList.remove(entry);
+      if (orderState.itemList.length == 0)
+        Navigator.of(context).pop();
+
+      StoreProvider.of<AppState>(context).dispatch(UpdateOrder(orderState));
+    });
+  }
+
+  ServiceState tmp;
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +118,11 @@ class CartState extends State<Cart> {
         },
         child: StoreConnector<AppState, AppState>(
             converter: (store) => store.state,
+            onInit: (store){
+              tmp = store.state.serviceState;
+            },
             builder: (context, snapshot) {
+              orderState = snapshot.order;
               return Scaffold(
                   resizeToAvoidBottomInset: false,
                   appBar: BuytimeAppbar(
@@ -102,9 +137,10 @@ class CartState extends State<Cart> {
                             context,
                             MaterialPageRoute(builder: (context) => ServiceList()),
                           );*/
-                          Future.delayed(Duration.zero, () {
-                            Navigator.of(context).pop();
-                          });
+                          /*StoreProvider.of<AppState>(context).dispatch(UpdateOrder(OrderState(
+                              itemList: orderState.itemList, date: orderState.date, position: orderState.position, total: orderState.total, business: orderState.business, user: orderState.user, businessId: orderState.businessId, userId: orderState.userId)));*/
+
+                          Navigator.of(context).pop();
                         }
                       ),
                       ///Cart Title
@@ -174,7 +210,8 @@ class CartState extends State<Cart> {
                                                     debugPrint('UI_U_Cart => LIST| ${orderState.itemList[index].name} ITEM COUNT: ${orderState.itemList[index].number}');
                                                     var item = (index != orderState.itemList.length ? orderState.itemList[index] : null);
                                                     int itemCount = orderState.itemList[index].number;
-                                                    return OptimumOrderItemCardMedium(
+                                                    return orderState.itemList.isNotEmpty && (orderState.itemList.first.time == null || orderState.itemList.first.time.isEmpty) ?
+                                                    OptimumOrderItemCardMedium(
                                                       key: ObjectKey(item),
                                                       orderEntry: orderState.itemList[index],
                                                       mediaSize: media,
@@ -209,6 +246,90 @@ class CartState extends State<Cart> {
                                                           )
                                                         ],
                                                       ),*/
+                                                    ) :
+                                                    Dismissible(
+                                                      // Each Dismissible must contain a Key. Keys allow Flutter to
+                                                      // uniquely identify widgets.
+                                                      key: UniqueKey(),
+                                                      // Provide a function that tells the app
+                                                      // what to do after an item has been swiped away.
+                                                        direction: DismissDirection.endToStart,
+                                                      onDismissed: (direction) {
+                                                        // Remove the item from the data source.
+                                                        setState(() {
+                                                          orderState.itemList.removeAt(index);
+                                                        });
+                                                        if(direction == DismissDirection.endToStart){
+                                                          deleteItem(orderState, item, index);
+                                                          debugPrint('UI_U_SearchPage => DX to DELETE');
+                                                          // Show a snackbar. This snackbar could also contain "Undo" actions.
+                                                          Scaffold.of(context).showSnackBar(SnackBar(
+                                                              content: Text("${item.name} removed"),
+                                                              action: SnackBarAction(label: "UNDO",
+                                                                  onPressed: () {
+                                                                    //To undo deletion
+                                                                    undoDeletion(index, item);
+                                                                  }
+                                                                  )
+                                                          ));
+                                                        }else{
+                                                          orderState.itemList.insert(index, item);
+                                                        }
+                                                      },
+                                                      child: OptimumOrderItemCardMedium(
+                                                        key: ObjectKey(item),
+                                                        orderEntry: orderState.itemList[index],
+                                                        mediaSize: media,
+                                                        orderState: orderState,
+                                                        index: index,
+                                                        show: true,
+                                                        /*rightWidget1: Column(
+                                                        children: [
+                                                          Row(
+                                                            children: [
+                                                              itemCount >= 2 ? IconButton(
+                                                                icon: Icon(
+                                                                  Icons.remove_circle_outline,
+                                                                  color: BuytimeTheme.AccentRed,
+                                                                  //size: SizeConfig.safeBlockHorizontal * 15,
+                                                                ),
+                                                                onPressed: () {
+                                                                  deleteOneItem(orderState, index);
+                                                                },
+                                                              ) : Container(),
+                                                              IconButton(
+                                                                icon: Icon(
+                                                                  Icons.remove_shopping_cart,
+                                                                  color: BuytimeTheme.SymbolGrey,
+                                                                  //size: SizeConfig.safeBlockHorizontal * 15,
+                                                                ),
+                                                                onPressed: () {
+                                                                  deleteItem(orderState, index);
+                                                                },
+                                                              ),
+                                                            ],
+                                                          )
+                                                        ],
+                                                      ),*/
+                                                      ),
+                                                      background: Container(
+                                                        color: BuytimeTheme.BackgroundWhite,
+                                                        //margin: EdgeInsets.symmetric(horizontal: 15),
+                                                        alignment: Alignment.centerRight,
+                                                      ),
+                                                      secondaryBackground: Container(
+                                                        color: BuytimeTheme.AccentRed,
+                                                        //margin: EdgeInsets.symmetric(horizontal: 15),
+                                                        alignment: Alignment.centerRight,
+                                                        child: Container(
+                                                          margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 2.5),
+                                                          child: Icon(
+                                                            VectorIcon.vector,
+                                                            size: 24, ///SizeConfig.safeBlockHorizontal * 7
+                                                            color: BuytimeTheme.SymbolWhite,
+                                                          ),
+                                                        ),
+                                                      ),
                                                     );
                                                   },
                                                     childCount: orderState.itemList.length,
@@ -217,7 +338,7 @@ class CartState extends State<Cart> {
                                               ]),
                                             ),
                                             ///Total Order
-                                            OrderTotal(media: media, orderState: snapshot),
+                                            OrderTotal(media: media, orderState: orderState),
                                             ///Divider
                                             Container(
                                               color: BuytimeTheme.DividerGrey,
@@ -276,7 +397,9 @@ class CartState extends State<Cart> {
                               child: Container(
                                 //height: double.infinity,
                                 //color: Colors.black87,
-                                child: Column(
+                                child: orderState.itemList.isNotEmpty && (orderState.itemList.first.time == null || orderState.itemList.first.time.isEmpty) ?
+                                    ///Buy & Continue
+                                Column(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
@@ -401,6 +524,40 @@ class CartState extends State<Cart> {
                                   SizedBox(
                                     height: media.height * 0.05,
                                   )*/
+                                  ],
+                                ) :
+                                    ///Reserve
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    ///Reserve button
+                                    Container(
+                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5, bottom: SizeConfig.safeBlockVertical * 5),
+                                        width: 158, /// media.width * .4
+                                        height: 46,
+                                        child: RaisedButton(
+                                          onPressed: () {
+                                            Navigator.push(context, MaterialPageRoute(builder: (context) => ConfirmOrder()),);
+                                          },
+                                          textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
+                                          color: BuytimeTheme.UserPrimary,
+                                          //padding: EdgeInsets.all(media.width * 0.03),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: new BorderRadius.circular(5),
+                                          ),
+                                          child: Text(
+                                            'RESERVE',//AppLocalizations.of(context).logBack, ///TODO Make it Global
+                                            style: TextStyle(
+                                                fontSize: 14,
+                                                fontFamily: BuytimeTheme.FontFamily,
+                                                fontWeight: FontWeight.w500,
+                                                color: BuytimeTheme.TextWhite,
+                                                letterSpacing: 1.25
+                                            ),
+                                          ),
+                                        )
+                                    ),
                                   ],
                                 ),
                               ),

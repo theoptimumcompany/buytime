@@ -92,6 +92,13 @@ class SetOrderProgress
   String get progress => _progress;
 }
 
+class SetOrderCartCounter
+{
+  int _cartCounter;
+  SetOrderCartCounter(this._cartCounter);
+  int get cartCounter => _cartCounter;
+}
+
 class SetOrderBusiness
 {
   BusinessSnippet _business;
@@ -153,6 +160,11 @@ OrderState orderReducer(OrderState state, action) {
   }
   if (action is SetOrder) {
     orderState = action.orderState.copyWith();
+    return orderState;
+  }
+  if (action is SetOrderCartCounter) {
+    orderState.cartCounter = action.cartCounter;
+    //orderState = action.orderState.copyWith();
     return orderState;
   }
   if (action is SetOrderToEmpty) {

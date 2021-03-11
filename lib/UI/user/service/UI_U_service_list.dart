@@ -23,7 +23,7 @@ class ServiceList extends StatefulWidget {
 }
 
 class ServiceListState extends State<ServiceList> {
-  OrderState order = OrderState(itemList: List<OrderEntry>(), date: DateTime.now(), position: "", total: 0.0, business: BusinessSnippet().toEmpty(), user: UserSnippet().toEmpty(), businessId: "");
+  OrderState order = OrderState().toEmpty();
 
   @override
   void initState() {
@@ -37,7 +37,7 @@ class ServiceListState extends State<ServiceList> {
         converter: (store) => store.state,
         onInit: (store) => store.dispatch(ServiceListRequest(StoreProvider.of<AppState>(context).state.business.id_firestore, 'user')),
         builder: (context, snapshot) {
-          order = snapshot.order.itemList != null ? (snapshot.order.itemList.length > 0 ? snapshot.order : order) : order;
+          order = snapshot.order.itemList != null ? (snapshot.order.itemList.length > 0 ? snapshot.order : OrderState().toEmpty()) : OrderState().toEmpty();
           return Scaffold(
             resizeToAvoidBottomInset: false,
             appBar: BuytimeAppbar(
@@ -54,11 +54,11 @@ class ServiceListState extends State<ServiceList> {
                     height: media.height * 0.05,
                   ),
                 ),
-                cartCounter > 0
+                order.cartCounter > 0
                     ? Badge(
                         badgeColor: Color.fromRGBO(255, 99, 99, 1.0),
                         badgeContent: Text(
-                          cartCounter.toString(),
+                          order.cartCounter.toString(),
                           style: TextStyle(color: Colors.white),
                         ),
                         position: BadgePosition.bottomStart(),
@@ -121,9 +121,9 @@ class ServiceListState extends State<ServiceList> {
                                                         order.user.name = snapshot.user.name;
                                                         order.user.id = snapshot.user.uid;
                                                         order.addItem(serviceList[index], snapshot.business.ownerId);
-                                                        setState(() {
-                                                          cartCounter++;
-                                                        });
+                                                        order.cartCounter++;
+                                                        //StoreProvider.of<AppState>(context).dispatch(SetOrderCartCounter(order.cartCounter));
+                                                        StoreProvider.of<AppState>(context).dispatch(SetOrder(order));
                                                       },
                                                     )
                                                   ],
@@ -175,7 +175,7 @@ class CartIconAppBar extends StatelessWidget {
         size: 35.0,
       ),
       onPressed: () {
-        if (cartCounter > 0) {
+        if (order.cartCounter > 0) {
           // dispatch the order
           StoreProvider.of<AppState>(context).dispatch(SetOrder(order));
           // go to the cart page

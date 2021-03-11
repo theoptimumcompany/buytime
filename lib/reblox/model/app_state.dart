@@ -41,6 +41,7 @@ class AppRoutes {
   static const myBookings = "/myBookings";
   static const confirmOrder = "/confirmOrder";
   static const bookingList = "/bookingList";
+  static const serviceDetails = "/serviceDetails";
 
 }
 

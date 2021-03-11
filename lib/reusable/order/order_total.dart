@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class OrderTotal extends StatelessWidget {
-  const OrderTotal({
+   OrderTotal({
     @required this.orderState,
     Key key,
     @required this.media,
@@ -26,42 +26,56 @@ class OrderTotal extends StatelessWidget {
         //crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ///Total Price Text
-          Text(
-            /*AppLocalizations.of(context).total*/ 'Total price',
-            style: TextStyle(
-              fontFamily: BuytimeTheme.FontFamily,
-              fontWeight: FontWeight.w500,
-              fontSize: 16, ///SizeConfig.safeBlockHorizontal * 4
-              color: BuytimeTheme.TextMedium,
-              letterSpacing: 0.25
+          Expanded(
+            flex: 1,
+            child: Container(
+              alignment: Alignment.center,
+              child: Text(
+                /*AppLocalizations.of(context).total*/ 'Total price',
+                style: TextStyle(
+                    fontFamily: BuytimeTheme.FontFamily,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 16, ///SizeConfig.safeBlockHorizontal * 4
+                    color: BuytimeTheme.TextMedium,
+                    letterSpacing: 0.25
+                ),
+              ),
             ),
           ),
           ///Total Value
-          Container(
-            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 20),
-            child: Text(
-              '€ ${orderState.total.toStringAsFixed(2)}',
-              style: TextStyle(
-                fontFamily: BuytimeTheme.FontFamily,
-                fontWeight: FontWeight.w600,
-                fontSize: 24, ///SizeConfig.safeBlockHorizontal * 7,
-                color: BuytimeTheme.TextBlack
+          Expanded(
+            flex: 1,
+            child: Container(
+              alignment: Alignment.center,
+              //margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 20),
+              child: Text(
+                '€ ${orderState.total.toStringAsFixed(2)}',
+                style: TextStyle(
+                    fontFamily: BuytimeTheme.FontFamily,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 24, ///SizeConfig.safeBlockHorizontal * 7,
+                    color: BuytimeTheme.TextBlack
+                ),
               ),
-            ),
+            )
           ),
           ///Tax
-          Container(
-            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 8),
-            child: Text(
-              AppLocalizations.of(context).tax + (orderState.total != null ? (orderState.total * 0.25).toStringAsFixed(2) : "0"),
-              style: TextStyle(
-                  fontFamily: BuytimeTheme.FontFamily,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 16, ///SizeConfig.safeBlockHorizontal * 4
-                  color: BuytimeTheme.TextMedium,
-                  letterSpacing: 0.25
+          Expanded(
+              flex: 1,
+              child: Container(
+                alignment: Alignment.center,
+                //margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 8),
+                child: Text(
+                  AppLocalizations.of(context).tax + (orderState.total != null ? (orderState.total * 0.25).toStringAsFixed(2) : "0"),
+                  style: TextStyle(
+                      fontFamily: BuytimeTheme.FontFamily,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 16, ///SizeConfig.safeBlockHorizontal * 4
+                      color: BuytimeTheme.TextMedium,
+                      letterSpacing: 0.25
+                  ),
+                ),
               ),
-            ),
           ),
         ],
       ),

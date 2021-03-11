@@ -1,4 +1,5 @@
 import 'package:Buytime/UI/user/cart/UI_U_Cart.dart';
+import 'package:Buytime/UI/user/service/UI_U_ServiceReserve.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/business/snippet/business_snippet_state.dart';
 import 'package:Buytime/reblox/model/order/order_entry.dart';
@@ -37,7 +38,7 @@ class _FilterGeneralState extends State<FilterGeneral> {
   String _selected = '';
 
   String sortBy = '';
-  OrderState order = OrderState(itemList: List<OrderEntry>(), date: DateTime.now(), position: "", total: 0.0, business: BusinessSnippet().toEmpty(), user: UserSnippet().toEmpty(), businessId: "");
+  OrderState order = OrderState().toEmpty();
 
 
   @override
@@ -83,7 +84,7 @@ class _FilterGeneralState extends State<FilterGeneral> {
         });
       },
       builder: (context, snapshot) {
-        order = snapshot.order.itemList != null ? (snapshot.order.itemList.length > 0 ? snapshot.order : order) : order;
+        order = snapshot.order.itemList != null ? (snapshot.order.itemList.length > 0 ? snapshot.order : OrderState().toEmpty()) : OrderState().toEmpty();
         return  GestureDetector(
           onTap: (){
             FocusScopeNode currentFocus = FocusScope.of(context);
@@ -152,7 +153,7 @@ class _FilterGeneralState extends State<FilterGeneral> {
                                   size: 24.0,
                                 ),
                                 onPressed: (){
-                                  if (cartCounter > 0) {
+                                  if (order.cartCounter > 0) {
                                     // dispatch the order
                                     StoreProvider.of<AppState>(context).dispatch(SetOrder(order));
                                     // go to the cart page
@@ -180,13 +181,13 @@ class _FilterGeneralState extends State<FilterGeneral> {
                               ),
                             ),
                           ),
-                          cartCounter > 0 ? Positioned.fill(
+                          order.cartCounter > 0 ? Positioned.fill(
                             top: 5,
                             left: 2.5,
                             child: Align(
                               alignment: Alignment.topCenter,
                               child: Text(
-                                '$cartCounter', //TODO Make it Global
+                                '${order.cartCounter}', //TODO Make it Global
                                 textAlign: TextAlign.start,
                                 style: TextStyle(
                                   fontSize: SizeConfig.safeBlockHorizontal * 3,
@@ -399,14 +400,21 @@ class _FilterGeneralState extends State<FilterGeneral> {
                                                    })));
                                          }else{
                                            debugPrint('UI_U_SearchPage => SX to BOOK');
-                                           order.business.name = snapshot.business.name;
-                                           order.business.id = snapshot.business.id_firestore;
-                                           order.user.name = snapshot.user.name;
-                                           order.user.id = snapshot.user.uid;
-                                           order.addItem(service, snapshot.business.ownerId);
-                                           setState(() {
-                                             cartCounter++;
-                                           });
+                                           if(service.switchSlots){
+                                             Navigator.push(
+                                               context,
+                                               MaterialPageRoute(builder: (context) => ServiceReserve(serviceState: service)),
+                                             );
+                                           }else{
+                                             order.business.name = snapshot.business.name;
+                                             order.business.id = snapshot.business.id_firestore;
+                                             order.user.name = snapshot.user.name;
+                                             order.user.id = snapshot.user.uid;
+                                             order.addItem(service, snapshot.business.ownerId);
+                                             order.cartCounter++;
+                                             //StoreProvider.of<AppState>(context).dispatch(SetOrderCartCounter(order.cartCounter));
+                                             StoreProvider.of<AppState>(context).dispatch(SetOrder(order));
+                                           }
                                            undoDeletion(index, service);
                                          }
 

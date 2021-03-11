@@ -80,7 +80,7 @@ class _BookingPageState extends State<BookingPage> {
 
   bool sameMonth = false;
   String searched = '';
-  OrderState order = OrderState(itemList: List<OrderEntry>(), date: DateTime.now(), position: "", total: 0.0, business: BusinessSnippet().toEmpty(), user: UserSnippet().toEmpty(), businessId: "");
+  OrderState order = OrderState().toEmpty();
 
   bool showAll = false;
 
@@ -240,7 +240,8 @@ class _BookingPageState extends State<BookingPage> {
         else
           sameMonth = false;
 
-        order = snapshot.order.itemList != null ? (snapshot.order.itemList.length > 0 ? snapshot.order : order) : order;
+        order = snapshot.order.itemList != null ? (snapshot.order.itemList.length > 0 ? snapshot.order : OrderState().toEmpty()) : OrderState().toEmpty();
+        debugPrint('UI_U_BookingPage => CART COUNT: ${order.cartCounter}');
 
         return  WillPopScope(
           onWillPop: () async => false,
@@ -304,7 +305,7 @@ class _BookingPageState extends State<BookingPage> {
                                 size: 24.0,
                               ),
                               onPressed: (){
-                                if (cartCounter > 0) {
+                                if (order.cartCounter > 0) {
                                   // dispatch the order
                                   StoreProvider.of<AppState>(context).dispatch(SetOrder(order));
                                   // go to the cart page
@@ -332,13 +333,13 @@ class _BookingPageState extends State<BookingPage> {
                             ),
                           ),
                         ),
-                        cartCounter > 0 ? Positioned.fill(
+                        order.cartCounter > 0 ? Positioned.fill(
                           top: 5,
                           left: 2.5,
                           child: Align(
                             alignment: Alignment.topCenter,
                             child: Text(
-                              '$cartCounter', //TODO Make it Global
+                              '${order.cartCounter}', //TODO Make it Global
                               textAlign: TextAlign.start,
                               style: TextStyle(
                                 fontSize: SizeConfig.safeBlockHorizontal * 3,
@@ -1034,7 +1035,7 @@ class _BookingPageState extends State<BookingPage> {
 
                                         facebookSignIn.logOut();
                                         //Resetto il carrello
-                                        cartCounter = 0;
+                                        //cartCounter = 0;
 
                                         //Svuotare lo Store sul Logout
                                         StoreProvider.of<AppState>(context).dispatch(SetCategoryToEmpty());

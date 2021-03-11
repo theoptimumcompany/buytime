@@ -4,6 +4,7 @@ import 'package:Buytime/utils/arrowClipper.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:local_auth/local_auth.dart';
 
 class AutoCompleteMenu extends StatefulWidget {
   final List<AutoCompleteState> items;
@@ -40,6 +41,7 @@ class _AutoCompleteMenuState extends State<AutoCompleteMenu> with SingleTickerPr
   AnimationController _animationController;
 
   String hint;
+  bool didAuthenticate = false;
 
 
   @override
@@ -84,6 +86,12 @@ class _AutoCompleteMenuState extends State<AutoCompleteMenu> with SingleTickerPr
     }
   }
 
+  var localAuth = LocalAuthentication();
+  void checkAuth() async{
+    bool didAuthenticate = await localAuth.authenticateWithBiometrics(localizedReason: 'Please authenticate to show account balance');
+    debugPrint('UI_U_Login => $didAuthenticate');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -99,11 +107,21 @@ class _AutoCompleteMenuState extends State<AutoCompleteMenu> with SingleTickerPr
             //progress: _animationController,
           ),
           color: widget.items.isEmpty ? BuytimeTheme.TextMedium : BuytimeTheme.ButtonMalibu,
-          onPressed: widget.items.isNotEmpty ? () {
-            if (isMenuOpen) {
-              closeMenu();
-            } else {
-              openMenu();
+          onPressed: widget.items.isNotEmpty ? () async{
+            /*if(!didAuthenticate){
+              didAuthenticate = await localAuth.authenticateWithBiometrics(localizedReason: 'Please authenticate to show account balance');
+              if(!didAuthenticate)
+                didAuthenticate = true;
+            }*/
+
+            didAuthenticate = true;
+
+            if(didAuthenticate){
+              if (isMenuOpen) {
+                closeMenu();
+              } else {
+                openMenu();
+              }
             }
           } : null,
         )

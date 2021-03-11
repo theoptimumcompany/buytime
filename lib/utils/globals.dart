@@ -1,2 +1,2 @@
 library my_prj.globals;
-int cartCounter = 0;
+//int cartCounter = 0;

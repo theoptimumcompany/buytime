@@ -32,6 +32,8 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
 
   TabController _controller;
   int _selectedIndex = 0;
+
+  OrderState orderState;
   @override
   void initState() {
     super.initState();
@@ -60,6 +62,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
             }, ///TODO Rememebr _test
             converter: (store) => store.state,
             builder: (context, snapshot) {
+              orderState = snapshot.order;
               bool selected = false;
               List<CardState> tmpList = StoreProvider.of<AppState>(context).state.cardListState.cardListState;
               tmpList.forEach((element) {
@@ -266,7 +269,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                             borderRadius: new BorderRadius.circular(5),
                                           ),
                                           child: Text(
-                                            'CONFIRM',//AppLocalizations.of(context).logBack, ///TODO Make it Global
+                                            orderState.itemList.isNotEmpty && (orderState.itemList.first.time == null || orderState.itemList.first.time.isEmpty) ? 'CONFIRM' : 'PAY',//AppLocalizations.of(context).logBack, ///TODO Make it Global
                                             style: TextStyle(
                                               letterSpacing: 1.25,
                                                 fontSize: 14,

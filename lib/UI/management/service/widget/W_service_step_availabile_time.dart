@@ -185,6 +185,7 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
       timeOfDayStart = TimeOfDay();
       startTime.add(timeOfDayStart);
       start.add(timeOfDayStart.hour.toString() + ":" + timeOfDayStart.minute.toString());
+      debugPrint('W_service_step_availabile_time => start: $start');
       StoreProvider.of<AppState>(context).dispatch(SetServiceSlotStartTime(start));
     } else {
       for (int i = 0; i < start.length; i++) {
@@ -192,6 +193,7 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
         textEditingControllerStart.text = start[i];
         startController.add(textEditingControllerStart);
         List<String> startString = start[i].split(":");
+        debugPrint('W_service_step_availabile_time => start: $start');
         timeOfDayStart = TimeOfDay(hour: int.parse(startString[0]), minute: int.parse(startString[1]));
         startTime.add(timeOfDayStart);
       }
@@ -248,18 +250,20 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
 
   @override
   Widget build(BuildContext context) {
-    switchWeek = StoreProvider.of<AppState>(context).state.serviceSlot.switchWeek;
-    daysInterval = StoreProvider.of<AppState>(context).state.serviceSlot.daysInterval;
-    numberOfSlotTimeInterval = StoreProvider.of<AppState>(context).state.serviceSlot.numberOfInterval;
-    intervalIndexVisibility = StoreProvider.of<AppState>(context).state.serviceSlot.intervalVisibility;
-    duration = StoreProvider.of<AppState>(context).state.serviceSlot.minDuration;
     if (setStartAndStop) {
       setStartAndStop = false;
       setStartAndStopTime();
     }
     return StoreConnector<AppState, AppState>(
         converter: (store) => store.state,
+        onInit: (store){
+          intervalIndexVisibility =  List.generate(store.state.serviceSlot.numberOfInterval, (index) => index == 0 ? true : false);
+        },
         builder: (context, snapshot) {
+          switchWeek = snapshot.serviceSlot.switchWeek;
+          daysInterval = snapshot.serviceSlot.daysInterval;
+          numberOfSlotTimeInterval = snapshot.serviceSlot.numberOfInterval;
+          duration = snapshot.serviceSlot.minDuration;
           return Column(
             mainAxisAlignment: MainAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
@@ -317,15 +321,23 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
                                     daysInterval.removeAt(i);
                                     StoreProvider.of<AppState>(context).dispatch(SetServiceSlotDaysInterval(daysInterval));
                                     startController.removeAt(i);
+                                    debugPrint('W_service_step_availabile_time => startController: $startController');
                                     List<String> listStart = [];
                                     startController.forEach((element) {
-                                      listStart.add(element.text);
+                                      if(element.text.isEmpty)
+                                        listStart.add('00:00');
+                                      else
+                                        listStart.add(element.text);
                                     });
+                                    debugPrint('W_service_step_availabile_time => listStart: $listStart');
                                     StoreProvider.of<AppState>(context).dispatch(SetServiceSlotStartTime(listStart));
                                     stopController.removeAt(i);
                                     List<String> listStop = [];
                                     stopController.forEach((element) {
-                                      listStop.add(element.text);
+                                      if(element.text.isEmpty)
+                                        listStop.add('00:00');
+                                      else
+                                        listStop.add(element.text);
                                     });
                                     StoreProvider.of<AppState>(context).dispatch(SetServiceSlotStopTime(listStop));
                                     startTime.removeAt(i);

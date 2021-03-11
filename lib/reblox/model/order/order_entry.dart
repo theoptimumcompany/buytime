@@ -8,6 +8,10 @@ class OrderEntry {
   String id;
   String id_business;
   String id_owner;
+  ///Reserve
+  String time;
+  String minutes;
+  DateTime date;
 
   OrderEntry({
     this.number = 0,
@@ -18,6 +22,9 @@ class OrderEntry {
     this.id,
     this.id_business,
     this.id_owner,
+    this.time,
+    this.minutes,
+    this.date,
   });
 
   OrderEntry.fromJson(Map<String, dynamic> json)
@@ -28,7 +35,11 @@ class OrderEntry {
         thumbnail = json['thumbnail'],
         id = json['id'],
         id_business = json['id_business'],
-  id_owner = json['id_owner'];
+        id_owner = json['id_owner'],
+  time = json['time'],
+  minutes = json['minutes'],
+  date = DateTime.fromMillisecondsSinceEpoch(json['date'].seconds * 1000).toUtc()
+  ;
 
   Map<String, dynamic> toJson() => {
         'number': number,
@@ -39,5 +50,7 @@ class OrderEntry {
         'id': id,
         'id_business': id_business,
         'id_owner': id_owner,
+        'minutes': minutes,
+        'date': date,
       };
 }
