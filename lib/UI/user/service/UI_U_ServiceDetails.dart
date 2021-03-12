@@ -295,17 +295,35 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                       fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
                                   ),
                                 ),
-                              ) : Container(
-                                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
-                                child: Text(
-                                  '€ ${serviceState.serviceSlot.first.price.toStringAsFixed(0)} / ${serviceState.serviceSlot.first.minDuration} minutes',
-                                  style: TextStyle(
-                                      fontFamily: BuytimeTheme.FontFamily,
-                                      color: BuytimeTheme.TextBlack,
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
+                              ) :
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
+                                    child: Text(
+                                      'Starting from €',
+                                      style: TextStyle(
+                                          fontFamily: BuytimeTheme.FontFamily,
+                                          color: BuytimeTheme.TextBlack,
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
+                                      ),
+                                    ),
                                   ),
-                                ),
+                                  Container(
+                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
+                                    child: Text(
+                                      ' ${serviceState.price.toStringAsFixed(2)}',
+                                      style: TextStyle(
+                                          fontFamily: BuytimeTheme.FontFamily,
+                                          color: BuytimeTheme.TextBlack,
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
+                                      ),
+                                    ),
+                                  )
+                                ],
                               ),
                               !serviceState.switchSlots ? Column(
                                 children: [

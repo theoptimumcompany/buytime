@@ -202,7 +202,7 @@ class OrderState {
     this.total += itemToAdd.price;
   }
 
-  addReserveItem(ServiceState itemToAdd, String idOwner, String time, String minutes, DateTime date) {
+  addReserveItem(ServiceState itemToAdd, String idOwner, String time, String minutes, DateTime date, dynamic price) {
     /*bool added = false;
     itemList.forEach((element) {
       if (!added && element.id == itemToAdd.serviceId) {
@@ -214,7 +214,7 @@ class OrderState {
         number: 1,
         name: itemToAdd.name,
         description: itemToAdd.description,
-        price: itemToAdd.serviceSlot.first.price,
+        price: price,
         thumbnail: itemToAdd.image1,
         id: itemToAdd.serviceId,
         id_business: itemToAdd.businessId,

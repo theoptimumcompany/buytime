@@ -257,7 +257,7 @@ class ConfirmedOrderState extends State<ConfirmedOrder> with SingleTickerProvide
                                                   child: FittedBox(
                                                     fit: BoxFit.scaleDown,
                                                     child: Text(
-                                                      snapshot.progress == "in_progress" ? 'WE ARE CONFIRMING YOUR ORDER' : 'ORDER CONFIRMED',//AppLocalizations.of(context).somethingIsNotRight,
+                                                      snapshot.progress == "in_progress" ? 'WE ARE CONFIRMING YOUR ORDER' : snapshot.progress == "failed" ? 'SOMETHING WENT WRONG' : 'ORDER CONFIRMED',//AppLocalizations.of(context).somethingIsNotRight, ///TODO Make it global
                                                       style: TextStyle(
                                                         letterSpacing: 1.25,
                                                         fontFamily: BuytimeTheme.FontFamily,

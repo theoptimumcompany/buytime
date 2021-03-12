@@ -15,8 +15,8 @@ import 'package:share/share.dart';
 
 class TimeSlotWidget extends StatefulWidget {
 
-  ServiceSlot serviceSlot;
-  int index;
+  dynamic serviceSlot;
+  dynamic index;
   bool selected;
   TimeSlotWidget(this.serviceSlot, this.index, this.selected);
 
@@ -41,51 +41,78 @@ class _TimeSlotWidgetState extends State<TimeSlotWidget> {
     return Container(
       //margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 2),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ///Time
-          Container(
-            width: 100,
-            margin: EdgeInsets.only(top: 25),
-            //margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 10),
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Text(
-                widget.index == 0 ? '${widget.serviceSlot.startTime.first}' : '${widget.serviceSlot.startTime.elementAt(widget.index)}', ///TODO Make it Global
-                style: TextStyle(
-                  //letterSpacing: 1.25,
-                    fontFamily: BuytimeTheme.FontFamily,
-                    color: BuytimeTheme.TextBlack,
-                    fontWeight: FontWeight.w400,
-                    fontSize: 16 ///SizeConfig.safeBlockHorizontal * 4
-                ),
-              ),
-            ),
-          ),
-          ///Price
-          Container(
-            width: 100,
-            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Text(
-                '€ ${widget.serviceSlot.price.toStringAsFixed(2)}', ///TODO Make it Global
-                style: TextStyle(
-                  //letterSpacing: 1.25,
-                    fontFamily: BuytimeTheme.FontFamily,
-                    color: BuytimeTheme.TextBlack,
-                    fontWeight: FontWeight.w400,
-                    fontSize: 16 ///SizeConfig.safeBlockHorizontal * 4
-                ),
-              ),
-            ),
-          ),
+         Container(
+           height: 78,
+           child: Column(
+             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+             children: [
+               ///Time
+               Container(
+                 width: 100,
+                 margin: EdgeInsets.only(top: 15),
+                 //margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 10),
+                 child: FittedBox(
+                   fit: BoxFit.scaleDown,
+                   child: Text(
+                     widget.index == 0 ? '${widget.serviceSlot.startTime.first}' : '${widget.serviceSlot.startTime.elementAt(widget.index)}', ///TODO Make it Global
+                     style: TextStyle(
+                       //letterSpacing: 1.25,
+                         fontFamily: BuytimeTheme.FontFamily,
+                         color: BuytimeTheme.TextBlack,
+                         fontWeight: FontWeight.w400,
+                         fontSize: 16 ///SizeConfig.safeBlockHorizontal * 4
+                     ),
+                   ),
+                 ),
+               ),
+               ///Duration
+               Container(
+                 width: 100,
+                 //margin: EdgeInsets.only(top: 5),
+                 //margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 10),
+                 child: FittedBox(
+                   fit: BoxFit.scaleDown,
+                   child: Text(
+                     '${widget.serviceSlot.minute} min', ///TODO Make it Global
+                     style: TextStyle(
+                       //letterSpacing: 1.25,
+                         fontFamily: BuytimeTheme.FontFamily,
+                         color: BuytimeTheme.TextBlack,
+                         fontWeight: FontWeight.w400,
+                         fontSize: 16 ///SizeConfig.safeBlockHorizontal * 4
+                     ),
+                   ),
+                 ),
+               ),
+               ///Price
+               Container(
+                 width: 100,
+                 //margin: EdgeInsets.only(top: 5),
+                 child: FittedBox(
+                   fit: BoxFit.scaleDown,
+                   child: Text(
+                     '€ ${widget.serviceSlot.price.toStringAsFixed(2)}', ///TODO Make it Global
+                     style: TextStyle(
+                       //letterSpacing: 1.25,
+                         fontFamily: BuytimeTheme.FontFamily,
+                         color: BuytimeTheme.TextBlack,
+                         fontWeight: FontWeight.w400,
+                         fontSize: 16 ///SizeConfig.safeBlockHorizontal * 4
+                     ),
+                   ),
+                 ),
+               ),
+             ],
+           ),
+         ),
           widget.selected ? Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Container(
-                margin: EdgeInsets.only(top: 5, right: 2),
+                margin: EdgeInsets.only(bottom: 0, right: .5),
                 child: Icon(
                   Icons.check_circle,
                   color: BuytimeTheme.UserPrimary.withOpacity(.5),

@@ -68,15 +68,23 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
   //List<int> dates = [];
   List<DateTime> dates = [];
   List<List<bool>> picked = [];
+  List<List<List<dynamic>>> tmpSlots = [];
+  List<List<List<dynamic>>> slots = [];
   List<List<List<int>>> indexes = [];
-  List<DateTime> getDaysInBeteween(DateTime startDate, DateTime endDate, DateTime userStartDate, DateTime userEndDate) {
+  List<DateTime> getDaysInBeteween(DateTime startDate, DateTime endDate, DateTime userStartDate, DateTime userEndDate, ServiceSlot slot) {
+    tmpSlots.clear();
     List<DateTime> days = [];
     for (int i = 0; i <= endDate.difference(startDate).inDays; i++) {
       if(startDate.add(Duration(days: i)).isAfter(userStartDate) && startDate.add(Duration(days: i)).isBefore(userEndDate)){
         if(startDate.add(Duration(days: i)).isAfter(startDate)){
-          days.add(startDate.add(Duration(days: i)));
-          picked.add(List.generate(endDate.difference(startDate).inDays, (index) => false));
-          indexes.add(List.generate(endDate.difference(startDate).inDays, (index) => List.generate(2, (index) => 0)));
+          DateTime currentTime = DateTime.now();
+          currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0);
+          if(startDate.add(Duration(days: i)).isAfter(currentTime) || startDate.add(Duration(days: i)).isAtSameMomentAs(currentTime)) {
+              days.add(startDate.add(Duration(days: i)));
+              tmpSlots.add(List.generate(slot.startTime.length, (index) => [index, slot]));
+            }
+          //picked.add(List.generate(endDate.difference(startDate).inDays, (index) => false));
+          //indexes.add(List.generate(endDate.difference(startDate).inDays, (index) => List.generate(2, (index) => 0)));
         }
       }
     }
@@ -105,10 +113,60 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
       onInit: (store){
         order = store.state.order.itemList != null ? (store.state.order.itemList.length > 0 ? store.state.order : order) : order;
         //order = store.state.order.itemList != null ? (store.state.order.itemList.length > 0 ? store.state.order : order) : order;
+
         DateTime startDate = DateFormat('dd/MM/yyyy').parse(widget.serviceState.serviceSlot.first.checkIn);
         DateTime endDate = DateFormat('dd/MM/yyyy').parse(widget.serviceState.serviceSlot.first.checkOut);
+
+        debugPrint('UI_U_ServiceReserve => SLOTS: ${widget.serviceState.serviceSlot.length}');
         dates.clear();
-        dates = getDaysInBeteween(startDate, endDate, store.state.booking.start_date,  store.state.booking.end_date);
+        widget.serviceState.serviceSlot.forEach((element) {
+          DateTime tmpStartDate = DateFormat('dd/MM/yyyy').parse(element.checkIn);
+          DateTime tmpEndDate = DateFormat('dd/MM/yyyy').parse(element.checkOut);
+          if(dates.isEmpty){
+            dates = getDaysInBeteween(tmpStartDate, tmpEndDate, store.state.booking.start_date,  store.state.booking.end_date, element);
+            slots.addAll(tmpSlots);
+          }else{
+            List<DateTime> tmpDates = getDaysInBeteween(tmpStartDate, tmpEndDate, store.state.booking.start_date,  store.state.booking.end_date, element);
+            for(int i = 0; i < dates.length; i++){
+              for(int j = 0; j < tmpDates.length; j++){
+                if(dates[i] == tmpDates[j])
+                  slots[i].addAll(tmpSlots[j]);
+              }
+            }
+            for(int i = 0; i < tmpDates.length; i++){
+              if(!dates.contains(tmpDates[i])){
+                dates.add(tmpDates[i]);
+                slots.add(tmpSlots[i]);
+              }
+            }
+            /*tmpDates.forEach((element) {
+              if(!dates.contains(element))
+                dates.add(element);
+              if(dates.contains(element)){
+
+              }
+            });*/
+          }
+
+         /* if(tmpStartDate.isBefore(startDate))
+            startDate = tmpStartDate;
+
+          if(tmpEndDate.isAfter(endDate))
+            endDate = tmpEndDate;*/
+        });
+
+        slots.forEach((element) {
+          element.sort((a,b) => (a.last.startTime[a.first]).compareTo(b.last.startTime[b.first]));
+        });
+
+        slots.forEach((element) {
+          picked.add(List.generate(element.length, (index) => false));
+          indexes.add(List.generate(element.length, (index) => List.generate(2, (index) => 0)));
+        });
+
+        debugPrint("UI_U_ServiceReserve => SLOTS: ${slots}");
+
+        //dates = getDaysInBeteween(startDate, endDate, store.state.booking.start_date,  store.state.booking.end_date);
       },
       builder: (context, snapshot) {
         order = snapshot.order.itemList != null ? (snapshot.order.itemList.length > 0 ? snapshot.order : OrderState().toEmpty()) : OrderState().toEmpty();
@@ -207,7 +265,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                     child: Padding(
                       padding: const EdgeInsets.only(left: 10.0),
                       child: Text(
-                        'Reserve ${widget.serviceState.serviceSlot.first.minDuration} min. ${widget.serviceState.name}', //TODO Make it Global
+                        'Reserve ${widget.serviceState.name}', //TODO Make it Global
                         textAlign: TextAlign.start,
                         style: BuytimeTheme.appbarTitle,
                         overflow: TextOverflow.ellipsis,
@@ -255,11 +313,23 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                           Container(
                             margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
                             child: Text(
-                              '€ ${serviceState.serviceSlot.first.price.toStringAsFixed(0)} / ${serviceState.serviceSlot.first.minDuration} minutes',
+                              'Starting from €',
                               style: TextStyle(
                                   fontFamily: BuytimeTheme.FontFamily,
                                   color: BuytimeTheme.TextBlack,
-                                  fontWeight: FontWeight.w500,
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
+                              ),
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
+                            child: Text(
+                              ' ${serviceState.price.toStringAsFixed(2)}',
+                              style: TextStyle(
+                                  fontFamily: BuytimeTheme.FontFamily,
+                                  color: BuytimeTheme.TextBlack,
+                                  fontWeight: FontWeight.w600,
                                   fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
                               ),
                             ),
@@ -342,7 +412,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                             order.business.id = snapshot.business.id_firestore;
                                             order.user.name = snapshot.user.name;
                                             order.user.id = snapshot.user.uid;
-                                            order.addReserveItem(widget.serviceState, snapshot.business.ownerId, widget.serviceState.serviceSlot.first.startTime[0], widget.serviceState.serviceSlot.first.minDuration.toString(), dates[0]);
+                                            order.addReserveItem(widget.serviceState, snapshot.business.ownerId, slots[0][0][1].startTime[slots[0][0][0]], slots[0][0][1].minute.toString(), dates[0], slots[0][0][1].price);
                                             order.selected.add(indexes[0][0]);
                                             order.cartCounter++;
                                             //StoreProvider.of<AppState>(context).dispatch(SetOrderCartCounter(order.cartCounter));
@@ -353,7 +423,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                           }else{
                                             OrderEntry tmp;
                                             order.itemList.forEach((element) {
-                                              if(element.time ==  widget.serviceState.serviceSlot.first.startTime[0] && element.date.isAtSameMomentAs(dates[0])){
+                                              if(element.time ==  slots[0][0][1].startTime[slots[0][0][0]] && element.date.isAtSameMomentAs(dates[0])){
                                                 tmp = element;
                                               }
                                             });
@@ -363,7 +433,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
 
                                           debugPrint('UI_U_ServiceReserve => SELECTED INDEXES: ${order.selected}');
                                         },
-                                        child: TimeSlotWidget(widget.serviceState.serviceSlot.first, 0, picked.first[0]),
+                                        child: TimeSlotWidget(slots[0][0][1], slots[0][0][0], picked.first[0]),
                                       )
                                   )
                               ),
@@ -421,7 +491,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                         delegate: SliverChildBuilderDelegate((context, i) {
                                           //MenuItemModel menuItem = menuItems.elementAt(index);
                                           //final item = (index != snapshot.itemList.length ? snapshot.itemList[index] : null);
-                                          ServiceSlot serviceSlot = widget.serviceState.serviceSlot.first;
+                                          List<dynamic> serviceSlot = slots[index].elementAt(i);
                                           indexes[index][i][0] = index;
                                           indexes[index][i][1] = i;
                                           return index == 0 && i == 0 ? Container() :
@@ -458,7 +528,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                           order.business.id = snapshot.business.id_firestore;
                                                           order.user.name = snapshot.user.name;
                                                           order.user.id = snapshot.user.uid;
-                                                          order.addReserveItem(widget.serviceState, snapshot.business.ownerId, widget.serviceState.serviceSlot.first.startTime[i], widget.serviceState.serviceSlot.first.minDuration.toString(), dates[index]);
+                                                          order.addReserveItem(widget.serviceState, snapshot.business.ownerId, serviceSlot[1].startTime[serviceSlot[0]], serviceSlot[1].minute.toString(), dates[index], serviceSlot[1].price);
                                                           order.selected.add(indexes[index][i]);
                                                           order.cartCounter++;
                                                           //StoreProvider.of<AppState>(context).dispatch(SetOrderCartCounter(order.cartCounter));
@@ -466,7 +536,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                         }else{
                                                           OrderEntry tmp;
                                                           order.itemList.forEach((element) {
-                                                            if(element.time ==  widget.serviceState.serviceSlot.first.startTime[i] && element.date.isAtSameMomentAs(dates[index])){
+                                                            if(element.time ==  serviceSlot[1].startTime[serviceSlot[0]] && element.date.isAtSameMomentAs(dates[index])){
                                                               tmp = element;
                                                             }
                                                           });
@@ -476,13 +546,13 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
 
                                                         debugPrint('UI_U_ServiceReserve => SELECTED INDEXES: ${order.selected}');
                                                       },
-                                                      child: TimeSlotWidget(serviceSlot, i, select[i]),
+                                                      child: TimeSlotWidget(serviceSlot[1], serviceSlot[0], select[i]),
                                                     )
                                                 )
                                             ),
                                           );
                                         },
-                                          childCount: widget.serviceState.serviceSlot.first.startTime.length,
+                                          childCount: slots[index].length,
                                         ),
                                       ),
                                     ]),

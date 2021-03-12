@@ -108,8 +108,8 @@ class StepLengthState extends State<StepLength> {
                             ),
                           ),
                           child: Slider(
-                            min: 10, ///TODO
-                            max: duration.toDouble(),
+                            min: 0, ///TODO
+                            max: 60,
                             divisions: 10,
                             label: '$durationSlider',
                             value: durationSlider.toDouble(),

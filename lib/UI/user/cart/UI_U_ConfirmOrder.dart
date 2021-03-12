@@ -253,7 +253,6 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                         child: RaisedButton(
                                           onPressed: () {
 
-
                                             if(selected){
                                               StoreProvider.of<AppState>(context).dispatch(SetOrderProgress("in_progress"));
                                               StoreProvider.of<AppState>(context).dispatch(CreateOrder(snapshot.order));
