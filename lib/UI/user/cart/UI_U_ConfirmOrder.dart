@@ -1,3 +1,4 @@
+
 import 'package:Buytime/UI/user/cart/UI_U_ConfirmedOrder.dart';
 import 'package:Buytime/UI/user/cart/tab/T_credit_cards.dart';
 import 'package:Buytime/UI/user/cart/tab/T_room.dart';
@@ -20,19 +21,19 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
-class ConfirmOrder extends StatefulWidget {
+class ConfirmOrder extends StatefulWidget{
   final String title = 'confirmOrder';
 
   @override
   State<StatefulWidget> createState() => ConfirmOrderState();
 }
 
-class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderStateMixin {
+class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderStateMixin{
+
   TabController _controller;
   int _selectedIndex = 0;
 
   OrderState orderState;
-
   @override
   void initState() {
     super.initState();
@@ -58,16 +59,14 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
             onInit: (store) {
               store?.dispatch(StripeListCardListRequest('${store?.state?.user?.uid}_test'));
               debugPrint('UI_U_ConfirmOrder => ON INIT');
-            },
-
-            ///TODO Rememebr _test
+            }, ///TODO Rememebr _test
             converter: (store) => store.state,
             builder: (context, snapshot) {
               orderState = snapshot.order;
               bool selected = false;
               List<CardState> tmpList = StoreProvider.of<AppState>(context).state.cardListState.cardListState;
               tmpList.forEach((element) {
-                if (element.selected) {
+                if(element.selected){
                   selected = true;
                 }
               });
@@ -83,7 +82,6 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                           Navigator.of(context).pop();
                         }),
                       ),
-
                       ///Order Title
                       Container(
                         child: Padding(
@@ -135,9 +133,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                             style: TextStyle(
                                               fontFamily: BuytimeTheme.FontFamily,
                                               color: BuytimeTheme.TextBlack,
-                                              fontSize: 14,
-
-                                              /// SizeConfig.safeBlockHorizontal * 4
+                                              fontSize: 14, /// SizeConfig.safeBlockHorizontal * 4
                                               fontWeight: FontWeight.w600,
                                             ),
                                           )
@@ -145,25 +141,24 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                       ),
                                     ),
                                   ),
-
                                   ///Total Price
                                   Container(
-                                      //color: Colors.black87,
+                                    //color: Colors.black87,
                                       child: StoreConnector<AppState, OrderState>(
                                           converter: (store) => store.state.order,
                                           rebuildOnChange: true,
                                           builder: (context, snapshot) {
                                             print("UI_U_cart => " + snapshot.itemList.length.toString());
                                             return OrderTotal(media: media, orderState: snapshot);
-                                          })),
-
+                                          }
+                                      )
+                                  ),
                                   ///Divider
                                   Container(
                                     margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 10, right: SizeConfig.safeBlockHorizontal * 10),
                                     color: BuytimeTheme.BackgroundLightGrey,
                                     height: SizeConfig.safeBlockVertical * .2,
                                   ),
-
                                   ///Please Charge ...
                                   Container(
                                     margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * .5),
@@ -180,9 +175,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                             style: TextStyle(
                                               fontFamily: BuytimeTheme.FontFamily,
                                               color: BuytimeTheme.TextBlack,
-                                              fontSize: 14,
-
-                                              /// SizeConfig.safeBlockHorizontal * 4
+                                              fontSize: 14, /// SizeConfig.safeBlockHorizontal * 4
                                               fontWeight: FontWeight.w600,
                                             ),
                                           )
@@ -190,13 +183,11 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                       ),
                                     ),
                                   ),
-
                                   ///Divider
                                   Container(
                                     color: BuytimeTheme.BackgroundLightGrey,
                                     height: SizeConfig.safeBlockVertical * 2,
                                   ),
-
                                   ///Confirm Details
                                   PreferredSize(
                                     preferredSize: Size.fromHeight(kToolbarHeight),
@@ -216,16 +207,12 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                         indicatorWeight: SizeConfig.safeBlockHorizontal * 1,
                                         indicatorColor: BuytimeTheme.BackgroundWhite,
                                         labelStyle: TextStyle(
-                                            letterSpacing: 1.25,
-
-                                            ///SizeConfig.safeBlockHorizontal * .2
+                                            letterSpacing: 1.25, ///SizeConfig.safeBlockHorizontal * .2
                                             fontFamily: BuytimeTheme.FontFamily,
                                             color: BuytimeTheme.TextWhite,
                                             fontWeight: FontWeight.w600,
-                                            fontSize: 14
-
-                                            ///SizeConfig.safeBlockHorizontal * 4
-                                            ),
+                                            fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
+                                        ),
                                         indicatorPadding: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2, right: SizeConfig.safeBlockHorizontal * 2),
                                         controller: _controller,
                                         tabs: [
@@ -233,7 +220,6 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                           Tab(
                                             text: AppLocalizations.of(context).creditCardUpper,
                                           ),
-
                                           ///Room
                                           Tab(
                                             text: AppLocalizations.of(context).roomUpper,
@@ -242,13 +228,11 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                       ),
                                     ),
                                   ),
-
                                   ///Tab
                                   _controller.index == 0 ? CreditCards() : Room(),
                                 ],
                               ),
                             ),
-
                             ///Confirm button
                             Align(
                               alignment: Alignment.bottomCenter,
@@ -261,26 +245,19 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                   children: [
                                     ///Confirm button
                                     Container(
-                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5, bottom: SizeConfig.safeBlockVertical * 4),
-                                        width: 158,
-
-                                        ///media.width * .4
+                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5, bottom: SizeConfig.safeBlockVertical *4),
+                                        width: 158, ///media.width * .4
                                         height: 44,
                                         child: RaisedButton(
                                           onPressed: () {
-                                            if (selected) {
+
+                                            if(selected){
                                               StoreProvider.of<AppState>(context).dispatch(SetOrderProgress("in_progress"));
                                               StoreProvider.of<AppState>(context).dispatch(CreateOrder(snapshot.order));
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(builder: (context) => ConfirmedOrder(_controller.index)),
-                                              );
+                                              Navigator.push(context, MaterialPageRoute(builder: (context) => ConfirmedOrder(_controller.index)),);
                                             }
 
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(builder: (context) => ConfirmedOrder(_controller.index)),
-                                            );
+                                            Navigator.push(context, MaterialPageRoute(builder: (context) => ConfirmedOrder(_controller.index)),);
                                           },
                                           textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
                                           color: BuytimeTheme.UserPrimary,
@@ -300,7 +277,8 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                               color: BuytimeTheme.TextWhite,
                                             ),
                                           ),
-                                        )),
+                                        )
+                                    ),
                                     /*Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
@@ -448,7 +426,10 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                         ),
                       ),
                     ),
-                  ));
-            }));
+                  )
+              );
+            }
+        )
+    );
   }
 }

@@ -146,7 +146,20 @@ class OrderCreateService implements EpicClass<AppState> {
         state = 'paid';
         //return SetOrderProgress("paid");
       } else {
-        var jsonResponse = jsonDecode(response.body);
+        var jsonResponse;
+        try{
+          jsonResponse = jsonDecode(response.body);
+        }catch(e){
+          debugPrint('order_service_epic => ERROR: $e');
+          state = 'failed';
+        }
+        /*var jsonResponse;
+        if(response.body == 'error'){
+          state = 'failed';
+        }else{
+          var jsonResponse = jsonDecode(response.body);
+        }*/
+        //jsonResponse = jsonDecode(response.body);
         if(jsonResponse!= null && response.body != "error") {
           print('ORDER_SERVICE_EPIC - OrderCreateService => JSON RESPONSE: $jsonResponse');
           // if an action is required, send the user to the confirmation link
@@ -177,7 +190,8 @@ class OrderCreateService implements EpicClass<AppState> {
             state = 'paid';
             //return SetOrderProgress("paid");
           }
-        }else {
+        }
+        else {
           state = 'failed';
           //return SetOrderProgress("failed");
         }
