@@ -76,10 +76,14 @@ dependencies:
   cached_network_image: ^2.5.0
   flutter_secure_storage: ^3.3.5
   flutter_screenutil: ^4.0.3+2
+  json_annotation: ^3.1.1
+  json_serializable: ^3.5.1
   logger_flutter: ^0.7.1
   logger: ^0.7.0
+  device_calendar: ^3.1.0
   local_auth: ^0.6.3+4
   image: ^2.1.18
+  credit_card_type_detector: ^1.1.0
 
 dependency_overrides:
   intl: ^0.17.0-nullsafety.2
@@ -88,6 +92,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_launcher_icons: ^0.8.1
+  build_runner: ^1.10.0
 
 flutter_icons:
   image_path: "assets/icon.png"

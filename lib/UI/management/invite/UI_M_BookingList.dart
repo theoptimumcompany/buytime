@@ -11,6 +11,7 @@ import 'package:Buytime/reusable/menu/UI_M_business_list_drawer.dart';
 import 'package:Buytime/services/booking_service_epic.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
+import 'package:Buytime/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -71,7 +72,7 @@ class _BookingListState extends State<BookingList> {
           endTime = new DateTime(endTime.year, endTime.month, endTime.day, 0, 0, 0, 0, 0);
           if(endTime.isBefore(currentTime) && element.status != 'closed'){
             debugPrint('UI_M_BookingList => ${element.end_date}');
-            element.status = element.enumToString(BookingStatus.closed);
+            element.status = Utils.enumToString(BookingStatus.closed);
             StoreProvider.of<AppState>(context).dispatch(UpdateBooking(element));
           }
         });

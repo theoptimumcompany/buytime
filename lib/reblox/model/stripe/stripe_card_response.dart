@@ -1,3 +1,7 @@
+import 'package:json_annotation/json_annotation.dart';
+part 'stripe_card_response.g.dart';
+
+@JsonSerializable(explicitToJson: true)
 class StripeCardResponse {
   String firestore_id;
   String last4;
@@ -8,20 +12,6 @@ class StripeCardResponse {
 
   StripeCardResponse({this.firestore_id, this.last4, this.expYear, this.expMonth, this.secretToken, this.brand});
 
-  StripeCardResponse.fromJson(Map<String, dynamic> json)
-      : firestore_id = json['firestore_id'],
-        last4 = json['last4'],
-        expMonth = json['expMonth'],
-        expYear = json['expYear'],
-        secretToken = json['secretToken'],
-        brand = json['brand'];
-
-  Map<String, dynamic> toJson() => {
-    'firestore_id': firestore_id,
-    'last4': last4,
-    'expMonth': expMonth,
-    'expYear': expYear,
-    'secretToken': secretToken,
-    'brand': brand,
-  };
+  factory StripeCardResponse.fromJson(Map<String, dynamic> json) => _$StripeCardResponseFromJson(json);
+  Map<String, dynamic> toJson() => _$StripeCardResponseToJson(this);
 }

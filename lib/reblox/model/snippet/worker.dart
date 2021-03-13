@@ -1,3 +1,7 @@
+import 'package:json_annotation/json_annotation.dart';
+part 'worker.g.dart';
+
+@JsonSerializable(explicitToJson: true)
 class Worker {
   String id;
   String mail;
@@ -11,16 +15,6 @@ class Worker {
     this.surname,
   });
 
-  Worker.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
-        mail = json['mail'],
-        name = json['name'],
-        surname = json['surname'];
-
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'mail': mail,
-        'name': name,
-        'surname': surname,
-      };
+  factory Worker.fromJson(Map<String, dynamic> json) => _$WorkerFromJson(json);
+  Map<String, dynamic> toJson() => _$WorkerToJson(this);
 }

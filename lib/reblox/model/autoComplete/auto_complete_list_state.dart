@@ -1,8 +1,12 @@
 import 'package:Buytime/reblox/model/autoComplete/auto_complete_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:flutter/foundation.dart';
+import 'package:json_annotation/json_annotation.dart';
 
 
+part 'auto_complete_list_state.g.dart';
+
+@JsonSerializable(explicitToJson: true)
 class AutoCompleteListState {
   List<AutoCompleteState> autoCompleteListState;
 
@@ -26,15 +30,11 @@ class AutoCompleteListState {
     );
   }
 
-  AutoCompleteListState.fromJson(Map json)
-      : autoCompleteListState = json['autoCompleteListState'];
-
-  Map<String, dynamic> toJson() => {
-    'autoCompleteState': autoCompleteListState
-  };
-
   AutoCompleteListState toEmpty() {
     return AutoCompleteListState(autoCompleteListState: []);
   }
+
+  factory AutoCompleteListState.fromJson(Map<String, dynamic> json) => _$AutoCompleteListStateFromJson(json);
+  Map<String, dynamic> toJson() => _$AutoCompleteListStateToJson(this);
 
 }

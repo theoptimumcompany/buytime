@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class Utils {
@@ -30,6 +31,16 @@ class Utils {
     return result;
   }
 
+  static getDate(Timestamp date){
+    return DateTime.fromMillisecondsSinceEpoch(date.seconds * 1000).toUtc();
+  }
+  static setDate(DateTime date){
+    return date;
+  }
+
+  static String enumToString(dynamic enumToTranslate){
+    return enumToTranslate.toString().split('.').last;
+  }
 
 }
 

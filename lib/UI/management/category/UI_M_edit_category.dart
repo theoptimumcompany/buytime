@@ -13,6 +13,7 @@ import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/reducer/category_reducer.dart';
+import 'package:Buytime/utils/utils.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -95,7 +96,7 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
   }
 
   setNewCategoryCustomTag(CustomTag customTag) {
-    StoreProvider.of<AppState>(context).dispatch(SetCustomTag(CategoryState().enumToString(customTag)));
+    StoreProvider.of<AppState>(context).dispatch(SetCustomTag(Utils.enumToString(customTag)));
   }
 
   void buildDropDownMenuItemsParent(Parent item) {
@@ -662,21 +663,21 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                                               items: [
                                                 DropdownMenuItem(
                                                   child: Text(
-                                                    CategoryState().enumToString(CustomTag.showcase),
+                                                    Utils.enumToString(CustomTag.showcase),
                                                     overflow: TextOverflow.ellipsis,
                                                   ),
                                                   value: CustomTag.showcase,
                                                 ),
                                                 DropdownMenuItem(
                                                   child: Text(
-                                                    CategoryState().enumToString(CustomTag.external),
+                                                    Utils.enumToString(CustomTag.external),
                                                     overflow: TextOverflow.ellipsis,
                                                   ),
                                                   value: CustomTag.external,
                                                 ),
                                                 DropdownMenuItem(
                                                   child: Text(
-                                                    CategoryState().enumToString(CustomTag.other),
+                                                    Utils.enumToString(CustomTag.other),
                                                     overflow: TextOverflow.ellipsis,
                                                   ),
                                                   value: CustomTag.other,

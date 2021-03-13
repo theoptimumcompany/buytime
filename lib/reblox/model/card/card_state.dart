@@ -1,11 +1,12 @@
 import 'dart:convert';
-
-import 'package:Buytime/reblox/model/stripe/stripe_card_response.dart';
 import 'package:Buytime/reblox/model/stripe/stripe_state.dart';
 import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:json_annotation/json_annotation.dart';
+part 'card_state.g.dart';
 
+@JsonSerializable(explicitToJson: true)
 class CardState {
 
   ///Storage
@@ -76,18 +77,9 @@ class CardState {
     );
   }
 
-  CardState.fromJson(Map<String, dynamic> json)
-      : cardId = json.containsKey('cardId') ? json['cardId'] :  '',
-        cardOwner = json.containsKey('cardOwner') ? json['cardOwner'] :  '',
-        stripeState = json['stripeState'],
-        selected = json['selected'];
+  factory CardState.fromJson(Map<String, dynamic> json) => _$CardStateFromJson(json);
+  Map<String, dynamic> toJson() => _$CardStateToJson(this);
 
-  Map<String, dynamic> toJson() => {
-        'cardId': cardId,
-        'cardOwner': cardOwner,
-        'stripeState': stripeState,
-        'selected': selected,
-      };
 
   writeToStorage(List<CardState> state) async{
 

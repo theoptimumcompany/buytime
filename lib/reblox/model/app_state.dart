@@ -1,4 +1,3 @@
-import 'package:Buytime/UI/management/invite/UI_M_BookingList.dart';
 import 'package:Buytime/reblox/model/autoComplete/auto_complete_list_state.dart';
 import 'package:Buytime/reblox/model/autoComplete/auto_complete_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_list_state.dart';
@@ -23,7 +22,6 @@ import 'package:Buytime/reblox/model/stripe/stripe_state.dart';
 import 'package:Buytime/reblox/model/user/user_state.dart';
 import 'package:flutter/foundation.dart';
 import 'category/tree/category_tree_state.dart';
-import 'old/filter_search_state.dart';
 
 class AppRoutes {
   static const home = "/home";
@@ -46,7 +44,6 @@ class AppRoutes {
 }
 
 class AppState {
-  FilterSearchState filterSearch;
   BusinessState business;
   BookingState booking;
   BusinessListState businessList;
@@ -73,7 +70,6 @@ class AppState {
   AutoCompleteListState autoCompleteListState;
 
   AppState({
-    @required this.filterSearch,
     @required this.business,
     @required this.booking,
     @required this.order,
@@ -101,7 +97,6 @@ class AppState {
   });
 
   AppState.initialState() {
-    filterSearch = FilterSearchState();
     business = BusinessState();
     booking = BookingState();
     order = OrderState();
@@ -128,7 +123,7 @@ class AppState {
   }
 
   AppState.copyWith(
-      {FilterSearchState filterSearch,
+      {
       BusinessState business,
       BookingState booking,
       OrderState order,
@@ -154,7 +149,6 @@ class AppState {
         AutoCompleteState autoCompleteState,
         AutoCompleteListState autoCompleteListState
       }) {
-    this.filterSearch = filterSearch;
     this.business = business;
     this.booking = booking;
     this.order = order;
@@ -180,60 +174,58 @@ class AppState {
     this.autoCompleteState = autoCompleteState;
     this.autoCompleteListState = autoCompleteListState;
   }
-
-  AppState.fromJson(Map json) {
-    filterSearch = json['filterSearch'];
-    business = json['business'];
-    booking = json['booking'];
-    order = json['order'];
-    orderList = json['orderList'];
-    stripe = json['stripe'];
-    stripeListState = json['stripeListState'];
-    businessList = json['businessList'];
-    bookingList = json['bookingList'];
-    user = json['user'];
-    category = json['category'];
-    categoryInvite = json['categoryInvite'];
-    categoryList = json['categoryList'];
-    categoryTree = json['categoryTree'];
-    serviceState = json['serviceState'];
-    serviceList = json['serviceList'];
-    serviceSlot = json['serviceSlot'];
-    pipeline = json['pipeline'];
-    pipelineList = json['pipelineList'];
-    route = json['route'];
-    statistics = json['statistics'];
-    cardState = json['cardState'];
-    cardListState = json['cardListState'];
-    autoCompleteState = json['autoCompleteState'];
-    autoCompleteListState = json['autoCompleteListState'];
-  }
-
-  Map toJson() => {
-        'filterSearch': filterSearch,
-        'business': business,
-        'booking': booking,
-        'order': order,
-        'orderList': orderList,
-        'stripe': stripe,
-        'stripeListState': stripeListState,
-        'businessList': businessList,
-        'bookingList': bookingList,
-        'user': user,
-        'category': category,
-        'categoryInvite': categoryInvite,
-        'categoryList': categoryList,
-        'categoryTree': categoryTree,
-        'serviceState': serviceState,
-        'serviceList': serviceList,
-        'serviceSlot': serviceSlot,
-        'pipeline': pipeline,
-        'pipelineList': pipelineList,
-        'route': route,
-        'statistics': statistics,
-        'cardState': cardState,
-        'cardListState': cardListState,
-        'autoCompleteState': autoCompleteState,
-        'autoCompleteListState': autoCompleteListState,
-      };
+  //
+  // AppState.fromJson(Map json) {
+  //   business = json['business'];
+  //   booking = json['booking'];
+  //   order = json['order'];
+  //   orderList = json['orderList'];
+  //   stripe = json['stripe'];
+  //   stripeListState = json['stripeListState'];
+  //   businessList = json['businessList'];
+  //   bookingList = json['bookingList'];
+  //   user = json['user'];
+  //   category = json['category'];
+  //   categoryInvite = json['categoryInvite'];
+  //   categoryList = json['categoryList'];
+  //   categoryTree = json['categoryTree'];
+  //   serviceState = json['serviceState'];
+  //   serviceList = json['serviceList'];
+  //   serviceSlot = json['serviceSlot'];
+  //   pipeline = json['pipeline'];
+  //   pipelineList = json['pipelineList'];
+  //   route = json['route'];
+  //   statistics = json['statistics'];
+  //   cardState = json['cardState'];
+  //   cardListState = json['cardListState'];
+  //   autoCompleteState = json['autoCompleteState'];
+  //   autoCompleteListState = json['autoCompleteListState'];
+  // }
+  //
+  // Map toJson() => {
+  //       'business': business,
+  //       'booking': booking,
+  //       'order': order,
+  //       'orderList': orderList,
+  //       'stripe': stripe,
+  //       'stripeListState': stripeListState,
+  //       'businessList': businessList,
+  //       'bookingList': bookingList,
+  //       'user': user,
+  //       'category': category,
+  //       'categoryInvite': categoryInvite,
+  //       'categoryList': categoryList,
+  //       'categoryTree': categoryTree,
+  //       'serviceState': serviceState,
+  //       'serviceList': serviceList,
+  //       'serviceSlot': serviceSlot,
+  //       'pipeline': pipeline,
+  //       'pipelineList': pipelineList,
+  //       'route': route,
+  //       'statistics': statistics,
+  //       'cardState': cardState,
+  //       'cardListState': cardListState,
+  //       'autoCompleteState': autoCompleteState,
+  //       'autoCompleteListState': autoCompleteListState,
+  //     };
 }

@@ -1,4 +1,7 @@
+import 'package:json_annotation/json_annotation.dart';
+part 'category_tree_state.g.dart';
 
+@JsonSerializable(explicitToJson: true)
 class CategoryTree {
   String nodeName;
   String nodeId;
@@ -42,22 +45,8 @@ class CategoryTree {
     );
   }
 
-  CategoryTree.fromJson(Map<String, dynamic> json)
-      : nodeName = json['nodeName'],
-        nodeId = json['nodeId'],
-        categoryRootId = json['categoryRootId'],
-        nodeLevel = json['nodeLevel'],
-        numberOfCategories = json['numberOfCategories'],
-        categoryNodeList = json['categoryNodeList'];
-
-  Map<String, dynamic> toJson() => {
-        'nodeName': nodeName,
-        'nodeId': nodeId,
-        'categoryRootId': categoryRootId,
-        'nodeLevel': nodeLevel,
-        'numberOfCategories': numberOfCategories,
-        'categoryNodeList': categoryNodeList,
-      };
+  factory CategoryTree.fromJson(Map<String, dynamic> json) => _$CategoryTreeFromJson(json);
+  Map<String, dynamic> toJson() => _$CategoryTreeToJson(this);
 
   CategoryTree toEmpty() {
     return CategoryTree(

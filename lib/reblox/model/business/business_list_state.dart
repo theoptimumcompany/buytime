@@ -1,7 +1,9 @@
 import 'package:flutter/foundation.dart';
-
+import 'package:json_annotation/json_annotation.dart';
 import 'business_state.dart';
+part 'business_list_state.g.dart';
 
+@JsonSerializable(explicitToJson: true)
 class BusinessListState {
   List<BusinessState> businessListState;
 
@@ -25,15 +27,10 @@ class BusinessListState {
     );
   }
 
-  BusinessListState.fromJson(Map json)
-      : businessListState = json['businessListState'];
-
-  Map<String, dynamic> toJson() => {
-    'businessListState': businessListState
-  };
-
   BusinessListState toEmpty() {
     return BusinessListState(businessListState: List<BusinessState>());
   }
 
+  factory BusinessListState.fromJson(Map<String, dynamic> json) => _$BusinessListStateFromJson(json);
+  Map<String, dynamic> toJson() => _$BusinessListStateToJson(this);
 }

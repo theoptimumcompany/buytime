@@ -12,6 +12,7 @@ import 'package:Buytime/utils/b_cube_grid_spinner.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
+import 'package:Buytime/utils/utils.dart';
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -72,7 +73,7 @@ class _MyBookingsState extends State<MyBookings> {
           endTime = new DateTime(endTime.year, endTime.month, endTime.day, 0, 0, 0, 0, 0);
           if(endTime.isBefore(currentTime) && element.status != 'closed'){
             debugPrint('UI_U_MyBookings => ${element.end_date}');
-            element.status = element.enumToString(BookingStatus.closed);
+            element.status = Utils.enumToString(BookingStatus.closed);
             StoreProvider.of<AppState>(context).dispatch(UpdateBooking(element));
           }
           if(element.status == 'opened'){

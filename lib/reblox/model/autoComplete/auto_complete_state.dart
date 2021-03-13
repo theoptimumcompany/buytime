@@ -1,11 +1,11 @@
 import 'dart:convert';
-
 import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
-import 'package:Buytime/reblox/model/snippet/generic.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:json_annotation/json_annotation.dart';
+part 'auto_complete_state.g.dart';
 
-
+@JsonSerializable(explicitToJson: true)
 class AutoCompleteState {
 
   ///Storage
@@ -34,10 +34,6 @@ class AutoCompleteState {
     );
   }
 
-  String enumToString(AutoCompleteState bookingStatus){
-    return bookingStatus.toString().split('.').last;
-  }
-
   AutoCompleteState.fromState(AutoCompleteState state) {
     this.email = state.email;
     this.password = state.password;
@@ -63,14 +59,8 @@ class AutoCompleteState {
     );
   }
 
-  AutoCompleteState.fromJson(Map<String, dynamic> json)
-      : email = json['email'],
-        password = json['password'];
-
-  Map<String, dynamic> toJson() => {
-        'email': email,
-        'password': password,
-      };
+  factory AutoCompleteState.fromJson(Map<String, dynamic> json) => _$AutoCompleteStateFromJson(json);
+  Map<String, dynamic> toJson() => _$AutoCompleteStateToJson(this);
 
   writeToStorage(List<AutoCompleteState> state) async{
 

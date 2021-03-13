@@ -381,7 +381,7 @@ BusinessState businessReducer(BusinessState state, action) {
     return businessState;
   }
   if (action is BusinessRequestResponse) {
-    businessState = action.businessState.copyWith();
+    businessState = action.businessState.copyWith(); // TODO check validity of the copyWith
     return businessState;
   }
   if (action is SetBusiness) {

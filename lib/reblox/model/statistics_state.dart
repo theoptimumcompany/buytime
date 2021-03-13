@@ -16,6 +16,7 @@ class StatisticsState{
 
   ///Business
   int businessListRequestServiceRead, businessListRequestServiceWrite, businessListRequestServiceDocuments;
+  int businessServiceSnippetListRequestServiceRead, businessServiceSnippetListRequestServiceWrite, businessServiceSnippetListRequestServiceDocuments;
   int businessAndNavigateRequestServiceRead, businessAndNavigateRequestServiceWrite, businessAndNavigateRequestServiceDocuments;
   int businessAndNavigateOnConfirmRequestServiceRead, businessAndNavigateOnConfirmRequestServiceWrite, businessAndNavigateOnConfirmRequestServiceDocuments;
   int businessRequestServiceRead, businessRequestServiceWrite, businessRequestServiceDocuments;
@@ -107,6 +108,9 @@ class StatisticsState{
       this.businessListRequestServiceRead,
       this.businessListRequestServiceWrite,
       this.businessListRequestServiceDocuments,
+      this.businessServiceSnippetListRequestServiceRead,
+      this.businessServiceSnippetListRequestServiceWrite,
+      this.businessServiceSnippetListRequestServiceDocuments,
       this.businessAndNavigateRequestServiceRead,
       this.businessAndNavigateRequestServiceWrite,
       this.businessAndNavigateRequestServiceDocuments,
@@ -273,6 +277,9 @@ class StatisticsState{
       businessListRequestServiceRead: 0,
       businessListRequestServiceWrite: 0,
       businessListRequestServiceDocuments: 0,
+      businessServiceSnippetListRequestServiceRead: 0,
+      businessServiceSnippetListRequestServiceWrite: 0,
+      businessServiceSnippetListRequestServiceDocuments: 0,
       businessAndNavigateRequestServiceRead: 0,
       businessAndNavigateRequestServiceWrite: 0,
       businessAndNavigateRequestServiceDocuments: 0,
@@ -439,6 +446,9 @@ class StatisticsState{
     this.businessListRequestServiceRead = state.businessListRequestServiceRead;
     this.businessListRequestServiceWrite = state.businessListRequestServiceWrite;
     this.businessListRequestServiceDocuments = state.businessListRequestServiceDocuments;
+    this.businessServiceSnippetListRequestServiceRead = state.businessServiceSnippetListRequestServiceRead;
+    this.businessServiceSnippetListRequestServiceWrite = state.businessServiceSnippetListRequestServiceWrite;
+    this.businessServiceSnippetListRequestServiceDocuments = state.businessServiceSnippetListRequestServiceDocuments;
     this.businessAndNavigateRequestServiceRead = state.businessAndNavigateRequestServiceRead;
     this.businessAndNavigateRequestServiceWrite = state.businessAndNavigateRequestServiceWrite;
     this.businessAndNavigateRequestServiceDocuments = state.businessAndNavigateRequestServiceDocuments;
@@ -604,6 +614,9 @@ class StatisticsState{
     int businessListRequestServiceRead,
     int businessListRequestServiceWrite,
     int businessListRequestServiceDocuments,
+    int businessServiceSnippetListRequestServiceRead,
+    int businessServiceSnippetListRequestServiceWrite,
+    int businessServiceSnippetListRequestServiceDocuments,
     int businessAndNavigateRequestServiceRead,
     int businessAndNavigateRequestServiceWrite,
     int businessAndNavigateRequestServiceDocuments,
@@ -768,6 +781,9 @@ class StatisticsState{
       businessListRequestServiceRead: businessListRequestServiceRead ?? this.businessListRequestServiceRead,
       businessListRequestServiceWrite: businessListRequestServiceWrite ?? this.businessListRequestServiceWrite,
       businessListRequestServiceDocuments: businessListRequestServiceDocuments ?? this.businessListRequestServiceDocuments,
+      businessServiceSnippetListRequestServiceRead: businessServiceSnippetListRequestServiceRead ?? this.businessServiceSnippetListRequestServiceRead,
+      businessServiceSnippetListRequestServiceWrite: businessServiceSnippetListRequestServiceWrite ?? this.businessServiceSnippetListRequestServiceWrite,
+      businessServiceSnippetListRequestServiceDocuments: businessServiceSnippetListRequestServiceDocuments ?? this.businessServiceSnippetListRequestServiceDocuments,
       businessAndNavigateRequestServiceRead: businessAndNavigateRequestServiceRead ?? this.businessAndNavigateRequestServiceRead,
       businessAndNavigateRequestServiceWrite: businessAndNavigateRequestServiceWrite ?? this.businessAndNavigateRequestServiceWrite,
       businessAndNavigateRequestServiceDocuments: businessAndNavigateRequestServiceDocuments ?? this.businessAndNavigateRequestServiceDocuments,
@@ -934,6 +950,9 @@ class StatisticsState{
     await storage.write(key: 'businessListRequestServiceRead', value: state.businessListRequestServiceRead.toString());
     await storage.write(key: 'businessListRequestServiceWrite', value: state.businessListRequestServiceWrite.toString());
     await storage.write(key: 'businessListRequestServiceDocuments', value: state.businessListRequestServiceDocuments.toString());
+    await storage.write(key: 'businessServiceSnippetListRequestService', value: state.businessServiceSnippetListRequestServiceRead.toString());
+    await storage.write(key: 'businessServiceSnippetListRequestServiceWrite', value: state.businessServiceSnippetListRequestServiceWrite.toString());
+    await storage.write(key: 'businessServiceSnippetListRequestServiceDocuments', value: state.businessServiceSnippetListRequestServiceDocuments.toString());
     await storage.write(key: 'businessAndNavigateRequestServiceRead', value: state.businessAndNavigateRequestServiceRead.toString());
     await storage.write(key: 'businessAndNavigateRequestServiceWrite', value: state.businessAndNavigateRequestServiceWrite.toString());
     await storage.write(key: 'businessAndNavigateRequestServiceDocuments', value: state.businessAndNavigateRequestServiceDocuments.toString());
@@ -1100,6 +1119,9 @@ class StatisticsState{
     state.businessListRequestServiceRead = int.parse(await storage.read(key: 'businessListRequestServiceRead') ?? '0');
     state.businessListRequestServiceWrite = int.parse(await storage.read(key: 'businessListRequestServiceWrite') ?? '0');
     state.businessListRequestServiceDocuments = int.parse(await storage.read(key: 'businessListRequestServiceDocuments') ?? '0');
+    state.businessServiceSnippetListRequestServiceRead = int.parse(await storage.read(key: 'businessServiceSnippetListRequestServiceRead') ?? '0');
+    state.businessServiceSnippetListRequestServiceWrite = int.parse(await storage.read(key: 'businessServiceSnippetListRequestServiceWrite') ?? '0');
+    state.businessServiceSnippetListRequestServiceDocuments = int.parse(await storage.read(key: 'businessServiceSnippetListRequestServiceDocuments') ?? '0');
     state.businessAndNavigateRequestServiceRead = int.parse(await storage.read(key: 'businessAndNavigateRequestServiceRead') ?? '0');
     state.businessAndNavigateRequestServiceWrite = int.parse(await storage.read(key: 'businessAndNavigateRequestServiceWrite') ?? '0');
     state.businessAndNavigateRequestServiceDocuments = int.parse(await storage.read(key: 'businessAndNavigateRequestServiceDocuments') ?? '0');
@@ -1254,6 +1276,7 @@ class StatisticsState{
     debugPrint('$from - BookingUpdateAndNavigateRequestService => READS: ${statisticsState.bookingUpdateAndNavigateRequestServiceRead}, WRITES: ${statisticsState.bookingUpdateAndNavigateRequestServiceWrite}, DOCUMENTS: ${statisticsState.bookingUpdateAndNavigateRequestServiceDocuments}');
 
     debugPrint('$from - BusinessListRequestService => READS: ${statisticsState.businessListRequestServiceRead}, WRITES: ${statisticsState.businessListRequestServiceWrite}, DOCUMENTS: ${statisticsState.businessListRequestServiceDocuments}');
+    debugPrint('$from - BusinessListRequestService => READS: ${statisticsState.businessServiceSnippetListRequestServiceRead}, WRITES: ${statisticsState.businessServiceSnippetListRequestServiceWrite}, DOCUMENTS: ${statisticsState.businessServiceSnippetListRequestServiceDocuments}');
     debugPrint('$from - BusinessAndNavigateRequestService => READS: ${statisticsState.businessAndNavigateRequestServiceRead}, WRITES: ${statisticsState.businessAndNavigateRequestServiceWrite}, DOCUMENTS: ${statisticsState.businessAndNavigateRequestServiceDocuments}');
     debugPrint('$from - BusinessAndNavigateOnConfirmRequestService => READS: ${statisticsState.businessAndNavigateOnConfirmRequestServiceRead}, WRITES: ${statisticsState.businessAndNavigateOnConfirmRequestServiceWrite}, DOCUMENTS: ${statisticsState.businessAndNavigateOnConfirmRequestServiceDocuments}');
     debugPrint('$from - BusinessRequestService => READS: ${statisticsState.businessRequestServiceRead}, WRITES: ${statisticsState.businessRequestServiceWrite}, DOCUMENTS: ${statisticsState.businessRequestServiceDocuments}');

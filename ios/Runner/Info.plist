@@ -138,6 +138,8 @@
 	<false/>
 	<key>io.flutter.embedded_views_preview</key>
 	<true/>
+	<key>NSCalendarsUsageDescription</key>
+    <string>booking saving</string>
 	<key>NSFaceIDUsageDescription</key>
     <string>Can i use the face id?</string>
 </dict>

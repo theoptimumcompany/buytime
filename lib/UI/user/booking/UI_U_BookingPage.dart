@@ -20,7 +20,6 @@ import 'package:Buytime/reblox/reducer/business_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_tree_reducer.dart';
-import 'package:Buytime/reblox/reducer/filter_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reblox/reducer/pipeline_list_reducer.dart';
@@ -276,7 +275,6 @@ class _BookingPageState extends State<BookingPage> {
                     ),
                   ],
                 ),
-
                 ///Title
                 Container(
                   child: Padding(
@@ -288,7 +286,6 @@ class _BookingPageState extends State<BookingPage> {
                     ),
                   ),
                 ),
-
                 ///Cart
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 10.0),
@@ -400,7 +397,6 @@ class _BookingPageState extends State<BookingPage> {
                               errorWidget: (context, url, error) => Icon(Icons.error),
                             ),
                           ),
-
                           ///Greetings & Portfolio & Search
                           Flexible(
                             child: Container(
@@ -422,7 +418,6 @@ class _BookingPageState extends State<BookingPage> {
                                           ),
                                     ),
                                   ),
-
                                   ///Portfolio
                                   Container(
                                     margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
@@ -434,7 +429,6 @@ class _BookingPageState extends State<BookingPage> {
                                           ),
                                     ),
                                   ),
-
                                   ///Date & Share
                                   Row(
                                     children: [
@@ -451,7 +445,6 @@ class _BookingPageState extends State<BookingPage> {
                                               ),
                                         ),
                                       ),
-
                                       ///Share
                                       Container(
                                           margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 0.5),
@@ -484,7 +477,6 @@ class _BookingPageState extends State<BookingPage> {
                                           )),
                                     ],
                                   ),
-
                                   ///Search
                                   Container(
                                     margin: EdgeInsets.only(
@@ -558,7 +550,6 @@ class _BookingPageState extends State<BookingPage> {
                               ),
                             ),
                           ),
-
                           ///Top Service
                           Flexible(
                             child: Container(
@@ -580,7 +571,6 @@ class _BookingPageState extends State<BookingPage> {
                                           ),
                                     ),
                                   ),
-
                                   ///List
                                   serviceList.isNotEmpty
                                       ?
@@ -621,7 +611,6 @@ class _BookingPageState extends State<BookingPage> {
                               ),
                             ),
                           ),
-
                           ///Inspiration
                           Flexible(
                             child: Container(
@@ -741,7 +730,6 @@ class _BookingPageState extends State<BookingPage> {
                                               ///SizeConfig.safeBlockHorizontal * 4
                                               ),
                                         ),
-
                                         ///Show All
                                         Container(
                                             //margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 0.5),
@@ -868,7 +856,6 @@ class _BookingPageState extends State<BookingPage> {
                                                             )
                                                           ],
                                                         ),
-
                                                         ///Icon
                                                         Icon(
                                                           Icons.call,
@@ -890,7 +877,6 @@ class _BookingPageState extends State<BookingPage> {
                               ),
                             ),
                           ),
-
                           ///Goto Business Management
                           StoreConnector<AppState, AppState>(
                               converter: (store) => store.state,
@@ -935,7 +921,6 @@ class _BookingPageState extends State<BookingPage> {
                                       )
                                     : Container();
                               }),
-
                           ///Log out
                           Flexible(
                             flex: 1,
@@ -961,7 +946,6 @@ class _BookingPageState extends State<BookingPage> {
                                         StoreProvider.of<AppState>(context).dispatch(SetCategoryToEmpty());
                                         StoreProvider.of<AppState>(context).dispatch(SetCategoryListToEmpty());
                                         StoreProvider.of<AppState>(context).dispatch(SetCategoryTreeToEmpty());
-                                        StoreProvider.of<AppState>(context).dispatch(SetFilterToEmpty());
                                         StoreProvider.of<AppState>(context).dispatch(SetOrderToEmpty(""));
                                         StoreProvider.of<AppState>(context).dispatch(SetOrderListToEmpty());
                                         StoreProvider.of<AppState>(context).dispatch(SetBusinessToEmpty());

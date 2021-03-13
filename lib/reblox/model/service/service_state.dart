@@ -1,8 +1,9 @@
-import 'package:Buytime/UI/management/service/widget/W_service_step_availabile_time.dart';
 import 'package:Buytime/reblox/model/service/service_slot_time_state.dart';
-
 import '../file/optimum_file_to_upload.dart';
+import 'package:json_annotation/json_annotation.dart';
+part 'service_state.g.dart';
 
+@JsonSerializable(explicitToJson: true)
 class ServiceState {
   String serviceId;
   String businessId;
@@ -20,13 +21,18 @@ class ServiceState {
   bool switchSlots;
   bool switchAutoConfirm;
   List<ServiceSlot> serviceSlot;
-
+  @JsonKey(defaultValue: false)
+  bool spinnerVisibility = false;
+  @JsonKey(defaultValue: false)
+  bool serviceCreated = false;
+  @JsonKey(defaultValue: false)
+  bool serviceEdited = false;
 
   ///Out Database
+  @JsonKey(ignore: true)
   List<OptimumFileToUpload> fileToUploadList;
-  bool spinnerVisibility = false;
-  bool serviceCreated = false;
-  bool serviceEdited = false;
+
+
 
   ServiceState({
     this.serviceId,
@@ -50,24 +56,6 @@ class ServiceState {
     this.serviceCreated,
     this.serviceEdited,
   });
-
-  // String enumToString(ServiceVisibility serviceVisibility) {
-  //   return serviceVisibility.toString().split('.').last;
-  // }
-  //
-  // ServiceVisibility stringToEnum(String serviceVisibility) {
-  //   switch (serviceVisibility) {
-  //     case 'Active':
-  //       return ServiceVisibility.Active;
-  //       break;
-  //     case 'Deactivated':
-  //       return ServiceVisibility.Deactivated;
-  //       break;
-  //     case 'Invisible':
-  //       return ServiceVisibility.Invisible;
-  //       break;
-  //   }
-  // }
 
   ServiceState toEmpty() {
     return ServiceState(
@@ -117,52 +105,6 @@ class ServiceState {
     this.serviceEdited = service.serviceEdited;
   }
 
-  serviceStateFieldUpdate(
-    String serviceId,
-    String businessId,
-    List<String> categoryId,
-    List<String> categoryRootId,
-    String image1,
-    String image2,
-    String image3,
-    String name,
-    String description,
-    String visibility,
-    double price,
-    List<OptimumFileToUpload> fileToUploadList,
-    int timesSold,
-    List<String> tag,
-    bool switchSlots,
-    bool switchAutoConfirm,
-    List<ServiceSlot> serviceSlot,
-    bool spinnerVisibility,
-    bool serviceCreated,
-    bool serviceEdited,
-  ) {
-    ServiceState(
-      serviceId: serviceId ?? this.serviceId,
-      businessId: businessId ?? this.businessId,
-      categoryId: categoryId ?? this.categoryId,
-      categoryRootId: categoryRootId ?? this.categoryRootId,
-      name: name ?? this.name,
-      image1: image1 ?? this.image1,
-      image2: image2 ?? this.image2,
-      image3: image3 ?? this.image3,
-      description: description ?? this.description,
-      visibility: visibility ?? this.visibility,
-      price: price ?? this.price,
-      fileToUploadList: fileToUploadList ?? this.fileToUploadList,
-      timesSold: timesSold ?? this.timesSold,
-      tag: tag ?? this.tag,
-      switchSlots: switchSlots ?? this.switchSlots,
-      switchAutoConfirm: switchAutoConfirm ?? this.switchAutoConfirm,
-      serviceSlot: serviceSlot ?? this.serviceSlot,
-      spinnerVisibility: spinnerVisibility ?? this.spinnerVisibility,
-      serviceCreated: serviceCreated ?? this.serviceCreated,
-      serviceEdited: serviceEdited ?? this.serviceEdited,
-    );
-  }
-
   ServiceState copyWith({
     String serviceId,
     String businessId,
@@ -209,52 +151,6 @@ class ServiceState {
     );
   }
 
-  List<dynamic> convertToJson(List<ServiceSlot> objectStateList) {
-    List<dynamic> list = [];
-    objectStateList.forEach((element) {
-      list.add(element.toJson());
-    });
-    return list;
-  }
-
-  ServiceState.fromJson(Map<String, dynamic> json)
-      : serviceId = json['serviceId'],
-        businessId = json['businessId'],
-        categoryId = List<String>.from(json['categoryId']),
-        categoryRootId = List<String>.from(json['categoryRootId']),
-        name = json['name'],
-        image1 = json.containsKey('image1') ? json['image1'] : '',
-        image2 = json.containsKey('image2') ? json['image2'] : '',
-        image3 = json.containsKey('image3') ? json['image3'] : '',
-        description = json['description'],
-        visibility = json.containsKey('visibility') ? json['visibility'] : 'Invisible',
-        price = json.containsKey('price') ? json['price'] : 0.0,
-        timesSold = json.containsKey('switchSlots') ? json['timesSold'] : 0,
-        tag = json.containsKey('tag') && json['tag'] != null ? List<String>.from(json['tag']) : [],
-        switchSlots = json.containsKey('switchSlots') ? json['switchSlots'] : false,
-        switchAutoConfirm = json.containsKey('switchAutoConfirm') ? json['switchAutoConfirm'] : false,
-        serviceSlot = json.containsKey('serviceSlot')
-            ? List<ServiceSlot>.from(json["serviceSlot"].map((item) {
-                return ServiceSlot.fromJson(item);
-              }))
-            : [];
-
-  Map<String, dynamic> toJson() => {
-        'serviceId': serviceId,
-        'businessId': businessId,
-        'categoryId': categoryId,
-        'categoryRootId': categoryRootId,
-        'name': name,
-        'image1': image1,
-        'image2': image2,
-        'image3': image3,
-        'description': description,
-        'visibility': visibility,
-        'price': price,
-        'timesSold': timesSold,
-        'tag': tag,
-        'switchSlots': switchSlots,
-        'switchAutoConfirm': switchAutoConfirm,
-        'serviceSlot': convertToJson(serviceSlot),
-      };
+  factory ServiceState.fromJson(Map<String, dynamic> json) => _$ServiceStateFromJson(json);
+  Map<String, dynamic> toJson() => _$ServiceStateToJson(this);
 }

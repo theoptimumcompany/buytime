@@ -1,3 +1,7 @@
+import 'package:json_annotation/json_annotation.dart';
+part 'business_snippet_state.g.dart';
+
+@JsonSerializable(explicitToJson: true)
 class BusinessSnippet {
   String id;
   String name;
@@ -27,17 +31,6 @@ class BusinessSnippet {
     );
   }
 
-  BusinessSnippet.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
-        name = json['name'],
-        thumbnail = json['thumbnail'];
-
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'name': name,
-        'thumbnail': thumbnail,
-      };
-
   BusinessSnippet toEmpty() {
     return BusinessSnippet(
       id: '',
@@ -45,4 +38,7 @@ class BusinessSnippet {
       thumbnail: '',
     );
   }
+
+  factory BusinessSnippet.fromJson(Map<String, dynamic> json) => _$BusinessSnippetFromJson(json);
+  Map<String, dynamic> toJson() => _$BusinessSnippetToJson(this);
 }

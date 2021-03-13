@@ -1,3 +1,7 @@
+import 'package:json_annotation/json_annotation.dart';
+part 'user_snippet_state.g.dart';
+
+@JsonSerializable(explicitToJson: true)
 class UserSnippet {
   String id;
   String name;
@@ -32,19 +36,6 @@ class UserSnippet {
     );
   }
 
-  UserSnippet.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
-        name = json['name'],
-        surname = json['surname'],
-        email = json['email'];
-
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'name': name,
-        'surname': surname,
-        'email': email,
-      };
-
   UserSnippet toEmpty() {
     return UserSnippet(
       id: '',
@@ -53,4 +44,7 @@ class UserSnippet {
       email: '',
     );
   }
+  factory UserSnippet.fromJson(Map<String, dynamic> json) => _$UserSnippetFromJson(json);
+  Map<String, dynamic> toJson() => _$UserSnippetToJson(this);
+
 }

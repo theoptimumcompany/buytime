@@ -9,6 +9,7 @@ import 'package:Buytime/reusable/menu/UI_M_business_list_drawer.dart';
 import 'package:Buytime/services/business_service_epic.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
+import 'package:Buytime/utils/utils.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -547,7 +548,7 @@ class _BookingCreationState extends State<BookingCreation> {
                                                     debugPrint('UI_M_BookingCreation => Start date: ${bookingState.start_date}');
                                                     debugPrint('UI_M_BookingCreation => End date: ${bookingState.end_date}');
 
-                                                    bookingState.status = bookingState.enumToString(BookingStatus.created);
+                                                    bookingState.status = Utils.enumToString(BookingStatus.created);
 
                                                     bookingState.userEmail.add(_emailToInviteController.text);
 

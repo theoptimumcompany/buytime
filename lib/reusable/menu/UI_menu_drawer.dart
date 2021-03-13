@@ -12,7 +12,6 @@ import 'package:Buytime/reblox/reducer/business_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/business_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_reducer.dart';
-import 'package:Buytime/reblox/reducer/filter_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reblox/reducer/pipeline_list_reducer.dart';
@@ -156,8 +155,6 @@ class MenuDrawer extends StatelessWidget {
                             .dispatch(SetCategoryListToEmpty());
                         StoreProvider.of<AppState>(context)
                             .dispatch(SetCategoryTreeToEmpty());
-                        StoreProvider.of<AppState>(context)
-                            .dispatch(SetFilterToEmpty());
                         StoreProvider.of<AppState>(context)
                             .dispatch(SetOrderToEmpty(""));
                         StoreProvider.of<AppState>(context)

@@ -1,4 +1,10 @@
+import 'package:Buytime/utils/utils.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
+part 'order_entry.g.dart';
+
+@JsonSerializable(explicitToJson: true)
 class OrderEntry {
   int number;
   String name;
@@ -11,6 +17,7 @@ class OrderEntry {
   ///Reserve
   String time;
   String minutes;
+  @JsonKey(fromJson: Utils.getDate, toJson: Utils.setDate)
   DateTime date;
 
   OrderEntry({
@@ -27,30 +34,6 @@ class OrderEntry {
     this.date,
   });
 
-  OrderEntry.fromJson(Map<String, dynamic> json)
-      : number = json['number'],
-        name = json['name'],
-        description = json['description'],
-        price = json['price'],
-        thumbnail = json['thumbnail'],
-        id = json['id'],
-        id_business = json['id_business'],
-        id_owner = json['id_owner'],
-  time = json['time'],
-  minutes = json['minutes'],
-  date = DateTime.fromMillisecondsSinceEpoch(json['date'].seconds * 1000).toUtc()
-  ;
-
-  Map<String, dynamic> toJson() => {
-        'number': number,
-        'name': name,
-        'description': description,
-        'price': price,
-        'thumbnail': thumbnail,
-        'id': id,
-        'id_business': id_business,
-        'id_owner': id_owner,
-        'minutes': minutes,
-        'date': date,
-      };
+  factory OrderEntry.fromJson(Map<String, dynamic> json) => _$OrderEntryFromJson(json);
+  Map<String, dynamic> toJson() => _$OrderEntryToJson(this);
 }

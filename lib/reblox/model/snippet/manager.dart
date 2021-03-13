@@ -1,3 +1,7 @@
+import 'package:json_annotation/json_annotation.dart';
+part 'manager.g.dart';
+
+@JsonSerializable(explicitToJson: true)
 class Manager {
   String id;
   String mail;
@@ -11,16 +15,6 @@ class Manager {
     this.surname,
   });
 
-  Manager.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
-        mail = json['mail'],
-        name = json['name'],
-        surname = json['surname'];
-
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'mail': mail,
-        'name': name,
-        'surname': surname,
-      };
+  factory Manager.fromJson(Map<String, dynamic> json) => _$ManagerFromJson(json);
+  Map<String, dynamic> toJson() => _$ManagerToJson(this);
 }

@@ -1,6 +1,9 @@
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:flutter/foundation.dart';
+import 'package:json_annotation/json_annotation.dart';
+part 'order_list_state.g.dart';
 
+@JsonSerializable(explicitToJson: true)
 class OrderListState {
   List<OrderState> orderListState;
 
@@ -20,7 +23,6 @@ class OrderListState {
     return OrderListState(orderListState: List<OrderState>());
   }
 
-  OrderListState.fromJson(Map json) : orderListState = json['orderListState'];
-
-  Map<String, dynamic> toJson() => {'orderListState': orderListState};
+  factory OrderListState.fromJson(Map<String, dynamic> json) => _$OrderListStateFromJson(json);
+  Map<String, dynamic> toJson() => _$OrderListStateToJson(this);
 }

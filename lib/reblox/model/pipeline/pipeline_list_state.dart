@@ -1,6 +1,9 @@
 import 'package:Buytime/reblox/model/pipeline/pipeline.dart';
 import 'package:flutter/foundation.dart';
+import 'package:json_annotation/json_annotation.dart';
+part 'pipeline_list_state.g.dart';
 
+@JsonSerializable(explicitToJson: true)
 class PipelineList {
   List<Pipeline> pipelineList;
 
@@ -20,9 +23,8 @@ class PipelineList {
     return PipelineList(pipelineList: pipelineList ?? this.pipelineList);
   }
 
-  PipelineList.fromJson(Map json) : pipelineList = json['pipelineList'];
-
-  Map<String, dynamic> toJson() => {'pipelineList': pipelineList};
+  factory PipelineList.fromJson(Map<String, dynamic> json) => _$PipelineListFromJson(json);
+  Map<String, dynamic> toJson() => _$PipelineListToJson(this);
 
   PipelineList toEmpty() {
     return PipelineList(pipelineList: List<Pipeline>());

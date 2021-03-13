@@ -1,9 +1,10 @@
 import 'package:Buytime/reblox/model/snippet/generic.dart';
-import 'package:Buytime/utils/theme/buytime_config.dart';
 import 'package:flutter/foundation.dart';
-
+import 'package:json_annotation/json_annotation.dart';
 import '../file/optimum_file_to_upload.dart';
+part 'business_state.g.dart';
 
+@JsonSerializable(explicitToJson: true)
 class BusinessState {
   String name;
   String responsible_person_name;
@@ -32,16 +33,9 @@ class BusinessState {
   GenericState owner;
   String ownerId;
   bool draft;
+  @JsonKey(ignore: true)
   List<OptimumFileToUpload> fileToUploadList;
   List<String> tag;
-
-  List<dynamic> convertToJson(List<GenericState> objectStateList) {
-    List<dynamic> list = List<dynamic>();
-    objectStateList.forEach((element) {
-      list.add(element.toJson());
-    });
-    return list;
-  }
 
   BusinessState({
     @required this.name,
@@ -141,70 +135,6 @@ class BusinessState {
     this.tag = state.tag;
   }
 
-  companyStateFieldUpdate(
-    String name,
-    String responsible_person_name,
-    String responsible_person_surname,
-    String responsible_person_email,
-    String phone_number,
-    String email,
-    String VAT,
-    String street,
-    String municipality,
-    String street_number,
-    String ZIP,
-    String state_province,
-    String nation,
-    String coordinate,
-    String profile,
-    List<String> gallery,
-    List<String> hasAccess,
-    String wide,
-    String logo,
-    List<GenericState> business_type,
-    String description,
-    String id_firestore,
-    GenericState salesman,
-    String salesmanId,
-    GenericState owner,
-    String ownerId,
-    bool draft,
-    List<OptimumFileToUpload> fileToUploadList,
-    List<String> tag,
-  ) {
-    BusinessState(
-      name: name ?? this.name,
-      responsible_person_name: responsible_person_name ?? this.responsible_person_name,
-      responsible_person_surname: responsible_person_surname ?? this.responsible_person_surname,
-      responsible_person_email: responsible_person_email ?? this.responsible_person_email,
-      phone_number: phone_number ?? this.phone_number,
-      email: email ?? this.email,
-      VAT: VAT ?? this.VAT,
-      street: street ?? this.street,
-      municipality: municipality ?? this.municipality,
-      street_number: street_number ?? this.street_number,
-      ZIP: ZIP ?? this.ZIP,
-      state_province: state_province ?? this.state_province,
-      nation: nation ?? this.nation,
-      coordinate: coordinate ?? this.coordinate,
-      profile: profile ?? this.profile,
-      gallery: gallery ?? this.gallery,
-      hasAccess: hasAccess ?? this.hasAccess,
-      wide: wide ?? this.wide,
-      logo: logo ?? this.logo,
-      business_type: business_type ?? this.business_type,
-      description: description ?? this.description,
-      id_firestore: id_firestore ?? this.id_firestore,
-      salesman: salesman ?? this.salesman,
-      salesmanId: salesmanId ?? this.salesmanId,
-      owner: owner ?? this.owner,
-      ownerId: ownerId ?? this.ownerId,
-      draft: draft ?? this.draft,
-      fileToUploadList: fileToUploadList ?? this.fileToUploadList,
-      tag: tag ?? this.tag,
-    );
-  }
-
   BusinessState copyWith({
     String name,
     String responsible_person_name,
@@ -269,71 +199,7 @@ class BusinessState {
     );
   }
 
-  BusinessState.fromJson(Map<String, dynamic> json)
-      : name = json['name'],
-        responsible_person_name = json['responsible_person_name'],
-        responsible_person_surname = json['responsible_person_surname'],
-        responsible_person_email = json['responsible_person_email'],
-        phone_number = json['phone_number'] ?? BuytimeConfig.FlaviosNumber,
-        email = json['email'],
-        VAT = json['VAT'],
-        street = json['street'],
-        municipality = json['municipality'],
-        street_number = json['street_number'],
-        ZIP = json['ZIP'],
-        state_province = json['state_province'],
-        nation = json['nation'],
-        coordinate = json['coordinate'],
-        profile = json['profile'],
-        gallery =  json['gallery'] != null ? List<String>.from(json['gallery']) : [],
-        hasAccess = json.containsKey('hasAccess') ? List<String>.from(json['hasAccess']) : [],
-        wide = json['wide'],
-        logo = json['logo'],
-        business_type = List<GenericState>.from(json["business_type"].map((item) {
-          return new GenericState(
-            content: item["name"] != null ? item["name"] : "",
-            id: item["id"] != null ? item["id"] : "",
-            // name: item["name"],
-            // id: item["id"],
-          );
-        })),
-        description = json['description'],
-        id_firestore = json['id_firestore'],
-        salesman = GenericState.fromJson(json["salesman"]) ?? GenericState.fromJson(json["salesman"]),
-        salesmanId = json['salesmanId'],
-        draft = json['draft'],
-        owner = GenericState.fromJson(json["owner"]),
-        ownerId = json['ownerId'],
-        tag = json['tag'] != null ? List<String>.from(json['tag']) : [];
+  factory BusinessState.fromJson(Map<String, dynamic> json) => _$BusinessStateFromJson(json);
+  Map<String, dynamic> toJson() => _$BusinessStateToJson(this);
 
-  Map<String, dynamic> toJson() => {
-        'name': name,
-        'responsible_person_name': responsible_person_name,
-        'responsible_person_surname': responsible_person_surname,
-        'responsible_person_email': responsible_person_email,
-        'phone_number': phone_number,
-        'email': email,
-        'VAT': VAT,
-        'street': street,
-        'municipality': municipality,
-        'street_number': street_number,
-        'ZIP': ZIP,
-        'state_province': state_province,
-        'nation': nation,
-        'coordinate': coordinate,
-        'profile': profile,
-        'gallery': gallery,
-        'hasAccess': hasAccess,
-        'wide': wide,
-        'logo': logo,
-        'business_type': convertToJson(business_type),
-        'description': description,
-        'id_firestore': id_firestore,
-        'salesman': salesman.toJson(),
-        'salesmanId': salesmanId,
-        'owner': owner.toJson(),
-        'ownerId': ownerId,
-        'draft': draft,
-        'tag': tag,
-      };
 }

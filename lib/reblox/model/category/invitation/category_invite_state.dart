@@ -1,3 +1,11 @@
+import 'package:Buytime/utils/utils.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+part 'category_invite_state.g.dart';
+
+
+@JsonSerializable(explicitToJson: true)
 class CategoryInviteState {
   String id;
   String id_business;
@@ -5,6 +13,7 @@ class CategoryInviteState {
   String mail;
   String link;
   String role;
+  @JsonKey(fromJson: Utils.getDate, toJson: Utils.setDate)
   DateTime timestamp;
 
   CategoryInviteState({
@@ -65,22 +74,6 @@ class CategoryInviteState {
     );
   }
 
-  CategoryInviteState.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
-        id_business = json['id_business'],
-        id_category = json['id_category'],
-        mail = json['mail'],
-        link = json['link'],
-        role = json['role'],
-        timestamp = json['timestamp'];
-
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'id_business': id_business,
-        'id_category': id_category,
-        'mail': mail,
-        'link': link,
-        'role': role,
-        'timestamp': timestamp,
-      };
+  factory CategoryInviteState.fromJson(Map<String, dynamic> json) => _$CategoryInviteStateFromJson(json);
+  Map<String, dynamic> toJson() => _$CategoryInviteStateToJson(this);
 }
