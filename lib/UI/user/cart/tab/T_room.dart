@@ -17,8 +17,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
 class Room extends StatefulWidget {
-  final String title = 'Cart';
-
   @override
   State<StatefulWidget> createState() => RoomState();
 }
@@ -26,6 +24,7 @@ class Room extends StatefulWidget {
 class RoomState extends State<Room> {
   String fullName = '';
   String room = '';
+
   @override
   void initState() {
     super.initState();
@@ -35,6 +34,7 @@ class RoomState extends State<Room> {
 
   List<String> tmpList = ['ciao', 'come'];
   List<Widget> creditCards = [];
+
   @override
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
@@ -63,28 +63,33 @@ class RoomState extends State<Room> {
                           Container(
                             margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
                             child: Text(
-                              'Room Number:', ///TODO Make it Global
+                              AppLocalizations.of(context).roomNumberColon,
                               textAlign: TextAlign.start,
                               style: TextStyle(
                                 letterSpacing: 0.25,
                                 fontFamily: BuytimeTheme.FontFamily,
                                 color: BuytimeTheme.TextMedium,
-                                fontSize: 14, ///SizeConfig.safeBlockHorizontal * 3.5
+                                fontSize: 14,
+
+                                ///SizeConfig.safeBlockHorizontal * 3.5
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
                           ),
+
                           ///Room Number Value
                           Container(
                             margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 5),
                             child: Text(
-                              room, ///TODO Make it Global
+                              room,
                               textAlign: TextAlign.start,
                               style: TextStyle(
                                 letterSpacing: 0.5,
                                 fontFamily: BuytimeTheme.FontFamily,
                                 color: BuytimeTheme.TextBlack,
-                                fontSize: 16, ///SizeConfig.safeBlockHorizontal * 3.5
+                                fontSize: 16,
+
+                                ///SizeConfig.safeBlockHorizontal * 3.5
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
@@ -98,6 +103,7 @@ class RoomState extends State<Room> {
                     color: BuytimeTheme.BackgroundLightGrey,
                     height: SizeConfig.safeBlockVertical * .2,
                   ),
+
                   ///User Name
                   Container(
                     margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * .5),
@@ -112,28 +118,33 @@ class RoomState extends State<Room> {
                           Container(
                             margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
                             child: Text(
-                              'Name:', ///TODO Make it Global
+                              AppLocalizations.of(context).nameColon,
                               textAlign: TextAlign.start,
                               style: TextStyle(
                                 letterSpacing: 0.25,
                                 fontFamily: BuytimeTheme.FontFamily,
                                 color: BuytimeTheme.TextMedium,
-                                fontSize: 14, ///SizeConfig.safeBlockHorizontal * 3.5
+                                fontSize: 14,
+
+                                ///SizeConfig.safeBlockHorizontal * 3.5
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
                           ),
+
                           ///Name Value
                           Container(
                             margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 5),
                             child: Text(
-                              fullName, ///TODO Make it Global
+                              fullName,
                               textAlign: TextAlign.start,
                               style: TextStyle(
                                 letterSpacing: 0.5,
                                 fontFamily: BuytimeTheme.FontFamily,
                                 color: BuytimeTheme.TextBlack,
-                                fontSize: 16, ///SizeConfig.safeBlockHorizontal * 3.5
+                                fontSize: 16,
+
+                                ///SizeConfig.safeBlockHorizontal * 3.5
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
@@ -147,6 +158,7 @@ class RoomState extends State<Room> {
                     color: BuytimeTheme.BackgroundLightGrey,
                     height: SizeConfig.safeBlockVertical * .2,
                   ),
+
                   ///Please ...
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -155,12 +167,14 @@ class RoomState extends State<Room> {
                         margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
                         padding: EdgeInsets.all(5.0),
                         child: Text(
-                          'Please charge this amount to my hotel bill.',//AppLocalizations.of(context).somethingIsNotRight,
+                          AppLocalizations.of(context).pleaseChargeAmountToMyBill,
                           style: TextStyle(
                             letterSpacing: 0.5,
                             fontFamily: BuytimeTheme.FontFamily,
                             color: BuytimeTheme.UserPrimary,
-                            fontSize: 16, ///SizeConfig.safeBlockHorizontal * 3.5
+                            fontSize: 16,
+
+                            ///SizeConfig.safeBlockHorizontal * 3.5
                             fontWeight: FontWeight.w600,
                           ),
                         ),

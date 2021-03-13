@@ -14,10 +14,10 @@ import 'package:intl/intl.dart';
 import 'package:share/share.dart';
 
 class TimeSlotWidget extends StatefulWidget {
-
   ServiceSlot serviceSlot;
   int index;
   bool selected;
+
   TimeSlotWidget(this.serviceSlot, this.index, this.selected);
 
   @override
@@ -25,19 +25,16 @@ class TimeSlotWidget extends StatefulWidget {
 }
 
 class _TimeSlotWidgetState extends State<TimeSlotWidget> {
-
   String bookingStatus = '';
   bool closed = false;
 
   @override
   void initState() {
     super.initState();
-
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Container(
       //margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 2),
       child: Column(
@@ -52,17 +49,19 @@ class _TimeSlotWidgetState extends State<TimeSlotWidget> {
             child: FittedBox(
               fit: BoxFit.scaleDown,
               child: Text(
-                widget.index == 0 ? '${widget.serviceSlot.startTime.first}' : '${widget.serviceSlot.startTime.elementAt(widget.index)}', ///TODO Make it Global
+                widget.index == 0 ? '${widget.serviceSlot.startTime.first}' : '${widget.serviceSlot.startTime.elementAt(widget.index)}',
                 style: TextStyle(
-                  //letterSpacing: 1.25,
+                    //letterSpacing: 1.25,
                     fontFamily: BuytimeTheme.FontFamily,
                     color: BuytimeTheme.TextBlack,
                     fontWeight: FontWeight.w400,
-                    fontSize: 16 ///SizeConfig.safeBlockHorizontal * 4
-                ),
+                    fontSize: 16
+                    ///SizeConfig.safeBlockHorizontal * 4
+                    ),
               ),
             ),
           ),
+
           ///Price
           Container(
             width: 100,
@@ -70,33 +69,35 @@ class _TimeSlotWidgetState extends State<TimeSlotWidget> {
             child: FittedBox(
               fit: BoxFit.scaleDown,
               child: Text(
-                '€ ${widget.serviceSlot.price.toStringAsFixed(2)}', ///TODO Make it Global
+                AppLocalizations.of(context).currency + widget.serviceSlot.price.toStringAsFixed(2),
                 style: TextStyle(
-                  //letterSpacing: 1.25,
+                    //letterSpacing: 1.25,
                     fontFamily: BuytimeTheme.FontFamily,
                     color: BuytimeTheme.TextBlack,
                     fontWeight: FontWeight.w400,
-                    fontSize: 16 ///SizeConfig.safeBlockHorizontal * 4
-                ),
+                    fontSize: 16
+                    ///SizeConfig.safeBlockHorizontal * 4
+                    ),
               ),
             ),
           ),
-          widget.selected ? Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Container(
-                margin: EdgeInsets.only(top: 5, right: 2),
-                child: Icon(
-                  Icons.check_circle,
-                  color: BuytimeTheme.UserPrimary.withOpacity(.5),
-                  size: 20,
-                ),
-              )
-            ],
-          ) : Container()
+          widget.selected
+              ? Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(top: 5, right: 2),
+                      child: Icon(
+                        Icons.check_circle,
+                        color: BuytimeTheme.UserPrimary.withOpacity(.5),
+                        size: 20,
+                      ),
+                    )
+                  ],
+                )
+              : Container()
         ],
       ),
     );
   }
 }
-

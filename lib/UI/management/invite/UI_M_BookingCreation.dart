@@ -575,7 +575,7 @@ class _BookingCreationState extends State<BookingCreation> {
                                                   mainAxisAlignment: MainAxisAlignment.center,
                                                   children: [
                                                     Text(
-                                                      "CREATE INVITE", ///TODO make it Global
+                                                      AppLocalizations.of(context).createInviteUpper,
                                                       style: TextStyle(
                                                           fontSize: 14,
                                                           fontFamily: BuytimeTheme.FontFamily,

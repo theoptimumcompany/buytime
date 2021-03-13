@@ -114,7 +114,7 @@ class _CreditCardState extends State<CreditCard> {
                         children: [
                           ///Card Name
                           Text(
-                            '$cardName',//AppLocalizations.of(context).logBack, ///TODO Make it Global
+                            '$cardName',
                             style: TextStyle(
                                 fontSize: SizeConfig.safeBlockHorizontal * 4,
                                 fontFamily: BuytimeTheme.FontFamily,
@@ -124,7 +124,7 @@ class _CreditCardState extends State<CreditCard> {
                           ),
                           ///Ending **** ....
                           Text(
-                            'ending **** $cardEndWith',//AppLocalizations.of(context).logBack, ///TODO Make it Global
+                            AppLocalizations.of(context).endingCard + cardEndWith,
                             style: TextStyle(
                                 fontSize: SizeConfig.safeBlockHorizontal * 4,
                                 fontFamily: BuytimeTheme.FontFamily,
@@ -169,7 +169,7 @@ class _CreditCardState extends State<CreditCard> {
                                       color: !widget.cardState.selected ? BuytimeTheme.TextGrey : BuytimeTheme.ActionButton,
                                     ),
                                     Text(
-                                      !widget.cardState.selected ? 'select' : 'selected',//AppLocalizations.of(context).somethingIsNotRight,
+                                      !widget.cardState.selected ? AppLocalizations.of(context).select : AppLocalizations.of(context).selected,
                                       style: TextStyle(
                                           letterSpacing: SizeConfig.safeBlockHorizontal * .2,
                                           fontFamily: BuytimeTheme.FontFamily,

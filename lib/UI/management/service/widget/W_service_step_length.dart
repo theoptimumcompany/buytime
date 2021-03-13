@@ -6,6 +6,7 @@ import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class StepLength extends StatefulWidget {
   Size media;
@@ -61,7 +62,7 @@ class StepLengthState extends State<StepLength> {
                     Container(
                       child: Flexible(
                         child: Text(
-                          'Service duration', //TODO: trans
+                          AppLocalizations.of(context).serviceDuration,
                           textAlign: TextAlign.start,
                           overflow: TextOverflow.clip,
                           style: TextStyle(
@@ -108,7 +109,9 @@ class StepLengthState extends State<StepLength> {
                             ),
                           ),
                           child: Slider(
-                            min: 10, ///TODO
+                            min: 10,
+
+                            ///TODO: max duration
                             max: duration.toDouble(),
                             divisions: 10,
                             label: '$durationSlider',
@@ -265,8 +268,7 @@ class StepLengthState extends State<StepLength> {
                       Container(
                         child: Flexible(
                           child: Text(
-                            'This service offered to guests that lasts $durationSlider minutes',
-                            //TODO: trans
+                            AppLocalizations.of(context).serviceOfferedToGuests + durationSlider.toString() + AppLocalizations.of(context).spaceMinutes,
                             textAlign: TextAlign.start,
                             overflow: TextOverflow.clip,
                             style: TextStyle(
@@ -289,7 +291,7 @@ class StepLengthState extends State<StepLength> {
                       Container(
                         child: Flexible(
                           child: Text(
-                            'Multiple Bookings', //TODO: trans
+                            AppLocalizations.of(context).multipleBookings,
                             textAlign: TextAlign.start,
                             overflow: TextOverflow.clip,
                             style: TextStyle(
@@ -456,8 +458,7 @@ class StepLengthState extends State<StepLength> {
                       Container(
                         child: Flexible(
                           child: Text(
-                            !bookingInfinity ? 'This service has a limit of bookings of ' + bookingSlider.toString() : 'This service has no limit of bookings',
-                            //TODO: trans
+                            !bookingInfinity ? AppLocalizations.of(context).serviceHasALimitOfBookings + bookingSlider.toString() : AppLocalizations.of(context).serviceHasNoLimitOfBookings,
                             textAlign: TextAlign.start,
                             overflow: TextOverflow.clip,
                             style: TextStyle(

@@ -200,8 +200,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                           Flexible(
                             child: Container(
                               child: Text(
-                                //AppLocalizations.of(context).serviceEdit,
-                                "Create Service", //Todo: trans
+                                AppLocalizations.of(context).createService,
                                 textAlign: TextAlign.start,
                                 overflow: TextOverflow.ellipsis,
                                 style: BuytimeTheme.appbarTitle,
@@ -289,7 +288,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                       padding: const EdgeInsets.only(top: 0.0, bottom: 5.0, left: 10.0, right: 10.0),
                                       child: TextFormField(
                                           initialValue: _serviceName,
-                                          validator: (value) => value.isEmpty ? 'Service name is blank' : null,
+                                          validator: (value) => value.isEmpty ? AppLocalizations.of(context).serviceNameBlank : null,
                                           onChanged: (value) {
                                             if (validateAndSave()) {
                                               _serviceName = value;
@@ -353,10 +352,10 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                           keyboardType: TextInputType.numberWithOptions(decimal: true),
                                           inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^(\d+)?\.?\d{0,2}'))],
                                           validator: (value) => value.isEmpty
-                                              ? 'Service price is blank'
+                                              ? AppLocalizations.of(context).servicePriceBlank
                                               : validatePrice(value)
                                                   ? null
-                                                  : 'Not a valid price',
+                                                  : AppLocalizations.of(context).notValidPrice,
                                           onChanged: (value) {
                                             if (value == "") {
                                               setState(() {
@@ -400,7 +399,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          AppLocalizations.of(context).selectCateogories,
+                                          AppLocalizations.of(context).selectCategories,
                                           textAlign: TextAlign.start,
                                           style: TextStyle(
                                             fontSize: media.height * 0.02,
@@ -426,7 +425,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                             child: Row(
                                           children: [
                                             Text(
-                                              'You have to select at least one category', //TODO: trans
+                                              AppLocalizations.of(context).notZeroCategory,
                                               style: TextStyle(
                                                 fontSize: media.height * 0.018,
                                                 color: BuytimeTheme.ErrorRed,
@@ -446,7 +445,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          'Tag', //TODO: trans lang
+                                          AppLocalizations.of(context).tag,
                                           textAlign: TextAlign.start,
                                           style: TextStyle(
                                             fontSize: media.height * 0.02,
@@ -474,7 +473,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                                           enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
                                                           focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
                                                           errorBorder: OutlineInputBorder(borderSide: BorderSide(color: BuytimeTheme.ErrorRed), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                                          labelText: 'Add new tag',
+                                                          labelText:  AppLocalizations.of(context).addNewTag,
                                                           labelStyle: TextStyle(
                                                             fontSize: 14,
                                                             fontFamily: BuytimeTheme.FontFamily,
@@ -501,7 +500,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                                         onPressed: () {
                                                           setState(() {
                                                             if (_tagServiceController.text.isNotEmpty) {
-                                                              snapshot.serviceState.tag.add(_tagServiceController.text); //TODO : Check if is possible without errors
+                                                              snapshot.serviceState.tag.add(_tagServiceController.text);
                                                               _tagServiceController.clear();
                                                             }
                                                           });

@@ -154,97 +154,97 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
   }
 
   String returnTextSwitchers() {
-    String text = 'The service requires a manual confirmation by the staff'; //TODO: trans
+    String text = AppLocalizations.of(context).manualServiceConfirmation;
     bool switchManual = StoreProvider.of<AppState>(context).state.serviceState.switchAutoConfirm;
     bool switchBookable = StoreProvider.of<AppState>(context).state.serviceState.switchSlots;
     if (switchManual && switchBookable) {
-      text = 'The reservable service no requires a manual confirmation by the staff';//TODO: trans
+      text = AppLocalizations.of(context).reservableAutomaticServiceConfirmation;
       return text;
     } else if (switchManual && !switchBookable) {
-      text = 'The purchasable service no requires a manual confirmation by the staff';//TODO: trans
+      text = AppLocalizations.of(context).purchasableAutomaticServiceConfirmation;
       return text;
     } else if (!switchManual && switchBookable) {
-      text = 'The reservable service requires a manual confirmation by the staff';//TODO: trans
+      text = AppLocalizations.of(context).reservableManualServiceConfirmation;
       return text;
     } else if (!switchManual && !switchBookable) {
-      text = 'The purchasable service requires a manual confirmation by the staff';//TODO: trans
+      text = AppLocalizations.of(context).purchasableManualServiceConfirmation;
       return text;
     }
     return text;
   }
 
-  String showDaysInterval(int indexSlot, int indexInterval) {
-    if (StoreProvider.of<AppState>(context).state.serviceState.serviceSlot[indexSlot].switchWeek[indexInterval] == true &&
-        StoreProvider.of<AppState>(context).state.serviceState.serviceSlot[indexSlot].switchWeek[indexInterval] != null) {
-      String week = 'Every Day';//TODO: trans
-      if (indexInterval < (StoreProvider.of<AppState>(context).state.serviceState.serviceSlot[indexSlot].numberOfInterval - 1)) {
-        week = week + "/";
-      }
-      return week;
-    } else {
-      String week = '';
-      for (int z = 0; z < StoreProvider.of<AppState>(context).state.serviceState.serviceSlot[indexSlot].daysInterval[indexInterval].everyDay.length; z++) {
-        if (StoreProvider.of<AppState>(context).state.serviceState.serviceSlot[indexSlot].daysInterval[indexInterval].everyDay[z]) {
-          switch (z) {
-            case 0:
-              week = week + "Mon, ";//TODO: trans
-              break;
-            case 1:
-              week = week + "Tue, ";//TODO: trans
-              break;
-            case 2:
-              week = week + "Wed, ";//TODO: trans
-              break;
-            case 3:
-              week = week + "Thu, ";//TODO: trans
-              break;
-            case 4:
-              week = week + "Fri, ";//TODO: trans
-              break;
-            case 5:
-              week = week + "Sat, ";//TODO: trans
-              break;
-            case 6:
-              week = week + "Sun, ";
-              break;
-          }
-        }
-      }
-      week = week.substring(0, week.length - 2);
-      if (indexInterval < (StoreProvider.of<AppState>(context).state.serviceState.serviceSlot[indexSlot].numberOfInterval - 1)) {
-        week = week + " / ";
-      }
-      return week;
-    }
-  }
-
-  Widget showSlotInterval(int numberOfInterval, Size media, int indexSlot) {
-    List<Widget> listWidget = [];
-    Widget singleWidget;
-    String text = '';
-    for (int i = 0; i < numberOfInterval; i++) {
-      text = text +
-          StoreProvider.of<AppState>(context).state.serviceState.serviceSlot[indexSlot].startTime[i] +
-          "-" +
-          StoreProvider.of<AppState>(context).state.serviceState.serviceSlot[indexSlot].stopTime[i] +
-          " " +
-          showDaysInterval(indexSlot, i);
-    }
-    listWidget.add(Flexible(
-      child: Container(
-        child: Text(
-          text, //TODO: trans
-          overflow: TextOverflow.clip,
-          style: TextStyle(
-            fontSize: media.height * 0.020,
-            color: BuytimeTheme.TextGrey,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      ),
-    ));
-    return Row(mainAxisAlignment: MainAxisAlignment.start, children: listWidget);
-  }
+  // String showDaysInterval(int indexSlot, int indexInterval) {
+  //   if (StoreProvider.of<AppState>(context).state.serviceState.serviceSlot[indexSlot].switchWeek[indexInterval] == true &&
+  //       StoreProvider.of<AppState>(context).state.serviceState.serviceSlot[indexSlot].switchWeek[indexInterval] != null) {
+  //     String week =  AppLocalizations.of(context).everyDay;
+  //     if (indexInterval < (StoreProvider.of<AppState>(context).state.serviceState.serviceSlot[indexSlot].numberOfInterval - 1)) {
+  //       week = week + "/";
+  //     }
+  //     return week;
+  //   } else {
+  //     String week = '';
+  //     for (int z = 0; z < StoreProvider.of<AppState>(context).state.serviceState.serviceSlot[indexSlot].daysInterval[indexInterval].everyDay.length; z++) {
+  //       if (StoreProvider.of<AppState>(context).state.serviceState.serviceSlot[indexSlot].daysInterval[indexInterval].everyDay[z]) {
+  //         switch (z) {
+  //           case 0:
+  //             week = week + "Mon, ";
+  //             break;
+  //           case 1:
+  //             week = week + "Tue, ";
+  //             break;
+  //           case 2:
+  //             week = week + "Wed, ";
+  //             break;
+  //           case 3:
+  //             week = week + "Thu, ";
+  //             break;
+  //           case 4:
+  //             week = week + "Fri, ";
+  //             break;
+  //           case 5:
+  //             week = week + "Sat, ";
+  //             break;
+  //           case 6:
+  //             week = week + "Sun, ";
+  //             break;
+  //         }
+  //       }
+  //     }
+  //     week = week.substring(0, week.length - 2);
+  //     if (indexInterval < (StoreProvider.of<AppState>(context).state.serviceState.serviceSlot[indexSlot].numberOfInterval - 1)) {
+  //       week = week + " / ";
+  //     }
+  //     return week;
+  //   }
+  // }
+  //
+  // Widget showSlotInterval(int numberOfInterval, Size media, int indexSlot) {
+  //   List<Widget> listWidget = [];
+  //   Widget singleWidget;
+  //   String text = '';
+  //   for (int i = 0; i < numberOfInterval; i++) {
+  //     text = text +
+  //         StoreProvider.of<AppState>(context).state.serviceState.serviceSlot[indexSlot].startTime[i] +
+  //         "-" +
+  //         StoreProvider.of<AppState>(context).state.serviceState.serviceSlot[indexSlot].stopTime[i] +
+  //         " " +
+  //         showDaysInterval(indexSlot, i);
+  //   }
+  //   listWidget.add(Flexible(
+  //     child: Container(
+  //       child: Text(
+  //         text,
+  //         overflow: TextOverflow.clip,
+  //         style: TextStyle(
+  //           fontSize: media.height * 0.020,
+  //           color: BuytimeTheme.TextGrey,
+  //           fontWeight: FontWeight.w500,
+  //         ),
+  //       ),
+  //     ),
+  //   ));
+  //   return Row(mainAxisAlignment: MainAxisAlignment.start, children: listWidget);
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -286,7 +286,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                 child: Container(
                                   child: Text(
                                     //AppLocalizations.of(context).serviceEdit,
-                                    "Edit " + StoreProvider.of<AppState>(context).state.serviceState.name, //Todo: trans
+                                    AppLocalizations.of(context).editSpace + StoreProvider.of<AppState>(context).state.serviceState.name,
                                     textAlign: TextAlign.start,
                                     overflow: TextOverflow.ellipsis,
                                     style: BuytimeTheme.appbarTitle,
@@ -393,7 +393,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                               padding: const EdgeInsets.only(top: 0.0, bottom: 10.0, left: 10.0, right: 10.0),
                                               child: TextFormField(
                                                 initialValue: snapshot.serviceState.name,
-                                                validator: (value) => value.isEmpty ? 'Service name is blank' : null,
+                                                validator: (value) => value.isEmpty ? AppLocalizations.of(context).serviceNameBlank : null,
                                                 onChanged: (value) {
                                                   if (validateAndSave()) {
                                                     _serviceName = value;
@@ -407,16 +407,10 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                   }
                                                 },
                                                 decoration: InputDecoration(
-                                                    labelText: AppLocalizations.of(context).name,
-                                                  enabledBorder: OutlineInputBorder(
-                                                      borderSide: BorderSide(color: Color(0xffe0e0e0)),
-                                                      borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                                  focusedBorder: OutlineInputBorder(
-                                                      borderSide: BorderSide(color: Color(0xff666666)),
-                                                      borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                                  errorBorder: OutlineInputBorder(
-                                                      borderSide: BorderSide(color: Colors.redAccent),
-                                                      borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                  labelText: AppLocalizations.of(context).name,
+                                                  enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                  focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                  errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(8.0))),
                                                 ),
                                               ),
                                             ),
@@ -441,16 +435,10 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                   _serviceDescription = value;
                                                 },
                                                 decoration: InputDecoration(
-                                                    labelText: AppLocalizations.of(context).description,
-                                                  enabledBorder: OutlineInputBorder(
-                                                      borderSide: BorderSide(color: Color(0xffe0e0e0)),
-                                                      borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                                  focusedBorder: OutlineInputBorder(
-                                                      borderSide: BorderSide(color: Color(0xff666666)),
-                                                      borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                                  errorBorder: OutlineInputBorder(
-                                                      borderSide: BorderSide(color: Colors.redAccent),
-                                                      borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                  labelText: AppLocalizations.of(context).description,
+                                                  enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                  focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                  errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(8.0))),
                                                 ),
                                               ),
                                             ),
@@ -472,10 +460,10 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                         keyboardType: TextInputType.number,
                                                         inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d*)'))],
                                                         validator: (value) => value.isEmpty
-                                                            ? 'Service price is blank'
+                                                            ? AppLocalizations.of(context).servicePriceBlank
                                                             : validatePrice(value)
                                                                 ? null
-                                                                : 'Not a valid price',
+                                                                : AppLocalizations.of(context).notValidPrice,
                                                         onChanged: (value) {
                                                           if (value == "") {
                                                             setState(() {
@@ -503,15 +491,9 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                         },
                                                         decoration: InputDecoration(
                                                           labelText: AppLocalizations.of(context).price,
-                                                          enabledBorder: OutlineInputBorder(
-                                                              borderSide: BorderSide(color: Color(0xffe0e0e0)),
-                                                              borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                                          focusedBorder: OutlineInputBorder(
-                                                              borderSide: BorderSide(color: Color(0xff666666)),
-                                                              borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                                          errorBorder: OutlineInputBorder(
-                                                              borderSide: BorderSide(color: Colors.redAccent),
-                                                              borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                          enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                          focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                          errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(8.0))),
                                                         ),
                                                       ),
                                                     ),
@@ -525,7 +507,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
                                                 Text(
-                                                  AppLocalizations.of(context).selectCateogories,
+                                                  AppLocalizations.of(context).selectCategories,
                                                   textAlign: TextAlign.start,
                                                   style: TextStyle(
                                                     fontSize: media.height * 0.02,
@@ -551,7 +533,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                     child: Row(
                                                   children: [
                                                     Text(
-                                                      'You have to select at least one category',  //TODO: trans
+                                                      AppLocalizations.of(context).notZeroCategory,
                                                       style: TextStyle(
                                                         fontSize: media.height * 0.018,
                                                         color: BuytimeTheme.ErrorRed,
@@ -580,7 +562,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
                                                 Text(
-                                                  'Tag', //TODO: trans lang
+                                                  AppLocalizations.of(context).tag,
                                                   textAlign: TextAlign.start,
                                                   style: TextStyle(
                                                     fontSize: media.height * 0.02,
@@ -605,10 +587,13 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                                 controller: _tagServiceController,
                                                                 textAlign: TextAlign.start,
                                                                 decoration: InputDecoration(
-                                                                  enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                                                  focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                                                  errorBorder: OutlineInputBorder(borderSide: BorderSide(color: BuytimeTheme.ErrorRed), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                                                  labelText: 'Add new tag', //TODO: trans
+                                                                  enabledBorder:
+                                                                      OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                                                  focusedBorder:
+                                                                      OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                                                  errorBorder:
+                                                                      OutlineInputBorder(borderSide: BorderSide(color: BuytimeTheme.ErrorRed), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                                                  labelText: AppLocalizations.of(context).addNewTag,
                                                                   labelStyle: TextStyle(
                                                                     fontSize: 14,
                                                                     fontFamily: BuytimeTheme.FontFamily,
@@ -635,7 +620,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                                 onPressed: () {
                                                                   setState(() {
                                                                     if (_tagServiceController.text.isNotEmpty) {
-                                                                      snapshot.serviceState.tag.add(_tagServiceController.text); //TODO : Check if is possible without errors
+                                                                      snapshot.serviceState.tag.add(_tagServiceController.text);
                                                                       _tagServiceController.clear();
                                                                     }
                                                                   });
@@ -704,7 +689,6 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                   Flexible(
                                                     child: Text(
                                                       returnTextSwitchers(),
-                                                      //  AppLocalizations.of(context).  todo : trans
                                                       textAlign: TextAlign.start,
                                                       overflow: TextOverflow.clip,
                                                       style: TextStyle(
@@ -733,8 +717,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                         }),
                                                     Expanded(
                                                       child: Text(
-                                                        "Allow users to get this service without manager confirmation",
-                                                        //  AppLocalizations.of(context).  todo : trans
+                                                        AppLocalizations.of(context).managerConfirmation,
                                                         textAlign: TextAlign.start,
                                                         overflow: TextOverflow.clip,
                                                         style: TextStyle(
@@ -764,8 +747,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                         }),
                                                     Expanded(
                                                       child: Text(
-                                                        "The service can be reserved ",
-                                                        //  AppLocalizations.of(context).  todo : trans
+                                                        AppLocalizations.of(context).serviceCanBeReserved,
                                                         textAlign: TextAlign.start,
                                                         overflow: TextOverflow.clip,
                                                         style: TextStyle(
@@ -789,7 +771,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                       children: [
                                                         Flexible(
                                                           child: Text(
-                                                            'You have to create at least a slot for a reservable service', //TODO: trans
+                                                            AppLocalizations.of(context).notZeroServiceSlot,
                                                             style: TextStyle(
                                                               fontSize: media.height * 0.018,
                                                               color: BuytimeTheme.ErrorRed,
@@ -833,8 +815,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                         children: [
                                                           Container(
                                                             child: Text(
-                                                              "Service time availability",
-                                                              //  AppLocalizations.of(context).  //TODO: trans
+                                                              AppLocalizations.of(context).serviceTimeAvailability,
                                                               textAlign: TextAlign.start,
                                                               overflow: TextOverflow.clip,
                                                               style: TextStyle(
@@ -888,7 +869,6 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                                     onDismissed: (direction) {
                                                                       setState(() {
                                                                         ///Deleting Slot
-                                                                        print("Delete Slot " + index.toString());
                                                                         StoreProvider.of<AppState>(context).dispatch(DeleteServiceSlot(index));
                                                                       });
                                                                     },
@@ -914,7 +894,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                                               children: [
                                                                                 Text(
-                                                                                  'Time Availability ' + (index + 1).toString(), //TODO: trans
+                                                                                  AppLocalizations.of(context).timeAvailabilitySpace + (index + 1).toString(),
                                                                                   style: TextStyle(
                                                                                     fontSize: media.height * 0.020,
                                                                                     color: BuytimeTheme.TextBlack,
@@ -933,7 +913,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                                                 ),
                                                                                 Row(
                                                                                   children: [
-                                                                                    Text(snapshot.serviceState.serviceSlot[index].price.toString() + " euro"), //TODO: trans
+                                                                                    Text(snapshot.serviceState.serviceSlot[index].price.toString() + AppLocalizations.of(context).spaceEuro),
                                                                                   ],
                                                                                 ),
                                                                                 //showSlotInterval(snapshot.serviceState.serviceSlot[index].numberOfInterval, media, index),
@@ -954,9 +934,10 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                               children: [
                                                                 Container(
                                                                   child: Text(
-                                                                    (snapshot.serviceState.name != null && snapshot.serviceState.name != "" ? snapshot.serviceState.name : "The service") +
-                                                                        " has not reservable slots",
-                                                                    //  AppLocalizations.of(context). //TODO: trans
+                                                                    (snapshot.serviceState.name != null && snapshot.serviceState.name != ""
+                                                                            ? snapshot.serviceState.name
+                                                                            : AppLocalizations.of(context).theService) +
+                                                                        AppLocalizations.of(context).spaceHasNotReservableSlots,
                                                                     textAlign: TextAlign.start,
                                                                     overflow: TextOverflow.clip,
                                                                     style: TextStyle(

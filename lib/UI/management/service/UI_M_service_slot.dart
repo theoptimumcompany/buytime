@@ -38,11 +38,9 @@ class UI_M_ServiceSlotState extends State<UI_M_ServiceSlot> {
 
   bool validateStepper() {
     if (StoreProvider.of<AppState>(context).state.serviceSlot.checkIn == null || StoreProvider.of<AppState>(context).state.serviceSlot.checkIn == '') {
-      print(StoreProvider.of<AppState>(context).state.serviceSlot.checkIn);
       print("Error CheckIn");
       return false;
     } else if (StoreProvider.of<AppState>(context).state.serviceSlot.checkOut == null || StoreProvider.of<AppState>(context).state.serviceSlot.checkOut == '') {
-      print(StoreProvider.of<AppState>(context).state.serviceSlot.checkOut);
       print("Error CheckOut");
       return false;
     } else if (StoreProvider.of<AppState>(context).state.serviceSlot.startTime == null || StoreProvider.of<AppState>(context).state.serviceSlot.startTime.isEmpty || StoreProvider.of<AppState>(context).state.serviceSlot.startTime.contains('null:null')) {
@@ -92,7 +90,7 @@ class UI_M_ServiceSlotState extends State<UI_M_ServiceSlot> {
                             ),
                             Container(
                               child: Text(
-                                "Slot Management", //TODO: trans
+                                AppLocalizations.of(context).slotManagement,
                                 textAlign: TextAlign.start,
                                 style: TextStyle(
                                   fontSize: media.height * 0.028,
@@ -119,26 +117,26 @@ class UI_M_ServiceSlotState extends State<UI_M_ServiceSlot> {
                                     currentStep: currentStep,
                                     steps: [
                                       Step(
-                                        title: Text("Define period"), //TODO: trans
+                                        title: Text(AppLocalizations.of(context).definePeriod),
                                         content: CalendarAvailability(media: media),
                                         state: currentStep == 0 ? StepState.editing : StepState.indexed,
                                         isActive: true,
                                       ),
                                       Step(
-                                        title: Text("Define weekly slots"),//TODO: trans
+                                        title: Text(AppLocalizations.of(context).defineWeeklySlots),
                                         content: StepAvailableTime(media: media),
                                         state: currentStep == 1 ? StepState.editing : StepState.indexed,
                                         isActive: true,
                                       ),
                                       Step(
-                                        title: Text("Provide service duration"),//TODO: trans
+                                        title: Text(AppLocalizations.of(context).provideServiceDuration),
                                         content: StepLength(media: media),
                                         state: currentStep == 2 ? StepState.editing : StepState.indexed,
                                         //state: StepState.complete,
                                         isActive: true,
                                       ),
                                       Step(
-                                        title: Text("Price"),//TODO: trans
+                                        title: Text(AppLocalizations.of(context).price),
                                         content: StepPrice(media: media),
                                         state: currentStep == 3 ? StepState.editing : StepState.indexed,
                                         isActive: true,
@@ -169,7 +167,7 @@ class UI_M_ServiceSlotState extends State<UI_M_ServiceSlot> {
                                                 child: Padding(
                                                   padding: const EdgeInsets.all(15.0),
                                                   child: Text(
-                                                    currentStep < 3 ? "NEXT" : "SAVE", //todo: trans
+                                                    currentStep < 3 ? AppLocalizations.of(context).nextUpper : AppLocalizations.of(context).saveUpper,
                                                     textAlign: TextAlign.start,
                                                     style: TextStyle(
                                                       fontSize: media.width * 0.04,
@@ -208,7 +206,7 @@ class UI_M_ServiceSlotState extends State<UI_M_ServiceSlot> {
                                             }
                                           } else {
                                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                              content: Text('Complete all fields to save'),  //TOdo:trans
+                                              content: Text(AppLocalizations.of(context).completeAllFieldsToSave),  //TOdo:trans
                                               duration: Duration(seconds: 3),
                                             ));
                                           }

@@ -2,13 +2,13 @@ import 'package:Buytime/UI/management/old_design/UI_M_business_list.dart';
 import 'package:Buytime/UI/management/order/UI_M_OrderHistory.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-
-// TODO insert context and translate
 class ManagerTabNavigationItem {
   final Widget page;
   final Widget title;
   final Icon icon;
+  static var context;
 
   ManagerTabNavigationItem({
     @required this.page,
@@ -20,12 +20,12 @@ class ManagerTabNavigationItem {
     ManagerTabNavigationItem(
       page: UI_M_BusinessList(),
       icon: Icon(Icons.business),
-      title: Text("Businesses"),
+      title: Text(AppLocalizations.of(context).businesses),
     ),
     ManagerTabNavigationItem(
       page: UI_M_OrderHistory(),
       icon: Icon(Icons.list),
-      title: Text("Orders"),
+      title: Text(AppLocalizations.of(context).orders),
     ),
   ];
 }

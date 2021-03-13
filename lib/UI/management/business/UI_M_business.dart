@@ -59,14 +59,14 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
       builder: (context, snapshot) {
         List<CategoryState> categoryRootList = snapshot.categoryList.categoryListState;
         snapshot.business.business_type.forEach((element) {
-          if(element.content == 'Hotel')
-            hotel = true;
+          if (element.content == 'Hotel') hotel = true;
         });
         return WillPopScope(
           onWillPop: () async => false,
           child: Scaffold(
             drawerEnableOpenDragGesture: false,
             key: _drawerKey,
+
             ///Appbar
             appBar: BuytimeAppbar(
               children: [
@@ -157,44 +157,32 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                                             Container(
                                               child: Text(
                                                 'Hi ' + snapshot.user.name,
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.w700,
-                                                    fontFamily: BuytimeTheme.FontFamily,
-                                                    fontSize: 24,
-                                                    color: BuytimeTheme.TextBlack
-                                                ),
+                                                style: TextStyle(fontWeight: FontWeight.w700, fontFamily: BuytimeTheme.FontFamily, fontSize: 24, color: BuytimeTheme.TextBlack),
                                               ),
                                             ),
+
                                             ///Employees count
                                             Container(
                                               margin: EdgeInsets.only(top: 10),
                                               child: Text(
                                                 AppLocalizations.of(context).employees,
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.w400,
-                                                    fontFamily: BuytimeTheme.FontFamily,
-                                                    fontSize: 14,
-                                                    color: BuytimeTheme.TextMedium
-                                                ),
+                                                style: TextStyle(fontWeight: FontWeight.w400, fontFamily: BuytimeTheme.FontFamily, fontSize: 14, color: BuytimeTheme.TextMedium),
                                               ),
                                             ),
+
                                             ///Menu items count
                                             Container(
                                               margin: EdgeInsets.only(top: 2.5),
                                               child: Text(
                                                 AppLocalizations.of(context).menuItems,
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.w400,
-                                                    fontFamily: BuytimeTheme.FontFamily,
-                                                    fontSize: 14,
-                                                    color: BuytimeTheme.TextMedium
-                                                ),
+                                                style: TextStyle(fontWeight: FontWeight.w400, fontFamily: BuytimeTheme.FontFamily, fontSize: 14, color: BuytimeTheme.TextMedium),
                                               ),
                                             )
                                           ],
                                         ),
                                       ),
                                     ),
+
                                     ///Business logo
                                     Expanded(
                                       flex: 2,
@@ -202,6 +190,7 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                                         Container(
                                           //color: Colors.deepOrange,
                                           width: 140,
+
                                           ///Fixed width
                                           child: Image.network(StoreProvider.of<AppState>(context).state.business.logo, fit: BoxFit.cover, scale: 1.1),
                                         )
@@ -215,6 +204,7 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                         ],
                       ),
                     ),
+
                     ///Categories & Manage
                     Container(
                         margin: EdgeInsets.only(left: 20.0, top: 20.0, right: 10.0, bottom: SizeConfig.safeBlockVertical * 1),
@@ -225,14 +215,10 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                             Container(
                               child: Text(
                                 AppLocalizations.of(context).serviceCategories,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w700,
-                                    fontFamily: BuytimeTheme.FontFamily,
-                                    fontSize: 18,
-                                    color: BuytimeTheme.TextBlack
-                                ),
+                                style: TextStyle(fontWeight: FontWeight.w700, fontFamily: BuytimeTheme.FontFamily, fontSize: 18, color: BuytimeTheme.TextBlack),
                               ),
                             ),
+
                             ///Manage
                             InkWell(
                               onTap: () {
@@ -249,17 +235,13 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                                 padding: EdgeInsets.all(5.0),
                                 child: Text(
                                   AppLocalizations.of(context).manage,
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontFamily: BuytimeTheme.FontFamily,
-                                      fontSize: 18,
-                                      color: BuytimeTheme.UserPrimary
-                                  ),
+                                  style: TextStyle(fontWeight: FontWeight.w500, fontFamily: BuytimeTheme.FontFamily, fontSize: 18, color: BuytimeTheme.UserPrimary),
                                 ),
                               ),
                             ),
                           ],
                         )),
+
                     ///Categories list top part
                     Container(
                       padding: EdgeInsets.only(left: 20.0, right: 20.0, top: SizeConfig.safeBlockVertical * 1, bottom: 10),
@@ -272,35 +254,25 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                             child: Container(
                               child: Text(
                                 AppLocalizations.of(context).menuItemsCaps,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontFamily: BuytimeTheme.FontFamily,
-                                    fontSize: 10,
-                                    color: BuytimeTheme.TextBlack,
-                                  letterSpacing: 1.5
-                                ),
+                                style: TextStyle(fontWeight: FontWeight.w600, fontFamily: BuytimeTheme.FontFamily, fontSize: 10, color: BuytimeTheme.TextBlack, letterSpacing: 1.5),
                               ),
                             ),
                           ),
+
                           ///Most popular text
                           Expanded(
                             flex: 1,
                             child: Container(
                               child: Text(
                                 AppLocalizations.of(context).mostPopularCaps,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontFamily: BuytimeTheme.FontFamily,
-                                    fontSize: 10,
-                                    color: BuytimeTheme.TextBlack,
-                                    letterSpacing: 1.5
-                                ),
+                                style: TextStyle(fontWeight: FontWeight.w600, fontFamily: BuytimeTheme.FontFamily, fontSize: 10, color: BuytimeTheme.TextBlack, letterSpacing: 1.5),
                               ),
                             ),
                           )
                         ],
                       ),
                     ),
+
                     ///Categories list & Invite user
                     Expanded(
                       child: GestureDetector(
@@ -314,6 +286,7 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                           children: [
                             categoryRootList.length > 0
                                 ?
+
                                 ///Categories list
                                 Positioned.fill(
                                     child: Align(
@@ -343,15 +316,17 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                                         ]),
                                       ),
                                     ),
-                                  ) : Container(
+                                  )
+                                : Container(
                                     height: SizeConfig.screenHeight * 0.1,
                                     child: Center(
-                                      child: Text("Non ci sono categorie attive!"),
+                                      child: Text(AppLocalizations.of(context).noActiveCategory),
                                     ),
                                   ),
-                                  ///Invite
-                                  hotel ?
-                                  Positioned.fill(
+
+                            ///Invite
+                            hotel
+                                ? Positioned.fill(
                                     child: Align(
                                       alignment: Alignment.bottomCenter,
                                       child: Container(
@@ -372,83 +347,77 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                                             onTap: () {
                                               debugPrint('INVITE USER Clicked!');
 
-                                        /*final RenderBox box = context.findRenderObject();
-                                              Share.share('Share', subject: 'Test', sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);*/
+                                              /*final RenderBox box = context.findRenderObject();
+                                              Share.share(AppLocalizations.of(context).share, subject: 'Test', sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);*/
                                               StoreProvider.of<AppState>(context).dispatch(BookingListRequest(snapshot.business.id_firestore));
                                               //Navigator.push(context, MaterialPageRoute(builder: (context) => BookingList(bookingList: bookingList)));
-                                      },
-                                      child: Container(
-                                        height: 70,
-                                        child: Row(
-                                          children: [
-                                            ///QR code Icon
-                                            Expanded(
-                                              flex: 1,
-                                              child: Container(
-                                                margin: EdgeInsets.only(left: 15.0),
-                                                child: Icon(
-                                                  Icons.qr_code_scanner,
-                                                  color: Colors.grey,
-                                                ),
+                                            },
+                                            child: Container(
+                                              height: 70,
+                                              child: Row(
+                                                children: [
+                                                  ///QR code Icon
+                                                  Expanded(
+                                                    flex: 1,
+                                                    child: Container(
+                                                      margin: EdgeInsets.only(left: 15.0),
+                                                      child: Icon(
+                                                        Icons.qr_code_scanner,
+                                                        color: Colors.grey,
+                                                      ),
+                                                    ),
+                                                  ),
+
+                                                  ///Message
+                                                  Expanded(
+                                                      flex: 3,
+                                                      child: Container(
+                                                        margin: EdgeInsets.only(top: 10.0, bottom: 5.0),
+                                                        child: Column(
+                                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                          children: [
+                                                            Container(
+                                                              child: Text(
+                                                                AppLocalizations.of(context).inviteUser,
+                                                                style: TextStyle(
+                                                                    color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w400, fontFamily: BuytimeTheme.FontFamily, fontSize: 16, letterSpacing: 0.15),
+                                                              ),
+                                                            ),
+                                                            Container(
+                                                              child: FittedBox(
+                                                                fit: BoxFit.scaleDown,
+                                                                child: Text(
+                                                                  AppLocalizations.of(context).userJoinQR,
+                                                                  style: TextStyle(
+                                                                      color: BuytimeTheme.TextMedium,
+                                                                      fontWeight: FontWeight.w400,
+                                                                      fontFamily: BuytimeTheme.FontFamily,
+                                                                      fontSize: 14,
+                                                                      letterSpacing: 0.25),
+                                                                ),
+                                                              ),
+                                                            )
+                                                          ],
+                                                        ),
+                                                      )),
+
+                                                  ///Arrow Icon
+                                                  Expanded(
+                                                    flex: 1,
+                                                    child: Container(
+                                                      child: Icon(Icons.keyboard_arrow_right, color: Colors.grey),
+                                                    ),
+                                                  )
+                                                ],
                                               ),
                                             ),
-
-                                            ///Message
-                                            Expanded(
-                                                flex: 3,
-                                                child: Container(
-                                                  margin: EdgeInsets.only(top: 10.0, bottom: 5.0),
-                                                  child: Column(
-                                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    children: [
-                                                      Container(
-                                                        child: Text(
-                                                          'Invite user',
-                                                          style: TextStyle(
-                                                              color: BuytimeTheme.TextBlack,
-                                                              fontWeight: FontWeight.w400,
-                                                              fontFamily: BuytimeTheme.FontFamily,
-                                                              fontSize: 16,
-                                                            letterSpacing: 0.15
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      Container(
-                                                        child: FittedBox(
-                                                          fit: BoxFit.scaleDown,
-                                                          child: Text(
-                                                            'Users join by scanning your QR code',
-                                                            style: TextStyle(
-                                                                color: BuytimeTheme.TextMedium,
-                                                                fontWeight: FontWeight.w400,
-                                                                fontFamily: BuytimeTheme.FontFamily,
-                                                                fontSize: 14,
-                                                                letterSpacing: 0.25
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      )
-                                                    ],
-                                                  ),
-                                                )),
-
-                                            ///Arrow Icon
-                                            Expanded(
-                                              flex: 1,
-                                              child: Container(
-                                                child: Icon(Icons.keyboard_arrow_right, color: Colors.grey),
-                                              ),
-                                            )
-                                          ],
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                ),
-                              ),
-                            ) :
-                                      Container()
+                                  )
+                                : Container()
                           ],
                         ),
                       ),

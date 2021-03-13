@@ -20,16 +20,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
 class Cart extends StatefulWidget {
-  final String title = 'Cart';
   ServiceState serviceState;
+
   Cart({Key key, this.serviceState}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() => CartState();
 }
 
 class CartState extends State<Cart> {
-
   OrderState orderState;
+
   @override
   void initState() {
     super.initState();
@@ -70,8 +71,8 @@ class CartState extends State<Cart> {
           debugPrint('UI_U_Cart => AFTER| TOTAL: ${snapshot.total}');
 
 
-          *//*snapshot.removeItem(snapshot.itemList[index]);
-        snapshot.itemList.removeAt(index);*//*
+          */ /*snapshot.removeItem(snapshot.itemList[index]);
+        snapshot.itemList.removeAt(index);*/ /*
         }
       }else{
         //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ServiceList()),);
@@ -82,25 +83,25 @@ class CartState extends State<Cart> {
     });
   }*/
 
-  void undoDeletion(index, OrderEntry item){
+  void undoDeletion(index, OrderEntry item) {
     /*
   This method accepts the parameters index and item and re-inserts the {item} at
   index {index}
   */
-    setState((){
+    setState(() {
       //orderState.addReserveItem(item., snapshot.business.ownerId, widget.serviceState.serviceSlot.first.startTime[i], widget.serviceState.serviceSlot.first.minDuration.toString(), dates[index]);
       orderState.itemList.insert(index, item);
       orderState.total += item.price;
     });
   }
+
   void deleteItem(OrderState snapshot, OrderEntry entry, int index) {
     setState(() {
       orderState.cartCounter = orderState.cartCounter - entry.number;
       orderState.removeReserveItem(entry);
       orderState.selected.removeAt(index);
       orderState.itemList.remove(entry);
-      if (orderState.itemList.length == 0)
-        Navigator.of(context).pop();
+      if (orderState.itemList.length == 0) Navigator.of(context).pop();
 
       StoreProvider.of<AppState>(context).dispatch(UpdateOrder(orderState));
     });
@@ -118,7 +119,7 @@ class CartState extends State<Cart> {
         },
         child: StoreConnector<AppState, AppState>(
             converter: (store) => store.state,
-            onInit: (store){
+            onInit: (store) {
               tmp = store.state.serviceState;
             },
             builder: (context, snapshot) {
@@ -131,24 +132,24 @@ class CartState extends State<Cart> {
                     children: [
                       ///Back Button
                       IconButton(
-                        icon: Icon(Icons.chevron_left, color: BuytimeTheme.TextWhite),
-                        onPressed: () {
-                          /*Navigator.pushReplacement(
+                          icon: Icon(Icons.chevron_left, color: BuytimeTheme.TextWhite),
+                          onPressed: () {
+                            /*Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(builder: (context) => ServiceList()),
                           );*/
-                          /*StoreProvider.of<AppState>(context).dispatch(UpdateOrder(OrderState(
+                            /*StoreProvider.of<AppState>(context).dispatch(UpdateOrder(OrderState(
                               itemList: orderState.itemList, date: orderState.date, position: orderState.position, total: orderState.total, business: orderState.business, user: orderState.user, businessId: orderState.businessId, userId: orderState.userId)));*/
 
-                          Navigator.of(context).pop();
-                        }
-                      ),
+                            Navigator.of(context).pop();
+                          }),
+
                       ///Cart Title
                       Container(
                         child: Padding(
                           padding: const EdgeInsets.only(left: 0.0),
                           child: Text(
-                            'Cart', ///TODO Make it Global
+                            AppLocalizations.of(context).cart,
                             textAlign: TextAlign.start,
                             style: BuytimeTheme.appbarTitle,
                           ),
@@ -185,6 +186,7 @@ class CartState extends State<Cart> {
                           ),
                         ),
                       ),*/
+
                             ///Service List
                             Expanded(
                               flex: 2,
@@ -205,20 +207,21 @@ class CartState extends State<Cart> {
                                               flex: 1,
                                               child: CustomScrollView(shrinkWrap: true, slivers: [
                                                 SliverList(
-                                                  delegate: SliverChildBuilderDelegate((context, index) {
-                                                    //MenuItemModel menuItem = menuItems.elementAt(index);
-                                                    debugPrint('UI_U_Cart => LIST| ${orderState.itemList[index].name} ITEM COUNT: ${orderState.itemList[index].number}');
-                                                    var item = (index != orderState.itemList.length ? orderState.itemList[index] : null);
-                                                    int itemCount = orderState.itemList[index].number;
-                                                    return orderState.itemList.isNotEmpty && (orderState.itemList.first.time == null || orderState.itemList.first.time.isEmpty) ?
-                                                    OptimumOrderItemCardMedium(
-                                                      key: ObjectKey(item),
-                                                      orderEntry: orderState.itemList[index],
-                                                      mediaSize: media,
-                                                      orderState: orderState,
-                                                      index: index,
-                                                      show: true,
-                                                      /*rightWidget1: Column(
+                                                  delegate: SliverChildBuilderDelegate(
+                                                    (context, index) {
+                                                      //MenuItemModel menuItem = menuItems.elementAt(index);
+                                                      debugPrint('UI_U_Cart => LIST| ${orderState.itemList[index].name} ITEM COUNT: ${orderState.itemList[index].number}');
+                                                      var item = (index != orderState.itemList.length ? orderState.itemList[index] : null);
+                                                      int itemCount = orderState.itemList[index].number;
+                                                      return orderState.itemList.isNotEmpty && (orderState.itemList.first.time == null || orderState.itemList.first.time.isEmpty)
+                                                          ? OptimumOrderItemCardMedium(
+                                                              key: ObjectKey(item),
+                                                              orderEntry: orderState.itemList[index],
+                                                              mediaSize: media,
+                                                              orderState: orderState,
+                                                              index: index,
+                                                              show: true,
+                                                              /*rightWidget1: Column(
                                                         children: [
                                                           Row(
                                                             children: [
@@ -246,44 +249,43 @@ class CartState extends State<Cart> {
                                                           )
                                                         ],
                                                       ),*/
-                                                    ) :
-                                                    Dismissible(
-                                                      // Each Dismissible must contain a Key. Keys allow Flutter to
-                                                      // uniquely identify widgets.
-                                                      key: UniqueKey(),
-                                                      // Provide a function that tells the app
-                                                      // what to do after an item has been swiped away.
-                                                        direction: DismissDirection.endToStart,
-                                                      onDismissed: (direction) {
-                                                        // Remove the item from the data source.
-                                                        setState(() {
-                                                          orderState.itemList.removeAt(index);
-                                                        });
-                                                        if(direction == DismissDirection.endToStart){
-                                                          deleteItem(orderState, item, index);
-                                                          debugPrint('UI_U_SearchPage => DX to DELETE');
-                                                          // Show a snackbar. This snackbar could also contain "Undo" actions.
-                                                          Scaffold.of(context).showSnackBar(SnackBar(
-                                                              content: Text("${item.name} removed"),
-                                                              action: SnackBarAction(label: "UNDO",
-                                                                  onPressed: () {
-                                                                    //To undo deletion
-                                                                    undoDeletion(index, item);
-                                                                  }
-                                                                  )
-                                                          ));
-                                                        }else{
-                                                          orderState.itemList.insert(index, item);
-                                                        }
-                                                      },
-                                                      child: OptimumOrderItemCardMedium(
-                                                        key: ObjectKey(item),
-                                                        orderEntry: orderState.itemList[index],
-                                                        mediaSize: media,
-                                                        orderState: orderState,
-                                                        index: index,
-                                                        show: true,
-                                                        /*rightWidget1: Column(
+                                                            )
+                                                          : Dismissible(
+                                                              // Each Dismissible must contain a Key. Keys allow Flutter to
+                                                              // uniquely identify widgets.
+                                                              key: UniqueKey(),
+                                                              // Provide a function that tells the app
+                                                              // what to do after an item has been swiped away.
+                                                              direction: DismissDirection.endToStart,
+                                                              onDismissed: (direction) {
+                                                                // Remove the item from the data source.
+                                                                setState(() {
+                                                                  orderState.itemList.removeAt(index);
+                                                                });
+                                                                if (direction == DismissDirection.endToStart) {
+                                                                  deleteItem(orderState, item, index);
+                                                                  debugPrint('UI_U_SearchPage => DX to DELETE');
+                                                                  // Show a snackbar. This snackbar could also contain "Undo" actions.
+                                                                  Scaffold.of(context).showSnackBar(SnackBar(
+                                                                      content: Text(item.name + AppLocalizations.of(context).spaceRemoved),
+                                                                      action: SnackBarAction(
+                                                                          label: AppLocalizations.of(context).undo,
+                                                                          onPressed: () {
+                                                                            //To undo deletion
+                                                                            undoDeletion(index, item);
+                                                                          })));
+                                                                } else {
+                                                                  orderState.itemList.insert(index, item);
+                                                                }
+                                                              },
+                                                              child: OptimumOrderItemCardMedium(
+                                                                key: ObjectKey(item),
+                                                                orderEntry: orderState.itemList[index],
+                                                                mediaSize: media,
+                                                                orderState: orderState,
+                                                                index: index,
+                                                                show: true,
+                                                                /*rightWidget1: Column(
                                                         children: [
                                                           Row(
                                                             children: [
@@ -311,34 +313,38 @@ class CartState extends State<Cart> {
                                                           )
                                                         ],
                                                       ),*/
-                                                      ),
-                                                      background: Container(
-                                                        color: BuytimeTheme.BackgroundWhite,
-                                                        //margin: EdgeInsets.symmetric(horizontal: 15),
-                                                        alignment: Alignment.centerRight,
-                                                      ),
-                                                      secondaryBackground: Container(
-                                                        color: BuytimeTheme.AccentRed,
-                                                        //margin: EdgeInsets.symmetric(horizontal: 15),
-                                                        alignment: Alignment.centerRight,
-                                                        child: Container(
-                                                          margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 2.5),
-                                                          child: Icon(
-                                                            VectorIcon.vector,
-                                                            size: 24, ///SizeConfig.safeBlockHorizontal * 7
-                                                            color: BuytimeTheme.SymbolWhite,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    );
-                                                  },
+                                                              ),
+                                                              background: Container(
+                                                                color: BuytimeTheme.BackgroundWhite,
+                                                                //margin: EdgeInsets.symmetric(horizontal: 15),
+                                                                alignment: Alignment.centerRight,
+                                                              ),
+                                                              secondaryBackground: Container(
+                                                                color: BuytimeTheme.AccentRed,
+                                                                //margin: EdgeInsets.symmetric(horizontal: 15),
+                                                                alignment: Alignment.centerRight,
+                                                                child: Container(
+                                                                  margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 2.5),
+                                                                  child: Icon(
+                                                                    VectorIcon.vector,
+                                                                    size: 24,
+
+                                                                    ///SizeConfig.safeBlockHorizontal * 7
+                                                                    color: BuytimeTheme.SymbolWhite,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            );
+                                                    },
                                                     childCount: orderState.itemList.length,
                                                   ),
                                                 ),
                                               ]),
                                             ),
+
                                             ///Total Order
                                             OrderTotal(media: media, orderState: orderState),
+
                                             ///Divider
                                             Container(
                                               color: BuytimeTheme.DividerGrey,
@@ -386,79 +392,82 @@ class CartState extends State<Cart> {
                                             )*/
                                           ],
                                         );
-                                        }
-                                      ),
+                                      }),
                                 ),
                               ),
                             ),
+
                             ///Buy Button & Continue Shooping
                             Align(
                               alignment: Alignment.bottomCenter,
                               child: Container(
                                 //height: double.infinity,
                                 //color: Colors.black87,
-                                child: orderState.itemList.isNotEmpty && (orderState.itemList.first.time == null || orderState.itemList.first.time.isEmpty) ?
+                                child: orderState.itemList.isNotEmpty && (orderState.itemList.first.time == null || orderState.itemList.first.time.isEmpty)
+                                    ?
+
                                     ///Buy & Continue
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    ///Buy button
-                                    Container(
-                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5),
-                                        width: 158, /// media.width * .4
-                                        height: 46,
-                                        child: RaisedButton(
-                                          onPressed: () {
-                                            Navigator.push(context, MaterialPageRoute(builder: (context) => ConfirmOrder()),);
-                                          },
-                                          textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
-                                          color: BuytimeTheme.UserPrimary,
-                                          //padding: EdgeInsets.all(media.width * 0.03),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: new BorderRadius.circular(5),
-                                          ),
-                                          child: Text(
-                                            'BUY',//AppLocalizations.of(context).logBack, ///TODO Make it Global
-                                            style: TextStyle(
-                                                fontSize: 14,
-                                                fontFamily: BuytimeTheme.FontFamily,
-                                                fontWeight: FontWeight.w500,
-                                                color: BuytimeTheme.TextWhite,
-                                              letterSpacing: 1.25
-                                            ),
-                                          ),
-                                        )
-                                    ),
-                                    ///Continue Shopping
-                                    Container(
-                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 5, bottom: SizeConfig.safeBlockVertical * 5),
-                                        alignment: Alignment.center,
-                                        child: Material(
-                                          color: Colors.transparent,
-                                          child: InkWell(
-                                              onTap: (){
-                                                //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ServiceList()),);
-                                                Navigator.of(context).pop();
-                                              },
-                                              borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                                              child: Container(
-                                                padding: EdgeInsets.all(5.0),
-                                                child: Text(
-                                                  'CONTINUE\nSHOPPING',//AppLocalizations.of(context).somethingIsNotRight,
-                                                  style: TextStyle(
-                                                      letterSpacing: 1.25, ///SizeConfig.safeBlockHorizontal * .2
-                                                      fontFamily: BuytimeTheme.FontFamily,
-                                                      color: BuytimeTheme.UserPrimary,
-                                                      fontWeight: FontWeight.w600,
-                                                      fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
-                                                  ),
+                                    Column(
+                                        mainAxisAlignment: MainAxisAlignment.end,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          ///Buy button
+                                          Container(
+                                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5),
+                                              width: 158,
+
+                                              /// media.width * .4
+                                              height: 46,
+                                              child: RaisedButton(
+                                                onPressed: () {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(builder: (context) => ConfirmOrder()),
+                                                  );
+                                                },
+                                                textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
+                                                color: BuytimeTheme.UserPrimary,
+                                                //padding: EdgeInsets.all(media.width * 0.03),
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius: new BorderRadius.circular(5),
                                                 ),
-                                              )
-                                          ),
-                                        )
-                                    ),
-                                    /*Row(
+                                                child: Text(
+                                                  AppLocalizations.of(context).buyUpper,
+                                                  style: TextStyle(fontSize: 14, fontFamily: BuytimeTheme.FontFamily, fontWeight: FontWeight.w500, color: BuytimeTheme.TextWhite, letterSpacing: 1.25),
+                                                ),
+                                              )),
+
+                                          ///Continue Shopping
+                                          Container(
+                                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 5, bottom: SizeConfig.safeBlockVertical * 5),
+                                              alignment: Alignment.center,
+                                              child: Material(
+                                                color: Colors.transparent,
+                                                child: InkWell(
+                                                    onTap: () {
+                                                      //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ServiceList()),);
+                                                      Navigator.of(context).pop();
+                                                    },
+                                                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                                    child: Container(
+                                                      padding: EdgeInsets.all(5.0),
+                                                      child: Text(
+                                                        AppLocalizations.of(context).continueShopping,
+                                                        style: TextStyle(
+                                                            letterSpacing: 1.25,
+
+                                                            ///SizeConfig.safeBlockHorizontal * .2
+                                                            fontFamily: BuytimeTheme.FontFamily,
+                                                            color: BuytimeTheme.UserPrimary,
+                                                            fontWeight: FontWeight.w600,
+                                                            fontSize: 14
+
+                                                            ///SizeConfig.safeBlockHorizontal * 4
+                                                            ),
+                                                      ),
+                                                    )),
+                                              )),
+                                          /*Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       GestureDetector(
@@ -524,52 +533,48 @@ class CartState extends State<Cart> {
                                   SizedBox(
                                     height: media.height * 0.05,
                                   )*/
-                                  ],
-                                ) :
+                                        ],
+                                      )
+                                    :
+
                                     ///Reserve
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    ///Reserve button
-                                    Container(
-                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5, bottom: SizeConfig.safeBlockVertical * 5),
-                                        width: 158, /// media.width * .4
-                                        height: 46,
-                                        child: RaisedButton(
-                                          onPressed: () {
-                                            Navigator.push(context, MaterialPageRoute(builder: (context) => ConfirmOrder()),);
-                                          },
-                                          textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
-                                          color: BuytimeTheme.UserPrimary,
-                                          //padding: EdgeInsets.all(media.width * 0.03),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: new BorderRadius.circular(5),
-                                          ),
-                                          child: Text(
-                                            'RESERVE',//AppLocalizations.of(context).logBack, ///TODO Make it Global
-                                            style: TextStyle(
-                                                fontSize: 14,
-                                                fontFamily: BuytimeTheme.FontFamily,
-                                                fontWeight: FontWeight.w500,
-                                                color: BuytimeTheme.TextWhite,
-                                                letterSpacing: 1.25
-                                            ),
-                                          ),
-                                        )
-                                    ),
-                                  ],
-                                ),
+                                    Column(
+                                        mainAxisAlignment: MainAxisAlignment.end,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          ///Reserve button
+                                          Container(
+                                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5, bottom: SizeConfig.safeBlockVertical * 5),
+                                              width: 158,
+
+                                              /// media.width * .4
+                                              height: 46,
+                                              child: RaisedButton(
+                                                onPressed: () {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(builder: (context) => ConfirmOrder()),
+                                                  );
+                                                },
+                                                textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
+                                                color: BuytimeTheme.UserPrimary,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius: new BorderRadius.circular(5),
+                                                ),
+                                                child: Text(
+                                                  AppLocalizations.of(context).reserveUpper,
+                                                  style: TextStyle(fontSize: 14, fontFamily: BuytimeTheme.FontFamily, fontWeight: FontWeight.w500, color: BuytimeTheme.TextWhite, letterSpacing: 1.25),
+                                                ),
+                                              )),
+                                        ],
+                                      ),
                               ),
                             )
                           ],
                         ),
                       ),
                     ),
-                  )
-              );
-            }
-        )
-    );
+                  ));
+            }));
   }
 }

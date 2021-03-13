@@ -26,6 +26,7 @@ import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'dart:convert';
 import 'dart:math';
 import 'package:crypto/crypto.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 /// Generates a cryptographically secure random nonce, to be included in a
 /// credential request.
@@ -43,8 +44,6 @@ String sha256ofString(String input) {
 }
 
 class Registration extends StatefulWidget {
-  final String title = 'Registration';
-
   @override
   State<StatefulWidget> createState() => RegistrationState();
 }
@@ -212,8 +211,7 @@ class RegistrationState extends State<Registration> {
       }
 
       print("Device ID : " + deviceId);
-      StoreProvider.of<AppState>(context)
-          .dispatch(new LoggedUser(UserState.fromFirebaseUser(user, deviceId, serverToken)));
+      StoreProvider.of<AppState>(context).dispatch(new LoggedUser(UserState.fromFirebaseUser(user, deviceId, serverToken)));
       Device device = Device(name: "device", id: deviceId, user_uid: user.uid);
       StoreProvider.of<AppState>(context).dispatch(new UpdateUserDevice(device));
       Token token = Token(name: "token", id: serverToken, user_uid: user.uid);
@@ -326,8 +324,7 @@ class RegistrationState extends State<Registration> {
       }
       print("Device ID : " + deviceId);
 
-      StoreProvider.of<AppState>(context)
-          .dispatch(new LoggedUser(UserState.fromFirebaseUser(user, deviceId, serverToken)));
+      StoreProvider.of<AppState>(context).dispatch(new LoggedUser(UserState.fromFirebaseUser(user, deviceId, serverToken)));
       Device device = Device(name: "device", id: deviceId, user_uid: user.uid);
       StoreProvider.of<AppState>(context).dispatch(new UpdateUserDevice(device));
       Token token = Token(name: "token", id: serverToken, user_uid: user.uid);
@@ -358,7 +355,6 @@ class RegistrationState extends State<Registration> {
   Future<int> _handleSignIn() async {
     FacebookLoginResult facebookLoginResult = await _handleFBSignIn();
     if (facebookLoginResult.accessToken != null) {
-
       ProgressDialog pr = new ProgressDialog(context);
       pr.style(
           message: AppLocalizations.of(context).authentication,
@@ -396,8 +392,7 @@ class RegistrationState extends State<Registration> {
 
         print("Device ID : " + deviceId);
 
-        StoreProvider.of<AppState>(context)
-            .dispatch(new LoggedUser(UserState.fromFirebaseUser(facebookUserFromFirebase.user, deviceId, serverToken)));
+        StoreProvider.of<AppState>(context).dispatch(new LoggedUser(UserState.fromFirebaseUser(facebookUserFromFirebase.user, deviceId, serverToken)));
         Device device = Device(name: "device", id: deviceId, user_uid: facebookUserFromFirebase.user.uid);
         StoreProvider.of<AppState>(context).dispatch(new UpdateUserDevice(device));
         Token token = Token(name: "token", id: serverToken, user_uid: facebookUserFromFirebase.user.uid);
@@ -427,7 +422,6 @@ class RegistrationState extends State<Registration> {
     return facebookLoginResult;
   }
 
-  // TODO add context to translate
   ///Validation
   void checkFormValidation() {
     setState(() {
@@ -435,16 +429,15 @@ class RegistrationState extends State<Registration> {
         responseMessage = '';
       } else {
         if (emailHasError && passwordHasError)
-          responseMessage = 'Please enter a valid Email and Password';
+          responseMessage = AppLocalizations.of(context).pleaseEnterAValidEmailAndPassword;
         else if (emailHasError)
-          responseMessage = 'Please enter a valid Email address';
+          responseMessage = AppLocalizations.of(context).pleaseEnterAValidEmail;
         else if (passwordHasError)
-          responseMessage =
-              'Password has a minimum of 6 characters and at least 1 digit, 1 lowercase char and 1 uppercase char';
+          responseMessage = AppLocalizations.of(context).passwordError;
         else if (!_success)
-          responseMessage = 'Registration failed';
+          responseMessage = AppLocalizations.of(context).registrationFail;
         else
-          responseMessage = 'Successfully registered with ' + _userEmail;
+          responseMessage = AppLocalizations.of(context).successfullyRegistered + _userEmail;
       }
     });
   }
@@ -482,28 +475,24 @@ class RegistrationState extends State<Registration> {
             child: SafeArea(
               child: SingleChildScrollView(
                 child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    minHeight: (SizeConfig.safeBlockVertical * 100) - 56
-                  ),
-                  child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        ///Logo & Email & Password & & Error message & Sign up button
-                        Flexible(
-                          flex: 6,
-                          child:  Container(
-                            height: SizeConfig.safeBlockVertical * 75,
-                            child:  Column(
-                              mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                ///Logo
-                                Container(
-                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.all(Radius.circular(20)),
-                                    /*boxShadow: [
+                  constraints: BoxConstraints(minHeight: (SizeConfig.safeBlockVertical * 100) - 56),
+                  child: Column(mainAxisSize: MainAxisSize.min, children: [
+                    ///Logo & Email & Password & & Error message & Sign up button
+                    Flexible(
+                      flex: 6,
+                      child: Container(
+                        height: SizeConfig.safeBlockVertical * 75,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            ///Logo
+                            Container(
+                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.all(Radius.circular(20)),
+                                /*boxShadow: [
                                 BoxShadow(
                                   color: Colors.black54.withOpacity(0.3),
                                   spreadRadius: 2,
@@ -511,223 +500,224 @@ class RegistrationState extends State<Registration> {
                                   offset: Offset(0, 0), // changes position of shadow
                                 ),
                               ],*/
-                                  ),
-                                  child: Image.asset('assets/img/img_buytime.png',
-                                    height: 96, ///media.height * 0.12
-                                  ),
-                                ),
-                                ///Email & Password & Error message
-                                Flexible(
-                                  flex: 3,
-                                  child: Container(
-                                      margin: EdgeInsets.only(
-                                          left: SizeConfig.safeBlockHorizontal * 10, right: SizeConfig.safeBlockHorizontal * 10),
-                                      ///8% - 8%
-                                      child: Column(
-                                        //mainAxisSize: MainAxisSize.min,
+                              ),
+                              child: Image.asset(
+                                'assets/img/img_buytime.png',
+                                height: 96,
+
+                                ///media.height * 0.12
+                              ),
+                            ),
+
+                            ///Email & Password & Error message
+                            Flexible(
+                              flex: 3,
+                              child: Container(
+                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 10, right: SizeConfig.safeBlockHorizontal * 10),
+
+                                  ///8% - 8%
+                                  child: Column(
+                                    //mainAxisSize: MainAxisSize.min,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      ///Sign up text
+                                      Row(
                                         mainAxisAlignment: MainAxisAlignment.start,
                                         children: [
-                                          ///Sign up text
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment.start,
-                                            children: [
-                                              Container(
-                                                //width: 328,
-                                                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 8),
-                                                child: Text(
-                                                  /* AppLocalizations.of(context).createYourAccount*/ 'Please Register:',
-                                                  style: TextStyle(
-                                                    fontFamily: BuytimeTheme.FontFamily,
-                                                    color: BuytimeTheme.TextBlack,
-                                                    fontWeight: FontWeight.w400,
-                                                    fontSize: 16, ///SizeConfig.safeBlockHorizontal * 3
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          ///Email address
                                           Container(
-                                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5),
-                                            height: 55, ///SizeConfig.safeBlockHorizontal * 14
                                             //width: 328,
-                                            child: TextFormField(
-                                              controller: _emailController,
-                                              textAlign: TextAlign.start,
-                                              keyboardType: TextInputType.emailAddress,
-                                              autofillHints: [AutofillHints.email],
-                                              decoration: InputDecoration(
-                                                enabledBorder: OutlineInputBorder(
-                                                    borderSide: BorderSide(color: Color(0xffe0e0e0)),
-                                                    borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                                focusedBorder: OutlineInputBorder(
-                                                    borderSide: BorderSide(color: Color(0xff666666)),
-                                                    borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                                errorBorder: OutlineInputBorder(
-                                                    borderSide: BorderSide(color: Colors.redAccent),
-                                                    borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                                labelText: AppLocalizations.of(context).emailAddress,
-                                                //hintText: "email *",
-                                                //hintStyle: TextStyle(color: Color(0xff666666)),
-                                                labelStyle: TextStyle(
-                                                  fontFamily: BuytimeTheme.FontFamily,
-                                                  color: Color(0xff666666),
-                                                  fontWeight: FontWeight.w400,
-                                                ),
-                                              ),
+                                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 8),
+                                            child: Text(
+                                              AppLocalizations.of(context).pleaseRegister,
                                               style: TextStyle(
                                                 fontFamily: BuytimeTheme.FontFamily,
-                                                color: Color(0xff666666),
-                                                fontWeight: FontWeight.w800,
+                                                color: BuytimeTheme.TextBlack,
+                                                fontWeight: FontWeight.w400,
+                                                fontSize: 16,
+
+                                                ///SizeConfig.safeBlockHorizontal * 3
                                               ),
-                                              validator: (String value) {
-                                                setState(() {
-                                                  if (value.isNotEmpty && EmailValidator.validate(value)) {
-                                                    emailHasError = false;
-                                                  } else
-                                                    emailHasError = true;
-                                                });
-                                                return null;
-                                              },
                                             ),
-                                          ),
-                                          ///Password
-                                          Container(
-                                            margin: EdgeInsets.only(top: SizeConfig.safeBlockHorizontal * 4),
-                                            height: 55, ///SizeConfig.safeBlockHorizontal * 14
-                                            //width: 328,
-                                            child: TextFormField(
-                                              controller: _passwordController,
-                                              textAlign: TextAlign.start,
-                                              obscureText: passwordVisible,
-                                              decoration: InputDecoration(
-                                                  enabledBorder: OutlineInputBorder(
-                                                      borderSide: BorderSide(color: Color(0xffe0e0e0)),
-                                                      borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                                  focusedBorder: OutlineInputBorder(
-                                                      borderSide: BorderSide(color: Color(0xff666666)),
-                                                      borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                                  errorBorder: OutlineInputBorder(
-                                                      borderSide: BorderSide(color: Colors.redAccent),
-                                                      borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                                  labelText: AppLocalizations.of(context).password,
-                                                  //hintText: "email *",
-                                                  //hintStyle: TextStyle(color: Color(0xff666666)),
-                                                  labelStyle: TextStyle(
-                                                    fontFamily: BuytimeTheme.FontFamily,
-                                                    color: Color(0xff666666),
-                                                    fontWeight: FontWeight.w400,
-                                                  ),
-                                                  suffixIcon: IconButton(
-                                                    icon: Icon(
-                                                      // Based on passwordVisible state choose the icon
-                                                      passwordVisible ? Icons.visibility : Icons.visibility_off,
-                                                      color: Color(0xff666666),
-                                                    ),
-                                                    onPressed: () {
-                                                      // Update the state i.e. toogle the state of passwordVisible variable
-                                                      setState(() {
-                                                        passwordVisible = !passwordVisible;
-                                                      });
-                                                    },
-                                                  )),
-                                              style: TextStyle(
-                                                fontFamily: BuytimeTheme.FontFamily,
-                                                color: Color(0xff666666),
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                              validator: (String value) {
-                                                setState(() {
-                                                  if (passwordValidator(value)) {
-                                                    passwordHasError = false;
-                                                  } else
-                                                    passwordHasError = true;
-                                                });
-                                                return null;
-                                              },
-                                            ),
-                                          ),
-                                          ///Error message
-                                          Flexible(
-                                           child: Row(
-                                             mainAxisAlignment: MainAxisAlignment.start,
-                                             children: [
-                                               Container(
-                                                 width: SizeConfig.safeBlockHorizontal * 80,
-                                                 //alignment: Alignment.centerLeft,
-                                                 margin: EdgeInsets.only(top: 12.0),
-                                                 child: Text(
-                                                   responseMessage,
-                                                   style: TextStyle(
-                                                       color: _success != null
-                                                           ? _success
-                                                           ? Colors.greenAccent
-                                                           : Colors.redAccent
-                                                           : Colors.redAccent,
-                                                       fontWeight: FontWeight.bold,
-                                                       fontSize: 12),
-                                                 ),
-                                               ),
-                                             ],
-                                           ),
                                           ),
                                         ],
-                                      )
-                                  ),
-                                ),
-                                ///Register button
-                                Flexible(
-                                    flex: 1,
-                                    child: Container(
-                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5, bottom: SizeConfig.safeBlockVertical * 2.5, left: SizeConfig.safeBlockHorizontal * 8, right: SizeConfig.safeBlockHorizontal * 8),
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.end,
-                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                          children: [
-                                            FloatingActionButton(
-                                              onPressed: () async {
-                                                if (_formKey.currentState.validate() && !_isRequestFlying) {
-                                                  _register();
-                                                  checkFormValidation();
-                                                }
-                                              },
-                                              shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(500.0)),
-                                              child: Icon(
-                                                Icons.chevron_right,
-                                                size: 30,
-                                                color: BuytimeTheme.SymbolGrey,
+                                      ),
+
+                                      ///Email address
+                                      Container(
+                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5),
+                                        height: 55,
+
+                                        ///SizeConfig.safeBlockHorizontal * 14
+                                        //width: 328,
+                                        child: TextFormField(
+                                          controller: _emailController,
+                                          textAlign: TextAlign.start,
+                                          keyboardType: TextInputType.emailAddress,
+                                          autofillHints: [AutofillHints.email],
+                                          decoration: InputDecoration(
+                                            enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                            focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                            errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                            labelText: AppLocalizations.of(context).emailAddress,
+                                            //hintText: "email *",
+                                            //hintStyle: TextStyle(color: Color(0xff666666)),
+                                            labelStyle: TextStyle(
+                                              fontFamily: BuytimeTheme.FontFamily,
+                                              color: Color(0xff666666),
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
+                                          style: TextStyle(
+                                            fontFamily: BuytimeTheme.FontFamily,
+                                            color: Color(0xff666666),
+                                            fontWeight: FontWeight.w800,
+                                          ),
+                                          validator: (String value) {
+                                            setState(() {
+                                              if (value.isNotEmpty && EmailValidator.validate(value)) {
+                                                emailHasError = false;
+                                              } else
+                                                emailHasError = true;
+                                            });
+                                            return null;
+                                          },
+                                        ),
+                                      ),
+
+                                      ///Password
+                                      Container(
+                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockHorizontal * 4),
+                                        height: 55,
+
+                                        ///SizeConfig.safeBlockHorizontal * 14
+                                        //width: 328,
+                                        child: TextFormField(
+                                          controller: _passwordController,
+                                          textAlign: TextAlign.start,
+                                          obscureText: passwordVisible,
+                                          decoration: InputDecoration(
+                                              enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                              focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                              errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                              labelText: AppLocalizations.of(context).password,
+                                              //hintText: "email *",
+                                              //hintStyle: TextStyle(color: Color(0xff666666)),
+                                              labelStyle: TextStyle(
+                                                fontFamily: BuytimeTheme.FontFamily,
+                                                color: Color(0xff666666),
+                                                fontWeight: FontWeight.w400,
                                               ),
-                                            )
+                                              suffixIcon: IconButton(
+                                                icon: Icon(
+                                                  // Based on passwordVisible state choose the icon
+                                                  passwordVisible ? Icons.visibility : Icons.visibility_off,
+                                                  color: Color(0xff666666),
+                                                ),
+                                                onPressed: () {
+                                                  // Update the state i.e. toogle the state of passwordVisible variable
+                                                  setState(() {
+                                                    passwordVisible = !passwordVisible;
+                                                  });
+                                                },
+                                              )),
+                                          style: TextStyle(
+                                            fontFamily: BuytimeTheme.FontFamily,
+                                            color: Color(0xff666666),
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                          validator: (String value) {
+                                            setState(() {
+                                              if (passwordValidator(value)) {
+                                                passwordHasError = false;
+                                              } else
+                                                passwordHasError = true;
+                                            });
+                                            return null;
+                                          },
+                                        ),
+                                      ),
+
+                                      ///Error message
+                                      Flexible(
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          children: [
+                                            Container(
+                                              width: SizeConfig.safeBlockHorizontal * 80,
+                                              //alignment: Alignment.centerLeft,
+                                              margin: EdgeInsets.only(top: 12.0),
+                                              child: Text(
+                                                responseMessage,
+                                                style: TextStyle(
+                                                    color: _success != null
+                                                        ? _success
+                                                            ? Colors.greenAccent
+                                                            : Colors.redAccent
+                                                        : Colors.redAccent,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 12),
+                                              ),
+                                            ),
                                           ],
-                                        )))
-                              ],
+                                        ),
+                                      ),
+                                    ],
+                                  )),
                             ),
-                          ),
+
+                            ///Register button
+                            Flexible(
+                                flex: 1,
+                                child: Container(
+                                    margin: EdgeInsets.only(
+                                        top: SizeConfig.safeBlockVertical * 2.5,
+                                        bottom: SizeConfig.safeBlockVertical * 2.5,
+                                        left: SizeConfig.safeBlockHorizontal * 8,
+                                        right: SizeConfig.safeBlockHorizontal * 8),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        FloatingActionButton(
+                                          onPressed: () async {
+                                            if (_formKey.currentState.validate() && !_isRequestFlying) {
+                                              _register();
+                                              checkFormValidation();
+                                            }
+                                          },
+                                          shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(500.0)),
+                                          child: Icon(
+                                            Icons.chevron_right,
+                                            size: 30,
+                                            color: BuytimeTheme.SymbolGrey,
+                                          ),
+                                        )
+                                      ],
+                                    )))
+                          ],
                         ),
-                        ///Google & Facebook & Apple Sign up buttons
-                        Flexible(
-                          flex: 3,
-                          child: Container(
-                            height: SizeConfig.safeBlockVertical * 30,
-                            //height: 243, ///285
-                            padding: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 5, bottom: SizeConfig.safeBlockVertical * 5),
-                            color: BuytimeTheme.BackgroundCerulean,
-                            child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  BrandedButton("assets/img/google_logo.png", /*AppLocalizations.of(context).signGoogle*/ 'Log In with Google', initiateGoogleSignIn), ///TODO Make it Global
-                                  BrandedButton("assets/img/apple_logo.png", /*AppLocalizations.of(context).signApple*/ 'Log In with Apple', initiateAppleSignIn), ///TODO Make it Global
-                                  //BrandedButton("assets/img/facebook_logo.png", AppLocalizations.of(context).signFacebook, initiateFacebookSignIn),
-                                ]),
-                          ),
-                        )
-                      ]),
+                      ),
+                    ),
+
+                    ///Google & Facebook & Apple Sign up buttons
+                    Flexible(
+                      flex: 3,
+                      child: Container(
+                        height: SizeConfig.safeBlockVertical * 30,
+                        //height: 243, ///285
+                        padding: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 5, bottom: SizeConfig.safeBlockVertical * 5),
+                        color: BuytimeTheme.BackgroundCerulean,
+                        child: Column(mainAxisAlignment: MainAxisAlignment.center, mainAxisSize: MainAxisSize.min, children: [
+                          BrandedButton("assets/img/google_logo.png", AppLocalizations.of(context).logInWithGoogle, initiateGoogleSignIn),
+                          BrandedButton("assets/img/apple_logo.png", AppLocalizations.of(context).logInWithApple, initiateAppleSignIn),
+                          //BrandedButton("assets/img/facebook_logo.png", AppLocalizations.of(context).signFacebook, initiateFacebookSignIn),
+                        ]),
+                      ),
+                    )
+                  ]),
                 ),
               ),
-            )
-        )
-    );
+            )));
   }
 
   @override
@@ -767,8 +757,7 @@ class RegistrationState extends State<Registration> {
         }
       }
       print("Device ID : " + deviceId);
-      StoreProvider.of<AppState>(context)
-          .dispatch(new LoggedUser(UserState.fromFirebaseUser(user, deviceId, serverToken)));
+      StoreProvider.of<AppState>(context).dispatch(new LoggedUser(UserState.fromFirebaseUser(user, deviceId, serverToken)));
       Device device = Device(name: "device", id: deviceId, user_uid: user.uid);
       StoreProvider.of<AppState>(context).dispatch(new UpdateUserDevice(device));
       Token token = Token(name: "token", id: serverToken, user_uid: user.uid);

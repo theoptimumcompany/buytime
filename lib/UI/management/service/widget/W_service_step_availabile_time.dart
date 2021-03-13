@@ -7,6 +7,7 @@ import 'package:Buytime/reblox/model/service/service_slot_time_state.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class StepAvailableTime extends StatefulWidget {
   Size media;
@@ -26,7 +27,7 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
   List<TextEditingController> stopController = [];
   List<TimeOfDay> startTime = [];
   List<TimeOfDay> stopTime = [];
-  List<String> daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']; //TODO: trans
+  List<String> daysOfWeek = [];
   final List<GlobalKey<FormState>> _formSlotTimeKey = [GlobalKey<FormState>()];
   bool setStartAndStop = true;
   int duration = 0;
@@ -35,6 +36,15 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
   @override
   void initState() {
     super.initState();
+    daysOfWeek = [
+      AppLocalizations.of(context).monday,
+      AppLocalizations.of(context).tuesday,
+      AppLocalizations.of(context).wednesday,
+      AppLocalizations.of(context).thursday,
+      AppLocalizations.of(context).friday,
+      AppLocalizations.of(context).saturday,
+      AppLocalizations.of(context).sunday
+    ];
   }
 
   List<String> convertListTextEditingControllerToListString(List<TextEditingController> controllerList) {
@@ -256,8 +266,8 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
     }
     return StoreConnector<AppState, AppState>(
         converter: (store) => store.state,
-        onInit: (store){
-          intervalIndexVisibility =  List.generate(store.state.serviceSlot.numberOfInterval, (index) => index == 0 ? true : false);
+        onInit: (store) {
+          intervalIndexVisibility = List.generate(store.state.serviceSlot.numberOfInterval, (index) => index == 0 ? true : false);
         },
         builder: (context, snapshot) {
           switchWeek = snapshot.serviceSlot.switchWeek;
@@ -324,7 +334,7 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
                                     debugPrint('W_service_step_availabile_time => startController: $startController');
                                     List<String> listStart = [];
                                     startController.forEach((element) {
-                                      if(element.text.isEmpty)
+                                      if (element.text.isEmpty)
                                         listStart.add('00:00');
                                       else
                                         listStart.add(element.text);
@@ -334,7 +344,7 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
                                     stopController.removeAt(i);
                                     List<String> listStop = [];
                                     stopController.forEach((element) {
-                                      if(element.text.isEmpty)
+                                      if (element.text.isEmpty)
                                         listStop.add('00:00');
                                       else
                                         listStop.add(element.text);
@@ -361,7 +371,7 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
                                           child: Row(
                                         children: [
                                           Text(
-                                            (i + 1).toString() + ". working hours",
+                                            (i + 1).toString() + AppLocalizations.of(context).workingHours,
                                             textAlign: TextAlign.start,
                                             style: TextStyle(
                                               fontSize: widget.media.height * 0.018,
@@ -407,7 +417,7 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
                                                                             OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
                                                                         focusedBorder:
                                                                             OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                                                        labelText: "Start",
+                                                                        labelText: AppLocalizations.of(context).start,
                                                                         //todo trans
                                                                         labelStyle: TextStyle(
                                                                           fontFamily: BuytimeTheme.FontFamily,
@@ -428,10 +438,10 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
                                                                     validator: (value) {
                                                                       setDuration();
                                                                       if (startController[i].text.isEmpty) {
-                                                                        return "Insert start time first";//TODO: trans
+                                                                        return AppLocalizations.of(context).insertStartTimeFirst;
                                                                       } else if (stopController[i].text.isEmpty) {
                                                                       } else if ((stopTime[i].hour + stopTime[i].minute / 60.0) - (startTime[i].hour + startTime[i].minute / 60.0) <= 0) {
-                                                                        return "Start time is higher than start"; //TODO: trans
+                                                                        return AppLocalizations.of(context).startTimeHigherStop;
                                                                       } else {
                                                                         List<String> controllerList = convertListTextEditingControllerToListString(startController);
                                                                         StoreProvider.of<AppState>(context).dispatch(SetServiceSlotStartTime(controllerList));
@@ -456,7 +466,6 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
                                                                   validate(i);
                                                                   return;
                                                                 }
-
                                                                 await _selectStopTime(context, i);
                                                               },
                                                               child: Padding(
@@ -473,10 +482,7 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
                                                                           OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
                                                                       focusedBorder:
                                                                           OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                                                      labelText: "Stop",
-                                                                      //todo: trans
-                                                                      //hintText: "email *",
-                                                                      //hintStyle: TextStyle(color: Color(0xff666666)),
+                                                                      labelText: AppLocalizations.of(context).stop,
                                                                       labelStyle: TextStyle(
                                                                         fontFamily: BuytimeTheme.FontFamily,
                                                                         color: Color(0xff666666),
@@ -497,10 +503,10 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
                                                                     setDuration();
 
                                                                     if (startController[i].text.isEmpty) {
-                                                                      return "Insert start time first";//TODO: trans
+                                                                      return AppLocalizations.of(context).insertStartTimeFirst;
                                                                     } else if (stopController[i].text.isEmpty) {
                                                                     } else if ((stopTime[i].hour + stopTime[i].minute / 60.0) - (startTime[i].hour + startTime[i].minute / 60.0) <= 0) {
-                                                                      return "Stop time is shorter than start";//TODO: trans
+                                                                      return AppLocalizations.of(context).stopTimeShorterStart;
                                                                     } else {
                                                                       List<String> controllerList = convertListTextEditingControllerToListString(stopController);
 
@@ -522,11 +528,11 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
                                                   children: <Widget>[
                                                     // Parent
                                                     CustomLabeledCheckbox(
-                                                      label: 'Every day',//TODO: trans
+                                                      label: AppLocalizations.of(context).everyDay,
                                                       value: switchWeek[i],
                                                       onChanged: (value) {
                                                         if (value != null) {
-                                                          // Checked/Unchecked
+                                                          /// Checked/Unchecked
                                                           _checkAll(value, i);
                                                         } else {
                                                           // Tristate
@@ -539,7 +545,6 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
                                                   ],
                                                 ),
                                                 // Children
-                                                ///TODO: sE everyday true metter tutti a true
                                                 Row(
                                                   children: [
                                                     Flexible(
@@ -632,7 +637,7 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
                         children: [
                           Icon(Icons.add, color: BuytimeTheme.ManagerPrimary, size: widget.media.width * 0.06),
                           Text(
-                            "ADD TIME SLOT", //TODO: trans
+                            AppLocalizations.of(context).addTimeSlot,
                             textAlign: TextAlign.start,
                             style: TextStyle(
                               fontSize: widget.media.width * 0.04,

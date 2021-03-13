@@ -23,18 +23,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
-class ConfirmedOrder extends StatefulWidget{
+class ConfirmedOrder extends StatefulWidget {
   final String title = 'Cart';
 
   int from;
+
   ConfirmedOrder(this.from);
 
   @override
   State<StatefulWidget> createState() => ConfirmedOrderState();
 }
 
-class ConfirmedOrderState extends State<ConfirmedOrder> with SingleTickerProviderStateMixin{
-
+class ConfirmedOrderState extends State<ConfirmedOrder> with SingleTickerProviderStateMixin {
   TabController _controller;
   int _selectedIndex = 0;
   CardState cardState = CardState().toEmpty();
@@ -51,10 +51,7 @@ class ConfirmedOrderState extends State<ConfirmedOrder> with SingleTickerProvide
       print("Selected Index: " + _controller.index.toString());
     });
 
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-
-    });
-
+    WidgetsBinding.instance.addPostFrameCallback((_) async {});
   }
 
   OrderState order = OrderState(itemList: List<OrderEntry>(), date: DateTime.now(), position: "", total: 0.0, business: BusinessSnippet().toEmpty(), user: UserSnippet().toEmpty(), businessId: "");
@@ -64,8 +61,7 @@ class ConfirmedOrderState extends State<ConfirmedOrder> with SingleTickerProvide
     var media = MediaQuery.of(context).size;
     List<CardState> tmpList = StoreProvider.of<AppState>(context).state.cardListState.cardListState;
     tmpList.forEach((element) {
-      if(element.selected)
-        cardState = element;
+      if (element.selected) cardState = element;
     });
     return WillPopScope(
         onWillPop: () async {
@@ -88,12 +84,13 @@ class ConfirmedOrderState extends State<ConfirmedOrder> with SingleTickerProvide
                           Navigator.of(context).pop();
                         }),
                       ),
+
                       ///Order ConfirmedTitle
                       Container(
                         child: Padding(
                           padding: const EdgeInsets.only(left: 0.0),
                           child: Text(
-                            'Order Confirmed', ///TODO Make it Global
+                            AppLocalizations.of(context).orderConfirmed,
                             textAlign: TextAlign.start,
                             style: BuytimeTheme.appbarTitle,
                           ),
@@ -114,9 +111,7 @@ class ConfirmedOrderState extends State<ConfirmedOrder> with SingleTickerProvide
                   body: SafeArea(
                     child: SingleChildScrollView(
                       child: ConstrainedBox(
-                        constraints: BoxConstraints(
-                          minHeight: (SizeConfig.safeBlockVertical * 80)
-                        ),
+                        constraints: BoxConstraints(minHeight: (SizeConfig.safeBlockVertical * 80)),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -145,12 +140,14 @@ class ConfirmedOrderState extends State<ConfirmedOrder> with SingleTickerProvide
                                                   mainAxisAlignment: MainAxisAlignment.center,
                                                   children: [
                                                     Text(
-                                                      'Service name second line', ///TODO Make it Global
+                                                      AppLocalizations.of(context).serviceNameSecondLine,
                                                       textAlign: TextAlign.start,
                                                       style: TextStyle(
                                                         fontFamily: BuytimeTheme.FontFamily,
                                                         color: BuytimeTheme.TextBlack,
-                                                        fontSize: 14, /// SizeConfig.safeBlockHorizontal * 4
+                                                        fontSize: 14,
+
+                                                        /// SizeConfig.safeBlockHorizontal * 4
                                                         fontWeight: FontWeight.w600,
                                                       ),
                                                     )
@@ -158,9 +155,10 @@ class ConfirmedOrderState extends State<ConfirmedOrder> with SingleTickerProvide
                                                 ),
                                               ),
                                             ),
+
                                             ///Service List
                                             Column(
-                                              children: snapshot.itemList.map((item){
+                                              children: snapshot.itemList.map((item) {
                                                 return OptimumOrderItemCardMedium(
                                                   key: ObjectKey(item),
                                                   orderEntry: item,
@@ -169,12 +167,14 @@ class ConfirmedOrderState extends State<ConfirmedOrder> with SingleTickerProvide
                                                 );
                                               }).toList(),
                                             ),
+
                                             ///Total order
                                             OrderTotal(media: media, orderState: snapshot),
                                             Container(
                                               color: BuytimeTheme.DividerGrey,
                                               height: SizeConfig.safeBlockVertical * 2,
                                             ),
+
                                             ///Charge Summary
                                             Container(
                                               color: BuytimeTheme.UserPrimary,
@@ -185,12 +185,14 @@ class ConfirmedOrderState extends State<ConfirmedOrder> with SingleTickerProvide
                                                   Container(
                                                     margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
                                                     child: Text(
-                                                      'CHARGE SUUMMARY:', ///TODO Make it Global
+                                                      AppLocalizations.of(context).chargeSummary,
                                                       textAlign: TextAlign.start,
                                                       style: TextStyle(
                                                         fontFamily: BuytimeTheme.FontFamily,
                                                         color: BuytimeTheme.TextWhite,
-                                                        fontSize: 14, /// SizeConfig.safeBlockHorizontal * 4
+                                                        fontSize: 14,
+
+                                                        /// SizeConfig.safeBlockHorizontal * 4
                                                         fontWeight: FontWeight.w500,
                                                       ),
                                                     ),
@@ -198,6 +200,7 @@ class ConfirmedOrderState extends State<ConfirmedOrder> with SingleTickerProvide
                                                 ],
                                               ),
                                             ),
+
                                             ///Room or Credit Card
                                             Container(
                                               margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * .5),
@@ -212,28 +215,33 @@ class ConfirmedOrderState extends State<ConfirmedOrder> with SingleTickerProvide
                                                     Container(
                                                       margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
                                                       child: Text(
-                                                        widget.from == 0 ? 'Credit Card:' : 'Room:', ///TODO Make it Global
+                                                        widget.from == 0 ? AppLocalizations.of(context).creditCard : AppLocalizations.of(context).room,
                                                         textAlign: TextAlign.start,
                                                         style: TextStyle(
                                                           letterSpacing: 0.25,
                                                           fontFamily: BuytimeTheme.FontFamily,
                                                           color: BuytimeTheme.TextMedium,
-                                                          fontSize: 14, ///SizeConfig.safeBlockHorizontal * 3.5
+                                                          fontSize: 14,
+
+                                                          ///SizeConfig.safeBlockHorizontal * 3.5
                                                           fontWeight: FontWeight.w500,
                                                         ),
                                                       ),
                                                     ),
+
                                                     ///Room or Credit Card Value
                                                     Container(
                                                       margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 5),
                                                       child: Text(
-                                                        widget.from == 0 ? '${cardState.stripeState.stripeCard.brand} **** ${cardState.stripeState.stripeCard.last4}' : 'Room Number', ///TODO Make it Global
+                                                        widget.from == 0 ? '${cardState.stripeState.stripeCard.brand} **** ${cardState.stripeState.stripeCard.last4}' : AppLocalizations.of(context).roomNumber,
                                                         textAlign: TextAlign.start,
                                                         style: TextStyle(
                                                           letterSpacing: 0.5,
                                                           fontFamily: BuytimeTheme.FontFamily,
                                                           color: BuytimeTheme.TextBlack,
-                                                          fontSize: 16, ///SizeConfig.safeBlockHorizontal * 3.5
+                                                          fontSize: 16,
+
+                                                          ///SizeConfig.safeBlockHorizontal * 3.5
                                                           fontWeight: FontWeight.w600,
                                                         ),
                                                       ),
@@ -247,6 +255,7 @@ class ConfirmedOrderState extends State<ConfirmedOrder> with SingleTickerProvide
                                               color: BuytimeTheme.BackgroundLightGrey,
                                               height: SizeConfig.safeBlockVertical * .2,
                                             ),
+
                                             ///Order Status
                                             Row(
                                               mainAxisAlignment: MainAxisAlignment.center,
@@ -257,12 +266,14 @@ class ConfirmedOrderState extends State<ConfirmedOrder> with SingleTickerProvide
                                                   child: FittedBox(
                                                     fit: BoxFit.scaleDown,
                                                     child: Text(
-                                                      snapshot.progress == "in_progress" ? 'WE ARE CONFIRMING YOUR ORDER' : 'ORDER CONFIRMED',//AppLocalizations.of(context).somethingIsNotRight,
+                                                      snapshot.progress == "in_progress" ? AppLocalizations.of(context).weAreConfirmingYourOrder : AppLocalizations.of(context).orderConfirmedUpper,
                                                       style: TextStyle(
                                                         letterSpacing: 1.25,
                                                         fontFamily: BuytimeTheme.FontFamily,
                                                         color: BuytimeTheme.UserPrimary,
-                                                        fontSize: 16, ///SizeConfig.safeBlockHorizontal * 3.5
+                                                        fontSize: 16,
+
+                                                        ///SizeConfig.safeBlockHorizontal * 3.5
                                                         fontWeight: FontWeight.w600,
                                                       ),
                                                     ),
@@ -270,6 +281,7 @@ class ConfirmedOrderState extends State<ConfirmedOrder> with SingleTickerProvide
                                                 )
                                               ],
                                             ),
+
                                             ///Animation
                                             Container(
                                               width: SizeConfig.safeBlockVertical * 20,
@@ -323,11 +335,11 @@ class ConfirmedOrderState extends State<ConfirmedOrder> with SingleTickerProvide
                                             )*/
                                           ],
                                         );
-                                      }
-                                  ),
+                                      }),
                                 ),
                               ),
                             ),
+
                             ///Back to home button
                             Align(
                               alignment: Alignment.bottomCenter,
@@ -361,17 +373,10 @@ class ConfirmedOrderState extends State<ConfirmedOrder> with SingleTickerProvide
                                             borderRadius: new BorderRadius.circular(5),
                                           ),
                                           child: Text(
-                                            'BACK TO HOME',//AppLocalizations.of(context).logBack, ///TODO Make it Global
-                                            style: TextStyle(
-                                                fontSize: 14,
-                                                fontFamily: BuytimeTheme.FontFamily,
-                                                fontWeight: FontWeight.w500,
-                                                color: BuytimeTheme.TextWhite,
-                                              letterSpacing: 1.25
-                                            ),
+                                            AppLocalizations.of(context).backToHome,
+                                            style: TextStyle(fontSize: 14, fontFamily: BuytimeTheme.FontFamily, fontWeight: FontWeight.w500, color: BuytimeTheme.TextWhite, letterSpacing: 1.25),
                                           ),
-                                        )
-                                    ),
+                                        )),
                                   ],
                                 ),
                               ),
@@ -380,10 +385,7 @@ class ConfirmedOrderState extends State<ConfirmedOrder> with SingleTickerProvide
                         ),
                       ),
                     ),
-                  )
-              );
-            }
-        )
-    );
+                  ));
+            }));
   }
 }

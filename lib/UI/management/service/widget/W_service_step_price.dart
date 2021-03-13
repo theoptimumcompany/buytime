@@ -6,6 +6,7 @@ import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class StepPrice extends StatefulWidget {
   Size media;
@@ -100,7 +101,7 @@ class StepPriceState extends State<StepPrice> {
                                   color: BuytimeTheme.ErrorRed,
                                   fontSize: 12.0,
                                 ),
-                                suffixText: '€'), //TODO: trans
+                                suffixText: AppLocalizations.of(context).currency),
                             style: TextStyle(
                               fontFamily: BuytimeTheme.FontFamily,
                               color: Color(0xff666666),

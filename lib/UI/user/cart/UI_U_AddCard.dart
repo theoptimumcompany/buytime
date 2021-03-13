@@ -81,7 +81,7 @@ class _UI_U_AddCardState extends State<UI_U_AddCard> {
                               child: Padding(
                                 padding: const EdgeInsets.only(left: 0.0),
                                 child: Text(
-                                  'Add Card', ///TODO Make it Global
+                                  AppLocalizations.of(context).addCard,
                                   textAlign: TextAlign.start,
                                   style: TextStyle(
                                     fontFamily: BuytimeTheme.FontFamily,
@@ -345,7 +345,7 @@ class _UI_U_AddCardState extends State<UI_U_AddCard> {
                                                       borderRadius: new BorderRadius.circular(5),
                                                     ),
                                                     child: Text(
-                                                      'ADD CARD',//AppLocalizations.of(context).logBack, ///TODO Make it Global
+                                                      AppLocalizations.of(context).addCardUpper,
                                                       style: TextStyle(
                                                           fontSize: 18,
                                                           fontFamily: BuytimeTheme.FontFamily,

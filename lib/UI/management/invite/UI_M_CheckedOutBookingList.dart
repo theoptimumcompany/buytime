@@ -130,7 +130,7 @@ class _CheckedOutBookingListState extends State<CheckedOutBookingList> {
                                 margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 4),
                                 alignment: Alignment.centerLeft,
                                 child:  Text(
-                                  'No History Found', //TODO Make it Global
+                                    AppLocalizations.of(context).noHistoryFound,
                                   style: TextStyle(
                                       fontFamily: BuytimeTheme.FontFamily,
                                       color: BuytimeTheme.TextGrey,

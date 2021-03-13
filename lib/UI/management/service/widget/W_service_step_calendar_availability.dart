@@ -7,6 +7,7 @@ import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CalendarAvailability extends StatefulWidget {
   Size media;

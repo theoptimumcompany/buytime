@@ -4,33 +4,34 @@ import 'package:Buytime/UI/user/order/UI_U_OrderHistory.dart';
 import 'package:Buytime/UI/user/service/UI_U_service_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class UserTabNavigationItem {
   final Widget page;
   final Widget title;
   final Icon icon;
+  static var context;
 
   UserTabNavigationItem({
     @required this.page,
     @required this.title,
     @required this.icon,
   });
-// TODO add context to translate
   static List<UserTabNavigationItem> get items => [
     UserTabNavigationItem(
       page: UI_U_BusinessList(),
       icon: Icon(Icons.business),
-      title: Text("Businesses"),
+      title: Text(AppLocalizations.of(context).businesses),
     ),
     UserTabNavigationItem(
       page: UI_U_OrderHistory(),
       icon: Icon(Icons.list),
-      title: Text("Orders"),
+      title: Text(AppLocalizations.of(context).orders),
     ),
     UserTabNavigationItem(
       page: UI_U_AboutUs(),
       icon: Icon(Icons.info_outline),
-      title: Text("About us"),
+      title: Text(AppLocalizations.of(context).aboutUs),
     ),
   ];
 }
