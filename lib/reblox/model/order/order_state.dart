@@ -1,12 +1,18 @@
 import 'package:Buytime/reblox/model/business/snippet/business_snippet_state.dart';
-import 'package:Buytime/reblox/model/snippet/generic.dart';
 import 'package:Buytime/reblox/model/order/order_entry.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
+import 'package:Buytime/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
+part 'order_state.g.dart';
+
+@JsonSerializable(explicitToJson: true)
 class OrderState {
   List<OrderEntry> itemList;
+  @JsonKey(fromJson: Utils.getDate, toJson: Utils.setDate)
   DateTime date;
   var position;
   double total = 0.0;
@@ -44,32 +50,6 @@ class OrderState {
     this.cartCounter,
   });
 
-  OrderState.fromJson(Map<String, dynamic> json)
-      : itemList = List<OrderEntry>.from(json["itemList"].map((item) {
-          return new OrderEntry(
-            number: item['number'],
-            name: item['name'],
-            description: item['description'],
-            price: item['price'].toDouble(),
-            thumbnail: item['thumbnail'],
-            id: item['id'],
-            id_business: item['id_business'],
-          );
-        })),
-        position = json['position'],
-        date = json['date'].toDate(),
-        progress = json['progress'],
-        addCardProgress = false,
-        navigate = false,
-        tip = json['tip'],
-        tax = json['tax'],
-        taxPercent = json['taxPercent'],
-        amount = json['amount'],
-        businessId = json['businessId'],
-        userId = json['userId'],
-        business = BusinessSnippet.fromJson(json["business"]),
-        user = UserSnippet.fromJson(json["user"]),
-        total = json['total'].toDouble();
 
 
   OrderState.fromState(OrderState state) {
@@ -90,32 +70,6 @@ class OrderState {
     this.user = state.user;
     this.selected = state.selected;
     this.cartCounter = state.cartCounter;
-  }
-
-  Map<String, dynamic> toJson() => {
-        'itemList': convertToJson(itemList),
-        'position': position,
-        'date': date,
-        'total': total,
-        'tip': tip,
-        'tax': tax,
-        'taxPercent': taxPercent,
-        'amount': amount,
-        'progress': progress,
-        'addCardProgress': addCardProgress,
-        'navigate': navigate,
-        'businessId': businessId,
-        'userId': userId,
-        'business': business.toJson(),
-        'user': user.toJson(),
-      };
-
-  List<dynamic> convertToJson(List<OrderEntry> orderEntryList) {
-    List<dynamic> list = List<dynamic>();
-    orderEntryList.forEach((element) {
-      list.add(element.toJson());
-    });
-    return list;
   }
 
   OrderState copyWith({
@@ -162,7 +116,7 @@ class OrderState {
     return OrderState(
       position: "",
       date: DateTime.now(),
-      itemList: List<OrderEntry>(),
+      itemList: [],
       total: 0.0,
       tip: 0.0,
       tax: 0.0,
@@ -241,4 +195,6 @@ class OrderState {
   void removeReserveItem(OrderEntry entry) {
     this.total -= (entry.price);
   }
+  factory OrderState.fromJson(Map<String, dynamic> json) => _$OrderStateFromJson(json);
+  Map<String, dynamic> toJson() => _$OrderStateToJson(this);
 }

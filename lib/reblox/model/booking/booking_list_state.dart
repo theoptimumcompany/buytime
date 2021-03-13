@@ -1,7 +1,9 @@
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:flutter/foundation.dart';
+import 'package:json_annotation/json_annotation.dart';
+part 'booking_list_state.g.dart';
 
-
+@JsonSerializable(explicitToJson: true)
 class BookingListState {
   List<BookingState> bookingListState;
 
@@ -25,15 +27,12 @@ class BookingListState {
     );
   }
 
-  BookingListState.fromJson(Map json)
-      : bookingListState = json['bookingListState'];
-
-  Map<String, dynamic> toJson() => {
-    'bookingListState': bookingListState
-  };
-
   BookingListState toEmpty() {
     return BookingListState(bookingListState: List<BookingState>());
   }
+
+  factory BookingListState.fromJson(Map<String, dynamic> json) => _$BookingListStateFromJson(json);
+  Map<String, dynamic> toJson() => _$BookingListStateToJson(this);
+
 
 }

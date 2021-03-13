@@ -5,6 +5,7 @@ import 'package:Buytime/reblox/reducer/booking_reducer.dart';
 import 'package:Buytime/reusable/material_design_icons.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
+import 'package:Buytime/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -509,7 +510,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                                           onPressed: () async{
                                             final RenderBox box = context.findRenderObject();
                                             //Uri link = await createDynamicLink(bookingState.booking_code);
-                                            bookingState.status = bookingState.enumToString(BookingStatus.sent);
+                                            bookingState.status = Utils.enumToString(BookingStatus.sent);
                                             StoreProvider.of<AppState>(context).dispatch(UpdateBooking(bookingState)); //TODO: Create the booking status update epic
 
                                             Share.share('check out Buytime App at $link', subject: 'Take your Time!', sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);

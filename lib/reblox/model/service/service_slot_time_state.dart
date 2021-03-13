@@ -1,5 +1,8 @@
 import 'package:Buytime/UI/management/service/class/service_slot_classes.dart';
+import 'package:json_annotation/json_annotation.dart';
+part 'service_slot_time_state.g.dart';
 
+@JsonSerializable(explicitToJson: true)
 class ServiceSlot {
   ///Time Slot Inner Interval vars
   int numberOfInterval = 1;
@@ -114,54 +117,7 @@ class ServiceSlot {
     this.intervalVisibility = serviceSlot.intervalVisibility;
   }
 
-  // List<dynamic> convertToJsonEveryDay(List<EveryDay> objectStateList) {
-  //   List<dynamic> list = [];
-  //   objectStateList.forEach((element) {
-  //     list.add(element.toJson());
-  //   });
-  //   return list;
-  // }
 
-  List<dynamic> convertToJson(var objectStateList) {
-    List<dynamic> list = [];
-    objectStateList.forEach((element) {
-      list.add(element.toJson());
-    });
-    return list;
-  }
-
-  ServiceSlot.fromJson(Map<String, dynamic> json)
-      : numberOfInterval = json.containsKey('numberOfInterval') ? json['numberOfInterval'] : 1,
-        switchWeek = json.containsKey('switchWeek') ? List<bool>.from(json["switchWeek"]) : [true],
-        startTime = json.containsKey('startTime') ? List<String>.from(json["startTime"]) : [],
-        stopTime = json.containsKey('stopTime') ? List<String>.from(json["stopTime"]) : [],
-        checkIn = json.containsKey('checkIn') ? json['checkIn'] : [],
-        checkOut = json.containsKey('checkOut') ? json['checkOut'] : [],
-        hour = json.containsKey('hour') ? json['hour'] : 0,
-        minute = json.containsKey('minute') ? json['minute'] : 0,
-        limitBooking = json.containsKey('limitBooking') ? json['limitBooking'] : 1,
-        noLimitBooking = json.containsKey('noLimitBooking') ? json['noLimitBooking'] : false,
-        price = json.containsKey('price') ? json['price'] : 0,
-        daysInterval = json.containsKey('daysInterval')
-            ? List<EveryDay>.from(json["daysInterval"].map((item) {
-                return EveryDay(
-                  everyDay: List<bool>.from(item['everyDay']),
-                );
-              }))
-            : [EveryDay().toEmpty()];
-
-  Map<String, dynamic> toJson() => {
-        'numberOfInterval': numberOfInterval,
-        'switchWeek': switchWeek,
-        'daysInterval': convertToJson(daysInterval),
-        'startTime': startTime,
-        'stopTime': stopTime,
-        'checkIn': checkIn,
-        'checkOut': checkOut,
-        'hour': hour,
-        'minute': minute,
-        'limitBooking': limitBooking,
-        'noLimitBooking': noLimitBooking,
-        'price': price,
-      };
+  factory ServiceSlot.fromJson(Map<String, dynamic> json) => _$ServiceSlotFromJson(json);
+  Map<String, dynamic> toJson() => _$ServiceSlotToJson(this);
 }

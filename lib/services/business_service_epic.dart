@@ -2,6 +2,7 @@ import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/model/file/optimum_file_to_upload.dart';
 import 'package:Buytime/reblox/model/role/role.dart';
+import 'package:Buytime/reblox/model/service/snippet/service_snippet_state.dart';
 import 'package:Buytime/reblox/model/statistics_state.dart';
 import 'package:Buytime/reblox/navigation/navigation_reducer.dart';
 import 'package:Buytime/reblox/reducer/business_list_reducer.dart';
@@ -84,6 +85,50 @@ class BusinessListRequestService implements EpicClass<AppState> {
       BusinessListReturned(businessStateList),
       UpdateStatistics(statisticsState),
     ]);
+  }
+}
+
+class BusinessServiceSnippetListRequestService implements EpicClass<AppState> {
+  List<ServiceSnippet> businessServiceSnippetList;
+  StatisticsState statisticsState;
+  @override
+  Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
+    return actions.whereType<BusinessServiceSnippetListRequest>().asyncMap((event) async {
+      debugPrint("BUSINESS_SERVICE_EPIC - BusinessServiceSnippetListRequest => BUSINESS ID: ${event.businessId}");
+      int serviceSnippetListFromFirebaseDocs = 0;
+      businessServiceSnippetList = [];
+      QuerySnapshot serviceSnippetListFromFirebase = await FirebaseFirestore.instance 
+            .collection("business/" + event.businessId + "serviceListSnapshot")
+            .limit(1)
+            .get();
+
+      serviceSnippetListFromFirebaseDocs = serviceSnippetListFromFirebase.docs.length;
+
+      serviceSnippetListFromFirebase.docs.forEach((element) {
+        ServiceSnippet serviceSnippet = ServiceSnippet.fromJson(element.data());
+        businessServiceSnippetList.add(serviceSnippet);
+      });
+
+      statisticsBusinessServiceSnippetList(store, serviceSnippetListFromFirebaseDocs);
+
+    }).expand((element) => [
+      BusinessServiceSnippetListReturned(businessServiceSnippetList),
+      UpdateStatistics(statisticsState),
+    ]);
+  }
+
+  void statisticsBusinessServiceSnippetList(EpicStore<AppState> store, int serviceSnippetListFromFirebaseDocs) {
+    statisticsState = store.state.statistics;
+    int reads = statisticsState.businessServiceSnippetListRequestServiceRead;
+    int writes = statisticsState.businessServiceSnippetListRequestServiceWrite;
+    int documents = statisticsState.businessServiceSnippetListRequestServiceDocuments;
+    debugPrint('BUSINESS_SERVICE_EPIC - BusinessServiceSnippetListRequest => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+    ++reads;
+    documents = documents + serviceSnippetListFromFirebaseDocs;
+    debugPrint('BUSINESS_SERVICE_EPIC - BusinessServiceSnippetListRequest =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+    statisticsState.businessServiceSnippetListRequestServiceRead = reads;
+    statisticsState.businessServiceSnippetListRequestServiceWrite = writes;
+    statisticsState.businessServiceSnippetListRequestServiceDocuments = documents;
   }
 }
 

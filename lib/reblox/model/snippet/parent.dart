@@ -1,3 +1,7 @@
+import 'package:json_annotation/json_annotation.dart';
+part 'parent.g.dart';
+
+@JsonSerializable(explicitToJson: true)
 class Parent {
   String id;
   int level;
@@ -11,16 +15,6 @@ class Parent {
     this.parentRootId = "",
   });
 
-  Parent.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
-        level = json['level'],
-        name = json['name'],
-        parentRootId = json['parentRootId'];
-
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'level': level,
-        'name': name,
-        'parentRootId': parentRootId,
-      };
+  factory Parent.fromJson(Map<String, dynamic> json) => _$ParentFromJson(json);
+  Map<String, dynamic> toJson() => _$ParentToJson(this);
 }

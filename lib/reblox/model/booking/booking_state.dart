@@ -1,6 +1,10 @@
 import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
 import 'package:Buytime/reblox/model/snippet/generic.dart';
+import 'package:Buytime/utils/utils.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:json_annotation/json_annotation.dart';
+part 'booking_state.g.dart';
 
 enum BookingStatus {
   opened,
@@ -11,28 +15,22 @@ enum BookingStatus {
   empty
 }
 
-
+@JsonSerializable(explicitToJson: true)
 class BookingState {
   String business_id;
   String booking_id;
   String business_name;
   String business_address;
   int guest_number_booked_for;
+  @JsonKey(fromJson: Utils.getDate, toJson: Utils.setDate)
   DateTime start_date;
+  @JsonKey(fromJson: Utils.getDate, toJson: Utils.setDate)
   DateTime end_date;
   String booking_code;
   List<String> userEmail;
   List<UserSnippet> user;
-  String status; //TODO Change to Enum
+  String status;
   String wide;
-
-  List<dynamic> convertToJson(List<UserSnippet> objectStateList) {
-    List<dynamic> list = [];
-    objectStateList.forEach((element) {
-      list.add(element.toJson());
-    });
-    return list;
-  }
 
   BookingState({
     @required this.business_id,
@@ -61,14 +59,12 @@ class BookingState {
       booking_code: "",
       userEmail: [],
       user: [],
-      status: enumToString(BookingStatus.empty),
+      status: Utils.enumToString(BookingStatus.empty),
       wide: "",
     );
   }
 
-  String enumToString(BookingStatus bookingStatus){
-    return bookingStatus.toString().split('.').last;
-  }
+
 
   BookingState.fromState(BookingState state) {
     this.business_id = state.business_id;
@@ -83,36 +79,6 @@ class BookingState {
     this.user = state.user;
     this.status = state.status;
     this.wide = state.wide;
-  }
-
-  companyStateFieldUpdate(
-    String business_id,
-    String booking_id,
-    String business_name,
-    String business_address,
-    int guest_number_booked_for,
-    DateTime start_date,
-    DateTime end_date,
-    String booking_code,
-    List<String> userEmail,
-    List<UserSnippet> user,
-    String status,
-    String wide,
-  ) {
-    BookingState(
-      business_id: business_id ?? this.business_id,
-      booking_id: booking_id ?? this.booking_id,
-      business_name: business_name ?? this.business_name,
-      business_address: business_address ?? this.business_address,
-      guest_number_booked_for: guest_number_booked_for ?? this.guest_number_booked_for,
-      start_date: start_date ?? this.start_date,
-      end_date: end_date ?? this.end_date,
-      booking_code: booking_code ?? this.booking_code,
-      userEmail: userEmail ?? this.userEmail,
-      user: user ?? this.user,
-      status: status ?? this.status,
-      wide: wide ?? this.wide,
-    );
   }
 
   BookingState copyWith({
@@ -145,41 +111,7 @@ class BookingState {
     );
   }
 
-  BookingState.fromJson(Map<String, dynamic> json)
-      : business_id = json['business_id'],
-        booking_id = json['booking_id'],
-        business_name = json['business_name'],
-        business_address = json['business_address'],
-        guest_number_booked_for = json['guest_number_booked_for'],
-        /*start_date = DateTime(json['start_date'].toDate().year,json['start_date'].toDate().month, json['start_date'].toDate().day).toUtc(),
-        end_date = DateTime(json['end_date'].toDate().year,json['end_date'].toDate().month, json['end_date'].toDate().day).toUtc(),*/
-        start_date = DateTime.fromMillisecondsSinceEpoch(json['start_date'].seconds * 1000).toUtc(),
-        end_date = DateTime.fromMillisecondsSinceEpoch(json['end_date'].seconds * 1000).toUtc(),
-        booking_code = json['booking_code'],
-        userEmail = json["userEmail"] != null ? List<String>.from(json["userEmail"]) : [],
-        user = List<UserSnippet>.from(json["user"].map((item) {
-          return new UserSnippet(
-            name: item["name"] != null ? item["name"] : "",
-            surname: item["surname"] != null ? item["surname"] : "",
-            email: item["email"] != null ? item["email"] : "",
-            //id: item["id"] != null ? item["id"] : "",
-          );
-        })),
-        status = json['status'],
-        wide = json['wide'];
+  factory BookingState.fromJson(Map<String, dynamic> json) => _$BookingStateFromJson(json);
+  Map<String, dynamic> toJson() => _$BookingStateToJson(this);
 
-  Map<String, dynamic> toJson() => {
-        'business_id': business_id,
-        'booking_id': booking_id,
-        'business_name': business_name,
-        'business_address': business_address,
-        'guest_number_booked_for': guest_number_booked_for,
-        'start_date': start_date,
-        'end_date': end_date,
-        'booking_code': booking_code,
-        'userEmail': userEmail,
-        'user': convertToJson(user),
-        'status': status,
-        'wide': wide
-      };
 }

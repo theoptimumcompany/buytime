@@ -11,7 +11,6 @@ import 'package:Buytime/reblox/model/category/category_list_state.dart';
 import 'package:Buytime/reblox/model/category/category_state.dart';
 import 'package:Buytime/reblox/model/category/invitation/category_invite_state.dart';
 import 'package:Buytime/reblox/model/category/tree/category_tree_state.dart';
-import 'package:Buytime/reblox/model/old/filter_search_state.dart';
 import 'package:Buytime/reblox/model/order/order_list_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/pipeline/pipeline.dart';
@@ -49,12 +48,10 @@ import 'business_reducer.dart';
 import 'business_list_reducer.dart';
 import 'category_reducer.dart';
 import 'category_tree_reducer.dart';
-import 'filter_reducer.dart';
 
 class ClickOnBusinessState {}
 
 AppState appReducer(AppState state, dynamic action) {
-  FilterSearchState filterSearchState = filterReducer(state.filterSearch, action);
   BusinessState businessState = businessReducer(state.business, action);
   BookingState bookingState = bookingReducer(state.booking, action);
   OrderState orderState = orderReducer(state.order, action);
@@ -80,7 +77,6 @@ AppState appReducer(AppState state, dynamic action) {
   AutoCompleteListState autoCompleteListState = autoCompleteListReducer(state.autoCompleteListState, action);
 
   AppState newState = AppState.copyWith(
-      filterSearch: filterSearchState,
       business: businessState,
       booking: bookingState,
       order: orderState,

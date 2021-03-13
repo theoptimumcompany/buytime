@@ -1,9 +1,9 @@
-import 'package:Buytime/reblox/model/booking/booking_state.dart';
-import 'package:Buytime/reblox/model/card/card_state.dart';
 import 'package:Buytime/reblox/model/stripe/stripe_state.dart';
 import 'package:flutter/foundation.dart';
+import 'package:json_annotation/json_annotation.dart';
+part 'stripe_list_state.g.dart';
 
-
+@JsonSerializable(explicitToJson: true)
 class StripeListState {
   List<StripeState> stripeListState;
 
@@ -27,15 +27,9 @@ class StripeListState {
     );
   }
 
-  StripeListState.fromJson(Map json)
-      : stripeListState = json['cardListState'];
-
-  Map<String, dynamic> toJson() => {
-    'cardListState': stripeListState
-  };
-
   StripeListState toEmpty() {
     return StripeListState(stripeListState: []);
   }
-
+  factory StripeListState.fromJson(Map<String, dynamic> json) => _$StripeListStateFromJson(json);
+  Map<String, dynamic> toJson() => _$StripeListStateToJson(this);
 }

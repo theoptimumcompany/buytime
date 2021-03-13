@@ -1,3 +1,7 @@
+import 'package:json_annotation/json_annotation.dart';
+part 'device.g.dart';
+
+@JsonSerializable(explicitToJson: true)
 class Device {
   String id;
   String name;
@@ -9,14 +13,6 @@ class Device {
     this.user_uid,
   });
 
-  Device.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
-        name = json['name'],
-        user_uid = json['user_uid'];
-
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'name': name,
-        'user_uid': user_uid,
-      };
+  factory Device.fromJson(Map<String, dynamic> json) => _$DeviceFromJson(json);
+  Map<String, dynamic> toJson() => _$DeviceToJson(this);
 }

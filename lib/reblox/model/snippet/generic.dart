@@ -1,3 +1,7 @@
+import 'package:json_annotation/json_annotation.dart';
+part 'generic.g.dart';
+
+@JsonSerializable(explicitToJson: true)
 class GenericState {
   String content;
   String id;
@@ -7,12 +11,6 @@ class GenericState {
     this.id = "",
   });
 
-  GenericState.fromJson(Map<String, dynamic> json)
-      : content = json['name'],
-        id = json['id'];
-
-  Map<String, dynamic> toJson() => {
-        'name': content,
-        'id': id,
-      };
+  factory GenericState.fromJson(Map<String, dynamic> json) => _$GenericStateFromJson(json);
+  Map<String, dynamic> toJson() => _$GenericStateToJson(this);
 }

@@ -1,3 +1,7 @@
+import 'package:json_annotation/json_annotation.dart';
+part 'pipeline.g.dart';
+
+@JsonSerializable(explicitToJson: true)
 class Pipeline {
   String name;
   String description;
@@ -19,14 +23,8 @@ class Pipeline {
     );
   }
 
-  Pipeline.fromJson(Map<String, dynamic> json)
-      : name = json['name'],
-        description = json['description'];
-
-  Map<String, dynamic> toJson() => {
-        'name': name,
-        'description': description,
-      };
+  factory Pipeline.fromJson(Map<String, dynamic> json) => _$PipelineFromJson(json);
+  Map<String, dynamic> toJson() => _$PipelineToJson(this);
 
   Pipeline toEmpty() {
     return Pipeline(

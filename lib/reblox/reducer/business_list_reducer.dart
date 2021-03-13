@@ -2,6 +2,7 @@
 import 'package:Buytime/reblox/model/business/business_list_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/model/role/role.dart';
+import 'package:Buytime/reblox/model/service/snippet/service_snippet_state.dart';
 
 class BusinessListRequest {
   String _userId;
@@ -10,6 +11,21 @@ class BusinessListRequest {
   String get userId => _userId;
   Role get role => _role;
 }
+
+class BusinessServiceSnippetListRequest {
+  String _businessId;
+  BusinessServiceSnippetListRequest(this._businessId);
+  String get businessId => _businessId;
+}
+
+class BusinessServiceSnippetListReturned {
+  List<ServiceSnippet> _businessServiceSnippetList;
+  BusinessServiceSnippetListReturned(this._businessServiceSnippetList);
+  List<ServiceSnippet> get businessServiceSnippetList => _businessServiceSnippetList;
+}
+
+
+
 class BusinessListReturned {
   List<BusinessState> _businessListState;
   BusinessListReturned(this._businessListState);

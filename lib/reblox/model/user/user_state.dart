@@ -1,6 +1,10 @@
 import 'package:Buytime/reblox/model/role/role.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:json_annotation/json_annotation.dart';
+part 'user_state.g.dart';
 
+
+@JsonSerializable(explicitToJson: true)
 class UserState {
   String name;
   String surname;
@@ -20,8 +24,7 @@ class UserState {
   bool worker = false;
   String photo;
   List<String> device;
-  String token;
-
+  List<String> token;
   UserState({
     this.name,
     this.surname,
@@ -132,29 +135,7 @@ class UserState {
     );
   }
 
-  UserState.fromJson(Map<String, dynamic> json)
-      : name = json['name'],
-        surname = json['surname'],
-        email = json['email'],
-        uid = json['uid'],
-        birth = json['birth'],
-        gender = json['gender'],
-        city = json['city'],
-        zip = json['zip'],
-        street = json['street'],
-        nation = json['nation'],
-        cellularPhone = json['cellularPhone'],
-        owner = json['owner'],
-        salesman = json['salesman'],
-        manager = json['manager'],
-        worker = json['worker'],
-        admin = json['admin'],
-        // device = json['device'],
-        // token = json['token'],
-        photo = json['photo'];
-
-
-  UserState.fromFirebaseUser(User user, String deviceId, String serverToken)
+  UserState.fromFirebaseUser(User user, String deviceId, List<String> serverToken)
       : name = user.displayName,
         surname = "",
         email = user.email,
@@ -175,30 +156,6 @@ class UserState {
         token = serverToken,
         photo = user.photoURL;
 
-  Map<String, dynamic> toJson() => {
-        'name': name,
-        'surname': surname,
-        'email': email,
-        'uid': uid,
-        'birth': birth,
-        'gender': gender,
-        'city': city,
-        'zip': zip,
-        'street': street,
-        'nation': nation,
-        'cellularPhone': cellularPhone,
-        'owner': owner,
-        'salesman': salesman,
-        'manager': manager,
-        'worker': worker,
-        'admin': admin,
-        'photo': photo,
-        'device': device,
-        'token': token,
-      };
-
-
-
   getRole() {
     if (this == null) return Role.user;
     if (this.admin) return Role.admin;
@@ -208,4 +165,7 @@ class UserState {
     if (this.worker) return Role.worker;
     return Role.user;
   }
+
+  factory UserState.fromJson(Map<String, dynamic> json) => _$UserStateFromJson(json);
+  Map<String, dynamic> toJson() => _$UserStateToJson(this);
 }

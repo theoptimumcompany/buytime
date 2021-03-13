@@ -92,102 +92,104 @@ class StripePaymentAddPaymentMethod implements EpicClass<AppState> {
 }
 
 
-class StripePaymentCardListRequest implements EpicClass<AppState> {
-  StatisticsState statisticsState;
-  List<StripeState> stripeListState = [];
-  StripeCardResponse stripeCardResponse;
-  @override
-  Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    return actions.whereType<StripeCardListRequest>().asyncMap((event) async {
-      debugPrint("STRIPE_PAYMENT_SERVICE_EPIC - StripePaymentCardListRequest => USER ID: ${event.firebaseUserId}");
-      String userId = event.firebaseUserId;
-      QuerySnapshot snapshotCard = await FirebaseFirestore.instance.collection("stripeCustomer/" +userId + "/card/").limit(10).get(); /// 1 READ - ? DOC
-      int snapshotCardDocs = snapshotCard.docs.length;
-      bool snapshotCardAvailable = snapshotCard != null && snapshotCard.docs != null && snapshotCard.docs.isNotEmpty;
-
-      QuerySnapshot snapshotToken = await FirebaseFirestore.instance.collection("stripeCustomer/" +userId + "/token/").limit(10).get(); /// 1 READ - ? DOC
-      int snapshotTokenDocs = snapshotToken.docs.length;
-      bool snapshotTokenAvailable = snapshotToken != null && snapshotToken.docs != null && snapshotToken.docs.isNotEmpty;
-
-
-
-      if (snapshotTokenAvailable && snapshotCardAvailable) {
-        debugPrint('stripe_payment_service_epic => CARD LENGTH: $snapshotCardDocs');
-        snapshotCard.docs.forEach((element) {
-          debugPrint('stripe_payment_service_epic => ID: ${element.id}');
-        });
-        debugPrint('stripe_payment_service_epic => TOKEN LENGTH: $snapshotTokenDocs');
-        /*snapshotToken.docs.forEach((element) {
-          var tokenData = element.data();
-          stripeListState.add(
-              StripeState(
-                stripeCard: StripeCardResponse(
-                  firestore_id: snapshotCard?.docs[0]?.id,
-                  last4: tokenData['card']['last4'],
-                  expYear: tokenData['card']['exp_year'],
-                  expMonth: tokenData['card']['exp_month'],
-                  brand: tokenData['card']['brand'],
-                )
-              )
-          );
-        });*/
-
-
-        var tokenData = snapshotToken?.docs[0]?.data();
-        stripeCardResponse = StripeCardResponse(
-          firestore_id: snapshotCard?.docs[0]?.id,
-          last4: tokenData['card']['last4'],
-          expYear: tokenData['card']['exp_year'],
-          expMonth: tokenData['card']['exp_month'],
-          brand: tokenData['card']['brand'],
-        );
-        ///Return
-        /*return new StripeCardListResult(StripeCardResponse(
-          firestore_id: snapshotCard?.docs[0]?.id,
-          last4: tokenData['card']['last4'],
-          expYear: tokenData['card']['exp_year'],
-          expMonth: tokenData['card']['exp_month'],
-          brand: tokenData['card']['brand'],
-        ));*/
-      }
-
-      statisticsState = store.state.statistics;
-      int reads = statisticsState.stripePaymentCardListRequestRead;
-      int writes = statisticsState.stripePaymentCardListRequestWrite;
-      int documents = statisticsState.stripePaymentCardListRequestDocuments;
-      debugPrint('STRIPE_PAYMENT_SERVICE_EPIC - StripePaymentCardListRequest => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
-      reads = reads + 2;
-      documents = documents + snapshotCardDocs + snapshotTokenDocs;
-      debugPrint('STRIPE_PAYMENT_SERVICE_EPIC - StripePaymentCardListRequest =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
-      statisticsState.stripePaymentCardListRequestRead = reads;
-      statisticsState.stripePaymentCardListRequestWrite = writes;
-      statisticsState.stripePaymentCardListRequestDocuments = documents;
-
-      /*List<CardState> tmpList = [];
-      CardState cardState = CardState().toEmpty();
-      cardState.stripeState = snapshot?.stripe;
-      tmpList.add(cardState);
-      StoreProvider.of<AppState>(context).dispatch(AddCardToList(tmpList));*/
-      ///Return
-      //return null;
-      // return new StripeCardListResult(StripeCardResponse());
-    }).expand((element) => [
-      stripeListState != null ? StripeCardListResult(stripeCardResponse) : null,
-      UpdateStatistics(statisticsState),
-    ]);
-  }
-}
+// class StripePaymentCardListRequest implements EpicClass<AppState> {
+//   StatisticsState statisticsState;
+//   List<StripeState> stripeListState = [];
+//   StripeCardResponse stripeCardResponse;
+//   @override
+//   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
+//     return actions.whereType<StripeCardListRequest>().asyncMap((event) async {
+//       debugPrint("STRIPE_PAYMENT_SERVICE_EPIC - StripePaymentCardListRequest => USER ID: ${event.firebaseUserId}");
+//       String userId = event.firebaseUserId;
+//       QuerySnapshot snapshotCard = await FirebaseFirestore.instance.collection("stripeCustomer/" +userId + "/card/").limit(10).get(); /// 1 READ - ? DOC
+//       int snapshotCardDocs = snapshotCard.docs.length;
+//       bool snapshotCardAvailable = snapshotCard != null && snapshotCard.docs != null && snapshotCard.docs.isNotEmpty;
+//
+//       QuerySnapshot snapshotToken = await FirebaseFirestore.instance.collection("stripeCustomer/" +userId + "/token/").limit(10).get(); /// 1 READ - ? DOC
+//       int snapshotTokenDocs = snapshotToken.docs.length;
+//       bool snapshotTokenAvailable = snapshotToken != null && snapshotToken.docs != null && snapshotToken.docs.isNotEmpty;
+//
+//
+//
+//       if (snapshotTokenAvailable && snapshotCardAvailable) {
+//         debugPrint('stripe_payment_service_epic => CARD LENGTH: $snapshotCardDocs');
+//         snapshotCard.docs.forEach((element) {
+//           debugPrint('stripe_payment_service_epic => ID: ${element.id}');
+//         });
+//         debugPrint('stripe_payment_service_epic => TOKEN LENGTH: $snapshotTokenDocs');
+//         /*snapshotToken.docs.forEach((element) {
+//           var tokenData = element.data();
+//           stripeListState.add(
+//               StripeState(
+//                 stripeCard: StripeCardResponse(
+//                   firestore_id: snapshotCard?.docs[0]?.id,
+//                   last4: tokenData['card']['last4'],
+//                   expYear: tokenData['card']['exp_year'],
+//                   expMonth: tokenData['card']['exp_month'],
+//                   brand: tokenData['card']['brand'],
+//                 )
+//               )
+//           );
+//         });*/
+//
+//
+//         var tokenData = snapshotToken?.docs[0]?.data();
+//         stripeCardResponse = StripeCardResponse(
+//           firestore_id: snapshotCard?.docs[0]?.id,
+//           last4: tokenData['card']['last4'],
+//           expYear: tokenData['card']['exp_year'],
+//           expMonth: tokenData['card']['exp_month'],
+//           brand: tokenData['card']['brand'],
+//         );
+//         ///Return
+//         /*return new StripeCardListResult(StripeCardResponse(
+//           firestore_id: snapshotCard?.docs[0]?.id,
+//           last4: tokenData['card']['last4'],
+//           expYear: tokenData['card']['exp_year'],
+//           expMonth: tokenData['card']['exp_month'],
+//           brand: tokenData['card']['brand'],
+//         ));*/
+//       }
+//
+//       statisticsState = store.state.statistics;
+//       int reads = statisticsState.stripePaymentCardListRequestRead;
+//       int writes = statisticsState.stripePaymentCardListRequestWrite;
+//       int documents = statisticsState.stripePaymentCardListRequestDocuments;
+//       debugPrint('STRIPE_PAYMENT_SERVICE_EPIC - StripePaymentCardListRequest => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+//       reads = reads + 2;
+//       documents = documents + snapshotCardDocs + snapshotTokenDocs;
+//       debugPrint('STRIPE_PAYMENT_SERVICE_EPIC - StripePaymentCardListRequest =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+//       statisticsState.stripePaymentCardListRequestRead = reads;
+//       statisticsState.stripePaymentCardListRequestWrite = writes;
+//       statisticsState.stripePaymentCardListRequestDocuments = documents;
+//
+//       /*List<CardState> tmpList = [];
+//       CardState cardState = CardState().toEmpty();
+//       cardState.stripeState = snapshot?.stripe;
+//       tmpList.add(cardState);
+//       StoreProvider.of<AppState>(context).dispatch(AddCardToList(tmpList));*/
+//       ///Return
+//       //return null;
+//       // return new StripeCardListResult(StripeCardResponse());
+//     }).expand((element) => [
+//       stripeListState != null ? StripeCardListResult(stripeCardResponse) : null,
+//       UpdateStatistics(statisticsState),
+//     ]);
+//   }
+// }
 
 class StripeListPaymentCardListRequest implements EpicClass<AppState> {
   StatisticsState statisticsState;
-  List<StripeState> stripeListState = [];
+  List<StripeState> stripeListState;
   StripeCardResponse stripeCardResponse;
-  List<CardState> tmp = [];
+  List<CardState> tmp;
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<StripeListCardListRequest>().asyncMap((event) async {
       debugPrint("STRIPE_PAYMENT_SERVICE_EPIC - StripePaymentCardListRequest => USER ID: ${event.firebaseUserId}");
       String userId = event.firebaseUserId;
+      stripeListState = [];
+      tmp = [];
       QuerySnapshot snapshotCard = await FirebaseFirestore.instance.collection("stripeCustomer/" +userId + "/card/").limit(10).get(); /// 1 READ - ? DOC
       int snapshotCardDocs = snapshotCard.docs.length;
       bool snapshotCardAvailable = snapshotCard != null && snapshotCard.docs != null && snapshotCard.docs.isNotEmpty;
@@ -204,19 +206,24 @@ class StripeListPaymentCardListRequest implements EpicClass<AppState> {
           debugPrint('stripe_payment_service_epic => ID: ${element.id}');
         });
         debugPrint('stripe_payment_service_epic => TOKEN LENGTH: $snapshotTokenDocs');
+        int counter = 0;
         snapshotToken.docs.forEach((element) {
           var tokenData = element.data();
-          stripeListState.add(
-              StripeState(
-                stripeCard: StripeCardResponse(
-                  firestore_id: snapshotCard?.docs[0]?.id,
-                  last4: tokenData['card']['last4'],
-                  expYear: tokenData['card']['exp_year'],
-                  expMonth: tokenData['card']['exp_month'],
-                  brand: tokenData['card']['brand'],
+          if (snapshotCard?.docs != null && snapshotCard.docs.length > counter) {
+            var cardFirestoreId = snapshotCard?.docs[counter]?.id;
+            stripeListState.add(
+                StripeState(
+                    stripeCard: StripeCardResponse(
+                      firestore_id: cardFirestoreId,
+                      last4: tokenData['card']['last4'],
+                      expYear: tokenData['card']['exp_year'],
+                      expMonth: tokenData['card']['exp_month'],
+                      brand: tokenData['card']['brand'],
+                    )
                 )
-              )
-          );
+            );
+          }
+          counter++;
         });
 
 

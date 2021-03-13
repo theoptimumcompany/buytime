@@ -20,10 +20,7 @@ import 'package:Buytime/reblox/model/category/tree/category_tree_state.dart';
 import 'package:Buytime/reblox/model/service/service_slot_time_state.dart';
 import 'package:Buytime/reblox/model/statistics_state.dart';
 import 'package:Buytime/reblox/model/stripe/stripe_list_state.dart';
-import 'package:Buytime/reblox/reducer/auto_complete_reducer.dart';
-import 'package:Buytime/reblox/reducer/statistics_reducer.dart';
 import 'package:Buytime/services/category_invite_service_epic.dart';
-import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/UI/user/login/UI_U_Home.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
@@ -31,7 +28,6 @@ import 'package:Buytime/reblox/model/business/business_list_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/model/category/category_list_state.dart';
 import 'package:Buytime/reblox/model/category/category_state.dart';
-import 'package:Buytime/reblox/model/old/filter_search_state.dart';
 import 'package:Buytime/reblox/model/order/order_list_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/pipeline/pipeline.dart';
@@ -105,7 +101,7 @@ void main(){
     CategoryTreeAddService(),
     CategoryTreeDeleteService(),
     StripePaymentAddPaymentMethod(),
-    StripePaymentCardListRequest(),
+    // StripePaymentCardListRequest(),
     StripeListPaymentCardListRequest(),
     StripeDetachPaymentMethodRequest(),
     ServiceUpdateService(),
@@ -126,7 +122,6 @@ void main(){
   final _initialState = AppState(
     category: CategoryState().toEmpty(),
     categoryInvite: CategoryInviteState().toEmpty(),
-    filterSearch: FilterSearchState().toEmpty(),
     categoryTree: CategoryTree().toEmpty(),
     business: BusinessState().toEmpty(),
     booking: BookingState().toEmpty(),

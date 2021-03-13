@@ -1,10 +1,8 @@
-
-import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/model/stripe/stripe_card_response.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:stripe_sdk/stripe_sdk_ui.dart';
+import 'package:json_annotation/json_annotation.dart';
+part 'stripe_state.g.dart';
 
-
+@JsonSerializable(explicitToJson: true)
 class StripeState {
   List<Map<String, dynamic>> paymentMethodList;
   var date;
@@ -24,15 +22,6 @@ class StripeState {
     this.error,
   });
 
-  StripeState.fromJson(Map<String, dynamic> json)
-      : paymentMethodList = json['paymentMethodList'],
-        position = json['position'],
-        date = json['date'],
-        total = json['total'],
-        stripeCard = json['stripeCard'],
-        error = json['error'],
-  URL = json['URL'];
-
   StripeState.fromState(StripeState state) {
     this.paymentMethodList = state.paymentMethodList;
     this.date = state.date;
@@ -42,16 +31,6 @@ class StripeState {
     this.URL = state.URL;
     this.error = state.error;
   }
-
-  Map<String, dynamic> toJson() => {
-    'paymentMethodList': paymentMethodList,
-    'position': position,
-    'date': date,
-    'total': total,
-    'stripeCard': stripeCard,
-    'URL': URL,
-    'error': error,
-  };
 
   StripeState copyWith({
     List<Map<String, dynamic>> paymentMethodList,
@@ -85,8 +64,6 @@ class StripeState {
     );
   }
 
-
-
-  void removeItem(serviceList) {}
-
+  factory StripeState.fromJson(Map<String, dynamic> json) => _$StripeStateFromJson(json);
+  Map<String, dynamic> toJson() => _$StripeStateToJson(this);
 }

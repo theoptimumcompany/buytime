@@ -1,6 +1,9 @@
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:flutter/foundation.dart';
+import 'package:json_annotation/json_annotation.dart';
+part 'service_list_state.g.dart';
 
+@JsonSerializable(explicitToJson: true)
 class ServiceListState {
   List<ServiceState> serviceListState;
 
@@ -21,8 +24,6 @@ class ServiceListState {
     return ServiceListState(serviceListState: List<ServiceState>());
   }
 
-  ServiceListState.fromJson(Map json)
-      : serviceListState = json['serviceListState'];
-
-  Map<String, dynamic> toJson() => {'serviceListState': serviceListState};
+  factory ServiceListState.fromJson(Map<String, dynamic> json) => _$ServiceListStateFromJson(json);
+  Map<String, dynamic> toJson() => _$ServiceListStateToJson(this);
 }

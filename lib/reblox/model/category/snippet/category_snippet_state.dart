@@ -1,6 +1,8 @@
 import 'package:Buytime/reblox/model/service/service_state.dart';
-import 'package:Buytime/reblox/model/service/snippet/service_snippet_state.dart';
+import 'package:json_annotation/json_annotation.dart';
+part 'category_snippet_state.g.dart';
 
+@JsonSerializable(explicitToJson: true)
 class CategorySnippet {
   int numberOfServices;
   ServiceState mostSoldService;
@@ -30,19 +32,8 @@ class CategorySnippet {
     );
   }
 
-  CategorySnippet.fromJson(Map<String, dynamic> json)
-      : numberOfServices = json['numberOfServices'],
-        //mostSoldService = ServiceState.fromJson(json["mostSoldService"]),
-        numberOfManagers = json['numberOfManagers'],
-        numberOfWorkers = json['numberOfWorkers'];
-
-
-  Map<String, dynamic> toJson() => {
-        'numberOfServices': numberOfServices,
-        //'mostSoldService': mostSoldService.toJson(),
-        'numberOfManagers': numberOfManagers,
-        'numberOfWorkers': numberOfWorkers,
-      };
+  factory CategorySnippet.fromJson(Map<String, dynamic> json) => _$CategorySnippetFromJson(json);
+  Map<String, dynamic> toJson() => _$CategorySnippetToJson(this);
 
   CategorySnippet toEmpty() {
     return CategorySnippet(
