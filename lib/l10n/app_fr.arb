@@ -357,5 +357,8 @@
   "saveCredentials": "Save Credentials",
   "pleaseRegister": "Please Register:",
   "createInviteUpper": "CREATE INVITE",
+  "startingFromCurrency": "Starting from €",
+  "somethingWentWrongUpper": "SOMETHING WENT WRONG",
+  "spaceMin": " min",
   "passwordError": "Password has a minimum of 6 characters and at least 1 digit, 1 lowercase char and 1 uppercase char"
 }

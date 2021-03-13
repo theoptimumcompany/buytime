@@ -302,7 +302,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                   Container(
                                     margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
                                     child: Text(
-                                      'Starting from €',  //TODO TRANS
+                                        AppLocalizations.of(context).startingFromCurrency,
                                       style: TextStyle(
                                           fontFamily: BuytimeTheme.FontFamily,
                                           color: BuytimeTheme.TextBlack,

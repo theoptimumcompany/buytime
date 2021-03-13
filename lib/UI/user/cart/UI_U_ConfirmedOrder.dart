@@ -251,9 +251,7 @@ class ConfirmedOrderState extends State<ConfirmedOrder> with SingleTickerProvide
                                                   child: FittedBox(
                                                     fit: BoxFit.scaleDown,
                                                     child: Text(
-                                                      ///TODO TRANS
-                                                     // snapshot.progress == "in_progress" ? 'WE ARE CONFIRMING YOUR ORDER' : snapshot.progress == "failed" ? 'SOMETHING WENT WRONG' : 'ORDER CONFIRMED',//AppLocalizations.of(context).somethingIsNotRight, ///TODO Make it global
-                                                      snapshot.progress == "in_progress" ? AppLocalizations.of(context).weAreConfirmingYourOrder : AppLocalizations.of(context).orderConfirmedUpper,
+                                                      snapshot.progress == "in_progress" ? AppLocalizations.of(context).weAreConfirmingYourOrder : snapshot.progress == "failed" ? AppLocalizations.of(context).somethingWentWrongUpper :  AppLocalizations.of(context).orderConfirmedUpper,
                                                       style: TextStyle(
                                                         letterSpacing: 1.25,
                                                         fontFamily: BuytimeTheme.FontFamily,

@@ -14,9 +14,6 @@ import 'package:intl/intl.dart';
 import 'package:share/share.dart';
 
 class TimeSlotWidget extends StatefulWidget {
-  ServiceSlot serviceSlot;
-  int index;
-
   dynamic serviceSlot;
   dynamic index;
   bool selected;
@@ -77,7 +74,7 @@ class _TimeSlotWidgetState extends State<TimeSlotWidget> {
                  child: FittedBox(
                    fit: BoxFit.scaleDown,
                    child: Text(
-                     widget.serviceSlot.minute + AppLocalizations.of(context).spaceMinute, ///TODO Make it Global
+                     widget.serviceSlot.minute + AppLocalizations.of(context).spaceMin,
                      style: TextStyle(
                        //letterSpacing: 1.25,
                          fontFamily: BuytimeTheme.FontFamily,
