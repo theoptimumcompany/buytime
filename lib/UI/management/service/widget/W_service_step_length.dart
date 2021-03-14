@@ -41,7 +41,7 @@ class StepLengthState extends State<StepLength> {
   Widget build(BuildContext context) {
     hour = StoreProvider.of<AppState>(context).state.serviceSlot.hour.toString();
     minute = StoreProvider.of<AppState>(context).state.serviceSlot.minute.toString();
-    duration = StoreProvider.of<AppState>(context).state.serviceSlot.minDuration < 10 ? 60 : StoreProvider.of<AppState>(context).state.serviceSlot.minDuration;
+    duration = StoreProvider.of<AppState>(context).state.serviceSlot.minDuration < 0 ? 60 : StoreProvider.of<AppState>(context).state.serviceSlot.minDuration;
     limitBooking = StoreProvider.of<AppState>(context).state.serviceSlot.limitBooking.toString();
     durationSlider = StoreProvider.of<AppState>(context).state.serviceSlot.minute;
     hourController.text = hour;

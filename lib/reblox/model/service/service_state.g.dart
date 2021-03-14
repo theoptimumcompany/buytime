@@ -27,7 +27,7 @@ ServiceState _$ServiceStateFromJson(Map<String, dynamic> json) {
     serviceSlot: (json['serviceSlot'] as List)
         ?.map((e) =>
             e == null ? null : ServiceSlot.fromJson(e as Map<String, dynamic>))
-        ?.toList(),
+        ?.toList() ?? [],
     spinnerVisibility: json['spinnerVisibility'] as bool ?? false,
     serviceCreated: json['serviceCreated'] as bool ?? false,
     serviceEdited: json['serviceEdited'] as bool ?? false,

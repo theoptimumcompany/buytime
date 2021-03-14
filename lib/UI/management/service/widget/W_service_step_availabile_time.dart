@@ -36,15 +36,6 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
   @override
   void initState() {
     super.initState();
-    daysOfWeek = [
-      AppLocalizations.of(context).monday,
-      AppLocalizations.of(context).tuesday,
-      AppLocalizations.of(context).wednesday,
-      AppLocalizations.of(context).thursday,
-      AppLocalizations.of(context).friday,
-      AppLocalizations.of(context).saturday,
-      AppLocalizations.of(context).sunday
-    ];
   }
 
   List<String> convertListTextEditingControllerToListString(List<TextEditingController> controllerList) {
@@ -284,6 +275,17 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: numberOfSlotTimeInterval,
                     itemBuilder: (context, i) {
+
+                      daysOfWeek = [
+                        AppLocalizations.of(context).monday,
+                        AppLocalizations.of(context).tuesday,
+                        AppLocalizations.of(context).wednesday,
+                        AppLocalizations.of(context).thursday,
+                        AppLocalizations.of(context).friday,
+                        AppLocalizations.of(context).saturday,
+                        AppLocalizations.of(context).sunday
+                      ];
+
                       if (i > 0) {
                         ///Update keyForm
                         _formSlotTimeKey.add(GlobalKey<FormState>());

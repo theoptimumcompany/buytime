@@ -20,7 +20,7 @@ class ServiceState {
   List<String> tag;
   bool switchSlots = false;
   bool switchAutoConfirm = false;
-  List<ServiceSlot> serviceSlot;
+  List<ServiceSlot> serviceSlot = [];
   @JsonKey(defaultValue: false)
   bool spinnerVisibility = false;
   @JsonKey(defaultValue: false)
