@@ -48,7 +48,7 @@ class UI_U_OrderDetailState extends State<UI_U_OrderDetail> {
           builder: (context, snapshot) {
             Timestamp stamp = Timestamp.now(); //TODO snapshot.order.date; Salvare bene timestamp sul navigation
             DateTime date = stamp.toDate();
-            String formattedDate = DateFormat('dd/MM/yyyy kk:mm').format(date);
+            String formattedDate = DateFormat().format(confirmedOrder.date);
             return Scaffold(
               resizeToAvoidBottomInset: false,
               appBar: BuytimeAppbar(
@@ -88,7 +88,7 @@ class UI_U_OrderDetailState extends State<UI_U_OrderDetail> {
                   Padding(
                     padding: const EdgeInsets.only(left: 10.0),
                     child: Text(
-                      formattedDate.split(" ")[0].toString() + AppLocalizations.of(context).at + formattedDate.split(" ")[1].toString(),
+                      '${DateFormat('dd MMMM yyyy').format(confirmedOrder.date)} ${AppLocalizations.of(context).at} ${DateFormat('HH:mm').format(confirmedOrder.date)}'/*formattedDate.split(" ")[0].toString() + AppLocalizations.of(context).at + formattedDate.split(" ")[1].toString()*/,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         fontWeight: FontWeight.w700,

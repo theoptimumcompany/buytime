@@ -32,6 +32,8 @@ class Utils {
   }
 
   static getDate(Timestamp date){
+    if(date == null)
+      date = Timestamp.fromDate(DateTime.now());
     return DateTime.fromMillisecondsSinceEpoch(date.seconds * 1000).toUtc();
   }
   static setDate(DateTime date){

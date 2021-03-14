@@ -18,7 +18,7 @@ class OrderEntry {
   String time;
   String minutes;
   @JsonKey(fromJson: Utils.getDate, toJson: Utils.setDate)
-  DateTime date = DateTime.now();
+  DateTime date;
 
   OrderEntry({
     this.number = 0,
