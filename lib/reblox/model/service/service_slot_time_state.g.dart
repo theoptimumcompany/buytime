@@ -23,7 +23,7 @@ ServiceSlot _$ServiceSlotFromJson(Map<String, dynamic> json) {
     limitBooking: json['limitBooking'] as int,
     noLimitBooking: json['noLimitBooking'] as bool,
     price: (json['price'] as num)?.toDouble(),
-    minDuration: json['minDuration'] as int,
+    minDuration: json['minDuration'] as int ?? 0,
     intervalVisibility:
         (json['intervalVisibility'] as List)?.map((e) => e as bool)?.toList(),
   );
