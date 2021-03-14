@@ -17,21 +17,21 @@ class UserTabNavigationItem {
     @required this.title,
     @required this.icon,
   });
-  static List<UserTabNavigationItem> get items => [
+  /*static List<UserTabNavigationItem> get items => [
     UserTabNavigationItem(
       page: UI_U_BusinessList(),
       icon: Icon(Icons.business),
-      title: Text(AppLocalizations.of(context).businesses),
+      title: Text('${AppLocalizations.of(context).businesses}'),
     ),
     UserTabNavigationItem(
       page: UI_U_OrderHistory(),
       icon: Icon(Icons.list),
-      title: Text(AppLocalizations.of(context).orders),
+      title: Text('${AppLocalizations.of(context).orders}'),
     ),
     UserTabNavigationItem(
       page: UI_U_AboutUs(),
       icon: Icon(Icons.info_outline),
-      title: Text(AppLocalizations.of(context).aboutUs),
+      title: Text('${AppLocalizations.of(context).aboutUs}'),
     ),
-  ];
+  ];*/
 }

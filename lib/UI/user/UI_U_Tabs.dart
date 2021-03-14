@@ -1,4 +1,7 @@
+import 'package:Buytime/UI/user/about_us/UI_U_About_Us.dart';
+import 'package:Buytime/UI/user/business/UI_U_business_list.dart';
 import 'package:Buytime/UI/user/model/User_tab_navigation_item.dart';
+import 'package:Buytime/UI/user/order/UI_U_OrderHistory.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/role/role.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
@@ -23,7 +26,12 @@ class UI_U_TabsState extends State<UI_U_Tabs> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+
+    });
   }
+
+  List<UserTabNavigationItem>  items = [];
 
   int _currentIndex = 0;
   bool visibleDrawer = false;
@@ -34,9 +42,25 @@ class UI_U_TabsState extends State<UI_U_Tabs> {
 
     return StoreConnector<AppState, AppState>(
         converter: (store) => store.state,
+        onInit: (store){
+          items.add(UserTabNavigationItem(
+            page: UI_U_BusinessList(),
+            icon: Icon(Icons.business),
+            title: Text('${AppLocalizations.of(context).businesses}'),
+          ));
+          items.add(UserTabNavigationItem(
+            page: UI_U_OrderHistory(),
+            icon: Icon(Icons.list),
+            title: Text('${AppLocalizations.of(context).orders}'),
+          ));
+          items.add(UserTabNavigationItem(
+            page: UI_U_AboutUs(),
+            icon: Icon(Icons.info_outline),
+            title: Text('${AppLocalizations.of(context).aboutUs}'),
+          ));
+        },
         builder: (context, snapshot) {
-          visibleDrawer =
-              snapshot.user != null && (snapshot.user.getRole() != Role.user) ? true : false;
+          visibleDrawer = snapshot.user != null && (snapshot.user.getRole() != Role.user) ? true : false;
 
           return Scaffold(
             drawerEnableOpenDragGesture: false,
@@ -69,7 +93,7 @@ class UI_U_TabsState extends State<UI_U_Tabs> {
             body: IndexedStack(
               index: _currentIndex,
               children: [
-                for (final tabItem in UserTabNavigationItem.items) tabItem.page,
+                for (final tabItem in items) tabItem.page,
               ],
             ),
             bottomNavigationBar: BottomNavigationBar(
@@ -79,7 +103,7 @@ class UI_U_TabsState extends State<UI_U_Tabs> {
               unselectedItemColor: Colors.black,
               onTap: (int index) => setState(() => _currentIndex = index),
               items: [
-                for (final tabItem in UserTabNavigationItem.items)
+                for (final tabItem in items)
                   BottomNavigationBarItem(
                     icon: tabItem.icon,
                     title: tabItem.title,
