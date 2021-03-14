@@ -97,11 +97,13 @@
 	<key>NSAppleMusicUsageDescription</key>
 	<string>Play using while you are hiking</string>
 	<key>NSCalendarsUsageDescription</key>
-	<string>Can i use Calendar please?</string>
+	<string>booking saving</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Can I use the camera please?</string>
 	<key>NSContactsUsageDescription</key>
 	<string>Can i use Contacts description please?</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Can i use the face id?</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>GPS</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
@@ -138,9 +140,5 @@
 	<false/>
 	<key>io.flutter.embedded_views_preview</key>
 	<true/>
-	<key>NSCalendarsUsageDescription</key>
-    <string>booking saving</string>
-	<key>NSFaceIDUsageDescription</key>
-    <string>Can i use the face id?</string>
 </dict>
 </plist>
