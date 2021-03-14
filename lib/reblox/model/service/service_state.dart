@@ -1,6 +1,7 @@
 import 'package:Buytime/reblox/model/service/service_slot_time_state.dart';
 import '../file/optimum_file_to_upload.dart';
 import 'package:json_annotation/json_annotation.dart';
+
 part 'service_state.g.dart';
 
 @JsonSerializable(explicitToJson: true)
@@ -18,8 +19,11 @@ class ServiceState {
   double price;
   int timesSold;
   List<String> tag;
+  @JsonKey(defaultValue: false)
   bool switchSlots = false;
+  @JsonKey(defaultValue: false)
   bool switchAutoConfirm = false;
+  @JsonKey(defaultValue: [])
   List<ServiceSlot> serviceSlot = [];
   @JsonKey(defaultValue: false)
   bool spinnerVisibility = false;
@@ -31,8 +35,6 @@ class ServiceState {
   ///Out Database
   @JsonKey(ignore: true)
   List<OptimumFileToUpload> fileToUploadList;
-
-
 
   ServiceState({
     this.serviceId,
@@ -152,5 +154,6 @@ class ServiceState {
   }
 
   factory ServiceState.fromJson(Map<String, dynamic> json) => _$ServiceStateFromJson(json);
+
   Map<String, dynamic> toJson() => _$ServiceStateToJson(this);
 }

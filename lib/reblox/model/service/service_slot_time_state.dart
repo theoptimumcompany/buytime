@@ -8,6 +8,8 @@ class ServiceSlot {
   int numberOfInterval = 1;
   List<bool> switchWeek = [];
   List<EveryDay> daysInterval = [];
+  @JsonKey(defaultValue: [true])
+  List<bool> intervalVisibility = [true];
 
   ///Time vars
   List<String> startTime = [];
@@ -18,17 +20,22 @@ class ServiceSlot {
   String checkOut = '';
 
   ///Length vars
+  @JsonKey(defaultValue: 0)
   int hour = 0;
+  @JsonKey(defaultValue: 0)
   int minute = 0;
+  @JsonKey(defaultValue: 0)
+  int maxDuration = 0;
+  @JsonKey(defaultValue: 0)
+  int duration = 0;
+  @JsonKey(defaultValue: 1)
   int limitBooking = 1;
+  @JsonKey(defaultValue: false)
   bool noLimitBooking = false;
 
   ///Price vars
+  @JsonKey(defaultValue: 0.0)
   double price = 0.0;
-
-  ///Vars out of DB
-  int minDuration = 0;
-  List<bool> intervalVisibility = [true];
 
   ServiceSlot({
     this.numberOfInterval,
@@ -43,8 +50,9 @@ class ServiceSlot {
     this.limitBooking,
     this.noLimitBooking,
     this.price,
-    this.minDuration,
+    this.maxDuration,
     this.intervalVisibility,
+    this.duration,
   });
 
   ServiceSlot copyWith({
@@ -60,8 +68,9 @@ class ServiceSlot {
     int limitBooking,
     bool noLimitBooking,
     double price,
-    int minDuration,
-    int intervalVisibility,
+    int maxDuration,
+    List<bool> intervalVisibility,
+    int duration,
   }) {
     return ServiceSlot(
       numberOfInterval: numberOfInterval ?? this.numberOfInterval,
@@ -76,8 +85,9 @@ class ServiceSlot {
       limitBooking: limitBooking ?? this.limitBooking,
       noLimitBooking: noLimitBooking ?? this.noLimitBooking,
       price: price ?? this.price,
-      minDuration: minDuration ?? this.minDuration,
+      maxDuration: maxDuration ?? this.maxDuration,
       intervalVisibility: intervalVisibility ?? this.intervalVisibility,
+      duration: duration ?? this.duration,
     );
   }
 
@@ -95,8 +105,9 @@ class ServiceSlot {
       limitBooking: 1,
       noLimitBooking: false,
       price: 0.0,
-      minDuration: 0,
+      maxDuration: 0,
       intervalVisibility: [true],
+      duration: 0,
     );
   }
 
@@ -113,8 +124,9 @@ class ServiceSlot {
     this.limitBooking = serviceSlot.limitBooking;
     this.noLimitBooking = serviceSlot.noLimitBooking;
     this.price = serviceSlot.price;
-    this.minDuration = serviceSlot.minDuration;
+    this.maxDuration = serviceSlot.maxDuration;
     this.intervalVisibility = serviceSlot.intervalVisibility;
+    this.duration = serviceSlot.duration;
   }
 
 

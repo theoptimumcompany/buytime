@@ -30,7 +30,7 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
   List<String> daysOfWeek = [];
   final List<GlobalKey<FormState>> _formSlotTimeKey = [GlobalKey<FormState>()];
   bool setStartAndStop = true;
-  int duration = 0;
+  int maxDuration = 0;
   List<bool> intervalIndexVisibility = [];
 
   @override
@@ -219,29 +219,35 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
     }
   }
 
-  void setDuration() {
+  void setMaxDuration() {
     if (StoreProvider.of<AppState>(context).state.serviceSlot.startTime.contains('null:null') || StoreProvider.of<AppState>(context).state.serviceSlot.stopTime.contains('null:null')) {
       return;
     } else {
       for (int i = 0; i < StoreProvider.of<AppState>(context).state.serviceSlot.numberOfInterval; i++) {
+        print(StoreProvider.of<AppState>(context).state.serviceSlot.startTime[i]);
         List<String> start = StoreProvider.of<AppState>(context).state.serviceSlot.startTime[i].split(":");
         int startHour = int.parse(start[0]);
         int startMinute = int.parse(start[1]);
+        print(StoreProvider.of<AppState>(context).state.serviceSlot.stopTime[i]);
         List<String> stop = StoreProvider.of<AppState>(context).state.serviceSlot.stopTime[i].split(":");
         int stopHour = int.parse(stop[0]);
         int stopMinute = int.parse(stop[1]);
         int localDuration = (((stopHour * 60) + stopMinute) - ((startHour * 60) + startMinute));
-        if (localDuration <= 9) {
-          StoreProvider.of<AppState>(context).dispatch(SetServiceSlotMinDuration(localDuration));
-        } else if (duration == 10) {
+        if (localDuration <= 0) {
+          StoreProvider.of<AppState>(context).dispatch(SetServiceSlotMaxDuration(60));
+        } else if (maxDuration == 0) {
+          maxDuration = localDuration;
+          StoreProvider.of<AppState>(context).dispatch(SetServiceSlotMaxDuration(maxDuration));
+          if(maxDuration < StoreProvider.of<AppState>(context).state.serviceSlot.duration){
+            StoreProvider.of<AppState>(context).dispatch(SetServiceSlotDuration(maxDuration));
+          }
+        } else if (localDuration < maxDuration) {
           setState(() {
-            duration = localDuration;
-            StoreProvider.of<AppState>(context).dispatch(SetServiceSlotMinDuration(duration));
-          });
-        } else if (localDuration < duration) {
-          setState(() {
-            duration = localDuration;
-            StoreProvider.of<AppState>(context).dispatch(SetServiceSlotMinDuration(duration));
+            maxDuration = localDuration;
+            StoreProvider.of<AppState>(context).dispatch(SetServiceSlotMaxDuration(maxDuration));
+            if(maxDuration < StoreProvider.of<AppState>(context).state.serviceSlot.duration){
+              StoreProvider.of<AppState>(context).dispatch(SetServiceSlotDuration(maxDuration));
+            }
           });
         }
         ;
@@ -264,7 +270,8 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
           switchWeek = snapshot.serviceSlot.switchWeek;
           daysInterval = snapshot.serviceSlot.daysInterval;
           numberOfSlotTimeInterval = snapshot.serviceSlot.numberOfInterval;
-          duration = snapshot.serviceSlot.minDuration;
+          maxDuration = snapshot.serviceSlot.maxDuration;
+          setMaxDuration();
           return Column(
             mainAxisAlignment: MainAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
@@ -275,7 +282,6 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: numberOfSlotTimeInterval,
                     itemBuilder: (context, i) {
-
                       daysOfWeek = [
                         AppLocalizations.of(context).monday,
                         AppLocalizations.of(context).tuesday,
@@ -438,7 +444,7 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
                                                                       fontWeight: FontWeight.w800,
                                                                     ),
                                                                     validator: (value) {
-                                                                      setDuration();
+                                                                      setMaxDuration();
                                                                       if (startController[i].text.isEmpty) {
                                                                         return AppLocalizations.of(context).insertStartTimeFirst;
                                                                       } else if (stopController[i].text.isEmpty) {
@@ -502,8 +508,7 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
                                                                     fontWeight: FontWeight.w800,
                                                                   ),
                                                                   validator: (value) {
-                                                                    setDuration();
-
+                                                                    setMaxDuration();
                                                                     if (startController[i].text.isEmpty) {
                                                                       return AppLocalizations.of(context).insertStartTimeFirst;
                                                                     } else if (stopController[i].text.isEmpty) {
@@ -511,7 +516,6 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
                                                                       return AppLocalizations.of(context).stopTimeShorterStart;
                                                                     } else {
                                                                       List<String> controllerList = convertListTextEditingControllerToListString(stopController);
-
                                                                       StoreProvider.of<AppState>(context).dispatch(SetServiceSlotStopTime(controllerList));
                                                                     }
                                                                     return '';

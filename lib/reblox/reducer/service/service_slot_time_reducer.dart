@@ -78,10 +78,16 @@ class SetServiceSlotMinute {
   int get minute => _minute;
 }
 
-class SetServiceSlotMinDuration {
-  int _minDuration;
-  SetServiceSlotMinDuration(this._minDuration);
-  int get minDuration => _minDuration;
+class SetServiceSlotDuration {
+  int _duration;
+  SetServiceSlotDuration(this._duration);
+  int get duration => _duration;
+}
+
+class SetServiceSlotMaxDuration {
+  int _maxDuration;
+  SetServiceSlotMaxDuration(this._maxDuration);
+  int get maxDuration => _maxDuration;
 }
 
 class SetServiceSlotIntervalVisibility {
@@ -151,8 +157,12 @@ ServiceSlot serviceSlotReducer(ServiceSlot state, action) {
     serviceSlot.minute = action.minute;
     return serviceSlot;
   }
-  if (action is SetServiceSlotMinDuration) {
-    serviceSlot.minDuration = action.minDuration;
+  if (action is SetServiceSlotDuration) {
+    serviceSlot.duration = action.duration;
+    return serviceSlot;
+  }
+  if (action is SetServiceSlotMaxDuration) {
+    serviceSlot.maxDuration = action.maxDuration;
     return serviceSlot;
   }
   if (action is SetServiceSlotIntervalVisibility) {

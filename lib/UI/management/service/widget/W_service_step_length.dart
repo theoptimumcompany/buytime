@@ -27,26 +27,34 @@ class StepLengthState extends State<StepLength> {
   String hour = '';
   String minute = '';
   String limitBooking = '';
-  int durationSlider = 10;
   int bookingSlider = 1;
   bool bookingInfinity = false;
   int duration = 0;
+  int maxDuration = 0;
 
   @override
   void initState() {
     super.initState();
   }
 
+  void calculateMaxDurationSlider(){
+
+
+  }
+
   @override
   Widget build(BuildContext context) {
     hour = StoreProvider.of<AppState>(context).state.serviceSlot.hour.toString();
     minute = StoreProvider.of<AppState>(context).state.serviceSlot.minute.toString();
-    duration = StoreProvider.of<AppState>(context).state.serviceSlot.minDuration < 0 ? 60 : StoreProvider.of<AppState>(context).state.serviceSlot.minDuration;
+    duration = StoreProvider.of<AppState>(context).state.serviceSlot.duration;
+    maxDuration = StoreProvider.of<AppState>(context).state.serviceSlot.maxDuration;
     limitBooking = StoreProvider.of<AppState>(context).state.serviceSlot.limitBooking.toString();
-    durationSlider = StoreProvider.of<AppState>(context).state.serviceSlot.minute;
     hourController.text = hour;
     minuteController.text = minute;
     limitBookingController.text = limitBooking;
+    calculateMaxDurationSlider();
+    print("Duration Max Slider : " + maxDuration.toString());
+    print("Duration actual : " + duration.toString());
     var media = MediaQuery.of(context).size;
     return StoreConnector<AppState, AppState>(
         converter: (store) => store.state,
@@ -109,15 +117,15 @@ class StepLengthState extends State<StepLength> {
                             ),
                           ),
                           child: Slider(
-                            min: 0, ///TODO
-                            max: 60,
-                            divisions: 10,
-                            label: '$durationSlider',
-                            value: durationSlider.toDouble(),
+                            min: 0,
+                            max: maxDuration.toDouble(),
+                            divisions: maxDuration > 0 ? maxDuration ~/ 5 : 10,
+                            label: '$duration',
+                            value: duration.toDouble(),
                             onChanged: (value) {
                               setState(() {
-                                durationSlider = value.toInt();
-                                StoreProvider.of<AppState>(context).dispatch(SetServiceSlotMinute(durationSlider));
+                                duration = value.toInt();
+                                StoreProvider.of<AppState>(context).dispatch(SetServiceSlotDuration(duration));
                               });
                             },
                           ),
@@ -266,7 +274,7 @@ class StepLengthState extends State<StepLength> {
                       Container(
                         child: Flexible(
                           child: Text(
-                            AppLocalizations.of(context).serviceOfferedToGuests + durationSlider.toString() + AppLocalizations.of(context).spaceMinutes,
+                            AppLocalizations.of(context).serviceOfferedToGuests + duration.toString() + AppLocalizations.of(context).spaceMinutes,
                             textAlign: TextAlign.start,
                             overflow: TextOverflow.clip,
                             style: TextStyle(
