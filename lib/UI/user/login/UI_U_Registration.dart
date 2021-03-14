@@ -211,7 +211,7 @@ class RegistrationState extends State<Registration> {
       }
 
       print("Device ID : " + deviceId);
-      StoreProvider.of<AppState>(context).dispatch(new LoggedUser(UserState.fromFirebaseUser(user, deviceId, serverToken)));
+      StoreProvider.of<AppState>(context).dispatch(new LoggedUser(UserState.fromFirebaseUser(user, deviceId, [serverToken])));
       Device device = Device(name: "device", id: deviceId, user_uid: user.uid);
       StoreProvider.of<AppState>(context).dispatch(new UpdateUserDevice(device));
       Token token = Token(name: "token", id: serverToken, user_uid: user.uid);
@@ -324,7 +324,7 @@ class RegistrationState extends State<Registration> {
       }
       print("Device ID : " + deviceId);
 
-      StoreProvider.of<AppState>(context).dispatch(new LoggedUser(UserState.fromFirebaseUser(user, deviceId, serverToken)));
+      StoreProvider.of<AppState>(context).dispatch(new LoggedUser(UserState.fromFirebaseUser(user, deviceId, [serverToken])));
       Device device = Device(name: "device", id: deviceId, user_uid: user.uid);
       StoreProvider.of<AppState>(context).dispatch(new UpdateUserDevice(device));
       Token token = Token(name: "token", id: serverToken, user_uid: user.uid);
@@ -392,7 +392,7 @@ class RegistrationState extends State<Registration> {
 
         print("Device ID : " + deviceId);
 
-        StoreProvider.of<AppState>(context).dispatch(new LoggedUser(UserState.fromFirebaseUser(facebookUserFromFirebase.user, deviceId, serverToken)));
+        StoreProvider.of<AppState>(context).dispatch(new LoggedUser(UserState.fromFirebaseUser(facebookUserFromFirebase.user, deviceId, [serverToken])));
         Device device = Device(name: "device", id: deviceId, user_uid: facebookUserFromFirebase.user.uid);
         StoreProvider.of<AppState>(context).dispatch(new UpdateUserDevice(device));
         Token token = Token(name: "token", id: serverToken, user_uid: facebookUserFromFirebase.user.uid);
@@ -757,7 +757,7 @@ class RegistrationState extends State<Registration> {
         }
       }
       print("Device ID : " + deviceId);
-      StoreProvider.of<AppState>(context).dispatch(new LoggedUser(UserState.fromFirebaseUser(user, deviceId, serverToken)));
+      StoreProvider.of<AppState>(context).dispatch(new LoggedUser(UserState.fromFirebaseUser(user, deviceId, [serverToken])));
       Device device = Device(name: "device", id: deviceId, user_uid: user.uid);
       StoreProvider.of<AppState>(context).dispatch(new UpdateUserDevice(device));
       Token token = Token(name: "token", id: serverToken, user_uid: user.uid);
