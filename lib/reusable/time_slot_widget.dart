@@ -74,7 +74,7 @@ class _TimeSlotWidgetState extends State<TimeSlotWidget> {
                  child: FittedBox(
                    fit: BoxFit.scaleDown,
                    child: Text(
-                     '${widget.serviceSlot.minute}${AppLocalizations.of(context).spaceMin}',
+                     '${widget.serviceSlot.duration}${AppLocalizations.of(context).spaceMin}',
                      style: TextStyle(
                        //letterSpacing: 1.25,
                          fontFamily: BuytimeTheme.FontFamily,

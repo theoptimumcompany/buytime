@@ -409,7 +409,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                             order.business.id = snapshot.business.id_firestore;
                                             order.user.name = snapshot.user.name;
                                             order.user.id = snapshot.user.uid;
-                                            order.addReserveItem(widget.serviceState, snapshot.business.ownerId, slots[0][0][1].startTime[slots[0][0][0]], slots[0][0][1].minute.toString(), dates[0], slots[0][0][1].price);
+                                            order.addReserveItem(widget.serviceState, snapshot.business.ownerId, slots[0][0][1].startTime[slots[0][0][0]], slots[0][0][1].duration.toString(), dates[0], slots[0][0][1].price);
                                             order.selected.add(indexes[0][0]);
                                             order.cartCounter++;
                                             //StoreProvider.of<AppState>(context).dispatch(SetOrderCartCounter(order.cartCounter));
@@ -525,7 +525,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                           order.business.id = snapshot.business.id_firestore;
                                                           order.user.name = snapshot.user.name;
                                                           order.user.id = snapshot.user.uid;
-                                                          order.addReserveItem(widget.serviceState, snapshot.business.ownerId, serviceSlot[1].startTime[serviceSlot[0]], serviceSlot[1].minute.toString(), dates[index], serviceSlot[1].price);
+                                                          order.addReserveItem(widget.serviceState, snapshot.business.ownerId, serviceSlot[1].startTime[serviceSlot[0]], serviceSlot[1].duration.toString(), dates[index], serviceSlot[1].price);
                                                           order.selected.add(indexes[index][i]);
                                                           order.cartCounter++;
                                                           //StoreProvider.of<AppState>(context).dispatch(SetOrderCartCounter(order.cartCounter));
