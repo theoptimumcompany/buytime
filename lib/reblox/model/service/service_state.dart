@@ -18,8 +18,8 @@ class ServiceState {
   double price;
   int timesSold;
   List<String> tag;
-  bool switchSlots;
-  bool switchAutoConfirm;
+  bool switchSlots = false;
+  bool switchAutoConfirm = false;
   List<ServiceSlot> serviceSlot;
   @JsonKey(defaultValue: false)
   bool spinnerVisibility = false;
