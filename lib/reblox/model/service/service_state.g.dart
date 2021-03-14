@@ -22,12 +22,12 @@ ServiceState _$ServiceStateFromJson(Map<String, dynamic> json) {
     price: (json['price'] as num)?.toDouble(),
     timesSold: json['timesSold'] as int,
     tag: (json['tag'] as List)?.map((e) => e as String)?.toList(),
-    switchSlots: json['switchSlots'] as bool ?? false,
-    switchAutoConfirm: json['switchAutoConfirm'] as bool ?? false,
+    switchSlots: json['switchSlots'] as bool,
+    switchAutoConfirm: json['switchAutoConfirm'] as bool,
     serviceSlot: (json['serviceSlot'] as List)
         ?.map((e) =>
             e == null ? null : ServiceSlot.fromJson(e as Map<String, dynamic>))
-        ?.toList() ?? [],
+        ?.toList(),
     spinnerVisibility: json['spinnerVisibility'] as bool ?? false,
     serviceCreated: json['serviceCreated'] as bool ?? false,
     serviceEdited: json['serviceEdited'] as bool ?? false,

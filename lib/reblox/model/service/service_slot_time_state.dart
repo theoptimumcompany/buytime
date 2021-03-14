@@ -27,7 +27,7 @@ class ServiceSlot {
   double price = 0.0;
 
   ///Vars out of DB
-  int minDuration = 10;
+  int minDuration = 0;
   List<bool> intervalVisibility = [true];
 
   ServiceSlot({
@@ -95,7 +95,7 @@ class ServiceSlot {
       limitBooking: 1,
       noLimitBooking: false,
       price: 0.0,
-      minDuration: 10,
+      minDuration: 0,
       intervalVisibility: [true],
     );
   }
