@@ -37,11 +37,6 @@ class StepLengthState extends State<StepLength> {
     super.initState();
   }
 
-  void calculateMaxDurationSlider(){
-
-
-  }
-
   @override
   Widget build(BuildContext context) {
     hour = StoreProvider.of<AppState>(context).state.serviceSlot.hour.toString();
@@ -52,9 +47,6 @@ class StepLengthState extends State<StepLength> {
     hourController.text = hour;
     minuteController.text = minute;
     limitBookingController.text = limitBooking;
-    calculateMaxDurationSlider();
-    print("Duration Max Slider : " + maxDuration.toString());
-    print("Duration actual : " + duration.toString());
     var media = MediaQuery.of(context).size;
     return StoreConnector<AppState, AppState>(
         converter: (store) => store.state,

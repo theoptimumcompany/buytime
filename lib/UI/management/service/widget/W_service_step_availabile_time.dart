@@ -99,8 +99,6 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
   }
 
   Future<void> _selectStartTime(BuildContext context, int indexController) async {
-    print(StoreProvider.of<AppState>(context).state.serviceSlot.startTime.length);
-    print(indexController);
     String initStart = StoreProvider.of<AppState>(context).state.serviceSlot.startTime[indexController];
     List<String> start = [];
     int startHour = 0;
@@ -224,11 +222,9 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
       return;
     } else {
       for (int i = 0; i < StoreProvider.of<AppState>(context).state.serviceSlot.numberOfInterval; i++) {
-        print(StoreProvider.of<AppState>(context).state.serviceSlot.startTime[i]);
         List<String> start = StoreProvider.of<AppState>(context).state.serviceSlot.startTime[i].split(":");
         int startHour = int.parse(start[0]);
         int startMinute = int.parse(start[1]);
-        print(StoreProvider.of<AppState>(context).state.serviceSlot.stopTime[i]);
         List<String> stop = StoreProvider.of<AppState>(context).state.serviceSlot.stopTime[i].split(":");
         int stopHour = int.parse(stop[0]);
         int stopMinute = int.parse(stop[1]);
@@ -264,6 +260,7 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
     return StoreConnector<AppState, AppState>(
         converter: (store) => store.state,
         onInit: (store) {
+          setMaxDuration();
           intervalIndexVisibility = List.generate(store.state.serviceSlot.numberOfInterval, (index) => index == 0 ? true : false);
         },
         builder: (context, snapshot) {
@@ -271,7 +268,6 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
           daysInterval = snapshot.serviceSlot.daysInterval;
           numberOfSlotTimeInterval = snapshot.serviceSlot.numberOfInterval;
           maxDuration = snapshot.serviceSlot.maxDuration;
-          setMaxDuration();
           return Column(
             mainAxisAlignment: MainAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
@@ -327,8 +323,6 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
                               onDismissed: (direction) {
                                 setState(() {
                                   ///Deleting Interval
-                                  print(startController);
-                                  print(snapshot.serviceSlot.startTime);
                                   if (numberOfSlotTimeInterval > 1) {
                                     print("Delete Interval " + i.toString());
                                     numberOfSlotTimeInterval = numberOfSlotTimeInterval - 1;
