@@ -97,7 +97,7 @@
 	<key>NSAppleMusicUsageDescription</key>
 	<string>Play using while you are hiking</string>
 	<key>NSCalendarsUsageDescription</key>
-	<string>booking saving</string>
+	<string>Can i use calendar?</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Can I use the camera please?</string>
 	<key>NSContactsUsageDescription</key>
