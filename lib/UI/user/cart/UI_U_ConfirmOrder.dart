@@ -253,18 +253,16 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                           hoverElevation: 0,
                                           focusElevation: 0,
                                           highlightElevation: 0,
-                                          onPressed: () {
-
-                                            if(selected){
-                                              StoreProvider.of<AppState>(context).dispatch(SetOrderProgress("in_progress"));
-                                              StoreProvider.of<AppState>(context).dispatch(CreateOrder(snapshot.order));
-                                              Navigator.push(context, MaterialPageRoute(builder: (context) => ConfirmedOrder(_controller.index)),);
-                                            }
-
+                                          onPressed: selected && _selectedIndex == 0 ? () {
+                                            StoreProvider.of<AppState>(context).dispatch(SetOrderProgress("in_progress"));
+                                            StoreProvider.of<AppState>(context).dispatch(CreateOrder(snapshot.order));
                                             Navigator.push(context, MaterialPageRoute(builder: (context) => ConfirmedOrder(_controller.index)),);
-                                          },
+                                          } : _selectedIndex == 1 ? (){
+                                            Navigator.push(context, MaterialPageRoute(builder: (context) => ConfirmedOrder(_controller.index)),);
+                                          } : null,
                                           textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
                                           color: BuytimeTheme.UserPrimary,
+                                          disabledColor: BuytimeTheme.SymbolLightGrey,
                                           padding: EdgeInsets.all(media.width * 0.03),
                                           shape: RoundedRectangleBorder(
                                             borderRadius: new BorderRadius.circular(5),

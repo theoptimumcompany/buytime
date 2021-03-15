@@ -583,13 +583,13 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
                         children: List.generate(autoCompleteList.length, (index) {
                           return GestureDetector(
                             onTap: () async {
-                              /*if(!didAuthenticate){
-                                didAuthenticate = await localAuth.authenticateWithBiometrics(localizedReason: 'Please authenticate to show account balance');
-                                if(!didAuthenticate)
-                                  didAuthenticate = true;
-                              }*/
+                              if(!didAuthenticate){
+                                didAuthenticate = await localAuth.authenticateWithBiometrics(localizedReason: 'Please authenticate to use the credentials');
+                                /*if(!didAuthenticate)
+                                  didAuthenticate = true;*/
+                              }
 
-                              didAuthenticate = true;
+                              //didAuthenticate = true;
 
                               //didAuthenticate = true;
                               if (didAuthenticate) {

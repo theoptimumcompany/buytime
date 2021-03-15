@@ -142,7 +142,7 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Container(
-      height: SizeConfig.safeBlockVertical * 8,
+      height: SizeConfig.safeBlockVertical * 9,
       width: SizeConfig.screenWidth,
       key: key,
       margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
