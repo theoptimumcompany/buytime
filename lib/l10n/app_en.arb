@@ -18,9 +18,8 @@
   "userMode": "Switch to user mode",
   "userModeShort": "Switch to user",
   "userSettings": "User settings",
-  "total": "Total: € ",
+  "total": "Total Price",
   "tax": "TAX: € ",
-  "euroSpace": "€ ",
   "unavailable": " - Unavailable",
   "ending": ", ending ",
   "logout": "Logout",
@@ -363,5 +362,7 @@
   "spaceMin": " min",
   "salesman": "Salesman",
   "owner": "Owner",
-  "passwordError": "Password has a minimum of 6 characters and at least 1 digit, 1 lowercase char and 1 uppercase char"
+  "passwordError": "Password has a minimum of 6 characters and at least 1 digit, 1 lowercase char and 1 uppercase char",
+  "reservation": "Reservation",
+  "euroSpace": "€ "
 }

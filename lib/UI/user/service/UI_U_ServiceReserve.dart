@@ -479,7 +479,8 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                   ),
                                   ///Time slot
                                   Container(
-                                    height: 150,
+                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, bottom: SizeConfig.safeBlockVertical * 3),
+                                    height: 104,
                                     width: SizeConfig.safeBlockHorizontal * 100,
                                     child: CustomScrollView(
                                         scrollDirection: Axis.horizontal,
@@ -493,7 +494,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                           indexes[index][i][1] = i;
                                           return index == 0 && i == 0 ? Container() :
                                           Container(
-                                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, bottom: SizeConfig.safeBlockVertical * 3, right: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockVertical * 2),
+                                            margin: EdgeInsets.only(top: 2, bottom: 2, right: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockVertical * 2),
                                             child: Container(
                                                 width: 100,
                                                 height: 100,

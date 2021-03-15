@@ -177,7 +177,7 @@ class OrderState {
       minutes: minutes,
       date: date
     ));
-    this.total += itemToAdd.serviceSlot.first.price;
+    this.total += price;
   }
 
   void removeItem(OrderEntry entry) {

@@ -31,7 +31,7 @@ class OrderTotal extends StatelessWidget {
             child: Container(
               alignment: Alignment.center,
               child: Text(
-                /*AppLocalizations.of(context).total*/ 'Total price',
+                AppLocalizations.of(context).total,
                 style: TextStyle(
                     fontFamily: BuytimeTheme.FontFamily,
                     fontWeight: FontWeight.w500,
@@ -49,7 +49,7 @@ class OrderTotal extends StatelessWidget {
               alignment: Alignment.center,
               //margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 20),
               child: Text(
-                '€ ${orderState.total.toStringAsFixed(2)}',
+                '${AppLocalizations.of(context).euroSpace}${orderState.total.toStringAsFixed(2)}',
                 style: TextStyle(
                     fontFamily: BuytimeTheme.FontFamily,
                     fontWeight: FontWeight.w600,

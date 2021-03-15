@@ -11,6 +11,7 @@ import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 typedef OptimumOrderItemCardMediumCallback = void Function(OrderEntry);
 
@@ -241,7 +242,7 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
                                Padding(
                                  padding: const EdgeInsets.only(bottom:5.0),
                                  child: Text(
-                                   'Reservation',
+                                   '${AppLocalizations.of(context).reservation}',
                                    overflow: TextOverflow.ellipsis,
                                    style: TextStyle(
                                        letterSpacing: 0.25,
@@ -254,7 +255,7 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
                                ),
                                ///Price
                                Text(
-                                 '€ ${orderEntry.price.toStringAsFixed(2)}',
+                                 '${AppLocalizations.of(context).euroSpace}${orderEntry.price.toStringAsFixed(2)}',
                                  overflow: TextOverflow.ellipsis,
                                  style: TextStyle(
                                      fontFamily: BuytimeTheme.FontFamily,
@@ -365,7 +366,7 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
                    ),
                  ),
                  child: Text(
-                   '${orderEntry.minutes} minutes',
+                   '${orderEntry.minutes}${AppLocalizations.of(context).spaceMinutes}',
                    overflow: TextOverflow.ellipsis,
                    style: TextStyle(
                        fontFamily: BuytimeTheme.FontFamily,

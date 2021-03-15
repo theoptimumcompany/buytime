@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:Buytime/UI/user/cart/UI_U_Cart.dart';
+import 'package:Buytime/UI/user/cart/UI_U_ConfirmOrder.dart';
 import 'package:Buytime/UI/user/service/UI_U_ServiceReserve.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/business/snippet/business_snippet_state.dart';
@@ -334,6 +335,20 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                       margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 4, bottom: SizeConfig.safeBlockVertical * 2),
                                       child: RaisedButton(
                                         onPressed: () {
+                                          order.business.name = snapshot.business.name;
+                                          order.business.id = snapshot.business.id_firestore;
+                                          order.user.name = snapshot.user.name;
+                                          order.user.id = snapshot.user.uid;
+                                          order.addItem(widget.serviceState, snapshot.business.ownerId);
+                                          order.cartCounter++;
+                                          //StoreProvider.of<AppState>(context).dispatch(SetOrderCartCounter(order.cartCounter));
+                                          StoreProvider.of<AppState>(context).dispatch(SetOrder(order));
+                                          //StoreProvider.of<AppState>(context).dispatch(SetOrder(order));
+
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(builder: (context) => ConfirmOrder()),
+                                          );
                                         },
                                         textColor: BuytimeTheme.TextWhite,
                                         color: BuytimeTheme.UserPrimary,
@@ -367,7 +382,6 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                           order.cartCounter++;
                                           //StoreProvider.of<AppState>(context).dispatch(SetOrderCartCounter(order.cartCounter));
                                           StoreProvider.of<AppState>(context).dispatch(SetOrder(order));
-                                          
                                         },
                                         textColor: BuytimeTheme.UserPrimary,
                                         color: BuytimeTheme.BackgroundWhite,

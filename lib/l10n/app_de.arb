@@ -363,5 +363,7 @@
   "spaceMin": " min",
   "salesman": "Salesman",
   "owner": "Owner",
-  "passwordError": "Password has a minimum of 6 characters and at least 1 digit, 1 lowercase char and 1 uppercase char"
+  "passwordError": "Password has a minimum of 6 characters and at least 1 digit, 1 lowercase char and 1 uppercase char",
+  "reservation": "Reservation",
+  "euroSpace": "€ "
 }
