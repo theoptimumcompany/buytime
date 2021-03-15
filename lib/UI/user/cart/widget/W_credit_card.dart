@@ -8,6 +8,7 @@ import 'package:Buytime/reblox/reducer/business_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/card_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/stripe_payment_reducer.dart';
 import 'package:Buytime/reusable/material_design_icons.dart';
+import 'package:Buytime/reusable/vector_icon.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
@@ -74,8 +75,9 @@ class _CreditCardState extends State<CreditCard> {
                       child: Row(
                         children: [
                           Icon(
-                            Icons.remove_circle_outline,
+                            VectorIcon.vector,
                             color: BuytimeTheme.AccentRed,
+                            size: 22,
                           ),
                         ],
                       ),
@@ -85,8 +87,8 @@ class _CreditCardState extends State<CreditCard> {
           ),
           ///Card Image
           Container(
-            height: SizeConfig.safeBlockVertical * 8,
-            width: SizeConfig.safeBlockHorizontal * 18,
+            height: 30,
+            width: 50,
             margin: EdgeInsets.all(SizeConfig.safeBlockHorizontal * 2.5),
             decoration: BoxDecoration(
                 image: DecorationImage(
@@ -114,11 +116,11 @@ class _CreditCardState extends State<CreditCard> {
                         children: [
                           ///Card Name
                           Text(
-                            '$cardName',
+                            '$cardName'.toUpperCase(),
                             style: TextStyle(
-                                fontSize: SizeConfig.safeBlockHorizontal * 4,
+                                fontSize: 14,
                                 fontFamily: BuytimeTheme.FontFamily,
-                                fontWeight: FontWeight.w500,
+                                fontWeight: FontWeight.w400,
                                 color: BuytimeTheme.TextGrey
                             ),
                           ),
@@ -126,9 +128,9 @@ class _CreditCardState extends State<CreditCard> {
                           Text(
                             AppLocalizations.of(context).endingCard + cardEndWith,
                             style: TextStyle(
-                                fontSize: SizeConfig.safeBlockHorizontal * 4,
+                                fontSize: 14,
                                 fontFamily: BuytimeTheme.FontFamily,
-                                fontWeight: FontWeight.w500,
+                                fontWeight: FontWeight.w400,
                                 color: BuytimeTheme.TextGrey
                             ),
                           ),
@@ -171,11 +173,11 @@ class _CreditCardState extends State<CreditCard> {
                                     Text(
                                       !widget.cardState.selected ? AppLocalizations.of(context).select : AppLocalizations.of(context).selected,
                                       style: TextStyle(
-                                          letterSpacing: SizeConfig.safeBlockHorizontal * .2,
+                                          letterSpacing: 0.25,
                                           fontFamily: BuytimeTheme.FontFamily,
                                           color: !widget.cardState.selected ? BuytimeTheme.TextGrey : BuytimeTheme.ActionButton,
                                           fontWeight: FontWeight.w600,
-                                          fontSize: SizeConfig.safeBlockHorizontal * 4
+                                          fontSize: 14
                                       ),
                                     )
                                   ],

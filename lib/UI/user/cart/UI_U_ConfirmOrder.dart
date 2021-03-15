@@ -248,7 +248,11 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                         margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5, bottom: SizeConfig.safeBlockVertical *4),
                                         width: 158, ///media.width * .4
                                         height: 44,
-                                        child: RaisedButton(
+                                        child: MaterialButton(
+                                          elevation: 0,
+                                          hoverElevation: 0,
+                                          focusElevation: 0,
+                                          highlightElevation: 0,
                                           onPressed: () {
 
                                             if(selected){

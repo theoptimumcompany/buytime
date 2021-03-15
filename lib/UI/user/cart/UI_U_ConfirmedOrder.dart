@@ -337,7 +337,11 @@ class ConfirmedOrderState extends State<ConfirmedOrder> with SingleTickerProvide
                                         margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5, bottom: SizeConfig.safeBlockVertical * 2.5),
                                         width: 158,
                                         height: 44,
-                                        child: RaisedButton(
+                                        child: MaterialButton(
+                                          elevation: 0,
+                                          hoverElevation: 0,
+                                          focusElevation: 0,
+                                          highlightElevation: 0,
                                           onPressed: () {
                                             //Navigator.push(context, MaterialPageRoute(builder: (context) => ConfirmedOrder()),);
                                             //StoreProvider.of<AppState>(context).state.orderList.orderListState = [];

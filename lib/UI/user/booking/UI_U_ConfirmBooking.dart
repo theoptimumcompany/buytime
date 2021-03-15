@@ -179,7 +179,11 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                                   width: 201, ///SizeConfig.safeBlockHorizontal * 55
                                   height: 44,
                                   margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 5, bottom: SizeConfig.safeBlockVertical * 2),
-                                  child: RaisedButton(
+                                  child: MaterialButton(
+                                    elevation: 0,
+                                    hoverElevation: 0,
+                                    focusElevation: 0,
+                                    highlightElevation: 0,
                                     onPressed: () {
                                       /*showDialog(
                                           context: context,

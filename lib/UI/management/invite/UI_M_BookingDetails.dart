@@ -506,7 +506,11 @@ class _BookingDetailsState extends State<BookingDetails> {
                                         height: 44,
                                         margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 4, bottom: SizeConfig.safeBlockVertical * 1),
                                         alignment: Alignment.bottomCenter,
-                                        child: RaisedButton(
+                                        child: MaterialButton(
+                                          elevation: 0,
+                                          hoverElevation: 0,
+                                          focusElevation: 0,
+                                          highlightElevation: 0,
                                           onPressed: () async{
                                             final RenderBox box = context.findRenderObject();
                                             //Uri link = await createDynamicLink(bookingState.booking_code);
@@ -550,7 +554,11 @@ class _BookingDetailsState extends State<BookingDetails> {
                                         height: 44,
                                         margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 2.5),
                                         alignment: Alignment.bottomCenter,
-                                        child: RaisedButton(
+                                        child: MaterialButton(
+                                          elevation: 0,
+                                          hoverElevation: 0,
+                                          focusElevation: 0,
+                                          highlightElevation: 0,
                                           onPressed: () async{
                                             Clipboard.setData(ClipboardData(text: link));
                                           },

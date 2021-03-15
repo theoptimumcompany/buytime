@@ -72,7 +72,7 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
 
   void deleteOneItem(OrderState snapshot, int index) {
     setState(() {
-      if(snapshot.itemList.length >= 1){
+      if(snapshot.itemList.length > 1){
         if (snapshot.itemList[index].number > 1) {
           --snapshot.cartCounter;
           int itemCount =  snapshot.itemList[index].number;
@@ -85,15 +85,55 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
           snapshot.total = serviceTotal;
           debugPrint('UI_U_Cart => AFTER| ${snapshot.itemList[index].name} ITEM COUNT: ${snapshot.itemList[index].number}');
           debugPrint('UI_U_Cart => AFTER| TOTAL: ${snapshot.total}');
-
-
           /*snapshot.removeItem(snapshot.itemList[index]);
         snapshot.itemList.removeAt(index);*/
+        }else{
+          snapshot.cartCounter = snapshot.cartCounter - snapshot.itemList[index].number;
+          snapshot.removeItem(snapshot.itemList[index]);
+          snapshot.itemList.removeAt(index);
+          //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ServiceList()),);
+          //Navigator.of(context).pop();
         }
       }else{
-        //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ServiceList()),);
-        Navigator.of(context).pop();
+        if (snapshot.itemList[index].number > 1) {
+          --snapshot.cartCounter;
+          int itemCount =  snapshot.itemList[index].number;
+          debugPrint('UI_U_Cart => BEFORE| ${snapshot.itemList[index].name} ITEM COUNT: ${snapshot.itemList[index].number}');
+          debugPrint('UI_U_Cart => BEFORE| TOTAL: ${snapshot.total}');
+          --itemCount;
+          snapshot.itemList[index].number = itemCount;
+          double serviceTotal =  snapshot.total;
+          serviceTotal = serviceTotal - snapshot.itemList[index].price;
+          snapshot.total = serviceTotal;
+          debugPrint('UI_U_Cart => AFTER| ${snapshot.itemList[index].name} ITEM COUNT: ${snapshot.itemList[index].number}');
+          debugPrint('UI_U_Cart => AFTER| TOTAL: ${snapshot.total}');
+          /*snapshot.removeItem(snapshot.itemList[index]);
+        snapshot.itemList.removeAt(index);*/
+        }else{
+          snapshot.cartCounter = snapshot.cartCounter - snapshot.itemList[index].number;
+          snapshot.removeItem(snapshot.itemList[index]);
+          snapshot.itemList.removeAt(index);
+          //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ServiceList()),);
+          Navigator.of(context).pop();
+        }
       }
+      StoreProvider.of<AppState>(context).dispatch(UpdateOrder(snapshot));
+    });
+  }
+
+  void addOneItem(OrderState snapshot, int index) {
+    setState(() {
+      ++snapshot.cartCounter;
+      int itemCount =  snapshot.itemList[index].number;
+      debugPrint('UI_U_Cart => BEFORE| ${snapshot.itemList[index].name} ITEM COUNT: ${snapshot.itemList[index].number}');
+      debugPrint('UI_U_Cart => BEFORE| TOTAL: ${snapshot.total}');
+      ++itemCount;
+      snapshot.itemList[index].number = itemCount;
+      double serviceTotal =  snapshot.total;
+      serviceTotal = serviceTotal + snapshot.itemList[index].price;
+      snapshot.total = serviceTotal;
+      debugPrint('UI_U_Cart => AFTER| ${snapshot.itemList[index].name} ITEM COUNT: ${snapshot.itemList[index].number}');
+      debugPrint('UI_U_Cart => AFTER| TOTAL: ${snapshot.total}');
       StoreProvider.of<AppState>(context).dispatch(UpdateOrder(snapshot));
     });
   }
@@ -102,9 +142,10 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Container(
-      height: SizeConfig.safeBlockVertical * 10,
+      height: SizeConfig.safeBlockVertical * 8,
       width: SizeConfig.screenWidth,
       key: key,
+      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
       child: GestureDetector(
         onTap: () {
           //onOrderItemCardTap(orderEntry);
@@ -128,7 +169,7 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
                   children: [
                     ///Quantity & Service Name & Price
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: show ? MainAxisAlignment.spaceBetween : MainAxisAlignment.center,
                       children: [
                         Expanded(
                           child: Column(
@@ -136,74 +177,101 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
                             children: [
                               ///Quantity & Service Name
                               Padding(
-                                padding: const EdgeInsets.only(bottom:5.0),
+                                padding: EdgeInsets.only(bottom: show ? 0 : 5),
                                 child: Text(
-                                  orderEntry.number.toString() + " x " +  orderEntry.name,
+                                  orderEntry.name,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                     fontFamily: BuytimeTheme.FontFamily,
                                       fontWeight: FontWeight.w500,
                                       color: BuytimeTheme.TextBlack,
-                                      fontSize: 18 /// mediaSize.height * 0.024
+                                      fontSize: 16 /// mediaSize.height * 0.024
                                   ),
                                 ),
                               ),
-                              ///Price
-                              Text(
-                                price(),
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  fontFamily: BuytimeTheme.FontFamily,
-                                    fontWeight: FontWeight.w600,
-                                    color: BuytimeTheme.TextMedium,
-                                    fontSize: 14 /// mediaSize.height * 0.024
+                              ///Remoce/Add item & Quantity
+                              show ?
+                                Row(
+                                children: [
+                                  ///Remove item
+                                  InkWell(
+                                    child: Container(
+                                      margin: EdgeInsets.all(SizeConfig.safeBlockVertical * 1),
+                                      child: Icon(
+                                        Icons.remove,
+                                        color: BuytimeTheme.UserPrimary,
+                                        //size: 22,
+                                        //size: SizeConfig.safeBlockHorizontal * 15,
+                                      ),
+                                    ),
+                                    onTap: () {
+                                      deleteOneItem(orderState, index);
+                                    },
+                                  ),
+                                  ///Quantity
+                                  Text(
+                                    orderEntry.number.toString(),
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                        fontFamily: BuytimeTheme.FontFamily,
+                                        fontWeight: FontWeight.w600,
+                                        color: BuytimeTheme.TextMedium,
+                                        fontSize: 14 /// mediaSize.height * 0.024
+                                    ),
+                                  ),
+                                  ///Add item
+                                  InkWell(
+                                    child: Container(
+                                      margin: EdgeInsets.all(SizeConfig.safeBlockVertical * 1),
+                                      child: Icon(
+                                        Icons.add,
+                                        color: BuytimeTheme.UserPrimary,
+                                        //size: 22,
+                                        //size: SizeConfig.safeBlockHorizontal * 15,
+                                      ),
+                                    ),
+                                    onTap: () {
+                                      addOneItem(orderState, index);
+                                    },
+                                  )
+                                ],
+                              ):
+                              Container(
+                                child: Text(
+                                  '${orderEntry.number} x € ${orderEntry.price.toStringAsFixed(2)}',
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      fontFamily: BuytimeTheme.FontFamily,
+                                      fontWeight: FontWeight.w600,
+                                      color: BuytimeTheme.TextMedium,
+                                      fontSize: 14 /// mediaSize.height * 0.024
+                                  ),
                                 ),
                               ),
                             ],
                           ),
                         ),
-                        show ?
+                        ///Price
                         Column(
                           children: [
-                            Row(
-                              children: [
-                                orderEntry.number >= 2 ? IconButton(
-                                  icon: Icon(
-                                    Icons.remove_circle_outline,
-                                    color: BuytimeTheme.AccentRed,
-                                    //size: SizeConfig.safeBlockHorizontal * 15,
-                                  ),
-                                  onPressed: () {
-                                    deleteOneItem(orderState, index);
-                                  },
-                                ) : Container(),
-                                IconButton(
-                                  icon: Icon(
-                                    Icons.remove_shopping_cart,
-                                    color: BuytimeTheme.SymbolGrey,
-                                    //size: SizeConfig.safeBlockHorizontal * 15,
-                                  ),
-                                  onPressed: () {
-                                    deleteItem(orderState, index);
-                                  },
+                            Container(
+                              margin: EdgeInsets.all(SizeConfig.safeBlockVertical * 1),
+                              child: Text(
+                                price(),
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                    letterSpacing: 0.25,
+                                    fontFamily: BuytimeTheme.FontFamily,
+                                    fontWeight: FontWeight.w400,
+                                    color: BuytimeTheme.TextBlack,
+                                    fontSize: 16 /// mediaSize.height * 0.024
                                 ),
-                              ],
+                              ),
                             )
                           ],
-                        ) :
-                            Container()
+                        )
                       ],
                     ),
-                    /*Container(
-                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
-                      height: SizeConfig.safeBlockVertical * .25,
-                      color: BuytimeTheme.DividerGrey,
-                    )*/
-                    // rowWidget1 != null || rowWidget2 != null || rowWidget3 != null ? Row(children: [
-                    //   rowWidget1,
-                    //   rowWidget2,
-                    //   rowWidget3
-                    // ],) : null
                   ],
                 ),
               ),
@@ -388,6 +456,7 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
     if (orderEntry.number == 1) {
       return "€ " + orderEntry.price.toStringAsFixed(2);
     }
-    return "€ " + orderEntry.price.toStringAsFixed(2) + " x " +  orderEntry.number.toString() + " = € " + (orderEntry.price * orderEntry.number).toStringAsFixed(2);
+    //return "€ " + orderEntry.price.toStringAsFixed(2) + " x " +  orderEntry.number.toString() + " = € " + (orderEntry.price * orderEntry.number).toStringAsFixed(2);
+    return "€ " + (orderEntry.price * orderEntry.number).toStringAsFixed(2);
   }
 }

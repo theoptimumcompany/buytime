@@ -13,7 +13,11 @@ class BackButtonBlue extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FlatButton(
+    return MaterialButton(
+      elevation: 0,
+      hoverElevation: 0,
+      focusElevation: 0,
+      highlightElevation: 0,
       splashColor: Colors.white,
       highlightColor: Colors.white,
       color: Colors.transparent,

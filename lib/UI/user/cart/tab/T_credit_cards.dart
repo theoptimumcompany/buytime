@@ -129,11 +129,11 @@ class CreditCardsState extends State<CreditCards> {
                             child: Text(
                               'Add a Card',//AppLocalizations.of(context).somethingIsNotRight,
                               style: TextStyle(
-                                  letterSpacing: SizeConfig.safeBlockHorizontal * .2,
+                                  letterSpacing: 1.25,
                                   fontFamily: BuytimeTheme.FontFamily,
                                   color: BuytimeTheme.UserPrimary,
                                   fontWeight: FontWeight.w600,
-                                  fontSize: SizeConfig.safeBlockHorizontal * 4
+                                  fontSize: 16
                               ),
                             ),
                           )

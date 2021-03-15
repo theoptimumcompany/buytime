@@ -582,7 +582,11 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                   margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5, bottom: SizeConfig.safeBlockVertical *4),
                                   width: 158, ///media.width * .4
                                   height: 44,
-                                  child: RaisedButton(
+                                  child: MaterialButton(
+                                    elevation: 0,
+                                    hoverElevation: 0,
+                                    focusElevation: 0,
+                                    highlightElevation: 0,
                                     onPressed: () {
                                       if (order.cartCounter > 0) {
                                         // dispatch the order
@@ -599,7 +603,11 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                               title: new Text(AppLocalizations.of(context).warning),
                                               content: new Text(AppLocalizations.of(context).emptyCart),
                                               actions: <Widget>[
-                                                FlatButton(
+                                                MaterialButton(
+                                                  elevation: 0,
+                                                  hoverElevation: 0,
+                                                  focusElevation: 0,
+                                                  highlightElevation: 0,
                                                   child: Text(AppLocalizations.of(context).ok),
                                                   onPressed: () {
                                                     Navigator.of(context).pop();

@@ -322,7 +322,11 @@
 //           title: Text(title),
 //           content: Text(message),
 //           actions: [
-//             FlatButton(
+//             MaterialButton(
+//                                   elevation: 0,
+//                                   hoverElevation: 0,
+//                                   focusElevation: 0,
+//                                   highlightElevation: 0,
 //               child: Text(AppLocalizations.of(context).ok),
 //               onPressed: () => Navigator.of(context).pop(), // dismiss dialog
 //             ),

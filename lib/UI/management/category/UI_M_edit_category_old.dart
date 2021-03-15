@@ -228,7 +228,11 @@
 //       context: context,
 //       builder: (_) => new AlertDialog(
 //         actions: <Widget>[
-//           FlatButton(
+//           MaterialButton(
+//                                   elevation: 0,
+//                                   hoverElevation: 0,
+//                                   focusElevation: 0,
+//                                   highlightElevation: 0,
 //             child: Text(AppLocalizations.of(context).cancel),
 //             onPressed: () {
 //               Navigator.of(context).pop();
@@ -236,7 +240,11 @@
 //           ),
 //
 //           ///Gestire invito manaager/worker da aggiungere alla categoria e alle sue sottocategorie
-//           FlatButton(
+//           MaterialButton(
+//                                   elevation: 0,
+//                                   hoverElevation: 0,
+//                                   focusElevation: 0,
+//                                   highlightElevation: 0,
 //             child: Text(AppLocalizations.of(context).invite),
 //             onPressed: () async {
 //               print("Category Edit Mail to add : " + inviteMail);

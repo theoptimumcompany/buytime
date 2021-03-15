@@ -36,53 +36,6 @@ class CartState extends State<Cart> {
     super.initState();
   }
 
-  /*void deleteItem(OrderState snapshot, int index) {
-    setState(() {
-      if (snapshot.itemList.length > 1) {
-        cartCounter = cartCounter - snapshot.itemList[index].number;
-        snapshot.removeItem(snapshot.itemList[index]);
-        snapshot.itemList.removeAt(index);
-      } else {
-        cartCounter = cartCounter - snapshot.itemList[index].number;
-        snapshot.removeItem(snapshot.itemList[index]);
-        snapshot.itemList.removeAt(index);
-        //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ServiceList()),);
-        Navigator.of(context).pop();
-      }
-      StoreProvider.of<AppState>(context).dispatch(UpdateOrder(OrderState(
-          itemList: snapshot.itemList, date: snapshot.date, position: snapshot.position, total: snapshot.total, business: snapshot.business, user: snapshot.user, businessId: snapshot.businessId, userId: snapshot.userId)));
-    });
-  }
-
-  void deleteOneItem(OrderState snapshot, int index) {
-    setState(() {
-      if(snapshot.itemList.length >= 1){
-        if (snapshot.itemList[index].number > 1) {
-          --cartCounter;
-          int itemCount =  snapshot.itemList[index].number;
-          debugPrint('UI_U_Cart => BEFORE| ${snapshot.itemList[index].name} ITEM COUNT: ${snapshot.itemList[index].number}');
-          debugPrint('UI_U_Cart => BEFORE| TOTAL: ${snapshot.total}');
-          --itemCount;
-          snapshot.itemList[index].number = itemCount;
-          double serviceTotal =  snapshot.total;
-          serviceTotal = serviceTotal - snapshot.itemList[index].price;
-          snapshot.total = serviceTotal;
-          debugPrint('UI_U_Cart => AFTER| ${snapshot.itemList[index].name} ITEM COUNT: ${snapshot.itemList[index].number}');
-          debugPrint('UI_U_Cart => AFTER| TOTAL: ${snapshot.total}');
-
-
-          */ /*snapshot.removeItem(snapshot.itemList[index]);
-        snapshot.itemList.removeAt(index);*/ /*
-        }
-      }else{
-        //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ServiceList()),);
-        Navigator.of(context).pop();
-      }
-      StoreProvider.of<AppState>(context).dispatch(UpdateOrder(OrderState(
-          itemList: snapshot.itemList, date: snapshot.date, position: snapshot.position, total: snapshot.total, business: snapshot.business, user: snapshot.user, businessId: snapshot.businessId, userId: snapshot.userId)));
-    });
-  }*/
-
   void undoDeletion(index, OrderEntry item) {
     /*
   This method accepts the parameters index and item and re-inserts the {item} at
@@ -91,11 +44,36 @@ class CartState extends State<Cart> {
     setState(() {
       //orderState.addReserveItem(item., snapshot.business.ownerId, widget.serviceState.serviceSlot.first.startTime[i], widget.serviceState.serviceSlot.first.minDuration.toString(), dates[index]);
       orderState.itemList.insert(index, item);
-      orderState.total += item.price;
+      orderState.total += item.price * item.number;
     });
   }
 
   void deleteItem(OrderState snapshot, OrderEntry entry, int index) {
+    debugPrint('UI_U_Cart => Remove Normal Item');
+    setState(() {
+      if (snapshot.itemList.length >= 1) {
+        orderState.cartCounter = orderState.cartCounter - entry.number;
+        orderState.itemList.remove(entry);
+        double serviceTotal =  orderState.total;
+        serviceTotal = serviceTotal - (entry.price * entry.number);
+        orderState.total = serviceTotal;
+        //snapshot.removeItem(snapshot.itemList[index]);
+        //snapshot.itemList.removeAt(index);
+      } else {
+        orderState.cartCounter = orderState.cartCounter - entry.number;
+        orderState.itemList.remove(entry);
+        double serviceTotal =  orderState.total;
+        serviceTotal = serviceTotal - (entry.price * entry.number);
+        orderState.total = serviceTotal;
+        //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ServiceList()),);
+        Navigator.of(context).pop();
+      }
+      StoreProvider.of<AppState>(context).dispatch(UpdateOrder(orderState));
+    });
+  }
+
+  void deleteReserveItem(OrderState snapshot, OrderEntry entry, int index) {
+    debugPrint('UI_U_Cart => Remove Normal Item');
     setState(() {
       orderState.cartCounter = orderState.cartCounter - entry.number;
       orderState.removeReserveItem(entry);
@@ -186,7 +164,6 @@ class CartState extends State<Cart> {
                           ),
                         ),
                       ),*/
-
                             ///Service List
                             Expanded(
                               flex: 2,
@@ -213,44 +190,7 @@ class CartState extends State<Cart> {
                                                       debugPrint('UI_U_Cart => LIST| ${orderState.itemList[index].name} ITEM COUNT: ${orderState.itemList[index].number}');
                                                       var item = (index != orderState.itemList.length ? orderState.itemList[index] : null);
                                                       int itemCount = orderState.itemList[index].number;
-                                                      return orderState.itemList.isNotEmpty && (orderState.itemList.first.time == null || orderState.itemList.first.time.isEmpty)
-                                                          ? OptimumOrderItemCardMedium(
-                                                              key: ObjectKey(item),
-                                                              orderEntry: orderState.itemList[index],
-                                                              mediaSize: media,
-                                                              orderState: orderState,
-                                                              index: index,
-                                                              show: true,
-                                                              /*rightWidget1: Column(
-                                                        children: [
-                                                          Row(
-                                                            children: [
-                                                              itemCount >= 2 ? IconButton(
-                                                                icon: Icon(
-                                                                  Icons.remove_circle_outline,
-                                                                  color: BuytimeTheme.AccentRed,
-                                                                  //size: SizeConfig.safeBlockHorizontal * 15,
-                                                                ),
-                                                                onPressed: () {
-                                                                  deleteOneItem(orderState, index);
-                                                                },
-                                                              ) : Container(),
-                                                              IconButton(
-                                                                icon: Icon(
-                                                                  Icons.remove_shopping_cart,
-                                                                  color: BuytimeTheme.SymbolGrey,
-                                                                  //size: SizeConfig.safeBlockHorizontal * 15,
-                                                                ),
-                                                                onPressed: () {
-                                                                  deleteItem(orderState, index);
-                                                                },
-                                                              ),
-                                                            ],
-                                                          )
-                                                        ],
-                                                      ),*/
-                                                            )
-                                                          : Dismissible(
+                                                      return  Dismissible(
                                                               // Each Dismissible must contain a Key. Keys allow Flutter to
                                                               // uniquely identify widgets.
                                                               key: UniqueKey(),
@@ -263,7 +203,9 @@ class CartState extends State<Cart> {
                                                                   orderState.itemList.removeAt(index);
                                                                 });
                                                                 if (direction == DismissDirection.endToStart) {
-                                                                  deleteItem(orderState, item, index);
+                                                                  orderState.selected == null || orderState.selected.isEmpty ?
+                                                                    deleteItem(orderState, item, index) :
+                                                                  deleteReserveItem(orderState, item, index);
                                                                   debugPrint('UI_U_SearchPage => DX to DELETE');
                                                                   // Show a snackbar. This snackbar could also contain "Undo" actions.
                                                                   Scaffold.of(context).showSnackBar(SnackBar(
@@ -418,7 +360,11 @@ class CartState extends State<Cart> {
 
                                               /// media.width * .4
                                               height: 46,
-                                              child: RaisedButton(
+                                              child: MaterialButton(
+                                                elevation: 0,
+                                                hoverElevation: 0,
+                                                focusElevation: 0,
+                                                highlightElevation: 0,
                                                 onPressed: () {
                                                   Navigator.push(
                                                     context,
@@ -549,7 +495,11 @@ class CartState extends State<Cart> {
 
                                               /// media.width * .4
                                               height: 46,
-                                              child: RaisedButton(
+                                              child: MaterialButton(
+                                                elevation: 0,
+                                                hoverElevation: 0,
+                                                focusElevation: 0,
+                                                highlightElevation: 0,
                                                 onPressed: () {
                                                   Navigator.push(
                                                     context,

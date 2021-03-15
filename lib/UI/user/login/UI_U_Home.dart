@@ -310,7 +310,11 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                 margin: EdgeInsets.only(top: 48, bottom: 24), ///SizeConfig.safeBlockVertical * 5 | SizeConfig.safeBlockVertical * 2
                                 child: FadeTransition(
                                   opacity: _animation3,
-                                  child: RaisedButton(
+                                  child: MaterialButton(
+                                  elevation: 0,
+                                  hoverElevation: 0,
+                                  focusElevation: 0,
+                                  highlightElevation: 0,
                                     onPressed: () {
                                       Navigator.push(context, MaterialPageRoute(builder: (context) => Registration()),);
                                     },
@@ -336,7 +340,11 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                 height: 50, ///50 | SizeConfig.safeBlockVertical * 6.5
                                 child: FadeTransition(
                                   opacity: _animation3,
-                                  child: RaisedButton(
+                                  child: MaterialButton(
+                                  elevation: 0,
+                                  hoverElevation: 0,
+                                  focusElevation: 0,
+                                  highlightElevation: 0,
                                     */
                     /*onPressed: () {
                                     Navigator.push(
@@ -380,7 +388,11 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                 margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 5, bottom: SizeConfig.safeBlockVertical * 2),
                                 child: FadeTransition(
                                   opacity: _animation3,
-                                  child: RaisedButton(
+                                  child: MaterialButton(
+                                  elevation: 0,
+                                  hoverElevation: 0,
+                                  focusElevation: 0,
+                                  highlightElevation: 0,
                                     onPressed: () {
                                       Navigator.push(context, MaterialPageRoute(builder: (context) => Registration()),);
                                     },
@@ -406,7 +418,11 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                 height: 50, ///50 | SizeConfig.safeBlockVertical * 6.5
                                 child: FadeTransition(
                                   opacity: _animation3,
-                                  child: RaisedButton(
+                                  child: MaterialButton(
+                                  elevation: 0,
+                                  hoverElevation: 0,
+                                  focusElevation: 0,
+                                  highlightElevation: 0,
                                     */
                     /*onPressed: () {
                                     Navigator.push(
@@ -456,7 +472,11 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                             /// 48 | SizeConfig.safeBlockVertical * 5 | 24 | SizeConfig.safeBlockVertical * 2
                             child: FadeTransition(
                               opacity: _animation3,
-                              child: RaisedButton(
+                              child: MaterialButton(
+                                elevation: 0,
+                                hoverElevation: 0,
+                                focusElevation: 0,
+                                highlightElevation: 0,
                                 onPressed: () {
                                   Navigator.push(
                                     context,
@@ -487,17 +507,27 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                             )),
 
                         ///Login
-                        Container(
-                            width: 247,
+                        FadeTransition(
+                          opacity: _animation3,
+                          child: Container(
+                              width: 247,
 
-                            /// media.width * .6 | 247 | SizeConfig.safeBlockHorizontal * 68
-                            height: 50,
+                              /// media.width * .6 | 247 | SizeConfig.safeBlockHorizontal * 68
+                              height: 50,
 
-                            /// 50 | SizeConfig.safeBlockVertical * 8.5
-                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3),
-                            child: FadeTransition(
-                              opacity: _animation3,
-                              child: RaisedButton(
+                              /// 50 | SizeConfig.safeBlockVertical * 8.5
+                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3),
+                              decoration: BoxDecoration(
+                                  borderRadius: new BorderRadius.circular(5),
+                                  border: Border.all(
+                                      color: BuytimeTheme.SymbolLightGrey
+                                  )
+                              ),
+                              child:  MaterialButton(
+                                elevation: 0,
+                                hoverElevation: 0,
+                                focusElevation: 0,
+                                highlightElevation: 0,
                                 /*onPressed: () {
                                     Navigator.push(
                                       context,
@@ -528,8 +558,9 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                       fontWeight: FontWeight.w500,
                                       color: BuytimeTheme.ButtonMalibu),
                                 ),
-                              ),
-                            )),
+                              )
+                          ),
+                        ),
                       ],
                     ),
 

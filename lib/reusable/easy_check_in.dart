@@ -202,7 +202,11 @@ class EasyCheckInState extends State<EasyCheckIn>
                               ),
                               Container(
                                   width: media.width * 0.7,
-                                  child: RaisedButton(
+                                  child: MaterialButton(
+                                    elevation: 0,
+                                    hoverElevation: 0,
+                                    focusElevation: 0,
+                                    highlightElevation: 0,
                                     onPressed: () async {
                                       print("Spunta " + check_remember.toString());
                                       SharedPreferences prefs =

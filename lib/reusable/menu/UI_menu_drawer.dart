@@ -134,7 +134,11 @@ class MenuDrawer extends StatelessWidget {
               child: Container(
                   margin: EdgeInsets.only(bottom: 20),
                   width: 200,
-                  child: RaisedButton(
+                  child: MaterialButton(
+                    elevation: 0,
+                    hoverElevation: 0,
+                    focusElevation: 0,
+                    highlightElevation: 0,
                     onPressed: () async {
                       SharedPreferences prefs =
                           await SharedPreferences.getInstance();

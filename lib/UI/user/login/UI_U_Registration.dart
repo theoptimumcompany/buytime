@@ -1,7 +1,9 @@
 import 'dart:io';
 import 'package:Buytime/UI/user/landing/UI_U_Landing.dart';
+import 'package:Buytime/reblox/model/autoComplete/auto_complete_state.dart';
 import 'package:Buytime/reblox/model/snippet/device.dart';
 import 'package:Buytime/reblox/model/snippet/token.dart';
+import 'package:Buytime/reblox/reducer/auto_complete_list_reducer.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/user/user_state.dart';
@@ -73,6 +75,8 @@ class RegistrationState extends State<Registration> {
   String responseMessage = '';
 
   bool passwordVisible = true;
+  bool remeberMe = false;
+  List<AutoCompleteState> autoCompleteList = [];
 
   @override
   void initState() {
@@ -661,6 +665,54 @@ class RegistrationState extends State<Registration> {
                                           ],
                                         ),
                                       ),
+                                      ///Remeber Me
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.end,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          ///Remeber Me
+                                          Container(
+                                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.start,
+                                              children: [
+                                                SizedBox(
+                                                  width: 15,
+                                                  height: 15,
+                                                  child: Checkbox(
+                                                    checkColor: BuytimeTheme.TextWhite,
+                                                    activeColor: BuytimeTheme.TextGrey,
+                                                    value: remeberMe,
+                                                    onChanged: (bool value) {
+                                                      setState(() {
+                                                        remeberMe = value;
+                                                      });
+                                                    },
+                                                  ),
+                                                ),
+                                                Container(
+                                                  //padding: EdgeInsets.all(5.0),
+                                                  margin: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 3),
+                                                  width: 100,
+                                                  height: 28,
+                                                  child: FittedBox(
+                                                    fit: BoxFit.scaleDown,
+                                                    child: Text(
+                                                      AppLocalizations.of(context).saveCredentials,
+                                                      style: TextStyle(
+                                                          letterSpacing: 1.25, fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextGrey, fontWeight: FontWeight.w500, fontSize: 16
+
+                                                        ///SizeConfig.safeBlockHorizontal * 4
+                                                      ),
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+
                                     ],
                                   )),
                             ),
@@ -742,6 +794,28 @@ class RegistrationState extends State<Registration> {
     if (tmpUserCredential != null) user = tmpUserCredential.user;
 
     if (user != null) {
+      if (remeberMe) {
+        AutoCompleteState autoComplete = AutoCompleteState().toEmpty();
+        autoComplete.email = _emailController.text;
+        autoComplete.password = _passwordController.text;
+        if (autoCompleteList.isNotEmpty) {
+          int i = 0;
+          autoCompleteList.forEach((element) {
+            if (element.email == autoComplete.email) ++i;
+          });
+          if (i == 0) {
+            autoCompleteList.add(autoComplete);
+            await autoComplete.writeToStorage(autoCompleteList);
+            StoreProvider.of<AppState>(context).dispatch(AddAutoCompleteToList(autoCompleteList));
+          }
+        } else {
+          List<AutoCompleteState> list = [];
+          list.add(autoComplete);
+          await autoComplete.writeToStorage(list);
+          StoreProvider.of<AppState>(context).dispatch(AddAutoCompleteToList(list));
+        }
+      }
+
       String deviceId = "web";
       if (!kIsWeb) {
         try {

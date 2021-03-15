@@ -176,7 +176,11 @@ class _UI_U_AddCardState extends State<UI_U_AddCard> {
                                               Container(
                                                   margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5),
                                                   width: media.width * .4,
-                                                  child: RaisedButton(
+                                                  child: MaterialButton(
+                                                    elevation: 0,
+                                                    hoverElevation: 0,
+                                                    focusElevation: 0,
+                                                    highlightElevation: 0,
                                                     onPressed: () {
                                                       if(formKey.currentState.validate()) {
                                                         formKey.currentState.save();
@@ -393,7 +397,11 @@ class _UI_U_AddCardState extends State<UI_U_AddCard> {
           title: Text(title),
           content: Text(message),
           actions: [
-            FlatButton(
+            MaterialButton(
+              elevation: 0,
+              hoverElevation: 0,
+              focusElevation: 0,
+              highlightElevation: 0,
               child: Text(AppLocalizations.of(context).ok),
               onPressed: () => Navigator.of(context).pop(), // dismiss dialog
             ),

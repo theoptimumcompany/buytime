@@ -677,19 +677,31 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                               children: <Widget>[
                                                 currentStep == 0
                                                     ? Container()
-                                                    : RaisedButton(
+                                                    : MaterialButton(
+                                                  elevation: 0,
+                                                  hoverElevation: 0,
+                                                  focusElevation: 0,
+                                                  highlightElevation: 0,
                                                   onPressed: onStepCancel,
                                                   child: Text(AppLocalizations.of(context).back),
                                                 ),
                                                 currentStep != 2
-                                                    ? RaisedButton(
+                                                    ? MaterialButton(
+                                                  elevation: 0,
+                                                  hoverElevation: 0,
+                                                  focusElevation: 0,
+                                                  highlightElevation: 0,
                                                   onPressed: () {
                                                     print("salesman board: Upload to DB");
                                                     onStepContinue();
                                                   },
                                                   child: Text(AppLocalizations.of(context).next),
                                                 )
-                                                    : RaisedButton(
+                                                    : MaterialButton(
+                                                  elevation: 0,
+                                                  hoverElevation: 0,
+                                                  focusElevation: 0,
+                                                  highlightElevation: 0,
                                                   onPressed: () {
                                                     if (_validateInputs() == false) {
                                                       print("buytime_salesman_create: validate problems");

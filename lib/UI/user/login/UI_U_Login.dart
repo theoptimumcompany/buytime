@@ -540,7 +540,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
             color: Colors.transparent,
             child: Stack(
               children: <Widget>[
-                autoCompleteList.isNotEmpty
+                /*autoCompleteList.isNotEmpty
                     ? Align(
                         alignment: Alignment.topCenter,
                         child: ClipPath(
@@ -548,21 +548,29 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
                           child: Container(
                             width: 17,
                             height: 17,
-                            color: BuytimeTheme.ButtonMalibu,
+                            color: BuytimeTheme.SymbolLightGrey,
                           ),
                         ),
                       )
-                    : Container(),
+                    : Container(),*/
                 Padding(
-                  padding: const EdgeInsets.only(top: 15.0),
+                  padding: const EdgeInsets.only(top: 5.0),
                   child: Container(
                     height: autoCompleteList.length * 60.0,
                     decoration: BoxDecoration(
                       color: BuytimeTheme.BackgroundWhite,
-                      border: Border.all(color: BuytimeTheme.ButtonMalibu, width: 2),
+                      //border: Border.all(color: BuytimeTheme.ButtonMalibu, width: 2),
                       borderRadius: BorderRadius.all(
                         const Radius.circular(5.0),
                       ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: BuytimeTheme.BackgroundBlack.withOpacity(0.3),
+                          spreadRadius: 2,
+                          blurRadius: 3,
+                          offset: Offset(0, 5), // changes position of shadow
+                        ),
+                      ],
                     ),
                     child: Theme(
                       data: ThemeData(
@@ -605,8 +613,8 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
                                         Container(
                                           margin: EdgeInsets.only(left: 10.0, top: 0),
                                           child: Icon(
-                                            Icons.email,
-                                            color: BuytimeTheme.ButtonMalibu,
+                                            Icons.email_outlined,
+                                            color: BuytimeTheme.SymbolGrey,
                                           ),
                                         ),
 
@@ -617,15 +625,14 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
                                             fit: BoxFit.scaleDown,
                                             child: Text(
                                               '${autoCompleteList[index].email}',
-                                              style: TextStyle(color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w600),
+                                              style: TextStyle(color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w400, fontSize: 14),
                                             ),
                                           ),
                                         ),
                                       ],
                                     ),
-
                                     ///Buytime Logo
-                                    Container(
+                                    /*Container(
                                       margin: EdgeInsets.only(right: 10.0, top: 0),
                                       width: 24,
                                       height: 24,
@@ -633,7 +640,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
                                           image: DecorationImage(
                                         image: AssetImage('assets/img/img_buytime.png'),
                                       )),
-                                    ),
+                                    ),*/
                                   ],
                                 )),
                           );

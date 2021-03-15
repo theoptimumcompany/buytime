@@ -520,7 +520,11 @@ class _BookingCreationState extends State<BookingCreation> {
                                               width: 180, ///media.width * .5
                                               height: 44,
                                               margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 4),
-                                              child: RaisedButton(
+                                              child: MaterialButton(
+                                                elevation: 0,
+                                                hoverElevation: 0,
+                                                focusElevation: 0,
+                                                highlightElevation: 0,
                                                 onPressed: () {
                                                   if (_formKey.currentState.validate()) {
 

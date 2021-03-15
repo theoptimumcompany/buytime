@@ -41,7 +41,11 @@ class ErrorDialog extends StatelessWidget {
           textAlign: TextAlign.center,
         ),
         ///OK button
-        RaisedButton(
+        MaterialButton(
+          elevation: 0,
+          hoverElevation: 0,
+          focusElevation: 0,
+          highlightElevation: 0,
           onPressed: () {
             Navigator.of(context).pop();
           },

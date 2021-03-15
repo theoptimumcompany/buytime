@@ -29,10 +29,13 @@ class BrandedButton extends StatelessWidget {
             height: 50,
             //margin: EdgeInsets.only(top: SizeConfig.screenHeight < 537 ? 1.0 : 5.0, bottom: SizeConfig.screenHeight < 537 ? 1.0 : 5.0, left: SizeConfig.safeBlockHorizontal * 0, right: SizeConfig.safeBlockHorizontal * 0),
             margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, bottom:SizeConfig.safeBlockVertical * 0, left: SizeConfig.safeBlockHorizontal * 0, right: SizeConfig.safeBlockHorizontal * 0),
-            child: RaisedButton(
+            child: MaterialButton(
+              elevation: 0,
+              hoverElevation: 0,
+              focusElevation: 0,
+              highlightElevation: 0,
               color: BuytimeTheme.BackgroundWhite,
               onPressed: buttonText.toString().contains('Apple') && Platform.isAndroid ? null : () =>  this.callbackAction(),
-              highlightElevation: 0,
               shape: RoundedRectangleBorder(
                 borderRadius: new BorderRadius.circular(5),
               ),
