@@ -366,5 +366,8 @@
   "euroSpace": "€ ",
   "activityManagement": "Activity Management",
   "seeAllWeek": "See all week",
-  "noReservationYet": "You don’t have reservations yet"
+  "noReservationYet": "You don’t have reservations yet",
+  "pending": "Pending",
+  "accepted": "Accepted",
+  "accept": "Accept"
 }

@@ -33,7 +33,7 @@ class OrderListRequestService implements EpicClass<AppState> {
         for(int i = 0; i < businessList.length; i++){
           debugPrint("ORDER_SERVICE_EPIC - OrderListRequestService =>  BUSINESS ID: ${businessList[i].id_firestore}");
           QuerySnapshot ordersFirebase = await FirebaseFirestore.instance.collection("order") /// 1 READ - ? DOC
-              .where("progress", isEqualTo: "paid")
+              //.where("progress", isEqualTo: "paid")
               .where("businessId", isEqualTo: businessList[i].id_firestore)
               .get();
 
