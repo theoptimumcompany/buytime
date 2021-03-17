@@ -8,13 +8,13 @@ part of 'generic.dart';
 
 GenericState _$GenericStateFromJson(Map<String, dynamic> json) {
   return GenericState(
-    content: json['content'] as String,
+    name: json['name'] as String,
     id: json['id'] as String,
   );
 }
 
 Map<String, dynamic> _$GenericStateToJson(GenericState instance) =>
     <String, dynamic>{
-      'content': instance.content,
+      'name': instance.name,
       'id': instance.id,
     };
