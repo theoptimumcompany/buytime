@@ -52,15 +52,17 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
     SizeConfig().init(context);
     return StoreConnector<AppState, AppState>(
       converter: (store) => store.state,
-      onInit: (store) => {
-        print("On Init Business : Request List of Root Categories"),
-        store.dispatch(RequestRootListCategory(store.state.business.id_firestore)),
+      onInit: (store) {
+        print("On Init Business : Request List of Root Categories");
+        store.dispatch(RequestRootListCategory(store.state.business.id_firestore));
+        store.state.business.business_type.forEach((element) {
+          print("UI_M_Business => Business Type: ${element.name}");
+          if (element.name == 'Hotel')
+            hotel = true;
+        });
       },
       builder: (context, snapshot) {
         List<CategoryState> categoryRootList = snapshot.categoryList.categoryListState;
-        snapshot.business.business_type.forEach((element) {
-          if (element.content == 'Hotel') hotel = true;
-        });
         return WillPopScope(
           onWillPop: () async => false,
           child: Scaffold(

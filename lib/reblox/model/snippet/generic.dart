@@ -3,11 +3,11 @@ part 'generic.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class GenericState {
-  String content;
+  String name;
   String id;
 
   GenericState({
-    this.content = "",
+    this.name = "",
     this.id = "",
   });
 

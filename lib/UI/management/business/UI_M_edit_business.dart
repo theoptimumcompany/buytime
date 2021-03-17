@@ -117,7 +117,7 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
   final GlobalKey<FormState> _formKeyCoordinateFieldEdit = GlobalKey<FormState>();
   final GlobalKey<FormState> _formKeyDescriptionFieldEdit = GlobalKey<FormState>();
 
-  List<GenericState> reportList = [GenericState(content: "Hotel"),GenericState(content:"Spa"),GenericState(content: "Restaurant")];
+  List<GenericState> reportList = [GenericState(name: "Hotel"),GenericState(name:"Spa"),GenericState(name: "Restaurant")];
   TextEditingController _tagController = TextEditingController();
 
   String bookingRequest = '';

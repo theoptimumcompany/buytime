@@ -36,7 +36,7 @@ class _OptimumDropdownState extends State<OptimumDropdown> {
     for (GenericState listItem in listItems) {
       items.add(
         DropdownMenuItem(
-          child: Text(listItem.content),
+          child: Text(listItem.name),
           value: listItem,
         ),
       );

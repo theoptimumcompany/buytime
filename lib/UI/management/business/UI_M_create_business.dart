@@ -33,7 +33,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
   List<String> tag = [];
 
   // TODO insert the real dynamic content
-  List<GenericState> reportList = [GenericState(content: "Hotel"),GenericState(content:"Spa"),GenericState(content: "Restaurant")];
+  List<GenericState> reportList = [GenericState(name: "Hotel"),GenericState(name:"Spa"),GenericState(name: "Restaurant")];
 
   next() {
     currentStep + 1 != steps ? goTo(currentStep + 1) : setState(() => complete = true);

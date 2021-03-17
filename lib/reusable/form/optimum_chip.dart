@@ -33,22 +33,22 @@ class _OptimumChipState extends State<OptimumChip> {
       choices.add(Container(
         padding: const EdgeInsets.all(2.0),
         child: ChoiceChip(
-          label: Text(item.content),
-          selected: selectedChoices.any((element) => element.content == item.content),
+          label: Text(item.name),
+          selected: selectedChoices.any((element) => element.name == item.name),
           selectedColor: Theme.of(context).accentColor,
-          labelStyle: TextStyle(color: selectedChoices.any((element) => element.content == item.content) ? Colors.black : Colors.white),
+          labelStyle: TextStyle(color: selectedChoices.any((element) => element.name == item.name) ? Colors.black : Colors.white),
           onSelected: (selected) {
 
             setState(() {
-              if (selectedChoices.any((element) => element.content == item.content)) {
-                selectedChoices.removeWhere((element) => element.content == item.content);
+              if (selectedChoices.any((element) => element.name == item.name)) {
+                selectedChoices.removeWhere((element) => element.name == item.name);
               } else {
                 selectedChoices.add(item);
               }
             });
 
             selectedChoices.forEach((element) {
-              print(element.content);
+              print(element.name);
             });
             optimumChipListToDispatch(selectedChoices);
           },

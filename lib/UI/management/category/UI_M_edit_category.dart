@@ -451,7 +451,7 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
     listOfWidget.add(InputChip(
       selected: false,
       label: Text(
-        snapshot.business.owner.content != null? snapshot.business.owner.content : AppLocalizations.of(context).owner,
+        snapshot.business.owner.name != null? snapshot.business.owner.name : AppLocalizations.of(context).owner,
         style: TextStyle(
           fontSize: 13.0,
           fontWeight: FontWeight.w500,
@@ -459,13 +459,13 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
       ),
     ));
 
-    snapshot.business.salesman.content != null && snapshot.business.salesman.content != ''
+    snapshot.business.salesman.name != null && snapshot.business.salesman.name != ''
         ? listOfWidget.add(Padding(
             padding: const EdgeInsets.only(left: 5.0),
             child: InputChip(
               selected: false,
               label: Text(
-                snapshot.business.salesman.content != null? snapshot.business.salesman.content : AppLocalizations.of(context).salesman,
+                snapshot.business.salesman.name != null? snapshot.business.salesman.name : AppLocalizations.of(context).salesman,
                 style: TextStyle(
                   fontSize: 13.0,
                   fontWeight: FontWeight.w500,

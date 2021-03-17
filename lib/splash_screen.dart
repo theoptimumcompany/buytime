@@ -30,6 +30,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/services.dart';
+import 'package:flutter_logs/flutter_logs.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
@@ -72,6 +73,11 @@ class _SplashScreenState extends State<SplashScreen>  with WidgetsBindingObserve
     debugPrint('splash_screen => AUTO COMPLETE LENGTH: ${completes.length}');
     StoreProvider.of<AppState>(context).dispatch(AddAutoCompleteToList(completes));
   }
+
+  var TAG = "MyApp";
+  var _my_log_file_name = "MyLogFile";
+  var toggle = false;
+  static Completer _completer = new Completer<String>();
 
   @override
   void initState() {
@@ -128,6 +134,43 @@ class _SplashScreenState extends State<SplashScreen>  with WidgetsBindingObserve
     });
 
     initPlatformState();
+    setUpLogs();
+  }
+
+  void setUpLogs() async {
+    await FlutterLogs.initLogs(
+        logLevelsEnabled: [
+          LogLevel.INFO,
+          LogLevel.WARNING,
+          LogLevel.ERROR,
+          LogLevel.SEVERE
+        ],
+        timeStampFormat: TimeStampFormat.TIME_FORMAT_READABLE,
+        directoryStructure: DirectoryStructure.FOR_DATE,
+        logTypesEnabled: [_my_log_file_name],
+        logFileExtension: LogFileExtension.LOG,
+        logsWriteDirectoryName: "MyLogs",
+        logsExportDirectoryName: "MyLogs/Exported",
+        debugFileOperations: true,
+        isDebuggable: true);
+
+    // [IMPORTANT] The first log line must never be called before 'FlutterLogs.initLogs'
+    FlutterLogs.logInfo(TAG, "setUpLogs", "setUpLogs: Setting up logs..");
+
+    // Logs Exported Callback
+    FlutterLogs.channel.setMethodCallHandler((call) async {
+      if (call.method == 'logsExported') {
+        // Contains file name of zip
+        FlutterLogs.logInfo(
+            TAG, "setUpLogs", "logsExported: ${call.arguments.toString()}");
+
+        // Notify Future with value
+        _completer.complete(call.arguments.toString());
+      } else if (call.method == 'logsPrinted') {
+        FlutterLogs.logInfo(
+            TAG, "setUpLogs", "logsPrinted: ${call.arguments.toString()}");
+      }
+    });
   }
 
 
