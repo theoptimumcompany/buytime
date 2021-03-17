@@ -3,17 +3,12 @@ import 'package:Buytime/UI/user/cart/UI_U_Cart.dart';
 import 'package:Buytime/UI/user/cart/UI_U_ConfirmOrder.dart';
 import 'package:Buytime/UI/user/service/UI_U_ServiceReserve.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
-import 'package:Buytime/reblox/model/business/snippet/business_snippet_state.dart';
-import 'package:Buytime/reblox/model/order/order_entry.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
-import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
-import 'package:Buytime/reusable/cart_icon.dart';
-import 'package:Buytime/utils/globals.dart';
+import 'package:Buytime/reusable/buytime_icons.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
-import 'package:Buytime/utils/b_cube_grid_spinner.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:flutter/foundation.dart';
@@ -147,7 +142,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                               alignment: Alignment.center,
                               child: IconButton(
                                 icon: Icon(
-                                  CartIcon.add_shopping_cart_24px,
+                                  BuytimeIcons.shopping_cart,
                                   color: BuytimeTheme.TextWhite,
                                   size: 24.0,
                                 ),

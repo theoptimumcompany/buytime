@@ -1,20 +1,16 @@
 import 'package:Buytime/UI/user/cart/UI_U_ConfirmOrder.dart';
-import 'package:Buytime/UI/user/service/UI_U_ServiceReserve.dart';
 import 'package:Buytime/reblox/model/order/order_entry.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
-import 'package:Buytime/reusable/vector_icon.dart';
+import 'package:Buytime/reusable/buytime_icons.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
-import 'package:Buytime/UI/user/service/UI_U_service_list.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
-import 'package:Buytime/utils/globals.dart';
 import 'package:Buytime/reusable/order/optimum_order_item_card_medium.dart';
 import 'package:Buytime/reusable/order/order_total.dart';
-import 'package:Buytime/UI/user/cart/UI_U_stripe_payment.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -189,7 +185,7 @@ class CartState extends State<Cart> {
                                                       //MenuItemModel menuItem = menuItems.elementAt(index);
                                                       debugPrint('UI_U_Cart => LIST| ${orderState.itemList[index].name} ITEM COUNT: ${orderState.itemList[index].number}');
                                                       var item = (index != orderState.itemList.length ? orderState.itemList[index] : null);
-                                                      int itemCount = orderState.itemList[index].number;
+                                                      //int itemCount = orderState.itemList[index].number;
                                                       return  Dismissible(
                                                               // Each Dismissible must contain a Key. Keys allow Flutter to
                                                               // uniquely identify widgets.
@@ -268,7 +264,7 @@ class CartState extends State<Cart> {
                                                                 child: Container(
                                                                   margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 2.5),
                                                                   child: Icon(
-                                                                    VectorIcon.vector,
+                                                                    BuytimeIcons.remove,
                                                                     size: 24,
 
                                                                     ///SizeConfig.safeBlockHorizontal * 7

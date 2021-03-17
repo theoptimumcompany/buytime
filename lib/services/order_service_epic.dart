@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:Buytime/reblox/model/app_state.dart';
+import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/statistics_state.dart';
 import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
@@ -22,21 +23,28 @@ class OrderListRequestService implements EpicClass<AppState> {
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     debugPrint("ORDER_SERVICE_EPIC - OrderListRequestService =>  CATCHED ACTION");
      return actions.whereType<OrderListRequest>().asyncMap((event) async {
-       debugPrint("ORDER_SERVICE_EPIC - OrderListRequestService =>  USER ID: ${store.state.user.uid}");
-        String userId = store.state.user.uid;
-        QuerySnapshot ordersFirebase = await FirebaseFirestore.instance.collection("order") /// 1 READ - ? DOC
-            .where("progress", isEqualTo: "paid")
-            .where("userId", isEqualTo: userId)
-            .get();
-
-        int ordersFirebaseDocs = ordersFirebase.docs.length;
-
-        debugPrint("ORDER_SERVICE_EPIC - OrderListRequestService => OrderListService Firestore request");
+       //debugPrint("ORDER_SERVICE_EPIC - OrderListRequestService =>  USER ID: ${store.state.user.uid}");
+       //debugPrint("ORDER_SERVICE_EPIC - OrderListRequestService =>  BUSINESS ID: ${store.state.business.id_firestore}");
+        String userId = store.state.business.id_firestore;
+        List<BusinessState> businessList = store.state.businessList.businessListState;
         orderStateList = [];
-        ordersFirebase.docs.forEach((element) {
+        int ordersFirebaseDocs = 0;
+        int read = 0;
+        for(int i = 0; i < businessList.length; i++){
+          debugPrint("ORDER_SERVICE_EPIC - OrderListRequestService =>  BUSINESS ID: ${businessList[i].id_firestore}");
+          QuerySnapshot ordersFirebase = await FirebaseFirestore.instance.collection("order") /// 1 READ - ? DOC
+              .where("progress", isEqualTo: "paid")
+              .where("businessId", isEqualTo: businessList[i].id_firestore)
+              .get();
+
+          read++;
+
+          ordersFirebaseDocs += ordersFirebase.docs.length;
+          debugPrint("ORDER_SERVICE_EPIC - OrderListRequestService => OrderListService Firestore request");
+          /*ordersFirebase.docs.forEach((element) {
           if(event.userId != "any"){
             OrderState orderState = OrderState.fromJson(element.data());
-            if(orderState.progress == "paid" && orderState.user.id == store.state.user.uid){
+            if(orderState.progress == "paid" && orderState.user.id == store.state.stripe.u){
               orderStateList.add(orderState);
             }
           }
@@ -46,7 +54,12 @@ class OrderListRequestService implements EpicClass<AppState> {
               orderStateList.add(orderState);
             }
           }
-        });
+        });*/
+          ordersFirebase.docs.forEach((element) {
+            OrderState orderState = OrderState.fromJson(element.data());
+            orderStateList.add(orderState);
+          });
+        }
         debugPrint("ORDER_SERVICE_EPIC - OrderListRequestService => OrderListService return list with " + orderStateList.length.toString());
 
         statisticsState = store.state.statistics;
@@ -54,7 +67,7 @@ class OrderListRequestService implements EpicClass<AppState> {
         int writes = statisticsState.orderListRequestServiceWrite;
         int documents = statisticsState.orderListRequestServiceDocuments;
         debugPrint('ORDER_SERVICE_EPIC - OrderListRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
-        ++reads;
+        reads = reads + read;
         documents = documents + ordersFirebaseDocs;
         debugPrint('ORDER_SERVICE_EPIC - OrderListRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
         statisticsState.orderListRequestServiceRead = reads;

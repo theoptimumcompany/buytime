@@ -1,23 +1,15 @@
-import 'dart:math';
-
 import 'package:Buytime/reblox/model/app_state.dart';
-import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/model/card/card_state.dart';
-import 'package:Buytime/reblox/reducer/booking_reducer.dart';
-import 'package:Buytime/reblox/reducer/business_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/card_list_reducer.dart';
-import 'package:Buytime/reblox/reducer/stripe_payment_reducer.dart';
+import 'package:Buytime/reusable/buytime_icons.dart';
 import 'package:Buytime/reusable/material_design_icons.dart';
-import 'package:Buytime/reusable/vector_icon.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:intl/intl.dart';
-import 'package:share/share.dart';
 
+// ignore: must_be_immutable
 class CreditCard extends StatefulWidget {
 
   CardState cardState;
@@ -75,7 +67,7 @@ class _CreditCardState extends State<CreditCard> {
                       child: Row(
                         children: [
                           Icon(
-                            VectorIcon.vector,
+                            BuytimeIcons.remove,
                             color: BuytimeTheme.AccentRed,
                             size: 22,
                           ),

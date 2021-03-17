@@ -31,7 +31,7 @@ import 'package:Buytime/reblox/reducer/stripe_payment_reducer.dart';
 import 'package:Buytime/reblox/reducer/user_reducer.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
 import 'package:Buytime/reusable/booking_page_service_list_item.dart';
-import 'package:Buytime/reusable/cart_icon.dart';
+import 'package:Buytime/reusable/buytime_icons.dart';
 import 'package:Buytime/reusable/custom_bottom_button_widget.dart';
 import 'package:Buytime/reusable/find_your_inspiration_card_widget.dart';
 import 'package:Buytime/reusable/material_design_icons.dart';
@@ -299,7 +299,7 @@ class _BookingPageState extends State<BookingPage> {
                             alignment: Alignment.center,
                             child: IconButton(
                               icon: Icon(
-                                CartIcon.add_shopping_cart_24px,
+                                BuytimeIcons.shopping_cart,
                                 color: BuytimeTheme.TextWhite,
                                 size: 24.0,
                               ),
@@ -578,7 +578,6 @@ class _BookingPageState extends State<BookingPage> {
                                   ///List
                                   serviceList.isNotEmpty
                                       ?
-
                                       ///Service List
                                       Column(
                                           children: serviceList
@@ -595,7 +594,6 @@ class _BookingPageState extends State<BookingPage> {
                                               .toList(),
                                         )
                                       :
-
                                       ///No List
                                       Container(
                                           height: SizeConfig.safeBlockVertical * 8,

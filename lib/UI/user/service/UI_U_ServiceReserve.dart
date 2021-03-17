@@ -9,7 +9,6 @@ import 'package:Buytime/reblox/model/service/service_slot_time_state.dart';
 import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
-import 'package:Buytime/reusable/cart_icon.dart';
 import 'package:Buytime/reusable/time_slot_widget.dart';
 import 'package:Buytime/utils/globals.dart';
 import 'package:flutter/cupertino.dart';

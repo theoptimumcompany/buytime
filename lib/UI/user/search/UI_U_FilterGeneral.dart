@@ -9,7 +9,7 @@ import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
 import 'package:Buytime/reusable/booking_page_service_list_item.dart';
-import 'package:Buytime/reusable/cart_icon.dart';
+import 'package:Buytime/reusable/buytime_icons.dart';
 import 'package:Buytime/reusable/material_design_icons.dart';
 import 'package:Buytime/utils/globals.dart';
 import 'package:Buytime/utils/size_config.dart';
@@ -145,7 +145,7 @@ class _FilterGeneralState extends State<FilterGeneral> {
                               alignment: Alignment.center,
                               child: IconButton(
                                 icon: Icon(
-                                  CartIcon.add_shopping_cart_24px,
+                                  BuytimeIcons.shopping_cart,
                                   color: BuytimeTheme.TextWhite,
                                   size: 24.0,
                                 ),
