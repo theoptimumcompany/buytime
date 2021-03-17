@@ -21,7 +21,6 @@ import 'package:Buytime/reusable/order/order_total.dart';
 import 'package:Buytime/UI/user/cart/UI_U_stripe_payment.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_logs/flutter_logs.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
 class ConfirmedOrder extends StatefulWidget{
@@ -350,12 +349,6 @@ class ConfirmedOrderState extends State<ConfirmedOrder> with SingleTickerProvide
                                             //snapshot.order = OrderState(itemList: List<OrderEntry>(), date: DateTime.now(), position: "", total: 0.0, business: BusinessSnippet().toEmpty(), user: UserSnippet().toEmpty(), businessId: "");
                                             //StoreProvider.of<AppState>(context).dispatch(SetOrderListToEmpty());
                                             //StoreProvider.of<AppState>(context).dispatch(UpdateOrder(order));
-                                            FlutterLogs.logInfo("TAG", "subTag", "My Log Message");
-                                            FlutterLogs.logWarn("TAG", "subTag", "My Log Message");
-                                            FlutterLogs.logError("TAG", "subTag", "My Log Message");
-                                            FlutterLogs.logErrorTrace("TAG", "subTag", "My Log Message", Error());
-                                            FlutterLogs.printLogs(
-                                                exportType: ExportType.ALL, decryptBeforeExporting: true);
                                             StoreProvider.of<AppState>(context).dispatch(SetOrder(OrderState().toEmpty()));
                                             Navigator.of(context).popUntil(ModalRoute.withName('/bookingPage'));
                                           },
