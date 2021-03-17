@@ -3,7 +3,6 @@ import 'package:Buytime/reblox/reducer/booking_list_reducer.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
 import 'package:Buytime/UI/management/category/UI_M_manage_category.dart';
 import 'package:Buytime/UI/management/category/W_category_list_item.dart';
-import 'package:Buytime/UI/management/invite/UI_M_BookingList.dart';
 import 'package:Buytime/UI/management/service/UI_M_service_list.dart';
 import 'package:Buytime/UI/model/manager_model.dart';
 import 'package:Buytime/UI/model/service_model.dart';
@@ -15,6 +14,8 @@ import 'package:Buytime/reblox/reducer/category_tree_reducer.dart';
 import 'package:Buytime/reusable/menu/UI_M_business_list_drawer.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
+import 'package:add_2_calendar/add_2_calendar.dart';
+//import 'package:device_calendar/device_calendar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -34,12 +35,33 @@ class UI_M_Business extends StatefulWidget {
 }
 
 class _UI_M_BusinessState extends State<UI_M_Business> {
-  List<BookingState> bookingList = new List();
+  List<BookingState> bookingList = [];
 
   @override
   void initState() {
     super.initState();
   }
+
+  // Widget calendarButtonOrCalendar() {
+  //   //Returns a calendar button that displays 'Select Calendar' or Returns a
+  //   // Calendar Page if the button was pressed
+  //     return  TextButton(
+  //         child: Text("Create Event",
+  //             style: Theme.of(context).textTheme.body1),
+  //         onPressed: () {
+  //
+  //           final Event event = Event(
+  //             title: 'Nuovo Evento Buytime',
+  //             description: 'Cazzarola',
+  //             location: 'Poggibonsi',
+  //             startDate: DateTime(2021,03,17),
+  //          //   alarmInterval: Duration(days: 1), // on iOS, you can set alarm notification after your event.
+  //             endDate: DateTime(2021,03,18),
+  //           );
+  //           Add2Calendar.addEvent2Cal(event);
+  //
+  //         });
+  // }
 
   final GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
   bool hotel = false;
@@ -424,6 +446,8 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                         ),
                       ),
                     ),
+
+                    //Expanded(child: calendarButtonOrCalendar()),
                   ],
                 ),
               ),
@@ -434,3 +458,4 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
     );
   }
 }
+

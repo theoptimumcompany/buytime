@@ -81,6 +81,7 @@ dependencies:
   logger_flutter: ^0.7.1
   logger: ^0.7.0
   device_calendar: ^3.1.0
+  add_2_calendar: ^1.4.0
   local_auth: ^0.6.3+4
   image: ^2.1.18
   credit_card_type_detector: ^1.1.0
