@@ -102,6 +102,7 @@ class _CategoryListItemWidgetState extends State<CategoryListItemWidget> {
                     child: Container(
                       child: Text(
                         AppLocalizations.of(context).mostPopularService,
+                        overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                             color: BuytimeTheme.TextBlack,
                             fontWeight: FontWeight.w400,
