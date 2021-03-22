@@ -76,7 +76,7 @@ class AutoCompleteState {
     await storage.write(
         key: 'autoComplete',
         value: append,
-      iOptions: _getIOSOptions()
+      //iOptions: _getIOSOptions()
     );
 
   }
