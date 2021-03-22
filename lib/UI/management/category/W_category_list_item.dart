@@ -76,6 +76,7 @@ class _CategoryListItemWidgetState extends State<CategoryListItemWidget> {
                       margin: EdgeInsets.only(left: 5.0),
                       child: Text(
                         widget.categoryItem.name,
+                        overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                             color: BuytimeTheme.TextBlack,
                             fontWeight: FontWeight.w400,
