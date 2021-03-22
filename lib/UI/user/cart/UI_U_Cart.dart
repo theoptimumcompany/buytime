@@ -1,5 +1,6 @@
 import 'package:Buytime/UI/user/cart/UI_U_ConfirmOrder.dart';
 import 'package:Buytime/reblox/model/order/order_entry.dart';
+import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reusable/buytime_icons.dart';
 import 'package:Buytime/utils/size_config.dart';
@@ -97,7 +98,7 @@ class CartState extends State<Cart> {
               tmp = store.state.serviceState;
             },
             builder: (context, snapshot) {
-              orderState = snapshot.order;
+                orderState = snapshot.order;
               return Scaffold(
                   resizeToAvoidBottomInset: false,
                   appBar: BuytimeAppbar(
@@ -149,17 +150,6 @@ class CartState extends State<Cart> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            /*Padding(
-                        padding: const EdgeInsets.only(top: 30.0, left: 10.0),
-                        child: Text(
-                          AppLocalizations.of(context).orderIn + StoreProvider.of<AppState>(context).state.business.name,
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                            fontSize: media.height * 0.025,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                      ),*/
                             ///Service List
                             Expanded(
                               flex: 2,
@@ -171,7 +161,7 @@ class CartState extends State<Cart> {
                                       converter: (store) => store.state.order,
                                       rebuildOnChange: true,
                                       builder: (context, snapshot) {
-                                        orderState = snapshot;
+                                          orderState = snapshot;
                                         print("UI_U_cart => CART COUNT: ${orderState.itemList.length}");
                                         return Column(
                                           children: [
@@ -223,34 +213,6 @@ class CartState extends State<Cart> {
                                                                 orderState: orderState,
                                                                 index: index,
                                                                 show: true,
-                                                                /*rightWidget1: Column(
-                                                        children: [
-                                                          Row(
-                                                            children: [
-                                                              itemCount >= 2 ? IconButton(
-                                                                icon: Icon(
-                                                                  Icons.remove_circle_outline,
-                                                                  color: BuytimeTheme.AccentRed,
-                                                                  //size: SizeConfig.safeBlockHorizontal * 15,
-                                                                ),
-                                                                onPressed: () {
-                                                                  deleteOneItem(orderState, index);
-                                                                },
-                                                              ) : Container(),
-                                                              IconButton(
-                                                                icon: Icon(
-                                                                  Icons.remove_shopping_cart,
-                                                                  color: BuytimeTheme.SymbolGrey,
-                                                                  //size: SizeConfig.safeBlockHorizontal * 15,
-                                                                ),
-                                                                onPressed: () {
-                                                                  deleteItem(orderState, index);
-                                                                },
-                                                              ),
-                                                            ],
-                                                          )
-                                                        ],
-                                                      ),*/
                                                               ),
                                                               background: Container(
                                                                 color: BuytimeTheme.BackgroundWhite,
@@ -288,232 +250,82 @@ class CartState extends State<Cart> {
                                               color: BuytimeTheme.DividerGrey,
                                               height: SizeConfig.safeBlockVertical * 2,
                                             ),
-                                            /*GridView.builder(
-                                              shrinkWrap: true,
-                                              itemCount: snapshot.itemList.length + 1,
-                                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                                crossAxisCount: 1,
-                                                childAspectRatio: 5,
-                                              ),
-                                              itemBuilder: (BuildContext context, int index) {
-                                                final item = (index != snapshot.itemList.length ? snapshot.itemList[index] : null);
-                                                return index != snapshot.itemList.length
-                                                    ? OptimumOrderItemCardMedium(
-                                                  key: ObjectKey(item),
-                                                  orderEntry: snapshot.itemList[index],
-                                                  mediaSize: media,
-                                                  rightWidget1: Column(
-                                                    children: [
-                                                      IconButton(
-                                                        icon: Icon(
-                                                          Icons.remove_shopping_cart,
-                                                          color: BuytimeTheme.SymbolGrey,
-                                                        ),
-                                                        onPressed: () {
-                                                          deleteItem(snapshot, index);
-                                                        },
-                                                      )
-                                                    ],
-                                                  ),
-                                                )
-                                                    : Column(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                  children: [
-                                                    OrderTotal(media: media, orderState: snapshot),
-                                                    Container(
-                                                      color: BuytimeTheme.DividerGrey,
-                                                      height: SizeConfig.safeBlockVertical * 2,
-                                                    ),
-                                                  ],
-                                                );
-                                              },
-                                            )*/
                                           ],
                                         );
                                       }),
                                 ),
                               ),
                             ),
-
                             ///Buy Button & Continue Shooping
                             Align(
                               alignment: Alignment.bottomCenter,
                               child: Container(
                                 //height: double.infinity,
                                 //color: Colors.black87,
-                                child: orderState.itemList.isNotEmpty && (orderState.itemList.first.time == null || orderState.itemList.first.time.isEmpty)
-                                    ?
-
-                                    ///Buy & Continue
-                                    Column(
-                                        mainAxisAlignment: MainAxisAlignment.end,
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          ///Buy button
-                                          Container(
-                                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5),
-                                              width: 158,
-
-                                              /// media.width * .4
-                                              height: 46,
-                                              child: MaterialButton(
-                                                elevation: 0,
-                                                hoverElevation: 0,
-                                                focusElevation: 0,
-                                                highlightElevation: 0,
-                                                onPressed: () {
-                                                  Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(builder: (context) => ConfirmOrder()),
-                                                  );
-                                                },
-                                                textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
-                                                color: BuytimeTheme.UserPrimary,
-                                                //padding: EdgeInsets.all(media.width * 0.03),
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius: new BorderRadius.circular(5),
-                                                ),
-                                                child: Text(
-                                                  AppLocalizations.of(context).buyUpper,
-                                                  style: TextStyle(fontSize: 14, fontFamily: BuytimeTheme.FontFamily, fontWeight: FontWeight.w500, color: BuytimeTheme.TextWhite, letterSpacing: 1.25),
-                                                ),
-                                              )),
-
-                                          ///Continue Shopping
-                                          Container(
-                                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 5, bottom: SizeConfig.safeBlockVertical * 5),
-                                              alignment: Alignment.center,
-                                              child: Material(
-                                                color: Colors.transparent,
-                                                child: InkWell(
-                                                    onTap: () {
-                                                      //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ServiceList()),);
-                                                      Navigator.of(context).pop();
-                                                    },
-                                                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                                                    child: Container(
-                                                      padding: EdgeInsets.all(5.0),
-                                                      child: Text(
-                                                        AppLocalizations.of(context).continueShopping,
-                                                        style: TextStyle(
-                                                            letterSpacing: 1.25,
-
-                                                            ///SizeConfig.safeBlockHorizontal * .2
-                                                            fontFamily: BuytimeTheme.FontFamily,
-                                                            color: BuytimeTheme.UserPrimary,
-                                                            fontWeight: FontWeight.w600,
-                                                            fontSize: 14
-
-                                                            ///SizeConfig.safeBlockHorizontal * 4
-                                                            ),
-                                                      ),
-                                                    )),
-                                              )),
-                                          /*Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () {
-                                          // trigger payment information page
-                                          Navigator.pushReplacement(
-                                            context,
-                                            MaterialPageRoute(builder: (context) => UI_U_StripePayment()),
-                                          );
-                                        },
-                                        child: Padding(
-                                          padding: EdgeInsets.only(top: (media.height * 0.05)),
-                                          child: Container(
-                                            width: media.width * 0.55,
-                                            decoration: BoxDecoration(color: Color.fromRGBO(1, 175, 81, 1.0), borderRadius: BorderRadius.all(Radius.circular(5.0))),
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(8.0),
-                                              child: Row(
-                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                children: [Icon(Icons.credit_card, color: Colors.white), SizedBox(width: 10.0), Text(AppLocalizations.of(context).orderAndPay, style: TextStyle(color: Colors.white))],
-                                              ),
-                                            ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    ///Buy button
+                                    Container(
+                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5),
+                                        width: 158,
+                                        /// media.width * .4
+                                        height: 46,
+                                        child: MaterialButton(
+                                          elevation: 0,
+                                          hoverElevation: 0,
+                                          focusElevation: 0,
+                                          highlightElevation: 0,
+                                          onPressed: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(builder: (context) => ConfirmOrder(reserve: false,)),
+                                            );
+                                          },
+                                          textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
+                                          color: BuytimeTheme.UserPrimary,
+                                          //padding: EdgeInsets.all(media.width * 0.03),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: new BorderRadius.circular(5),
                                           ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  // Row(
-                                  //   mainAxisAlignment: MainAxisAlignment.center,
-                                  //   children: [
-                                  //     GestureDetector(
-                                  //       onTap: () {
-                                  //         // trigger payment information page
-                                  //         print("Dispatch Order create!");
-                                  //         StoreProvider.of<AppState>(context).dispatch(CreateOrder(OrderState(
-                                  //             itemList: snapshot.order.itemList,
-                                  //             date: snapshot.order.date,
-                                  //             progress: "paid",
-                                  //             position: snapshot.order.position,
-                                  //             total: snapshot.order.total,
-                                  //             business: snapshot.order.business,
-                                  //             user: snapshot.order.user,
-                                  //             businessId: snapshot.business.id_firestore)));
-                                  //         StoreProvider.of<AppState>(context).dispatch(OrderListRequest());
-                                  //       },
-                                  //       child: Padding(
-                                  //         padding: EdgeInsets.only(top: (media.height * 0.05)),
-                                  //         child: Container(
-                                  //           width: media.width * 0.55,
-                                  //           decoration: BoxDecoration(color: Color.fromRGBO(1, 175, 81, 1.0), borderRadius: BorderRadius.all(Radius.circular(5.0))),
-                                  //           child: Padding(
-                                  //             padding: const EdgeInsets.all(8.0),
-                                  //             child: Row(
-                                  //               mainAxisAlignment: MainAxisAlignment.center,
-                                  //               children: [Icon(Icons.credit_card, color: Colors.white), SizedBox(width: 10.0), Text("Test Order Create", style: TextStyle(color: Colors.white))],
-                                  //             ),
-                                  //           ),
-                                  //         ),
-                                  //       ),
-                                  //     ),
-                                  //   ],
-                                  // ),
-                                  SizedBox(
-                                    height: media.height * 0.05,
-                                  )*/
-                                        ],
-                                      )
-                                    :
-
-                                    ///Reserve
-                                    Column(
-                                        mainAxisAlignment: MainAxisAlignment.end,
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          ///Reserve button
-                                          Container(
-                                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5, bottom: SizeConfig.safeBlockVertical * 5),
-                                              width: 158,
-
-                                              /// media.width * .4
-                                              height: 46,
-                                              child: MaterialButton(
-                                                elevation: 0,
-                                                hoverElevation: 0,
-                                                focusElevation: 0,
-                                                highlightElevation: 0,
-                                                onPressed: () {
-                                                  Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(builder: (context) => ConfirmOrder()),
-                                                  );
-                                                },
-                                                textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
-                                                color: BuytimeTheme.UserPrimary,
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius: new BorderRadius.circular(5),
-                                                ),
+                                          child: Text(
+                                            AppLocalizations.of(context).buyUpper,
+                                            style: TextStyle(fontSize: 14, fontFamily: BuytimeTheme.FontFamily, fontWeight: FontWeight.w500, color: BuytimeTheme.TextWhite, letterSpacing: 1.25),
+                                          ),
+                                        )),
+                                    ///Continue Shopping
+                                    Container(
+                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 5, bottom: SizeConfig.safeBlockVertical * 5),
+                                        alignment: Alignment.center,
+                                        child: Material(
+                                          color: Colors.transparent,
+                                          child: InkWell(
+                                              onTap: () {
+                                                //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ServiceList()),);
+                                                Navigator.of(context).pop();
+                                              },
+                                              borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                              child: Container(
+                                                padding: EdgeInsets.all(5.0),
                                                 child: Text(
-                                                  AppLocalizations.of(context).reserveUpper,
-                                                  style: TextStyle(fontSize: 14, fontFamily: BuytimeTheme.FontFamily, fontWeight: FontWeight.w500, color: BuytimeTheme.TextWhite, letterSpacing: 1.25),
+                                                  AppLocalizations.of(context).continueShopping,
+                                                  style: TextStyle(
+                                                      letterSpacing: 1.25,
+
+                                                      ///SizeConfig.safeBlockHorizontal * .2
+                                                      fontFamily: BuytimeTheme.FontFamily,
+                                                      color: BuytimeTheme.UserPrimary,
+                                                      fontWeight: FontWeight.w600,
+                                                      fontSize: 14
+
+                                                    ///SizeConfig.safeBlockHorizontal * 4
+                                                  ),
                                                 ),
                                               )),
-                                        ],
-                                      ),
+                                        )),
+                                  ],
+                                )
                               ),
                             )
                           ],

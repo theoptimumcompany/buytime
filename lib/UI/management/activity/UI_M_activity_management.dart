@@ -44,8 +44,8 @@ class _ActivityManagementState extends State<ActivityManagement> {
   bool seeAll = false;
   final GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
 
-  List<OrderState> pendingList = [];
-  List<OrderState> acceptedList = [];
+  List<List> pendingList = [];
+  List<List> acceptedList = [];
   List<List> orderList = [];
 
   @override
@@ -53,6 +53,32 @@ class _ActivityManagementState extends State<ActivityManagement> {
     super.initState();
   }
 
+  bool startRequest = false;
+  bool noActivity = false;
+
+
+  void listUp(OrderState element, DateTime currentTime, DateTime orderTime, List<List> list){
+    if(element.selected.isNotEmpty){
+      element.itemList.forEach((entry) {
+        DateTime orderEntryTime = entry.date;
+        orderEntryTime = new DateTime(orderEntryTime.year, orderEntryTime.month, orderEntryTime.day, 0, 0, 0, 0, 0);
+        if(seeAll){
+          list.add([element, entry]);
+        }else{
+          if(orderEntryTime.isAtSameMomentAs(currentTime))
+            list.add([element, entry]);
+        }
+      });
+    }else{
+      if(seeAll){
+        list.add([element, null]);
+      }else{
+        if(orderTime.isAtSameMomentAs(currentTime))
+          list.add([element, null]);
+      }
+      //list.add([element, null]);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,37 +90,45 @@ class _ActivityManagementState extends State<ActivityManagement> {
       converter: (store) => store.state,
       onInit: (store) {
         store.dispatch(OrderListRequest(store.state.business.id_firestore));
+        startRequest = true;
       },
       builder: (context, snapshot) {
         pendingList.clear();
         acceptedList.clear();
         orderList.clear();
-        print("UI_U_OrderHistory : Number of orders is " + snapshot.orderList.orderListState.length.toString());
+        print("UI_M_activity_management : Request: $startRequest - Number of orders is " + snapshot.orderList.orderListState.length.toString());
+        if(snapshot.orderList.orderListState.isEmpty && startRequest){
+          noActivity = true;
+        }else{
+          noActivity = false;
+        }
+        print("UI_M_activity_management : No activity: $noActivity");
 
         List<OrderState> tmp = snapshot.orderList.orderListState;
+
+
+        ///Current time
+        DateTime currentTime = DateTime.now();
+        currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0);
         tmp.forEach((element) {
+          DateTime orderTime = element.date;
+          orderTime = new DateTime(orderTime.year, orderTime.month, orderTime.day, 0, 0, 0, 0, 0);
           if(element.progress != 'paid'){
-            pendingList.add(element);
+            listUp(element, currentTime, orderTime, pendingList);
+            //pendingList.add(element);
           }else{
-            acceptedList.add(element);
+            listUp(element, currentTime, orderTime, acceptedList);
+            //acceptedList.add(element);
           }
         });
 
-        pendingList.forEach((order) {
-          order.itemList.forEach((entry) {
-            orderList.add([order, entry]);
-          });
-        });
-        acceptedList.forEach((order) {
-          if(order.progress != 'paid'){
-            order.itemList.forEach((entry) {
-              orderList.add([order, entry]);
-            });
-          }else{
-            orderList.add([order, OrderEntry()]);
-          }
 
-        });
+        orderList.addAll(pendingList);
+
+        orderList.addAll(acceptedList);
+
+        String today = '${AppLocalizations.of(context).today.substring(0,1)}${AppLocalizations.of(context).today.substring(1,AppLocalizations.of(context).today.length-2).toLowerCase()}';
+
 
         //List<CategoryState> categoryRootList = snapshot.categoryList.categoryListState;
         return WillPopScope(
@@ -167,7 +201,7 @@ class _ActivityManagementState extends State<ActivityManagement> {
                               Container(
                                 margin: EdgeInsets.only(left: 10),
                                 child: Text(
-                                  '${AppLocalizations.of(context).today.substring(0,1)}${AppLocalizations.of(context).today.substring(1,AppLocalizations.of(context).today.length).toLowerCase()}${DateFormat('dd MMM').format(DateTime.now())}',
+                                  '$today, ${DateFormat('dd MMM').format(DateTime.now())}',
                                   style: TextStyle(
                                       fontFamily: BuytimeTheme.FontFamily,
                                       fontSize: 16,
@@ -197,7 +231,7 @@ class _ActivityManagementState extends State<ActivityManagement> {
                                   child: Container(
                                     padding: EdgeInsets.all(5.0),
                                     child: Text(
-                                      !seeAll ? AppLocalizations.of(context).seeAllWeek : AppLocalizations.of(context).showLess,
+                                      !seeAll ? AppLocalizations.of(context).seeAllWeek : today,
                                       style: TextStyle(
                                           letterSpacing: .25,
                                           fontFamily: BuytimeTheme.FontFamily,
@@ -333,7 +367,15 @@ class _ActivityManagementState extends State<ActivityManagement> {
                         ),
                       ]),
                     ),
-                  ):
+                  ) : noActivity ?
+                      Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            CircularProgressIndicator()
+                          ],
+                        ),
+                      ) :
                   ///No List
                   Container(
                     //height: SizeConfig.safeBlockVertical * 8,

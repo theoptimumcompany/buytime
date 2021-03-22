@@ -96,7 +96,7 @@ class _TimeSlotWidgetState extends State<TimeSlotWidget> {
                      style: TextStyle(
                        //letterSpacing: 1.25,
                          fontFamily: BuytimeTheme.FontFamily,
-                         color: BuytimeTheme.TextBlack,
+                         color:  BuytimeTheme.TextBlack,
                          fontWeight: FontWeight.w400,
                          fontSize: 16 ///SizeConfig.safeBlockHorizontal * 4
                      ),

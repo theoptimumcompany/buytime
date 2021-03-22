@@ -1,4 +1,5 @@
 import 'dart:core';
+import 'package:Buytime/UI/management/activity/UI_M_activity_management.dart';
 import 'package:Buytime/UI/management/business/UI_M_business_list.dart';
 import 'package:Buytime/UI/user/UI_U_Tabs.dart';
 import 'package:Buytime/UI/user/landing/invite_guest_form.dart';
@@ -67,13 +68,13 @@ class LandingState extends State<Landing> {
       if (deepLink != null) {
         if (deepLink.queryParameters.containsKey('booking')) {
           String id = deepLink.queryParameters['booking'];
-          debugPrint('splash_screen: booking: $id');
-          Navigator.of(context).push(MaterialPageRoute(builder: (context) => InviteGuestForm(id)));
+          debugPrint('UI_U_landing: booking: $id');
+          Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => InviteGuestForm(id)), (Route<dynamic> route) => false);
         }
         else if (deepLink.queryParameters.containsKey('categoryInvite')) {
           String id = deepLink.queryParameters['categoryInvite'];
-          debugPrint('splash_screen: categoryInvite: $id');
-          Navigator.of(context).push(MaterialPageRoute(builder: (context) => InviteGuestForm(id)));
+          debugPrint('UI_U_landing: categoryInvite: $id');
+          Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => InviteGuestForm(id)), (Route<dynamic> route) => false);
         }
       }
     }, onError: (OnLinkErrorException e) async {
@@ -90,13 +91,13 @@ class LandingState extends State<Landing> {
     if (deepLink != null) {
       if (deepLink.queryParameters.containsKey('booking')) {
         String id = deepLink.queryParameters['booking'];
-        debugPrint('splash_screen: booking: $id');
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) => InviteGuestForm(id)));
+        debugPrint('UI_U_landing: booking: $id');
+        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => InviteGuestForm(id)), ModalRoute.withName('/landing'));
       }
       else if (deepLink.queryParameters.containsKey('categoryInvite')) {
         String id = deepLink.queryParameters['categoryInvite'];
-        debugPrint('splash_screen: categoryInvite: $id');
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) =>InviteGuestForm(id)));
+        debugPrint('UI_U_landing: categoryInvite: $id');
+        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => InviteGuestForm(id)), (Route<dynamic> route) => false);
       }
     }
   }
@@ -108,70 +109,74 @@ class LandingState extends State<Landing> {
     var isManagerOrAbove = false;
 
 
-    return WillPopScope(
-        onWillPop: () async {
-          FocusScope.of(context).unfocus();
-          return false;
-        },
-        child: Scaffold(
-          body: SafeArea(
-            top: false,
-            child: SingleChildScrollView(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                    minHeight: (SizeConfig.safeBlockVertical * 100)
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    ///Celurian Part
-                    Flexible(
-                      //flex: 10,
+    return StoreConnector<AppState, AppState>(
+        converter: (store) => store.state,
+        builder: (context, snapshot) {
+          isManagerOrAbove = snapshot.user != null && (snapshot.user.getRole() != Role.user) ? true : false;
+          return WillPopScope(
+              onWillPop: () async {
+                FocusScope.of(context).unfocus();
+                return false;
+              },
+              child: Scaffold(
+                body: SafeArea(
+                  top: false,
+                  child: SingleChildScrollView(
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                          minHeight: (SizeConfig.safeBlockVertical * 100)
+                      ),
                       child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          ///Welcome text & Share icon & Description
-                          Container(
-                            // margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
-                            width: double.infinity,
-                            //height: SizeConfig.safeBlockVertical * 40,
-                            color: BuytimeTheme.BackgroundCerulean,
-                            child: Column(
-                              //mainAxisSize: MainAxisSize.min,
-                              children: [
-                                ///Welcome text & Share icon
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    ///Welcome text
-                                    Flexible(
-                                      flex: 2,
-                                      child: Container(
-                                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 6, left: SizeConfig.safeBlockHorizontal * 8),
-                                          /*width: double.infinity,
+                          ///Celurian Part
+                          Flexible(
+                            //flex: 10,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  ///Welcome text & Share icon & Description
+                                  Container(
+                                    // margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
+                                    width: double.infinity,
+                                    //height: SizeConfig.safeBlockVertical * 40,
+                                    color: BuytimeTheme.BackgroundCerulean,
+                                    child: Column(
+                                      //mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        ///Welcome text & Share icon
+                                        Row(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            ///Welcome text
+                                            Flexible(
+                                              flex: 2,
+                                              child: Container(
+                                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 6, left: SizeConfig.safeBlockHorizontal * 8),
+                                                  /*width: double.infinity,
                                         height: double.infinity,*/
-                                          child: Text(
-                                            AppLocalizations.of(context).welcomeToBuytime,
-                                            style: TextStyle(
-                                                fontFamily: BuytimeTheme.FontFamily,
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.w700,
-                                                fontSize: 32//SizeConfig.safeBlockHorizontal * 7.5
+                                                  child: Text(
+                                                    AppLocalizations.of(context).welcomeToBuytime,
+                                                    style: TextStyle(
+                                                        fontFamily: BuytimeTheme.FontFamily,
+                                                        color: Colors.white,
+                                                        fontWeight: FontWeight.w700,
+                                                        fontSize: 32//SizeConfig.safeBlockHorizontal * 7.5
+                                                    ),
+                                                  )),
                                             ),
-                                          )),
-                                    ),
-                                    ///Share icon
-                                    Flexible(
-                                      flex: 1,
-                                      child: Container(
-                                        alignment: Alignment.topRight,
-                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 6, right: SizeConfig.safeBlockHorizontal * 4),
-                                        child: IconButton(
-                                          onPressed: () async{
-                                            //LogConsole.init();
-                                            /*final RenderBox box = context.findRenderObject();
+                                            ///Share icon
+                                            Flexible(
+                                              flex: 1,
+                                              child: Container(
+                                                alignment: Alignment.topRight,
+                                                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 6, right: SizeConfig.safeBlockHorizontal * 4),
+                                                child: IconButton(
+                                                  onPressed: () async{
+                                                    //LogConsole.init();
+                                                    /*final RenderBox box = context.findRenderObject();
                                           Uri link = await createDynamicLink('prova');
                                           Share.share(AppLocalizations.of(context).checkYourBuytimeApp + link.toString(), subject: AppLocalizations.of(context).takeYourTime, sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
                                           Share.share('Share', subject:
@@ -179,103 +184,99 @@ class LandingState extends State<Landing> {
                                               'https://play.google.com/store/apps/details?id=com.theoptimumcompany.buytime' :
                                           'Test'
                                               , sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);*/
-                                          },
-                                          icon: Icon(
-                                            Icons.share,
-                                            color: Colors.white,
-                                            size: 24,
-                                          ),
+                                                  },
+                                                  icon: Icon(
+                                                    Icons.share,
+                                                    color: Colors.white,
+                                                    size: 24,
+                                                  ),
+                                                ),
+                                              ),
+                                            )
+                                          ],
                                         ),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                                ///Description
-                                Container(
-                                    margin: EdgeInsets.only(
-                                        top: SizeConfig.safeBlockVertical * 5,
-                                        bottom: SizeConfig.safeBlockVertical * 5,
-                                        left: SizeConfig.safeBlockHorizontal * 8,
-                                        right: SizeConfig.safeBlockHorizontal * 16),
-                                    child: Text(
-                                      AppLocalizations.of(context).whenYouBookWith,
-                                      style: TextStyle(
-                                          fontFamily: BuytimeTheme.FontFamily,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 18 //SizeConfig.safeBlockHorizontal * 4
-                                      ),
-                                    ))
-                              ],
-                            ),
-                          ),
-                          ///Card list
-                          Container(
-                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 4, top: SizeConfig.safeBlockVertical * 4),
-                              alignment: Alignment.centerLeft,
-                              height: 190,
-                              child: CustomScrollView(
-                                shrinkWrap: true,
-                                scrollDirection: Axis.horizontal,
-                                slivers: [
-                                  SliverList(
-                                    delegate: SliverChildBuilderDelegate(
-                                          (context, index) {
-                                        LandingCardWidget landingCard = cards.elementAt(index);
-                                        return Container(
-                                          margin: EdgeInsets.all(10),
-                                          child: _OpenContainerWrapper(
-                                            index: index,
-                                            closedBuilder: (BuildContext _, VoidCallback openContainer) {
-                                              landingCard.callback = openContainer;
-                                              return landingCard;
-                                            },
-                                          ),
-                                        );
-                                      },
-                                      childCount: cards.length,
+                                        ///Description
+                                        Container(
+                                            margin: EdgeInsets.only(
+                                                top: SizeConfig.safeBlockVertical * 5,
+                                                bottom: SizeConfig.safeBlockVertical * 5,
+                                                left: SizeConfig.safeBlockHorizontal * 8,
+                                                right: SizeConfig.safeBlockHorizontal * 16),
+                                            child: Text(
+                                              AppLocalizations.of(context).whenYouBookWith,
+                                              style: TextStyle(
+                                                  fontFamily: BuytimeTheme.FontFamily,
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 18 //SizeConfig.safeBlockHorizontal * 4
+                                              ),
+                                            ))
+                                      ],
                                     ),
                                   ),
-                                ],
-                              )),
-                          ///Booking history
-                          Container(
-                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 6.5, bottom: SizeConfig.safeBlockVertical * 1, top: SizeConfig.safeBlockVertical * 1),
-                              alignment: Alignment.centerLeft,
-                              child: Material(
-                                color: Colors.transparent,
-                                child: InkWell(
-                                    onTap: () {
-                                      /*Navigator.push(
+                                  ///Card list
+                                  Container(
+                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 4, top: SizeConfig.safeBlockVertical * 4),
+                                      alignment: Alignment.centerLeft,
+                                      height: 190,
+                                      child: CustomScrollView(
+                                        shrinkWrap: true,
+                                        scrollDirection: Axis.horizontal,
+                                        slivers: [
+                                          SliverList(
+                                            delegate: SliverChildBuilderDelegate(
+                                                  (context, index) {
+                                                LandingCardWidget landingCard = cards.elementAt(index);
+                                                return Container(
+                                                  margin: EdgeInsets.all(10),
+                                                  child: _OpenContainerWrapper(
+                                                    index: index,
+                                                    closedBuilder: (BuildContext _, VoidCallback openContainer) {
+                                                      landingCard.callback = openContainer;
+                                                      return landingCard;
+                                                    },
+                                                  ),
+                                                );
+                                              },
+                                              childCount: cards.length,
+                                            ),
+                                          ),
+                                        ],
+                                      )),
+                                  ///Booking history
+                                  Container(
+                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 6.5, bottom: SizeConfig.safeBlockVertical * 1, top: SizeConfig.safeBlockVertical * 1),
+                                      alignment: Alignment.centerLeft,
+                                      child: Material(
+                                        color: Colors.transparent,
+                                        child: InkWell(
+                                            onTap: () {
+                                              /*Navigator.push(
                                               context,
                                               MaterialPageRoute(builder: (context) => MyBookings()),
                                             );*/
-                                      StoreProvider.of<AppState>(context).dispatch(UserBookingListRequest(StoreProvider.of<AppState>(context).state.user.email));
-                                    },
-                                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                                    child: Container(
-                                      padding: EdgeInsets.all(5.0),
-                                      child: Text(
-                                        AppLocalizations.of(context).viewBookings,
-                                        style: TextStyle(
-                                            letterSpacing: 1.25,
-                                            fontFamily: BuytimeTheme.FontFamily,
-                                            color: BuytimeTheme.TextMalibu,
-                                            fontWeight: FontWeight.w700,
-                                            fontSize: 14 //SizeConfig.safeBlockHorizontal * 4
-                                        ),
-                                      ),
-                                    )),
-                              )),
-                        ],
-                      )
-                    ),
-                    ///Contact us & Log out
-                    StoreConnector<AppState, AppState>(
-                        converter: (store) => store.state,
-                        builder: (context, snapshot) {
-                          isManagerOrAbove = snapshot.user != null && (snapshot.user.getRole() != Role.user) ? true : false;
-                          return Column(
+                                              StoreProvider.of<AppState>(context).dispatch(UserBookingListRequest(StoreProvider.of<AppState>(context).state.user.email));
+                                            },
+                                            borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                            child: Container(
+                                              padding: EdgeInsets.all(5.0),
+                                              child: Text(
+                                                AppLocalizations.of(context).viewBookings,
+                                                style: TextStyle(
+                                                    letterSpacing: 1.25,
+                                                    fontFamily: BuytimeTheme.FontFamily,
+                                                    color: BuytimeTheme.TextMalibu,
+                                                    fontWeight: FontWeight.w700,
+                                                    fontSize: 14 //SizeConfig.safeBlockHorizontal * 4
+                                                ),
+                                              ),
+                                            )),
+                                      )),
+                                ],
+                              )
+                          ),
+                          ///Contact us & Log out
+                          Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             //mainAxisSize: MainAxisSize.min,
                             children: [
@@ -287,13 +288,13 @@ class LandingState extends State<Landing> {
                                   color: Colors.transparent,
                                   child: InkWell(
                                     onTap: () async {
-                                      StoreProvider.of<AppState>(context).dispatch(SetBusinessListToEmpty());
-                                      StoreProvider.of<AppState>(context).dispatch(SetOrderListToEmpty());
-                                      Navigator.pushReplacement(
+                                      /*StoreProvider.of<AppState>(context).dispatch(SetBusinessListToEmpty());
+                                      StoreProvider.of<AppState>(context).dispatch(SetOrderListToEmpty());*/
+                                      Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                UI_M_BusinessList()),
+                                            drawerSelection == DrawerSelection.BusinessList ? UI_M_BusinessList() : ActivityManagement()),
                                       );
                                     },
                                     child: CustomBottomButtonWidget(
@@ -399,6 +400,7 @@ class LandingState extends State<Landing> {
                                           StoreProvider.of<AppState>(context).dispatch(SetStripeToEmpty());
                                           StoreProvider.of<AppState>(context).dispatch(SetUserStateToEmpty());
                                           //Torno al Login
+                                          drawerSelection = DrawerSelection.BusinessList;
                                           Navigator.pushReplacement(
                                             context,
                                             MaterialPageRoute(builder: (context) => Home()),
@@ -419,27 +421,27 @@ class LandingState extends State<Landing> {
                                             ),
                                           ),
                                           '',
-                                         Container(
-                                           margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5),
-                                           child:  Icon(
-                                             MaterialDesignIcons.exit_to_app,
-                                             color: BuytimeTheme.SymbolGrey,
-                                           ),
-                                         )
+                                          Container(
+                                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5),
+                                            child:  Icon(
+                                              MaterialDesignIcons.exit_to_app,
+                                              color: BuytimeTheme.SymbolGrey,
+                                            ),
+                                          )
                                       )
                                   ),
                                 ),
                               ),
                             ],
-                          );
-                        }
-                    )
-                  ],
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          ),
-        ));
+              ));
+        }
+    );
   }
 }
 

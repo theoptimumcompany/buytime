@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:Buytime/UI/user/booking/UI_U_ConfirmBooking.dart';
+import 'package:Buytime/UI/user/landing/UI_U_Landing.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/reducer/booking_reducer.dart';
@@ -71,10 +72,9 @@ class _InviteGuestFormState extends State<InviteGuestForm> {
     });
     StoreProvider.of<AppState>(context).dispatch(BookingRequest(bookingCodeController.text));
 
-    Timer(Duration(seconds: 3), () => setState(() {
+    /*Timer(Duration(seconds: 3), () => setState(() {
       bookingRequest = '';
-    }));
-
+    }));*/
   }
 
 
@@ -90,179 +90,190 @@ class _InviteGuestFormState extends State<InviteGuestForm> {
     FocusScopeNode currentFocus = FocusScope.of(context);
      //bool bookingRequest = false;
 
-    return Stack(
-      children: [
-        ///Edit Business
-        Positioned.fill(
-            child: Align(
-              alignment: Alignment.topCenter,
-              child: Scaffold(
-                appBar: AppBar(
-                  backgroundColor: BuytimeTheme.BackgroundCerulean,
-                  brightness: Brightness.dark,
-                  elevation: 0,
-                  actions: [
-                    IconButton(
-                      icon: Icon(
-                        Icons.help_outline,
-                        color: Colors.white,
-                      ),
-                      onPressed: (){
-
-                      },
-                    ),
-                  ],
-                  leading: IconButton(
-                    icon: Icon(
-                      Icons.keyboard_arrow_left,
-                      color: Colors.white,
-                    ),
-                    onPressed: () async{
-
-                      if (!currentFocus.hasPrimaryFocus) {
-                        currentFocus.unfocus();
-                      }
-
-                      await Future.delayed(const Duration(milliseconds: 500));
-                      StoreProvider.of<AppState>(context).dispatch(BookingRequestResponse(BookingState().toEmpty()));
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ),
-                body: SafeArea(
-                  child: SingleChildScrollView(
-                    child: Container(
-                      width: double.infinity,
-                      height: (SizeConfig.safeBlockVertical * 100) - 56,
-                      color: BuytimeTheme.BackgroundCerulean,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          ///Enter Booking Code Title
-                          Container(
-                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5),
-                            child: Text(
-                              AppLocalizations.of(context).bookingCode.toUpperCase(),
-                              style: TextStyle(
-                                  fontFamily: BuytimeTheme.FontFamily,
-                                  color: BuytimeTheme.TextWhite,
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 26 ///SizeConfig.safeBlockHorizontal * 8
-                              ),
+    return StoreConnector<AppState, AppState>(
+        converter: (store) => store.state,
+        builder: (context, snapshot) {
+          debugPrint('invite_quest_form => BOOKING CODE: ${snapshot.booking.booking_code}');
+          if(snapshot.booking.booking_code != '' && bookingRequest == 'send')
+            bookingRequest = '';
+          //order = snapshot.order.itemList != null ? (snapshot.order.itemList.length > 0 ? snapshot.order : OrderState().toEmpty()) : OrderState().toEmpty();
+          return  Stack(
+            children: [
+              ///Edit Business
+              Positioned.fill(
+                  child: Align(
+                    alignment: Alignment.topCenter,
+                    child: Scaffold(
+                      appBar: AppBar(
+                        backgroundColor: BuytimeTheme.BackgroundCerulean,
+                        brightness: Brightness.dark,
+                        elevation: 0,
+                        actions: [
+                          IconButton(
+                            icon: Icon(
+                              Icons.help_outline,
+                              color: Colors.white,
                             ),
-                          ),
-                          ///Enter Booking Code Subtitle
-                          Container(
-                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 6, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5),
-                            child: Text(
-                              AppLocalizations.of(context).enterYourBookingCode,
-                              style: TextStyle(
-                                  fontFamily: BuytimeTheme.FontFamily,
-                                  color: BuytimeTheme.TextWhite,
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 24 ///SizeConfig.safeBlockHorizontal * 5
-                              ),
-                            ),
-                          ),
-                          ///Booking Code
-                          Container(
-                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5),
-                            height: SizeConfig.safeBlockHorizontal * 40, ///SizeConfig.safeBlockHorizontal * 40
-                            child: TextFormField(
-                              autofocus: bookingCodeController.text.isNotEmpty ? false : true,
-                              controller: bookingCodeController,
-                              textAlign: TextAlign.center,
-                              maxLength: 6,
-                             // maxLengthEnforced: false,
-                              //inputFormatters: [LengthLimitingTextInputFormatter(5)],
-                              decoration: InputDecoration(
-                                counter: Offstage(),
-                                fillColor: BuytimeTheme.TextWhite,
-                                filled: true,
-                                enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(color: Color(0xffe0e0e0)),
-                                    borderRadius: BorderRadius.all(Radius.circular(5.0))
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.white),
-                                    borderRadius: BorderRadius.all(Radius.circular(5.0))
-                                ),
-                                errorBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.redAccent),
-                                  borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                                ),
-                                labelText: currentFocus.hasFocus ? '' : AppLocalizations.of(context).bookingCode,
-                                //hintText: 'Booking Code',
-                                helperText: StoreProvider.of<AppState>(context).state.booking.booking_code != 'error' ? AppLocalizations.of(context).yourBookingCodeIs : 'Your booking code does not appear to be valid.',
-                                //hintText: "email *",
-                                //hintStyle: TextStyle(color: Color(0xff666666)),
-                                labelStyle: TextStyle(
-                                  fontFamily: BuytimeTheme.FontFamily,
-                                  color: Color(0xff666666),
-                                  fontWeight: FontWeight.w400,
-                                  letterSpacing: 0.0,
-                                ),
-                                helperMaxLines: 3,
-                                helperStyle: TextStyle(
-                                  fontFamily: BuytimeTheme.FontFamily,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w400,
-                                  letterSpacing: 0.0,
-                                ),
-                              ),
-                              style: TextStyle(
-                                fontFamily: BuytimeTheme.FontFamily,
-                                color: Color(0xff666666),
-                                fontWeight: FontWeight.w800,
-                                fontSize: 20,
-                                letterSpacing: 5.0,
-                              ),
-                              onEditingComplete: (){
-                                debugPrint('done');
-                                onBookingCode();
-                              },
-                            ),
+                            onPressed: (){
+
+                            },
                           ),
                         ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            )
-        ),
-        ///Ripple Effect
-        bookingRequest.isNotEmpty ? Positioned.fill(
-          child: Align(
-            alignment: Alignment.center,
-            child: Container(
-                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3),
-                height: SizeConfig.safeBlockVertical * 100,
-                decoration: BoxDecoration(
-                  color: BuytimeTheme.BackgroundCerulean.withOpacity(.8),
-                ),
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Container(
-                        width: 50,
-                        height: 50,
-                        child: Center(
-                          child: SpinKitRipple(
+                        leading: IconButton(
+                          icon: Icon(
+                            Icons.keyboard_arrow_left,
                             color: Colors.white,
-                            size: 50,
+                          ),
+                          onPressed: () async{
+
+                            if (!currentFocus.hasPrimaryFocus) {
+                              currentFocus.unfocus();
+                            }
+
+                            await Future.delayed(const Duration(milliseconds: 500));
+                            StoreProvider.of<AppState>(context).dispatch(BookingRequestResponse(BookingState().toEmpty()));
+                            //Navigator.of(context).pop();
+                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Landing()));
+                          },
+                        ),
+                      ),
+                      body: SafeArea(
+                        child: SingleChildScrollView(
+                          child: Container(
+                            width: double.infinity,
+                            height: (SizeConfig.safeBlockVertical * 100) - 56,
+                            color: BuytimeTheme.BackgroundCerulean,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                ///Enter Booking Code Title
+                                Container(
+                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5),
+                                  child: Text(
+                                    AppLocalizations.of(context).bookingCode.toUpperCase(),
+                                    style: TextStyle(
+                                        fontFamily: BuytimeTheme.FontFamily,
+                                        color: BuytimeTheme.TextWhite,
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 26 ///SizeConfig.safeBlockHorizontal * 8
+                                    ),
+                                  ),
+                                ),
+                                ///Enter Booking Code Subtitle
+                                Container(
+                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 6, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5),
+                                  child: Text(
+                                    AppLocalizations.of(context).enterYourBookingCode,
+                                    style: TextStyle(
+                                        fontFamily: BuytimeTheme.FontFamily,
+                                        color: BuytimeTheme.TextWhite,
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 24 ///SizeConfig.safeBlockHorizontal * 5
+                                    ),
+                                  ),
+                                ),
+                                ///Booking Code
+                                Container(
+                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5),
+                                  height: SizeConfig.safeBlockHorizontal * 40, ///SizeConfig.safeBlockHorizontal * 40
+                                  child: TextFormField(
+                                    autofocus: bookingCodeController.text.isNotEmpty ? false : true,
+                                    controller: bookingCodeController,
+                                    textAlign: TextAlign.center,
+                                    maxLength: 6,
+                                    // maxLengthEnforced: false,
+                                    //inputFormatters: [LengthLimitingTextInputFormatter(5)],
+                                    decoration: InputDecoration(
+                                      counter: Offstage(),
+                                      fillColor: BuytimeTheme.TextWhite,
+                                      filled: true,
+                                      enabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(color: Color(0xffe0e0e0)),
+                                          borderRadius: BorderRadius.all(Radius.circular(5.0))
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(color: Colors.white),
+                                          borderRadius: BorderRadius.all(Radius.circular(5.0))
+                                      ),
+                                      errorBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.redAccent),
+                                        borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                      ),
+                                      labelText: currentFocus.hasFocus ? '' : AppLocalizations.of(context).bookingCode,
+                                      //hintText: 'Booking Code',
+                                      helperText: AppLocalizations.of(context).yourBookingCodeIs,
+                                      //StoreProvider.of<AppState>(context).state.booking.booking_code != 'error' ? AppLocalizations.of(context).yourBookingCodeIs : 'Your booking code does not appear to be valid.',
+                                      //hintText: "email *",
+                                      //hintStyle: TextStyle(color: Color(0xff666666)),
+                                      labelStyle: TextStyle(
+                                        fontFamily: BuytimeTheme.FontFamily,
+                                        color: Color(0xff666666),
+                                        fontWeight: FontWeight.w400,
+                                        letterSpacing: 0.0,
+                                      ),
+                                      helperMaxLines: 3,
+                                      helperStyle: TextStyle(
+                                        fontFamily: BuytimeTheme.FontFamily,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w400,
+                                        letterSpacing: 0.0,
+                                      ),
+                                    ),
+                                    style: TextStyle(
+                                      fontFamily: BuytimeTheme.FontFamily,
+                                      color: Color(0xff666666),
+                                      fontWeight: FontWeight.w800,
+                                      fontSize: 20,
+                                      letterSpacing: 5.0,
+                                    ),
+                                    onEditingComplete: (){
+                                      debugPrint('done');
+                                      onBookingCode();
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ],
+                    ),
+                  )
+              ),
+              ///Ripple Effect
+              bookingRequest.isNotEmpty ? Positioned.fill(
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Container(
+                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3),
+                      height: SizeConfig.safeBlockVertical * 100,
+                      decoration: BoxDecoration(
+                        color: BuytimeTheme.BackgroundCerulean.withOpacity(.8),
+                      ),
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Container(
+                              width: 50,
+                              height: 50,
+                              child: Center(
+                                child: SpinKitRipple(
+                                  color: Colors.white,
+                                  size: 50,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
                   ),
-                )
-            ),
-          ),
-        ) : Container()
-      ],
+                ),
+              ) : Container()
+            ],
+          );
+        }
     );
   }
 }

@@ -236,7 +236,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                       ],*/
                                 ),
                                 child: Image.asset(
-                                  'assets/img/img_buytime.png',
+                                  'assets/img/brand/logo.png',
                                   height: 96,
 
                                   ///media.height * 0.12
@@ -485,14 +485,14 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                 },
                                 textColor: BuytimeTheme.TextWhite,
                                 color: BuytimeTheme.ButtonMalibu,
-                                padding: EdgeInsets.all(media.width * 0.03),
+                                //padding: EdgeInsets.all(media.width * 0.03),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: new BorderRadius.circular(5),
                                 ),
                                 child: FittedBox(
                                   fit: BoxFit.scaleDown,
                                   child: Text(
-                                    AppLocalizations.of(context).register,
+                                    AppLocalizations.of(context).register.toUpperCase(),
                                     style: TextStyle(
                                       letterSpacing: 1.25,
                                       fontSize: 14,
@@ -543,12 +543,12 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                 },
                                 textColor: BuytimeTheme.UserPrimary.withOpacity(0.3),
                                 color: Colors.white,
-                                padding: EdgeInsets.all(media.width * 0.03),
+                                //padding: EdgeInsets.all(media.width * 0.03),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: new BorderRadius.circular(5),
                                 ),
                                 child: Text(
-                                  AppLocalizations.of(context).logIn,
+                                  AppLocalizations.of(context).logIn.toUpperCase(),
                                   style: TextStyle(
                                       letterSpacing: 1.25,
                                       fontSize: 14,

@@ -4,8 +4,10 @@ import 'package:Buytime/UI/user/cart/tab/T_room.dart';
 import 'package:Buytime/reblox/model/business/snippet/business_snippet_state.dart';
 import 'package:Buytime/reblox/model/card/card_state.dart';
 import 'package:Buytime/reblox/model/order/order_entry.dart';
+import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
 import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
 import 'package:Buytime/reblox/reducer/order_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/order_reservable_reducer.dart';
 import 'package:Buytime/utils/b_cube_grid_spinner.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
@@ -22,12 +24,14 @@ import 'package:Buytime/UI/user/cart/UI_U_stripe_payment.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:video_player/video_player.dart';
 
 class ConfirmedOrder extends StatefulWidget{
   final String title = 'Cart';
 
   int from;
-  ConfirmedOrder(this.from);
+  bool reserve;
+  ConfirmedOrder(this.from, this.reserve);
 
   @override
   State<StatefulWidget> createState() => ConfirmedOrderState();
@@ -38,10 +42,22 @@ class ConfirmedOrderState extends State<ConfirmedOrder> with SingleTickerProvide
   TabController _controller;
   int _selectedIndex = 0;
   CardState cardState = CardState().toEmpty();
+  VideoPlayerController _videorController;
+  VideoPlayerOptions videoPlayerOptions = VideoPlayerOptions(mixWithOthers: true);
 
   @override
   void initState() {
     super.initState();
+    _videorController = VideoPlayerController.asset("assets/video/moneyCat.mp4", videoPlayerOptions: videoPlayerOptions)
+      ..initialize().then((_) {
+        // Once the video has been loaded we play the video and set looping to true.
+        _videorController.play();
+        _videorController.seekTo(Duration(seconds: 3));
+        _videorController.setLooping(true);
+        _videorController.setVolume(0.0);
+        // Ensure the first frame is shown after the video is initialized.
+        setState(() {});
+      });
     _controller = TabController(length: 2, vsync: this);
 
     _controller.addListener(() {
@@ -54,7 +70,14 @@ class ConfirmedOrderState extends State<ConfirmedOrder> with SingleTickerProvide
     WidgetsBinding.instance.addPostFrameCallback((_) async {});
   }
 
-  OrderState order = OrderState(itemList: List<OrderEntry>(), date: DateTime.now(), position: "", total: 0.0, business: BusinessSnippet().toEmpty(), user: UserSnippet().toEmpty(), businessId: "");
+  @override
+  void dispose() {
+    _videorController.dispose();
+    super.dispose();
+  }
+
+  OrderState orderState = OrderState().toEmpty();
+  OrderReservableState orderReservableState = OrderReservableState().toEmpty();
 
   @override
   Widget build(BuildContext context) {
@@ -123,11 +146,17 @@ class ConfirmedOrderState extends State<ConfirmedOrder> with SingleTickerProvide
                                 //color: Colors.black87,
                                 child: Padding(
                                   padding: const EdgeInsets.only(top: 10),
-                                  child: StoreConnector<AppState, OrderState>(
-                                      converter: (store) => store.state.order,
+                                  child: StoreConnector<AppState, AppState>(
+                                      converter: (store) => store.state,
                                       rebuildOnChange: true,
                                       builder: (context, snapshot) {
-                                        print("UI_U_cart => " + snapshot.itemList.length.toString());
+                                        if(widget.reserve){
+                                          print("UI_U_ConfirmedOrder => " + snapshot.orderReservable.itemList.length.toString());
+                                          orderReservableState = snapshot.orderReservable;
+                                        }else{
+                                          print("UI_U_ConfirmedOrder => " + snapshot.order.itemList.length.toString());
+                                          orderState = snapshot.order;
+                                        }
                                         return Column(
                                           children: [
                                             ///Top Text
@@ -154,7 +183,16 @@ class ConfirmedOrderState extends State<ConfirmedOrder> with SingleTickerProvide
                                             ),
                                             ///Service List
                                             Column(
-                                              children: snapshot.itemList.map((item){
+                                              children: widget.reserve ?
+                                              orderReservableState.itemList.map((item){
+                                                return OptimumOrderItemCardMedium(
+                                                  key: ObjectKey(item),
+                                                  orderEntry: item,
+                                                  mediaSize: media,
+                                                  show: false,
+                                                );
+                                              }).toList() :
+                                              orderState.itemList.map((item){
                                                 return OptimumOrderItemCardMedium(
                                                   key: ObjectKey(item),
                                                   orderEntry: item,
@@ -164,7 +202,7 @@ class ConfirmedOrderState extends State<ConfirmedOrder> with SingleTickerProvide
                                               }).toList(),
                                             ),
                                             ///Total order
-                                            OrderTotal(media: media, orderState: snapshot),
+                                            OrderTotal(media: media, orderState: widget.reserve ? OrderState.fromReservableState(orderReservableState) : orderState),
                                             Container(
                                               color: BuytimeTheme.DividerGrey,
                                               height: SizeConfig.safeBlockVertical * 2,
@@ -251,7 +289,9 @@ class ConfirmedOrderState extends State<ConfirmedOrder> with SingleTickerProvide
                                                   child: FittedBox(
                                                     fit: BoxFit.scaleDown,
                                                     child: Text(
-                                                      snapshot.progress == "in_progress" ? AppLocalizations.of(context).weAreConfirmingYourOrder : snapshot.progress == "failed" ? AppLocalizations.of(context).somethingWentWrongUpper :  AppLocalizations.of(context).orderConfirmedUpper,
+                                                      widget.reserve ?
+                                                        orderReservableState.progress == "in_progress" ? AppLocalizations.of(context).weAreConfirmingYourOrder : orderReservableState.progress == "failed" ? AppLocalizations.of(context).somethingWentWrongUpper :  AppLocalizations.of(context).orderConfirmedUpper :
+                                                        orderState.progress == "in_progress" ? AppLocalizations.of(context).weAreConfirmingYourOrder : orderState.progress == "failed" ? AppLocalizations.of(context).somethingWentWrongUpper :  AppLocalizations.of(context).orderConfirmedUpper,
                                                       style: TextStyle(
                                                         letterSpacing: 1.25,
                                                         fontFamily: BuytimeTheme.FontFamily,
@@ -269,10 +309,28 @@ class ConfirmedOrderState extends State<ConfirmedOrder> with SingleTickerProvide
                                               width: SizeConfig.safeBlockVertical * 20,
                                               height: SizeConfig.safeBlockVertical * 20,
                                               child: Center(
-                                                child: BCubeGridSpinner(
-                                                  color: Colors.transparent,
-                                                  size: SizeConfig.safeBlockVertical * 15,
-                                                ),
+                                                child: _videorController.value.initialized
+                                                ? SizedBox.expand(
+                                                  child: FittedBox(
+                                                    // If your background video doesn't look right, try changing the BoxFit property.
+                                                    // BoxFit.fill created the look I was going for.
+                                                      fit: BoxFit.cover,
+                                                      child: Container(
+                                                        decoration: BoxDecoration(
+                                                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                                                        ),
+                                                        width: _videorController.value.size?.width ?? 0,
+                                                        height: _videorController.value.size?.height ?? 0,
+                                                        child: VideoPlayer(
+                                                          _videorController,
+                                                        ),
+                                                      )
+                                                  ),
+                                                ) :
+                                                BCubeGridSpinner(
+                                                      color: Colors.transparent,
+                                                      size: SizeConfig.safeBlockVertical * 15,
+                                                    ),
                                               ),
                                             ),
                                             /*GridView.builder(
@@ -349,7 +407,9 @@ class ConfirmedOrderState extends State<ConfirmedOrder> with SingleTickerProvide
                                             //snapshot.order = OrderState(itemList: List<OrderEntry>(), date: DateTime.now(), position: "", total: 0.0, business: BusinessSnippet().toEmpty(), user: UserSnippet().toEmpty(), businessId: "");
                                             //StoreProvider.of<AppState>(context).dispatch(SetOrderListToEmpty());
                                             //StoreProvider.of<AppState>(context).dispatch(UpdateOrder(order));
-                                            StoreProvider.of<AppState>(context).dispatch(SetOrder(OrderState().toEmpty()));
+                                            widget.reserve ?
+                                              StoreProvider.of<AppState>(context).dispatch(SetOrderReservable(OrderReservableState().toEmpty())) :
+                                              StoreProvider.of<AppState>(context).dispatch(SetOrder(OrderState().toEmpty()));
                                             Navigator.of(context).popUntil(ModalRoute.withName('/bookingPage'));
                                           },
                                           textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),

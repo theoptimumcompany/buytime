@@ -12,6 +12,8 @@ import 'package:Buytime/reblox/model/category/category_state.dart';
 import 'package:Buytime/reblox/model/category/invitation/category_invite_state.dart';
 import 'package:Buytime/reblox/model/category/tree/category_tree_state.dart';
 import 'package:Buytime/reblox/model/order/order_list_state.dart';
+import 'package:Buytime/reblox/model/order/order_reservable_list_state.dart';
+import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/pipeline/pipeline.dart';
 import 'package:Buytime/reblox/model/pipeline/pipeline_list_state.dart';
@@ -29,6 +31,8 @@ import 'package:Buytime/reblox/reducer/category_invite_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
+import 'package:Buytime/reblox/reducer/order_reservable_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/order_reservable_reducer.dart';
 import 'package:Buytime/reblox/reducer/pipeline_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/pipeline_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/card_list_reducer.dart';
@@ -55,7 +59,9 @@ AppState appReducer(AppState state, dynamic action) {
   BusinessState businessState = businessReducer(state.business, action);
   BookingState bookingState = bookingReducer(state.booking, action);
   OrderState orderState = orderReducer(state.order, action);
+  OrderReservableState orderReservableState = orderReservableReducer(state.orderReservable, action);
   OrderListState orderListState = orderListReducer(state.orderList, action);
+  OrderReservableListState orderReservableListState = orderReservableListReducer(state.orderReservableList, action);
   BusinessListState businessListState = businessListReducer(state.businessList, action);
   BookingListState bookingListState = bookingListReducer(state.bookingList, action);
   StripeState stripeState = stripePaymentReducer(state.stripe, action);
@@ -80,7 +86,9 @@ AppState appReducer(AppState state, dynamic action) {
       business: businessState,
       booking: bookingState,
       order: orderState,
+      orderReservable: orderReservableState,
       orderList: orderListState,
+      orderReservableList: orderReservableListState,
       businessList: businessListState,
       bookingList: bookingListState,
       user: userState,

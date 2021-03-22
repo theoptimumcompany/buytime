@@ -5,6 +5,7 @@ import 'package:Buytime/UI/user/service/UI_U_ServiceReserve.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
+import 'package:Buytime/reblox/reducer/order_reservable_list_reducer.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
 import 'package:Buytime/reusable/buytime_icons.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -274,7 +275,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                     ),
                                   ),
                                 ),
-                                ///Service Name Text
+                                /*///Service Name Text
                                 Container(
                                   margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1.5),
                                   child: Text(
@@ -284,11 +285,11 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                       ///SizeConfig.safeBlockHorizontal * 4
                                     ),
                                   ),
-                                ),
+                                ),*/
                                 ///Amount
                                 !serviceState.switchSlots ?
                                 Container(
-                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
+                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
                                   child: Text(
                                     serviceState.price != null
                                         ? AppLocalizations.of(context).currencySpace + serviceState.price.toString() + AppLocalizations.of(context).slashOneUnit
@@ -334,7 +335,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                 Flexible(
                                   child: Container(
                                     width: double.infinity,
-                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, bottom: SizeConfig.safeBlockVertical * 1),
+                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, bottom: SizeConfig.safeBlockVertical * 1, top: SizeConfig.safeBlockVertical * 2),
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
@@ -342,17 +343,17 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                           margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3),
                                           child: Text(
                                             AppLocalizations.of(context).serviceDescription,
-                                            style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w600, fontSize: 16
+                                            style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w600, fontSize: 18
 
                                               ///SizeConfig.safeBlockHorizontal * 5
                                             ),
                                           ),
                                         ),
                                         Container(
-                                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, bottom: SizeConfig.safeBlockVertical * 2),
+                                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 2),
                                           child: Text(
                                             serviceState.description.isNotEmpty ? serviceState.description : AppLocalizations.of(context).loreIpsum,
-                                            style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w400, fontSize: 14
+                                            style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w400, fontSize: 16
 
                                               ///SizeConfig.safeBlockHorizontal * 4
                                             ),
@@ -400,20 +401,17 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                 },
                                 textColor: BuytimeTheme.UserPrimary,
                                 color: BuytimeTheme.BackgroundWhite,
-                                padding: EdgeInsets.all(15),
+                                //padding: EdgeInsets.all(15),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: new BorderRadius.circular(5),
                                 ),
-                                child: FittedBox(
-                                  fit: BoxFit.fitHeight,
-                                  child: Text(
-                                    AppLocalizations.of(context).addToCart,
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        fontFamily: BuytimeTheme.FontFamily,
-                                        fontWeight: FontWeight.w500,
-                                        letterSpacing: 1.25
-                                    ),
+                                child: Text(
+                                  AppLocalizations.of(context).addToCart,
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      fontFamily: BuytimeTheme.FontFamily,
+                                      fontWeight: FontWeight.w500,
+                                      letterSpacing: 1.25
                                   ),
                                 ),
                               )
@@ -446,7 +444,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                 },
                                 textColor: BuytimeTheme.TextWhite,
                                 color: BuytimeTheme.UserPrimary,
-                                padding: EdgeInsets.all(15),
+                                //padding: EdgeInsets.all(15),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: new BorderRadius.circular(5),
                                 ),
@@ -464,26 +462,33 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                         ],
                       ) :
                       ///Reserve
-                      Container(
-                          width: 158, ///SizeConfig.safeBlockHorizontal * 40
-                          height: 44,
-                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, bottom: SizeConfig.safeBlockVertical * 2),
-                          child: MaterialButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => ServiceReserve(serviceState: serviceState)),
-                              );
-                            },
-                            elevation: 0,
-                            hoverElevation: 0,
-                            focusElevation: 0,
-                            highlightElevation: 0,
-                            textColor: BuytimeTheme.TextWhite,
-                            color: BuytimeTheme.UserPrimary,
-                            padding: EdgeInsets.all(15),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: new BorderRadius.circular(5),
+                      MaterialButton(
+                        onPressed: () {
+                          StoreProvider.of<AppState>(context).dispatch(OrderReservableListRequest(widget.serviceState.serviceId));
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => ServiceReserve(serviceState: serviceState)),
+                          );
+                        },
+                        elevation: 0,
+                        hoverElevation: 0,
+                        focusElevation: 0,
+                        highlightElevation: 0,
+                        textColor: BuytimeTheme.TextWhite,
+                        color: BuytimeTheme.UserPrimary,
+                        //padding: EdgeInsets.all(15),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: new BorderRadius.circular(5),
+                        ),
+                        child: Container(
+                            width: 158, ///SizeConfig.safeBlockHorizontal * 40
+                            height: 44,
+                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, bottom: SizeConfig.safeBlockVertical * 2, right: SizeConfig.safeBlockHorizontal * 5),
+                            decoration: BoxDecoration(
+                                borderRadius: new BorderRadius.circular(5),
+                                border: Border.all(
+                                    color: BuytimeTheme.UserPrimary
+                                )
                             ),
                             child: Text(
                               AppLocalizations.of(context).reserveUpper,
@@ -493,8 +498,8 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                   fontWeight: FontWeight.w800,
                                   letterSpacing: 1.25
                               ),
-                            ),
-                          )
+                            )
+                        ),
                       ),
                     ],
                   ),

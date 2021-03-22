@@ -47,7 +47,7 @@ class UI_M_BusinessListDrawer extends StatefulWidget {
   _UI_M_BusinessListDrawerState createState() =>
       _UI_M_BusinessListDrawerState();
 }
-DrawerSelection _drawerSelection = DrawerSelection.BusinessList;
+DrawerSelection drawerSelection = DrawerSelection.BusinessList;
 class _UI_M_BusinessListDrawerState extends State<UI_M_BusinessListDrawer> {
 
 
@@ -131,7 +131,7 @@ class _UI_M_BusinessListDrawerState extends State<UI_M_BusinessListDrawer> {
               )
             ),
             child: ListTile(
-              selected: _drawerSelection == DrawerSelection.BusinessList,
+              selected: drawerSelection == DrawerSelection.BusinessList,
               //selectedTileColor: Color.fromRGBO(32, 124, 195, 0.3),
               autofocus: false,
               title: Text(
@@ -143,14 +143,14 @@ class _UI_M_BusinessListDrawerState extends State<UI_M_BusinessListDrawer> {
                   fontSize: 14,
                   fontFamily: BuytimeTheme.FontFamily,
                   letterSpacing: 0.1,
-                  color: _drawerSelection == DrawerSelection.BusinessList ? BuytimeTheme.AccentRed : BuytimeTheme.TextBlack,
+                  color: drawerSelection == DrawerSelection.BusinessList ? BuytimeTheme.AccentRed : BuytimeTheme.TextBlack,
                 ),
               ),
               //leading: Icon(Icons.list),
               onTap: () {
                 //Navigator.pop(context);
                 setState(() {
-                  _drawerSelection = DrawerSelection.BusinessList;
+                  drawerSelection = DrawerSelection.BusinessList;
                   Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
@@ -169,7 +169,7 @@ class _UI_M_BusinessListDrawerState extends State<UI_M_BusinessListDrawer> {
                 )
             ),
             child: ListTile(
-              selected: _drawerSelection == DrawerSelection.ActivityManagement,
+              selected: drawerSelection == DrawerSelection.ActivityManagement,
               //selectedTileColor: Color.fromRGBO(32, 124, 195, 0.3),
               autofocus: false,
               title: Text(
@@ -181,14 +181,14 @@ class _UI_M_BusinessListDrawerState extends State<UI_M_BusinessListDrawer> {
                   fontSize: 14,
                   fontFamily: BuytimeTheme.FontFamily,
                   letterSpacing: 0.1,
-                  color: _drawerSelection == DrawerSelection.ActivityManagement ? BuytimeTheme.AccentRed : BuytimeTheme.TextBlack,
+                  color: drawerSelection == DrawerSelection.ActivityManagement ? BuytimeTheme.AccentRed : BuytimeTheme.TextBlack,
                 ),
               ),
               //leading: Icon(Icons.list),
               onTap: () {
                 //Navigator.pop(context);
                 setState(() {
-                  _drawerSelection = DrawerSelection.ActivityManagement;
+                  drawerSelection = DrawerSelection.ActivityManagement;
                   Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
@@ -219,10 +219,10 @@ class _UI_M_BusinessListDrawerState extends State<UI_M_BusinessListDrawer> {
                       leading: Icon(Icons.emoji_emotions_outlined,
                           color: BuytimeTheme.TextMedium, size: 24),
                       onTap: () {
-                        StoreProvider.of<AppState>(context)
+                        /*StoreProvider.of<AppState>(context)
                             .dispatch(SetBusinessListToEmpty());
                         StoreProvider.of<AppState>(context)
-                            .dispatch(SetOrderListToEmpty());
+                            .dispatch(SetOrderListToEmpty());*/
                         Navigator.pushReplacement(context,
                             MaterialPageRoute(builder: (context) => Landing()));
                       },
@@ -299,6 +299,7 @@ class _UI_M_BusinessListDrawerState extends State<UI_M_BusinessListDrawer> {
                         StoreProvider.of<AppState>(context)
                             .dispatch(SetUserStateToEmpty());
                         //Torno al Login
+                        drawerSelection = DrawerSelection.BusinessList;
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(builder: (context) => Home()),

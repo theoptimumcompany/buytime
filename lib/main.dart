@@ -17,10 +17,13 @@ import 'package:Buytime/reblox/model/card/card_list_state.dart';
 import 'package:Buytime/reblox/model/card/card_state.dart';
 import 'package:Buytime/reblox/model/category/invitation/category_invite_state.dart';
 import 'package:Buytime/reblox/model/category/tree/category_tree_state.dart';
+import 'package:Buytime/reblox/model/order/order_reservable_list_state.dart';
+import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
 import 'package:Buytime/reblox/model/service/service_slot_time_state.dart';
 import 'package:Buytime/reblox/model/statistics_state.dart';
 import 'package:Buytime/reblox/model/stripe/stripe_list_state.dart';
 import 'package:Buytime/services/category_invite_service_epic.dart';
+import 'package:Buytime/services/order_reservable_service_epic.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/UI/user/login/UI_U_Home.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
@@ -114,10 +117,15 @@ void main(){
     PipelineRequestService(),
     PipelineListRequestService(),
     OrderListRequestService(),
+    OrderReservableListRequestService(),
     OrderRequestService(),
+    OrderReservableRequestService(),
     OrderUpdateService(),
+    OrderReservableUpdateService(),
     OrderCreateService(),
+    OrderReservableCreateService(),
     AddingStripePaymentMethodRequest(),
+    AddingReservableStripePaymentMethodRequest(),
   ]);
   final _initialState = AppState(
     category: CategoryState().toEmpty(),
@@ -126,7 +134,9 @@ void main(){
     business: BusinessState().toEmpty(),
     booking: BookingState().toEmpty(),
     order: OrderState().toEmpty(),
+    orderReservable: OrderReservableState().toEmpty(),
     orderList: OrderListState().toEmpty(),
+    orderReservableList: OrderReservableListState().toEmpty(),
     stripe: StripeState().toEmpty(),
     stripeListState: StripeListState().toEmpty(),
     businessList: BusinessListState().toEmpty(),

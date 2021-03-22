@@ -10,6 +10,8 @@ import 'package:Buytime/reblox/model/category/category_list_state.dart';
 import 'package:Buytime/reblox/model/category/category_state.dart';
 import 'package:Buytime/reblox/model/category/invitation/category_invite_state.dart';
 import 'package:Buytime/reblox/model/order/order_list_state.dart';
+import 'package:Buytime/reblox/model/order/order_reservable_list_state.dart';
+import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/pipeline/pipeline.dart';
 import 'package:Buytime/reblox/model/pipeline/pipeline_list_state.dart';
@@ -49,7 +51,9 @@ class AppState {
   BusinessListState businessList;
   BookingListState bookingList;
   OrderState order;
+  OrderReservableState orderReservable;
   OrderListState orderList;
+  OrderReservableListState orderReservableList;
   StripeState stripe;
   StripeListState stripeListState;
   UserState user;
@@ -73,7 +77,9 @@ class AppState {
     @required this.business,
     @required this.booking,
     @required this.order,
+    @required this.orderReservable,
     @required this.orderList,
+    @required this.orderReservableList,
     @required this.stripe,
     this.stripeListState,
     @required this.businessList,
@@ -100,9 +106,11 @@ class AppState {
     business = BusinessState();
     booking = BookingState();
     order = OrderState();
+    orderReservable = OrderReservableState();
     stripe = StripeState();
     stripeListState = StripeListState();
     orderList = OrderListState();
+    orderReservableList = OrderReservableListState();
     businessList = BusinessListState();
     bookingList = BookingListState();
     user = UserState();
@@ -127,7 +135,9 @@ class AppState {
       BusinessState business,
       BookingState booking,
       OrderState order,
+      OrderReservableState orderReservable,
       OrderListState orderList,
+      OrderReservableListState orderReservableList,
       StripeState stripe,
         StripeListState stripeListState,
       BusinessListState businessList,
@@ -152,7 +162,9 @@ class AppState {
     this.business = business;
     this.booking = booking;
     this.order = order;
+    this.orderReservable = orderReservable;
     this.orderList = orderList;
+    this.orderReservableList = orderReservableList;
     this.stripe = stripe;
     this.stripeListState = stripeListState;
     this.businessList = businessList;

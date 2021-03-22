@@ -2,6 +2,7 @@ import 'package:Buytime/UI/management/business/UI_M_business_list.dart';
 import 'package:Buytime/UI/user/cart/UI_U_Cart.dart';
 import 'package:Buytime/UI/user/login/UI_U_Home.dart';
 import 'package:Buytime/UI/user/search/UI_U_FilterGeneral.dart';
+import 'package:Buytime/UI/user/service/UI_U_ServiceReserve.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
@@ -22,6 +23,7 @@ import 'package:Buytime/reblox/reducer/category_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_tree_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
+import 'package:Buytime/reblox/reducer/order_reservable_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/pipeline_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/pipeline_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/service_list_reducer.dart';
@@ -192,6 +194,16 @@ class _BookingPageState extends State<BookingPage> {
             : Container(),
       ],
     );
+  }
+
+  void undoDeletion(index, item) {
+    /*
+  This method accepts the parameters index and item and re-inserts the {item} at
+  index {index}
+  */
+    setState(() {
+      serviceList.insert(index, item);
+    });
   }
 
   @override
@@ -487,7 +499,7 @@ class _BookingPageState extends State<BookingPage> {
                                         top: SizeConfig.safeBlockVertical * 2,
                                         left: SizeConfig.safeBlockHorizontal * 5,
                                         right: SizeConfig.safeBlockHorizontal * 5,
-                                        bottom: SizeConfig.safeBlockVertical * 0),
+                                        bottom: SizeConfig.safeBlockVertical * 4),
                                     height: SizeConfig.safeBlockHorizontal * 20,
                                     child: TextFormField(
                                       controller: _searchController,
@@ -550,6 +562,65 @@ class _BookingPageState extends State<BookingPage> {
                                       },
                                     ),
                                   ),
+                                  ///My next services
+                                  /*Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      ///Just show me
+                                      Container(
+                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1),
+                                        child: Text(
+                                          AppLocalizations.of(context).justShowMe,
+                                          style: TextStyle(
+                                            //letterSpacing: SizeConfig.safeBlockVertical * .4,
+                                              fontFamily: BuytimeTheme.FontFamily,
+                                              color: BuytimeTheme.TextBlack,
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: 18
+
+                                            ///SizeConfig.safeBlockHorizontal * 4
+                                          ),
+                                        ),
+                                      ),
+                                      subCategoryList.isNotEmpty ?
+                                      ///List
+                                      Container(
+                                        height: SizeConfig.screenWidth / 3,
+                                        width: double.infinity,
+                                        child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
+                                          SliverList(
+                                            delegate: SliverChildBuilderDelegate(
+                                                  (context, index) {
+                                                //MenuItemModel menuItem = menuItems.elementAt(index);
+                                                CategoryState category = subCategoryList.elementAt(index);
+                                                return Container(
+                                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 2),
+                                                  child: FindYourInspirationCardWidget(SizeConfig.screenWidth / 3 - 2, SizeConfig.screenWidth / 3 - 2, category, false),
+                                                );
+                                              },
+                                              childCount: subCategoryList.length,
+                                            ),
+                                          ),
+                                        ]),
+                                      ) :
+                                      ///No List
+                                      Container(
+                                        height: SizeConfig.safeBlockVertical * 8,
+                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                        decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
+                                        child: Center(
+                                            child: Container(
+                                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 4),
+                                              alignment: Alignment.centerLeft,
+                                              child: Text(
+                                                AppLocalizations.of(context).noSubCategoryFound,
+                                                style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextGrey, fontWeight: FontWeight.w500, fontSize: 16),
+                                              ),
+                                            )),
+                                      ),
+                                    ],
+                                  ),*/
                                 ],
                               ),
                             ),
@@ -558,7 +629,7 @@ class _BookingPageState extends State<BookingPage> {
                           Flexible(
                             child: Container(
                               margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
-                              padding: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2),
+                              padding: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 5),
                               color: BuytimeTheme.BackgroundWhite,
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
@@ -581,7 +652,45 @@ class _BookingPageState extends State<BookingPage> {
                                       ///Service List
                                       Column(
                                           children: serviceList
-                                              .map((ServiceState service) => Column(
+                                              .map((ServiceState service) {
+                                            int index;
+                                            for (int i = 0; i < serviceList.length; i++) {
+                                              if (serviceList[i].serviceId == service.serviceId) index = i;
+                                            }
+                                            return Column(
+                                              children: [
+                                                Dismissible(
+                                                  // Each Dismissible must contain a Key. Keys allow Flutter to
+                                                  // uniquely identify widgets.
+                                                  key: UniqueKey(),
+                                                  // Provide a function that tells the app
+                                                  // what to do after an item has been swiped away.
+                                                  direction: DismissDirection.endToStart,
+                                                  onDismissed: (direction) {
+                                                    // Remove the item from the data source.
+                                                    setState(() {
+                                                      serviceList.removeAt(index);
+                                                    });
+                                                    debugPrint('UI_U_SearchPage => SX to BOOK');
+                                                    if (service.switchSlots) {
+                                                      StoreProvider.of<AppState>(context).dispatch(OrderReservableListRequest(service.serviceId));
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(builder: (context) => ServiceReserve(serviceState: service)),
+                                                      );
+                                                    } else {
+                                                      order.business.name = snapshot.business.name;
+                                                      order.business.id = snapshot.business.id_firestore;
+                                                      order.user.name = snapshot.user.name;
+                                                      order.user.id = snapshot.user.uid;
+                                                      order.addItem(service, snapshot.business.ownerId);
+                                                      order.cartCounter++;
+                                                      //StoreProvider.of<AppState>(context).dispatch(SetOrderCartCounter(order.cartCounter));
+                                                      StoreProvider.of<AppState>(context).dispatch(SetOrder(order));
+                                                    }
+                                                    undoDeletion(index, service);
+                                                  },
+                                                  child: Column(
                                                     children: [
                                                       BookingListServiceListItem(service),
                                                       Container(
@@ -590,10 +699,37 @@ class _BookingPageState extends State<BookingPage> {
                                                         color: BuytimeTheme.DividerGrey,
                                                       )
                                                     ],
-                                                  ))
-                                              .toList(),
-                                        )
-                                      :
+                                                  ),
+                                                  background: Container(
+                                                    color: BuytimeTheme.BackgroundWhite,
+                                                    //margin: EdgeInsets.symmetric(horizontal: 15),
+                                                    alignment: Alignment.centerRight,
+                                                  ),
+                                                  secondaryBackground: Container(
+                                                    color: BuytimeTheme.UserPrimary,
+                                                    //margin: EdgeInsets.symmetric(horizontal: 15),
+                                                    alignment: Alignment.centerRight,
+                                                    child: Container(
+                                                      margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 2.5),
+                                                      child: Icon(
+                                                        Icons.add_shopping_cart,
+                                                        size: 24,
+
+                                                        ///SizeConfig.safeBlockHorizontal * 7
+                                                        color: BuytimeTheme.SymbolWhite,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                Container(
+                                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 38),
+                                                  height: SizeConfig.safeBlockVertical * .2,
+                                                  color: BuytimeTheme.DividerGrey,
+                                                )
+                                              ],
+                                            );
+                                          }).toList(),
+                                        ) :
                                       ///No List
                                       Container(
                                           height: SizeConfig.safeBlockVertical * 8,
@@ -971,7 +1107,7 @@ class _BookingPageState extends State<BookingPage> {
                                           margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1.5),
                                           child: Text(
                                             AppLocalizations.of(context).logOut,
-                                            style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: Colors.black.withOpacity(.7), fontWeight: FontWeight.w500, fontSize: 16),
+                                            style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w500, fontSize: 16),
                                           ),
                                         ),
                                         '',

@@ -3,6 +3,8 @@ import 'package:Buytime/UI/user/cart/UI_U_ConfirmedOrder.dart';
 import 'package:Buytime/UI/user/cart/tab/T_credit_cards.dart';
 import 'package:Buytime/UI/user/cart/tab/T_room.dart';
 import 'package:Buytime/reblox/model/card/card_state.dart';
+import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
+import 'package:Buytime/reblox/reducer/order_reservable_reducer.dart';
 import 'package:Buytime/reblox/reducer/stripe_list_payment_reducer.dart';
 import 'package:Buytime/reblox/reducer/stripe_payment_reducer.dart';
 import 'package:Buytime/utils/size_config.dart';
@@ -24,6 +26,9 @@ import 'package:flutter_redux/flutter_redux.dart';
 class ConfirmOrder extends StatefulWidget{
   final String title = 'confirmOrder';
 
+  bool reserve;
+  ConfirmOrder({Key key, this.reserve}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() => ConfirmOrderState();
 }
@@ -34,6 +39,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
   int _selectedIndex = 0;
 
   OrderState orderState;
+  OrderReservableState orderReservableState;
   @override
   void initState() {
     super.initState();
@@ -62,7 +68,11 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
             }, ///TODO Rememebr _test
             converter: (store) => store.state,
             builder: (context, snapshot) {
-              orderState = snapshot.order;
+              if(widget.reserve)
+                orderReservableState = snapshot.orderReservable;
+              else
+                orderState = snapshot.order;
+
               bool selected = false;
               List<CardState> tmpList = StoreProvider.of<AppState>(context).state.cardListState.cardListState;
               tmpList.forEach((element) {
@@ -70,6 +80,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                   selected = true;
                 }
               });
+
               return Scaffold(
                   appBar: BuytimeAppbar(
                     background: BuytimeTheme.UserPrimary,
@@ -144,12 +155,17 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                   ///Total Price
                                   Container(
                                     //color: Colors.black87,
-                                      child: StoreConnector<AppState, OrderState>(
-                                          converter: (store) => store.state.order,
+                                      child: StoreConnector<AppState, AppState>(
+                                          converter: (store) => store.state,
                                           rebuildOnChange: true,
                                           builder: (context, snapshot) {
-                                            print("UI_U_cart => " + snapshot.itemList.length.toString());
-                                            return OrderTotal(media: media, orderState: snapshot);
+                                            if(widget.reserve){
+                                              print("UI_U_ConfirmOrder => " + snapshot.orderReservable.itemList.length.toString());
+                                              return OrderTotal(media: media, orderState: OrderState.fromReservableState(snapshot.orderReservable));
+                                            }else{
+                                              print("UI_U_ConfirmOrder => " + snapshot.order.itemList.length.toString());
+                                              return OrderTotal(media: media, orderState: snapshot.order);
+                                            }
                                           }
                                       )
                                   ),
@@ -254,11 +270,41 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                           focusElevation: 0,
                                           highlightElevation: 0,
                                           onPressed: selected && _selectedIndex == 0 ? () {
-                                            StoreProvider.of<AppState>(context).dispatch(SetOrderProgress("in_progress"));
-                                            StoreProvider.of<AppState>(context).dispatch(CreateOrder(snapshot.order));
-                                            Navigator.push(context, MaterialPageRoute(builder: (context) => ConfirmedOrder(_controller.index)),);
+                                            if(widget.reserve){
+                                              StoreProvider.of<AppState>(context).dispatch(SetOrderReservableProgress("in_progress"));
+                                              for(int i = 0; i < snapshot.orderReservable.itemList.length; i++){
+                                                OrderReservableState reservable = OrderReservableState(
+                                                  position: snapshot.orderReservable.position,
+                                                    date: snapshot.orderReservable.itemList[i].date,
+                                                    itemList: [snapshot.orderReservable.itemList[i]],
+                                                    total: snapshot.orderReservable.itemList[i].price,
+                                                    tip: snapshot.orderReservable.tip,
+                                                    tax: snapshot.orderReservable.tax,
+                                                    taxPercent: snapshot.orderReservable.taxPercent,
+                                                    amount: 1,
+                                                    progress: snapshot.orderReservable.progress,
+                                                    addCardProgress: snapshot.orderReservable.addCardProgress,
+                                                    navigate: snapshot.orderReservable.navigate,
+                                                    businessId: snapshot.orderReservable.businessId,
+                                                    userId: snapshot.orderReservable.userId,
+                                                    business: snapshot.orderReservable.business,
+                                                    user: snapshot.orderReservable.user,
+                                                    selected: [snapshot.orderReservable.selected[i]],
+                                                    cartCounter: snapshot.orderReservable.cartCounter,
+                                                    serviceId: snapshot.orderReservable.serviceId
+                                                );
+
+                                                debugPrint('UI_U_ConfirmOrder => Date: ${reservable.date}');
+                                                StoreProvider.of<AppState>(context).dispatch(CreateOrderReservable(reservable));
+                                              }
+                                              //StoreProvider.of<AppState>(context).dispatch(CreateOrderReservable(snapshot.orderReservable));
+                                            }else{
+                                              StoreProvider.of<AppState>(context).dispatch(SetOrderProgress("in_progress"));
+                                              StoreProvider.of<AppState>(context).dispatch(CreateOrder(snapshot.order));
+                                            }
+                                            Navigator.push(context, MaterialPageRoute(builder: (context) => ConfirmedOrder(_controller.index, widget.reserve)),);
                                           } : _selectedIndex == 1 ? (){
-                                            Navigator.push(context, MaterialPageRoute(builder: (context) => ConfirmedOrder(_controller.index)),);
+                                            Navigator.push(context, MaterialPageRoute(builder: (context) => ConfirmedOrder(_controller.index, widget.reserve)),);
                                           } : null,
                                           textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
                                           color: BuytimeTheme.UserPrimary,
@@ -267,16 +313,19 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                           shape: RoundedRectangleBorder(
                                             borderRadius: new BorderRadius.circular(5),
                                           ),
-                                          child: Text(
-                                            orderState.itemList.isNotEmpty && (orderState.itemList.first.time == null || orderState.itemList.first.time.isEmpty)
-                                                ? AppLocalizations.of(context).confirmUpper
-                                                : AppLocalizations.of(context).payUpper,
-                                            style: TextStyle(
-                                              letterSpacing: 1.25,
-                                              fontSize: 14,
-                                              fontFamily: BuytimeTheme.FontFamily,
-                                              fontWeight: FontWeight.w500,
-                                              color: BuytimeTheme.TextWhite,
+                                          child: FittedBox(
+                                            fit: BoxFit.scaleDown,
+                                            child: Text(
+                                              !widget.reserve
+                                                  ? AppLocalizations.of(context).confirmUpper
+                                                  : '${AppLocalizations.of(context).completeBooking.toString().toUpperCase()}',
+                                              style: TextStyle(
+                                                letterSpacing: 1.25,
+                                                fontSize: 14,
+                                                fontFamily: BuytimeTheme.FontFamily,
+                                                fontWeight: FontWeight.w500,
+                                                color: BuytimeTheme.TextWhite,
+                                              ),
                                             ),
                                           ),
                                         )

@@ -112,7 +112,7 @@ class BookingRequestService implements EpicClass<AppState> {
 
       QuerySnapshot bookingSnapshot = await FirebaseFirestore.instance /// 1 READ - ? DOC
           .collection("booking")
-          .where("userEmail", arrayContains: store.state.user.email)
+          //.where("userEmail", arrayContains: store.state.user.email)
           .where('booking_code', isEqualTo: event.bookingId)
           //.where('status', isEqualTo: 'sent')
           .get();

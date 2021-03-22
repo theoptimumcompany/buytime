@@ -10,11 +10,51 @@ import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reblox/reducer/statistics_reducer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:redux_epics/redux_epics.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:http/http.dart' as http;
 import 'package:Buytime/services/file_upload_service.dart' if (dart.library.html) 'package:Buytime/services/file_upload_service_web.dart';
 import 'package:stripe_sdk/stripe_sdk.dart';
+
+List<DateTime> getPeriod(DateTime dateTime){
+  //String weekdayDate = DateFormat('E d M y').format(dateTime);
+  String weekday = DateFormat('E').format(dateTime);
+
+  int unix = dateTime.millisecondsSinceEpoch;
+
+  //String period = '';
+  List<DateTime> period = [];
+
+  if('Mon' == weekday) {
+    period = getStringPeriod(unix, 0, 6);
+  }else if('Tue' == weekday){
+    period = getStringPeriod(unix, 1, 5);
+  }else if('Wed' == weekday){
+    period = getStringPeriod(unix, 2, 4);
+  }else if('Thu' == weekday){
+    period = getStringPeriod(unix, 3, 3);
+  }else if('Fri' == weekday){
+    period = getStringPeriod(unix, 4, 2);
+  }else if('Sat' == weekday){
+    period = getStringPeriod(unix, 5, 1);
+  }else{
+    period = getStringPeriod(unix, 6, 0);
+  }
+
+  debugPrint('Period: $period');
+
+  return period;
+}
+
+List<DateTime> getStringPeriod(int unix, startValue, endValue){
+  int startUnix = unix - (86400000 * startValue);
+  int endUnix =  unix + (86400000 * endValue);
+  debugPrint('startUnix: $startUnix - endUnix: $endUnix');
+  DateTime startStringUnix = DateTime.fromMillisecondsSinceEpoch(startUnix, isUtc: true);
+  DateTime endStringUnix = DateTime.fromMillisecondsSinceEpoch(endUnix, isUtc: true);
+  return [startStringUnix, endStringUnix];
+}
 
 class OrderListRequestService implements EpicClass<AppState> {
   StatisticsState statisticsState;
@@ -27,6 +67,7 @@ class OrderListRequestService implements EpicClass<AppState> {
        //debugPrint("ORDER_SERVICE_EPIC - OrderListRequestService =>  BUSINESS ID: ${store.state.business.id_firestore}");
         String userId = store.state.business.id_firestore;
         List<BusinessState> businessList = store.state.businessList.businessListState;
+        List<DateTime> period = getPeriod(DateTime.now());
         orderStateList = [];
         int ordersFirebaseDocs = 0;
         int read = 0;
@@ -35,6 +76,8 @@ class OrderListRequestService implements EpicClass<AppState> {
           QuerySnapshot ordersFirebase = await FirebaseFirestore.instance.collection("order") /// 1 READ - ? DOC
               //.where("progress", isEqualTo: "paid")
               .where("businessId", isEqualTo: businessList[i].id_firestore)
+              .where("date", isGreaterThanOrEqualTo: period[0])
+              .where("date", isLessThanOrEqualTo: period[1])
               .get();
 
           read++;

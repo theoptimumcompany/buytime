@@ -478,21 +478,22 @@ class RegistrationState extends State<Registration> {
             key: _formKey,
             child: SafeArea(
               child: SingleChildScrollView(
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(minHeight: (SizeConfig.safeBlockVertical * 100) - 56),
+                child: Container(
+                  height: (SizeConfig.safeBlockVertical * 100) - 56,
+                  //constraints: BoxConstraints(minHeight: (SizeConfig.safeBlockVertical * 100) - 56),
                   child: Column(mainAxisSize: MainAxisSize.min, children: [
                     ///Logo & Email & Password & & Error message & Sign up button
-                    Flexible(
+                    Expanded(
                       flex: 6,
                       child: Container(
-                        height: SizeConfig.safeBlockVertical * 75,
+                        //height: SizeConfig.safeBlockVertical * 75,
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             ///Logo
                             Container(
-                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
+                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0),
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.all(Radius.circular(20)),
@@ -506,7 +507,7 @@ class RegistrationState extends State<Registration> {
                               ],*/
                               ),
                               child: Image.asset(
-                                'assets/img/img_buytime.png',
+                                'assets/img/brand/logo.png',
                                 height: 96,
 
                                 ///media.height * 0.12
@@ -750,14 +751,13 @@ class RegistrationState extends State<Registration> {
                         ),
                       ),
                     ),
-
                     ///Google & Facebook & Apple Sign up buttons
-                    Flexible(
-                      flex: 3,
+                    Expanded(
+                      flex: 2,
                       child: Container(
-                        height: SizeConfig.safeBlockVertical * 30,
+                        //height: SizeConfig.safeBlockVertical * 30,
                         //height: 243, ///285
-                        padding: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 5, bottom: SizeConfig.safeBlockVertical * 5),
+                        padding: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5, bottom: SizeConfig.safeBlockVertical * 2.5),
                         color: BuytimeTheme.BackgroundCerulean,
                         child: Column(mainAxisAlignment: MainAxisAlignment.center, mainAxisSize: MainAxisSize.min, children: [
                           BrandedButton("assets/img/google_logo.png", AppLocalizations.of(context).logInWithGoogle, initiateGoogleSignIn),
@@ -769,7 +769,9 @@ class RegistrationState extends State<Registration> {
                   ]),
                 ),
               ),
-            )));
+            )
+        )
+    );
   }
 
   @override

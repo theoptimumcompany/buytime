@@ -10,6 +10,7 @@ import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
+import 'package:Buytime/reblox/reducer/order_reservable_list_reducer.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
 import 'package:Buytime/reusable/booking_page_service_list_item.dart';
 import 'package:Buytime/reusable/buytime_icons.dart';
@@ -202,7 +203,8 @@ class _FilterByCategoryState extends State<FilterByCategory> {
           });
         });
         categoryListState = store.state.categoryList;
-        categoryList = categoryListState.categoryListState;
+        categoryList.addAll(categoryListState.categoryListState);
+        categoryList.remove(widget.categoryState);
       },
       builder: (context, snapshot) {
         List<ServiceState> s = [];
@@ -352,7 +354,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        ///Just shoe me
+                        ///Just show me
                         Flexible(
                           child: Container(
                             margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
@@ -616,6 +618,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                                       } else {
                                                         debugPrint('UI_U_SearchPage => SX to BOOK');
                                                         if (service.switchSlots) {
+                                                          StoreProvider.of<AppState>(context).dispatch(OrderReservableListRequest(service.serviceId));
                                                           Navigator.push(
                                                             context,
                                                             MaterialPageRoute(builder: (context) => ServiceReserve(serviceState: service)),
@@ -730,7 +733,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                         ///Inspiration
                         Flexible(
                           child: Container(
-                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
+                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, bottom: SizeConfig.safeBlockVertical * 2),
                             padding: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 1),
                             color: BuytimeTheme.BackgroundWhite,
                             child: Column(
@@ -897,9 +900,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                             showAll && row3.isNotEmpty ? inspiration(row3) : Container(),
                                             showAll && row4.isNotEmpty ? inspiration(row4) : Container(),
                                           ],
-                                        ))
-                                    :
-
+                                        )) :
                                     ///No Category
                                     Container(
                                         height: SizeConfig.safeBlockVertical * 8,

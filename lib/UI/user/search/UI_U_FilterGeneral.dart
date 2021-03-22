@@ -7,6 +7,7 @@ import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
+import 'package:Buytime/reblox/reducer/order_reservable_list_reducer.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
 import 'package:Buytime/reusable/booking_page_service_list_item.dart';
 import 'package:Buytime/reusable/buytime_icons.dart';
@@ -395,6 +396,7 @@ class _FilterGeneralState extends State<FilterGeneral> {
                                                 } else {
                                                   debugPrint('UI_U_SearchPage => SX to BOOK');
                                                   if (service.switchSlots) {
+                                                    StoreProvider.of<AppState>(context).dispatch(OrderReservableListRequest(service.serviceId));
                                                     Navigator.push(
                                                       context,
                                                       MaterialPageRoute(builder: (context) => ServiceReserve(serviceState: service)),

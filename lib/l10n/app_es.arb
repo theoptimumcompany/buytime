@@ -163,7 +163,7 @@
   "hotelName": "Nombre del Hotel",
   "locationCountry": "Ubicación, País",
   "guestsNumber": "## Huéspedes",
-  "confirmBooking": "CONFIRMA RESERVA",
+  "confirmBooking": "Confirma Reserva",
   "somethingIsNotRight": "ALGO NO ES CORRECTO",
   "myBookings": "Reservas pasadas",
   "yourBookingWill": "Su reserva anterior con nosotros aparecerá aquí. ¿Te gustaría saber más sobre la red Buytime? ",
@@ -369,5 +369,7 @@
   "noReservationYet": "You don’t have reservations yet",
   "pending": "Pending",
   "accepted": "Accepted",
-  "accept": "Accept"
+  "accept": "Accept",
+  "vat": "VAT Included",
+  "completeBooking": "Complete Booking"
 }

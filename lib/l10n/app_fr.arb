@@ -163,7 +163,7 @@
   "hotelName": "Hotel Name",
   "locationCountry": "Location, Country",
   "guestsNumber": "## guests",
-  "confirmBooking": "CONFIRM BOOKING",
+  "confirmBooking": "Confirm Booking",
   "somethingIsNotRight": "SOMETHING ISN'T RIGHT",
   "myBookings": "My bookings",
   "yourBookingWill": "Your bookings will appear here.\n\nWould you like to know more about Buytime network?",
@@ -370,5 +370,7 @@
   "noReservationYet": "You don’t have reservations yet",
   "pending": "Pending",
   "accepted": "Accepted",
-  "accept": "Accept"
+  "accept": "Accept",
+  "vat": "VAT Included",
+  "completeBooking": "Complete Booking"
 }

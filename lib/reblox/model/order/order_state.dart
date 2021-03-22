@@ -1,5 +1,7 @@
 import 'package:Buytime/reblox/model/business/snippet/business_snippet_state.dart';
 import 'package:Buytime/reblox/model/order/order_entry.dart';
+import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
+import 'package:Buytime/reblox/model/order/selected_entry.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
 import 'package:Buytime/utils/utils.dart';
@@ -27,7 +29,7 @@ class OrderState {
   UserSnippet user;
   String businessId;
   String userId;
-  List<List<int>> selected;
+  List<SelectedEntry> selected;
   int cartCounter = 0;
 
   OrderState({
@@ -72,6 +74,26 @@ class OrderState {
     this.cartCounter = state.cartCounter;
   }
 
+  OrderState.fromReservableState(OrderReservableState state) {
+    this.itemList = state.itemList;
+    this.date = state.date;
+    this.position = state.position;
+    this.total = state.total;
+    this.tip = state.tip;
+    this.tax = state.tax;
+    this.taxPercent = state.taxPercent;
+    this.amount = state.amount;
+    this.progress = state.progress;
+    this.addCardProgress = state.addCardProgress;
+    this.navigate = state.navigate;
+    this.business = state.business;
+    this.businessId = state.businessId;
+    this.userId = state.userId;
+    this.user = state.user;
+    this.selected = state.selected;
+    this.cartCounter = state.cartCounter;
+  }
+
   OrderState copyWith({
     List<OrderEntry> itemList,
     DateTime date,
@@ -88,7 +110,7 @@ class OrderState {
     String userId,
     BusinessSnippet business,
     UserSnippet user,
-    List<List<int>> selected,
+    List<SelectedEntry> selected,
     int cartCounter
   }) {
     return OrderState(
