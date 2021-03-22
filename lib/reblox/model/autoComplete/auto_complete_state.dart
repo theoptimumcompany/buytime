@@ -73,8 +73,17 @@ class AutoCompleteState {
     });
 
     debugPrint('auto_complete_state => List: $append');
-    await storage.write(key: 'autoComplete', value: append);
+    await storage.write(
+        key: 'autoComplete',
+        value: append,
+      //iOptions: _getIOSOptions()
+    );
+
   }
+
+  IOSOptions _getIOSOptions() => IOSOptions(
+    //accountName: _getAccountName(),
+  );
 
   Future<List<AutoCompleteState>> readFromStorage() async {
     List<AutoCompleteState> list = [];

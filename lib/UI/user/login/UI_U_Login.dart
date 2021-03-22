@@ -595,6 +595,9 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
                               if (didAuthenticate) {
                                 _emailController.text = autoCompleteList.elementAt(index).email;
                                 _passwordController.text = autoCompleteList.elementAt(index).password;
+                                if (_formKey.currentState.validate() && !_isRequestFlying) {
+                                  _signInWithEmailAndPassword();
+                                }
                                 closeMenu();
                               }
                             },
@@ -717,21 +720,21 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
                   key: _formKey,
                   child: SafeArea(
                     child: SingleChildScrollView(
-                      child: ConstrainedBox(
-                        constraints: BoxConstraints(minHeight: (SizeConfig.safeBlockVertical * 100) - 56),
+                      child: Container(
+                        height: (SizeConfig.safeBlockVertical * 100) - 56,
                         child: Column(mainAxisSize: MainAxisSize.min, children: [
                           ///Logo & Email & Password & & Error message & Log in button
-                          Flexible(
+                          Expanded(
                             flex: 6,
                             child: Container(
-                              height: SizeConfig.safeBlockVertical * 75,
+                              //height: SizeConfig.safeBlockVertical * 75,
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   ///Logo
                                   Container(
-                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
+                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0),
                                     decoration: BoxDecoration(
                                       color: Colors.white,
                                       borderRadius: BorderRadius.all(Radius.circular(20)),
@@ -745,7 +748,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
                               ],*/
                                     ),
                                     child: Image.asset(
-                                      'assets/img/img_buytime.png',
+                                      'assets/img/brand/logo.png',
                                       height: 96,
 
                                       ///media.height * 0.12
@@ -793,62 +796,62 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
                                               children: [
                                                 Flexible(
                                                     child: Container(
-                                                  key: _key,
-                                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5),
-                                                  height: 55,
+                                                      key: _key,
+                                                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5),
+                                                      height: 55,
 
-                                                  ///SizeConfig.safeBlockHorizontal * 14
-                                                  //width: 2,
-                                                  child: TextFormField(
-                                                    controller: _emailController,
-                                                    textAlign: TextAlign.start,
-                                                    keyboardType: TextInputType.emailAddress,
-                                                    textInputAction: TextInputAction.next,
-                                                    autofillHints: [AutofillHints.email],
-                                                    decoration: InputDecoration(
-                                                      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                                      focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                                      errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                                      labelText: AppLocalizations.of(context).emailAddress,
-                                                      //hintText: "email *",
-                                                      //hintStyle: TextStyle(color: Color(0xff666666)),
-                                                      labelStyle: TextStyle(
-                                                        fontFamily: BuytimeTheme.FontFamily,
-                                                        color: Color(0xff666666),
-                                                        fontWeight: FontWeight.w400,
-                                                      ),
-                                                    ),
-                                                    style: TextStyle(
-                                                      fontFamily: BuytimeTheme.FontFamily,
-                                                      color: Color(0xff666666),
-                                                      fontWeight: FontWeight.w800,
-                                                    ),
-                                                    validator: (String value) {
-                                                      setState(() {
-                                                        if (value.isNotEmpty && EmailValidator.validate(value)) {
-                                                          emailHasError = false;
-                                                        } else
-                                                          emailHasError = true;
-                                                      });
-                                                      return null;
-                                                    },
-                                                    onTap: autoCompleteList.isNotEmpty
-                                                        ? () async {
-                                                            if (isMenuOpen) {
-                                                              closeMenu();
-                                                            } else {
-                                                              openMenu();
-                                                            }
+                                                      ///SizeConfig.safeBlockHorizontal * 14
+                                                      //width: 2,
+                                                      child: TextFormField(
+                                                        controller: _emailController,
+                                                        textAlign: TextAlign.start,
+                                                        keyboardType: TextInputType.emailAddress,
+                                                        textInputAction: TextInputAction.next,
+                                                        autofillHints: [AutofillHints.email],
+                                                        decoration: InputDecoration(
+                                                          enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                          focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                          errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                          labelText: AppLocalizations.of(context).emailAddress,
+                                                          //hintText: "email *",
+                                                          //hintStyle: TextStyle(color: Color(0xff666666)),
+                                                          labelStyle: TextStyle(
+                                                            fontFamily: BuytimeTheme.FontFamily,
+                                                            color: Color(0xff666666),
+                                                            fontWeight: FontWeight.w400,
+                                                          ),
+                                                        ),
+                                                        style: TextStyle(
+                                                          fontFamily: BuytimeTheme.FontFamily,
+                                                          color: Color(0xff666666),
+                                                          fontWeight: FontWeight.w800,
+                                                        ),
+                                                        validator: (String value) {
+                                                          setState(() {
+                                                            if (value.isNotEmpty && EmailValidator.validate(value)) {
+                                                              emailHasError = false;
+                                                            } else
+                                                              emailHasError = true;
+                                                          });
+                                                          return null;
+                                                        },
+                                                        onTap: autoCompleteList.isNotEmpty
+                                                            ? () async {
+                                                          if (isMenuOpen) {
+                                                            closeMenu();
+                                                          } else {
+                                                            openMenu();
                                                           }
-                                                        : null,
-                                                    onFieldSubmitted: (submit) {
-                                                      if (overlayEntry != null && isMenuOpen) {
-                                                        overlayEntry.remove();
-                                                        isMenuOpen = !isMenuOpen;
-                                                      }
-                                                    },
-                                                  ),
-                                                )),
+                                                        }
+                                                            : null,
+                                                        onFieldSubmitted: (submit) {
+                                                          if (overlayEntry != null && isMenuOpen) {
+                                                            overlayEntry.remove();
+                                                            isMenuOpen = !isMenuOpen;
+                                                          }
+                                                        },
+                                                      ),
+                                                    )),
                                                 /*Container(
                                                       //width: 10,
                                                       //margin: EdgeInsets.only(left: 1),
@@ -939,8 +942,8 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
                                                       style: TextStyle(
                                                           color: _success != null
                                                               ? _success
-                                                                  ? Colors.greenAccent
-                                                                  : Colors.redAccent
+                                                              ? Colors.greenAccent
+                                                              : Colors.redAccent
                                                               : Colors.redAccent,
                                                           fontWeight: FontWeight.bold,
                                                           fontSize: 12),
@@ -1025,8 +1028,8 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
                                                             style: TextStyle(
                                                                 letterSpacing: 1.25, fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextGrey, fontWeight: FontWeight.w500, fontSize: 16
 
-                                                                ///SizeConfig.safeBlockHorizontal * 4
-                                                                ),
+                                                              ///SizeConfig.safeBlockHorizontal * 4
+                                                            ),
                                                           ),
                                                         ),
                                                       )
@@ -1071,14 +1074,13 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
                               ),
                             ),
                           ),
-
                           ///Google & Facebook & Apple Sign up buttons
-                          Flexible(
-                            flex: 3,
+                          Expanded(
+                            flex: 2,
                             child: Container(
-                              height: SizeConfig.safeBlockVertical * 30,
+                              //height: SizeConfig.safeBlockVertical * 30,
                               //height: 243, ///285
-                              padding: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 5, bottom: SizeConfig.safeBlockVertical * 5),
+                              padding: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5, bottom: SizeConfig.safeBlockVertical * 2.5),
                               color: BuytimeTheme.BackgroundCerulean,
                               child: Column(mainAxisAlignment: MainAxisAlignment.center, mainAxisSize: MainAxisSize.min, children: [
                                 BrandedButton("assets/img/google_logo.png", AppLocalizations.of(context).logInWithGoogle, initiateGoogleSignIn),
