@@ -89,6 +89,11 @@ class UI_M_CreateCategoryState extends State<UI_M_CreateCategory> {
     }
   }
 
+  setNewCategoryName(String name){
+    StoreProvider.of<AppState>(context).dispatch(SetCategoryName(name));
+
+  }
+
   setNewCategoryCustomTag(CustomTag customTag) {
     StoreProvider.of<AppState>(context).dispatch(SetCustomTag(Utils.enumToString(customTag)));
   }
@@ -174,7 +179,7 @@ class UI_M_CreateCategoryState extends State<UI_M_CreateCategory> {
             selectedParentDropValue = _dropdownMenuParentCategory.first.value;
           }
 
-          customTag = snapshot.category.customTag == 'showcase' ? CustomTag.showcase : snapshot.category.customTag == 'external' ? CustomTag.external : CustomTag.other;
+          customTag = CustomTag.other;
 
           String businessName = snapshot.business.name;
 
@@ -312,12 +317,11 @@ class UI_M_CreateCategoryState extends State<UI_M_CreateCategory> {
                                                 validator: (value) => value.isEmpty ? AppLocalizations.of(context).categoryNameIsBlank : null,
                                                 initialValue: _selectedCategoryName,
                                                 onChanged: (value) {
-                                                  _selectedCategoryName = value;
-                                                  StoreProvider.of<AppState>(context).dispatch(SetCategoryName(_selectedCategoryName));
-                                                },
-                                                onSaved: (value) {
-                                                  _selectedCategoryName = value;
-                                                },
+                                                  setState(() {
+                                                    _selectedCategoryName = value;
+                                                    setNewCategoryName(value);
+                                                  });
+                                                  },
                                                 decoration: InputDecoration(labelText: AppLocalizations.of(context).categoryName),
                                               ),
                                             )),

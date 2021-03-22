@@ -388,67 +388,52 @@ class ManageCategoryState extends State<ManageCategory> {
               key: widget._keyScaffoldCategory,
               appBar: BuytimeAppbar(
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      ///Back Button
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
-                        child: IconButton(
-                          icon: const Icon(
-                            Icons.keyboard_arrow_left,
-                            color: Colors.white,
-                          ),
-                          tooltip: AppLocalizations.of(context).comeBack,
-                          onPressed: () {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(builder: (context) => UI_M_Business()),
-                            );
-                          },
-                        ),
-                      ),
-                      ///Title
-                      Container(
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 20.0),
-                          child: Text(
-                            AppLocalizations.of(context).categories,
-                            textAlign: TextAlign.start,
-                            style: BuytimeTheme.appbarTitle,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
-                    child: IconButton(
-                      icon: const Icon(
-                        Icons.add,
-                        color: Colors.white,
-                        size: 30.0,
-                      ),
-                      tooltip: AppLocalizations.of(context).createCategory,
-                      onPressed: () {
-                        print("Numero categorie prima del create " + snapshot.categoryTree.numberOfCategories.toString());
-                        snapshot.categoryTree.numberOfCategories < 50
-                            ? Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(builder: (context) => UI_M_CreateCategory(empty: true)),
-                              )
-                            : showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  // return object of type Dialog
-                                  return AlertDialog(
-                                    title: new Text(AppLocalizations.of(context).caution),
-                                    content: new Text(AppLocalizations.of(context).noCategoriesForBusiness),
-                                  );
-                                },
-                              );
-                      },
+                  IconButton(
+                    icon: const Icon(
+                      Icons.keyboard_arrow_left,
+                      color: Colors.white,
                     ),
+                    tooltip: AppLocalizations.of(context).comeBack,
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => UI_M_Business()),
+                      );
+                    },
+                  ),
+                  ///Title
+                  Container(
+                    child: Text(
+                      AppLocalizations.of(context).categories,
+                      textAlign: TextAlign.start,
+                      style: BuytimeTheme.appbarTitle,
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(
+                      Icons.add,
+                      color: Colors.white,
+                      size: 30.0,
+                    ),
+                    tooltip: AppLocalizations.of(context).createCategory,
+                    onPressed: () {
+                      print("Numero categorie prima del create " + snapshot.categoryTree.numberOfCategories.toString());
+                      snapshot.categoryTree.numberOfCategories < 50
+                          ? Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (context) => UI_M_CreateCategory(empty: true)),
+                            )
+                          : showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                // return object of type Dialog
+                                return AlertDialog(
+                                  title: new Text(AppLocalizations.of(context).caution),
+                                  content: new Text(AppLocalizations.of(context).noCategoriesForBusiness),
+                                );
+                              },
+                            );
+                    },
                   ),
                 ],
               ),
