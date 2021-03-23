@@ -372,6 +372,7 @@
   "accepted": "Accepted",
   "accept": "Accept",
   "vat": "VAT Included",
-  "completeBooking": "Complete Booking"
+  "completeBooking": "Complete Booking",
+  "allWeek": "All week"
 
 }

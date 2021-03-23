@@ -47,9 +47,9 @@ class UI_U_OrderHistoryState extends State<UI_U_OrderHistory> {
             child: StoreConnector<AppState, AppState>(
                 converter: (store) => store.state,
                 rebuildOnChange: true,
-                onInitialBuild: (state) {StoreProvider.of<AppState>(context).dispatch(OrderListRequest(state.user.uid));},
-                onDispose: (store) => store.dispatch(OrderListRequest(store.state.user.uid)),
-                onInit: (store) => store.dispatch(OrderListRequest(store.state.user.uid)),
+                //onInitialBuild: (state) {StoreProvider.of<AppState>(context).dispatch(OrderListRequest(state.user.uid));},
+                //onDispose: (store) => store.dispatch(OrderListRequest(store.state.user.uid)),
+                //onInit: (store) => store.dispatch(OrderListRequest(store.state.user.uid)),
                 builder: (context, snapshot) {
                   print("UI_U_OrderHistory : Number of orders is " + snapshot.orderList.orderListState.length.toString());
                   return snapshot.orderList.orderListState.length > 0

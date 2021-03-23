@@ -67,7 +67,9 @@ class OrderListRequestService implements EpicClass<AppState> {
        //debugPrint("ORDER_SERVICE_EPIC - OrderListRequestService =>  BUSINESS ID: ${store.state.business.id_firestore}");
         String userId = store.state.business.id_firestore;
         List<BusinessState> businessList = store.state.businessList.businessListState;
-        List<DateTime> period = getPeriod(DateTime.now());
+        DateTime currentTime = DateTime.now();
+        currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0);
+        List<DateTime> period = getPeriod(currentTime);
         orderStateList = [];
         int ordersFirebaseDocs = 0;
         int read = 0;
@@ -76,7 +78,7 @@ class OrderListRequestService implements EpicClass<AppState> {
           QuerySnapshot ordersFirebase = await FirebaseFirestore.instance.collection("order") /// 1 READ - ? DOC
               //.where("progress", isEqualTo: "paid")
               .where("businessId", isEqualTo: businessList[i].id_firestore)
-              .where("date", isGreaterThanOrEqualTo: period[0])
+              .where("date", isGreaterThanOrEqualTo: currentTime)
               .where("date", isLessThanOrEqualTo: period[1])
               .get();
 

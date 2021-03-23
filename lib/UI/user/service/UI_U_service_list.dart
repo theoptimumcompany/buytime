@@ -1,4 +1,5 @@
 import 'dart:core';
+import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/reducer/service/service_list_reducer.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:Buytime/UI/user/cart/UI_U_Cart.dart';
@@ -18,12 +19,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
 class ServiceList extends StatefulWidget {
+  BusinessState businessState;
+  ServiceList(this.businessState);
   @override
   State<StatefulWidget> createState() => ServiceListState();
 }
 
 class ServiceListState extends State<ServiceList> {
   OrderState order = OrderState().toEmpty();
+
+  bool startRequest = false;
+  bool noActivity = false;
 
   @override
   void initState() {
@@ -35,7 +41,10 @@ class ServiceListState extends State<ServiceList> {
     var media = MediaQuery.of(context).size;
     return StoreConnector<AppState, AppState>(
         converter: (store) => store.state,
-        onInit: (store) => store.dispatch(ServiceListRequest(StoreProvider.of<AppState>(context).state.business.id_firestore, 'user')),
+        //onInit: (store) => store.dispatch(ServiceListRequest(StoreProvider.of<AppState>(context).state.business.id_firestore, 'user')),
+        onInit: (store){
+          store.dispatch(ServiceListRequest(widget.businessState.id_firestore, 'user'));
+        },
         builder: (context, snapshot) {
           order = snapshot.order.itemList != null ? (snapshot.order.itemList.length > 0 ? snapshot.order : OrderState().toEmpty()) : OrderState().toEmpty();
           return Scaffold(

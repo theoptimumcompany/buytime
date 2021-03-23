@@ -45,7 +45,10 @@ class UI_U_BusinessListState extends State<UI_U_BusinessList> {
     var mediaHeight = media.height;
     return StoreConnector<AppState, AppState>(
             converter: (store) => store.state,
-            onInit: (store) => store.dispatch(BusinessListRequest("any", store.state.user.getRole())),
+            onInit: (store) {
+              store.state.businessList.businessListState.clear();
+              store.dispatch(BusinessListRequest("any", store.state.user.getRole()));
+            },
             builder: (context, snapshot) {
               return Scaffold(
                   body: Column(
@@ -69,6 +72,7 @@ class UI_U_BusinessListState extends State<UI_U_BusinessList> {
                               converter: (store) => store.state,
                               builder: (context, snapshot) {
                                 List<BusinessState> businessListState = snapshot.businessList.businessListState;
+
                                 return businessListState != null && businessListState.length > 0
                                     ? GridView.count(
                                         crossAxisCount: 1,
@@ -76,6 +80,7 @@ class UI_U_BusinessListState extends State<UI_U_BusinessList> {
                                         scrollDirection: Axis.vertical,
                                         shrinkWrap: true,
                                         children: List.generate(businessListState.length, (index) {
+                                          debugPrint('UI_U_business_list => BUSINESS NAME: ${businessListState[index].name}');
                                           return Padding(
                                             padding: const EdgeInsets.only(top: 8.0),
                                             child: OptimumBusinessCardMediumUser(
@@ -84,7 +89,7 @@ class UI_U_BusinessListState extends State<UI_U_BusinessList> {
                                                 StoreProvider.of<AppState>(context).dispatch(new SetBusiness(businessListState[index]));
                                                 Navigator.push(
                                                   context,
-                                                  MaterialPageRoute(builder: (context) => ServiceList()),
+                                                  MaterialPageRoute(builder: (context) => ServiceList(businessListState[index])),
                                                 );
                                               },
                                               imageUrl: businessListState[index].profile,
