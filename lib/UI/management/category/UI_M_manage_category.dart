@@ -5,6 +5,7 @@ import 'package:Buytime/UI/management/category/UI_M_create_category.dart';
 import 'package:Buytime/reblox/reducer/category_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_tree_reducer.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
+import 'package:Buytime/reusable/enterExitRoute.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:flutter/material.dart';
@@ -397,8 +398,9 @@ class ManageCategoryState extends State<ManageCategory> {
                     onPressed: () {
                       Navigator.pushReplacement(
                         context,
-                        MaterialPageRoute(builder: (context) => UI_M_Business()),
+                          EnterExitRoute(enterPage: UI_M_Business(), exitPage: ManageCategory(), enterBeginOffset: Offset(-1.0, 0.0), enterEndOffset: Offset(0.0, 0.0), exitBeginOffset: Offset(-1.0, 0.0), exitEndOffset: Offset(0.0, 0.0)),
                       );
+                      //Navigator.of(context).pop();
                     },
                   ),
                   ///Title

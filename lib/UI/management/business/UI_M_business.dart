@@ -11,6 +11,7 @@ import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/model/category/category_state.dart';
 import 'package:Buytime/reblox/reducer/category_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_tree_reducer.dart';
+import 'package:Buytime/reusable/enterExitRoute.dart';
 import 'package:Buytime/reusable/menu/UI_M_business_list_drawer.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
@@ -249,9 +250,9 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                                 debugPrint('MANAGE Clicked!');
                                 StoreProvider.of<AppState>(context).dispatch(CategoryTreeCreateIfNotExists(snapshot.business.id_firestore, context));
 
-                                Navigator.pushReplacement(
+                                Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (context) => ManageCategory()),
+                                  EnterExitRoute(enterPage: ManageCategory(), exitPage: UI_M_Business(), enterBeginOffset: Offset(0.0, 0.0), enterEndOffset: Offset(-1.0, 0.0), exitBeginOffset: Offset(1.0, 0.0), exitEndOffset: Offset.zero),
                                 );
                               },
                               borderRadius: BorderRadius.all(Radius.circular(5.0)),
