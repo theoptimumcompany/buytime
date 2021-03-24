@@ -998,7 +998,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
                                                     )),
 
                                                 ///Remeber Me
-                                                Container(
+                                                /*Container(
                                                   margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
                                                   child: Row(
                                                     mainAxisAlignment: MainAxisAlignment.start,
@@ -1036,7 +1036,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
                                                       )
                                                     ],
                                                   ),
-                                                ),
+                                                ),*/
                                               ],
                                             ),
                                           ],
@@ -1157,7 +1157,26 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
     });
 
     if (user != null) {
-      if (remeberMe) {
+      AutoCompleteState autoComplete = AutoCompleteState().toEmpty();
+      autoComplete.email = _emailController.text;
+      autoComplete.password = _passwordController.text;
+      if (autoCompleteList.isNotEmpty) {
+        int i = 0;
+        autoCompleteList.forEach((element) {
+          if (element.email == autoComplete.email) ++i;
+        });
+        if (i == 0) {
+          autoCompleteList.add(autoComplete);
+          await autoComplete.writeToStorage(autoCompleteList);
+          StoreProvider.of<AppState>(context).dispatch(AddAutoCompleteToList(autoCompleteList));
+        }
+      } else {
+        List<AutoCompleteState> list = [];
+        list.add(autoComplete);
+        await autoComplete.writeToStorage(list);
+        StoreProvider.of<AppState>(context).dispatch(AddAutoCompleteToList(list));
+      }
+      /*if (remeberMe) {
         AutoCompleteState autoComplete = AutoCompleteState().toEmpty();
         autoComplete.email = _emailController.text;
         autoComplete.password = _passwordController.text;
@@ -1177,7 +1196,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
           await autoComplete.writeToStorage(list);
           StoreProvider.of<AppState>(context).dispatch(AddAutoCompleteToList(list));
         }
-      }
+      }*/
 
       String deviceId = "web";
       if (!kIsWeb) {

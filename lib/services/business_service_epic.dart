@@ -30,31 +30,31 @@ class BusinessListRequestService implements EpicClass<AppState> {
         businessListFromFirebase = await FirebaseFirestore.instance /// 1 read - ? DOC
             .collection("business")
             .where("draft", isEqualTo: false)
-            .limit(10)
+            .limit(20)
             .get();
       } else {
         if (event.role == Role.manager || event.role == Role.worker) {
           businessListFromFirebase = await FirebaseFirestore.instance /// 1 READ - ? DOC
               .collection("business")
               .where("hasAccess", arrayContains: store.state.user.email)
-              .limit(10)
+              .limit(20)
               .get();
         } else if (event.role == Role.owner) {
           businessListFromFirebase = await FirebaseFirestore.instance /// 1 READ - ? DOC
               .collection("business")
               .where("ownerId", isEqualTo: store.state.user.uid)
-              .limit(10)
+              .limit(20)
               .get();
         } else if (event.role == Role.salesman) {
           businessListFromFirebase = await FirebaseFirestore.instance /// 1 READ - ? DOC
               .collection("business")
               .where("salesmanId", isEqualTo: store.state.user.uid)
-              .limit(10)
+              .limit(20)
               .get();
         } else if (event.role == Role.admin) {
           businessListFromFirebase = await FirebaseFirestore.instance /// 1 READ - ? DOC
               .collection("business")
-              .limit(10)
+              .limit(20)
               .get();
         }
       }

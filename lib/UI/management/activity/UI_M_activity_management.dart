@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:Buytime/UI/management/activity/widget/W_dashboard_card.dart';
 import 'package:Buytime/UI/management/activity/widget/W_dashboard_list_item.dart';
 import 'package:Buytime/UI/management/business/UI_M_edit_business.dart';
@@ -207,6 +209,62 @@ class _ActivityManagementState extends State<ActivityManagement> {
         ));
 
     return widgetList;
+  }
+
+  void onCancel(){
+    showDialog(
+        context: context,
+        builder: (context) {
+      return Container(
+          height: SizeConfig.safeBlockVertical * 100,
+          //color: BuytimeTheme.BackgroundWhite.withOpacity(0.5),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                BackdropFilter(
+                    filter: ImageFilter.blur(
+                      sigmaX: 5,
+                      sigmaY: 5
+                    ),
+                  child: Container(
+                    width: 318,
+                    height: 230,
+                    decoration: BoxDecoration(
+                        color: BuytimeTheme.BackgroundWhite,
+                        borderRadius: BorderRadius.all(Radius.circular(10))
+                    ),
+                    child: Center(
+                      child: Column(
+                        children: [
+                          Container(
+                            child: Row(
+                              children: [
+                                Text(
+                                  AppLocalizations.of(context).whyDoYou,
+                                  style: TextStyle(
+                                      letterSpacing: 1.25,
+                                      fontFamily: BuytimeTheme.FontFamily,
+                                      color: BuytimeTheme.TextMalibu,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14
+                                    ///SizeConfig.safeBlockHorizontal * 4
+                                  ),
+                                )
+                              ],
+                            ),
+                          )
+                        ],
+                      )
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          )
+      );
+    }
+    );
   }
 
   @override
@@ -485,6 +543,7 @@ class _ActivityManagementState extends State<ActivityManagement> {
                                             color: Colors.transparent,
                                             child: InkWell(
                                                 onTap: () {
+                                                  onCancel();
                                                 },
                                                 borderRadius: BorderRadius.all(Radius.circular(5.0)),
                                                 child: Container(

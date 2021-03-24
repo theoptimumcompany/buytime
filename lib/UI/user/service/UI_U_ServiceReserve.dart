@@ -87,10 +87,13 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
     tmpSlots.clear();
     List<DateTime> days = [];
     for (int i = 0; i <= endDate.difference(startDate).inDays; i++) {
+      debugPrint('UI_U_ServiceReserve => LOOKING DATE: ${startDate.add(Duration(days: i))} - IS AFTER: $userStartDate - IS BEFORE: $userEndDate');
       if(startDate.add(Duration(days: i)).isAfter(userStartDate) && startDate.add(Duration(days: i)).isBefore(userEndDate)){
-        if(startDate.add(Duration(days: i)).isAfter(startDate)){
+        debugPrint('UI_U_ServiceReserve => LOOKED DATE: ${startDate.add(Duration(days: i))} - IS AFTER: $startDate');
+        if(startDate.add(Duration(days: i)).isAfter(startDate) || startDate.add(Duration(days: i)).isAtSameMomentAs(startDate)){
           DateTime currentTime = DateTime.now();
           currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0);
+          debugPrint('UI_U_ServiceReserve => LOOKED DATE: ${startDate.add(Duration(days: i))} - CURRENT DATE: ${currentTime}');
           if(startDate.add(Duration(days: i)).isAfter(currentTime) || startDate.add(Duration(days: i)).isAtSameMomentAs(currentTime)) {
               days.add(startDate.add(Duration(days: i)));
               //tmpSlots.add(List.generate(slot.startTime.length, (index) => [index, slot]));
@@ -98,16 +101,17 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
               tmpSlots.add([]);
               reserved.forEach((r) {
                 r.itemList.forEach((item) {
-                  //debugPrint('UI_U_ServiceReserve => DATE: ${item.date}');
-                  if(startDate.add(Duration(days: i)).isAtSameMomentAs(item.date)){
-                    debugPrint('UI_U_ServiceReserve => DATE: ${item.date} - RESERVED: ${startDate.add(Duration(days: i))}');
-                    isReserved = true;
+                  //debugPrint('UI_U_ServiceReserve => LOOKING DATE: ${item.date}');
+                  if(startDate.add(Duration(days: i)).isAtSameMomentAs(item.date) && !isReserved && slot.startTime.contains(item.time)){
+                    debugPrint('UI_U_ServiceReserve => LOOKED DATE: ${item.date} - RESERVED: ${startDate.add(Duration(days: i))}');
                     for(int i = 0; i < slot.startTime.length; i++) {
+                      debugPrint('UI_U_ServiceReserve => LOOKING TIME: ${slot.startTime[i]} - TIME: ${item.time}');
                       if(slot.startTime[i] == item.time){
-                        debugPrint('UI_U_ServiceReserve => TIME: ${item.time} - RESERVED: ${slot.startTime[i]}');
-                      }else
+                        isReserved = true;
+                        debugPrint('UI_U_ServiceReserve => LOOKED TIME: ${item.time} - RESERVED: ${slot.startTime[i]}');
+                      }else{
                         tmpSlots.last.add([i, slot]);
-
+                      }
                     }
                   }
                 });
@@ -164,24 +168,37 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
           noActivity = false;
 
           dates.clear();
+          slots.clear();
           widget.serviceState.serviceSlot.forEach((element) {
             DateTime tmpStartDate = DateFormat('dd/MM/yyyy').parse(element.checkIn);
             DateTime tmpEndDate = DateFormat('dd/MM/yyyy').parse(element.checkOut);
             if(dates.isEmpty){
               dates = getDaysInBeteween(tmpStartDate, tmpEndDate, snapshot.booking.start_date,  snapshot.booking.end_date, element, snapshot.orderReservableList.orderReservableListState);
               slots.addAll(tmpSlots);
+              slots.forEach((element) {
+                picked.add(List.generate(element.length, (index) => false));
+                selectedSlot.add(List.generate(element.length, (index) => false));
+                indexes.add(List.generate(element.length, (index) => SelectedEntry(first: 0, last: 0)));
+              });
             }else{
               List<DateTime> tmpDates = getDaysInBeteween(tmpStartDate, tmpEndDate, snapshot.booking.start_date,  snapshot.booking.end_date, element, snapshot.orderReservableList.orderReservableListState);
               for(int i = 0; i < dates.length; i++){
                 for(int j = 0; j < tmpDates.length; j++){
-                  if(dates[i] == tmpDates[j])
+                  if(dates[i] == tmpDates[j]){
                     slots[i].addAll(tmpSlots[j]);
+                    picked[i].addAll(List.generate(tmpSlots[j].length, (index) => false));
+                    selectedSlot[i].addAll(List.generate(tmpSlots[j].length, (index) => false));
+                    indexes[i].addAll(List.generate(tmpSlots[j].length, (index) => SelectedEntry(first: 0, last: 0)));
+                  }
                 }
               }
               for(int i = 0; i < tmpDates.length; i++){
                 if(!dates.contains(tmpDates[i])){
                   dates.add(tmpDates[i]);
                   slots.add(tmpSlots[i]);
+                  picked.add(List.generate(tmpSlots[i].length, (index) => false));
+                  selectedSlot.add(List.generate(tmpSlots[i].length, (index) => false));
+                  indexes.add(List.generate(tmpSlots[i].length, (index) => SelectedEntry(first: 0, last: 0)));
                 }
               }
             }
@@ -194,11 +211,11 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
 
           debugPrint("UI_U_ServiceReserve => SLOTS: ${slots}");
 
-          slots.forEach((element) {
+          /*slots.forEach((element) {
             picked.add(List.generate(element.length, (index) => false));
             selectedSlot.add(List.generate(element.length, (index) => false));
             indexes.add(List.generate(element.length, (index) => SelectedEntry(first: 0, last: 0)));
-          });
+          });*/
         }
 
         order = snapshot.orderReservable.itemList != null ? (snapshot.orderReservable.itemList.length > 0 ? snapshot.orderReservable : OrderReservableState().toEmpty()) : OrderReservableState().toEmpty();

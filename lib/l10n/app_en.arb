@@ -375,6 +375,7 @@
   "completeBooking": "Complete Booking",
   "allWeek": "All week",
   "item": "Item",
-  "items": "Items"
+  "items": "Items",
+  "whyDoYou": "Why do you want to cancel it?"
 
 }

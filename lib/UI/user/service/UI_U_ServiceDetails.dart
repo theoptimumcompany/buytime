@@ -462,43 +462,46 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                         ],
                       ) :
                       ///Reserve
-                      MaterialButton(
-                        onPressed: () {
-                          StoreProvider.of<AppState>(context).dispatch(OrderReservableListRequest(widget.serviceState.serviceId));
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => ServiceReserve(serviceState: serviceState)),
-                          );
-                        },
-                        elevation: 0,
-                        hoverElevation: 0,
-                        focusElevation: 0,
-                        highlightElevation: 0,
-                        textColor: BuytimeTheme.TextWhite,
-                        color: BuytimeTheme.UserPrimary,
-                        //padding: EdgeInsets.all(15),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: new BorderRadius.circular(5),
-                        ),
-                        child: Container(
-                            width: 158, ///SizeConfig.safeBlockHorizontal * 40
-                            height: 44,
-                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, bottom: SizeConfig.safeBlockVertical * 2, right: SizeConfig.safeBlockHorizontal * 5),
-                            decoration: BoxDecoration(
-                                borderRadius: new BorderRadius.circular(5),
-                                border: Border.all(
-                                    color: BuytimeTheme.UserPrimary
-                                )
-                            ),
-                            child: Text(
-                              AppLocalizations.of(context).reserveUpper,
-                              style: TextStyle(
-                                  fontSize: 14,
-                                  fontFamily: BuytimeTheme.FontFamily,
-                                  fontWeight: FontWeight.w800,
-                                  letterSpacing: 1.25
-                              ),
+                      Container(
+                        width: 158, ///SizeConfig.safeBlockHorizontal * 40
+                        height: 44,
+                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, bottom: SizeConfig.safeBlockVertical * 2, right: SizeConfig.safeBlockHorizontal * 5),
+                        decoration: BoxDecoration(
+                            borderRadius: new BorderRadius.circular(5),
+                            border: Border.all(
+                                color: BuytimeTheme.UserPrimary
                             )
+                        ),
+                        child: MaterialButton(
+                          onPressed: () {
+                            StoreProvider.of<AppState>(context).dispatch(OrderReservableListRequest(widget.serviceState.serviceId));
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => ServiceReserve(serviceState: serviceState)),
+                            );
+                          },
+                          elevation: 0,
+                          hoverElevation: 0,
+                          focusElevation: 0,
+                          highlightElevation: 0,
+                          textColor: BuytimeTheme.TextWhite,
+                          color: BuytimeTheme.UserPrimary,
+                          //padding: EdgeInsets.all(15),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: new BorderRadius.circular(5),
+                          ),
+                          child: Container(
+
+                              child: Text(
+                                AppLocalizations.of(context).reserveUpper,
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    fontFamily: BuytimeTheme.FontFamily,
+                                    fontWeight: FontWeight.w800,
+                                    letterSpacing: 1.25
+                                ),
+                              )
+                          ),
                         ),
                       ),
                     ],

@@ -46,6 +46,9 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
     }
   }
 
+  bool startRequest = false;
+  bool noActivity = false;
+
   @override
   void initState() {
     super.initState();
@@ -82,12 +85,22 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
             ));
           }
         },
-        onInit: (store) => {store.dispatch(ServiceListRequest(store.state.business.id_firestore, 'manager'))},
-        onWillChange: (store, storeNew) => setServiceLists(storeNew.categoryList.categoryListState, storeNew.serviceList.serviceListState),
+        onInit: (store) => {
+          store.state.serviceList.serviceListState.clear(),
+          store.dispatch(ServiceListRequest(store.state.business.id_firestore, 'manager')),
+          startRequest = true
+        },
+        //onWillChange: (store, storeNew) => setServiceLists(storeNew.categoryList.categoryListState, storeNew.serviceList.serviceListState),
         builder: (context, snapshot) {
           List<CategoryState> categoryRootList = snapshot.categoryList.categoryListState;
           categoryRootList.sort((a, b) => a.name.compareTo(b.name));
-          List<ServiceState> serviceList = StoreProvider.of<AppState>(context).state.serviceList.serviceListState;
+          if(snapshot.serviceList.serviceListState.isEmpty && startRequest){
+            noActivity = true;
+          }else{
+            noActivity = false;
+            setServiceLists(snapshot.categoryList.categoryListState, snapshot.serviceList.serviceListState);
+          }
+          List<ServiceState> serviceList = snapshot.serviceList.serviceListState;
           order = snapshot.order.itemList != null ? (snapshot.order.itemList.length > 0 ? snapshot.order : OrderState().toEmpty()) : OrderState().toEmpty();
 
           return WillPopScope(
@@ -244,7 +257,7 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                                     )),
 
                                 ///Service List
-                                serviceList.length > 0
+                                serviceList.isNotEmpty
                                     ? Container(
                                         //height: listOfServiceEachRoot.length > 0 ? listOfServiceEachRoot[i].length * 44.00 : 50,
                                         child: ListView.builder(
@@ -393,8 +406,14 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                                                 ));
                                           },
                                         ),
-                                      )
-                                    : Container(),
+                                      ) :
+                                noActivity ?
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    CircularProgressIndicator()
+                                  ],
+                                ) : Container(),
                               ],
                             ),
                           ),

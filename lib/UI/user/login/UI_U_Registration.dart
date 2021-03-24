@@ -667,7 +667,7 @@ class RegistrationState extends State<Registration> {
                                         ),
                                       ),
                                       ///Remeber Me
-                                      Row(
+                                      /*Row(
                                         mainAxisAlignment: MainAxisAlignment.end,
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
@@ -712,7 +712,7 @@ class RegistrationState extends State<Registration> {
                                             ),
                                           ),
                                         ],
-                                      ),
+                                      ),*/
 
                                     ],
                                   )),
@@ -796,7 +796,26 @@ class RegistrationState extends State<Registration> {
     if (tmpUserCredential != null) user = tmpUserCredential.user;
 
     if (user != null) {
-      if (remeberMe) {
+      AutoCompleteState autoComplete = AutoCompleteState().toEmpty();
+      autoComplete.email = _emailController.text;
+      autoComplete.password = _passwordController.text;
+      if (autoCompleteList.isNotEmpty) {
+        int i = 0;
+        autoCompleteList.forEach((element) {
+          if (element.email == autoComplete.email) ++i;
+        });
+        if (i == 0) {
+          autoCompleteList.add(autoComplete);
+          await autoComplete.writeToStorage(autoCompleteList);
+          StoreProvider.of<AppState>(context).dispatch(AddAutoCompleteToList(autoCompleteList));
+        }
+      } else {
+        List<AutoCompleteState> list = [];
+        list.add(autoComplete);
+        await autoComplete.writeToStorage(list);
+        StoreProvider.of<AppState>(context).dispatch(AddAutoCompleteToList(list));
+      }
+      /*if (remeberMe) {
         AutoCompleteState autoComplete = AutoCompleteState().toEmpty();
         autoComplete.email = _emailController.text;
         autoComplete.password = _passwordController.text;
@@ -816,7 +835,7 @@ class RegistrationState extends State<Registration> {
           await autoComplete.writeToStorage(list);
           StoreProvider.of<AppState>(context).dispatch(AddAutoCompleteToList(list));
         }
-      }
+      }*/
 
       String deviceId = "web";
       if (!kIsWeb) {

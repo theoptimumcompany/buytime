@@ -37,7 +37,7 @@ class OrderReservableListRequestService implements EpicClass<AppState> {
         QuerySnapshot ordersFirebase = await FirebaseFirestore.instance.collection("order") /// 1 READ - ? DOC
             .where("progress", isEqualTo: "paid")
             .where("serviceId", isEqualTo: event.userId)
-            .where("date", isGreaterThanOrEqualTo: currentTime)
+            .where("date", isGreaterThanOrEqualTo: currentTime).limit(100)
             .get();
 
         read++;

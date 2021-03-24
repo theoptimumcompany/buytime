@@ -33,7 +33,7 @@ class CalendarAvailabilityState extends State<CalendarAvailability> {
 
   Future<void> selectDate(BuildContext context, DateTime cIn, DateTime cOut) async {
     final DateTimeRange picked = await showDateRangePicker(
-        context: context, initialDateRange: DateTimeRange(start: cIn, end: cOut), firstDate: new DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day), lastDate: new DateTime(2025));
+        context: context, initialDateRange: DateTimeRange(start: cIn, end: cOut), firstDate: checkIn, lastDate: new DateTime(2025));
     if (picked != null && picked.start != null && picked.end != null) {
       setState(() {
         checkInController.text = DateFormat('dd/MM/yyyy').format(picked.start);
