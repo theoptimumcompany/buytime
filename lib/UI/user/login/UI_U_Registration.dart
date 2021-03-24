@@ -757,7 +757,7 @@ class RegistrationState extends State<Registration> {
                       child: Container(
                         //height: SizeConfig.safeBlockVertical * 30,
                         //height: 243, ///285
-                        padding: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5, bottom: SizeConfig.safeBlockVertical * 2.5),
+                        padding: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, bottom: SizeConfig.safeBlockVertical * 2),
                         color: BuytimeTheme.BackgroundCerulean,
                         child: Column(mainAxisAlignment: MainAxisAlignment.center, mainAxisSize: MainAxisSize.min, children: [
                           BrandedButton("assets/img/google_logo.png", AppLocalizations.of(context).logInWithGoogle, initiateGoogleSignIn),

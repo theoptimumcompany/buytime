@@ -12,6 +12,7 @@ import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
 import 'package:Buytime/reblox/reducer/service/service_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/service_reducer.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
+import 'package:Buytime/reusable/enterExitRoute.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -106,10 +107,10 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                     ///Back Button
                     IconButton(
                       icon: Icon(Icons.keyboard_arrow_left, color: Colors.white),
-                      onPressed: () => Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => UI_M_Business()),
-                      ),
+                      onPressed: () {
+                        //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_Business()))
+                        Navigator.pushReplacement(context, EnterExitRoute(enterPage: UI_M_Business(), exitPage: UI_M_ServiceList(), from: false));
+                      },
                     ),
                     Container(
                       child: Padding(

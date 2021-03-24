@@ -396,10 +396,7 @@ class ManageCategoryState extends State<ManageCategory> {
                     ),
                     tooltip: AppLocalizations.of(context).comeBack,
                     onPressed: () {
-                      Navigator.pushReplacement(
-                        context,
-                          EnterExitRoute(enterPage: UI_M_Business(), exitPage: ManageCategory(), enterBeginOffset: Offset(-1.0, 0.0), enterEndOffset: Offset(0.0, 0.0), exitBeginOffset: Offset(-1.0, 0.0), exitEndOffset: Offset(0.0, 0.0)),
-                      );
+                      Navigator.pushReplacement(context, EnterExitRoute(enterPage: UI_M_Business(), exitPage: ManageCategory(), from: false));
                       //Navigator.of(context).pop();
                     },
                   ),

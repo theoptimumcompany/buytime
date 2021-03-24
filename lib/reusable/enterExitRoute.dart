@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 class EnterExitRoute extends PageRouteBuilder {
   final Widget enterPage;
   final Widget exitPage;
-  final Offset enterBeginOffset;
-  final Offset enterEndOffset;
-  final Offset exitBeginOffset;
-  final Offset exitEndOffset;
-  EnterExitRoute({this.exitPage, this.enterPage, this.enterBeginOffset, this.enterEndOffset, this.exitBeginOffset, this.exitEndOffset})
+  final bool from;
+
+  EnterExitRoute({this.exitPage, this.enterPage, this.from})
       : super(
     pageBuilder: (
         BuildContext context,
@@ -24,15 +22,15 @@ class EnterExitRoute extends PageRouteBuilder {
           children: <Widget>[
             SlideTransition(
               position: new Tween<Offset>(
-                begin: enterBeginOffset,
-                end: enterEndOffset,
+                begin: from ? Offset(0.0, 0.0) : Offset(-1.0, 0.0),
+                end: from ? Offset(-1.0, 0.0) : Offset(0.0, 0.0),
               ).animate(animation),
               child: exitPage,
             ),
             SlideTransition(
               position: new Tween<Offset>(
-                begin: exitBeginOffset,
-                end: exitEndOffset,
+                begin: from ? Offset(1.0, 0.0) : Offset(-1.0, 0.0),
+                end: from ? Offset.zero : Offset(0.0, 0.0),
               ).animate(animation),
               child: enterPage,
             )

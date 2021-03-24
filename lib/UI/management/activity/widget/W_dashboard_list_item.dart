@@ -77,7 +77,7 @@ class _DashboardListItemState extends State<DashboardListItem> {
                           child: Text(
                               widget.orderState.selected == null || widget.orderState.selected.isEmpty ?
                             '${widget.orderState.user.name ?? ''} ${widget.orderState.user.surname ?? ''}' :
-                            '${widget.orderState.user.name ?? ''} ${widget.orderState.user.surname ?? ''} - ${DateFormat('dd MMM').format(widget.orderEntry.date)} at ${widget.orderEntry.time} ',
+                            '${widget.orderState.user.name ?? ''} ${widget.orderState.user.surname ?? ''} - ${widget.orderEntry.time}',
                             style: TextStyle(
                                 fontFamily: BuytimeTheme.FontFamily,
                                 fontSize: 16,

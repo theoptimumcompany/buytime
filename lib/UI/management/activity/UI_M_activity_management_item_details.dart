@@ -189,7 +189,7 @@ class _ActivityManagementItemDetailsState extends State<ActivityManagementItemDe
                                 Container(
                                   margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1),
                                   child: Text(
-                                    '${AppLocalizations.of(context).chargeSummary}',
+                                    '${widget.orderState.business.name}',
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
                                         fontFamily: BuytimeTheme.FontFamily,
@@ -221,7 +221,24 @@ class _ActivityManagementItemDetailsState extends State<ActivityManagementItemDe
                               ],
                             ),
                             widget.orderEntry == null ?
-                                Container() :
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1),
+                                  child: Text(
+                                    widget.orderState.itemList.length > 1 ? '${widget.orderState.itemList.length} ${AppLocalizations.of(context).items}' : '${widget.orderState.itemList.length} ${AppLocalizations.of(context).item}',
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                        fontFamily: BuytimeTheme.FontFamily,
+                                        fontWeight: FontWeight.w600,
+                                        color: BuytimeTheme.TextBlack,
+                                        fontSize: 18 /// mediaSize.height * 0.024
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ) :
                             ///Sub text
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,

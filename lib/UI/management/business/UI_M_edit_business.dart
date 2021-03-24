@@ -6,6 +6,7 @@ import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/model/snippet/generic.dart';
 import 'package:Buytime/reblox/reducer/business_reducer.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
+import 'package:Buytime/reusable/enterExitRoute.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -139,7 +140,8 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
                   if (!currentFocus.hasPrimaryFocus) {
                     currentFocus.unfocus();
                   }
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_Business()));
+                  //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_Business()));
+                  Navigator.pushReplacement(context, EnterExitRoute(enterPage: UI_M_Business(), exitPage: UI_M_EditBusiness(), from: false));
                   return false;
                 },
                 child: Scaffold(
@@ -152,11 +154,10 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
                           children: [
                             IconButton(
                               icon: Icon(Icons.chevron_left, color: BuytimeTheme.TextWhite),
-                              onPressed: () => Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => UI_M_Business()),
-                              ),
+                              onPressed: () {
+                                //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_Business()),);
+                                Navigator.pushReplacement(context, EnterExitRoute(enterPage: UI_M_Business(), exitPage: UI_M_EditBusiness(), from: false));
+                              },
                             ),
                             Container(
                               child: Padding(

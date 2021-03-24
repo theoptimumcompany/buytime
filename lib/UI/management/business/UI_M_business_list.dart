@@ -1,7 +1,9 @@
 import 'package:Buytime/UI/management/business/UI_M_create_business.dart';
 import 'package:Buytime/UI/management/business/UI_M_manage_business.dart';
 import 'package:Buytime/UI/management/business/UI_M_business.dart';
+import 'package:Buytime/UI/management/category/UI_M_manage_category.dart';
 import 'package:Buytime/reblox/model/business/business_list_state.dart';
+import 'package:Buytime/reusable/enterExitRoute.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
@@ -91,10 +93,8 @@ class UI_M_BusinessListState extends State<UI_M_BusinessList> {
                         ),
                         tooltip: AppLocalizations.of(context).createBusinessPlain,
                         onPressed: () {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (context) => UI_M_CreateBusiness()),
-                          );
+                          //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_CreateBusiness()));
+                          Navigator.push(context, EnterExitRoute(enterPage: UI_M_CreateBusiness(), exitPage: UI_M_BusinessList(), from: true));
                         },
                       ),
                     ),

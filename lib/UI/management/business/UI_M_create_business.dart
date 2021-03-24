@@ -5,6 +5,7 @@ import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/model/snippet/generic.dart';
 import 'package:Buytime/reblox/reducer/business_reducer.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
+import 'package:Buytime/reusable/enterExitRoute.dart';
 import 'package:Buytime/reusable/form/optimum_form_field.dart';
 import 'package:Buytime/reusable/form/optimum_form_multi_photo.dart' if (dart.library.html) 'package:Buytime/reusable/form/optimum_form_multi_photo_web.dart';
 import 'package:Buytime/utils/size_config.dart';
@@ -168,7 +169,8 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                     if (!currentFocus.hasPrimaryFocus) {
                       currentFocus.unfocus();
                     }
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_BusinessList()));
+                    //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_BusinessList()));
+                    Navigator.pushReplacement(context, EnterExitRoute(enterPage: UI_M_BusinessList(), exitPage: UI_M_CreateBusiness(), from: false));
                     return false;
                   },
                   child: Scaffold(
@@ -181,12 +183,10 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                           children: [
                             IconButton(
                               icon: Icon(Icons.chevron_left, color: BuytimeTheme.TextWhite),
-                              onPressed: () => Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => UI_M_BusinessList()),
-                              ),
-                            ),
+                              onPressed: () {
+                                  //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_BusinessList()));
+                                  Navigator.pushReplacement(context, EnterExitRoute(enterPage: UI_M_BusinessList(), exitPage: UI_M_CreateBusiness(), from: false));
+                                }),
                             Container(
                               child: Padding(
                                 padding: const EdgeInsets.only(left: 20.0),

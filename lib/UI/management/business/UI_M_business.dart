@@ -129,10 +129,8 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                     child: InkWell(
                       borderRadius: BorderRadius.all(Radius.circular(5.0)),
                       onTap: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (context) => UI_M_EditBusiness()),
-                        );
+                        //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_EditBusiness()),);
+                        Navigator.push(context, EnterExitRoute(enterPage: UI_M_EditBusiness(), exitPage: UI_M_Business(), from: true));
                       },
                       child: Container(
                         padding: EdgeInsets.all(5.0),
@@ -250,10 +248,7 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                                 debugPrint('MANAGE Clicked!');
                                 StoreProvider.of<AppState>(context).dispatch(CategoryTreeCreateIfNotExists(snapshot.business.id_firestore, context));
 
-                                Navigator.push(
-                                  context,
-                                  EnterExitRoute(enterPage: ManageCategory(), exitPage: UI_M_Business(), enterBeginOffset: Offset(0.0, 0.0), enterEndOffset: Offset(-1.0, 0.0), exitBeginOffset: Offset(1.0, 0.0), exitEndOffset: Offset.zero),
-                                );
+                                Navigator.push(context, EnterExitRoute(enterPage: ManageCategory(), exitPage: UI_M_Business(), from: true));
                               },
                               borderRadius: BorderRadius.all(Radius.circular(5.0)),
                               child: Container(
@@ -302,10 +297,8 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                     Expanded(
                       child: GestureDetector(
                         onTap: () {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (context) => UI_M_ServiceList()),
-                          );
+                          //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_ServiceList()),);
+                          Navigator.push(context, EnterExitRoute(enterPage: UI_M_ServiceList(), exitPage: UI_M_Business(), from: true));
                         },
                         child: Stack(
                           children: [
