@@ -229,7 +229,7 @@ class _BookingPageState extends State<BookingPage> {
         bookingState = store.state.booking;
         businessState = store.state.business;
         serviceListState = store.state.serviceList;
-        serviceList = serviceListState.serviceListState;
+        serviceList = serviceListState.serviceListState.length >= 5 ? serviceListState.serviceListState.sublist(0,5) : serviceListState.serviceListState;
         categoryListState = store.state.categoryList;
         categoryList = categoryListState.categoryListState;
       },
