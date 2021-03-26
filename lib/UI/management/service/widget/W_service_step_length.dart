@@ -7,6 +7,7 @@ import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_picker/flutter_picker.dart';
 
 class StepLength extends StatefulWidget {
   Size media;
@@ -35,18 +36,51 @@ class StepLengthState extends State<StepLength> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) {
+      hour = StoreProvider.of<AppState>(context).state.serviceSlot.hour.toString();
+      minute = StoreProvider.of<AppState>(context).state.serviceSlot.minute.toString();
+      duration = StoreProvider.of<AppState>(context).state.serviceSlot.duration;
+      maxDuration = StoreProvider.of<AppState>(context).state.serviceSlot.maxDuration;
+      limitBooking = StoreProvider.of<AppState>(context).state.serviceSlot.limitBooking.toString();
+      hourController.text = hour;
+      minuteController.text = minute;
+      limitBookingController.text = limitBooking;
+    });
+  }
+
+  showPickerHour(BuildContext context) {
+    Picker(
+        adapter: NumberPickerAdapter(data: [
+          NumberPickerColumn(initValue: int.parse(hour),begin: 0, end: 24, jump: 1),
+        ]),
+        hideHeader: true,
+        title: Center(child: Text("Set Hour")),
+        selectedTextStyle: TextStyle(color: Colors.blue),
+        onConfirm: (Picker picker, List value) {
+          setState(() {
+            hourController.text = value[0].toString();
+            hour = value[0].toString();
+          });
+        }).showDialog(context);
+  }
+
+  showPickerMinute(BuildContext context) {
+    Picker(
+        adapter: NumberPickerAdapter(data: [
+          NumberPickerColumn(begin: 0, end: 60, jump: 1),
+        ]),
+        hideHeader: true,
+        title: Text("Set Minute"),
+        selectedTextStyle: TextStyle(color: Colors.blue),
+        onConfirm: (Picker picker, List value) {
+          print(value.toString());
+          print(picker.getSelectedValues());
+        }).showDialog(context);
   }
 
   @override
   Widget build(BuildContext context) {
-    hour = StoreProvider.of<AppState>(context).state.serviceSlot.hour.toString();
-    minute = StoreProvider.of<AppState>(context).state.serviceSlot.minute.toString();
-    duration = StoreProvider.of<AppState>(context).state.serviceSlot.duration;
-    maxDuration = StoreProvider.of<AppState>(context).state.serviceSlot.maxDuration;
-    limitBooking = StoreProvider.of<AppState>(context).state.serviceSlot.limitBooking.toString();
-    hourController.text = hour;
-    minuteController.text = minute;
-    limitBookingController.text = limitBooking;
     var media = MediaQuery.of(context).size;
     return StoreConnector<AppState, AppState>(
         converter: (store) => store.state,
@@ -75,211 +109,205 @@ class StepLengthState extends State<StepLength> {
                     )
                   ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 10.0),
-                  child: Row(
-                    children: [
-                      // Text(
-                      //   '10 m',
-                      //   textAlign: TextAlign.center,
-                      //   style: TextStyle(
-                      //     fontSize: media.height * 0.02,
-                      //     fontWeight: FontWeight.w700,
-                      //     color: BuytimeTheme.TextGrey,
-                      //   ),
-                      // ),
-                      Flexible(
-                        child: SliderTheme(
-                          data: SliderTheme.of(context).copyWith(
-                            activeTrackColor: BuytimeTheme.UserPrimary[700],
-                            inactiveTrackColor: BuytimeTheme.UserPrimary[100],
-                            trackShape: RoundedRectSliderTrackShape(),
-                            trackHeight: 4.0,
-                            thumbShape: RoundSliderThumbShape(enabledThumbRadius: 12.0),
-                            thumbColor: BuytimeTheme.ManagerPrimary,
-                            overlayColor: BuytimeTheme.ManagerPrimary.withAlpha(32),
-                            overlayShape: RoundSliderOverlayShape(overlayRadius: 28.0),
-                            tickMarkShape: RoundSliderTickMarkShape(),
-                            activeTickMarkColor: BuytimeTheme.ManagerPrimary,
-                            inactiveTickMarkColor: BuytimeTheme.UserPrimary[100],
-                            valueIndicatorShape: PaddleSliderValueIndicatorShape(),
-                            valueIndicatorColor: BuytimeTheme.ManagerPrimary,
-                            valueIndicatorTextStyle: TextStyle(
-                              color: BuytimeTheme.TextWhite,
-                            ),
-                          ),
-                          child: Slider(
-                            min: 0,
-                            max: maxDuration.toDouble(),
-                            divisions: maxDuration > 0 ? maxDuration ~/ 5 : 10,
-                            label: '$duration',
-                            value: duration.toDouble(),
-                            onChanged: (value) {
-                              setState(() {
-                                duration = value.toInt();
-                                StoreProvider.of<AppState>(context).dispatch(SetServiceSlotDuration(duration));
-                              });
-                            },
-                          ),
-                        ),
-                      ),
-                      // Text(
-                      //   '100 m',
-                      //   textAlign: TextAlign.center,
-                      //   style: TextStyle(
-                      //     fontSize: media.height * 0.02,
-                      //     fontWeight: FontWeight.w700,
-                      //     color: BuytimeTheme.TextGrey,
-                      //   ),
-                      // ),
-                      // CustomLabeledCheckbox(
-                      //   label: '∞',
-                      //   value: durationInfinity,
-                      //   onChanged: (value) {
-                      //     setState(() {
-                      //       durationInfinity = value;
-                      //     });
-                      //   },
-                      //   checkboxType: CheckboxType.Child,
-                      //   activeColor: Colors.indigo,
-                      // ),
-                    ],
-                  ),
-                ),
                 // Padding(
                 //   padding: const EdgeInsets.only(top: 10.0),
                 //   child: Row(
-                //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 //     children: [
-                //       ///Hour
+                //       // Text(
+                //       //   '10 m',
+                //       //   textAlign: TextAlign.center,
+                //       //   style: TextStyle(
+                //       //     fontSize: media.height * 0.02,
+                //       //     fontWeight: FontWeight.w700,
+                //       //     color: BuytimeTheme.TextGrey,
+                //       //   ),
+                //       // ),
                 //       Flexible(
-                //           child: Padding(
-                //         padding: const EdgeInsets.only(top: 5.0),
-                //         child: TextFormField(
-                //           enabled: true,
-                //           controller: hourController,
-                //           onChanged: (value) {
-                //             setState(() {
-                //               StoreProvider.of<AppState>(context).dispatch(SetServiceSlotHour(int.parse(hourController.text)));
-                //             });
-                //           },
-                //           onSaved: (value) {
-                //             setState(() {
-                //               StoreProvider.of<AppState>(context).dispatch(SetServiceSlotHour(int.parse(hourController.text)));
-                //             });
-                //           },
-                //           textAlign: TextAlign.start,
-                //           keyboardType: TextInputType.number,
-                //           decoration: InputDecoration(
-                //               filled: true,
-                //               fillColor: BuytimeTheme.DividerGrey,
-                //               enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                //               focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                //               // labelText: 'Hour',
-                //               // labelStyle: TextStyle(
-                //               //   fontFamily: BuytimeTheme.FontFamily,
-                //               //   color: Color(0xff666666),
-                //               //   fontWeight: FontWeight.w400,
-                //               // ),
-                //               errorMaxLines: 2,
-                //               errorStyle: TextStyle(
-                //                 color: BuytimeTheme.ErrorRed,
-                //                 fontSize: 12.0,
-                //               ),
-                //               suffixText: 'h'),
-                //           style: TextStyle(
-                //             fontFamily: BuytimeTheme.FontFamily,
-                //             color: Color(0xff666666),
-                //             fontWeight: FontWeight.w800,
+                //         child: SliderTheme(
+                //           data: SliderTheme.of(context).copyWith(
+                //             activeTrackColor: BuytimeTheme.UserPrimary[700],
+                //             inactiveTrackColor: BuytimeTheme.UserPrimary[100],
+                //             trackShape: RoundedRectSliderTrackShape(),
+                //             trackHeight: 4.0,
+                //             thumbShape: RoundSliderThumbShape(enabledThumbRadius: 12.0),
+                //             thumbColor: BuytimeTheme.ManagerPrimary,
+                //             overlayColor: BuytimeTheme.ManagerPrimary.withAlpha(32),
+                //             overlayShape: RoundSliderOverlayShape(overlayRadius: 28.0),
+                //             tickMarkShape: RoundSliderTickMarkShape(),
+                //             activeTickMarkColor: BuytimeTheme.ManagerPrimary,
+                //             inactiveTickMarkColor: BuytimeTheme.UserPrimary[100],
+                //             valueIndicatorShape: PaddleSliderValueIndicatorShape(),
+                //             valueIndicatorColor: BuytimeTheme.ManagerPrimary,
+                //             valueIndicatorTextStyle: TextStyle(
+                //               color: BuytimeTheme.TextWhite,
+                //             ),
                 //           ),
-                //           validator: (value) {
-                //             if (value.isEmpty) {
-                //               return 'Please insert an hour';
-                //             }
-                //             return null;
-                //           },
+                //           child: Slider(
+                //             min: 0,
+                //             max: maxDuration.toDouble(),
+                //             divisions: maxDuration > 0 ? maxDuration ~/ 5 : 10,
+                //             label: '$duration',
+                //             value: duration.toDouble(),
+                //             onChanged: (value) {
+                //               setState(() {
+                //                 duration = value.toInt();
+                //                 StoreProvider.of<AppState>(context).dispatch(SetServiceSlotDuration(duration));
+                //               });
+                //             },
+                //           ),
                 //         ),
-                //       )),
-                //       Container(
-                //         margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 1, right: SizeConfig.blockSizeHorizontal * 1),
                 //       ),
-                //
-                //       ///Minute
-                //       Flexible(
-                //           child: Padding(
-                //         padding: const EdgeInsets.only(top: 5.0),
-                //         child: TextFormField(
-                //           enabled: true,
-                //           controller: minuteController,
-                //           onChanged: (value) {
-                //             setState(() {
-                //               StoreProvider.of<AppState>(context).dispatch(SetServiceSlotMinute(int.parse(minuteController.text)));
-                //             });
-                //           },
-                //           onSaved: (value) {
-                //             setState(() {
-                //               StoreProvider.of<AppState>(context).dispatch(SetServiceSlotMinute(int.parse(minuteController.text)));
-                //             });
-                //           },
-                //           textAlign: TextAlign.start,
-                //           keyboardType: TextInputType.number,
-                //           decoration: InputDecoration(
-                //               filled: true,
-                //               fillColor: BuytimeTheme.DividerGrey,
-                //               enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                //               focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                //               // labelText: 'Minute',
-                //               // labelStyle: TextStyle(
-                //               //   fontFamily: BuytimeTheme.FontFamily,
-                //               //   color: Color(0xff666666),
-                //               //   fontWeight: FontWeight.w400,
-                //               // ),
-                //               errorMaxLines: 2,
-                //               errorStyle: TextStyle(
-                //                 color: BuytimeTheme.ErrorRed,
-                //                 fontSize: 12.0,
-                //               ),
-                //               suffixText: 'm'),
-                //           style: TextStyle(
-                //             //fontSize: 12,
-                //             fontFamily: BuytimeTheme.FontFamily,
-                //             color: Color(0xff666666),
-                //             fontWeight: FontWeight.w800,
-                //           ),
-                //           validator: (value) {
-                //             if (value.isEmpty) {
-                //               return 'Please insert a minute';
-                //             }
-                //             return null;
-                //           },
-                //         ),
-                //       ))
                 //     ],
                 //   ),
                 // ),
-
-                /// Resume text time duration
                 Padding(
                   padding: const EdgeInsets.only(top: 10.0),
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Container(
-                        child: Flexible(
-                          child: Text(
-                            AppLocalizations.of(context).serviceOfferedToGuests + duration.toString() + AppLocalizations.of(context).spaceMinutes,
+                      ///Hour
+                      Flexible(
+                          child: GestureDetector(
+                        onTap: () {
+                          showPickerHour(context);
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 5.0),
+                          child: TextFormField(
+                            enabled: false,
+                            controller: hourController,
+                            onChanged: (value) {
+                              setState(() {
+                                StoreProvider.of<AppState>(context).dispatch(SetServiceSlotHour(int.parse(hourController.text)));
+                              });
+                            },
+                            onSaved: (value) {
+                              setState(() {
+                                StoreProvider.of<AppState>(context).dispatch(SetServiceSlotHour(int.parse(hourController.text)));
+                              });
+                            },
                             textAlign: TextAlign.start,
-                            overflow: TextOverflow.clip,
+                            keyboardType: TextInputType.number,
+                            decoration: InputDecoration(
+                                filled: true,
+                                fillColor: BuytimeTheme.DividerGrey,
+                                enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                errorMaxLines: 2,
+                                errorStyle: TextStyle(
+                                  color: BuytimeTheme.ErrorRed,
+                                  fontSize: 12.0,
+                                ),
+                                suffixText: 'hour'),
                             style: TextStyle(
-                              color: BuytimeTheme.TextBlack,
-                              fontSize: media.height * 0.018,
-                              fontWeight: FontWeight.w400,
+                              fontFamily: BuytimeTheme.FontFamily,
+                              color: Color(0xff666666),
+                              fontWeight: FontWeight.w800,
                             ),
+                            validator: (value) {
+                              if (value.isEmpty) {
+                                return 'Please insert an hour';
+                              }
+                              return null;
+                            },
                           ),
                         ),
-                      )
+                      )),
+                      Container(
+                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 1, right: SizeConfig.blockSizeHorizontal * 1),
+                      ),
+
+                      ///Minute
+                      Flexible(
+                          child: Padding(
+                        padding: const EdgeInsets.only(top: 5.0),
+                        child: TextFormField(
+                          enabled: true,
+                          controller: minuteController,
+                          onChanged: (value) {
+                            setState(() {
+                              StoreProvider.of<AppState>(context).dispatch(SetServiceSlotMinute(int.parse(minuteController.text)));
+                            });
+                          },
+                          onSaved: (value) {
+                            setState(() {
+                              StoreProvider.of<AppState>(context).dispatch(SetServiceSlotMinute(int.parse(minuteController.text)));
+                            });
+                          },
+                          textAlign: TextAlign.start,
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                              filled: true,
+                              fillColor: BuytimeTheme.DividerGrey,
+                              enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                              focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                              // labelText: 'Minute',
+                              // labelStyle: TextStyle(
+                              //   fontFamily: BuytimeTheme.FontFamily,
+                              //   color: Color(0xff666666),
+                              //   fontWeight: FontWeight.w400,
+                              // ),
+                              errorMaxLines: 2,
+                              errorStyle: TextStyle(
+                                color: BuytimeTheme.ErrorRed,
+                                fontSize: 12.0,
+                              ),
+                              suffixText: 'min'),
+                          style: TextStyle(
+                            //fontSize: 12,
+                            fontFamily: BuytimeTheme.FontFamily,
+                            color: Color(0xff666666),
+                            fontWeight: FontWeight.w800,
+                          ),
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Please insert a minute';
+                            }
+                            return null;
+                          },
+                        ),
+                      ))
                     ],
                   ),
                 ),
+
+                // /// Resume text time duration
+                // Padding(
+                //   padding: const EdgeInsets.only(top: 10.0),
+                //   child: Row(
+                //     children: [
+                //       Container(
+                //         child: Flexible(
+                //           child: (int.parse(hour) == 0 && int.parse(minute) == 0)
+                //               ? Text(AppLocalizations.of(context).noDurationSet,
+                //                   textAlign: TextAlign.start,
+                //                   overflow: TextOverflow.clip,
+                //                   style: TextStyle(
+                //                     color: BuytimeTheme.TextBlack,
+                //                     fontSize: media.height * 0.018,
+                //                     fontWeight: FontWeight.w400,
+                //                   ))
+                //               : Text(
+                //                   AppLocalizations.of(context).serviceOfferedToGuests +
+                //                       (int.parse(hour) > 1
+                //                           ? (hour + AppLocalizations.of(context).spaceHours + AppLocalizations.of(context).spaceAndSpace)
+                //                           : ((int.parse(hour) == 1 ? (hour + AppLocalizations.of(context).spaceHour + AppLocalizations.of(context).spaceAndSpace) : ('')))) +
+                //                       (int.parse(minute) > 1
+                //                           ? (minute + AppLocalizations.of(context).spaceMinutes)
+                //                           : ((int.parse(minute) == 1 ? (minute + AppLocalizations.of(context).spaceMinute) : ('')))),
+                //                   textAlign: TextAlign.start,
+                //                   overflow: TextOverflow.clip,
+                //                   style: TextStyle(
+                //                     color: BuytimeTheme.TextBlack,
+                //                     fontSize: media.height * 0.018,
+                //                     fontWeight: FontWeight.w400,
+                //                   ),
+                //                 ),
+                //         ),
+                //       )
+                //     ],
+                //   ),
+                // ),
 
                 ///Title MultiBooking
                 Padding(

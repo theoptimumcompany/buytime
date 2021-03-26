@@ -117,22 +117,22 @@ class UI_M_ServiceSlotState extends State<UI_M_ServiceSlot> {
                                     currentStep: currentStep,
                                     steps: [
                                       Step(
-                                        title: Text(AppLocalizations.of(context).definePeriod),
+                                        title: Text(AppLocalizations.of(context).slotCalendar),
                                         content: CalendarAvailability(media: media),
                                         state: currentStep == 0 ? StepState.editing : StepState.indexed,
                                         isActive: true,
                                       ),
                                       Step(
-                                        title: Text(AppLocalizations.of(context).defineWeeklySlots),
-                                        content: StepAvailableTime(media: media),
-                                        state: currentStep == 1 ? StepState.editing : StepState.indexed,
-                                        isActive: true,
-                                      ),
-                                      Step(
-                                        title: Text(AppLocalizations.of(context).provideServiceDuration),
+                                        title: Text(AppLocalizations.of(context).slotLength),
                                         content: StepLength(media: media),
                                         state: currentStep == 2 ? StepState.editing : StepState.indexed,
                                         //state: StepState.complete,
+                                        isActive: true,
+                                      ),
+                                      Step(
+                                        title: Text(AppLocalizations.of(context).slotAvailableTime),
+                                        content: StepAvailableTime(media: media),
+                                        state: currentStep == 1 ? StepState.editing : StepState.indexed,
                                         isActive: true,
                                       ),
                                       Step(
