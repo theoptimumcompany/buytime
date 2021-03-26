@@ -470,7 +470,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                         onTap: () {
                                           debugPrint('done');
                                           FocusScope.of(context).unfocus();
-                                          search(snapshot.serviceList.serviceListState);
+                                          search(tmpServiceList);
                                         },
                                         child: Icon(
                                           // Based on passwordVisible state choose the icon
@@ -483,7 +483,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                     onEditingComplete: () {
                                       debugPrint('done');
                                       FocusScope.of(context).unfocus();
-                                      search(snapshot.serviceList.serviceListState);
+                                      search(tmpServiceList);
                                     },
                                   ),
                                 ),
@@ -677,11 +677,11 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                                       ),
                                                     ),
                                                   ),
-                                                  Container(
+                                                  /*Container(
                                                     margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 38),
                                                     height: SizeConfig.safeBlockVertical * .2,
                                                     color: BuytimeTheme.DividerGrey,
-                                                  )
+                                                  )*/
                                                 ],
                                               );
                                             }).toList(),

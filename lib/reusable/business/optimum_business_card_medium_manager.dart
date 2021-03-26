@@ -110,8 +110,8 @@ class _OptimumBusinessCardMediumManagerState extends State<OptimumBusinessCardMe
                     imageUrl: version200(widget.imageUrl),
                     imageBuilder: (context, imageProvider) => Container(
                       //margin: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 5), ///5%
-                      height: 110,
-                      width: 110,
+                      height: 100,
+                      width: 100,
                       decoration: BoxDecoration(
                         //borderRadius: BorderRadius.all(Radius.circular(SizeConfig.blockSizeHorizontal * 5)), ///12.5%
                           image: DecorationImage(image: imageProvider, fit: BoxFit.cover)),
@@ -133,7 +133,7 @@ class _OptimumBusinessCardMediumManagerState extends State<OptimumBusinessCardMe
                   ),
                   Expanded(
                     child: Container(
-                      height: mediaSize.height * 0.13,
+                      height: 100,//mediaSize.height * 0.13,
                       decoration: BoxDecoration(
                         border: Border(
                           bottom: BorderSide(

@@ -720,11 +720,11 @@ class _BookingPageState extends State<BookingPage> {
                                                     ),
                                                   ),
                                                 ),
-                                                Container(
+                                                /*Container(
                                                   margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 38),
                                                   height: SizeConfig.safeBlockVertical * .2,
                                                   color: BuytimeTheme.DividerGrey,
-                                                )
+                                                )*/
                                               ],
                                             );
                                           }).toList(),

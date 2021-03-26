@@ -455,11 +455,11 @@ class _FilterGeneralState extends State<FilterGeneral> {
                                                 ),
                                               ),
                                             ),
-                                            Container(
+                                            /*Container(
                                               margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 38),
                                               height: SizeConfig.safeBlockVertical * .2,
                                               color: BuytimeTheme.DividerGrey,
-                                            )
+                                            )*/
                                           ],
                                         );
                                       }).toList(),
