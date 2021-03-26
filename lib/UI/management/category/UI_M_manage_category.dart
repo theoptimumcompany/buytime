@@ -9,6 +9,7 @@ import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
 import 'package:Buytime/reusable/enterExitRoute.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
+import 'package:Buytime/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -393,13 +394,7 @@ class ManageCategoryState extends State<ManageCategory> {
                     },
                   ),
                   ///Title
-                  Container(
-                    child: Text(
-                      AppLocalizations.of(context).categories,
-                      textAlign: TextAlign.start,
-                      style: BuytimeTheme.appbarTitle,
-                    ),
-                  ),
+                  Utils.barTitle(AppLocalizations.of(context).categories),
                   IconButton(
                     icon: const Icon(
                       Icons.add,

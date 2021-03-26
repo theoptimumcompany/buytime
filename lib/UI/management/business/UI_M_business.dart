@@ -15,7 +15,9 @@ import 'package:Buytime/reusable/enterExitRoute.dart';
 import 'package:Buytime/reusable/menu/UI_M_business_list_drawer.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
+import 'package:Buytime/utils/utils.dart';
 import 'package:add_2_calendar/add_2_calendar.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 //import 'package:device_calendar/device_calendar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -112,18 +114,10 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                         },
                       ),
                     ),
-                    Container(
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 20.0),
-                        child: Text(
-                          AppLocalizations.of(context).dashboard,
-                          textAlign: TextAlign.start,
-                          style: BuytimeTheme.appbarTitle,
-                        ),
-                      ),
-                    ),
                   ],
                 ),
+                ///Title
+                Utils.barTitle(AppLocalizations.of(context).dashboard),
                 Padding(
                     padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
                     child: InkWell(
@@ -213,9 +207,36 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                                         Container(
                                           //color: Colors.deepOrange,
                                           width: 140,
-
                                           ///Fixed width
-                                          child: Image.network(StoreProvider.of<AppState>(context).state.business.logo, fit: BoxFit.cover, scale: 1.1),
+                                          child: CachedNetworkImage(
+                                            imageUrl: StoreProvider.of<AppState>(context).state.business.logo,
+                                            imageBuilder: (context, imageProvider) => Container(
+                                              //margin: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 5), ///5%
+                                              height: 140,
+                                              width: 140,
+                                              decoration: BoxDecoration(
+                                                //borderRadius: BorderRadius.all(Radius.circular(SizeConfig.blockSizeHorizontal * 5)), ///12.5%
+                                                  image: DecorationImage(image: imageProvider, fit: BoxFit.cover,)),
+                                            ),
+                                            placeholder: (context, url) => Container(
+                                              height: 140,
+                                              width: 140,
+                                              child: Row(
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                children: [
+                                                  Container(
+                                                    //padding: EdgeInsets.only(top: 80, bottom: 80, left: 50, right: 50),
+                                                    child: CircularProgressIndicator(
+                                                      //valueColor: new AlwaysStoppedAnimation<Color>(BuytimeTheme.ManagerPrimary),
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                            errorWidget: (context, url, error) => Icon(Icons.error),
+                                          )
+
+                                          //Image.network(StoreProvider.of<AppState>(context).state.business.logo, fit: BoxFit.cover, scale: 1.1),
                                         )
                                       ]),
                                     )

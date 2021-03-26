@@ -79,7 +79,7 @@ class BuytimeTheme {
 
   static TextStyle appbarTitle = TextStyle(
       fontFamily: FontFamily,
-      fontSize: 20,
+      fontSize: 18,
       fontWeight: FontWeight.w700,
       color: TextWhite
   );

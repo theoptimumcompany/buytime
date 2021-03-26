@@ -372,6 +372,11 @@
   "item": "Item",
   "items": "Items",
   "whyDoYou": "Why do you want to cancel it?",
+  "confirm": "Confirm",
+  "overbooking": "Overbooking",
+  "techProblem": "Technical problem",
+  "legalRestrict": "Legal restrictions (COVID)"
+  "whyDoYou": "Why do you want to cancel it?",
   "spaceHours": " hours",
   "spaceHour": " hour",
   "spaceMinute": " minute",

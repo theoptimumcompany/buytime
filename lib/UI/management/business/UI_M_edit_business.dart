@@ -389,12 +389,12 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
                                                                   ],
                                                                 ),
                                                                 /*Container(
-                                    width: double.infinity,
-                                    child: Row(
-                                      children: listOfTagChips(tag),
-                                    ),
-                                  ),*/
-                                                                (snapshot.tag.length > 0 && snapshot.tag != null)
+                                                                  width: double.infinity,
+                                                                  child: Row(
+                                                                    children: listOfTagChips(tag),
+                                                                  ),
+                                                                ),*/
+                                                                (snapshot.tag != null && snapshot.tag.length > 0)
                                                                     ? Container(
                                                                   height: media.height * 0.05,
                                                                   child: ListView.builder(
@@ -588,7 +588,10 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
                                                           minHeight: 200,
                                                           minWidth: 500,
                                                           cropAspectRatioPreset: CropAspectRatioPreset.square,
-                                                          image: snapshot.logo == null || snapshot.logo.isEmpty ? null : Image.network(snapshot.logo, width: media.width * 0.3),
+                                                          image: snapshot.logo == null || snapshot.logo.isEmpty ?
+                                                          null :
+                                                          snapshot.logo,
+                                                          //Image.network(snapshot.logo, width: media.width * 0.3),
                                                           onFilePicked: (fileToUpload) {
                                                             fileToUpload.remoteFolder = "business/" + businessName + "/logo";
                                                             StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInBusiness(fileToUpload, fileToUpload.state, 0));
@@ -604,7 +607,9 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
                                                           minHeight: 200,
                                                           minWidth: 600,
                                                           cropAspectRatioPreset: CropAspectRatioPreset.ratio16x9,
-                                                          image: snapshot.wide == null || snapshot.wide.isEmpty ? null : Image.network(snapshot.wide, width: media.width * 0.3),
+                                                          image: snapshot.wide == null || snapshot.wide.isEmpty ? null :
+                                                          snapshot.wide,
+                                                          //Image.network(snapshot.wide, width: media.width * 0.3),
                                                           onFilePicked: (fileToUpload) {
                                                             fileToUpload.remoteFolder = "business/" + businessName + "/wide";
                                                             StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInBusiness(fileToUpload, fileToUpload.state, 1));
@@ -620,7 +625,9 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
                                                           minHeight: 200,
                                                           minWidth: 600,
                                                           cropAspectRatioPreset: CropAspectRatioPreset.square,
-                                                          image: snapshot.profile == null || snapshot.profile.isEmpty ? null : Image.network(snapshot.profile, width: media.width * 0.3),
+                                                          image: snapshot.profile == null || snapshot.profile.isEmpty ? null :
+                                                          snapshot.profile,
+                                                          //Image.network(snapshot.profile, width: media.width * 0.3),
                                                           onFilePicked: (fileToUpload) {
                                                             fileToUpload.remoteFolder = "business/" + businessName + "/profile";
                                                             StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInBusiness(fileToUpload, fileToUpload.state, 2));
@@ -636,7 +643,9 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
                                                           minHeight: 200,
                                                           minWidth: 600,
                                                           cropAspectRatioPreset: CropAspectRatioPreset.square,
-                                                          image: snapshot.gallery == null || snapshot.gallery.length == 0 || snapshot.gallery.isEmpty ? null :Image.network(snapshot.gallery[0], width: media.width * 0.3),
+                                                          image: snapshot.gallery == null || snapshot.gallery.length == 0 || snapshot.gallery.isEmpty ? null :
+                                                          snapshot.gallery[0],
+                                                          //Image.network(snapshot.gallery[0], width: media.width * 0.3),
                                                           onFilePicked: (fileToUpload) {
                                                             fileToUpload.remoteFolder = "business/" + businessName + "/gallery";
                                                             StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInBusiness(fileToUpload, fileToUpload.state, 3));

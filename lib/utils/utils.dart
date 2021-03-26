@@ -1,7 +1,11 @@
 import 'dart:math';
 
+import 'package:Buytime/utils/size_config.dart';
+import 'package:Buytime/utils/theme/buytime_theme.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class Utils {
 
@@ -42,6 +46,23 @@ class Utils {
 
   static String enumToString(dynamic enumToTranslate){
     return enumToTranslate.toString().split('.').last;
+  }
+
+  static Widget barTitle(String title){
+    return Container(
+      width: SizeConfig.safeBlockHorizontal * 60,
+      child: Padding(
+          padding: const EdgeInsets.only(left: 0.0),
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              title,
+              textAlign: TextAlign.start,
+              style: BuytimeTheme.appbarTitle,
+            ),
+          )
+      ),
+    );
   }
 
 }

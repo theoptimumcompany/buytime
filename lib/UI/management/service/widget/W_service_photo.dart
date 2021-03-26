@@ -4,6 +4,8 @@ import 'dart:ui' as ui;
 import 'package:Buytime/reblox/model/file/optimum_file_to_upload.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
+import 'package:Buytime/utils/utils.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:image_cropper/image_cropper.dart';
 import 'package:path/path.dart' as path;
@@ -18,7 +20,7 @@ class WidgetServicePhoto extends StatefulWidget {
   final OnFilePickedCallback onFilePicked;
   final String remotePath;
   final int maxPhoto;
-  final Image image;
+  final String image;
   final CropAspectRatioPreset cropAspectRatioPreset;
 
   WidgetServicePhoto(
@@ -45,8 +47,10 @@ class WidgetServicePhotoState extends State<WidgetServicePhoto> {
   final CropAspectRatioPreset cropAspectRatioPreset;
   final OnFilePickedCallback onFilePicked;
   var size;
-  Image image;
+  String image;
   AssetImage assetImage = AssetImage('assets/img/image_placeholder.png');
+
+  Image croppedImage;
 
   PickedFile imageFile;
   ImageState imageServiceState;
@@ -151,7 +155,7 @@ class WidgetServicePhotoState extends State<WidgetServicePhoto> {
       if (kIsWeb) {
         if (pickedFile != null) {
           setState(() {
-            image = Image.network(tmpCroppedFile.path);
+            image = tmpCroppedFile.path;
             imageFile = tmpCroppedFile;
           });
         }
@@ -159,7 +163,8 @@ class WidgetServicePhotoState extends State<WidgetServicePhoto> {
         Image imageFromMemory = Image.memory(await tmpCroppedFile.readAsBytes());
         if (imageFromMemory != null) {
           setState(() {
-            image = imageFromMemory;
+            //image = imageFromMemory;
+            croppedImage = imageFromMemory;
             imageFile = tmpCroppedFile;
           });
         }
@@ -214,7 +219,21 @@ class WidgetServicePhotoState extends State<WidgetServicePhoto> {
         ),
         Container(
           child: GestureDetector(
-            child: image == null ? Image(image: assetImage, fit: BoxFit.cover,) : image,
+            child: CachedNetworkImage(
+              imageUrl: image != '' ? remotePath.endsWith('1') ? Utils.sizeImage(image, Utils.imageSizing600) :Utils.sizeImage(image, Utils.imageSizing200) : '',
+              imageBuilder: (context, imageProvider) => Container(
+                //margin: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 5), ///5%
+                height: remotePath.endsWith('1') ? 300 : 150,
+                width: remotePath.endsWith('1') ? 300 : 150,
+                decoration: BoxDecoration(
+                  //borderRadius: BorderRadius.all(Radius.circular(SizeConfig.blockSizeHorizontal * 5)), ///12.5%
+                    image: DecorationImage(image: imageProvider, fit: BoxFit.cover)),
+              ),
+              placeholder: (context, url) => CircularProgressIndicator(
+                //valueColor: new AlwaysStoppedAnimation<Color>(BuytimeTheme.ManagerPrimary),
+              ),
+              errorWidget: (context, url, error) => croppedImage == null ? Image(width: SizeConfig.blockSizeHorizontal * 50, image: assetImage) : croppedImage,
+            ),
             onTap: () {
               manageImage();
             },
