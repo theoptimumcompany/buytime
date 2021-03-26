@@ -6,6 +6,7 @@ import 'package:Buytime/reblox/model/snippet/parent.dart';
 import 'package:Buytime/reblox/reducer/category_tree_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/service_reducer.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
+import 'package:Buytime/reusable/enterExitRoute.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:flutter/material.dart';
@@ -170,7 +171,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
         if (Navigator.of(context).userGestureInProgress)
           return false;
         else
-          return true;
+          return false;
       },
       child: StoreConnector<AppState, AppState>(
           converter: (store) => store.state,
@@ -192,10 +193,8 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                   icon: Icon(Icons.keyboard_arrow_left, color: Colors.white, size: 24),
                                   onPressed: () {
                                     //Todo: POP o no?
-                                    Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(builder: (context) => UI_M_ServiceList()),
-                                    );
+                                    //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_ServiceList()),);
+                                    Navigator.pushReplacement(context, EnterExitRoute(enterPage: UI_M_ServiceList(), exitPage: UI_CreateService(), from: false));
                                   })),
                           Flexible(
                             child: Container(

@@ -5,6 +5,7 @@ import 'package:Buytime/reblox/model/category/tree/category_tree_state.dart';
 import 'package:Buytime/reblox/reducer/category_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_tree_reducer.dart';
 import 'package:Buytime/reblox/model/snippet/parent.dart';
+import 'package:Buytime/reusable/enterExitRoute.dart';
 import 'package:Buytime/reusable/form/optimum_form_multi_photo.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
@@ -150,10 +151,10 @@ class UI_M_CreateCategoryState extends State<UI_M_CreateCategory> {
   }
 
   Future<bool> _onWillPop() {
-    Navigator.pushReplacement(
+    /*Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => ManageCategory()),
-    );
+    );*/
   }
 
   Parent searchDropdownParent(var snapshot) {
@@ -208,10 +209,8 @@ class UI_M_CreateCategoryState extends State<UI_M_CreateCategory> {
                                     ),
                                     tooltip: AppLocalizations.of(context).comeBack,
                                     onPressed: () {
-                                      Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(builder: (context) => ManageCategory()),
-                                      );
+                                      //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ManageCategory()),);
+                                      Navigator.pushReplacement(context, EnterExitRoute(enterPage: ManageCategory(), exitPage: UI_M_CreateCategory(empty: true,), from: false));
                                     },
                                   ),
                                 ),

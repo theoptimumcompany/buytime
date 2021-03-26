@@ -55,10 +55,10 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
   }
 
   Future<bool> _onWillPop() {
-    Navigator.pushReplacement(
+    /*Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => UI_M_Business()),
-    );
+    );*/
   }
 
   @override
@@ -139,13 +139,8 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                       icon: Icon(Icons.add, color: Colors.white, size: mediaWidth * 0.085),
                       onPressed: () {
                         StoreProvider.of<AppState>(context).dispatch(SetService(ServiceState().toEmpty()));
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => UI_CreateService(
-                                    categoryId: "",
-                                  )),
-                        );
+                        //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_CreateService(categoryId: "",)));
+                        Navigator.pushReplacement(context, EnterExitRoute(enterPage: UI_CreateService(categoryId: "",), exitPage: UI_M_ServiceList(), from: true));
                       },
                     ),
                   ],
@@ -204,10 +199,8 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                                       //borderRadius: BorderRadius.all(Radius.circular(10)),
                                       onTap: () async {
                                         StoreProvider.of<AppState>(context).dispatch(SetService(ServiceState().toEmpty()));
-                                        Navigator.pushReplacement(
-                                          context,
-                                          MaterialPageRoute(builder: (context) => UI_CreateService(categoryId: categoryRootList[i].id)),
-                                        );
+                                        //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_CreateService(categoryId: categoryRootList[i].id)),);
+                                        Navigator.pushReplacement(context, EnterExitRoute(enterPage: UI_CreateService(categoryId: categoryRootList[i].id), exitPage: UI_M_ServiceList(), from: true));
                                       },
                                       child: Container(
                                         height: 56,
@@ -359,10 +352,8 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                                                               child: GestureDetector(
                                                                 onTap: () {
                                                                   StoreProvider.of<AppState>(context).dispatch(SetService(listOfServiceEachRoot[i][index]));
-                                                                  Navigator.push(
-                                                                    context,
-                                                                    MaterialPageRoute(builder: (context) => UI_EditService()),
-                                                                  );
+                                                                  //Navigator.push(context, MaterialPageRoute(builder: (context) => UI_EditService()),);
+                                                                  Navigator.pushReplacement(context, EnterExitRoute(enterPage: UI_EditService(), exitPage: UI_M_ServiceList(), from: true));
                                                                 },
                                                                 child: Container(
                                                                   height: 56,

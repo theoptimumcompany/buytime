@@ -27,10 +27,10 @@ class UI_M_ManageBusinessState extends State<UI_M_ManageBusiness> {
     return WillPopScope(
       onWillPop: () async {
         FocusScope.of(context).unfocus();
-        Navigator.pushReplacement(
+        /*Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => UI_M_Business()),
-        );
+        );*/
         return false;
       },
       child: Scaffold(
