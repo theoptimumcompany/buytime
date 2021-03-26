@@ -342,7 +342,8 @@ class _BookingPageState extends State<BookingPage> {
                                                 },
                                               )
                                             ],
-                                          ));
+                                          )
+                                  );
                                 }
                               },
                             ),
@@ -388,10 +389,8 @@ class _BookingPageState extends State<BookingPage> {
                           Container(
                             //margin: EdgeInsets.only(left: SizeConfig.safeBlockVertical * 1, right: SizeConfig.safeBlockHorizontal * 1),
                             width: 125,
-
                             ///25% SizeConfig.safeBlockVertical * 20
                             height: 125,
-
                             ///25% SizeConfig.safeBlockVertical * 20
                             decoration: BoxDecoration(
                               color: Color(0xffE6E7E8),

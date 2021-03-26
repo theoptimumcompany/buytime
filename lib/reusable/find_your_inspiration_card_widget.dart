@@ -99,9 +99,14 @@ class _FindYourInspirationCardWidgetState extends State<FindYourInspirationCardW
         ),
       ),
       placeholder: (context, url) => Container(
-        width: SizeConfig.safeBlockVertical * 10,
-        height: SizeConfig.safeBlockVertical * 10,
-        child: CircularProgressIndicator(),
+        width: widget.width, ///SizeConfig.safeBlockVertical * widget.width
+        height: widget.heigth, ///SizeConfig.safeBlockVertical * widget.width
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircularProgressIndicator()
+          ],
+        ),
       ),
       errorWidget: (context, url, error) => Icon(Icons.error),
     );

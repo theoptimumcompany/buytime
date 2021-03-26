@@ -8,6 +8,7 @@ import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reservable_list_reducer.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
 import 'package:Buytime/reusable/buytime_icons.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/utils/size_config.dart';
@@ -220,10 +221,38 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                             ///Background Image
                             Container(
                               height: SizeConfig.safeBlockVertical * 55,
+                              //width: double.infinity,
                               child: Stack(
                                 children: [
                                   ///Background image
-                                  Positioned.fill(
+                                  CachedNetworkImage(
+                                    imageUrl: version200(serviceState.image1),
+                                    imageBuilder: (context, imageProvider) => Container(
+                                      //margin: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 5), ///5%
+                                      height: SizeConfig.safeBlockVertical * 55,
+                                      width: double.infinity,
+                                      decoration: BoxDecoration(
+                                        //borderRadius: BorderRadius.all(Radius.circular(SizeConfig.blockSizeHorizontal * 5)), ///12.5%
+                                          image: DecorationImage(image: imageProvider, fit: BoxFit.fill,)),
+                                    ),
+                                    placeholder: (context, url) => Container(
+                                      height: SizeConfig.safeBlockVertical * 55,
+                                      width: double.infinity,
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Container(
+                                            //padding: EdgeInsets.only(top: 80, bottom: 80, left: 50, right: 50),
+                                            child: CircularProgressIndicator(
+                                              //valueColor: new AlwaysStoppedAnimation<Color>(BuytimeTheme.ManagerPrimary),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                    errorWidget: (context, url, error) => Icon(Icons.error),
+                                  )
+                                  /*Positioned.fill(
                                     child: Align(
                                       alignment: Alignment.center,
                                       child: Container(
@@ -236,7 +265,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                         ),
                                       ),
                                     ),
-                                  ),
+                                  ),*/
                                   /*///Back button
                                   Positioned.fill(
                                     child: Align(
@@ -465,7 +494,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                       Container(
                         width: 158, ///SizeConfig.safeBlockHorizontal * 40
                         height: 44,
-                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, bottom: SizeConfig.safeBlockVertical * 2, right: SizeConfig.safeBlockHorizontal * 5),
+                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, bottom: SizeConfig.safeBlockVertical * 2, right: SizeConfig.safeBlockHorizontal * 0),
                         decoration: BoxDecoration(
                             borderRadius: new BorderRadius.circular(5),
                             border: Border.all(

@@ -13,6 +13,7 @@ import 'package:Buytime/reblox/reducer/business_reducer.dart';
 import 'package:Buytime/reusable/business/optimum_business_card_medium_manager.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
 import 'package:Buytime/reusable/menu/UI_M_business_list_drawer.dart';
+import 'package:Buytime/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -28,6 +29,9 @@ class UI_M_BusinessListState extends State<UI_M_BusinessList> {
   List<BusinessState> businessListState;
   GlobalKey<ScaffoldState> _drawerKeyTabs = GlobalKey();
 
+  bool startRequest = false;
+  bool noActivity = false;
+
   @override
   void initState() {
     super.initState();
@@ -42,8 +46,14 @@ class UI_M_BusinessListState extends State<UI_M_BusinessList> {
         onInit: (store) => {
               print("Oninitbusinesslist"),
               store.dispatch(BusinessListRequest(store.state.user.uid, store.state.user.getRole())),
+              startRequest = true
             },
         builder: (context, snapshot) {
+          if(snapshot.businessListState.isEmpty && startRequest){
+            noActivity = true;
+          }else{
+            noActivity = false;
+          }
           businessListState = snapshot.businessListState;
           return WillPopScope(
             onWillPop: () async => false,
@@ -69,19 +79,10 @@ class UI_M_BusinessListState extends State<UI_M_BusinessList> {
                             },
                           ),
                         ),
-                        ///Title
-                        Container(
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 20.0),
-                            child: Text(
-                              AppLocalizations.of(context).businessManagement,
-                              textAlign: TextAlign.start,
-                              style: BuytimeTheme.appbarTitle,
-                            ),
-                          ),
-                        )
                       ],
                     ),
+                    ///Title
+                    Utils.barTitle(AppLocalizations.of(context).businessManagement),
                     ///Add Icon
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
@@ -107,7 +108,8 @@ class UI_M_BusinessListState extends State<UI_M_BusinessList> {
                     Expanded(
                       child: Padding(
                         padding: const EdgeInsets.only(top: 10.0),
-                        child: businessListState != null && businessListState.length > 0
+                        child:
+                        businessListState != null && businessListState.length > 0
                             ? ListView.builder(
                                 scrollDirection: Axis.vertical,
                                 shrinkWrap: true,
@@ -119,19 +121,37 @@ class UI_M_BusinessListState extends State<UI_M_BusinessList> {
                                       businessState: businessListState[index],
                                       onBusinessCardTap: (BusinessState businessState) {
                                         StoreProvider.of<AppState>(context).dispatch(SetBusiness(businessListState[index]));
-                                        Navigator.pushReplacement(
-                                          context,
-                                          MaterialPageRoute(builder: (context) => UI_M_Business()),
-                                        );
+                                        //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_Business()),);
+                                        Navigator.push(context, EnterExitRoute(enterPage: UI_M_Business(), exitPage: UI_M_BusinessList(), from: true));
                                       },
                                       imageUrl: businessListState[index].profile,
                                       mediaSize: media,
                                     ),
                                   );
-                                })
-                            : Center(
-                                child: Text(AppLocalizations.of(context).noActiveBusinesses),
-                              ),
+                                }) :
+                            noActivity ?
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                CircularProgressIndicator(
+                                  valueColor: new AlwaysStoppedAnimation<Color>(BuytimeTheme.ManagerPrimary),
+                                )
+                              ],
+                            ) :
+                            Container(
+                              height: SizeConfig.safeBlockVertical * 8,
+                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                              decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
+                              child: Center(
+                                  child: Container(
+                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 4),
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      AppLocalizations.of(context).noActiveBusinesses,
+                                      style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextGrey, fontWeight: FontWeight.w500, fontSize: 16),
+                                    ),
+                                  )),
+                            ),
                       ),
                     ),
                   ],

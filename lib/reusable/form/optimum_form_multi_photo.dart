@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'dart:ui' as ui;
 import 'package:Buytime/reblox/model/file/optimum_file_to_upload.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:image_cropper/image_cropper.dart';
 import 'package:path/path.dart' as path;
@@ -24,7 +26,7 @@ class OptimumFormMultiPhoto extends StatefulWidget {
   final int minWidth;
   final int maxHeight;
   final int minHeight;
-  final Image image;
+  final String image;
   final CropAspectRatioPreset cropAspectRatioPreset;
 
   OptimumFormMultiPhoto(
@@ -67,8 +69,10 @@ class OptimumFormMultiPhotoState extends State<OptimumFormMultiPhoto> {
   final CropAspectRatioPreset cropAspectRatioPreset;
   final OnFilePickedCallback onFilePicked;
   var size;
-  Image image;
+  String image;
   AssetImage assetImage = AssetImage('assets/img/image_placeholder.png');
+
+  Image croppedImage;
 
   PickedFile imageFile;
   ImageState state;
@@ -179,16 +183,19 @@ class OptimumFormMultiPhotoState extends State<OptimumFormMultiPhoto> {
       if (kIsWeb) {
         if (pickedFile != null) {
           setState(() {
-            image = Image.network(tmpCroppedFile.path);
+            //image = Image.network(tmpCroppedFile.path);
+            image = tmpCroppedFile.path;
             imageFile = tmpCroppedFile;
           });
         }
 
       } else {
         Image imageFromMemory = Image.memory(await tmpCroppedFile.readAsBytes());
-        if ( imageFromMemory != null) {
-          setState(() {
-            image = imageFromMemory;
+        //String tmpImage = base64Encode(await tmpCroppedFile.readAsBytes());
+        if ( imageFromMemory != null){
+          setState((){
+            //image = tmpCroppedFile.path;
+            croppedImage = imageFromMemory;
             imageFile = tmpCroppedFile;
           });
         }
@@ -276,7 +283,22 @@ class OptimumFormMultiPhotoState extends State<OptimumFormMultiPhoto> {
                   child: Align(
                     alignment: Alignment.center,
                     child: GestureDetector(
-                      child: image == null ? Image(width: SizeConfig.blockSizeHorizontal * 50, image: assetImage) : image,
+                      child: CachedNetworkImage(
+                        imageUrl: image ?? '',
+                        imageBuilder: (context, imageProvider) => Container(
+                          //margin: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 5), ///5%
+                          decoration: BoxDecoration(
+                            //borderRadius: BorderRadius.all(Radius.circular(SizeConfig.blockSizeHorizontal * 5)), ///12.5%
+                              image: DecorationImage(image: imageProvider, fit: BoxFit.fitHeight)),
+                        ),
+                        placeholder: (context, url) => CircularProgressIndicator(
+                          //valueColor: new AlwaysStoppedAnimation<Color>(BuytimeTheme.ManagerPrimary),
+                        ),
+                        errorWidget: (context, url, error) => croppedImage == null ? Image(width: SizeConfig.blockSizeHorizontal * 50, image: assetImage) : croppedImage,
+                      ),
+                      /*image == null ?
+                      Image(width: SizeConfig.blockSizeHorizontal * 50, image: assetImage) :
+                      image,*/
                       onTap: () {
                         manageImage();
                       },

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:math';
+import 'package:Buytime/UI/management/service/class/service_slot_classes.dart';
 import 'package:Buytime/UI/user/cart/UI_U_Cart.dart';
 import 'package:Buytime/UI/user/cart/UI_U_CartReservable.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
@@ -83,20 +84,42 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
   List<List<SelectedEntry>> indexes = [];
   List<SelectedEntry> alreadySelected = [];
 
+  bool isValid(DateTime dateTime, EveryDay everyDay){
+    //String weekdayDate = DateFormat('E d M y').format(dateTime);
+    String weekday = DateFormat('E').format(dateTime);
+
+    if('Mon' == weekday) {
+      return everyDay.everyDay[0];
+    }else if('Tue' == weekday){
+      return everyDay.everyDay[1];
+    }else if('Wed' == weekday){
+      return everyDay.everyDay[2];
+    }else if('Thu' == weekday){
+      return everyDay.everyDay[3];
+    }else if('Fri' == weekday){
+      return everyDay.everyDay[4];
+    }else if('Sat' == weekday){
+      return everyDay.everyDay[5];
+    }else{
+      return everyDay.everyDay[6];
+    }
+  }
+
   List<DateTime> getDaysInBeteween(DateTime startDate, DateTime endDate, DateTime userStartDate, DateTime userEndDate, ServiceSlot slot, List<OrderReservableState> reserved) {
     tmpSlots.clear();
     List<DateTime> days = [];
     for (int i = 0; i <= endDate.difference(startDate).inDays; i++) {
-      debugPrint('UI_U_ServiceReserve => LOOKING DATE: ${startDate.add(Duration(days: i))} - IS AFTER: $userStartDate - IS BEFORE: $userEndDate');
+      //debugPrint('UI_U_ServiceReserve => LOOKING DATE: ${startDate.add(Duration(days: i))} - IS AFTER: $userStartDate - IS BEFORE: $userEndDate');
       if(startDate.add(Duration(days: i)).isAfter(userStartDate) && startDate.add(Duration(days: i)).isBefore(userEndDate)){
-        debugPrint('UI_U_ServiceReserve => LOOKED DATE: ${startDate.add(Duration(days: i))} - IS AFTER: $startDate');
+        //debugPrint('UI_U_ServiceReserve => LOOKED DATE: ${startDate.add(Duration(days: i))} - IS AFTER: $startDate');
         if(startDate.add(Duration(days: i)).isAfter(startDate) || startDate.add(Duration(days: i)).isAtSameMomentAs(startDate)){
           DateTime currentTime = DateTime.now();
           currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0);
-          debugPrint('UI_U_ServiceReserve => LOOKED DATE: ${startDate.add(Duration(days: i))} - CURRENT DATE: ${currentTime}');
+          //debugPrint('UI_U_ServiceReserve => LOOKED DATE: ${startDate.add(Duration(days: i))} - CURRENT DATE: ${currentTime}');
           if(startDate.add(Duration(days: i)).isAfter(currentTime) || startDate.add(Duration(days: i)).isAtSameMomentAs(currentTime)) {
-              days.add(startDate.add(Duration(days: i)));
               //tmpSlots.add(List.generate(slot.startTime.length, (index) => [index, slot]));
+
+               bool isIn = false;
               bool isReserved = false;
               tmpSlots.add([]);
               reserved.forEach((r) {
@@ -104,13 +127,16 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                   //debugPrint('UI_U_ServiceReserve => LOOKING DATE: ${item.date}');
                   if(startDate.add(Duration(days: i)).isAtSameMomentAs(item.date) && !isReserved && slot.startTime.contains(item.time)){
                     debugPrint('UI_U_ServiceReserve => LOOKED DATE: ${item.date} - RESERVED: ${startDate.add(Duration(days: i))}');
-                    for(int i = 0; i < slot.startTime.length; i++) {
-                      debugPrint('UI_U_ServiceReserve => LOOKING TIME: ${slot.startTime[i]} - TIME: ${item.time}');
-                      if(slot.startTime[i] == item.time){
-                        isReserved = true;
-                        debugPrint('UI_U_ServiceReserve => LOOKED TIME: ${item.time} - RESERVED: ${slot.startTime[i]}');
-                      }else{
-                        tmpSlots.last.add([i, slot]);
+                    for(int j = 0; j < slot.startTime.length; j++) {
+                      debugPrint('UI_U_ServiceReserve => LOOKING TIME: ${slot.startTime[j]} - TIME: ${item.time}');
+                      if(isValid(startDate.add(Duration(days: i)), slot.daysInterval[j])){
+                        isIn = true;
+                        if(slot.startTime[j] == item.time){
+                          isReserved = true;
+                          debugPrint('UI_U_ServiceReserve => LOOKED TIME: ${item.time} - RESERVED: ${slot.startTime[j]}');
+                        }else{
+                          tmpSlots.last.add([j, slot]);
+                        }
                       }
                     }
                   }
@@ -118,9 +144,23 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
               });
 
               if(!isReserved){
-                tmpSlots.removeLast();
-                tmpSlots.add(List.generate(slot.startTime.length, (index) => [index, slot]));
+                //tmpSlots.removeLast();
+                //tmpSlots.add(List.generate(slot.startTime.length, (index) => [index, slot]));
+                for(int j = 0; j < slot.startTime.length; j++) {
+                  //debugPrint('UI_U_ServiceReserve => LOOKING TIME: ${slot.startTime[j]} - TIME: ${item.time}');
+                  if(isValid(startDate.add(Duration(days: i)), slot.daysInterval[j])){
+                    isIn = true;
+                    tmpSlots.last.add([j, slot]);
+                  }
+                }
               }
+
+              if(isIn){
+                days.add(startDate.add(Duration(days: i)));
+              }else
+                tmpSlots.removeLast();
+
+               //days.add(startDate.add(Duration(days: i)));
             }
           //picked.add(List.generate(endDate.difference(startDate).inDays, (index) => false));
           //indexes.add(List.generate(endDate.difference(startDate).inDays, (index) => List.generate(2, (index) => 0)));
@@ -306,14 +346,18 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                   ),
                   ///Title
                   Container(
+                    width: SizeConfig.safeBlockHorizontal * 60,
                     child: Padding(
                       padding: const EdgeInsets.only(left: 10.0),
-                      child: Text(
-                        AppLocalizations.of(context).reserveSpace + widget.serviceState.name,
-                        textAlign: TextAlign.start,
-                        style: BuytimeTheme.appbarTitle,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          AppLocalizations.of(context).reserveSpace + widget.serviceState.name,
+                          textAlign: TextAlign.start,
+                          style: BuytimeTheme.appbarTitle,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                        ),
                       ),
                     ),
                   ),
@@ -555,6 +599,8 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                   //final item = (index != snapshot.itemList.length ? snapshot.itemList[index] : null);
                                   DateTime i = dates.elementAt(index);
                                   String date = DateFormat('MMM dd').format(i).toUpperCase();
+                                  String currentDate = DateFormat('MMM dd').format(DateTime.now()).toUpperCase();
+                                  String nextDate = DateFormat('MMM dd').format(DateTime.now().add(Duration(days: 1))).toUpperCase();
                                   List<bool> select = picked.elementAt(index);
                                   return Column(
                                     children: [
@@ -568,7 +614,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                             Container(
                                               margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
                                               child: Text(
-                                                index == 0 ? AppLocalizations.of(context).today + date : index == 1 ? AppLocalizations.of(context).tomorrow + date : '${DateFormat('EEEE').format(i).toUpperCase()}, $date',
+                                                index == 0 && currentDate == date ? AppLocalizations.of(context).today + date : index == 1 && nextDate == date ? AppLocalizations.of(context).tomorrow + date : '${DateFormat('EEEE').format(i).toUpperCase()}, $date',
                                                 textAlign: TextAlign.start,
                                                 style: TextStyle(
                                                   letterSpacing: 1.25,

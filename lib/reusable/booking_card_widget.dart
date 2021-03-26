@@ -4,6 +4,7 @@ import 'package:Buytime/reblox/reducer/booking_reducer.dart';
 import 'package:Buytime/reblox/reducer/business_reducer.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
@@ -107,113 +108,132 @@ class _BookingCardWidgetState extends State<BookingCardWidget> {
 
     return ColorFiltered(
       colorFilter: !closed ? identity: greyscale,
-      child: Container(
-        height: 200, ///SizeConfig.safeBlockVertical * 28
-        width: 310, ///SizeConfig.safeBlockHorizontal * 80
-        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * .5, left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 2.5),
-        decoration: BoxDecoration(
-            color: Colors.black,
-            borderRadius: BorderRadius.all(Radius.circular(5.0)),
-            image: DecorationImage(
-              image: NetworkImage(widget.bookingState.wide),
-              fit: BoxFit.cover,
-            )
-        ),
-        child: Material(
-          color: Colors.transparent,
-          child: InkWell(
-            splashColor: Colors.black.withOpacity(.3),
-            onTap: !closed ? (){
-              StoreProvider.of<AppState>(context).dispatch(BookingRequestResponse(widget.bookingState));
-              StoreProvider.of<AppState>(context).dispatch(BusinessAndNavigateRequest(widget.bookingState.business_id));
-            } : null,
-            borderRadius: BorderRadius.all(Radius.circular(5.0)),
-            child: Container(
-              height: 200, ///SizeConfig.safeBlockVertical * 25
-              width: 310, ///SizeConfig.safeBlockHorizontal * 50
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                  color: !closed ? Colors.black.withOpacity(.2) : BuytimeTheme.TextWhite.withOpacity(0.1)
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, bottom: SizeConfig.safeBlockVertical * .5),
-                        child: FittedBox(
-                          fit: BoxFit.scaleDown,
-                          child: Text(
-                            widget.bookingState.business_name,
-                            style: TextStyle(
-                              letterSpacing:  -.1,
-                                fontFamily: BuytimeTheme.FontFamily,
-                                color: !closed ? BuytimeTheme.TextWhite : BuytimeTheme.TextWhite.withOpacity(.8),
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
+      child: CachedNetworkImage(
+        imageUrl: widget.bookingState.wide,
+        imageBuilder: (context, imageProvider) => Container(
+          height: 200, ///SizeConfig.safeBlockVertical * 28
+          width: 310, ///SizeConfig.safeBlockHorizontal * 80
+          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * .5, left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 2.5),
+          decoration: BoxDecoration(
+              color: Colors.black,
+              borderRadius: BorderRadius.all(Radius.circular(5.0)),
+              image: DecorationImage(
+                image: imageProvider,
+                fit: BoxFit.cover,
+              )
+          ),
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              splashColor: Colors.black.withOpacity(.3),
+              onTap: !closed ? (){
+                StoreProvider.of<AppState>(context).dispatch(BookingRequestResponse(widget.bookingState));
+                StoreProvider.of<AppState>(context).dispatch(BusinessAndNavigateRequest(widget.bookingState.business_id));
+              } : null,
+              borderRadius: BorderRadius.all(Radius.circular(5.0)),
+              child: Container(
+                height: 200, ///SizeConfig.safeBlockVertical * 25
+                width: 310, ///SizeConfig.safeBlockHorizontal * 50
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                    color: !closed ? Colors.black.withOpacity(.2) : BuytimeTheme.TextWhite.withOpacity(0.1)
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, bottom: SizeConfig.safeBlockVertical * .5),
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(
+                              widget.bookingState.business_name,
+                              style: TextStyle(
+                                  letterSpacing:  -.1,
+                                  fontFamily: BuytimeTheme.FontFamily,
+                                  color: !closed ? BuytimeTheme.TextWhite : BuytimeTheme.TextWhite.withOpacity(.8),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, bottom: SizeConfig.safeBlockVertical * .5),
-                        child:  FittedBox(
-                          fit: BoxFit.scaleDown,
-                          child: Text(
-                            '${DateFormat('dd MMMM').format(widget.bookingState.start_date)} - ${DateFormat('dd MMMM yyyy').format(widget.bookingState.end_date)}',
-                            style: TextStyle(
-                                fontFamily: BuytimeTheme.FontFamily,
-                                color: !closed ? BuytimeTheme.TextWhite : BuytimeTheme.TextWhite.withOpacity(.8),
-                                fontWeight: FontWeight.w600,
-                                fontSize: 12 ///SizeConfig.safeBlockHorizontal * 4
+                        Container(
+                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, bottom: SizeConfig.safeBlockVertical * .5),
+                          child:  FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(
+                              '${DateFormat('dd MMMM').format(widget.bookingState.start_date)} - ${DateFormat('dd MMMM yyyy').format(widget.bookingState.end_date)}',
+                              style: TextStyle(
+                                  fontFamily: BuytimeTheme.FontFamily,
+                                  color: !closed ? BuytimeTheme.TextWhite : BuytimeTheme.TextWhite.withOpacity(.8),
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 12 ///SizeConfig.safeBlockHorizontal * 4
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, bottom: SizeConfig.safeBlockVertical * 1.5),
-                        child: FittedBox(
-                          fit: BoxFit.scaleDown,
-                          child: Text(
-                            bookingStatus,
-                            style: TextStyle(
-                                fontFamily: BuytimeTheme.FontFamily,
-                                color: !closed ? BuytimeTheme.TextWhite : BuytimeTheme.TextWhite.withOpacity(.8),
-                                fontWeight: FontWeight.w600,
-                                fontSize: 12 ///SizeConfig.safeBlockHorizontal * 4
+                        Container(
+                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, bottom: SizeConfig.safeBlockVertical * 1.5),
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(
+                              bookingStatus,
+                              style: TextStyle(
+                                  fontFamily: BuytimeTheme.FontFamily,
+                                  color: !closed ? BuytimeTheme.TextWhite : BuytimeTheme.TextWhite.withOpacity(.8),
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 12 ///SizeConfig.safeBlockHorizontal * 4
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                  ///Share icon
-                  Expanded(
-                    flex: 1,
-                    child: Container(
-                      alignment: Alignment.bottomRight,
-                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, right: SizeConfig.safeBlockHorizontal * .5),
-                      child: IconButton(
-                        onPressed: !closed ? (){
-                          final RenderBox box = context.findRenderObject();
-                          Share.share('check out Buytime App at $link', subject: 'Take your Time!', sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
-                        } : null,
-                        icon: Icon(
-                          Icons.share,
-                          color: widget.bookingState.status == 'opened' ? BuytimeTheme.TextWhite : BuytimeTheme.TextWhite.withOpacity(.8),
-                        ),
-                      ),
+                      ],
                     ),
-                  )
-                ],
+                    ///Share icon
+                    Expanded(
+                      flex: 1,
+                      child: Container(
+                        alignment: Alignment.bottomRight,
+                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, right: SizeConfig.safeBlockHorizontal * .5),
+                        child: IconButton(
+                          onPressed: !closed ? (){
+                            final RenderBox box = context.findRenderObject();
+                            Share.share('check out Buytime App at $link', subject: 'Take your Time!', sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
+                          } : null,
+                          icon: Icon(
+                            Icons.share,
+                            color: widget.bookingState.status == 'opened' ? BuytimeTheme.TextWhite : BuytimeTheme.TextWhite.withOpacity(.8),
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
           ),
         ),
-      ),
+        placeholder: (context, url) => Container(
+          height: 200, ///SizeConfig.safeBlockVertical * 28
+          width: 310, ///SizeConfig.safeBlockHorizontal * 80
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                //padding: EdgeInsets.only(top: 80, bottom: 80, left: 50, right: 50),
+                child: CircularProgressIndicator(
+                  //valueColor: new AlwaysStoppedAnimation<Color>(BuytimeTheme.ManagerPrimary),
+                ),
+              )
+            ],
+          ),
+        ),
+        errorWidget: (context, url, error) => Icon(Icons.error),
+      )
     );
   }
 }

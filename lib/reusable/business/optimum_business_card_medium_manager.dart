@@ -1,5 +1,6 @@
 import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -17,13 +18,13 @@ class OptimumBusinessCardMediumManager extends StatefulWidget {
 
   OptimumBusinessCardMediumManager(
       {this.image,
-      @required this.imageUrl,
-      @required this.businessState,
-      this.onBusinessCardTap,
-      this.rowWidget1,
-      this.rowWidget2,
-      this.rowWidget3,
-      @required this.mediaSize}) {
+        @required this.imageUrl,
+        @required this.businessState,
+        this.onBusinessCardTap,
+        this.rowWidget1,
+        this.rowWidget2,
+        this.rowWidget3,
+        @required this.mediaSize}) {
     this.image = image;
     this.imageUrl = imageUrl;
     this.businessState = businessState;
@@ -59,13 +60,29 @@ class _OptimumBusinessCardMediumManagerState extends State<OptimumBusinessCardMe
 
   _OptimumBusinessCardMediumManagerState(
       {this.image,
-      this.imageUrl,
-      this.businessState,
-      this.businessCardTap,
-      this.rowWidget1,
-      this.rowWidget2,
-      this.rowWidget3,
-      this.mediaSize});
+        this.imageUrl,
+        this.businessState,
+        this.businessCardTap,
+        this.rowWidget1,
+        this.rowWidget2,
+        this.rowWidget3,
+        this.mediaSize});
+
+  String version200(String imageUrl) {
+    //debugPrint('optimum_business_card_medium_manager => RAW IMAGE URL: $imageUrl');
+    String result = "";
+    String extension = "";
+    if (imageUrl != null && imageUrl.length > 0) {
+      extension = imageUrl.substring(imageUrl.lastIndexOf('.'), imageUrl.length);
+      result = imageUrl.substring(0, imageUrl.lastIndexOf('.'));
+      result += "_200x200" + extension;
+    } else {
+      result = "https://firebasestorage.googleapis.com/v0/b/buytime-458a1.appspot.com/o/general%2Fimage_placeholder_200x200.png?alt=media&token=d40ccab1-7fb5-4290-91c6-634871b7a4f3";
+    }
+
+    //debugPrint('optimum_business_card_medium_manager => IMAGE URL: $result');
+    return result;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -89,12 +106,27 @@ class _OptimumBusinessCardMediumManagerState extends State<OptimumBusinessCardMe
                 children: [
                   ///Image
                   widget.image == null
-                      ? Image.network(
+                      ? CachedNetworkImage(
+                    imageUrl: version200(widget.imageUrl),
+                    imageBuilder: (context, imageProvider) => Container(
+                      //margin: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 5), ///5%
+                      height: 110,
+                      width: 110,
+                      decoration: BoxDecoration(
+                        //borderRadius: BorderRadius.all(Radius.circular(SizeConfig.blockSizeHorizontal * 5)), ///12.5%
+                          image: DecorationImage(image: imageProvider, fit: BoxFit.cover)),
+                    ),
+                    placeholder: (context, url) => CircularProgressIndicator(
+                      //valueColor: new AlwaysStoppedAnimation<Color>(BuytimeTheme.ManagerPrimary),
+                    ),
+                    errorWidget: (context, url, error) => Icon(Icons.error),
+                  )
+                  /*Image.network(
                     version200(widget.imageUrl),
                     height: widget.mediaSize != null
                         ? widget.mediaSize.height * 0.13
                         : 50.0,
-                  )
+                  )*/
                       : widget.image,
                   SizedBox(
                     width: widget.mediaSize.width * 0.025,
@@ -201,18 +233,5 @@ class _OptimumBusinessCardMediumManagerState extends State<OptimumBusinessCardMe
     );
   }
 
-  String version200(String imageUrl) {
-    String result = "";
-    String extension = "";
-    if (imageUrl != null && imageUrl.length > 0) {
-      extension =
-          imageUrl.substring(imageUrl.lastIndexOf('.'), imageUrl.length);
-      result = imageUrl.substring(0, imageUrl.lastIndexOf('.'));
-      result += "_200x200" + extension;
-    } else {
-      result =
-          "https://firebasestorage.googleapis.com/v0/b/buytime-458a1.appspot.com/o/general%2Fimage_placeholder_200x200.png?alt=media&token=d40ccab1-7fb5-4290-91c6-634871b7a4f3";
-    }
-    return result;
-  }
+
 }

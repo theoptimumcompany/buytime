@@ -621,20 +621,10 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                                     },
                                   ),
                                 ),
-                                ///Title
-                                Container(
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(left: 20.0),
-                                    child: Text(
-                                      AppLocalizations.of(context).editSpace + snapshot.category.name,
-                                      textAlign: TextAlign.start,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: BuytimeTheme.appbarTitle,
-                                    ),
-                                  ),
-                                ),
                               ],
                             ),
+                            ///Title
+                            Utils.barTitle(AppLocalizations.of(context).editSpace + snapshot.category.name),
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
                               child: IconButton(
@@ -701,7 +691,8 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                                   cropAspectRatioPreset: CropAspectRatioPreset.square,
                                   image: snapshot.category.categoryImage == null || snapshot.category.categoryImage.isEmpty
                                       ? null
-                                      : Image.network(snapshot.category.categoryImage, width: media.width * 0.3),
+                                      : snapshot.category.categoryImage,
+                                  //Image.network(snapshot.category.categoryImage, width: media.width * 0.3),
                                   onFilePicked: (fileToUpload) {
                                     fileToUpload.remoteFolder = "business/" + businessName + "/category";
                                     StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInCategory(fileToUpload, fileToUpload.state, 0));

@@ -1,6 +1,7 @@
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:share/share.dart';
@@ -39,7 +40,34 @@ class _BookingListServiceListItemState extends State<BookingListServiceListItem>
                 child: Row(
                   children: [
                     ///Service Image
-                    Container(
+                    CachedNetworkImage(
+                      imageUrl: widget.serviceState.image1,
+                      imageBuilder: (context, imageProvider) => Container(
+                        //margin: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 5), ///5%
+                        height: 91,
+                        width: 91,
+                        decoration: BoxDecoration(
+                          //borderRadius: BorderRadius.all(Radius.circular(SizeConfig.blockSizeHorizontal * 5)), ///12.5%
+                            image: DecorationImage(image: imageProvider, fit: BoxFit.cover,)),
+                      ),
+                      placeholder: (context, url) => Container(
+                        height: 91,
+                        width: 91,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              //padding: EdgeInsets.only(top: 80, bottom: 80, left: 50, right: 50),
+                              child: CircularProgressIndicator(
+                                //valueColor: new AlwaysStoppedAnimation<Color>(BuytimeTheme.ManagerPrimary),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                      errorWidget: (context, url, error) => Icon(Icons.error),
+                    ),
+                    /*Container(
                       height: 91, ///SizeConfig.safeBlockVertical * 15
                       width: 91, ///SizeConfig.safeBlockVertical * 15
                       //margin: EdgeInsets.all(SizeConfig.safeBlockVertical * 2),
@@ -51,7 +79,7 @@ class _BookingListServiceListItemState extends State<BookingListServiceListItem>
                             fit: BoxFit.cover,
                           )
                       ),
-                    ),
+                    ),*/
                     ///Service Name & Description
                     Container(
                       margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1),

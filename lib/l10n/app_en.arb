@@ -68,7 +68,7 @@
   "businessCreation": "Business Creation",
   "businessEdit": "Business Edit",
   "openMenu": "Open Menu",
-  "dashboard": "Business Dashboard",
+  "dashboard": "Your Business Dashboard",
   "edit": "Edit",
   "editSpace": "Edit ",
   "menuItems": "1 menu items",
@@ -376,6 +376,10 @@
   "allWeek": "All week",
   "item": "Item",
   "items": "Items",
-  "whyDoYou": "Why do you want to cancel it?"
+  "whyDoYou": "Why do you want to cancel it?",
+  "confirm": "Confirm",
+  "overbooking": "Overbooking",
+  "techProblem": "Technical problem",
+  "legalRestrict": "Legal restrictions (COVID)"
 
 }

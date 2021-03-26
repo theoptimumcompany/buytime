@@ -329,11 +329,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                     child: WidgetServicePhoto(
                                                       remotePath: "service/" + (snapshot.business.name != null ? snapshot.business.name + "/" : "") + snapshot.serviceState.name + "_1",
                                                       maxPhoto: 1,
-                                                      image: snapshot.serviceState.image1 != ''
-                                                          ? Image.network(
-                                                              Utils.sizeImage(snapshot.serviceState.image1, Utils.imageSizing600),
-                                                            )
-                                                          : Image.asset('assets/img/image_placeholder.png'),
+                                                      image: snapshot.serviceState.image1,
                                                       cropAspectRatioPreset: CropAspectRatioPreset.square,
                                                       onFilePicked: (fileToUpload) {
                                                         print("UI_create_service - callback upload image 1!");
@@ -352,11 +348,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                           remotePath: "service/" + (snapshot.business.name != null ? snapshot.business.name + "/" : "") + snapshot.serviceState.name + "_2",
                                                           maxPhoto: 1,
                                                           cropAspectRatioPreset: CropAspectRatioPreset.square,
-                                                          image: snapshot.serviceState.image2 != ''
-                                                              ? Image.network(
-                                                                  Utils.sizeImage(snapshot.serviceState.image2, Utils.imageSizing200),
-                                                                )
-                                                              : Image.asset('assets/img/image_placeholder.png'),
+                                                          image: snapshot.serviceState.image2,
                                                           onFilePicked: (fileToUpload) {
                                                             print("UI_create_service -  callback upload image 2!");
                                                             StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInService(fileToUpload));
@@ -367,11 +359,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                         remotePath: "service/" + (snapshot.business.name != null ? snapshot.business.name + "/" : "") + snapshot.serviceState.name + "_3",
                                                         maxPhoto: 1,
                                                         cropAspectRatioPreset: CropAspectRatioPreset.square,
-                                                        image: snapshot.serviceState.image3 != ''
-                                                            ? Image.network(
-                                                                Utils.sizeImage(snapshot.serviceState.image3, Utils.imageSizing200),
-                                                              )
-                                                            : Image.asset('assets/img/image_placeholder.png'),
+                                                        image: snapshot.serviceState.image3,
                                                         onFilePicked: (fileToUpload) {
                                                           print("UI_create_service -  callback upload image 3!");
                                                           StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInService(fileToUpload));
