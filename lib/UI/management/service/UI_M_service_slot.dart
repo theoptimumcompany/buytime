@@ -52,9 +52,6 @@ class UI_M_ServiceSlotState extends State<UI_M_ServiceSlot> {
     } else if (StoreProvider.of<AppState>(context).state.serviceSlot.switchWeek == null || StoreProvider.of<AppState>(context).state.serviceSlot.switchWeek.contains(false)) {
       print("Error week");
       return false;
-    } else if (StoreProvider.of<AppState>(context).state.serviceSlot.maxDuration == null || StoreProvider.of<AppState>(context).state.serviceSlot.maxDuration < 10) {
-      print("Error duration");
-      return false;
     } else
       return true;
   }
