@@ -240,6 +240,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                             child: WidgetServicePhoto(
                                               remotePath: "service/" + (snapshot.business.name != null ? snapshot.business.name + "/" : "") + snapshot.serviceState.name + "_1",
                                               maxPhoto: 1,
+                                              image: snapshot.serviceState.image1,
                                               cropAspectRatioPreset: CropAspectRatioPreset.square,
                                               onFilePicked: (fileToUpload) {
                                                 print("UI_create_service - callback upload image 1!");
@@ -256,6 +257,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                                 child: WidgetServicePhoto(
                                                   remotePath: "service/" + (snapshot.business.name != null ? snapshot.business.name + "/" : "") + snapshot.serviceState.name + "_2",
                                                   maxPhoto: 1,
+                                                  image: snapshot.serviceState.image2,
                                                   cropAspectRatioPreset: CropAspectRatioPreset.square,
                                                   onFilePicked: (fileToUpload) {
                                                     print("UI_create_service -  callback upload image 2!");
@@ -266,6 +268,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                               WidgetServicePhoto(
                                                 remotePath: "service/" + (snapshot.business.name != null ? snapshot.business.name + "/" : "") + snapshot.serviceState.name + "_3",
                                                 maxPhoto: 1,
+                                                image: snapshot.serviceState.image3,
                                                 cropAspectRatioPreset: CropAspectRatioPreset.square,
                                                 onFilePicked: (fileToUpload) {
                                                   print("UI_create_service -  callback upload image 3!");

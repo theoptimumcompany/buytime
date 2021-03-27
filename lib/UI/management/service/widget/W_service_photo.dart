@@ -232,7 +232,7 @@ class WidgetServicePhotoState extends State<WidgetServicePhoto> {
               placeholder: (context, url) => CircularProgressIndicator(
                 //valueColor: new AlwaysStoppedAnimation<Color>(BuytimeTheme.ManagerPrimary),
               ),
-              errorWidget: (context, url, error) => croppedImage == null ? Image(width: SizeConfig.blockSizeHorizontal * 50, image: assetImage) : croppedImage,
+              errorWidget: (context, url, error) => croppedImage == null ? Image(width: SizeConfig.blockSizeHorizontal * 100, image: assetImage) : croppedImage,
             ),
             onTap: () {
               manageImage();
