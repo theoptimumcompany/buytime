@@ -219,8 +219,8 @@ class WidgetServicePhotoState extends State<WidgetServicePhoto> {
         ),
         Container(
           child: GestureDetector(
-            child: CachedNetworkImage(
-              imageUrl: image != '' ? remotePath.endsWith('1') ? Utils.sizeImage(image, Utils.imageSizing600) :Utils.sizeImage(image, Utils.imageSizing200) : '',
+            child: image != '' ? CachedNetworkImage(
+              imageUrl: remotePath.endsWith('1') ? Utils.sizeImage(image, Utils.imageSizing600) :Utils.sizeImage(image, Utils.imageSizing200),
               imageBuilder: (context, imageProvider) => Container(
                 //margin: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 5), ///5%
                 height: remotePath.endsWith('1') ? 300 : 150,
@@ -233,7 +233,7 @@ class WidgetServicePhotoState extends State<WidgetServicePhoto> {
                 //valueColor: new AlwaysStoppedAnimation<Color>(BuytimeTheme.ManagerPrimary),
               ),
               errorWidget: (context, url, error) => croppedImage == null ? Image(width: SizeConfig.blockSizeHorizontal * 100, image: assetImage) : croppedImage,
-            ),
+            ) : croppedImage == null ? Image(width: SizeConfig.blockSizeHorizontal * 100, image: assetImage) : croppedImage,
             onTap: () {
               manageImage();
             },

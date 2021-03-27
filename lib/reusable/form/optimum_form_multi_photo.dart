@@ -283,8 +283,8 @@ class OptimumFormMultiPhotoState extends State<OptimumFormMultiPhoto> {
                   child: Align(
                     alignment: Alignment.center,
                     child: GestureDetector(
-                      child: CachedNetworkImage(
-                        imageUrl: image ?? '',
+                      child: image != null ? CachedNetworkImage(
+                        imageUrl: image,
                         imageBuilder: (context, imageProvider) => Container(
                           //margin: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 5), ///5%
                           decoration: BoxDecoration(
@@ -295,7 +295,7 @@ class OptimumFormMultiPhotoState extends State<OptimumFormMultiPhoto> {
                           //valueColor: new AlwaysStoppedAnimation<Color>(BuytimeTheme.ManagerPrimary),
                         ),
                         errorWidget: (context, url, error) => croppedImage == null ? Image(width: SizeConfig.blockSizeHorizontal * 50, image: assetImage) : croppedImage,
-                      ),
+                      ) : croppedImage == null ? Image(width: SizeConfig.blockSizeHorizontal * 50, image: assetImage) : croppedImage,
                       /*image == null ?
                       Image(width: SizeConfig.blockSizeHorizontal * 50, image: assetImage) :
                       image,*/
