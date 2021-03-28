@@ -23,11 +23,11 @@ ServiceSlot _$ServiceSlotFromJson(Map<String, dynamic> json) {
     limitBooking: json['limitBooking'] as int ?? 1,
     noLimitBooking: json['noLimitBooking'] as bool ?? false,
     price: (json['price'] as num)?.toDouble() ?? 0.0,
-    maxDuration: json['maxDuration'] as int ?? 0,
+    maxQuantity: json['maxQuantity'] as int ?? 0,
     intervalVisibility:
         (json['intervalVisibility'] as List)?.map((e) => e as bool)?.toList() ??
             [true],
-    duration: json['duration'] as int ?? 0,
+    day: json['day'] as int ?? 0,
   );
 }
 
@@ -43,8 +43,8 @@ Map<String, dynamic> _$ServiceSlotToJson(ServiceSlot instance) =>
       'checkOut': instance.checkOut,
       'hour': instance.hour,
       'minute': instance.minute,
-      'maxDuration': instance.maxDuration,
-      'duration': instance.duration,
+      'day': instance.day,
+      'maxQuantity': instance.maxQuantity,
       'limitBooking': instance.limitBooking,
       'noLimitBooking': instance.noLimitBooking,
       'price': instance.price,

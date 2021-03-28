@@ -72,96 +72,96 @@ class CalendarAvailabilityState extends State<CalendarAvailability> {
     return StoreConnector<AppState, AppState>(
         converter: (store) => store.state,
         builder: (context, snapshot) {
-          return Container(
-              child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              ///Check In
-              Flexible(
-                  child: GestureDetector(
-                onTap: () async {
-                  await selectDate(context, checkIn, checkOut);
-                },
-                child: TextFormField(
-                  enabled: false,
-                  controller: checkInController,
-                  textAlign: TextAlign.start,
-                  keyboardType: TextInputType.datetime,
-                  decoration: InputDecoration(
-                      filled: true,
-                      fillColor: BuytimeTheme.DividerGrey,
-                      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                      focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                      labelText: AppLocalizations.of(context).checkIn,
-                      labelStyle: TextStyle(
-                        fontFamily: BuytimeTheme.FontFamily,
-                        fontSize: 12,
-                        color: Color(0xff666666),
-                        fontWeight: FontWeight.w400,
-                      ),
-                      suffixIcon: Icon(
-                        Icons.calendar_today,
-                      )),
-                  style: TextStyle(
-                    fontFamily: BuytimeTheme.FontFamily,
-                    color: Color(0xff666666),
-                    fontSize: 13,
-                    fontWeight: FontWeight.w800,
-                  ),
-                  validator: (String value) {
-                    if (value.isEmpty) {
-                      return AppLocalizations.of(context).pleaseEnterAValidDateInterval;
-                    }
-                    return null;
-                  },
+          return Padding(
+            padding: const EdgeInsets.only(top: 5.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+            ///Check In
+            Flexible(
+                child: GestureDetector(
+              onTap: () async {
+                await selectDate(context, checkIn, checkOut);
+              },
+              child: TextFormField(
+                enabled: false,
+                controller: checkInController,
+                textAlign: TextAlign.start,
+                keyboardType: TextInputType.datetime,
+                decoration: InputDecoration(
+                    filled: true,
+                    fillColor: BuytimeTheme.DividerGrey,
+                    disabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                    labelText: AppLocalizations.of(context).checkIn,
+                    labelStyle: TextStyle(
+                      fontFamily: BuytimeTheme.FontFamily,
+                      fontSize: 12,
+                      color: Color(0xff666666),
+                      fontWeight: FontWeight.w400,
+                    ),
+                    suffixIcon: Icon(
+                      Icons.calendar_today,
+                    )),
+                style: TextStyle(
+                  fontFamily: BuytimeTheme.FontFamily,
+                  color: Color(0xff666666),
+                  fontSize: 13,
+                  fontWeight: FontWeight.w800,
                 ),
-              )),
-              Container(
-                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 1, right: SizeConfig.blockSizeHorizontal * 1),
+                validator: (String value) {
+                  if (value.isEmpty) {
+                    return AppLocalizations.of(context).pleaseEnterAValidDateInterval;
+                  }
+                  return null;
+                },
               ),
+            )),
+            Container(
+              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 1, right: SizeConfig.blockSizeHorizontal * 1),
+            ),
 
-              ///Check Out
-              Flexible(
-                  child: GestureDetector(
-                onTap: () async {
-                  await selectDate(context, checkIn, checkOut);
-                },
-                child: TextFormField(
-                  enabled: false,
-                  controller: checkOutController,
-                  textAlign: TextAlign.start,
-                  keyboardType: TextInputType.datetime,
-                  decoration: InputDecoration(
-                      filled: true,
-                      fillColor: BuytimeTheme.DividerGrey,
-                      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                      focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                      labelText: AppLocalizations.of(context).checkOut,
-                      labelStyle: TextStyle(
-                        fontFamily: BuytimeTheme.FontFamily,
-                        fontSize: 12,
-                        color: Color(0xff666666),
-                        fontWeight: FontWeight.w400,
-                      ),
-                      suffixIcon: Icon(Icons.calendar_today)),
-                  style: TextStyle(
-                    //fontSize: 12,
-                    fontFamily: BuytimeTheme.FontFamily,
-                    color: Color(0xff666666),
-                    fontSize: 13,
-                    fontWeight: FontWeight.w800,
-                  ),
-                  validator: (String value) {
-                    debugPrint('${checkIn.compareTo(checkOut)}');
-                    if (value.isEmpty || checkIn.compareTo(checkOut) > 0) {
-                      return AppLocalizations.of(context).pleaseEnterAValidDateInterval;
-                    }
-                    return null;
-                  },
+            ///Check Out
+            Flexible(
+                child: GestureDetector(
+              onTap: () async {
+                await selectDate(context, checkIn, checkOut);
+              },
+              child: TextFormField(
+                enabled: false,
+                controller: checkOutController,
+                textAlign: TextAlign.start,
+                keyboardType: TextInputType.datetime,
+                decoration: InputDecoration(
+                    filled: true,
+                    fillColor: BuytimeTheme.DividerGrey,
+                    disabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                    labelText: AppLocalizations.of(context).checkOut,
+                    labelStyle: TextStyle(
+                      fontFamily: BuytimeTheme.FontFamily,
+                      fontSize: 12,
+                      color: Color(0xff666666),
+                      fontWeight: FontWeight.w400,
+                    ),
+                    suffixIcon: Icon(Icons.calendar_today)),
+                style: TextStyle(
+                  //fontSize: 12,
+                  fontFamily: BuytimeTheme.FontFamily,
+                  color: Color(0xff666666),
+                  fontSize: 13,
+                  fontWeight: FontWeight.w800,
                 ),
-              ))
-            ],
-          ));
+                validator: (String value) {
+                  debugPrint('${checkIn.compareTo(checkOut)}');
+                  if (value.isEmpty || checkIn.compareTo(checkOut) > 0) {
+                    return AppLocalizations.of(context).pleaseEnterAValidDateInterval;
+                  }
+                  return null;
+                },
+              ),
+            ))
+              ],
+            ),
+          );
         });
   }
 }

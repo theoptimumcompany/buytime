@@ -137,7 +137,7 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
           ),
         ),
         selectedTextStyle: TextStyle(color: Colors.blue),
-        onCancel: null,
+        onCancel: (){return 0;},
         onConfirm: (Picker picker, List value) {
           if (picker != null) {
             String minute = value[1] < 10 ? "0" + value[1].toString() : value[1].toString();
@@ -150,19 +150,35 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
             setState(() {
               startTime[indexController] = format24;
               _formSlotTimeKey[indexController].currentState.validate();
+
+              //TODO : Calcolare orario di arrivo in base alla durata dei giorni
+              if(StoreProvider.of<AppState>(context).state.serviceSlot.day > 0){
+                setStopTimeOvercome24h(startTime[indexController]);
+              }
             });
           }
         }).showDialog(context);
   }
 
+  setStopTimeOvercome24h(String startTimeString){
+    DateTime initialDate = DateTime(2021,09,01,int.parse(startTimeString.split(":")[0]),int.parse(startTimeString.split(":")[1]));
+    print(initialDate);
+    int hourDuration = StoreProvider.of<AppState>(context).state.serviceSlot.hour;
+    print(hourDuration);
+    int minuteDuration = StoreProvider.of<AppState>(context).state.serviceSlot.minute;
+    print(minuteDuration);
+    DateTime finalDate = initialDate.add(Duration(hours: hourDuration,minutes: minuteDuration));
+    print(finalDate);
+  }
+
   showPickerStopTime(BuildContext context, int indexController) {
-    String initStart = StoreProvider.of<AppState>(context).state.serviceSlot.stopTime[indexController];
+    String initStop = StoreProvider.of<AppState>(context).state.serviceSlot.stopTime[indexController];
     List<String> stop = [];
     int stopHour = 0;
     int stopMinute = 0;
-    if (initStart.contains('null:null')) {
+    if (initStop.contains('null:null')) {
     } else {
-      stop = initStart.split(":");
+      stop = initStop.split(":");
       stopHour = int.parse(stop[0]);
       stopMinute = int.parse(stop[1]);
     }
@@ -188,6 +204,7 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
           ),
         ),
         selectedTextStyle: TextStyle(color: Colors.blue),
+        onCancel: (){return 0;},
         onConfirm: (Picker picker, List value) {
           if (picker != null) {
             String minute = value[1] < 10 ? "0" + value[1].toString() : value[1].toString();
@@ -425,7 +442,6 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
           switchWeek = snapshot.serviceSlot.switchWeek;
           daysInterval = snapshot.serviceSlot.daysInterval;
           numberOfSlotTimeInterval = snapshot.serviceSlot.numberOfInterval;
-          maxDuration = snapshot.serviceSlot.maxDuration;
           return Column(
             mainAxisAlignment: MainAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
@@ -451,7 +467,7 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
                         _formSlotTimeKey.add(GlobalKey<FormState>());
                       }
                       return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10.0),
+                        padding: const EdgeInsets.only(bottom: 10.0),
                         child: GestureDetector(
                           onTap: () {
                             setState(() {
@@ -591,7 +607,7 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
                                                                         errorText: errorStartTime[i],
                                                                         errorStyle: TextStyle(
                                                                           color: BuytimeTheme.ErrorRed,
-                                                                          fontSize: 12.0,
+                                                                          fontSize: 11.0,
                                                                         ),
                                                                         suffixIcon: Icon(Icons.av_timer_outlined)),
                                                                     style: TextStyle(
@@ -617,7 +633,10 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
                                                           children: [
                                                             GestureDetector(
                                                               onTap: () {
-                                                                if (startController[i].text.isEmpty) {
+                                                                if(snapshot.serviceSlot.day > 0){
+                                                                  return;
+                                                                }
+                                                                else if (startController[i].text.isEmpty) {
                                                                   errorStartTime[i] = showErrorStartTime(i);
                                                                   return;
                                                                 }
@@ -647,7 +666,7 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
                                                                         errorText: errorStopTime[i],
                                                                         errorStyle: TextStyle(
                                                                           color: BuytimeTheme.ErrorRed,
-                                                                          fontSize: 12.0,
+                                                                          fontSize: 11.0,
                                                                         ),
                                                                         suffixIcon: Icon(Icons.av_timer_outlined)),
                                                                     style: TextStyle(

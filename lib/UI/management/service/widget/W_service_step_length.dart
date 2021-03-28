@@ -27,13 +27,16 @@ class StepLengthState extends State<StepLength> {
   TextEditingController maxController = TextEditingController();
   GlobalKey<FormState> _formSlotLengthKey = GlobalKey<FormState>();
 
-  //TODO translation new confirmed strings
+
+  //TODO SET TRANSLATION STRINGS
+
   int hour = 0;
   int minute = 0;
   int limitBooking = 0;
   int duration = 0;
   int day = 0;
   int maxQuantity = 0;
+  //String errorDay = null;
 
   @override
   void initState() {
@@ -41,17 +44,38 @@ class StepLengthState extends State<StepLength> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       hour = StoreProvider.of<AppState>(context).state.serviceSlot.hour;
       minute = StoreProvider.of<AppState>(context).state.serviceSlot.minute;
-      duration = StoreProvider.of<AppState>(context).state.serviceSlot.duration;
-      // day da db
-      // maxquantity da db
+      day = StoreProvider.of<AppState>(context).state.serviceSlot.day;
+      maxQuantity = StoreProvider.of<AppState>(context).state.serviceSlot.maxQuantity;
       limitBooking = StoreProvider.of<AppState>(context).state.serviceSlot.limitBooking;
       hourController.text = hour.toString();
       minuteController.text = minute.toString();
       limitBookingController.text = limitBooking.toString();
       dayController.text = day.toString();
       maxController.text = maxQuantity.toString();
+
     });
   }
+  ////Controllo su durata e calendario
+  // String showErrorDay(int value) {
+  //   String checkIn = StoreProvider.of<AppState>(context).state.serviceSlot.checkIn;
+  //   String checkOut = StoreProvider.of<AppState>(context).state.serviceSlot.checkOut;
+  //   if (checkIn.contains("/") && checkOut.contains("/")) {
+  //     List<String> convertedCheckIn = checkIn.split("/");
+  //     List<String> convertedCheckOut = checkOut.split("/");
+  //     DateTime dayFirst = DateTime.parse(convertedCheckIn[2] + "-" + convertedCheckIn[1] + "-" + convertedCheckIn[0]);
+  //     DateTime dayLast = DateTime.parse(convertedCheckOut[2] + "-" + convertedCheckOut[1] + "-" + convertedCheckOut[0]);
+  //     int durationDatetime = dayLast.difference(dayFirst).inDays;
+  //     if(value > durationDatetime){
+  //       return "Day duration overcome datetime interval chosen";
+  //     }
+  //   } else if (!checkIn.contains("/") && !checkOut.contains("/")) {
+  //     return "No Check-In and Check-Out days set";
+  //   } else if (checkIn.contains("/") && !checkOut.contains("/")) {
+  //     return "No Check-Out day set";
+  //   } else if (!checkIn.contains("/") && checkOut.contains("/")) {
+  //     return "No Check-In day set";
+  //   }
+  // }
 
   showPickerHour(BuildContext context) {
     Picker(
@@ -114,7 +138,8 @@ class StepLengthState extends State<StepLength> {
           setState(() {
             dayController.text = value[0].toString();
             day = value[0];
-            //TODO dispatch day
+            ///TODO: Set orario arrivo se startTime != 0
+            StoreProvider.of<AppState>(context).dispatch(SetServiceSlotDay(day));
           });
         }).showDialog(context);
   }
@@ -122,7 +147,7 @@ class StepLengthState extends State<StepLength> {
   showPickerLimitBookings(BuildContext context) {
     Picker(
         adapter: NumberPickerAdapter(data: [
-          NumberPickerColumn(initValue: limitBooking, begin: 0, end: 60, jump: 1),
+          NumberPickerColumn(initValue: limitBooking, begin: 0, end: 999, jump: 1),
         ]),
         hideHeader: true,
         title: Text("Set max bookings",
@@ -158,7 +183,7 @@ class StepLengthState extends State<StepLength> {
           setState(() {
             maxController.text = value[0].toString();
             maxQuantity = value[0];
-            //TODO dispatch max Quantity
+            StoreProvider.of<AppState>(context).dispatch(SetServiceSlotMaxQuantity(maxQuantity));
           });
         }).showDialog(context);
   }
@@ -208,14 +233,17 @@ class StepLengthState extends State<StepLength> {
                           padding: const EdgeInsets.only(top: 5.0),
                           child: TextFormField(
                             enabled: false,
-                            controller: hourController,
+                            controller: dayController,
                             textAlign: TextAlign.start,
                             keyboardType: TextInputType.number,
                             decoration: InputDecoration(
                                 filled: true,
                                 fillColor: BuytimeTheme.DividerGrey,
                                 disabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                errorMaxLines: 2,
+                                errorBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: BuytimeTheme.ErrorRed), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                // errorMaxLines: 3,
+                                // errorText: errorDay,
                                 errorStyle: TextStyle(
                                   color: BuytimeTheme.ErrorRed,
                                   fontSize: 12.0,
@@ -226,12 +254,9 @@ class StepLengthState extends State<StepLength> {
                               color: Color(0xff666666),
                               fontWeight: FontWeight.w800,
                             ),
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return 'Please insert a day';
-                              }
-                              return null;
-                            },
+                            // validator: (value) {
+                            //  return errorDay = showErrorDay(int.parse(value));
+                            // },
                           ),
                         ),
                       )),
@@ -264,6 +289,8 @@ class StepLengthState extends State<StepLength> {
                                 filled: true,
                                 fillColor: BuytimeTheme.DividerGrey,
                                 disabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                errorBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: BuytimeTheme.ErrorRed), borderRadius: BorderRadius.all(Radius.circular(10.0))),
                                 errorMaxLines: 2,
                                 errorStyle: TextStyle(
                                   color: BuytimeTheme.ErrorRed,
@@ -305,6 +332,8 @@ class StepLengthState extends State<StepLength> {
                                 filled: true,
                                 fillColor: BuytimeTheme.DividerGrey,
                                 disabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                errorBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: BuytimeTheme.ErrorRed), borderRadius: BorderRadius.all(Radius.circular(10.0))),
                                 errorMaxLines: 2,
                                 errorStyle: TextStyle(
                                   color: BuytimeTheme.ErrorRed,
@@ -372,6 +401,8 @@ class StepLengthState extends State<StepLength> {
                                 filled: true,
                                 fillColor: BuytimeTheme.DividerGrey,
                                 disabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                errorBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: BuytimeTheme.ErrorRed), borderRadius: BorderRadius.all(Radius.circular(10.0))),
                                 errorMaxLines: 2,
                                 errorStyle: TextStyle(
                                   color: BuytimeTheme.ErrorRed,
@@ -437,6 +468,8 @@ class StepLengthState extends State<StepLength> {
                                 filled: true,
                                 fillColor: BuytimeTheme.DividerGrey,
                                 disabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                errorBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: BuytimeTheme.ErrorRed), borderRadius: BorderRadius.all(Radius.circular(10.0))),
                                 errorMaxLines: 2,
                                 errorStyle: TextStyle(
                                   color: BuytimeTheme.ErrorRed,

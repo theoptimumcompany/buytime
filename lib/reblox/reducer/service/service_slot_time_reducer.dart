@@ -78,18 +78,6 @@ class SetServiceSlotMinute {
   int get minute => _minute;
 }
 
-class SetServiceSlotDuration {
-  int _duration;
-  SetServiceSlotDuration(this._duration);
-  int get duration => _duration;
-}
-
-class SetServiceSlotMaxDuration {
-  int _maxDuration;
-  SetServiceSlotMaxDuration(this._maxDuration);
-  int get maxDuration => _maxDuration;
-}
-
 class SetServiceSlotIntervalVisibility {
   List<bool> _intervalVisibility;
   SetServiceSlotIntervalVisibility(this._intervalVisibility);
@@ -100,6 +88,18 @@ class SetServiceSlotLimitBooking {
   int _limit;
   SetServiceSlotLimitBooking(this._limit);
   int get limit => _limit;
+}
+
+class SetServiceSlotDay {
+  int _day;
+  SetServiceSlotDay(this._day);
+  int get day => _day;
+}
+
+class SetServiceSlotMaxQuantity {
+  int _quantity;
+  SetServiceSlotMaxQuantity(this._quantity);
+  int get quantity => _quantity;
 }
 
 class SetServiceSlotNoLimitBooking {
@@ -157,20 +157,20 @@ ServiceSlot serviceSlotReducer(ServiceSlot state, action) {
     serviceSlot.minute = action.minute;
     return serviceSlot;
   }
-  if (action is SetServiceSlotDuration) {
-    serviceSlot.duration = action.duration;
-    return serviceSlot;
-  }
-  if (action is SetServiceSlotMaxDuration) {
-    serviceSlot.maxDuration = action.maxDuration;
-    return serviceSlot;
-  }
   if (action is SetServiceSlotIntervalVisibility) {
     serviceSlot.intervalVisibility = action.intervalVisibility;
     return serviceSlot;
   }
   if (action is SetServiceSlotLimitBooking) {
     serviceSlot.limitBooking = action.limit;
+    return serviceSlot;
+  }
+  if (action is SetServiceSlotMaxQuantity) {
+    serviceSlot.maxQuantity = action.quantity;
+    return serviceSlot;
+  }
+  if (action is SetServiceSlotDay) {
+    serviceSlot.day = action.day;
     return serviceSlot;
   }
   if (action is SetServiceSlotNoLimitBooking) {

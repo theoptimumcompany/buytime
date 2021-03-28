@@ -25,9 +25,9 @@ class ServiceSlot {
   @JsonKey(defaultValue: 0)
   int minute = 0;
   @JsonKey(defaultValue: 0)
-  int maxDuration = 0;
+  int day = 0;
   @JsonKey(defaultValue: 0)
-  int duration = 0;
+  int maxQuantity = 0;
   @JsonKey(defaultValue: 1)
   int limitBooking = 1;
   @JsonKey(defaultValue: false)
@@ -50,9 +50,9 @@ class ServiceSlot {
     this.limitBooking,
     this.noLimitBooking,
     this.price,
-    this.maxDuration,
+    this.maxQuantity,
     this.intervalVisibility,
-    this.duration,
+    this.day,
   });
 
   ServiceSlot copyWith({
@@ -68,9 +68,9 @@ class ServiceSlot {
     int limitBooking,
     bool noLimitBooking,
     double price,
-    int maxDuration,
+    int maxQuantity,
     List<bool> intervalVisibility,
-    int duration,
+    int day,
   }) {
     return ServiceSlot(
       numberOfInterval: numberOfInterval ?? this.numberOfInterval,
@@ -85,9 +85,9 @@ class ServiceSlot {
       limitBooking: limitBooking ?? this.limitBooking,
       noLimitBooking: noLimitBooking ?? this.noLimitBooking,
       price: price ?? this.price,
-      maxDuration: maxDuration ?? this.maxDuration,
+      maxQuantity: maxQuantity ?? this.maxQuantity,
       intervalVisibility: intervalVisibility ?? this.intervalVisibility,
-      duration: duration ?? this.duration,
+      day: day ?? this.day,
     );
   }
 
@@ -105,9 +105,9 @@ class ServiceSlot {
       limitBooking: 1,
       noLimitBooking: false,
       price: 0.0,
-      maxDuration: 0,
+      maxQuantity: 0,
       intervalVisibility: [true],
-      duration: 0,
+      day: 0,
     );
   }
 
@@ -124,9 +124,9 @@ class ServiceSlot {
     this.limitBooking = serviceSlot.limitBooking;
     this.noLimitBooking = serviceSlot.noLimitBooking;
     this.price = serviceSlot.price;
-    this.maxDuration = serviceSlot.maxDuration;
+    this.maxQuantity = serviceSlot.maxQuantity;
     this.intervalVisibility = serviceSlot.intervalVisibility;
-    this.duration = serviceSlot.duration;
+    this.day = serviceSlot.day;
   }
 
 
