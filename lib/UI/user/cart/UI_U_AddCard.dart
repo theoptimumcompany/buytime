@@ -100,31 +100,6 @@ class _UI_U_AddCardState extends State<UI_U_AddCard> {
                                   padding: const EdgeInsets.all(12.0),
                                   child: Column(
                                     children: [
-                                      ///User Information Text
-                                      Container(
-                                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5, bottom: SizeConfig.safeBlockVertical * 1),
-                                          alignment: Alignment.center,
-                                          child: Material(
-                                            color: Colors.transparent,
-                                            child: InkWell(
-                                                onTap: null,
-                                                borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                                                child: Container(
-                                                  padding: EdgeInsets.all(5.0),
-                                                  child: Text(
-                                                    'User Information',//AppLocalizations.of(context).somethingIsNotRight,
-                                                    style: TextStyle(
-                                                        letterSpacing: SizeConfig.safeBlockHorizontal * .2,
-                                                        fontFamily: BuytimeTheme.FontFamily,
-                                                        color: BuytimeTheme.UserPrimary,
-                                                        fontWeight: FontWeight.w600,
-                                                        fontSize: SizeConfig.safeBlockHorizontal * 4
-                                                    ),
-                                                  ),
-                                                )
-                                            ),
-                                          )
-                                      ),
                                       ///Card Information Text
                                       Container(
                                           margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5, bottom: SizeConfig.safeBlockVertical * 0),
@@ -137,7 +112,7 @@ class _UI_U_AddCardState extends State<UI_U_AddCard> {
                                                 child: Container(
                                                   padding: EdgeInsets.all(5.0),
                                                   child: Text(
-                                                    'Card Information',//AppLocalizations.of(context).somethingIsNotRight,
+                                                    AppLocalizations.of(context).cardInformation,
                                                     style: TextStyle(
                                                         letterSpacing: SizeConfig.safeBlockHorizontal * .2,
                                                         fontFamily: BuytimeTheme.FontFamily,
