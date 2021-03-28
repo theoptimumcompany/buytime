@@ -38,6 +38,18 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
   bool errorSwitchSlots = false;
   bool submit = false;
   TextEditingController _tagServiceController = TextEditingController();
+  TextEditingController priceController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _servicePrice = StoreProvider.of<AppState>(context).state.serviceSlot.price;
+      List<String> format = [];
+      format = _servicePrice.toString().split(".");
+      priceController.text = format[0].toString() + "." + (int.parse(format[1]) < 10 ? format[1].toString() + "0" : format[1].toString());
+    });
+  }
 
   bool validateAndSave() {
     final FormState form = _keyEditServiceForm.currentState;
@@ -370,9 +382,10 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                     child: Padding(
                                                       padding: const EdgeInsets.only(top: 0.0, bottom: 5.0, left: 10.0, right: 10.0),
                                                       child: TextFormField(
-                                                        initialValue: snapshot.serviceState.price.toString(),
-                                                        keyboardType: TextInputType.number,
-                                                        inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d*)'))],
+                                                        controller: priceController,
+                                                        keyboardType: TextInputType.numberWithOptions(signed: true, decimal: true),
+                                                        textInputAction: TextInputAction.done,
+                                                        inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^(\d+)?\.?\d{0,2}'))],
                                                         validator: (value) => value.isEmpty
                                                             ? AppLocalizations.of(context).servicePriceBlank
                                                             : validatePrice(value)
@@ -382,26 +395,51 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                           if (value == "") {
                                                             setState(() {
                                                               _servicePrice = 0.0;
+                                                              value = "0.0";
                                                             });
                                                           } else {
+                                                            if (value.contains(".")) {
+                                                              List<String> priceString = value.split(".");
+                                                              if (priceString[1].length == 1) {
+                                                                value += "0";
+                                                              }
+                                                              else if(priceString[1].length == 0){
+                                                                value += "00";
+                                                              }
+                                                            } else {
+                                                              value += ".00";
+                                                            }
                                                             setState(() {
                                                               _servicePrice = double.parse(value);
                                                             });
                                                           }
-                                                          validateAndSave();
-                                                          StoreProvider.of<AppState>(context).dispatch(SetServicePrice(_servicePrice));
+                                                          StoreProvider.of<AppState>(context).dispatch(SetServiceSlotPrice(_servicePrice));
                                                         },
-                                                        onSaved: (value) {
+                                                        onFieldSubmitted: (value) {
                                                           if (value == "") {
                                                             setState(() {
                                                               _servicePrice = 0.0;
+                                                              value = "0.0";
+                                                              priceController.text = value;
                                                             });
                                                           } else {
+                                                            if (value.contains(".")) {
+                                                              List<String> priceString = value.split(".");
+                                                              if (priceString[1].length == 1) {
+                                                                value += "0";
+                                                              }
+                                                              else if(priceString[1].length == 0){
+                                                                value += "00";
+                                                              }
+                                                            } else {
+                                                              value += ".00";
+                                                            }
                                                             setState(() {
                                                               _servicePrice = double.parse(value);
+                                                              priceController.text = value;
                                                             });
                                                           }
-                                                          StoreProvider.of<AppState>(context).dispatch(SetServicePrice(_servicePrice));
+                                                          StoreProvider.of<AppState>(context).dispatch(SetServiceSlotPrice(_servicePrice));
                                                         },
                                                         decoration: InputDecoration(
                                                           labelText: AppLocalizations.of(context).price,

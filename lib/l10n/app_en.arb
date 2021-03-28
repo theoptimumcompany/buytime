@@ -387,6 +387,12 @@
   "serviceDuration": "Service Duration",
   "parallelBookings": "Parallel Bookings",
   "maxQuantityService": "Max Qty Per Service",
-  "cardInformation": "Card information"
-
+  "cardInformation": "Card information",
+  "pleaseSelectStartTime": "Please select start time",
+  "pleaseSelectStopTime": "Please select stop time",
+  "pleaseSelectNumberOfDays": "Please select number of days",
+  "pleaseSelectNumberOfHours": "Please select number of hours",
+  "pleaseSelectNumberOfMinutes": "Please select number of minutes",
+  "pleaseSelectNumberOfMaxBookings": "Please select number of max bookings",
+  "pleaseSelectNumberOfMaxCapacity": "Please select number of max capacity"
 }

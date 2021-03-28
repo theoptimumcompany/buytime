@@ -35,47 +35,47 @@ class StepPriceState extends State<StepPrice> {
     });
   }
 
-  showPickerPrice(BuildContext context) {
-    String initPrice = StoreProvider.of<AppState>(context).state.serviceSlot.price.toString();
-    List<String> format = [];
-    int unit = 0;
-    int decimal = 0;
-
-    format = initPrice.split(".");
-    unit = int.parse(format[0]);
-    decimal = int.parse(format[1]);
-
-    Picker(
-        adapter: NumberPickerAdapter(data: [
-          NumberPickerColumn(initValue: unit, begin: 0, end: 999, jump: 1),
-          NumberPickerColumn(initValue: decimal, begin: 0, end: 99, jump: 1),
-        ]),
-        delimiter: [
-          PickerDelimiter(
-              child: Container(
-            alignment: Alignment.center,
-            child: Text("."),
-          ))
-        ],
-        hideHeader: true,
-        title: Text(
-          "Please select price",
-          style: TextStyle(
-            fontSize: widget.media.height * 0.022,
-            color: BuytimeTheme.TextBlack,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        selectedTextStyle: TextStyle(color: Colors.blue),
-        onCancel: (){return 0;},
-        onConfirm: (Picker picker, List value) {
-          setState(() {
-            priceController.text = value[0].toString() + "." + (value[1] < 10 ? value[1].toString() + "0" : value[1].toString());
-            price = double.parse(value[0].toString() + "." + (value[1] < 10 ? value[1].toString() + "0" : value[1].toString()));
-            StoreProvider.of<AppState>(context).dispatch(SetServiceSlotPrice(price));
-          });
-        }).showDialog(context);
-  }
+  // showPickerPrice(BuildContext context) {
+  //   String initPrice = StoreProvider.of<AppState>(context).state.serviceSlot.price.toString();
+  //   List<String> format = [];
+  //   int unit = 0;
+  //   int decimal = 0;
+  //
+  //   format = initPrice.split(".");
+  //   unit = int.parse(format[0]);
+  //   decimal = int.parse(format[1]);
+  //
+  //   Picker(
+  //       adapter: NumberPickerAdapter(data: [
+  //         NumberPickerColumn(initValue: unit, begin: 0, end: 999, jump: 1),
+  //         NumberPickerColumn(initValue: decimal, begin: 0, end: 99, jump: 1),
+  //       ]),
+  //       delimiter: [
+  //         PickerDelimiter(
+  //             child: Container(
+  //           alignment: Alignment.center,
+  //           child: Text("."),
+  //         ))
+  //       ],
+  //       hideHeader: true,
+  //       title: Text(
+  //         "Please select price",
+  //         style: TextStyle(
+  //           fontSize: widget.media.height * 0.022,
+  //           color: BuytimeTheme.TextBlack,
+  //           fontWeight: FontWeight.w500,
+  //         ),
+  //       ),
+  //       selectedTextStyle: TextStyle(color: Colors.blue),
+  //       onCancel: (){return 0;},
+  //       onConfirm: (Picker picker, List value) {
+  //         setState(() {
+  //           priceController.text = value[0].toString() + "." + (value[1] < 10 ? value[1].toString() + "0" : value[1].toString());
+  //           price = double.parse(value[0].toString() + "." + (value[1] < 10 ? value[1].toString() + "0" : value[1].toString()));
+  //           StoreProvider.of<AppState>(context).dispatch(SetServiceSlotPrice(price));
+  //         });
+  //       }).showDialog(context);
+  // }
 
   // bool validateAndSave() {
   //   final FormState form = _formSlotPriceKey.currentState;
@@ -106,59 +106,79 @@ class StepPriceState extends State<StepPrice> {
                 Flexible(
                     child: Padding(
                   padding: const EdgeInsets.only(top: 5.0),
-                  child: GestureDetector(
-                    onTap: () {
-                      showPickerPrice(context);
+                  child: TextFormField(
+                    enabled: true,
+                    controller: priceController,
+                    //  initialValue: snapshot.serviceSlot.price.toString(),
+                    onChanged: (value) {
+                      if (value == "") {
+                        setState(() {
+                          price = 0.0;
+                          value = "0.0";
+                        });
+                      } else {
+                        if (value.contains(".")) {
+                          List<String> priceString = value.split(".");
+                          if (priceString[1].length == 1) {
+                            value += "0";
+                          }
+                          else if(priceString[1].length == 0){
+                            value += "00";
+                          }
+                        } else {
+                          value += ".00";
+                        }
+                        setState(() {
+                          price = double.parse(value);
+                        });
+                      }
+                      StoreProvider.of<AppState>(context).dispatch(SetServiceSlotPrice(price));
                     },
-                    child: TextFormField(
-                      enabled: false,
-                      controller: priceController,
-                      //  initialValue: snapshot.serviceSlot.price.toString(),
-                      // onChanged: (value) {
-                      //   if (value == "") {
-                      //     setState(() {
-                      //       price = 0.0;
-                      //       value = "0.0";
-                      //     });
-                      //   } else {
-                      //     setState(() {
-                      //       price = double.parse(value);
-                      //     });
-                      //   }
-                      //   validateAndSave();
-                      //   StoreProvider.of<AppState>(context).dispatch(SetServiceSlotPrice(price));
-                      // },
-                      // onSaved: (value) {
-                      //   if (value == "") {
-                      //     setState(() {
-                      //       price = 0.0;
-                      //       value = "0.0";
-                      //     });
-                      //   } else {
-                      //     setState(() {
-                      //       price = double.parse(value);
-                      //     });
-                      //   }
-                      //   validateAndSave();
-                      //   StoreProvider.of<AppState>(context).dispatch(SetServiceSlotPrice(price));
-                      // },
-                      textAlign: TextAlign.start,
-                      keyboardType: TextInputType.numberWithOptions(decimal: true),
-                      decoration: InputDecoration(
-                          filled: true,
-                          fillColor: BuytimeTheme.DividerGrey,
-                          disabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                          errorMaxLines: 2,
-                          errorStyle: TextStyle(
-                            color: BuytimeTheme.ErrorRed,
-                            fontSize: 12.0,
-                          ),
-                          suffixText: AppLocalizations.of(context).currency),
-                      style: TextStyle(
-                        fontFamily: BuytimeTheme.FontFamily,
-                        color: Color(0xff666666),
-                        fontWeight: FontWeight.w800,
-                      ),
+                    onFieldSubmitted: (value) {
+                      if (value == "") {
+                        setState(() {
+                          price = 0.0;
+                          value = "0.0";
+                          priceController.text = value;
+                        });
+                      } else {
+                        if (value.contains(".")) {
+                          List<String> priceString = value.split(".");
+                          if (priceString[1].length == 1) {
+                            value += "0";
+                          }
+                          else if(priceString[1].length == 0){
+                            value += "00";
+                          }
+                        } else {
+                          value += ".00";
+                        }
+                        setState(() {
+                          price = double.parse(value);
+                          priceController.text = value;
+                        });
+                      }
+                      StoreProvider.of<AppState>(context).dispatch(SetServiceSlotPrice(price));
+                    },
+                    textAlign: TextAlign.start,
+                    keyboardType: TextInputType.numberWithOptions(signed: true, decimal: true),
+                    textInputAction: TextInputAction.done,
+                    inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^(\d+)?\.?\d{0,2}'))],
+                    decoration: InputDecoration(
+                        filled: true,
+                        fillColor: BuytimeTheme.DividerGrey,
+                        enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                        focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                        errorMaxLines: 2,
+                        errorStyle: TextStyle(
+                          color: BuytimeTheme.ErrorRed,
+                          fontSize: 12.0,
+                        ),
+                        suffixText: AppLocalizations.of(context).currency),
+                    style: TextStyle(
+                      fontFamily: BuytimeTheme.FontFamily,
+                      color: Color(0xff666666),
+                      fontWeight: FontWeight.w800,
                     ),
                   ),
                 )),

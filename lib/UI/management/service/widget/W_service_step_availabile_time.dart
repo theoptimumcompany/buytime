@@ -129,7 +129,7 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
         ],
         hideHeader: true,
         title: Text(
-          "Please select start time",
+          AppLocalizations.of(context).pleaseSelectStartTime,
           style: TextStyle(
             fontSize: widget.media.height * 0.022,
             color: BuytimeTheme.TextBlack,
@@ -137,7 +137,9 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
           ),
         ),
         selectedTextStyle: TextStyle(color: Colors.blue),
-        onCancel: (){return 0;},
+        onCancel: () {
+          return 0;
+        },
         onConfirm: (Picker picker, List value) {
           if (picker != null) {
             String minute = value[1] < 10 ? "0" + value[1].toString() : value[1].toString();
@@ -149,23 +151,25 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
 
             setState(() {
               startTime[indexController] = format24;
-              _formSlotTimeKey[indexController].currentState.validate();
-              if(StoreProvider.of<AppState>(context).state.serviceSlot.day > 0){
-                setStopTimeOvercome24h(startTime[indexController],indexController);
+              if (StoreProvider.of<AppState>(context).state.serviceSlot.day > 0) {
+                setStopTimeOvercome24h(startTime[indexController], indexController);
+              } else {
+                _formSlotTimeKey[indexController].currentState.validate();
               }
             });
           }
         }).showDialog(context);
   }
 
-  setStopTimeOvercome24h(String startTimeString, int indexController){
-    DateTime initialDate = DateTime(2021,09,01,int.parse(startTimeString.split(":")[0]),int.parse(startTimeString.split(":")[1]));
+  setStopTimeOvercome24h(String startTimeString, int indexController) {
+    DateTime initialDate = DateTime(2021, 09, 01, int.parse(startTimeString.split(":")[0]), int.parse(startTimeString.split(":")[1]));
     int hourDuration = StoreProvider.of<AppState>(context).state.serviceSlot.hour;
     int minuteDuration = StoreProvider.of<AppState>(context).state.serviceSlot.minute;
-    DateTime finalDate = initialDate.add(Duration(hours: hourDuration,minutes: minuteDuration));
+    DateTime finalDate = initialDate.add(Duration(hours: hourDuration, minutes: minuteDuration));
     String finalDateString = finalDate.hour.toString() + ":" + finalDate.minute.toString();
     stopController[indexController].text = finalDateString;
     stopTime[indexController] = finalDateString;
+    StoreProvider.of<AppState>(context).dispatch(SetServiceSlotStopTime(stopTime));
   }
 
   showPickerStopTime(BuildContext context, int indexController) {
@@ -193,7 +197,7 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
         ],
         hideHeader: true,
         title: Text(
-          "Please select stop time",
+          AppLocalizations.of(context).pleaseSelectStopTime,
           style: TextStyle(
             fontSize: widget.media.height * 0.022,
             color: BuytimeTheme.TextBlack,
@@ -201,7 +205,9 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
           ),
         ),
         selectedTextStyle: TextStyle(color: Colors.blue),
-        onCancel: (){return 0;},
+        onCancel: () {
+          return 0;
+        },
         onConfirm: (Picker picker, List value) {
           if (picker != null) {
             String minute = value[1] < 10 ? "0" + value[1].toString() : value[1].toString();
@@ -432,8 +438,14 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
     return StoreConnector<AppState, AppState>(
         converter: (store) => store.state,
         onInit: (store) {
-          //setMaxDuration();
           intervalIndexVisibility = List.generate(store.state.serviceSlot.numberOfInterval, (index) => index == 0 ? true : false);
+        },
+        onWillChange: (oldStore, newStore) {
+          if ((oldStore.serviceSlot.hour != newStore.serviceSlot.hour || oldStore.serviceSlot.minute != newStore.serviceSlot.minute) && newStore.serviceSlot.day > 0) {
+            for (int i = 0; i < newStore.serviceSlot.startTime.length; i++) {
+              setStopTimeOvercome24h(newStore.serviceSlot.startTime[i], i);
+            }
+          }
         },
         builder: (context, snapshot) {
           switchWeek = snapshot.serviceSlot.switchWeek;
@@ -449,15 +461,7 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: numberOfSlotTimeInterval,
                     itemBuilder: (context, i) {
-                      daysOfWeek = [
-                        AppLocalizations.of(context).monday,
-                        AppLocalizations.of(context).tuesday,
-                        AppLocalizations.of(context).wednesday,
-                        AppLocalizations.of(context).thursday,
-                        AppLocalizations.of(context).friday,
-                        AppLocalizations.of(context).saturday,
-                        AppLocalizations.of(context).sunday
-                      ];
+                      daysOfWeek = [AppLocalizations.of(context).monday, AppLocalizations.of(context).tuesday, AppLocalizations.of(context).wednesday, AppLocalizations.of(context).thursday, AppLocalizations.of(context).friday, AppLocalizations.of(context).saturday, AppLocalizations.of(context).sunday];
 
                       if (i > 0) {
                         ///Update keyForm
@@ -596,10 +600,8 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
                                                                           fontWeight: FontWeight.w400,
                                                                         ),
                                                                         fillColor: BuytimeTheme.DividerGrey,
-                                                                        disabledBorder:
-                                                                            OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                                                        errorBorder: OutlineInputBorder(
-                                                                            borderSide: BorderSide(color: BuytimeTheme.ErrorRed), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                                                        disabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                                                        errorBorder: OutlineInputBorder(borderSide: BorderSide(color: BuytimeTheme.ErrorRed), borderRadius: BorderRadius.all(Radius.circular(10.0))),
                                                                         errorMaxLines: 2,
                                                                         errorText: errorStartTime[i],
                                                                         errorStyle: TextStyle(
@@ -630,10 +632,9 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
                                                           children: [
                                                             GestureDetector(
                                                               onTap: () {
-                                                                if(snapshot.serviceSlot.day > 0){
+                                                                if (snapshot.serviceSlot.day > 0) {
                                                                   return;
-                                                                }
-                                                                else if (startController[i].text.isEmpty) {
+                                                                } else if (startController[i].text.isEmpty) {
                                                                   errorStartTime[i] = showErrorStartTime(i);
                                                                   return;
                                                                 }
@@ -655,10 +656,8 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
                                                                           fontWeight: FontWeight.w400,
                                                                         ),
                                                                         fillColor: BuytimeTheme.DividerGrey,
-                                                                        disabledBorder:
-                                                                            OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                                                        errorBorder: OutlineInputBorder(
-                                                                            borderSide: BorderSide(color: BuytimeTheme.ErrorRed), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                                                        disabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                                                        errorBorder: OutlineInputBorder(borderSide: BorderSide(color: BuytimeTheme.ErrorRed), borderRadius: BorderRadius.all(Radius.circular(10.0))),
                                                                         errorMaxLines: 2,
                                                                         errorText: errorStopTime[i],
                                                                         errorStyle: TextStyle(
