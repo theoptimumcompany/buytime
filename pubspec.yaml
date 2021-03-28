@@ -84,7 +84,7 @@ dependencies:
   local_auth: ^0.6.3+4
   image: ^2.1.18
   credit_card_type_detector: ^1.1.0
-  flutter_picker: ^2.0.0
+  flutter_picker: ^2.0.1
 
 dependency_overrides:
   intl: ^0.17.0-nullsafety.2
