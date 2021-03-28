@@ -74,7 +74,6 @@
   "editSpace": "Edit ",
   "menuItems": "1 menu items",
   "services": "Services",
-  "serviceList": "Test ServiceList",
   "categories": "Categories",
   "manage": "Manage",
   "menuItemsCaps": "MENU ITEMS",
@@ -132,7 +131,6 @@
   "checkOut": "Check-out",
   "numberOfGuest": "Number of guests",
   "sendInvite": "SEND INVITE",
-  "guestDetails": "GUEST DETAILS",
   "bookingId": "Booking id",
   "fullName": "Full Name",
   "email": "Email",
@@ -224,7 +222,6 @@
   "emptyCart": "The cart is empty, add a service to the basked first.",
   "serviceName": "Service Name",
   "hour": "Hour",
-  "createInvite": "Create Invite",
   "addToCart": "ADD TO CART",
   "createYourAccount": "Create your account:",
   "serviceCategories": "Service Categories",
@@ -360,7 +357,6 @@
   "owner": "Owner",
   "passwordError": "Password has a minimum of 6 characters and at least 1 digit, 1 lowercase char and 1 uppercase char",
   "reservation": "Reservation",
-  "euroSpace": "€ ",
   "activityManagement": "Activity Management",
   "seeAllWeek": "See all week",
   "noReservationYet": "You don’t have reservations yet",
@@ -372,7 +368,6 @@
   "allWeek": "All week",
   "item": "Item",
   "items": "Items",
-  "whyDoYou": "Why do you want to cancel it?",
   "confirm": "Confirm",
   "overbooking": "Overbooking",
   "techProblem": "Technical problem",
@@ -390,5 +385,6 @@
   "slotAvailableTime": "Slot Available Starting Time",
   "serviceDuration": "Service Duration",
   "parallelBookings": "Parallel Bookings",
-  "maxQuantityService": "Max Qty Per Service"
+  "maxQuantityService": "Max Qty Per Service",
+  "cardInformation": "Card information"
 }
