@@ -150,8 +150,6 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
             setState(() {
               startTime[indexController] = format24;
               _formSlotTimeKey[indexController].currentState.validate();
-
-              //TODO : Calcolare orario di arrivo in base alla durata dei giorni
               if(StoreProvider.of<AppState>(context).state.serviceSlot.day > 0){
                 setStopTimeOvercome24h(startTime[indexController],indexController);
               }
