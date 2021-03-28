@@ -67,6 +67,7 @@ class StepPriceState extends State<StepPrice> {
           ),
         ),
         selectedTextStyle: TextStyle(color: Colors.blue),
+        onCancel: (){return 0;},
         onConfirm: (Picker picker, List value) {
           setState(() {
             priceController.text = value[0].toString() + "." + (value[1] < 10 ? value[1].toString() + "0" : value[1].toString());

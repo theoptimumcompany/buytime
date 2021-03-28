@@ -90,6 +90,7 @@ class StepLengthState extends State<StepLength> {
               fontWeight: FontWeight.w500,
             )),
         selectedTextStyle: TextStyle(color: Colors.blue),
+        onCancel: (){return 0;},
         onConfirm: (Picker picker, List value) {
           setState(() {
             hourController.text = value[0].toString();
@@ -112,6 +113,7 @@ class StepLengthState extends State<StepLength> {
               fontWeight: FontWeight.w500,
             )),
         selectedTextStyle: TextStyle(color: Colors.blue),
+        onCancel: (){return 0;},
         onConfirm: (Picker picker, List value) {
           setState(() {
             minuteController.text = value[0].toString();
@@ -134,6 +136,7 @@ class StepLengthState extends State<StepLength> {
               fontWeight: FontWeight.w500,
             )),
         selectedTextStyle: TextStyle(color: Colors.blue),
+        onCancel: (){return 0;},
         onConfirm: (Picker picker, List value) {
           setState(() {
             dayController.text = value[0].toString();
@@ -157,6 +160,7 @@ class StepLengthState extends State<StepLength> {
               fontWeight: FontWeight.w500,
             )),
         selectedTextStyle: TextStyle(color: Colors.blue),
+        onCancel: (){return 0;},
         onConfirm: (Picker picker, List value) {
           setState(() {
             limitBookingController.text = value[0].toString();
@@ -179,6 +183,7 @@ class StepLengthState extends State<StepLength> {
               fontWeight: FontWeight.w500,
             )),
         selectedTextStyle: TextStyle(color: Colors.blue),
+        onCancel: (){return 0;},
         onConfirm: (Picker picker, List value) {
           setState(() {
             maxController.text = value[0].toString();
