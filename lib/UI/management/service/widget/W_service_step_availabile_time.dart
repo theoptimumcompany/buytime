@@ -153,22 +153,21 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
 
               //TODO : Calcolare orario di arrivo in base alla durata dei giorni
               if(StoreProvider.of<AppState>(context).state.serviceSlot.day > 0){
-                setStopTimeOvercome24h(startTime[indexController]);
+                setStopTimeOvercome24h(startTime[indexController],indexController);
               }
             });
           }
         }).showDialog(context);
   }
 
-  setStopTimeOvercome24h(String startTimeString){
+  setStopTimeOvercome24h(String startTimeString, int indexController){
     DateTime initialDate = DateTime(2021,09,01,int.parse(startTimeString.split(":")[0]),int.parse(startTimeString.split(":")[1]));
-    print(initialDate);
     int hourDuration = StoreProvider.of<AppState>(context).state.serviceSlot.hour;
-    print(hourDuration);
     int minuteDuration = StoreProvider.of<AppState>(context).state.serviceSlot.minute;
-    print(minuteDuration);
     DateTime finalDate = initialDate.add(Duration(hours: hourDuration,minutes: minuteDuration));
-    print(finalDate);
+    String finalDateString = finalDate.hour.toString() + ":" + finalDate.minute.toString();
+    stopController[indexController].text = finalDateString;
+    stopTime[indexController] = finalDateString;
   }
 
   showPickerStopTime(BuildContext context, int indexController) {
