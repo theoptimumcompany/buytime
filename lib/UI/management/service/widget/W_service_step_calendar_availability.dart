@@ -32,19 +32,28 @@ class CalendarAvailabilityState extends State<CalendarAvailability> {
   }
 
   Future<void> selectDate(BuildContext context, DateTime cIn, DateTime cOut) async {
-    final DateTimeRange picked = await showDateRangePicker(
-        context: context, initialDateRange: DateTimeRange(start: cIn, end: cOut), firstDate: checkIn, lastDate: new DateTime(2025));
+    DateTimeRange picked;
+    print("$cIn, $cOut, $checkIn, $checkOut");
+    DateTime currentTime = DateTime.now();
+    currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0);
+    if(checkIn.isBefore(currentTime) && !checkIn.isAtSameMomentAs(currentTime)){
+      picked = await showDateRangePicker(
+          context: context, firstDate: DateTime.now(), lastDate: new DateTime(2025));
+    }else{
+      picked = await showDateRangePicker(
+          context: context, initialDateRange: DateTimeRange(start: cIn, end: cOut), firstDate: checkIn, lastDate: new DateTime(2025));
+    }
     if (picked != null && picked.start != null && picked.end != null) {
-      setState(() {
-        checkInController.text = DateFormat('dd/MM/yyyy').format(picked.start);
-        print(checkInController.text);
-        checkOutController.text = DateFormat('dd/MM/yyyy').format(picked.end);
-        print(checkOutController.text);
-        checkIn = picked.start;
-        checkOut = picked.end;
-        StoreProvider.of<AppState>(context).dispatch(SetServiceSlotCheckIn(checkInController.text));
-        StoreProvider.of<AppState>(context).dispatch(SetServiceSlotCheckOut(checkOutController.text));
-      });
+        setState(() {
+          checkInController.text = DateFormat('dd/MM/yyyy').format(picked.start);
+          print(checkInController.text);
+          checkOutController.text = DateFormat('dd/MM/yyyy').format(picked.end);
+          print(checkOutController.text);
+          checkIn = picked.start;
+          checkOut = picked.end;
+          StoreProvider.of<AppState>(context).dispatch(SetServiceSlotCheckIn(checkInController.text));
+          StoreProvider.of<AppState>(context).dispatch(SetServiceSlotCheckOut(checkOutController.text));
+        });
     }
     return null;
   }

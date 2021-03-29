@@ -27,12 +27,9 @@ class StepLengthState extends State<StepLength> {
   TextEditingController maxController = TextEditingController();
   GlobalKey<FormState> _formSlotLengthKey = GlobalKey<FormState>();
 
-  //TODO SET TRANSLATION STRINGS
-
   int hour = 0;
   int minute = 0;
   int limitBooking = 0;
-  int duration = 0;
   int day = 0;
   int maxQuantity = 0;
 
