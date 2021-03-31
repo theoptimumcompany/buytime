@@ -171,12 +171,12 @@ class LandingState extends State<Landing> {
                 debugPrint('UI_U_Landing => Active booking found!');
                 //StoreProvider.of<AppState>(context).dispatch(BookingRequestResponse(bookingList.first));
                 //StoreProvider.of<AppState>(context).dispatch(BusinessAndNavigateRequest(bookingList.first.business_id));
-              }
-              else if(bookingList.first.start_date.isAfter(currentTime)){
+              } else if(bookingList.first.start_date.isAfter(currentTime)){
                 //bookingStatus = 'Upcoming';
                 debugPrint('UI_U_Landing => Upcoming booking found!');
-                rippleLoading = false;
-                Navigator.push(context, MaterialPageRoute(builder: (context) => MyBookings()));
+                WidgetsBinding.instance.addPostFrameCallback((_) async {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => MyBookings()));
+                });
               } else{
                 //bookingStatus = 'Active';
                 secondRippleLoading = true;
