@@ -334,9 +334,9 @@ class ServiceUpdateService implements EpicClass<AppState> {
 
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    return actions.whereType<UpdateService>().asyncMap((event) {
+    return actions.whereType<UpdateService>().asyncMap((event) async {
       if (event.serviceState.fileToUploadList != null) {
-        uploadFiles(event.serviceState.fileToUploadList, event.serviceState).then((ServiceState updatedServiceState) {
+        await uploadFiles(event.serviceState.fileToUploadList, event.serviceState).then((ServiceState updatedServiceState) {
           serviceState = updatedServiceState;
           FirebaseFirestore.instance.collection("service").doc(serviceState.serviceId).update(updatedServiceState.toJson()).then((value) {
             print("ServiceService should be updated online ");

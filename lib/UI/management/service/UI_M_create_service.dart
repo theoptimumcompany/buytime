@@ -227,7 +227,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                             key: _keyCreateServiceForm,
                             child: Column(
                               children: <Widget>[
-                                Padding(
+                                /*Padding(
                                   padding: const EdgeInsets.only(bottom: 25.0),
                                   child: Container(
                                     child: Row(
@@ -281,26 +281,23 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                       ],
                                     ),
                                   ),
-                                ),
+                                ),*/
                                 Center(
                                   child: Container(
                                     width: media.width * 0.9,
                                     // decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
                                     child: Padding(
-                                      padding: const EdgeInsets.only(top: 0.0, bottom: 5.0, left: 10.0, right: 10.0),
+                                      padding: const EdgeInsets.only(top: 40.0, bottom: 5.0, left: 10.0, right: 10.0),
                                       child: TextFormField(
-                                          initialValue: _serviceName,
+                                          //initialValue: _serviceName,
                                           validator: (value) => value.isEmpty ? AppLocalizations.of(context).serviceNameBlank : null,
                                           onChanged: (value) {
-                                            if (validateAndSave()) {
-                                              _serviceName = value;
-                                              StoreProvider.of<AppState>(context).dispatch(SetServiceName(_serviceName));
-                                            }
+                                            StoreProvider.of<AppState>(context).dispatch(SetServiceName(value));
                                           },
                                           onSaved: (value) {
                                             if (validateAndSave()) {
-                                              _serviceName = value;
-                                              StoreProvider.of<AppState>(context).dispatch(SetServiceName(_serviceName));
+                                              //_serviceName = value;
+                                              StoreProvider.of<AppState>(context).dispatch(SetServiceName(value));
                                             }
                                           },
                                           decoration: InputDecoration(

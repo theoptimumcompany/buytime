@@ -165,7 +165,7 @@ class LandingState extends State<Landing> {
               if(endTime.isBefore(currentTime)){
                 //bookingStatus = 'Closed';
                 debugPrint('UI_U_Landing => No active booking found!');
-                rippleLoading = false;
+                //rippleLoading = false;
               }else if(bookingList.first.start_date.isAtSameMomentAs(currentTime)){
                 //bookingStatus = 'Active';
                 debugPrint('UI_U_Landing => Active booking found!');

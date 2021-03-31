@@ -578,15 +578,107 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
                           color: BuytimeTheme.TextBlack,
                         ),
                       ),
-                      child: Column(
+                      child: CustomScrollView(
+                          shrinkWrap: true,
+                          slivers: [
+                            SliverList(
+                              delegate: SliverChildBuilderDelegate(
+                                    (context, index) {
+                                  //MenuItemModel menuItem = menuItems.elementAt(index);
+                                  //CategoryState categoryItem = categoryRootList.elementAt(index);
+                                  return GestureDetector(
+                                    onTap: () async {
+                                      if(!didAuthenticate){
+                                        didAuthenticate = await localAuth.authenticateWithBiometrics(localizedReason: 'Please authenticate to use the credentials');
+                                        /*if(!didAuthenticate)
+                                  didAuthenticate = true;*/
+                                      }
+
+                                      //didAuthenticate = true;
+
+                                      //didAuthenticate = true;
+                                      if (didAuthenticate) {
+                                        _emailController.text = autoCompleteList.elementAt(index).email;
+                                        _passwordController.text = autoCompleteList.elementAt(index).password;
+                                        if (_formKey.currentState.validate() && !_isRequestFlying) {
+                                          _signInWithEmailAndPassword();
+                                        }
+                                        closeMenu();
+                                      }
+                                    },
+                                    child: Container(
+                                        width: SizeConfig.screenWidth - (SizeConfig.safeBlockHorizontal * 10 * 2),
+                                        height: 60 - 4.0,
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: <Widget>[
+                                            ///Email Icon & Email
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.start,
+                                              children: [
+                                                ///Email Icon
+                                                Container(
+                                                  margin: EdgeInsets.only(left: 10.0, top: 0),
+                                                  child: Icon(
+                                                    Icons.email_outlined,
+                                                    color: BuytimeTheme.SymbolGrey,
+                                                  ),
+                                                ),
+
+                                                ///Email
+                                                Container(
+                                                  margin: EdgeInsets.only(left: 10.0, top: 0),
+                                                  child: FittedBox(
+                                                    fit: BoxFit.scaleDown,
+                                                    child: Text(
+                                                      '${autoCompleteList[index].email}',
+                                                      style: TextStyle(color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w400, fontSize: 14),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            ///Buytime Logo
+                                            /*Container(
+                                      margin: EdgeInsets.only(right: 10.0, top: 0),
+                                      width: 24,
+                                      height: 24,
+                                      decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                        image: AssetImage('assets/img/img_buytime.png'),
+                                      )),
+                                    ),*/
+                                          ],
+                                        )),
+                                  );
+                                  // return InkWell(
+                                  //   onTap: () {
+                                  //     debugPrint('Category Item: ${categoryItem.name.toUpperCase()} Clicked!');
+                                  //   },
+                                  //   //child: MenuItemListItemWidget(menuItem),
+                                  //   child: CategoryListItemWidget(categoryItem),
+                                  // );
+                                },
+                                childCount: autoCompleteList.length,
+                              ),
+                            ),
+                          ])
+                      /*Column(
                         mainAxisSize: MainAxisSize.min,
-                        children: List.generate(autoCompleteList.length, (index) {
+                        children:[
+
+                        ]
+
+                        *//*List.generate(
+                            autoCompleteList.length,
+                                (index) {
                           return GestureDetector(
                             onTap: () async {
                               if(!didAuthenticate){
                                 didAuthenticate = await localAuth.authenticateWithBiometrics(localizedReason: 'Please authenticate to use the credentials');
-                                /*if(!didAuthenticate)
-                                  didAuthenticate = true;*/
+                                *//**//*if(!didAuthenticate)
+                                  didAuthenticate = true;*//**//*
                               }
 
                               //didAuthenticate = true;
@@ -635,7 +727,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
                                       ],
                                     ),
                                     ///Buytime Logo
-                                    /*Container(
+                                    *//**//*Container(
                                       margin: EdgeInsets.only(right: 10.0, top: 0),
                                       width: 24,
                                       height: 24,
@@ -643,12 +735,12 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
                                           image: DecorationImage(
                                         image: AssetImage('assets/img/img_buytime.png'),
                                       )),
-                                    ),*/
+                                    ),*//**//*
                                   ],
                                 )),
                           );
-                        }),
-                      ),
+                        })*//*,
+                      )*/,
                     ),
                   ),
                 ),
