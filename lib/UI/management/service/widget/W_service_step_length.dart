@@ -311,7 +311,7 @@ class StepLengthState extends State<StepLength> {
                       Flexible(
                           child: GestureDetector(
                         onTap: () {
-                          //showPickerHour(context);
+                          showPickerHour(context);
                         },
                         child: Padding(
                           padding: const EdgeInsets.only(top: 5.0),

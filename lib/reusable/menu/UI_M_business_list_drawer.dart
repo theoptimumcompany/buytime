@@ -30,10 +30,7 @@ import '../../utils/globals.dart';
 
 final GoogleSignIn googleSignIn = new GoogleSignIn();
 final FacebookLogin facebookSignIn = new FacebookLogin();
-enum DrawerSelection {
-  BusinessList,
-  ActivityManagement
-}
+enum DrawerSelection { BusinessList, ActivityManagement }
 
 class UI_M_BusinessListDrawer extends StatefulWidget {
   UI_M_BusinessListDrawer({
@@ -44,13 +41,12 @@ class UI_M_BusinessListDrawer extends StatefulWidget {
   final Size mediaz;
 
   @override
-  _UI_M_BusinessListDrawerState createState() =>
-      _UI_M_BusinessListDrawerState();
+  _UI_M_BusinessListDrawerState createState() => _UI_M_BusinessListDrawerState();
 }
+
 DrawerSelection drawerSelection = DrawerSelection.BusinessList;
+
 class _UI_M_BusinessListDrawerState extends State<UI_M_BusinessListDrawer> {
-
-
   @override
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
@@ -60,266 +56,250 @@ class _UI_M_BusinessListDrawerState extends State<UI_M_BusinessListDrawer> {
       // Add a ListView to the drawer. This ensures the user can scroll
       // through the options in the drawer if there isn't enough vertical
       // space to fit everything.
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          ///Header
-          Container(
-            //height: mediaHeight * 0.3,
-            child: DrawerHeader(
-              margin: EdgeInsets.all(0),
-              child: Column(
-                children: [
-                  ///Logo
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 10.0),
-                      child: Image.asset('assets/img/img_buytime.png',
-                          height: 40),
-                    ),
-                  ),
-                  ///Buytime text
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 15.0),
-                      child: Text(
-                        AppLocalizations.of(context).buytime,
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.start,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 20,
-                          fontFamily: BuytimeTheme.FontFamily,
-                          letterSpacing: 0.15,
-                          color: BuytimeTheme.TextBlack
+      child: StoreConnector<AppState, AppState>(
+        converter: (store) => store.state,
+        builder: (context, snapshot) {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              ///Header
+              Container(
+                height: mediaHeight * 0.32,
+                child: DrawerHeader(
+                  margin: EdgeInsets.all(0),
+                  child: Column(
+                    children: [
+                      ///Logo
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 10.0),
+                          child: Image.asset('assets/img/img_buytime.png', height: 40),
                         ),
                       ),
-                    ),
-                  ),
-                  ///Sub text
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 5.0),
-                      child: Text(
-                        AppLocalizations.of(context).enterpriseManagement,
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.start,
-                        style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                            fontFamily: BuytimeTheme.FontFamily,
-                            letterSpacing: 0.25,
-                            color: BuytimeTheme.TextMedium
+
+                      ///Buytime text
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 15.0),
+                          child: Text(
+                            AppLocalizations.of(context).buytime,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.start,
+                            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20, fontFamily: BuytimeTheme.FontFamily, letterSpacing: 0.15, color: BuytimeTheme.TextBlack),
+                          ),
                         ),
                       ),
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ),
-          ///Business List
-          Container(
-            decoration: BoxDecoration(
-              border: Border(
-                bottom: BorderSide(
-                  color: BuytimeTheme.DividerGrey
-                )
-              )
-            ),
-            child: ListTile(
-              selected: drawerSelection == DrawerSelection.BusinessList,
-              //selectedTileColor: Color.fromRGBO(32, 124, 195, 0.3),
-              autofocus: false,
-              title: Text(
-                AppLocalizations.of(context).businessList,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.start,
-                style: TextStyle(
-                  fontWeight: FontWeight.w400,
-                  fontSize: 14,
-                  fontFamily: BuytimeTheme.FontFamily,
-                  letterSpacing: 0.1,
-                  color: drawerSelection == DrawerSelection.BusinessList ? BuytimeTheme.AccentRed : BuytimeTheme.TextBlack,
-                ),
-              ),
-              //leading: Icon(Icons.list),
-              onTap: () {
-                //Navigator.pop(context);
-                setState(() {
-                  drawerSelection = DrawerSelection.BusinessList;
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => UI_M_BusinessList()));
-                });
-              },
-            ),
-          ),
-          ///Activity Management
-          Container(
-            decoration: BoxDecoration(
-                border: Border(
-                    bottom: BorderSide(
-                        color: BuytimeTheme.DividerGrey
-                    )
-                )
-            ),
-            child: ListTile(
-              selected: drawerSelection == DrawerSelection.ActivityManagement,
-              //selectedTileColor: Color.fromRGBO(32, 124, 195, 0.3),
-              autofocus: false,
-              title: Text(
-                AppLocalizations.of(context).activityManagement,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.start,
-                style: TextStyle(
-                  fontWeight: FontWeight.w400,
-                  fontSize: 14,
-                  fontFamily: BuytimeTheme.FontFamily,
-                  letterSpacing: 0.1,
-                  color: drawerSelection == DrawerSelection.ActivityManagement ? BuytimeTheme.AccentRed : BuytimeTheme.TextBlack,
-                ),
-              ),
-              //leading: Icon(Icons.list),
-              onTap: () {
-                //Navigator.pop(context);
-                setState(() {
-                  drawerSelection = DrawerSelection.ActivityManagement;
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ActivityManagement()));
-                });
-              },
-            ),
-          ),
-          Expanded(
-            child: Align(
-              alignment: FractionalOffset.bottomLeft,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  ///Client mode
-                  Container(
-                    decoration: BoxDecoration(
-                        border: Border(
-                            top: BorderSide(
-                                color: BuytimeTheme.DividerGrey
-                            ),
-                            bottom: BorderSide(
-                                color: BuytimeTheme.DividerGrey
-                            )
-                        )
-                    ),
-                    child: ListTile(
-                      leading: Icon(Icons.emoji_emotions_outlined,
-                          color: BuytimeTheme.TextMedium, size: 24),
-                      onTap: () {
-                        /*StoreProvider.of<AppState>(context)
-                            .dispatch(SetBusinessListToEmpty());
-                        StoreProvider.of<AppState>(context)
-                            .dispatch(SetOrderListToEmpty());*/
-                        Navigator.pushReplacement(context,
-                            MaterialPageRoute(builder: (context) => Landing()));
-                      },
-                      title: Text(AppLocalizations.of(context).clientMode,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 14,
-                            fontFamily: BuytimeTheme.FontFamily,
-                            letterSpacing: 0.1,
-                            color: BuytimeTheme.TextMedium,
-                          )
+
+                      ///Sub text
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 5.0),
+                          child: Text(
+                            AppLocalizations.of(context).enterpriseManagement,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.start,
+                            style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20, fontFamily: BuytimeTheme.FontFamily, letterSpacing: 0.25, color: BuytimeTheme.TextMedium),
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                  ///Settings
-                  ListTile(
-                    leading: Icon(Icons.settings,
-                        color: BuytimeTheme.TextMedium, size: 24),
-                    onTap: () {},
-                    title: Text(AppLocalizations.of(context).userSettings,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 14,
-                          fontFamily: BuytimeTheme.FontFamily,
-                          letterSpacing: 0.1,
-                          color: BuytimeTheme.TextMedium,
-                        )
-                    ),
-                  ),
-                  ///Log out
-                  ListTile(
-                    leading: Icon(Icons.logout,
-                        color: BuytimeTheme.TextMedium, size: 24),
-                    onTap: () async {
-                      SharedPreferences prefs =
-                          await SharedPreferences.getInstance();
 
-                      await prefs.setBool('easy_check_in', false);
-                      await prefs.setBool('star_explanation', false);
-                      FirebaseAuth.instance.signOut().then((_) {
-                        googleSignIn.signOut();
+                      ///User E-Mail
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 10.0),
+                          child: Text(
+                            snapshot.user.email,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.start,
+                            style: TextStyle(fontWeight: FontWeight.w200, fontSize: 12, fontFamily: BuytimeTheme.FontFamily, letterSpacing: 0.25, color: BuytimeTheme.TextMedium),
+                          ),
+                        ),
+                      ),
 
-                        facebookSignIn.logOut();
-                        //Resetto il carrello
-                        //cartCounter = 0;
-
-                        //Svuotare lo Store sul Logout
-                        StoreProvider.of<AppState>(context)
-                            .dispatch(SetCategoryToEmpty());
-                        StoreProvider.of<AppState>(context)
-                            .dispatch(SetCategoryListToEmpty());
-                        StoreProvider.of<AppState>(context)
-                            .dispatch(SetCategoryTreeToEmpty());
-                        StoreProvider.of<AppState>(context)
-                            .dispatch(SetOrderToEmpty(""));
-                        StoreProvider.of<AppState>(context)
-                            .dispatch(SetOrderListToEmpty());
-                        StoreProvider.of<AppState>(context)
-                            .dispatch(SetBusinessToEmpty());
-                        StoreProvider.of<AppState>(context)
-                            .dispatch(SetBusinessListToEmpty());
-                        StoreProvider.of<AppState>(context)
-                            .dispatch(SetServiceToEmpty());
-                        StoreProvider.of<AppState>(context)
-                            .dispatch(SetServiceListToEmpty());
-                        StoreProvider.of<AppState>(context)
-                            .dispatch(SetServiceSlotToEmpty());
-                        StoreProvider.of<AppState>(context)
-                            .dispatch(SetPipelineToEmpty());
-                        StoreProvider.of<AppState>(context)
-                            .dispatch(SetPipelineListToEmpty());
-                        StoreProvider.of<AppState>(context)
-                            .dispatch(SetStripeToEmpty());
-                        StoreProvider.of<AppState>(context)
-                            .dispatch(SetUserStateToEmpty());
-                        //Torno al Login
-                        drawerSelection = DrawerSelection.BusinessList;
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (context) => Home()),
-                        );
-                      });
-                    },
-                    title: Text(AppLocalizations.of(context).logout,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 14,
-                          fontFamily: BuytimeTheme.FontFamily,
-                          letterSpacing: 0.1,
-                          color: BuytimeTheme.TextMedium,
-                        )),
+                      ///User Role
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 5.0),
+                          child: Text(
+                            snapshot.user.owner
+                                ? "Owner"
+                                : snapshot.user.manager
+                                    ? "Manager"
+                                    : snapshot.user.salesman
+                                        ? "Salesman"
+                                        : "Admin",
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.start,
+                            style: TextStyle(fontWeight: FontWeight.w200, fontSize: 12, fontFamily: BuytimeTheme.FontFamily, letterSpacing: 0.25, color: BuytimeTheme.TextMedium),
+                          ),
+                        ),
+                      )
+                    ],
                   ),
-                ],
+                ),
               ),
-            ),
-          ),
-        ],
+
+              ///Business List
+              Container(
+                decoration: BoxDecoration(border: Border(bottom: BorderSide(color: BuytimeTheme.DividerGrey))),
+                child: ListTile(
+                  selected: drawerSelection == DrawerSelection.BusinessList,
+                  //selectedTileColor: Color.fromRGBO(32, 124, 195, 0.3),
+                  autofocus: false,
+                  title: Text(
+                    AppLocalizations.of(context).businessList,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 14,
+                      fontFamily: BuytimeTheme.FontFamily,
+                      letterSpacing: 0.1,
+                      color: drawerSelection == DrawerSelection.BusinessList ? BuytimeTheme.AccentRed : BuytimeTheme.TextBlack,
+                    ),
+                  ),
+                  //leading: Icon(Icons.list),
+                  onTap: () {
+                    //Navigator.pop(context);
+                    setState(() {
+                      drawerSelection = DrawerSelection.BusinessList;
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_BusinessList()));
+                    });
+                  },
+                ),
+              ),
+
+              ///Activity Management
+              Container(
+                decoration: BoxDecoration(border: Border(bottom: BorderSide(color: BuytimeTheme.DividerGrey))),
+                child: ListTile(
+                  selected: drawerSelection == DrawerSelection.ActivityManagement,
+                  //selectedTileColor: Color.fromRGBO(32, 124, 195, 0.3),
+                  autofocus: false,
+                  title: Text(
+                    AppLocalizations.of(context).activityManagement,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 14,
+                      fontFamily: BuytimeTheme.FontFamily,
+                      letterSpacing: 0.1,
+                      color: drawerSelection == DrawerSelection.ActivityManagement ? BuytimeTheme.AccentRed : BuytimeTheme.TextBlack,
+                    ),
+                  ),
+                  //leading: Icon(Icons.list),
+                  onTap: () {
+                    //Navigator.pop(context);
+                    setState(() {
+                      drawerSelection = DrawerSelection.ActivityManagement;
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ActivityManagement()));
+                    });
+                  },
+                ),
+              ),
+              Expanded(
+                child: Align(
+                  alignment: FractionalOffset.bottomLeft,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      ///Client mode
+                      Container(
+                        decoration: BoxDecoration(border: Border(top: BorderSide(color: BuytimeTheme.DividerGrey), bottom: BorderSide(color: BuytimeTheme.DividerGrey))),
+                        child: ListTile(
+                          leading: Icon(Icons.emoji_emotions_outlined, color: BuytimeTheme.TextMedium, size: 24),
+                          onTap: () {
+                            /*StoreProvider.of<AppState>(context)
+                              .dispatch(SetBusinessListToEmpty());
+                          StoreProvider.of<AppState>(context)
+                              .dispatch(SetOrderListToEmpty());*/
+                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Landing()));
+                          },
+                          title: Text(AppLocalizations.of(context).clientMode,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 14,
+                                fontFamily: BuytimeTheme.FontFamily,
+                                letterSpacing: 0.1,
+                                color: BuytimeTheme.TextMedium,
+                              )),
+                        ),
+                      ),
+
+                      ///Settings
+                      ListTile(
+                        leading: Icon(Icons.settings, color: BuytimeTheme.TextMedium, size: 24),
+                        onTap: () {},
+                        title: Text(AppLocalizations.of(context).userSettings,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 14,
+                              fontFamily: BuytimeTheme.FontFamily,
+                              letterSpacing: 0.1,
+                              color: BuytimeTheme.TextMedium,
+                            )),
+                      ),
+
+                      ///Log out
+                      ListTile(
+                        leading: Icon(Icons.logout, color: BuytimeTheme.TextMedium, size: 24),
+                        onTap: () async {
+                          SharedPreferences prefs = await SharedPreferences.getInstance();
+
+                          await prefs.setBool('easy_check_in', false);
+                          await prefs.setBool('star_explanation', false);
+                          FirebaseAuth.instance.signOut().then((_) {
+                            googleSignIn.signOut();
+
+                            facebookSignIn.logOut();
+                            //Resetto il carrello
+                            //cartCounter = 0;
+
+                            //Svuotare lo Store sul Logout
+                            StoreProvider.of<AppState>(context).dispatch(SetCategoryToEmpty());
+                            StoreProvider.of<AppState>(context).dispatch(SetCategoryListToEmpty());
+                            StoreProvider.of<AppState>(context).dispatch(SetCategoryTreeToEmpty());
+                            StoreProvider.of<AppState>(context).dispatch(SetOrderToEmpty(""));
+                            StoreProvider.of<AppState>(context).dispatch(SetOrderListToEmpty());
+                            StoreProvider.of<AppState>(context).dispatch(SetBusinessToEmpty());
+                            StoreProvider.of<AppState>(context).dispatch(SetBusinessListToEmpty());
+                            StoreProvider.of<AppState>(context).dispatch(SetServiceToEmpty());
+                            StoreProvider.of<AppState>(context).dispatch(SetServiceListToEmpty());
+                            StoreProvider.of<AppState>(context).dispatch(SetServiceSlotToEmpty());
+                            StoreProvider.of<AppState>(context).dispatch(SetPipelineToEmpty());
+                            StoreProvider.of<AppState>(context).dispatch(SetPipelineListToEmpty());
+                            StoreProvider.of<AppState>(context).dispatch(SetStripeToEmpty());
+                            StoreProvider.of<AppState>(context).dispatch(SetUserStateToEmpty());
+                            //Torno al Login
+                            drawerSelection = DrawerSelection.BusinessList;
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (context) => Home()),
+                            );
+                          });
+                        },
+                        title: Text(AppLocalizations.of(context).logout,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 14,
+                              fontFamily: BuytimeTheme.FontFamily,
+                              letterSpacing: 0.1,
+                              color: BuytimeTheme.TextMedium,
+                            )),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }
