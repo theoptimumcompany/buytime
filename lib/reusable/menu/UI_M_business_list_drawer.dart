@@ -116,7 +116,30 @@ class _UI_M_BusinessListDrawerState extends State<UI_M_BusinessListDrawer> {
                         ),
                       ),
                     ),
-                  )
+                  ),                  ///Sub text
+                  StoreConnector<AppState, AppState>(
+                      converter: (store) => store.state,
+                      onInit: (store) {},
+                      builder: (context, snapshot) {
+                      return Container(
+                                alignment: Alignment.centerLeft,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(top: 5.0),
+                                  child: Text(
+                                    snapshot.user.email,
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.start,
+                                  style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 14,
+                                  fontFamily: BuytimeTheme.FontFamily,
+                                  letterSpacing: 0.25,
+                                  color: BuytimeTheme.TextMedium
+                                  ),
+                                ),
+                              ),
+                            );
+                  })
                 ],
               ),
             ),

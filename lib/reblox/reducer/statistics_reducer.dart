@@ -17,8 +17,9 @@ StatisticsState statisticsReducer(StatisticsState state, action) {
   StatisticsState statisticsState = new StatisticsState.fromState(state);
   
   if (action is UpdateStatistics) {
-    statisticsState = action.statisticsState.copyWith();
-    //StatisticsState().log('STATISTICS_REDUCER', statisticsState);
+    if (action.statisticsState != null) {
+      statisticsState = action.statisticsState.copyWith();
+    }
     return statisticsState;
   }
   

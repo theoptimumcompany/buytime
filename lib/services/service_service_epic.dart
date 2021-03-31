@@ -234,74 +234,6 @@ class ServiceListAndNavigateOnConfirmRequestService implements EpicClass<AppStat
   }
 }
 
-// class ServiceRequestService implements EpicClass<AppState> {
-//   @override
-//   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-//     return actions.whereType<ServiceRequest>().asyncMap((event) {
-// //      CategoryPath categoryPath = event.categoryPath;
-// //      print("CategoryService document id:" + categoryPath.categoryId);
-// //      return Firestore.instance.collection("business").document(categoryPath.businessId).collection("category").document(categoryPath.categoryId).get().then((snapshot) {
-// //        print("CategoryService firestore listener:" + snapshot['name']);
-// //        return new CategoryRequestResponse(CategoryState(
-// //          name: snapshot['name'],
-// //          id: snapshot['id'],
-// //          level: snapshot['level'],
-// //          children: snapshot['children'],
-// //          parent: snapshot['parent'],
-// //          manager: snapshot['manager'],
-// //          businessId: snapshot['businessId'],
-// //          notificationTo: snapshot['notificationTo'],
-// //        ));
-// //      });
-//     }).takeUntil(actions.whereType<UnlistenCategory>());
-//   }
-// }
-
-class ServiceUpdateService implements EpicClass<AppState> {
-  ServiceState serviceState;
-  StatisticsState statisticsState;
-
-  @override
-  Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    return actions.whereType<UpdateService>().asyncMap((event) {
-      if (event.serviceState.fileToUploadList != null) {
-        uploadFiles(event.serviceState.fileToUploadList, event.serviceState).then((ServiceState updatedServiceState) {
-          serviceState = updatedServiceState;
-          FirebaseFirestore.instance.collection("service").doc(serviceState.serviceId).update(updatedServiceState.toJson()).then((value) {
-            print("ServiceService should be updated online ");
-            serviceState = updatedServiceState;
-          }).catchError((error) {
-            print(error);
-          }).then((value) {});
-        });
-      } else {
-        serviceState = event.serviceState;
-
-        statisticsState = store.state.statistics;
-        int reads = statisticsState.serviceUpdateServiceRead;
-        int writes = statisticsState.serviceUpdateServiceWrite;
-        int documents = statisticsState.serviceUpdateServiceDocuments;
-        debugPrint('SERVICE_SERVICE_EPIC - ServiceUpdateService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
-        debugPrint('SERVICE_SERVICE_EPIC - ServiceUpdateService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
-        statisticsState.serviceUpdateServiceRead = reads;
-        statisticsState.serviceUpdateServiceWrite = writes;
-        statisticsState.serviceUpdateServiceDocuments = documents;
-
-        FirebaseFirestore.instance.collection("service").doc(serviceState.serviceId).update(serviceState.toJson()).then((value) {
-          print("ServiceService should be updated online ");
-        }).catchError((error) {
-          print(error);
-        }).then((value) {});
-      }
-    }).expand((element) => [
-          UpdateStatistics(statisticsState),
-          UpdatedService(serviceState),
-          SetEditedService(true),
-          NavigatePushAction(AppRoutes.managerServiceList),
-        ]);
-  }
-}
-
 class ServiceUpdateServiceVisibility implements EpicClass<AppState> {
   String id;
   String visibility;
@@ -396,44 +328,64 @@ class ServiceCreateService implements EpicClass<AppState> {
   }
 }
 
+class ServiceUpdateService implements EpicClass<AppState> {
+  ServiceState serviceState;
+  StatisticsState statisticsState;
+
+  @override
+  Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
+    return actions.whereType<UpdateService>().asyncMap((event) {
+      if (event.serviceState.fileToUploadList != null) {
+        uploadFiles(event.serviceState.fileToUploadList, event.serviceState).then((ServiceState updatedServiceState) {
+          serviceState = updatedServiceState;
+          FirebaseFirestore.instance.collection("service").doc(serviceState.serviceId).update(updatedServiceState.toJson()).then((value) {
+            print("ServiceService should be updated online ");
+            serviceState = updatedServiceState;
+          }).catchError((error) {
+            print(error);
+          }).then((value) {});
+        });
+      } else {
+        serviceState = event.serviceState;
+        statisticsState = store.state.statistics;
+        int reads = statisticsState.serviceUpdateServiceRead;
+        int writes = statisticsState.serviceUpdateServiceWrite;
+        int documents = statisticsState.serviceUpdateServiceDocuments;
+        debugPrint('SERVICE_SERVICE_EPIC - ServiceUpdateService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+        debugPrint('SERVICE_SERVICE_EPIC - ServiceUpdateService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+        statisticsState.serviceUpdateServiceRead = reads;
+        statisticsState.serviceUpdateServiceWrite = writes;
+        statisticsState.serviceUpdateServiceDocuments = documents;
+
+        FirebaseFirestore.instance.collection("service").doc(serviceState.serviceId).update(serviceState.toJson()).then((value) {
+          print("ServiceService should be updated online ");
+        }).catchError((error) {
+          print(error);
+        }).then((value) {});
+      }
+    }).expand((element) => [
+      UpdateStatistics(statisticsState),
+      UpdatedService(serviceState),
+      SetEditedService(true),
+      NavigatePushAction(AppRoutes.managerServiceList),
+    ]);
+  }
+}
+
 Future<ServiceState> uploadFiles(List<OptimumFileToUpload> fileToUploadList, ServiceState serviceState) async {
   for (int index = 0; index < fileToUploadList.length; index++) {
     await uploadToFirebaseStorage(fileToUploadList[index]).then((fileUrl) {
-      switch (index) {
-        case 0:
-          serviceState.image1 = fileUrl.toString();
-          break;
-        case 1:
-          serviceState.image2 = fileUrl.toString();
-          break;
-        case 2:
-          serviceState.image3 = fileUrl.toString();
-          break;
+      if (Uri.decodeFull(fileUrl).contains(serviceState.name + '_1')) {
+        serviceState.image1 = fileUrl.toString();
+      } else if (Uri.decodeFull(fileUrl).contains(serviceState.name + '_2')) {
+        serviceState.image2 = fileUrl.toString();
+      } else if (Uri.decodeFull(fileUrl).contains(serviceState.name + '_3')) {
+        serviceState.image3 = fileUrl.toString();
       }
     });
   }
-
-  // await Future.forEach(
-  //     fileToUploadList,
-  //     (fileToUpload) => uploadToFirebaseStorage(fileToUpload).then((fileUrl) {
-  //           serviceState.image1 = fileUrl.toString();
-  //           return serviceState;
-  //         }));
   return serviceState;
 }
-
-// Future<CreatedService> createService(ServiceState serviceState) {
-//   DocumentReference docReference = FirebaseFirestore.instance.collection('service').doc();
-//   serviceState.serviceId = docReference.id;
-//   return docReference.set(serviceState.toJson()).then((value) {
-//     print("ServiceService has created new Service! ");
-//     return serviceState;
-//   }).catchError((error) {
-//     print(error);
-//   }).then((value) {
-//     return null;
-//   });
-// }
 
 class ServiceDeleteService implements EpicClass<AppState> {
   StatisticsState statisticsState;

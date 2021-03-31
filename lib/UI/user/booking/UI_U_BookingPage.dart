@@ -401,6 +401,7 @@ class _BookingPageState extends State<BookingPage> {
                           ),*/
                             ),
                             child: CachedNetworkImage(
+                              // imageUrl: businessState.wide,
                               imageUrl: businessState.logo,
                               imageBuilder: (context, imageProvider) => Container(
                                 //margin: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 5), ///5%
