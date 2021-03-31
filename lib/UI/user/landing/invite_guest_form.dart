@@ -119,6 +119,16 @@ class _InviteGuestFormState extends State<InviteGuestForm> {
                             },
                           ),
                         ],
+                        centerTitle: true,
+                        title: Text(
+                          AppLocalizations.of(context).bookingCode,
+                          style: TextStyle(
+                              fontFamily: BuytimeTheme.FontFamily,
+                              color: BuytimeTheme.TextWhite,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 20 ///SizeConfig.safeBlockHorizontal * 8
+                          ),
+                        ),
                         leading: IconButton(
                           icon: Icon(
                             Icons.keyboard_arrow_left,
@@ -148,7 +158,7 @@ class _InviteGuestFormState extends State<InviteGuestForm> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 ///Enter Booking Code Title
-                                Container(
+                                /*Container(
                                   margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5),
                                   child: Text(
                                     AppLocalizations.of(context).bookingCode.toUpperCase(),
@@ -159,10 +169,10 @@ class _InviteGuestFormState extends State<InviteGuestForm> {
                                         fontSize: 26 ///SizeConfig.safeBlockHorizontal * 8
                                     ),
                                   ),
-                                ),
+                                ),*/
                                 ///Enter Booking Code Subtitle
                                 Container(
-                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 6, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5),
+                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 5, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5),
                                   child: Text(
                                     AppLocalizations.of(context).enterYourBookingCode,
                                     style: TextStyle(

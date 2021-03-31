@@ -50,9 +50,6 @@ dependencies:
     git:
       url: https://github.com/romme86/stripe-sdk
   share: ^0.6.5+4
-  flutter_web_image_picker:
-    git:
-      url: https://github.com/theoptimumcompany/flutter_web_image_picker
   uuid: ^2.2.2
   crop: any
   mime: ^0.9.7
@@ -85,6 +82,7 @@ dependencies:
   image: ^2.1.18
   credit_card_type_detector: ^1.1.0
   flutter_picker: ^2.0.1
+  carousel_pro: ^1.0.0
 
 dependency_overrides:
   intl: ^0.17.0-nullsafety.2

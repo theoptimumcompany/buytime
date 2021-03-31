@@ -1,6 +1,5 @@
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/reducer/service/service_slot_time_reducer.dart';
-import 'package:Buytime/reusable/checkbox/W_checkbox_parent_child.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';

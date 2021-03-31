@@ -314,7 +314,9 @@ ServiceState serviceReducer(ServiceState state, action) {
     return serviceState;
   }
   if (action is UpdatedService) {
-    serviceState = action.serviceState.copyWith();
+    if (action.serviceState != null) {
+      serviceState = action.serviceState.copyWith();
+    }
     return serviceState;
   }
   if (action is ServiceRequestResponse) {

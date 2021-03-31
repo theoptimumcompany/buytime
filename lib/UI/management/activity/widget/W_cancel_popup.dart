@@ -1,17 +1,8 @@
 import 'dart:ui';
 
-import 'package:Buytime/reblox/model/app_state.dart';
-import 'package:Buytime/reblox/model/booking/booking_state.dart';
-import 'package:Buytime/reblox/reducer/booking_reducer.dart';
-import 'package:Buytime/reblox/reducer/business_reducer.dart';
-import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_redux/flutter_redux.dart';
-import 'package:intl/intl.dart';
-import 'package:share/share.dart';
 
 // ignore: must_be_immutable
 class CancelPop extends StatefulWidget {
