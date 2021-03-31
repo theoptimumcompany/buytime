@@ -359,7 +359,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                           child: Container(
                             margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
                             padding: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2),
-                            height: subCategoryList.isNotEmpty ? SizeConfig.safeBlockVertical * 28 : SizeConfig.safeBlockVertical * 17,
+                            height: subCategoryList.isNotEmpty ? SizeConfig.safeBlockVertical * 28 : SizeConfig.safeBlockVertical * 19,
                             color: BuytimeTheme.BackgroundWhite,
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.start,
