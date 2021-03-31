@@ -25,7 +25,7 @@ class CancelPop extends StatefulWidget {
 class _CancelPopState extends State<CancelPop> {
 
   double _result = 0.0;
-  int _radioValue = -1;
+  int _radioValue = 0;
 
   void _handleRadioValueChange(int value) {
     setState(() {

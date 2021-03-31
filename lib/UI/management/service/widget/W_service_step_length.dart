@@ -52,27 +52,27 @@ class StepLengthState extends State<StepLength> {
     });
   }
 
-  ////Controllo su durata e calendario
-  // String showErrorDay(int value) {
-  //   String checkIn = StoreProvider.of<AppState>(context).state.serviceSlot.checkIn;
-  //   String checkOut = StoreProvider.of<AppState>(context).state.serviceSlot.checkOut;
-  //   if (checkIn.contains("/") && checkOut.contains("/")) {
-  //     List<String> convertedCheckIn = checkIn.split("/");
-  //     List<String> convertedCheckOut = checkOut.split("/");
-  //     DateTime dayFirst = DateTime.parse(convertedCheckIn[2] + "-" + convertedCheckIn[1] + "-" + convertedCheckIn[0]);
-  //     DateTime dayLast = DateTime.parse(convertedCheckOut[2] + "-" + convertedCheckOut[1] + "-" + convertedCheckOut[0]);
-  //     int durationDatetime = dayLast.difference(dayFirst).inDays;
-  //     if(value > durationDatetime){
-  //       return "Day duration overcome datetime interval chosen";
-  //     }
-  //   } else if (!checkIn.contains("/") && !checkOut.contains("/")) {
-  //     return "No Check-In and Check-Out days set";
-  //   } else if (checkIn.contains("/") && !checkOut.contains("/")) {
-  //     return "No Check-Out day set";
-  //   } else if (!checkIn.contains("/") && checkOut.contains("/")) {
-  //     return "No Check-In day set";
-  //   }
-  // }
+  //Controllo su durata e calendario
+  /*String showErrorDay(int value) {
+    String checkIn = StoreProvider.of<AppState>(context).state.serviceSlot.checkIn;
+    String checkOut = StoreProvider.of<AppState>(context).state.serviceSlot.checkOut;
+    if (checkIn.contains("/") && checkOut.contains("/")) {
+      List<String> convertedCheckIn = checkIn.split("/");
+      List<String> convertedCheckOut = checkOut.split("/");
+      DateTime dayFirst = DateTime.parse(convertedCheckIn[2] + "-" + convertedCheckIn[1] + "-" + convertedCheckIn[0]);
+      DateTime dayLast = DateTime.parse(convertedCheckOut[2] + "-" + convertedCheckOut[1] + "-" + convertedCheckOut[0]);
+      int durationDatetime = dayLast.difference(dayFirst).inDays;
+      if(value > durationDatetime){
+        return "Day duration overcome datetime interval chosen";
+      }
+    } else if (!checkIn.contains("/") && !checkOut.contains("/")) {
+      return "No Check-In and Check-Out days set";
+    } else if (checkIn.contains("/") && !checkOut.contains("/")) {
+      return "No Check-Out day set";
+    } else if (!checkIn.contains("/") && checkOut.contains("/")) {
+      return "No Check-In day set";
+    }
+  }*/
 
   showPickerHour(BuildContext context) {
     Picker(
@@ -311,7 +311,7 @@ class StepLengthState extends State<StepLength> {
                       Flexible(
                           child: GestureDetector(
                         onTap: () {
-                          showPickerHour(context);
+                          //showPickerHour(context);
                         },
                         child: Padding(
                           padding: const EdgeInsets.only(top: 5.0),

@@ -233,6 +233,7 @@ class _ActivityManagementState extends State<ActivityManagement> {
     return StoreConnector<AppState, AppState>(
       converter: (store) => store.state,
       onInit: (store) {
+        store.state.orderList.orderListState.clear();
         store.dispatch(OrderListRequest(store.state.business.id_firestore));
         startRequest = true;
       },

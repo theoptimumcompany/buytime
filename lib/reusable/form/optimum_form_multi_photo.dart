@@ -195,6 +195,7 @@ class OptimumFormMultiPhotoState extends State<OptimumFormMultiPhoto> {
         if ( imageFromMemory != null){
           setState((){
             //image = tmpCroppedFile.path;
+            image = null;
             croppedImage = imageFromMemory;
             imageFile = tmpCroppedFile;
           });

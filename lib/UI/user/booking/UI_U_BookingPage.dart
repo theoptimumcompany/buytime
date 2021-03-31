@@ -437,7 +437,7 @@ class _BookingPageState extends State<BookingPage> {
                                   Container(
                                     margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                     child: Text(
-                                      AppLocalizations.of(context).yourHolidayInSpace + bookingState.business_name,
+                                      AppLocalizations.of(context).yourHolidayInSpace + businessState.municipality,
                                       style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextMedium, fontWeight: FontWeight.w400, fontSize: 16
 
                                           ///SizeConfig.safeBlockHorizontal * 4

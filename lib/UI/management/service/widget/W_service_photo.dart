@@ -163,7 +163,7 @@ class WidgetServicePhotoState extends State<WidgetServicePhoto> {
         Image imageFromMemory = Image.memory(await tmpCroppedFile.readAsBytes());
         if (imageFromMemory != null) {
           setState(() {
-            //image = imageFromMemory;
+            image = '';
             croppedImage = imageFromMemory;
             imageFile = tmpCroppedFile;
           });

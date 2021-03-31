@@ -67,7 +67,7 @@ class _TimeSlotWidgetState extends State<TimeSlotWidget> {
                  ),
                ),
                ///Duration
-               Container(
+               /*Container(
                  width: 100,
                  //margin: EdgeInsets.only(top: 5),
                  //margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 10),
@@ -84,7 +84,7 @@ class _TimeSlotWidgetState extends State<TimeSlotWidget> {
                      ),
                    ),
                  ),
-               ),
+               ),*/
                ///Price
                Container(
                  width: 100,

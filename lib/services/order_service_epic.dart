@@ -68,7 +68,8 @@ class OrderListRequestService implements EpicClass<AppState> {
         String userId = store.state.business.id_firestore;
         List<BusinessState> businessList = store.state.businessList.businessListState;
         DateTime currentTime = DateTime.now();
-        currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0);
+        currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0).toUtc();
+        debugPrint('order_service_epic => current Time: $currentTime');
         List<DateTime> period = getPeriod(currentTime);
         orderStateList = [];
         int ordersFirebaseDocs = 0;
