@@ -617,7 +617,8 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                                     tooltip: AppLocalizations.of(context).comeBack,
                                     onPressed: () {
                                       //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ManageCategory()),);
-                                      Navigator.pushReplacement(context, EnterExitRoute(enterPage: ManageCategory(), exitPage: UI_M_EditCategory(), from: false));
+                                      Navigator.of(context).pop();
+                                      //Navigator.pushReplacement(context, EnterExitRoute(enterPage: ManageCategory(), exitPage: UI_M_EditCategory(), from: false));
                                     },
                                   ),
                                 ),

@@ -64,7 +64,7 @@ class _UI_M_BusinessListDrawerState extends State<UI_M_BusinessListDrawer> {
             children: <Widget>[
               ///Header
               Container(
-                height: mediaHeight * 0.32,
+                height: 225,
                 child: DrawerHeader(
                   margin: EdgeInsets.all(0),
                   child: Column(
@@ -115,7 +115,7 @@ class _UI_M_BusinessListDrawerState extends State<UI_M_BusinessListDrawer> {
                             snapshot.user.email,
                             overflow: TextOverflow.ellipsis,
                             textAlign: TextAlign.start,
-                            style: TextStyle(fontWeight: FontWeight.w200, fontSize: 12, fontFamily: BuytimeTheme.FontFamily, letterSpacing: 0.25, color: BuytimeTheme.TextMedium),
+                            style: TextStyle(fontWeight: FontWeight.w300, fontSize: 12, fontFamily: BuytimeTheme.FontFamily, letterSpacing: 0.25, color: BuytimeTheme.TextMedium),
                           ),
                         ),
                       ),
@@ -127,15 +127,15 @@ class _UI_M_BusinessListDrawerState extends State<UI_M_BusinessListDrawer> {
                           padding: const EdgeInsets.only(top: 5.0),
                           child: Text(
                             snapshot.user.owner
-                                ? "Owner"
+                                ?  AppLocalizations.of(context).owner
                                 : snapshot.user.manager
-                                    ? "Manager"
+                                    ?  AppLocalizations.of(context).manager
                                     : snapshot.user.salesman
-                                        ? "Salesman"
-                                        : "Admin",
+                                        ?  AppLocalizations.of(context).salesman
+                                        :  AppLocalizations.of(context).admin,
                             overflow: TextOverflow.ellipsis,
                             textAlign: TextAlign.start,
-                            style: TextStyle(fontWeight: FontWeight.w200, fontSize: 12, fontFamily: BuytimeTheme.FontFamily, letterSpacing: 0.25, color: BuytimeTheme.TextMedium),
+                            style: TextStyle(fontWeight: FontWeight.w300, fontSize: 12, fontFamily: BuytimeTheme.FontFamily, letterSpacing: 0.25, color: BuytimeTheme.TextMedium),
                           ),
                         ),
                       )
@@ -219,6 +219,7 @@ class _UI_M_BusinessListDrawerState extends State<UI_M_BusinessListDrawer> {
                               .dispatch(SetBusinessListToEmpty());
                           StoreProvider.of<AppState>(context)
                               .dispatch(SetOrderListToEmpty());*/
+                            switchToClient = true;
                             Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Landing()));
                           },
                           title: Text(AppLocalizations.of(context).clientMode,

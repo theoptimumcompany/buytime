@@ -140,7 +140,7 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                       onPressed: () {
                         StoreProvider.of<AppState>(context).dispatch(SetService(ServiceState().toEmpty()));
                         //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_CreateService(categoryId: "",)));
-                        Navigator.pushReplacement(context, EnterExitRoute(enterPage: UI_CreateService(categoryId: "",), exitPage: UI_M_ServiceList(), from: true));
+                        Navigator.push(context, EnterExitRoute(enterPage: UI_CreateService(categoryId: "",), exitPage: UI_M_ServiceList(), from: true));
                       },
                     ),
                   ],
@@ -200,7 +200,7 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                                       onTap: () async {
                                         StoreProvider.of<AppState>(context).dispatch(SetService(ServiceState().toEmpty()));
                                         //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_CreateService(categoryId: categoryRootList[i].id)),);
-                                        Navigator.pushReplacement(context, EnterExitRoute(enterPage: UI_CreateService(categoryId: categoryRootList[i].id), exitPage: UI_M_ServiceList(), from: true));
+                                        Navigator.push(context, EnterExitRoute(enterPage: UI_CreateService(categoryId: categoryRootList[i].id), exitPage: UI_M_ServiceList(), from: true));
                                       },
                                       child: Container(
                                         height: 56,
@@ -353,7 +353,7 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                                                                 onTap: () {
                                                                   StoreProvider.of<AppState>(context).dispatch(SetService(listOfServiceEachRoot[i][index]));
                                                                   //Navigator.push(context, MaterialPageRoute(builder: (context) => UI_EditService()),);
-                                                                  Navigator.pushReplacement(context, EnterExitRoute(enterPage: UI_EditService(), exitPage: UI_M_ServiceList(), from: true));
+                                                                  Navigator.push(context, EnterExitRoute(enterPage: UI_EditService(), exitPage: UI_M_ServiceList(), from: true));
                                                                 },
                                                                 child: Container(
                                                                   height: 56,

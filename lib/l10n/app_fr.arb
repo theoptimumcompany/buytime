@@ -393,5 +393,7 @@
   "pleaseSelectNumberOfHours": "Please select number of hours",
   "pleaseSelectNumberOfMinutes": "Please select number of minutes",
   "pleaseSelectNumberOfMaxBookings": "Please select number of max bookings",
-  "pleaseSelectNumberOfMaxCapacity": "Please select number of max capacity"
+  "pleaseSelectNumberOfMaxCapacity": "Please select number of max capacity",
+  "admin": "Admin",
+  "manager": "Manager"
 }

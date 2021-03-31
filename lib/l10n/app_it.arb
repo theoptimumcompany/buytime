@@ -395,5 +395,7 @@
   "pleaseSelectNumberOfHours": "Per favore seleziona il numero di ore",
   "pleaseSelectNumberOfMinutes": "Per favore seleziona il numero di minuti",
   "pleaseSelectNumberOfMaxBookings": "Per favore seleziona il numero massimo di prenotazioni",
-  "pleaseSelectNumberOfMaxCapacity": "Per favore seleziona la capacità massima"
+  "pleaseSelectNumberOfMaxCapacity": "Per favore seleziona la capacità massima",
+  "admin": "Admin",
+  "manager": "Manager"
 }

@@ -210,7 +210,8 @@ class UI_M_CreateCategoryState extends State<UI_M_CreateCategory> {
                                     tooltip: AppLocalizations.of(context).comeBack,
                                     onPressed: () {
                                       //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ManageCategory()),);
-                                      Navigator.pushReplacement(context, EnterExitRoute(enterPage: ManageCategory(), exitPage: UI_M_CreateCategory(empty: true,), from: false));
+                                      Navigator.of(context).pop();
+                                      //Navigator.pushReplacement(context, EnterExitRoute(enterPage: ManageCategory(), exitPage: UI_M_CreateCategory(empty: true,), from: false));
                                     },
                                   ),
                                 ),

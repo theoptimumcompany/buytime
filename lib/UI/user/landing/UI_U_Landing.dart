@@ -50,7 +50,7 @@ class Landing extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => LandingState();
 }
-
+bool switchToClient = false;
 
 class LandingState extends State<Landing> {
   List<LandingCardWidget> cards = new List();
@@ -128,7 +128,6 @@ class LandingState extends State<Landing> {
     SizeConfig().init(context);
     var isManagerOrAbove = false;
 
-
     return StoreConnector<AppState, AppState>(
         converter: (store) => store.state,
         onInit: (store){
@@ -141,46 +140,53 @@ class LandingState extends State<Landing> {
           bookingList.addAll(snapshot.bookingList.bookingListState);
           isManagerOrAbove = snapshot.user != null && (snapshot.user.getRole() != Role.user) ? true : false;
 
-          if(bookingList.isEmpty && snapshot.user.email.isNotEmpty && !onBookingCode && !requestingBookings && !isManagerOrAbove){
-            rippleLoading = true;
+          if(isManagerOrAbove && !switchToClient && !requestingBookings){
             requestingBookings = true;
-            debugPrint('UI_U_Landing => USER EMAIL: ${snapshot.user.email}');
-            StoreProvider.of<AppState>(context).dispatch(UserBookingListRequest(snapshot.user.email, false));
-            //rippleLoading = false;
-          }
-
-          if(bookingList.isNotEmpty && !onBookingCode && rippleLoading && !isManagerOrAbove){
-            rippleLoading = false;
-            DateTime currentTime = DateTime.now();
-            currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0);
-
-            DateTime endTime = DateTime.now();
-            //DateTime startTime = DateTime.now();
-            endTime = new DateTime(bookingList.first.end_date.year, bookingList.first.end_date.month, bookingList.first.end_date.day, 0, 0, 0, 0, 0);
-            if(endTime.isBefore(currentTime)){
-              //bookingStatus = 'Closed';
-              debugPrint('UI_U_Landing => No active booking found!');
-              rippleLoading = false;
-            }else if(bookingList.first.start_date.isAtSameMomentAs(currentTime)){
-              //bookingStatus = 'Active';
-              debugPrint('UI_U_Landing => Active booking found!');
-              //StoreProvider.of<AppState>(context).dispatch(BookingRequestResponse(bookingList.first));
-              //StoreProvider.of<AppState>(context).dispatch(BusinessAndNavigateRequest(bookingList.first.business_id));
-            }
-            else if(bookingList.first.start_date.isAfter(currentTime)){
-              //bookingStatus = 'Upcoming';
-              debugPrint('UI_U_Landing => Upcoming booking found!');
-              rippleLoading = false;
-              Navigator.push(context, MaterialPageRoute(builder: (context) => MyBookings()));
-            } else{
-              //bookingStatus = 'Active';
-              secondRippleLoading = true;
-              debugPrint('UI_U_Landing => Active booking found!');
-              StoreProvider.of<AppState>(context).dispatch(BookingRequestResponse(bookingList.first));
-              //Navigator.push(context, MaterialPageRoute(builder: (context) => BookingPage()));
-              StoreProvider.of<AppState>(context).dispatch(BusinessAndNavigateRequest(bookingList.first.business_id));
+            WidgetsBinding.instance.addPostFrameCallback((_) async {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => UI_M_BusinessList()));
+            });
+          }else{
+            if(bookingList.isEmpty && snapshot.user.email.isNotEmpty && !onBookingCode && !requestingBookings && !isManagerOrAbove){
+              rippleLoading = true;
+              requestingBookings = true;
+              debugPrint('UI_U_Landing => USER EMAIL: ${snapshot.user.email}');
+              StoreProvider.of<AppState>(context).dispatch(UserBookingListRequest(snapshot.user.email, false));
+              //rippleLoading = false;
             }
 
+            if(bookingList.isNotEmpty && !onBookingCode && rippleLoading && !isManagerOrAbove){
+              rippleLoading = false;
+              DateTime currentTime = DateTime.now();
+              currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0);
+
+              DateTime endTime = DateTime.now();
+              //DateTime startTime = DateTime.now();
+              endTime = new DateTime(bookingList.first.end_date.year, bookingList.first.end_date.month, bookingList.first.end_date.day, 0, 0, 0, 0, 0);
+              if(endTime.isBefore(currentTime)){
+                //bookingStatus = 'Closed';
+                debugPrint('UI_U_Landing => No active booking found!');
+                rippleLoading = false;
+              }else if(bookingList.first.start_date.isAtSameMomentAs(currentTime)){
+                //bookingStatus = 'Active';
+                debugPrint('UI_U_Landing => Active booking found!');
+                //StoreProvider.of<AppState>(context).dispatch(BookingRequestResponse(bookingList.first));
+                //StoreProvider.of<AppState>(context).dispatch(BusinessAndNavigateRequest(bookingList.first.business_id));
+              }
+              else if(bookingList.first.start_date.isAfter(currentTime)){
+                //bookingStatus = 'Upcoming';
+                debugPrint('UI_U_Landing => Upcoming booking found!');
+                rippleLoading = false;
+                Navigator.push(context, MaterialPageRoute(builder: (context) => MyBookings()));
+              } else{
+                //bookingStatus = 'Active';
+                secondRippleLoading = true;
+                debugPrint('UI_U_Landing => Active booking found!');
+                StoreProvider.of<AppState>(context).dispatch(BookingRequestResponse(bookingList.first));
+                //Navigator.push(context, MaterialPageRoute(builder: (context) => BookingPage()));
+                StoreProvider.of<AppState>(context).dispatch(BusinessAndNavigateRequest(bookingList.first.business_id));
+              }
+
+            }
           }
 
           return Stack(children: [

@@ -6,6 +6,7 @@ import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/role/role.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
 import 'package:Buytime/reusable/menu/UI_menu_drawer.dart';
+import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -66,6 +67,7 @@ class UI_U_TabsState extends State<UI_U_Tabs> {
             drawerEnableOpenDragGesture: false,
             key: _drawerKeyTabs,
             appBar: BuytimeAppbar(
+              background: BuytimeTheme.UserPrimary,
               children: [
                 (IconButton(
                   icon: Icon(
