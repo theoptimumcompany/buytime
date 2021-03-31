@@ -9,6 +9,7 @@ import 'package:Buytime/reblox/reducer/order_reservable_list_reducer.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
 import 'package:Buytime/reusable/buytime_icons.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/utils/size_config.dart';
@@ -32,6 +33,8 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
 
   ServiceState serviceState;
   OrderState order = OrderState().toEmpty();
+
+  List<String> images = [];
 
   @override
   void initState() {
@@ -70,6 +73,12 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
       converter: (store) => store.state,
       onInit: (store){
         //order = store.state.order.itemList != null ? (store.state.order.itemList.length > 0 ? store.state.order : order) : order;
+        if(widget.serviceState.image1.isNotEmpty)
+          images.add(widget.serviceState.image1);
+        if(widget.serviceState.image2.isNotEmpty)
+          images.add(widget.serviceState.image2);
+        if(widget.serviceState.image3.isNotEmpty)
+          images.add(widget.serviceState.image3);
       },
       builder: (context, snapshot) {
         debugPrint('UI_U_ServiceDetails => SNAPSHOT CART COUNT: ${snapshot.order}');
@@ -225,32 +234,47 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                               child: Stack(
                                 children: [
                                   ///Background image
-                                  CachedNetworkImage(
-                                    imageUrl: version200(serviceState.image1),
-                                    imageBuilder: (context, imageProvider) => Container(
-                                      //margin: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 5), ///5%
-                                      height: SizeConfig.safeBlockVertical * 55,
-                                      width: double.infinity,
-                                      decoration: BoxDecoration(
-                                        //borderRadius: BorderRadius.all(Radius.circular(SizeConfig.blockSizeHorizontal * 5)), ///12.5%
-                                          image: DecorationImage(image: imageProvider, fit: BoxFit.fill,)),
-                                    ),
-                                    placeholder: (context, url) => Container(
-                                      height: SizeConfig.safeBlockVertical * 55,
-                                      width: double.infinity,
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Container(
-                                            //padding: EdgeInsets.only(top: 80, bottom: 80, left: 50, right: 50),
-                                            child: CircularProgressIndicator(
-                                              //valueColor: new AlwaysStoppedAnimation<Color>(BuytimeTheme.ManagerPrimary),
-                                            ),
-                                          )
-                                        ],
+                                  Carousel(
+                                    boxFit: BoxFit.cover,
+                                    autoplay: true,
+                                    animationCurve: Curves.decelerate,
+                                    animationDuration: Duration(milliseconds: 1000),
+                                    dotSize: SizeConfig.blockSizeVertical * 1, ///1%
+                                    dotIncreasedColor: BuytimeTheme.UserPrimary,
+                                    dotColor: BuytimeTheme.BackgroundWhite,
+                                    dotBgColor: Colors.transparent,
+                                    dotPosition: DotPosition.bottomCenter,
+                                    dotVerticalPadding: 10.0,
+                                    showIndicator: true,
+                                    indicatorBgPadding: 7.0,
+                                    ///User images
+                                    images: images.map((e) =>  CachedNetworkImage(
+                                      imageUrl: version200(e),
+                                      imageBuilder: (context, imageProvider) => Container(
+                                        //margin: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 5), ///5%
+                                        height: SizeConfig.safeBlockVertical * 55,
+                                        width: double.infinity,
+                                        decoration: BoxDecoration(
+                                          //borderRadius: BorderRadius.all(Radius.circular(SizeConfig.blockSizeHorizontal * 5)), ///12.5%
+                                            image: DecorationImage(image: imageProvider, fit: BoxFit.fill,)),
                                       ),
-                                    ),
-                                    errorWidget: (context, url, error) => Icon(Icons.error),
+                                      placeholder: (context, url) => Container(
+                                        height: SizeConfig.safeBlockVertical * 55,
+                                        width: double.infinity,
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Container(
+                                              //padding: EdgeInsets.only(top: 80, bottom: 80, left: 50, right: 50),
+                                              child: CircularProgressIndicator(
+                                                //valueColor: new AlwaysStoppedAnimation<Color>(BuytimeTheme.ManagerPrimary),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                      errorWidget: (context, url, error) => Icon(Icons.error),
+                                    )).toList(),
                                   )
                                   /*Positioned.fill(
                                     child: Align(

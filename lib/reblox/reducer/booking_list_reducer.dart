@@ -11,7 +11,8 @@ class BookingListRequest {
 }
 class UserBookingListRequest {
   String _userEmail;
-  UserBookingListRequest(this._userEmail);
+  bool fromConfirm;
+  UserBookingListRequest(this._userEmail, this.fromConfirm);
   String get userEmail => _userEmail;
 }
 class BookingListReturned {

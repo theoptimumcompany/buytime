@@ -150,10 +150,12 @@ class UserBookingListRequestService implements EpicClass<AppState> {
   List<BookingState> bookingListState;
   String route;
   StatisticsState statisticsState;
+  bool fromConfirm = false;
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<UserBookingListRequest>().asyncMap((event) async {
       print("BOOKING_SERVICE_EPIC - UserBookingListRequestService => USER EMAIL: ${ event.userEmail}");
+      fromConfirm = event.fromConfirm;
 
       QuerySnapshot openedBookingSnapshot = await FirebaseFirestore.instance /// 1 READ - ? DOC
           .collection("booking")
@@ -205,7 +207,7 @@ class UserBookingListRequestService implements EpicClass<AppState> {
     }).expand((element) => [
       UserBookingListReturned(bookingListState),
       UpdateStatistics(statisticsState),
-      NavigatePushAction(AppRoutes.myBookings),
+      fromConfirm ? NavigatePushAction(AppRoutes.myBookings) : null,
     ]);
   }
 }
