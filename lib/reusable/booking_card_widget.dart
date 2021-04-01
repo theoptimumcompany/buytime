@@ -181,7 +181,11 @@ class _BookingCardWidgetState extends State<BookingCardWidget> {
                           child: FittedBox(
                             fit: BoxFit.scaleDown,
                             child: Text(
-                              bookingStatus,
+                              bookingStatus == 'Active' ?
+                              AppLocalizations.of(context).active :
+                              bookingStatus == 'Upcoming' ?
+                              AppLocalizations.of(context).upcoming :
+                              AppLocalizations.of(context).closed ,
                               style: TextStyle(
                                   fontFamily: BuytimeTheme.FontFamily,
                                   color: !closed ? BuytimeTheme.TextWhite : BuytimeTheme.TextWhite.withOpacity(.8),
@@ -202,7 +206,7 @@ class _BookingCardWidgetState extends State<BookingCardWidget> {
                         child: IconButton(
                           onPressed: !closed ? (){
                             final RenderBox box = context.findRenderObject();
-                            Share.share('check out Buytime App at $link', subject: 'Take your Time!', sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
+                            Share.share('${AppLocalizations.of(context).checkOutBuytimeApp} $link', subject: '${AppLocalizations.of(context).takeYourTime}', sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
                           } : null,
                           icon: Icon(
                             Icons.share,

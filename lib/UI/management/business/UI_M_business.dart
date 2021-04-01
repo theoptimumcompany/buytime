@@ -173,7 +173,7 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                                             ///Welcome message 'Hi ...'
                                             Container(
                                               child: Text(
-                                                'Hi ' + snapshot.user.name,
+                                                '${AppLocalizations.of(context).hi}' + snapshot.user.name,
                                                 style: TextStyle(fontWeight: FontWeight.w700, fontFamily: BuytimeTheme.FontFamily, fontSize: 24, color: BuytimeTheme.TextBlack),
                                               ),
                                             ),

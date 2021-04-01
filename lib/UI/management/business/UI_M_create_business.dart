@@ -339,7 +339,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                                       child: Padding(
                                                                         padding: const EdgeInsets.only(left: 5.0),
                                                                         child: Text(
-                                                                          'Tag',
+                                                                          '${AppLocalizations.of(context).tag}',
                                                                           textAlign: TextAlign.start,
                                                                           style: TextStyle(
                                                                             color: BuytimeTheme.TextGrey,
@@ -375,7 +375,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                                               borderSide: BorderSide(color: Colors.redAccent),
                                                                               borderRadius: BorderRadius.all(Radius.circular(10.0))
                                                                           ),
-                                                                          labelText: 'Add new tag',
+                                                                          labelText: '${AppLocalizations.of(context).addNewTag}',
                                                                           //hintText: "email *",
                                                                           //hintStyle: TextStyle(color: Color(0xff666666)),
                                                                           labelStyle: TextStyle(

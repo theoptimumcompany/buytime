@@ -66,8 +66,7 @@ class LandingState extends State<Landing> {
   @override
   void initState() {
     super.initState();
-    cards.add(LandingCardWidget(AppLocalizations.of(context).enterBookingCode, AppLocalizations.of(context).startYourJourney, 'assets/img/booking_code.png', null));
-    cards.add(LandingCardWidget(AppLocalizations.of(context).aboutBuytime, AppLocalizations.of(context).discoverOurNetwork, 'assets/img/beach_girl.png', null));
+
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       initDynamicLinks();
       debugPrint('UI_U_Landing => initState()');
@@ -133,6 +132,8 @@ class LandingState extends State<Landing> {
         converter: (store) => store.state,
         onInit: (store){
           debugPrint('UI_U_Landing => store on init()');
+          cards.add(LandingCardWidget(AppLocalizations.of(context).enterBookingCode, AppLocalizations.of(context).startYourJourney, 'assets/img/booking_code.png', null));
+          cards.add(LandingCardWidget(AppLocalizations.of(context).aboutBuytime, AppLocalizations.of(context).discoverOurNetwork, 'assets/img/beach_girl.png', null));
           //rippleLoading = false;
           //secondRippleLoading = false;
         },

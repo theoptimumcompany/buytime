@@ -421,5 +421,8 @@
   "min": "min",
   "limit": "limit",
   "numberOf": "n°",
-  "copyLink": "COPY LINK"
+  "copyLink": "COPY LINK",
+  "closed": "Closed",
+  "active": "Active",
+  "upcoming": "Upcoming"
 }

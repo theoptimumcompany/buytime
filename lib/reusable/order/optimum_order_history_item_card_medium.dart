@@ -7,6 +7,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 typedef OptimumOrderHistoryItemCardMediumCallback = void Function(OrderState);
 
@@ -115,6 +116,6 @@ class _OptimumOrderHistoryItemCardMediumState extends State<OptimumOrderHistoryI
   }
 
   String price() {
-    return "€ " + order.total.toStringAsFixed(2);
+    return AppLocalizations.of(context).currency + order.total.toStringAsFixed(2);
   }
 }

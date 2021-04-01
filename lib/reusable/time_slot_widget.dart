@@ -36,9 +36,9 @@ class _TimeSlotWidgetState extends State<TimeSlotWidget> {
 
     int tmpMin = widget.serviceSlot.hour * 60 + widget.serviceSlot.minute;
     if(tmpMin > 90)
-      duration = '${widget.serviceSlot.hour} h ${widget.serviceSlot.minute} min.';
+      duration = '${widget.serviceSlot.hour} h ${widget.serviceSlot.minute}';
     else
-      duration = '$tmpMin min.';
+      duration = '$tmpMin';
   }
 
   @override
@@ -82,7 +82,7 @@ class _TimeSlotWidgetState extends State<TimeSlotWidget> {
                  child: FittedBox(
                    fit: BoxFit.scaleDown,
                    child: Text(
-                     duration,
+                     '$duration ${AppLocalizations.of(context).min}',
                      style: TextStyle(
                        //letterSpacing: 1.25,
                          fontFamily: BuytimeTheme.FontFamily,
