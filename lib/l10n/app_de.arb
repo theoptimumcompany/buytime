@@ -402,8 +402,8 @@
   "pleaseAuthenticateUseCredentials": "Please authenticate to use the credentials",
   "pleaseLogin": "Please Log In:"
   "manager": "Manager",
-   "decline": "Decline",
-   "canceled": "Canceled",
-   "declined": "Declined",
-   "reOpen": "Re-Open"
+  "decline": "Decline",
+  "canceled": "Canceled",
+  "declined": "Declined",
+  "reOpen": "Re-Open"
 }
