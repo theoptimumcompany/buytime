@@ -8,6 +8,7 @@ import 'package:Buytime/reblox/model/order/order_entry.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/reducer/booking_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
 import 'package:Buytime/UI/management/category/UI_M_manage_category.dart';
 import 'package:Buytime/UI/management/category/W_category_list_item.dart';
@@ -143,6 +144,33 @@ class _ActivityManagementState extends State<ActivityManagement> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         ///Accept
+                        order.progress == 'canceled' || order.progress == 'declined' ?
+                        Container(
+                            margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 1.5, bottom: SizeConfig.safeBlockVertical * .5, top: SizeConfig.safeBlockVertical * .25),
+                            alignment: Alignment.center,
+                            child: Material(
+                              color: Colors.transparent,
+                              child: InkWell(
+                                  onTap: () {
+                                    order.progress = 'pending';
+                                    StoreProvider.of<AppState>(context).dispatch(UpdateOrder(order));
+                                  },
+                                  borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                  child: Container(
+                                    padding: EdgeInsets.all(5.0),
+                                    child: Text(
+                                      AppLocalizations.of(context).reOpen.toUpperCase(),
+                                      style:  TextStyle(
+                                          letterSpacing: 1.25,
+                                          fontFamily: BuytimeTheme.FontFamily,
+                                          color: BuytimeTheme.TextMalibu,
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 14
+                                        ///SizeConfig.safeBlockHorizontal * 4
+                                      ),
+                                    ),
+                                  )),
+                            )) :
                         order.progress != 'paid' ?
                         Container(
                             margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 1.5, bottom: SizeConfig.safeBlockVertical * .5, top: SizeConfig.safeBlockVertical * .25),
@@ -151,6 +179,8 @@ class _ActivityManagementState extends State<ActivityManagement> {
                               color: Colors.transparent,
                               child: InkWell(
                                   onTap: () {
+                                    order.progress = 'paid';
+                                    StoreProvider.of<AppState>(context).dispatch(UpdateOrder(order));
                                   },
                                   borderRadius: BorderRadius.all(Radius.circular(5.0)),
                                   child: Container(
@@ -169,7 +199,8 @@ class _ActivityManagementState extends State<ActivityManagement> {
                                   )),
                             )) :
                         Container(),
-                        ///Cancel
+                        ///Decline
+                        order.progress != 'canceled' && order.progress != 'declined' ?
                         Container(
                             margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 1.5, right: SizeConfig.safeBlockHorizontal * 1.5, bottom: SizeConfig.safeBlockVertical * .5, top: SizeConfig.safeBlockVertical * .25),
                             alignment: Alignment.center,
@@ -177,13 +208,20 @@ class _ActivityManagementState extends State<ActivityManagement> {
                               color: Colors.transparent,
                               child: InkWell(
                                   onTap: () {
-                                    onCancel();
+                                    if(order.progress == 'paid'){
+                                      //StoreProvider.of<AppState>(context).dispatch(SetOrderProgress('canceled'));
+                                      onCancel(order);
+                                    }else{
+                                      //StoreProvider.of<AppState>(context).dispatch(SetOrderProgress('declined'));
+                                      order.progress = 'declined';
+                                      StoreProvider.of<AppState>(context).dispatch(UpdateOrder(order));
+                                    }
                                   },
                                   borderRadius: BorderRadius.all(Radius.circular(5.0)),
                                   child: Container(
                                     padding: EdgeInsets.all(5.0),
                                     child: Text(
-                                      AppLocalizations.of(context).cancel.toUpperCase(),
+                                      order.progress == 'paid' ? AppLocalizations.of(context).cancel.toUpperCase() : AppLocalizations.of(context).decline.toUpperCase(),
                                       style: TextStyle(
                                           letterSpacing: 1.25,
                                           fontFamily: BuytimeTheme.FontFamily,
@@ -194,7 +232,8 @@ class _ActivityManagementState extends State<ActivityManagement> {
                                       ),
                                     ),
                                   )),
-                            ))
+                            )) :
+                            Container()
                       ],
                     ),
                   ),
@@ -215,11 +254,11 @@ class _ActivityManagementState extends State<ActivityManagement> {
 
 
 
-  void onCancel(){
+  void onCancel(OrderState order){
     showDialog(
         context: context,
         builder: (context) {
-      return CancelPop();
+      return CancelPop(order: order);
     }
     );
   }
@@ -467,6 +506,34 @@ class _ActivityManagementState extends State<ActivityManagement> {
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
                                       ///Accept
+                                      ///Accept
+                                      order.progress == 'canceled' || order.progress == 'declined' ?
+                                      Container(
+                                          margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 1.5, bottom: SizeConfig.safeBlockVertical * .5, top: SizeConfig.safeBlockVertical * .25),
+                                          alignment: Alignment.center,
+                                          child: Material(
+                                            color: Colors.transparent,
+                                            child: InkWell(
+                                                onTap: () {
+                                                  order.progress = 'pending';
+                                                  StoreProvider.of<AppState>(context).dispatch(UpdateOrder(order));
+                                                },
+                                                borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                                child: Container(
+                                                  padding: EdgeInsets.all(5.0),
+                                                  child: Text(
+                                                    AppLocalizations.of(context).reOpen.toUpperCase(),
+                                                    style:  TextStyle(
+                                                        letterSpacing: 1.25,
+                                                        fontFamily: BuytimeTheme.FontFamily,
+                                                        color: BuytimeTheme.TextMalibu,
+                                                        fontWeight: FontWeight.w600,
+                                                        fontSize: 14
+                                                      ///SizeConfig.safeBlockHorizontal * 4
+                                                    ),
+                                                  ),
+                                                )),
+                                          )) :
                                       order.progress != 'paid' ?
                                       Container(
                                           margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 1.5, bottom: SizeConfig.safeBlockVertical * .5, top: SizeConfig.safeBlockVertical * .25),
@@ -475,6 +542,8 @@ class _ActivityManagementState extends State<ActivityManagement> {
                                             color: Colors.transparent,
                                             child: InkWell(
                                                 onTap: () {
+                                                  order.progress = 'paid';
+                                                  StoreProvider.of<AppState>(context).dispatch(UpdateOrder(order));
                                                 },
                                                 borderRadius: BorderRadius.all(Radius.circular(5.0)),
                                                 child: Container(
@@ -493,22 +562,29 @@ class _ActivityManagementState extends State<ActivityManagement> {
                                                 )),
                                           )) :
                                       Container(),
-                                      ///Cancel
+                                      ///Decline
+                                      order.progress != 'canceled' && order.progress != 'declined' ?
                                       Container(
-                                         margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 1.5, right: SizeConfig.safeBlockHorizontal * 1.5, bottom: SizeConfig.safeBlockVertical * .5, top: SizeConfig.safeBlockVertical * .25),
+                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 1.5, right: SizeConfig.safeBlockHorizontal * 1.5, bottom: SizeConfig.safeBlockVertical * .5, top: SizeConfig.safeBlockVertical * .25),
                                           alignment: Alignment.center,
                                           child: Material(
                                             color: Colors.transparent,
                                             child: InkWell(
                                                 onTap: () {
-                                                  debugPrint('UI');
-                                                  onCancel();
+                                                  if(order.progress == 'paid'){
+                                                    //StoreProvider.of<AppState>(context).dispatch(SetOrderProgress('canceled'));
+                                                    onCancel(order);
+                                                  }else{
+                                                    //StoreProvider.of<AppState>(context).dispatch(SetOrderProgress('declined'));
+                                                    order.progress = 'declined';
+                                                    StoreProvider.of<AppState>(context).dispatch(UpdateOrder(order));
+                                                  }
                                                 },
                                                 borderRadius: BorderRadius.all(Radius.circular(5.0)),
                                                 child: Container(
                                                   padding: EdgeInsets.all(5.0),
                                                   child: Text(
-                                                    AppLocalizations.of(context).cancel.toUpperCase(),
+                                                    order.progress == 'paid' ? AppLocalizations.of(context).cancel.toUpperCase() : AppLocalizations.of(context).decline.toUpperCase(),
                                                     style: TextStyle(
                                                         letterSpacing: 1.25,
                                                         fontFamily: BuytimeTheme.FontFamily,
@@ -519,7 +595,8 @@ class _ActivityManagementState extends State<ActivityManagement> {
                                                     ),
                                                   ),
                                                 )),
-                                          ))
+                                          )) :
+                                      Container()
                                     ],
                                   ),
                                 ),

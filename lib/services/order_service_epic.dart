@@ -161,16 +161,29 @@ class OrderRequestService implements EpicClass<AppState> {
 }
 
 class OrderUpdateService implements EpicClass<AppState> {
+  OrderState orderState;
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    return actions.whereType<UpdateOrder>().asyncMap((event) {
+    return actions.whereType<UpdateOrder>().asyncMap((event) async{
     //   if (event.serviceState.fileToUploadList != null) {
     //     uploadFiles(event.serviceState.fileToUploadList, event.serviceState).then((ServiceState updatedServiceState) {
     //       return updateService(updatedServiceState);
     //     });
     //   }
     //   return updateService(event.serviceState);
-     });
+
+      print("ORDER_SERVICE_EPIC - OrderUpdateService => ORDER ID: ${event.orderState.orderId}");
+
+      orderState = event.orderState;
+
+      await FirebaseFirestore.instance /// 1 WRITE
+          .collection("order")
+          .doc(event.orderState.orderId)
+          .update(event.orderState.toJson())
+      ;
+     }).expand((element) => [
+       UpdatedOrder(orderState)
+    ]);
   }
 }
 
@@ -184,7 +197,7 @@ class OrderCreateService implements EpicClass<AppState> {
      return actions.whereType<CreateOrder>().asyncMap((event) async {
       OrderState orderState = event.orderState;
       // add needed data to the order state
-
+      int write = 0;
       orderState.user = UserSnippet();
       orderState.user.id = store.state.user.uid;
       orderState.user.name = store.state.user.name;
@@ -192,15 +205,19 @@ class OrderCreateService implements EpicClass<AppState> {
       orderState.userId = store.state.user.uid;
       // send document to orders collection
       var addedOrder = await FirebaseFirestore.instance.collection("order/").add(orderState.toJson());
+      orderState.orderId = addedOrder.id;
+      //await FirebaseFirestore.instance.collection("order/").doc(addedOrder.id.toString()).update(orderState.toJson()); /// 1 WRITE
+      //++write;
       final http.Response response = await http.post('https://europe-west1-buytime-458a1.cloudfunctions.net/StripePIOnOrder?orderId=' + addedOrder.id);
       print("ORDER_SERVICE_EPIC - OrderCreateService => Order_service epic - response is done");
       print('ORDER_SERVICE_EPIC - OrderCreateService => RESPONSE: $response');
-      int write = 0;
+
       if (response != null && response.body == "Error: could not handle the request\n") {
         // verify why this happens.
         var updatedOrder = await FirebaseFirestore.instance /// 1 WRITE
             .collection("order/").doc(addedOrder.id.toString()).update({
-          'progress': "paid"
+          'progress': "paid",
+          'orderId': addedOrder.id
         });
         state = 'paid';
         //return SetOrderProgress("paid");
@@ -233,7 +250,8 @@ class OrderCreateService implements EpicClass<AppState> {
             if (paymentIntentRes["status"] == "succeeded") {
               ++write;
               var updatedOrder = await FirebaseFirestore.instance.collection("order/").doc(addedOrder.id.toString()).update({ /// 1 WRITE
-                'progress': "paid"
+                'progress': "paid",
+                'orderId': addedOrder.id
               });
               state = 'paid';
               //return SetOrderProgress("paid");
@@ -244,7 +262,8 @@ class OrderCreateService implements EpicClass<AppState> {
           } else {
             ++write;
             var updatedOrder = await FirebaseFirestore.instance.collection("order/").doc(addedOrder.id.toString()).update({ /// 1 WRITE
-              'progress': "paid"
+              'progress': "paid",
+              'orderId': addedOrder.id
             });
             state = 'paid';
             //return SetOrderProgress("paid");

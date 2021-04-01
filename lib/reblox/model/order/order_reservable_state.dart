@@ -28,6 +28,7 @@ class OrderReservableState {
   UserSnippet user;
   String businessId;
   String userId;
+  String orderId;
   List<SelectedEntry> selected;
   int cartCounter = 0;
   String serviceId;
@@ -48,6 +49,7 @@ class OrderReservableState {
     this.user,
     this.businessId,
     this.userId,
+    this.orderId,
     this.selected,
     this.cartCounter,
     this.serviceId
@@ -70,6 +72,7 @@ class OrderReservableState {
     this.business = state.business;
     this.businessId = state.businessId;
     this.userId = state.userId;
+    this.orderId = state.orderId;
     this.user = state.user;
     this.selected = state.selected;
     this.cartCounter = state.cartCounter;
@@ -90,6 +93,7 @@ class OrderReservableState {
     String navigate,
     String businessId,
     String userId,
+    String orderId,
     BusinessSnippet business,
     UserSnippet user,
     List<SelectedEntry> selected,
@@ -110,6 +114,7 @@ class OrderReservableState {
       navigate: navigate ?? this.navigate,
       businessId: businessId ?? this.businessId,
       userId: userId ?? this.userId,
+      orderId: orderId ?? this.orderId,
       business: business ?? this.business,
       user: user ?? this.user,
       selected: selected ?? this.selected,
@@ -133,6 +138,7 @@ class OrderReservableState {
       navigate: false,
       businessId: "",
       userId: "",
+        orderId: "",
       business: BusinessSnippet().toEmpty(),
       user: UserSnippet().toEmpty(),
       selected: [],

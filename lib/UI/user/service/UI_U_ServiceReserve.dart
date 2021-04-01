@@ -49,6 +49,9 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
   bool startRequest = false;
   bool noActivity = false;
 
+  String price = '';
+  String firstSlot = '';
+
   @override
   void initState() {
     super.initState();
@@ -197,6 +200,30 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
         debugPrint('UI_U_ServiceReserve => SLOTS: ${widget.serviceState.serviceSlot.length}');
 
         startRequest = true;
+
+        double tmpPrice;
+        debugPrint('UI_U_ServiceDetails => SLOTS LENGTH: ${widget.serviceState.serviceSlot.length}');
+        DateTime currentTime = DateTime.now();
+        currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0);
+        widget.serviceState.serviceSlot.forEach((element) {
+          DateTime checkOut = DateFormat('dd/MM/yyyy').parse(element.checkOut);
+          if(checkOut.isAtSameMomentAs(currentTime) || checkOut.isAfter(currentTime)){
+            debugPrint('UI_U_ServiceDetails => VALID: ${element.checkIn}');
+            tmpPrice = element.price;
+            if(element.price <= tmpPrice){
+              if(element.day != 0){
+                debugPrint('UI_U_ServiceDetails => SLOT WITH DAYS');
+              }else{
+                debugPrint('UI_U_ServiceDetails => SLOT WITHOUT DAYS');
+                int tmpMin = element.hour * 60 + element.minute;
+                if(tmpMin > 90)
+                  price = ' ${element.price.toStringAsFixed(0)}/${element.hour} h ${element.minute} ${AppLocalizations.of(context).spaceMinSpace}';
+                else
+                  price = ' ${element.price.toStringAsFixed(0)} / $tmpMin${AppLocalizations.of(context).spaceMinSpace}';
+              }
+            }
+          }
+        });
       },
       builder: (context, snapshot) {
 
@@ -256,6 +283,14 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
             selectedSlot.add(List.generate(element.length, (index) => false));
             indexes.add(List.generate(element.length, (index) => SelectedEntry(first: 0, last: 0)));
           });*/
+        }
+
+        if(slots.isNotEmpty){
+          int tmpMin = slots[0][0][1].hour * 60 + slots[0][0][1].minute;
+          if(tmpMin > 90)
+            firstSlot = '${slots[0][0][1].hour} h ${slots[0][0][1].minute} ${AppLocalizations.of(context).spaceMinSpace}';
+          else
+            firstSlot = '$tmpMin${AppLocalizations.of(context).spaceMinSpace}';
         }
 
         order = snapshot.orderReservable.itemList != null ? (snapshot.orderReservable.itemList.length > 0 ? snapshot.orderReservable : OrderReservableState().toEmpty()) : OrderReservableState().toEmpty();
@@ -413,7 +448,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                           Container(
                             margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
                             child: Text(
-                              ' ${serviceState.price.toStringAsFixed(2)}',
+                              price,
                               style: TextStyle(
                                   fontFamily: BuytimeTheme.FontFamily,
                                   color: BuytimeTheme.TextBlack,
@@ -460,91 +495,130 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                           ///First slot
                           noActivity ?
                           Container(
-                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5, right: SizeConfig.safeBlockHorizontal * 5, bottom: SizeConfig.safeBlockVertical * 2.5),
-                            child: Container(
-                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, bottom: SizeConfig.safeBlockVertical * 3, right: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockVertical * 2),
-                              child: Container(
-                                  width: 100,
-                                  height: 100,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      CircularProgressIndicator()
-                                    ],
-                                  ),
-                              ),
+                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, bottom: SizeConfig.safeBlockVertical * 3, right: SizeConfig.safeBlockVertical * 5, left: SizeConfig.safeBlockVertical * 2),
+                            width: 179,
+                            height: 120,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                CircularProgressIndicator()
+                              ],
                             ),
                           ) :
                           Container(
-                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5, right: SizeConfig.safeBlockHorizontal * 5, bottom: SizeConfig.safeBlockVertical * 2.5),
-                            child: Container(
-                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, bottom: SizeConfig.safeBlockVertical * 3, right: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockVertical * 2),
-                              child: Container(
-                                  width: 100,
-                                  height: 100,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.all(Radius.circular(5)),
-                                    border: Border.all(
-                                      color: picked.first[0] ? BuytimeTheme.UserPrimary.withOpacity(0.5) : BuytimeTheme.BackgroundWhite
-                                    ),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: picked[0][0] ? BuytimeTheme.BackgroundWhite : BuytimeTheme.BackgroundBlack.withOpacity(0.3),
-                                        spreadRadius: .5,
-                                        blurRadius: 1,
-                                        offset: Offset(0, picked.first[0] ? 0 : 1), // changes position of shadow
-                                      ),
-                                    ],
-                                  ),
-                                  child: Material(
-                                      color: Colors.transparent,
-                                      child: InkWell(
-                                        borderRadius: BorderRadius.all(Radius.circular(5)),
-                                        onTap: () async {
-                                          setState(() {
-                                            picked[0][0] = !picked[0][0];
-                                          });
-
-                                          indexes[0][0].first = 0;
-                                          indexes[0][0].last = 0;
-                                          //SelectedEntry selected = SelectedEntry(first: 0, last: 0);
-
-                                          if(picked.first[0]){
-                                            order.serviceId = widget.serviceState.serviceId;
-                                            order.business.name = snapshot.business.name;
-                                            order.business.id = snapshot.business.id_firestore;
-                                            order.user.name = snapshot.user.name;
-                                            order.user.id = snapshot.user.uid;
-                                            order.addReserveItem(widget.serviceState, snapshot.business.ownerId, slots[0][0][1].startTime[slots[0][0][0]], slots[0][0][1].duration.toString(), dates[0], slots[0][0][1].price);
-                                            order.selected.add(indexes[0][0]);
-                                            //order.selected.add(indexes[0][0]);
-                                            order.cartCounter++;
-                                            //StoreProvider.of<AppState>(context).dispatch(SetOrderCartCounter(order.cartCounter));
-                                            StoreProvider.of<AppState>(context).dispatch(SetOrderReservable(order));
-                                            /*setState(() {
-                                              cartCounter++;
-                                            });*/
-                                          }else{
-                                            OrderEntry tmp;
-                                            order.itemList.forEach((element) {
-                                              if(element.time ==  slots[0][0][1].startTime[slots[0][0][0]] && element.date.isAtSameMomentAs(dates[0])){
-                                                tmp = element;
-                                              }
-                                            });
-                                            order.selected.remove(indexes[0][0]);
-                                            //order.selected.remove(selected);
-                                            deleteItem(snapshot.order, tmp);
-                                          }
-
-                                          debugPrint('UI_U_ServiceReserve => SELECTED INDEXES: ${order.selected}');
-                                        },
-                                        child: TimeSlotWidget(slots[0][0][1], slots[0][0][0], picked.first[0]),
-                                      )
-                                  )
-                              ),
+                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, bottom: SizeConfig.safeBlockVertical * 3, right: SizeConfig.safeBlockVertical * 5, left: SizeConfig.safeBlockVertical * 2),
+                            width: 179,
+                            height: 120,
+                            decoration: BoxDecoration(
+                              color: BuytimeTheme.BackgroundLightBlue.withOpacity(.2),
+                              borderRadius: BorderRadius.all(Radius.circular(5)),
                             ),
-                          )
+                            child: dates.isNotEmpty ?
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                ///Date
+                                Container(
+                                  width: 179,
+                                  //margin: EdgeInsets.only(top: 15),
+                                  //margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 10),
+                                  child: FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: Text(
+                                      DateFormat('MMM dd').format(DateTime.now()).toUpperCase() == DateFormat('MMM dd').format(dates[0]).toUpperCase() ? AppLocalizations.of(context).today.replaceFirst(',', '').toUpperCase() : '${DateFormat('EEEE').format(dates[0])}',
+                                      style: TextStyle(
+                                        //letterSpacing: 1.25,
+                                          fontFamily: BuytimeTheme.FontFamily,
+                                          color: BuytimeTheme.TextBlack,
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 16 ///SizeConfig.safeBlockHorizontal * 4
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                ///Time
+                                Container(
+                                  width: 179,
+                                  //margin: EdgeInsets.only(top: 15),
+                                  //margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 10),
+                                  child: FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: Text(
+                                      '${slots[0][0][1].startTime[slots[0][0][0]]}',
+                                      style: TextStyle(
+                                        //letterSpacing: 1.25,
+                                          fontFamily: BuytimeTheme.FontFamily,
+                                          color: BuytimeTheme.UserPrimary,
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 16 ///SizeConfig.safeBlockHorizontal * 4
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                ///Duration
+                                Container(
+                                  width: 179,
+                                  //margin: EdgeInsets.only(top: 5),
+                                  //margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 10),
+                                  child: FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: Text(
+                                      firstSlot,
+                                      style: TextStyle(
+                                        //letterSpacing: 1.25,
+                                          fontFamily: BuytimeTheme.FontFamily,
+                                          color: BuytimeTheme.TextBlack,
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 16 ///SizeConfig.safeBlockHorizontal * 4
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                ///Price
+                                Container(
+                                  width: 179,
+                                  //margin: EdgeInsets.only(top: 5),
+                                  child: FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: Text(
+                                      AppLocalizations.of(context).currency + slots[0][0][1].price.toStringAsFixed(2) ,
+                                      style: TextStyle(
+                                        //letterSpacing: 1.25,
+                                          fontFamily: BuytimeTheme.FontFamily,
+                                          color:  BuytimeTheme.TextBlack,
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 16 ///SizeConfig.safeBlockHorizontal * 4
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ) :
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                ///Nothing
+                                Container(
+                                  width: 179,
+                                  //margin: EdgeInsets.only(top: 15),
+                                  //margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 10),
+                                  child: FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: Text(
+                                      'No service found!',
+                                      style: TextStyle(
+                                        //letterSpacing: 1.25,
+                                          fontFamily: BuytimeTheme.FontFamily,
+                                          color: BuytimeTheme.UserPrimary,
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 16 ///SizeConfig.safeBlockHorizontal * 4
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ],
                       ),
                       ///Blue part & Time Slots
@@ -644,7 +718,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                               indexes[index][i].first = index;
                                               indexes[index][i].last = i;
                                               SelectedEntry selected = SelectedEntry(first: index, last: i);
-                                              return index == 0 && i == 0 ? Container() :
+                                              return
                                               Container(
                                                 margin: EdgeInsets.only(top: 2, bottom: 2, right: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockVertical * 2),
                                                 child: Container(
@@ -679,7 +753,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                               order.business.id = snapshot.business.id_firestore;
                                                               order.user.name = snapshot.user.name;
                                                               order.user.id = snapshot.user.uid;
-                                                              order.addReserveItem(widget.serviceState, snapshot.business.ownerId, serviceSlot[1].startTime[serviceSlot[0]], serviceSlot[1].duration.toString(), dates[index], serviceSlot[1].price);
+                                                              order.addReserveItem(widget.serviceState, snapshot.business.ownerId, serviceSlot[1].startTime[serviceSlot[0]], '0', dates[index], serviceSlot[1].price);
                                                               order.selected.add(indexes[index][i]);
                                                               //order.selected.add(selected);
                                                               order.cartCounter++;
@@ -753,7 +827,8 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                           context,
                                           MaterialPageRoute(builder: (context) => CartReservable(serviceState: widget.serviceState,)),
                                         );
-                                      } else {
+                                      }
+                                      else {
                                         showDialog(
                                             context: context,
                                             builder: (_) => new AlertDialog(
@@ -781,7 +856,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                       borderRadius: new BorderRadius.circular(5),
                                     ),
                                     child: Text(
-                                      AppLocalizations.of(context).confirmUpper,
+                                      AppLocalizations.of(context).reserveUpper,
                                       style: TextStyle(
                                         letterSpacing: 1.25,
                                         fontSize: 14,

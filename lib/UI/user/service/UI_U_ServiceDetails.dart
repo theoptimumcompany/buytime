@@ -17,6 +17,7 @@ import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:intl/intl.dart';
 
 
 class ServiceDetails extends StatefulWidget {
@@ -35,6 +36,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
   OrderState order = OrderState().toEmpty();
 
   List<String> images = [];
+  String price = '';
 
   @override
   void initState() {
@@ -79,6 +81,37 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
           images.add(widget.serviceState.image2);
         if(widget.serviceState.image3.isNotEmpty)
           images.add(widget.serviceState.image3);
+
+        if(widget.serviceState.switchSlots){
+          double tmpPrice;
+          debugPrint('UI_U_ServiceDetails => SLOTS LENGTH: ${widget.serviceState.serviceSlot.length}');
+          DateTime currentTime = DateTime.now();
+          currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0);
+          widget.serviceState.serviceSlot.forEach((element) {
+            DateTime checkOut = DateFormat('dd/MM/yyyy').parse(element.checkOut);
+            if(checkOut.isAtSameMomentAs(currentTime) || checkOut.isAfter(currentTime)){
+              debugPrint('UI_U_ServiceDetails => VALID: ${element.checkIn}');
+              tmpPrice = element.price;
+              if(element.price <= tmpPrice){
+                if(element.day != 0){
+                  debugPrint('UI_U_ServiceDetails => SLOT WITH DAYS');
+                }else{
+                  debugPrint('UI_U_ServiceDetails => SLOT WITHOUT DAYS');
+                  int tmpMin = element.hour * 60 + element.minute;
+                  if(tmpMin > 90)
+                    price = AppLocalizations.of(context).startingFromCurrency + ' ${element.price.toStringAsFixed(0)}/${element.hour} h ${element.minute} ${AppLocalizations.of(context).spaceMinSpace}';
+                  else
+                    price = AppLocalizations.of(context).startingFromCurrency + ' ${element.price.toStringAsFixed(0)} / $tmpMin${AppLocalizations.of(context).spaceMinSpace}';
+                }
+              }
+            }
+          });
+        }else{
+          price =  serviceState.price != null
+              ? AppLocalizations.of(context).currencySpace + serviceState.price.toString() + AppLocalizations.of(context).slashOneUnit
+              : AppLocalizations.of(context).currencyNoPrice + AppLocalizations.of(context).hour;
+        }
+
       },
       builder: (context, snapshot) {
         debugPrint('UI_U_ServiceDetails => SNAPSHOT CART COUNT: ${snapshot.order}');
@@ -231,86 +264,48 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                             Container(
                               height: SizeConfig.safeBlockVertical * 55,
                               //width: double.infinity,
-                              child: Stack(
-                                children: [
-                                  ///Background image
-                                  Carousel(
-                                    boxFit: BoxFit.cover,
-                                    autoplay: true,
-                                    animationCurve: Curves.decelerate,
-                                    animationDuration: Duration(milliseconds: 1000),
-                                    dotSize: SizeConfig.blockSizeVertical * 1, ///1%
-                                    dotIncreasedColor: BuytimeTheme.UserPrimary,
-                                    dotColor: BuytimeTheme.BackgroundWhite,
-                                    dotBgColor: Colors.transparent,
-                                    dotPosition: DotPosition.bottomCenter,
-                                    dotVerticalPadding: 10.0,
-                                    showIndicator: true,
-                                    indicatorBgPadding: 7.0,
-                                    ///User images
-                                    images: images.map((e) =>  CachedNetworkImage(
-                                      imageUrl: version200(e),
-                                      imageBuilder: (context, imageProvider) => Container(
-                                        //margin: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 5), ///5%
-                                        height: SizeConfig.safeBlockVertical * 55,
-                                        width: double.infinity,
-                                        decoration: BoxDecoration(
-                                          //borderRadius: BorderRadius.all(Radius.circular(SizeConfig.blockSizeHorizontal * 5)), ///12.5%
-                                            image: DecorationImage(image: imageProvider, fit: BoxFit.fill,)),
-                                      ),
-                                      placeholder: (context, url) => Container(
-                                        height: SizeConfig.safeBlockVertical * 55,
-                                        width: double.infinity,
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            Container(
-                                              //padding: EdgeInsets.only(top: 80, bottom: 80, left: 50, right: 50),
-                                              child: CircularProgressIndicator(
-                                                //valueColor: new AlwaysStoppedAnimation<Color>(BuytimeTheme.ManagerPrimary),
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                      errorWidget: (context, url, error) => Icon(Icons.error),
-                                    )).toList(),
-                                  )
-                                  /*Positioned.fill(
-                                    child: Align(
-                                      alignment: Alignment.center,
-                                      child: Container(
-                                        width: double.infinity,
-                                        decoration: BoxDecoration(
-                                            image: DecorationImage(
-                                                image: NetworkImage(version200(serviceState.image1)),
-                                                fit: BoxFit.fill
-                                            )
-                                        ),
-                                      ),
-                                    ),
-                                  ),*/
-                                  /*///Back button
-                                  Positioned.fill(
-                                    child: Align(
-                                      alignment: Alignment.topLeft,
-                                      child: Container(
-                                        margin: EdgeInsets.only(top: 10.0),
-                                        child: IconButton(
-                                          iconSize: 30,
-                                          icon: Icon(
-                                            Icons.keyboard_arrow_left,
-                                            color: Colors.white,
+                              child: Carousel(
+                                boxFit: BoxFit.cover,
+                                autoplay: false,
+                                animationCurve: Curves.bounceIn,
+                                //animationDuration: Duration(milliseconds: 1000),
+                                dotSize: SizeConfig.blockSizeVertical * 1, ///1%
+                                dotIncreasedColor: BuytimeTheme.UserPrimary,
+                                dotColor: BuytimeTheme.BackgroundWhite,
+                                dotBgColor: Colors.transparent,
+                                dotPosition: DotPosition.bottomCenter,
+                                dotVerticalPadding: 10.0,
+                                showIndicator: true,
+                                indicatorBgPadding: 7.0,
+                                ///User images
+                                images: images.map((e) =>  CachedNetworkImage(
+                                  imageUrl: version200(e),
+                                  imageBuilder: (context, imageProvider) => Container(
+                                    //margin: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 5), ///5%
+                                    height: SizeConfig.safeBlockVertical * 55,
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                      //borderRadius: BorderRadius.all(Radius.circular(SizeConfig.blockSizeHorizontal * 5)), ///12.5%
+                                        image: DecorationImage(image: imageProvider, fit: BoxFit.fill,)),
+                                  ),
+                                  placeholder: (context, url) => Container(
+                                    height: SizeConfig.safeBlockVertical * 55,
+                                    width: double.infinity,
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                          //padding: EdgeInsets.only(top: 80, bottom: 80, left: 50, right: 50),
+                                          child: CircularProgressIndicator(
+                                            //valueColor: new AlwaysStoppedAnimation<Color>(BuytimeTheme.ManagerPrimary),
                                           ),
-                                          onPressed: () async{
-                                            Navigator.of(context).pop();
-                                          },
-                                        ),
-                                      ),
+                                        )
+                                      ],
                                     ),
-                                  ),*/
-                                ],
-                              ),
+                                  ),
+                                  errorWidget: (context, url, error) => Icon(Icons.error),
+                                )).toList(),
+                              )
                             ),
                             ///Service Name
                             Column(
@@ -340,13 +335,10 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                   ),
                                 ),*/
                                 ///Amount
-                                !serviceState.switchSlots ?
                                 Container(
-                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
+                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
                                   child: Text(
-                                    serviceState.price != null
-                                        ? AppLocalizations.of(context).currencySpace + serviceState.price.toString() + AppLocalizations.of(context).slashOneUnit
-                                        : AppLocalizations.of(context).currencyNoPrice + AppLocalizations.of(context).hour,
+                                    price,
                                     style: TextStyle(
                                         fontFamily: BuytimeTheme.FontFamily,
                                         color: BuytimeTheme.UserPrimary,
@@ -354,35 +346,6 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                         fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
                                     ),
                                   ),
-                                ) :
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
-                                      child: Text(
-                                        AppLocalizations.of(context).startingFromCurrency,
-                                        style: TextStyle(
-                                            fontFamily: BuytimeTheme.FontFamily,
-                                            color: BuytimeTheme.UserPrimary,
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
-                                      child: Text(
-                                        ' ${serviceState.price.toStringAsFixed(2)}',
-                                        style: TextStyle(
-                                            fontFamily: BuytimeTheme.FontFamily,
-                                            color: BuytimeTheme.UserPrimary,
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
-                                        ),
-                                      ),
-                                    )
-                                  ],
                                 ),
                                 ///Description
                                 Flexible(

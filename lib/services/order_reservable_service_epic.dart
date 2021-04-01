@@ -117,15 +117,38 @@ class OrderReservableRequestService implements EpicClass<AppState> {
 }
 
 class OrderReservableUpdateService implements EpicClass<AppState> {
+  OrderReservableState orderReservableState;
+  StatisticsState statisticsState;
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    return actions.whereType<UpdateOrderReservable>().asyncMap((event) {
+    return actions.whereType<UpdateOrderReservable>().asyncMap((event) async {
     //   if (event.serviceState.fileToUploadList != null) {
     //     uploadFiles(event.serviceState.fileToUploadList, event.serviceState).then((ServiceState updatedServiceState) {
     //       return updateService(updatedServiceState);
     //     });
     //   }
     //   return updateService(event.serviceState);
+      print("BOOKING_SERVICE_EPIC - OrderReservableUpdateService => ORDER ID: ${event.orderReservableState}");
+
+      orderReservableState = event.orderReservableState;
+
+      await FirebaseFirestore.instance /// 1 WRITE
+          .collection("order")
+          .doc(event.orderReservableState.userId)
+          .update(event.orderReservableState.toJson())
+      ;
+
+      /*statisticsState = store.state.statistics;
+      int reads = statisticsState.bookingListRequestServiceRead;
+      int writes = statisticsState.bookingListRequestServiceWrite;
+      int documents = statisticsState.bookingListRequestServiceDocuments;
+      debugPrint('BOOKING_SERVICE_EPIC - BookingUpdateAndNavigateRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      ++writes;
+      debugPrint('BOOKING_SERVICE_EPIC - BookingUpdateAndNavigateRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      statisticsState.bookingListRequestServiceRead = reads;
+      statisticsState.bookingListRequestServiceWrite = writes;
+      statisticsState.bookingListRequestServiceDocuments = documents;*/
+
      });
   }
 }
@@ -140,7 +163,7 @@ class OrderReservableCreateService implements EpicClass<AppState> {
      return actions.whereType<CreateOrderReservable>().asyncMap((event) async {
       OrderReservableState orderReservableState = event.orderReservableState;
       // add needed data to the order state
-
+      int write = 0;
       orderReservableState.user = UserSnippet();
       orderReservableState.user.id = store.state.user.uid;
       orderReservableState.user.name = store.state.user.name;
@@ -148,15 +171,18 @@ class OrderReservableCreateService implements EpicClass<AppState> {
       orderReservableState.userId = store.state.user.uid;
       // send document to orders collection
       var addedOrderReservable = await FirebaseFirestore.instance.collection("order/").add(orderReservableState.toJson());
+      orderReservableState.orderId = addedOrderReservable.id;
+      //await FirebaseFirestore.instance.collection("order/").doc(addedOrderReservable.id.toString()).update(orderReservableState.toJson()); /// 1 WRITE
+      //++write;
       final http.Response response = await http.post('https://europe-west1-buytime-458a1.cloudfunctions.net/StripePIOnOrder?orderId=' + addedOrderReservable.id);
       print("ORDER_RESERVABLE_SERVICE_EPIC - OrderReservableCreateService => OrderReservable_service epic - response is done");
       print('ORDER_RESERVABLE_SERVICE_EPIC - OrderReservableCreateService => RESPONSE: ${response.body}');
-      int write = 0;
       if (response != null && response.body == "Error: could not handle the request\n") {
         // verify why this happens.
         var updatedOrderReservable = await FirebaseFirestore.instance /// 1 WRITE
             .collection("order/").doc(addedOrderReservable.id.toString()).update({
-          'progress': "paid"
+          'progress': "paid",
+          'orderId': addedOrderReservable.id
         });
         state = 'paid';
         //return SetOrderReservableProgress("paid");
@@ -189,7 +215,8 @@ class OrderReservableCreateService implements EpicClass<AppState> {
             if (paymentIntentRes["status"] == "succeeded") {
               ++write;
               var updatedOrderReservable = await FirebaseFirestore.instance.collection("order/").doc(addedOrderReservable.id.toString()).update({ /// 1 WRITE
-                'progress': "paid"
+                'progress': "paid",
+                'orderId': addedOrderReservable.id
               });
               state = 'paid';
               //return SetOrderReservableProgress("paid");
@@ -200,7 +227,8 @@ class OrderReservableCreateService implements EpicClass<AppState> {
           } else {
             ++write;
             var updatedOrderReservable = await FirebaseFirestore.instance.collection("order/").doc(addedOrderReservable.id.toString()).update({ /// 1 WRITE
-              'progress': "paid"
+              'progress': "paid",
+              'orderId': addedOrderReservable.id
             });
             state = 'paid';
             //return SetOrderReservableProgress("paid");

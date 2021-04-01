@@ -56,8 +56,8 @@ class _DashboardListItemState extends State<DashboardListItem> {
                   Container(
                     margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
                     child: Icon(
-                      widget.orderState.progress != 'paid' ? BuytimeIcons.pending_clock : BuytimeIcons.accepted_clock,
-                      color: BuytimeTheme.SymbolBlack,
+                      widget.orderState.progress == 'canceled' || widget.orderState.progress == 'declined' ? BuytimeIcons.remove : widget.orderState.progress == 'paid' ? BuytimeIcons.pending_clock : BuytimeIcons.accepted_clock,
+                      color: widget.orderState.progress == 'canceled' || widget.orderState.progress == 'declined' ? BuytimeTheme.AccentRed : BuytimeTheme.SymbolBlack,
                       size: 22,
                     ),
                   )
@@ -118,7 +118,13 @@ class _DashboardListItemState extends State<DashboardListItem> {
                       children: [
                         Container(
                           child: Text(
-                    widget.orderState.progress != 'paid' ? '${AppLocalizations.of(context).pending}' : '${AppLocalizations.of(context).accepted}',
+                            widget.orderState.progress == 'paid' ?
+                            '${AppLocalizations.of(context).accepted}' :
+                            widget.orderState.progress == 'canceled' ?
+                            '${AppLocalizations.of(context).canceled}' :
+                            widget.orderState.progress == 'declined' ?
+                            '${AppLocalizations.of(context).declined}' :
+                            '${AppLocalizations.of(context).pending}',
                             style: TextStyle(
                                 fontFamily: BuytimeTheme.FontFamily,
                                 fontSize: 12,

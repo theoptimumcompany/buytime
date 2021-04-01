@@ -396,5 +396,10 @@
   "pleaseSelectNumberOfMaxBookings": "Please select number of max bookings",
   "pleaseSelectNumberOfMaxCapacity": "Please select number of max capacity",
   "admin": "Admin",
-  "manager": "Manager"
+  "manager": "Manager",
+  "decline": "Decline",
+  "canceled": "Canceled",
+  "declined": "Declined",
+  "reOpen": "Re-Open"
+
 }

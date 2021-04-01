@@ -28,9 +28,17 @@ class _TimeSlotWidgetState extends State<TimeSlotWidget> {
   String bookingStatus = '';
   bool closed = false;
 
+  String duration = '';
+
   @override
   void initState() {
     super.initState();
+
+    int tmpMin = widget.serviceSlot.hour * 60 + widget.serviceSlot.minute;
+    if(tmpMin > 90)
+      duration = '${widget.serviceSlot.hour} h ${widget.serviceSlot.minute} min.';
+    else
+      duration = '$tmpMin min.';
   }
 
   @override
@@ -67,14 +75,14 @@ class _TimeSlotWidgetState extends State<TimeSlotWidget> {
                  ),
                ),
                ///Duration
-               /*Container(
+               Container(
                  width: 100,
                  //margin: EdgeInsets.only(top: 5),
                  //margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 10),
                  child: FittedBox(
                    fit: BoxFit.scaleDown,
                    child: Text(
-                     '${widget.serviceSlot.duration}${AppLocalizations.of(context).spaceMin}',
+                     duration,
                      style: TextStyle(
                        //letterSpacing: 1.25,
                          fontFamily: BuytimeTheme.FontFamily,
@@ -84,7 +92,7 @@ class _TimeSlotWidgetState extends State<TimeSlotWidget> {
                      ),
                    ),
                  ),
-               ),*/
+               ),
                ///Price
                Container(
                  width: 100,
