@@ -587,6 +587,7 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
                                                               child: Padding(
                                                                 padding: const EdgeInsets.only(right: 5.0),
                                                                 child: Container(
+                                                                  height: 56,
                                                                   child: TextFormField(
                                                                     enabled: false,
                                                                     controller: startController[i],
@@ -643,6 +644,7 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
                                                               child: Padding(
                                                                 padding: const EdgeInsets.only(right: 5.0),
                                                                 child: Container(
+                                                                  height: 56,
                                                                   child: TextFormField(
                                                                     enabled: false,
                                                                     controller: stopController[i],
@@ -740,9 +742,10 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
                     }),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.00),
+                padding: const EdgeInsets.only(top: 15.0, bottom: 5.0),
                 child: Container(
-                  width: widget.media.width * 0.50,
+                  width: 208,
+                  height: 44,
                   child: OutlinedButton(
                     onPressed: () {
                       setState(() {
@@ -792,20 +795,26 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
                       });
                     },
                     child: Padding(
-                      padding: const EdgeInsets.all(10.0),
+                      padding: const EdgeInsets.all(0.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Icon(Icons.add, color: BuytimeTheme.ManagerPrimary, size: widget.media.width * 0.06),
-                          Text(
-                            AppLocalizations.of(context).addTimeSlot,
-                            textAlign: TextAlign.start,
-                            style: TextStyle(
-                              fontSize: widget.media.width * 0.04,
-                              color: BuytimeTheme.ManagerPrimary,
-                              fontWeight: FontWeight.w900,
+                          Icon(Icons.add, color: BuytimeTheme.ManagerPrimary, size:24),
+                          Container(
+                            width: 150,
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(
+                                AppLocalizations.of(context).addTimeSlot,
+                                textAlign: TextAlign.start,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: BuytimeTheme.ManagerPrimary,
+                                  fontWeight: FontWeight.w900,
+                                ),
+                              ),
                             ),
-                          ),
+                          )
                         ],
                       ),
                     ),

@@ -233,337 +233,355 @@ class StepLengthState extends State<StepLength> {
             key: _formSlotLengthKey,
             child: Container(
                 child: Column(
-              children: [
-                ///Service duration
-                Row(
                   children: [
-                    Container(
-                      child: Flexible(
-                        child: Text(
-                          AppLocalizations.of(context).serviceDuration,
-                          textAlign: TextAlign.start,
-                          overflow: TextOverflow.clip,
-                          style: TextStyle(
-                            color: BuytimeTheme.TextBlack,
-                            fontSize: media.height * 0.02,
-                            fontWeight: FontWeight.w400,
+                    ///Service duration
+                    Row(
+                      children: [
+                        Container(
+                          child: Flexible(
+                            child: Text(
+                              AppLocalizations.of(context).serviceDuration,
+                              textAlign: TextAlign.start,
+                              overflow: TextOverflow.clip,
+                              style: TextStyle(
+                                color: BuytimeTheme.TextBlack,
+                                fontSize: media.height * 0.02,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
                           ),
-                        ),
+                        )
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          ///Days
+                          Flexible(
+                              child: GestureDetector(
+                                onTap: () {
+                                  showPickerDay(context);
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.only(top: 5.0),
+                                  child: Container(
+                                    // /width: 142,
+                                    height: 56,
+                                    child: TextFormField(
+                                      enabled: false,
+                                      controller: dayController,
+                                      textAlign: TextAlign.start,
+                                      keyboardType: TextInputType.number,
+                                      decoration: InputDecoration(
+                                          filled: true,
+                                          fillColor: BuytimeTheme.DividerGrey,
+                                          disabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                          errorBorder: OutlineInputBorder(borderSide: BorderSide(color: BuytimeTheme.ErrorRed), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                          // errorMaxLines: 3,
+                                          // errorText: errorDay,
+                                          errorStyle: TextStyle(
+                                            color: BuytimeTheme.ErrorRed,
+                                            fontSize: 12.0,
+                                          ),
+                                          suffixText: AppLocalizations.of(context).days),
+                                      style: TextStyle(
+                                        fontFamily: BuytimeTheme.FontFamily,
+                                        color: Color(0xff666666),
+                                        fontWeight: FontWeight.w800,
+                                      ),
+                                      // validator: (value) {
+                                      //  return errorDay = showErrorDay(int.parse(value));
+                                      // },
+                                    ),
+                                  ),
+                                ),
+                              )),
+                          Container(
+                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 1, right: SizeConfig.blockSizeHorizontal * 1),
+                          ),
+                          Flexible(child: SizedBox()),
+                        ],
                       ),
-                    )
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 5.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          ///Hour
+                          Flexible(
+                              child: GestureDetector(
+                                onTap: () {
+                                  showPickerHour(context);
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.only(top: 5.0),
+                                  child: Container(
+                                    //width: 142,
+                                    height: 56,
+                                    child: TextFormField(
+                                      enabled: false,
+                                      controller: hourController,
+                                      textAlign: TextAlign.start,
+                                      keyboardType: TextInputType.number,
+                                      decoration: InputDecoration(
+                                          filled: true,
+                                          fillColor: BuytimeTheme.DividerGrey,
+                                          disabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                          errorBorder: OutlineInputBorder(borderSide: BorderSide(color: BuytimeTheme.ErrorRed), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                          errorMaxLines: 2,
+                                          errorStyle: TextStyle(
+                                            color: BuytimeTheme.ErrorRed,
+                                            fontSize: 12.0,
+                                          ),
+                                          suffixText: AppLocalizations.of(context).hour),
+                                      style: TextStyle(
+                                        fontFamily: BuytimeTheme.FontFamily,
+                                        color: Color(0xff666666),
+                                        fontWeight: FontWeight.w800,
+                                      ),
+                                      validator: (value) {
+                                        if (value.isEmpty) {
+                                          return AppLocalizations.of(context).pleaseInsertHour;
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              )),
+                          Container(
+                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 1, right: SizeConfig.blockSizeHorizontal * 1),
+                          ),
+
+                          ///Minute
+                          Flexible(
+                              child: GestureDetector(
+                                onTap: () {
+                                  showPickerMinute(context);
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.only(top: 5.0),
+                                  child: Container(
+                                    //width: 142,
+                                    height: 56,
+                                    child: TextFormField(
+                                      enabled: false,
+                                      controller: minuteController,
+                                      textAlign: TextAlign.start,
+                                      keyboardType: TextInputType.number,
+                                      decoration: InputDecoration(
+                                          filled: true,
+                                          fillColor: BuytimeTheme.DividerGrey,
+                                          disabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                          errorBorder: OutlineInputBorder(borderSide: BorderSide(color: BuytimeTheme.ErrorRed), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                          errorMaxLines: 2,
+                                          errorStyle: TextStyle(
+                                            color: BuytimeTheme.ErrorRed,
+                                            fontSize: 12.0,
+                                          ),
+                                          suffixText: AppLocalizations.of(context).min),
+                                      style: TextStyle(
+                                        fontFamily: BuytimeTheme.FontFamily,
+                                        color: Color(0xff666666),
+                                        fontWeight: FontWeight.w800,
+                                      ),
+                                      validator: (value) {
+                                        if (value.isEmpty) {
+                                          return AppLocalizations.of(context).pleaseInsertMinute;
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              )),
+                        ],
+                      ),
+                    ),
+
+                    ///Parallel Bookings
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20.0),
+                      child: Row(
+                        children: [
+                          Container(
+                            child: Flexible(
+                              child: Text(
+                                AppLocalizations.of(context).parallelBookings,
+                                textAlign: TextAlign.start,
+                                overflow: TextOverflow.clip,
+                                style: TextStyle(
+                                  color: BuytimeTheme.TextBlack,
+                                  fontSize: media.height * 0.02,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 5.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Flexible(
+                              child: GestureDetector(
+                                onTap: () {
+                                  showPickerLimitBookings(context);
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.only(top: 5.0),
+                                  child: Container(
+                                    height: 56,
+                                    child: TextFormField(
+                                      enabled: false,
+                                      controller: limitBookingController,
+                                      textAlign: TextAlign.start,
+                                      keyboardType: TextInputType.number,
+                                      decoration: InputDecoration(
+                                          filled: true,
+                                          fillColor: BuytimeTheme.DividerGrey,
+                                          disabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                          errorBorder: OutlineInputBorder(borderSide: BorderSide(color: BuytimeTheme.ErrorRed), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                          errorMaxLines: 2,
+                                          errorStyle: TextStyle(
+                                            color: BuytimeTheme.ErrorRed,
+                                            fontSize: 12.0,
+                                          ),
+                                          suffixText:  AppLocalizations.of(context).limit),
+                                      style: TextStyle(
+                                        fontFamily: BuytimeTheme.FontFamily,
+                                        color: Color(0xff666666),
+                                        fontWeight: FontWeight.w800,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )),
+                          Container(
+                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 1, right: SizeConfig.blockSizeHorizontal * 1),
+                          ),
+                          Flexible(child: SizedBox()),
+                        ],
+                      ),
+                    ),
+
+                    ///Max Quantity Per Service
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20.0),
+                      child: Row(
+                        children: [
+                          Container(
+                            child: Flexible(
+                              child: Text(
+                                AppLocalizations.of(context).maxQuantityService,
+                                textAlign: TextAlign.start,
+                                overflow: TextOverflow.clip,
+                                style: TextStyle(
+                                  color: BuytimeTheme.TextBlack,
+                                  fontSize: media.height * 0.02,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 5.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Flexible(
+                              child: GestureDetector(
+                                onTap: () {
+                                  showPickerMaxQuantity(context);
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.only(top: 5.0),
+                                  child: Container(
+                                    height: 56,
+                                    child: TextFormField(
+                                      enabled: false,
+                                      controller: maxController,
+                                      textAlign: TextAlign.start,
+                                      keyboardType: TextInputType.number,
+                                      decoration: InputDecoration(
+                                          filled: true,
+                                          fillColor: BuytimeTheme.DividerGrey,
+                                          disabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                          errorBorder: OutlineInputBorder(borderSide: BorderSide(color: BuytimeTheme.ErrorRed), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                          errorMaxLines: 2,
+                                          errorStyle: TextStyle(
+                                            color: BuytimeTheme.ErrorRed,
+                                            fontSize: 12.0,
+                                          ),
+                                          suffixText:  AppLocalizations.of(context).numberOf),
+                                      style: TextStyle(
+                                        fontFamily: BuytimeTheme.FontFamily,
+                                        color: Color(0xff666666),
+                                        fontWeight: FontWeight.w800,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )),
+                          Container(
+                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 1, right: SizeConfig.blockSizeHorizontal * 1),
+                          ),
+                          Flexible(child: SizedBox()),
+                        ],
+                      ),
+                    ),
+
+                    // Padding(
+                    //   padding: const EdgeInsets.only(top: 10.0),
+                    //   child: Row(
+                    //     children: [
+                    //       CustomLabeledCheckbox(
+                    //         label: '∞',
+                    //         value: bookingInfinity,
+                    //         onChanged: (value) {
+                    //           setState(() {
+                    //             bookingInfinity = value;
+                    //             StoreProvider.of<AppState>(context).dispatch(SetServiceSlotNoLimitBooking(bookingInfinity));
+                    //           });
+                    //         },
+                    //         checkboxType: CheckboxType.Child,
+                    //         activeColor: Colors.indigo,
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
+                    // Padding(
+                    //   padding: const EdgeInsets.only(top: 10.0),
+                    //   child: Row(
+                    //     children: [
+                    //       Container(
+                    //         child: Flexible(
+                    //           child: Text(
+                    //             !bookingInfinity ? AppLocalizations.of(context).serviceHasALimitOfBookings + bookingSlider.toString() : AppLocalizations.of(context).serviceHasNoLimitOfBookings,
+                    //             textAlign: TextAlign.start,
+                    //             overflow: TextOverflow.clip,
+                    //             style: TextStyle(
+                    //               color: BuytimeTheme.TextBlack,
+                    //               fontSize: media.height * 0.02,
+                    //               fontWeight: FontWeight.w400,
+                    //             ),
+                    //           ),
+                    //         ),
+                    //       )
+                    //     ],
+                    //   ),
+                    // )
                   ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 10.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      ///Days
-                      Flexible(
-                          child: GestureDetector(
-                        onTap: () {
-                          showPickerDay(context);
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 5.0),
-                          child: TextFormField(
-                            enabled: false,
-                            controller: dayController,
-                            textAlign: TextAlign.start,
-                            keyboardType: TextInputType.number,
-                            decoration: InputDecoration(
-                                filled: true,
-                                fillColor: BuytimeTheme.DividerGrey,
-                                disabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                errorBorder: OutlineInputBorder(borderSide: BorderSide(color: BuytimeTheme.ErrorRed), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                // errorMaxLines: 3,
-                                // errorText: errorDay,
-                                errorStyle: TextStyle(
-                                  color: BuytimeTheme.ErrorRed,
-                                  fontSize: 12.0,
-                                ),
-                                suffixText: AppLocalizations.of(context).days),
-                            style: TextStyle(
-                              fontFamily: BuytimeTheme.FontFamily,
-                              color: Color(0xff666666),
-                              fontWeight: FontWeight.w800,
-                            ),
-                            // validator: (value) {
-                            //  return errorDay = showErrorDay(int.parse(value));
-                            // },
-                          ),
-                        ),
-                      )),
-                      Container(
-                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 1, right: SizeConfig.blockSizeHorizontal * 1),
-                      ),
-                      Flexible(child: SizedBox()),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 5.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      ///Hour
-                      Flexible(
-                          child: GestureDetector(
-                        onTap: () {
-                          showPickerHour(context);
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 5.0),
-                          child: TextFormField(
-                            enabled: false,
-                            controller: hourController,
-                            textAlign: TextAlign.start,
-                            keyboardType: TextInputType.number,
-                            decoration: InputDecoration(
-                                filled: true,
-                                fillColor: BuytimeTheme.DividerGrey,
-                                disabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                errorBorder: OutlineInputBorder(borderSide: BorderSide(color: BuytimeTheme.ErrorRed), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                errorMaxLines: 2,
-                                errorStyle: TextStyle(
-                                  color: BuytimeTheme.ErrorRed,
-                                  fontSize: 12.0,
-                                ),
-                                suffixText: AppLocalizations.of(context).hour),
-                            style: TextStyle(
-                              fontFamily: BuytimeTheme.FontFamily,
-                              color: Color(0xff666666),
-                              fontWeight: FontWeight.w800,
-                            ),
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return AppLocalizations.of(context).pleaseInsertHour;
-                              }
-                              return null;
-                            },
-                          ),
-                        ),
-                      )),
-                      Container(
-                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 1, right: SizeConfig.blockSizeHorizontal * 1),
-                      ),
-
-                      ///Minute
-                      Flexible(
-                          child: GestureDetector(
-                        onTap: () {
-                          showPickerMinute(context);
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 5.0),
-                          child: TextFormField(
-                            enabled: false,
-                            controller: minuteController,
-                            textAlign: TextAlign.start,
-                            keyboardType: TextInputType.number,
-                            decoration: InputDecoration(
-                                filled: true,
-                                fillColor: BuytimeTheme.DividerGrey,
-                                disabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                errorBorder: OutlineInputBorder(borderSide: BorderSide(color: BuytimeTheme.ErrorRed), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                errorMaxLines: 2,
-                                errorStyle: TextStyle(
-                                  color: BuytimeTheme.ErrorRed,
-                                  fontSize: 12.0,
-                                ),
-                                suffixText: AppLocalizations.of(context).min),
-                            style: TextStyle(
-                              fontFamily: BuytimeTheme.FontFamily,
-                              color: Color(0xff666666),
-                              fontWeight: FontWeight.w800,
-                            ),
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return AppLocalizations.of(context).pleaseInsertMinute;
-                              }
-                              return null;
-                            },
-                          ),
-                        ),
-                      )),
-                    ],
-                  ),
-                ),
-
-                ///Parallel Bookings
-                Padding(
-                  padding: const EdgeInsets.only(top: 20.0),
-                  child: Row(
-                    children: [
-                      Container(
-                        child: Flexible(
-                          child: Text(
-                            AppLocalizations.of(context).parallelBookings,
-                            textAlign: TextAlign.start,
-                            overflow: TextOverflow.clip,
-                            style: TextStyle(
-                              color: BuytimeTheme.TextBlack,
-                              fontSize: media.height * 0.02,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 5.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Flexible(
-                          child: GestureDetector(
-                        onTap: () {
-                          showPickerLimitBookings(context);
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 5.0),
-                          child: TextFormField(
-                            enabled: false,
-                            controller: limitBookingController,
-                            textAlign: TextAlign.start,
-                            keyboardType: TextInputType.number,
-                            decoration: InputDecoration(
-                                filled: true,
-                                fillColor: BuytimeTheme.DividerGrey,
-                                disabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                errorBorder: OutlineInputBorder(borderSide: BorderSide(color: BuytimeTheme.ErrorRed), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                errorMaxLines: 2,
-                                errorStyle: TextStyle(
-                                  color: BuytimeTheme.ErrorRed,
-                                  fontSize: 12.0,
-                                ),
-                                suffixText:  AppLocalizations.of(context).limit),
-                            style: TextStyle(
-                              fontFamily: BuytimeTheme.FontFamily,
-                              color: Color(0xff666666),
-                              fontWeight: FontWeight.w800,
-                            ),
-                          ),
-                        ),
-                      )),
-                      Container(
-                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 1, right: SizeConfig.blockSizeHorizontal * 1),
-                      ),
-                      Flexible(child: SizedBox()),
-                    ],
-                  ),
-                ),
-
-                ///Max Quantity Per Service
-                Padding(
-                  padding: const EdgeInsets.only(top: 20.0),
-                  child: Row(
-                    children: [
-                      Container(
-                        child: Flexible(
-                          child: Text(
-                            AppLocalizations.of(context).maxQuantityService,
-                            textAlign: TextAlign.start,
-                            overflow: TextOverflow.clip,
-                            style: TextStyle(
-                              color: BuytimeTheme.TextBlack,
-                              fontSize: media.height * 0.02,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 5.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Flexible(
-                          child: GestureDetector(
-                        onTap: () {
-                          showPickerMaxQuantity(context);
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 5.0),
-                          child: TextFormField(
-                            enabled: false,
-                            controller: maxController,
-                            textAlign: TextAlign.start,
-                            keyboardType: TextInputType.number,
-                            decoration: InputDecoration(
-                                filled: true,
-                                fillColor: BuytimeTheme.DividerGrey,
-                                disabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                errorBorder: OutlineInputBorder(borderSide: BorderSide(color: BuytimeTheme.ErrorRed), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                errorMaxLines: 2,
-                                errorStyle: TextStyle(
-                                  color: BuytimeTheme.ErrorRed,
-                                  fontSize: 12.0,
-                                ),
-                                suffixText:  AppLocalizations.of(context).numberOf),
-                            style: TextStyle(
-                              fontFamily: BuytimeTheme.FontFamily,
-                              color: Color(0xff666666),
-                              fontWeight: FontWeight.w800,
-                            ),
-                          ),
-                        ),
-                      )),
-                      Container(
-                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 1, right: SizeConfig.blockSizeHorizontal * 1),
-                      ),
-                      Flexible(child: SizedBox()),
-                    ],
-                  ),
-                ),
-
-                // Padding(
-                //   padding: const EdgeInsets.only(top: 10.0),
-                //   child: Row(
-                //     children: [
-                //       CustomLabeledCheckbox(
-                //         label: '∞',
-                //         value: bookingInfinity,
-                //         onChanged: (value) {
-                //           setState(() {
-                //             bookingInfinity = value;
-                //             StoreProvider.of<AppState>(context).dispatch(SetServiceSlotNoLimitBooking(bookingInfinity));
-                //           });
-                //         },
-                //         checkboxType: CheckboxType.Child,
-                //         activeColor: Colors.indigo,
-                //       ),
-                //     ],
-                //   ),
-                // ),
-                // Padding(
-                //   padding: const EdgeInsets.only(top: 10.0),
-                //   child: Row(
-                //     children: [
-                //       Container(
-                //         child: Flexible(
-                //           child: Text(
-                //             !bookingInfinity ? AppLocalizations.of(context).serviceHasALimitOfBookings + bookingSlider.toString() : AppLocalizations.of(context).serviceHasNoLimitOfBookings,
-                //             textAlign: TextAlign.start,
-                //             overflow: TextOverflow.clip,
-                //             style: TextStyle(
-                //               color: BuytimeTheme.TextBlack,
-                //               fontSize: media.height * 0.02,
-                //               fontWeight: FontWeight.w400,
-                //             ),
-                //           ),
-                //         ),
-                //       )
-                //     ],
-                //   ),
-                // )
-              ],
-            )),
+                )),
           );
         });
   }

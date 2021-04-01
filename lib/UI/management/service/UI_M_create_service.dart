@@ -9,6 +9,7 @@ import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
 import 'package:Buytime/reusable/enterExitRoute.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
+import 'package:Buytime/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -197,18 +198,11 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                     //Navigator.pushReplacement(context, EnterExitRoute(enterPage: UI_M_ServiceList(), exitPage: UI_CreateService(), from: false));
                                   })),
                           Flexible(
-                            child: Container(
-                              child: Text(
-                                AppLocalizations.of(context).createService,
-                                textAlign: TextAlign.start,
-                                overflow: TextOverflow.ellipsis,
-                                style: BuytimeTheme.appbarTitle,
-                              ),
-                            ),
+                            child: Utils.barTitle(AppLocalizations.of(context).createService),
                           ),
                           Container(
                             child: IconButton(
-                                icon: Icon(Icons.check, color: Colors.white, size: media.width * 0.07),
+                                icon: Icon(Icons.check, color: Colors.white),
                                 onPressed: () {
                                   if (validateChosenCategories() && validateAndSave() && validatePrice(_servicePrice.toString())) {
                                     setState(() {

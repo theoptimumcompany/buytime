@@ -140,28 +140,31 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
   _buildChoiceList() {
     List<Widget> choices = [];
     categoryList.forEach((item) {
-      choices.add(Container(
-        padding: const EdgeInsets.all(2.0),
-        child: ChoiceChip(
-          label: Text(item.name),
-          selected: selectedCategoryList.any((element) => element.id == item.id),
-          selectedColor: Theme.of(context).accentColor,
-          labelStyle: TextStyle(color: selectedCategoryList.any((element) => element.id == item.id) ? BuytimeTheme.TextBlack : BuytimeTheme.TextWhite),
-          onSelected: (selected) {
-            setState(() {
-              if (selectedCategoryList.any((element) => element.id == item.id)) {
-                selectedCategoryList.removeWhere((element) => element.id == item.id);
-              } else {
-                selectedCategoryList.add(item);
-              }
-              validateChosenCategories();
-            });
+      choices.add(
+          Container(
+            margin: EdgeInsets.only(right: SizeConfig.safeBlockVertical * 1, top: SizeConfig.safeBlockVertical * .5, bottom: SizeConfig.safeBlockVertical * .5),
+            height: 32,
+            padding: const EdgeInsets.all(0.0),
+            child: ChoiceChip(
+              label: Text(item.name),
+              selected: selectedCategoryList.any((element) => element.id == item.id),
+              selectedColor: Theme.of(context).accentColor,
+              labelStyle: TextStyle(color: selectedCategoryList.any((element) => element.id == item.id) ? BuytimeTheme.TextBlack : BuytimeTheme.TextWhite),
+              onSelected: (selected) {
+                setState(() {
+                  if (selectedCategoryList.any((element) => element.id == item.id)) {
+                    selectedCategoryList.removeWhere((element) => element.id == item.id);
+                  } else {
+                    selectedCategoryList.add(item);
+                  }
+                  validateChosenCategories();
+                });
 
-            ///Aggiorno lo store con la lista di categorie selezionate salvando id e rootId
-            StoreProvider.of<AppState>(context).dispatch(SetServiceSelectedCategories(selectedCategoryList));
-          },
-        ),
-      ));
+                ///Aggiorno lo store con la lista di categorie selezionate salvando id e rootId
+                StoreProvider.of<AppState>(context).dispatch(SetServiceSelectedCategories(selectedCategoryList));
+              },
+            ),
+          ));
     });
     return choices;
   }
@@ -221,19 +224,11 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                         //Navigator.pushReplacement(context, EnterExitRoute(enterPage: UI_M_ServiceList(), exitPage: UI_EditService(), from: false));
                                       })),
                               Flexible(
-                                child: Container(
-                                  child: Text(
-                                    //AppLocalizations.of(context).serviceEdit,
-                                    AppLocalizations.of(context).editSpace + StoreProvider.of<AppState>(context).state.serviceState.name,
-                                    textAlign: TextAlign.start,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: BuytimeTheme.appbarTitle,
-                                  ),
-                                ),
+                                child: Utils.barTitle(AppLocalizations.of(context).editSpace + StoreProvider.of<AppState>(context).state.serviceState.name),
                               ),
                               Container(
                                 child: IconButton(
-                                    icon: Icon(Icons.check, color: Colors.white, size: media.width * 0.07),
+                                    icon: Icon(Icons.check, color: Colors.white),
                                     onPressed: () {
                                       setState(() {
                                         submit = true;
@@ -373,98 +368,101 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                         snapshot.serviceState.switchSlots
                                             ? Container()
                                             : Padding(
-                                                padding: const EdgeInsets.only(bottom: 15.0),
-                                                child: Center(
-                                                  child: Container(
-                                                    width: media.width * 0.9,
-                                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
-                                                    //decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
-                                                    child: Padding(
-                                                      padding: const EdgeInsets.only(top: 0.0, bottom: 5.0, left: 10.0, right: 10.0),
-                                                      child: TextFormField(
-                                                        controller: priceController,
-                                                        keyboardType: TextInputType.numberWithOptions(signed: true, decimal: true),
-                                                        textInputAction: TextInputAction.done,
-                                                        inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^(\d+)?\.?\d{0,2}'))],
-                                                        validator: (value) => value.isEmpty
-                                                            ? AppLocalizations.of(context).servicePriceBlank
-                                                            : validatePrice(value)
-                                                                ? null
-                                                                : AppLocalizations.of(context).notValidPrice,
-                                                        onChanged: (value) {
-                                                          if (value == "") {
-                                                            setState(() {
-                                                              _servicePrice = 0.0;
-                                                              value = "0.0";
-                                                            });
-                                                          } else {
-                                                            if (value.contains(".")) {
-                                                              List<String> priceString = value.split(".");
-                                                              if (priceString[1].length == 1) {
-                                                                value += "0";
-                                                              }
-                                                              else if(priceString[1].length == 0){
-                                                                value += "00";
-                                                              }
-                                                            } else {
-                                                              value += ".00";
-                                                            }
-                                                            setState(() {
-                                                              _servicePrice = double.parse(value);
-                                                            });
-                                                          }
-                                                          StoreProvider.of<AppState>(context).dispatch(SetServiceSlotPrice(_servicePrice));
-                                                        },
-                                                        onFieldSubmitted: (value) {
-                                                          if (value == "") {
-                                                            setState(() {
-                                                              _servicePrice = 0.0;
-                                                              value = "0.0";
-                                                              priceController.text = value;
-                                                            });
-                                                          } else {
-                                                            if (value.contains(".")) {
-                                                              List<String> priceString = value.split(".");
-                                                              if (priceString[1].length == 1) {
-                                                                value += "0";
-                                                              }
-                                                              else if(priceString[1].length == 0){
-                                                                value += "00";
-                                                              }
-                                                            } else {
-                                                              value += ".00";
-                                                            }
-                                                            setState(() {
-                                                              _servicePrice = double.parse(value);
-                                                              priceController.text = value;
-                                                            });
-                                                          }
-                                                          StoreProvider.of<AppState>(context).dispatch(SetServiceSlotPrice(_servicePrice));
-                                                        },
-                                                        decoration: InputDecoration(
-                                                          labelText: AppLocalizations.of(context).price,
-                                                          enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                                          focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                                          errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                                        ),
-                                                      ),
-                                                    ),
+                                          padding: const EdgeInsets.only(bottom: 15.0),
+                                          child: Center(
+                                            child: Container(
+                                              width: media.width * 0.9,
+                                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
+                                              //decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(top: 0.0, bottom: 5.0, left: 10.0, right: 10.0),
+                                                child: TextFormField(
+                                                  controller: priceController,
+                                                  keyboardType: TextInputType.numberWithOptions(signed: true, decimal: true),
+                                                  textInputAction: TextInputAction.done,
+                                                  inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^(\d+)?\.?\d{0,2}'))],
+                                                  validator: (value) => value.isEmpty
+                                                      ? AppLocalizations.of(context).servicePriceBlank
+                                                      : validatePrice(value)
+                                                      ? null
+                                                      : AppLocalizations.of(context).notValidPrice,
+                                                  onChanged: (value) {
+                                                    if (value == "") {
+                                                      setState(() {
+                                                        _servicePrice = 0.0;
+                                                        value = "0.0";
+                                                      });
+                                                    } else {
+                                                      if (value.contains(".")) {
+                                                        List<String> priceString = value.split(".");
+                                                        if (priceString[1].length == 1) {
+                                                          value += "0";
+                                                        }
+                                                        else if(priceString[1].length == 0){
+                                                          value += "00";
+                                                        }
+                                                      } else {
+                                                        value += ".00";
+                                                      }
+                                                      setState(() {
+                                                        _servicePrice = double.parse(value);
+                                                      });
+                                                    }
+                                                    StoreProvider.of<AppState>(context).dispatch(SetServiceSlotPrice(_servicePrice));
+                                                  },
+                                                  onFieldSubmitted: (value) {
+                                                    if (value == "") {
+                                                      setState(() {
+                                                        _servicePrice = 0.0;
+                                                        value = "0.0";
+                                                        priceController.text = value;
+                                                      });
+                                                    } else {
+                                                      if (value.contains(".")) {
+                                                        List<String> priceString = value.split(".");
+                                                        if (priceString[1].length == 1) {
+                                                          value += "0";
+                                                        }
+                                                        else if(priceString[1].length == 0){
+                                                          value += "00";
+                                                        }
+                                                      } else {
+                                                        value += ".00";
+                                                      }
+                                                      setState(() {
+                                                        _servicePrice = double.parse(value);
+                                                        priceController.text = value;
+                                                      });
+                                                    }
+                                                    StoreProvider.of<AppState>(context).dispatch(SetServiceSlotPrice(_servicePrice));
+                                                  },
+                                                  decoration: InputDecoration(
+                                                    labelText: AppLocalizations.of(context).price,
+                                                    enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                    focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                    errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(8.0))),
                                                   ),
                                                 ),
                                               ),
+                                            ),
+                                          ),
+                                        ),
                                         Padding(
                                           padding: const EdgeInsets.only(left: 20.0, top: 10.0),
                                           child: Container(
                                             child: Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
-                                                Text(
-                                                  AppLocalizations.of(context).selectCategories,
-                                                  textAlign: TextAlign.start,
-                                                  style: TextStyle(
-                                                    fontSize: media.height * 0.02,
-                                                    color: BuytimeTheme.TextBlack,
-                                                    fontWeight: FontWeight.w500,
+                                                Container(
+                                                  margin: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2),
+                                                  child: Text(
+                                                    AppLocalizations.of(context).selectCategories,
+                                                    textAlign: TextAlign.start,
+                                                    style: TextStyle(
+                                                      fontSize: media.height * 0.02,
+                                                      color: BuytimeTheme.TextBlack,
+                                                      fontWeight: FontWeight.w500,
+                                                    ),
                                                   ),
                                                 ),
                                                 Container(
@@ -480,21 +478,21 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                         ///Error message Empty CategoryList
                                         errorCategoryListEmpty
                                             ? Padding(
-                                                padding: const EdgeInsets.only(left: 30.0, bottom: 10),
-                                                child: Container(
-                                                    child: Row(
-                                                  children: [
-                                                    Text(
-                                                      AppLocalizations.of(context).notZeroCategory,
-                                                      style: TextStyle(
-                                                        fontSize: media.height * 0.018,
-                                                        color: BuytimeTheme.ErrorRed,
-                                                        fontWeight: FontWeight.w500,
-                                                      ),
+                                          padding: const EdgeInsets.only(left: 30.0, bottom: 10),
+                                          child: Container(
+                                              child: Row(
+                                                children: [
+                                                  Text(
+                                                    AppLocalizations.of(context).notZeroCategory,
+                                                    style: TextStyle(
+                                                      fontSize: media.height * 0.018,
+                                                      color: BuytimeTheme.ErrorRed,
+                                                      fontWeight: FontWeight.w500,
                                                     ),
-                                                  ],
-                                                )),
-                                              )
+                                                  ),
+                                                ],
+                                              )),
+                                        )
                                             : Container(),
 
                                         ///Divider under category selection
@@ -540,11 +538,11 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                                 textAlign: TextAlign.start,
                                                                 decoration: InputDecoration(
                                                                   enabledBorder:
-                                                                      OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                                                  OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
                                                                   focusedBorder:
-                                                                      OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                                                  OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
                                                                   errorBorder:
-                                                                      OutlineInputBorder(borderSide: BorderSide(color: BuytimeTheme.ErrorRed), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                                                  OutlineInputBorder(borderSide: BorderSide(color: BuytimeTheme.ErrorRed), borderRadius: BorderRadius.all(Radius.circular(10.0))),
                                                                   labelText: AppLocalizations.of(context).addNewTag,
                                                                   labelStyle: TextStyle(
                                                                     fontSize: 14,
@@ -583,29 +581,29 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                         ),
                                                         (snapshot.serviceState.tag.length > 0 && snapshot.serviceState.tag != null)
                                                             ? Align(
-                                                                alignment: Alignment.topLeft,
-                                                                child: Wrap(
-                                                                  spacing: 3.0,
-                                                                  runSpacing: 3.0,
-                                                                  children: List<Widget>.generate(snapshot.serviceState.tag.length, (int index) {
-                                                                    return InputChip(
-                                                                      selected: false,
-                                                                      label: Text(
-                                                                        snapshot.serviceState.tag[index],
-                                                                        style: TextStyle(
-                                                                          fontSize: 13.0,
-                                                                          fontWeight: FontWeight.w500,
-                                                                        ),
-                                                                      ),
-                                                                      onDeleted: () {
-                                                                        setState(() {
-                                                                          snapshot.serviceState.tag.remove(snapshot.serviceState.tag[index]);
-                                                                        });
-                                                                      },
-                                                                    );
-                                                                  }),
+                                                          alignment: Alignment.topLeft,
+                                                          child: Wrap(
+                                                            spacing: 3.0,
+                                                            runSpacing: 3.0,
+                                                            children: List<Widget>.generate(snapshot.serviceState.tag.length, (int index) {
+                                                              return InputChip(
+                                                                selected: false,
+                                                                label: Text(
+                                                                  snapshot.serviceState.tag[index],
+                                                                  style: TextStyle(
+                                                                    fontSize: 13.0,
+                                                                    fontWeight: FontWeight.w500,
+                                                                  ),
                                                                 ),
-                                                              )
+                                                                onDeleted: () {
+                                                                  setState(() {
+                                                                    snapshot.serviceState.tag.remove(snapshot.serviceState.tag[index]);
+                                                                  });
+                                                                },
+                                                              );
+                                                            }),
+                                                          ),
+                                                        )
                                                             : Container()
                                                       ],
                                                     ),
@@ -717,24 +715,24 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                             ///Error message Empty CategoryList
                                             errorSwitchSlots
                                                 ? Padding(
-                                                    padding: const EdgeInsets.only(left: 30.0, bottom: 10),
-                                                    child: Container(
-                                                        child: Row(
-                                                      children: [
-                                                        Flexible(
-                                                          child: Text(
-                                                            AppLocalizations.of(context).notZeroServiceSlot,
-                                                            style: TextStyle(
-                                                              fontSize: media.height * 0.018,
-                                                              color: BuytimeTheme.ErrorRed,
-                                                              fontWeight: FontWeight.w500,
-                                                            ),
-                                                            overflow: TextOverflow.clip,
+                                              padding: const EdgeInsets.only(left: 30.0, bottom: 10),
+                                              child: Container(
+                                                  child: Row(
+                                                    children: [
+                                                      Flexible(
+                                                        child: Text(
+                                                          AppLocalizations.of(context).notZeroServiceSlot,
+                                                          style: TextStyle(
+                                                            fontSize: media.height * 0.018,
+                                                            color: BuytimeTheme.ErrorRed,
+                                                            fontWeight: FontWeight.w500,
                                                           ),
+                                                          overflow: TextOverflow.clip,
                                                         ),
-                                                      ],
-                                                    )),
-                                                  )
+                                                      ),
+                                                    ],
+                                                  )),
+                                            )
                                                 : Container(),
                                           ],
                                         ),
@@ -751,159 +749,182 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                         snapshot.serviceState.switchSlots
                                             ?
 
-                                            ///Service Resevable Slot Block
-                                            Padding(
-                                                padding: const EdgeInsets.only(
-                                                  left: 20.0,
-                                                  right: 20.0,
-                                                  bottom: 20.0,
-                                                ),
-                                                child: Column(
+                                        ///Service Resevable Slot Block
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                            left: 0.0,
+                                            right: 0.0,
+                                            bottom: 20.0,
+                                          ),
+                                          child: Column(
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 35.0),
+                                                child: Row(
+                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                   children: [
-                                                    Padding(
-                                                      padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
-                                                      child: Row(
-                                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                        children: [
-                                                          Container(
-                                                            child: Text(
-                                                              AppLocalizations.of(context).serviceTimeAvailability,
-                                                              textAlign: TextAlign.start,
-                                                              overflow: TextOverflow.clip,
-                                                              style: TextStyle(
-                                                                fontSize: media.height * 0.021,
-                                                                color: BuytimeTheme.TextBlack,
-                                                                fontWeight: FontWeight.w500,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          Container(
-                                                              child: GestureDetector(
-                                                            child: Icon(Icons.add, color: BuytimeTheme.SymbolGrey, size: media.width * 0.06),
-                                                            onTap: () {
-                                                              ///Svuoto lo stato dello slot
-                                                              StoreProvider.of<AppState>(context).dispatch(SetServiceSlotToEmpty());
-                                                              Navigator.push(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                                    builder: (context) => UI_M_ServiceSlot(
-                                                                          createSlot: true,
-                                                                          editSlot: false,
-                                                                        )),
-                                                              );
-                                                            },
-                                                          )),
-                                                        ],
+                                                    Container(
+                                                      child: Text(
+                                                        AppLocalizations.of(context).serviceTimeAvailability,
+                                                        textAlign: TextAlign.start,
+                                                        overflow: TextOverflow.clip,
+                                                        style: TextStyle(
+                                                          fontSize: 14,
+                                                          color: BuytimeTheme.TextBlack,
+                                                          fontWeight: FontWeight.w500,
+                                                        ),
                                                       ),
                                                     ),
-                                                    snapshot.serviceState.serviceSlot.length > 0
-                                                        ? Padding(
-                                                            padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
-                                                            child: ConstrainedBox(
-                                                              constraints: BoxConstraints(),
-                                                              child: ListView.builder(
-                                                                shrinkWrap: true,
-                                                                physics: const NeverScrollableScrollPhysics(),
-                                                                itemCount: snapshot.serviceState.serviceSlot.length,
-                                                                itemBuilder: (context, index) {
-                                                                  return Dismissible(
-                                                                    key: UniqueKey(),
-                                                                    direction: DismissDirection.endToStart,
-                                                                    background: Container(
-                                                                      color: Colors.red,
-                                                                      margin: EdgeInsets.symmetric(horizontal: 15),
-                                                                      alignment: Alignment.centerRight,
-                                                                      child: Icon(
-                                                                        Icons.delete,
-                                                                        color: BuytimeTheme.SymbolWhite,
-                                                                      ),
-                                                                    ),
-                                                                    onDismissed: (direction) {
-                                                                      setState(() {
-                                                                        ///Deleting Slot
-                                                                        StoreProvider.of<AppState>(context).dispatch(DeleteServiceSlot(index));
-                                                                      });
-                                                                    },
-                                                                    child: GestureDetector(
-                                                                      onTap: () {
-                                                                        StoreProvider.of<AppState>(context).dispatch(SetServiceSlot(snapshot.serviceState.serviceSlot[index]));
-                                                                        Navigator.push(
-                                                                          context,
-                                                                          MaterialPageRoute(
-                                                                              builder: (context) => UI_M_ServiceSlot(
-                                                                                    createSlot: false,
-                                                                                    editSlot: true,
-                                                                                    indexSlot: index,
-                                                                                  )),
-                                                                        );
-                                                                      },
-                                                                      child: Padding(
-                                                                        padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 10.0),
-                                                                        child: Card(
-                                                                          elevation: 1.0,
-                                                                          child: ListTile(
-                                                                            title: Row(
-                                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                              children: [
-                                                                                Text(
-                                                                                  AppLocalizations.of(context).timeAvailabilitySpace + (index + 1).toString(),
-                                                                                  style: TextStyle(
-                                                                                    fontSize: media.height * 0.020,
-                                                                                    color: BuytimeTheme.TextBlack,
-                                                                                    fontWeight: FontWeight.w500,
-                                                                                  ),
-                                                                                ),
-                                                                              ],
-                                                                            ),
-                                                                            subtitle: Column(
-                                                                              children: [
-                                                                                Row(
-                                                                                  children: [
-                                                                                    Text(snapshot.serviceState.serviceSlot[index].checkIn + " - " + snapshot.serviceState.serviceSlot[index].checkOut),
-                                                                                  ],
-                                                                                ),
-                                                                                Row(
-                                                                                  children: [
-                                                                                    Text(snapshot.serviceState.serviceSlot[index].price.toString() + AppLocalizations.of(context).spaceEuro),
-                                                                                  ],
-                                                                                ),
-                                                                                //showSlotInterval(snapshot.serviceState.serviceSlot[index].numberOfInterval, media, index),
-                                                                              ],
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                  );
-                                                                },
-                                                              ),
-                                                            ),
-                                                          )
-                                                        : Padding(
-                                                            padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 15.0),
-                                                            child: Row(
+                                                    Container(
+                                                        child: GestureDetector(
+                                                          child: Icon(Icons.add, color: BuytimeTheme.SymbolGrey),
+                                                          onTap: () {
+                                                            ///Svuoto lo stato dello slot
+                                                            StoreProvider.of<AppState>(context).dispatch(SetServiceSlotToEmpty());
+                                                            Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                  builder: (context) => UI_M_ServiceSlot(
+                                                                    createSlot: true,
+                                                                    editSlot: false,
+                                                                  )),
+                                                            );
+                                                          },
+                                                        )),
+                                                  ],
+                                                ),
+                                              ),
+                                              snapshot.serviceState.serviceSlot.length > 0
+                                                  ? Padding(
+                                                padding: const EdgeInsets.only(left: 20.0),
+                                                child: ConstrainedBox(
+                                                  constraints: BoxConstraints(),
+                                                  child: ListView.builder(
+                                                    shrinkWrap: true,
+                                                    physics: const NeverScrollableScrollPhysics(),
+                                                    itemCount: snapshot.serviceState.serviceSlot.length,
+                                                    itemBuilder: (context, index) {
+                                                      return Dismissible(
+                                                        key: UniqueKey(),
+                                                        direction: DismissDirection.endToStart,
+                                                        background: Container(
+                                                          color: Colors.red,
+                                                          margin: EdgeInsets.symmetric(horizontal: 0),
+                                                          alignment: Alignment.centerRight,
+                                                          child: Icon(
+                                                            Icons.delete,
+                                                            color: BuytimeTheme.SymbolWhite,
+                                                          ),
+                                                        ),
+                                                        onDismissed: (direction) {
+                                                          setState(() {
+                                                            ///Deleting Slot
+                                                            StoreProvider.of<AppState>(context).dispatch(DeleteServiceSlot(index));
+                                                          });
+                                                        },
+                                                        child: GestureDetector(
+                                                          onTap: () {
+                                                            StoreProvider.of<AppState>(context).dispatch(SetServiceSlot(snapshot.serviceState.serviceSlot[index]));
+                                                            Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                  builder: (context) => UI_M_ServiceSlot(
+                                                                    createSlot: false,
+                                                                    editSlot: true,
+                                                                    indexSlot: index,
+                                                                  )),
+                                                            );
+                                                          },
+                                                          child: Padding(
+                                                            padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 0.0),
+                                                            child: Column(
                                                               children: [
                                                                 Container(
-                                                                  child: Text(
-                                                                    (snapshot.serviceState.name != null && snapshot.serviceState.name != ""
-                                                                            ? snapshot.serviceState.name
-                                                                            : AppLocalizations.of(context).theService) +
-                                                                        AppLocalizations.of(context).spaceHasNotReservableSlots,
-                                                                    textAlign: TextAlign.start,
-                                                                    overflow: TextOverflow.clip,
-                                                                    style: TextStyle(
-                                                                      fontSize: media.height * 0.018,
-                                                                      color: BuytimeTheme.TextBlack,
-                                                                      fontWeight: FontWeight.w500,
+                                                                  height: 88,
+                                                                  child: ListTile(
+                                                                    title: Row(
+                                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                      children: [
+                                                                        Text(
+                                                                          AppLocalizations.of(context).timeAvailabilitySpace + (index + 1).toString(),
+                                                                          style: TextStyle(
+                                                                            fontSize:16,
+                                                                            color: BuytimeTheme.TextBlack,
+                                                                            fontWeight: FontWeight.w400,
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                    subtitle: Column(
+                                                                      mainAxisAlignment: MainAxisAlignment.start,
+                                                                      children: [
+                                                                        Container(
+                                                                          margin: EdgeInsets.only(top: 10),
+                                                                          child: Row(
+                                                                            children: [
+                                                                              Text(snapshot.serviceState.serviceSlot[index].checkIn + " - " + snapshot.serviceState.serviceSlot[index].checkOut,
+                                                                                style: TextStyle(
+                                                                                  fontSize: 14,
+                                                                                  color: BuytimeTheme.TextBlack,
+                                                                                  fontWeight: FontWeight.w400,
+                                                                                ),),
+                                                                            ],
+                                                                          ),
+                                                                        ),
+                                                                        Row(
+                                                                          children: [
+                                                                            Text(snapshot.serviceState.serviceSlot[index].price.toString() + AppLocalizations.of(context).spaceEuro,
+                                                                              style: TextStyle(
+                                                                                fontSize: 14,
+                                                                                color: BuytimeTheme.TextBlack,
+                                                                                fontWeight: FontWeight.w400,
+                                                                              ),),
+                                                                          ],
+                                                                        ),
+                                                                        //showSlotInterval(snapshot.serviceState.serviceSlot[index].numberOfInterval, media, index),
+                                                                      ],
                                                                     ),
                                                                   ),
                                                                 ),
+                                                                Container(
+                                                                  height: 1,
+                                                                  color: BuytimeTheme.DividerGrey,
+                                                                  margin: EdgeInsets.only(left: 20),
+                                                                )
                                                               ],
                                                             ),
                                                           ),
-                                                  ],
+                                                        ),
+                                                      );
+                                                    },
+                                                  ),
                                                 ),
                                               )
+                                                  : Padding(
+                                                padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 15.0),
+                                                child: Row(
+                                                  children: [
+                                                    Container(
+                                                      child: Text(
+                                                        (snapshot.serviceState.name != null && snapshot.serviceState.name != ""
+                                                            ? snapshot.serviceState.name
+                                                            : AppLocalizations.of(context).theService) +
+                                                            AppLocalizations.of(context).spaceHasNotReservableSlots,
+                                                        textAlign: TextAlign.start,
+                                                        overflow: TextOverflow.clip,
+                                                        style: TextStyle(
+                                                          fontSize: media.height * 0.018,
+                                                          color: BuytimeTheme.TextBlack,
+                                                          fontWeight: FontWeight.w500,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        )
                                             : Container(),
                                       ],
                                     ),
@@ -916,33 +937,33 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
               ///Ripple Effect
               rippleLoading
                   ? Positioned.fill(
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: Container(
-                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3),
-                            height: SizeConfig.safeBlockVertical * 100,
-                            decoration: BoxDecoration(
-                              color: BuytimeTheme.BackgroundCerulean.withOpacity(.8),
-                            ),
-                            child: Center(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Container(
-                                    width: 50,
-                                    height: 50,
-                                    child: Center(
-                                      child: SpinKitRipple(
-                                        color: Colors.white,
-                                        size: 50,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            )),
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Container(
+                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3),
+                      height: SizeConfig.safeBlockVertical * 100,
+                      decoration: BoxDecoration(
+                        color: BuytimeTheme.BackgroundCerulean.withOpacity(.8),
                       ),
-                    )
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Container(
+                              width: 50,
+                              height: 50,
+                              child: Center(
+                                child: SpinKitRipple(
+                                  color: Colors.white,
+                                  size: 50,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )),
+                ),
+              )
                   : Container(),
             ]);
           }),

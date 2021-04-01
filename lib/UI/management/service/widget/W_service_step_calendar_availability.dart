@@ -44,16 +44,16 @@ class CalendarAvailabilityState extends State<CalendarAvailability> {
           context: context, initialDateRange: DateTimeRange(start: cIn, end: cOut), firstDate: checkIn, lastDate: new DateTime(2025));
     }
     if (picked != null && picked.start != null && picked.end != null) {
-        setState(() {
-          checkInController.text = DateFormat('dd/MM/yyyy').format(picked.start);
-          print(checkInController.text);
-          checkOutController.text = DateFormat('dd/MM/yyyy').format(picked.end);
-          print(checkOutController.text);
-          checkIn = picked.start;
-          checkOut = picked.end;
-          StoreProvider.of<AppState>(context).dispatch(SetServiceSlotCheckIn(checkInController.text));
-          StoreProvider.of<AppState>(context).dispatch(SetServiceSlotCheckOut(checkOutController.text));
-        });
+      setState(() {
+        checkInController.text = DateFormat('dd/MM/yyyy').format(picked.start);
+        print(checkInController.text);
+        checkOutController.text = DateFormat('dd/MM/yyyy').format(picked.end);
+        print(checkOutController.text);
+        checkIn = picked.start;
+        checkOut = picked.end;
+        StoreProvider.of<AppState>(context).dispatch(SetServiceSlotCheckIn(checkInController.text));
+        StoreProvider.of<AppState>(context).dispatch(SetServiceSlotCheckOut(checkOutController.text));
+      });
     }
     return null;
   }
@@ -67,17 +67,17 @@ class CalendarAvailabilityState extends State<CalendarAvailability> {
     checkIn = checkInController.text == ''
         ? DateTime.now()
         : DateTime(
-            int.parse(checkInString[2]),
-            int.parse(checkInString[1]),
-            int.parse(checkInString[0]),
-          );
+      int.parse(checkInString[2]),
+      int.parse(checkInString[1]),
+      int.parse(checkInString[0]),
+    );
     checkOut = checkOutController.text == ''
         ? DateTime.now()
         : DateTime(
-            int.parse(checkOutString[2]),
-            int.parse(checkOutString[1]),
-            int.parse(checkOutString[0]),
-          );
+      int.parse(checkOutString[2]),
+      int.parse(checkOutString[1]),
+      int.parse(checkOutString[0]),
+    );
     return StoreConnector<AppState, AppState>(
         converter: (store) => store.state,
         builder: (context, snapshot) {
@@ -86,88 +86,90 @@ class CalendarAvailabilityState extends State<CalendarAvailability> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-            ///Check In
-            Flexible(
-                child: GestureDetector(
-              onTap: () async {
-                await selectDate(context, checkIn, checkOut);
-              },
-              child: TextFormField(
-                enabled: false,
-                controller: checkInController,
-                textAlign: TextAlign.start,
-                keyboardType: TextInputType.datetime,
-                decoration: InputDecoration(
-                    filled: true,
-                    fillColor: BuytimeTheme.DividerGrey,
-                    disabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                    labelText: AppLocalizations.of(context).checkIn,
-                    labelStyle: TextStyle(
-                      fontFamily: BuytimeTheme.FontFamily,
-                      fontSize: 12,
-                      color: Color(0xff666666),
-                      fontWeight: FontWeight.w400,
-                    ),
-                    suffixIcon: Icon(
-                      Icons.calendar_today,
+                ///Check In
+                Flexible(
+                    child: GestureDetector(
+                      onTap: () async {
+                        await selectDate(context, checkIn, checkOut);
+                      },
+                      child: Container(
+                        //height: 56,
+                        child: TextFormField(
+                          enabled: false,
+                          controller: checkInController,
+                          textAlign: TextAlign.start,
+                          keyboardType: TextInputType.datetime,
+                          decoration: InputDecoration(
+                              filled: true,
+                              fillColor: BuytimeTheme.DividerGrey,
+                              disabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                              labelText: AppLocalizations.of(context).checkIn,
+                              labelStyle: TextStyle(
+                                fontFamily: BuytimeTheme.FontFamily,
+                                fontSize: 12,
+                                color: Color(0xff666666),
+                                fontWeight: FontWeight.w400,
+                              ),
+                              suffixIcon: Icon(
+                                Icons.calendar_today,
+                              )),
+                          style: TextStyle(
+                            fontFamily: BuytimeTheme.FontFamily,
+                            color: Color(0xff666666),
+                            fontSize: 13,
+                            fontWeight: FontWeight.w800,
+                          ),
+                          validator: (String value) {
+                            if (value.isEmpty) {
+                              return AppLocalizations.of(context).pleaseEnterAValidDateInterval;
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
                     )),
-                style: TextStyle(
-                  fontFamily: BuytimeTheme.FontFamily,
-                  color: Color(0xff666666),
-                  fontSize: 13,
-                  fontWeight: FontWeight.w800,
+                Container(
+                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 1, right: SizeConfig.blockSizeHorizontal * 1),
                 ),
-                validator: (String value) {
-                  if (value.isEmpty) {
-                    return AppLocalizations.of(context).pleaseEnterAValidDateInterval;
-                  }
-                  return null;
-                },
-              ),
-            )),
-            Container(
-              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 1, right: SizeConfig.blockSizeHorizontal * 1),
-            ),
-
-            ///Check Out
-            Flexible(
-                child: GestureDetector(
-              onTap: () async {
-                await selectDate(context, checkIn, checkOut);
-              },
-              child: TextFormField(
-                enabled: false,
-                controller: checkOutController,
-                textAlign: TextAlign.start,
-                keyboardType: TextInputType.datetime,
-                decoration: InputDecoration(
-                    filled: true,
-                    fillColor: BuytimeTheme.DividerGrey,
-                    disabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                    labelText: AppLocalizations.of(context).checkOut,
-                    labelStyle: TextStyle(
-                      fontFamily: BuytimeTheme.FontFamily,
-                      fontSize: 12,
-                      color: Color(0xff666666),
-                      fontWeight: FontWeight.w400,
-                    ),
-                    suffixIcon: Icon(Icons.calendar_today)),
-                style: TextStyle(
-                  //fontSize: 12,
-                  fontFamily: BuytimeTheme.FontFamily,
-                  color: Color(0xff666666),
-                  fontSize: 13,
-                  fontWeight: FontWeight.w800,
-                ),
-                validator: (String value) {
-                  debugPrint('${checkIn.compareTo(checkOut)}');
-                  if (value.isEmpty || checkIn.compareTo(checkOut) > 0) {
-                    return AppLocalizations.of(context).pleaseEnterAValidDateInterval;
-                  }
-                  return null;
-                },
-              ),
-            ))
+                ///Check Out
+                Flexible(
+                    child: GestureDetector(
+                      onTap: () async {
+                        await selectDate(context, checkIn, checkOut);
+                      },
+                      child: TextFormField(
+                        enabled: false,
+                        controller: checkOutController,
+                        textAlign: TextAlign.start,
+                        keyboardType: TextInputType.datetime,
+                        decoration: InputDecoration(
+                            filled: true,
+                            fillColor: BuytimeTheme.DividerGrey,
+                            disabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                            labelText: AppLocalizations.of(context).checkOut,
+                            labelStyle: TextStyle(
+                              fontFamily: BuytimeTheme.FontFamily,
+                              fontSize: 12,
+                              color: Color(0xff666666),
+                              fontWeight: FontWeight.w400,
+                            ),
+                            suffixIcon: Icon(Icons.calendar_today)),
+                        style: TextStyle(
+                          //fontSize: 12,
+                          fontFamily: BuytimeTheme.FontFamily,
+                          color: Color(0xff666666),
+                          fontSize: 13,
+                          fontWeight: FontWeight.w800,
+                        ),
+                        validator: (String value) {
+                          debugPrint('${checkIn.compareTo(checkOut)}');
+                          if (value.isEmpty || checkIn.compareTo(checkOut) > 0) {
+                            return AppLocalizations.of(context).pleaseEnterAValidDateInterval;
+                          }
+                          return null;
+                        },
+                      ),
+                    ))
               ],
             ),
           );

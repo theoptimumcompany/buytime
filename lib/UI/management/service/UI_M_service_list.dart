@@ -14,6 +14,7 @@ import 'package:Buytime/reblox/reducer/service/service_reducer.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
 import 'package:Buytime/reusable/enterExitRoute.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
+import 'package:Buytime/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -125,18 +126,9 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                         Navigator.pushReplacement(context, EnterExitRoute(enterPage: UI_M_Business(), exitPage: UI_M_ServiceList(), from: false));
                       },
                     ),
-                    Container(
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 0.0),
-                        child: Text(
-                          AppLocalizations.of(context).serviceList,
-                          textAlign: TextAlign.start,
-                          style: BuytimeTheme.appbarTitle,
-                        ),
-                      ),
-                    ),
+                    Utils.barTitle(AppLocalizations.of(context).serviceList),
                     IconButton(
-                      icon: Icon(Icons.add, color: Colors.white, size: mediaWidth * 0.085),
+                      icon: Icon(Icons.add, color:BuytimeTheme.SymbolWhite),
                       onPressed: () {
                         StoreProvider.of<AppState>(context).dispatch(SetService(ServiceState().toEmpty()));
                         //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_CreateService(categoryId: "",)));

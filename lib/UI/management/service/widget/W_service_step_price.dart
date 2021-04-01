@@ -100,103 +100,106 @@ class StepPriceState extends State<StepPrice> {
             key: _formSlotPriceKey,
             child: Container(
                 child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                ///Price TextFormField
-                Flexible(
-                    child: Padding(
-                  padding: const EdgeInsets.only(top: 5.0),
-                  child: TextFormField(
-                    enabled: true,
-                    controller: priceController,
-                    //  initialValue: snapshot.serviceSlot.price.toString(),
-                    onChanged: (value) {
-                      if (value == "") {
-                        setState(() {
-                          price = 0.0;
-                          value = "0.0";
-                        });
-                      } else {
-                        if (value.contains(".")) {
-                          List<String> priceString = value.split(".");
-                          if (priceString[1].length == 1) {
-                            value += "0";
-                          }
-                          else if(priceString[1].length == 0){
-                            value += "00";
-                          }
-                        } else {
-                          value += ".00";
-                        }
-                        setState(() {
-                          price = double.parse(value);
-                        });
-                      }
-                      StoreProvider.of<AppState>(context).dispatch(SetServiceSlotPrice(price));
-                    },
-                    onFieldSubmitted: (value) {
-                      if (value == "") {
-                        setState(() {
-                          price = 0.0;
-                          value = "0.0";
-                          priceController.text = value;
-                        });
-                      } else {
-                        if (value.contains(".")) {
-                          List<String> priceString = value.split(".");
-                          if (priceString[1].length == 1) {
-                            value += "0";
-                          }
-                          else if(priceString[1].length == 0){
-                            value += "00";
-                          }
-                        } else {
-                          value += ".00";
-                        }
-                        setState(() {
-                          price = double.parse(value);
-                          priceController.text = value;
-                        });
-                      }
-                      StoreProvider.of<AppState>(context).dispatch(SetServiceSlotPrice(price));
-                    },
-                    textAlign: TextAlign.start,
-                    keyboardType: TextInputType.numberWithOptions(signed: true, decimal: true),
-                    textInputAction: TextInputAction.done,
-                    inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^(\d+)?\.?\d{0,2}'))],
-                    decoration: InputDecoration(
-                        filled: true,
-                        fillColor: BuytimeTheme.DividerGrey,
-                        enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                        focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                        errorMaxLines: 2,
-                        errorStyle: TextStyle(
-                          color: BuytimeTheme.ErrorRed,
-                          fontSize: 12.0,
-                        ),
-                        suffixText: AppLocalizations.of(context).currency),
-                    style: TextStyle(
-                      fontFamily: BuytimeTheme.FontFamily,
-                      color: Color(0xff666666),
-                      fontWeight: FontWeight.w800,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    ///Price TextFormField
+                    Flexible(
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 5.0),
+                          child: Container(
+                            height: 56,
+                            child: TextFormField(
+                              enabled: true,
+                              controller: priceController,
+                              //  initialValue: snapshot.serviceSlot.price.toString(),
+                              onChanged: (value) {
+                                if (value == "") {
+                                  setState(() {
+                                    price = 0.0;
+                                    value = "0.0";
+                                  });
+                                } else {
+                                  if (value.contains(".")) {
+                                    List<String> priceString = value.split(".");
+                                    if (priceString[1].length == 1) {
+                                      value += "0";
+                                    }
+                                    else if(priceString[1].length == 0){
+                                      value += "00";
+                                    }
+                                  } else {
+                                    value += ".00";
+                                  }
+                                  setState(() {
+                                    price = double.parse(value);
+                                  });
+                                }
+                                StoreProvider.of<AppState>(context).dispatch(SetServiceSlotPrice(price));
+                              },
+                              onFieldSubmitted: (value) {
+                                if (value == "") {
+                                  setState(() {
+                                    price = 0.0;
+                                    value = "0.0";
+                                    priceController.text = value;
+                                  });
+                                } else {
+                                  if (value.contains(".")) {
+                                    List<String> priceString = value.split(".");
+                                    if (priceString[1].length == 1) {
+                                      value += "0";
+                                    }
+                                    else if(priceString[1].length == 0){
+                                      value += "00";
+                                    }
+                                  } else {
+                                    value += ".00";
+                                  }
+                                  setState(() {
+                                    price = double.parse(value);
+                                    priceController.text = value;
+                                  });
+                                }
+                                StoreProvider.of<AppState>(context).dispatch(SetServiceSlotPrice(price));
+                              },
+                              textAlign: TextAlign.start,
+                              keyboardType: TextInputType.numberWithOptions(signed: true, decimal: true),
+                              textInputAction: TextInputAction.done,
+                              inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^(\d+)?\.?\d{0,2}'))],
+                              decoration: InputDecoration(
+                                  filled: true,
+                                  fillColor: BuytimeTheme.DividerGrey,
+                                  enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                  focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                  errorMaxLines: 2,
+                                  errorStyle: TextStyle(
+                                    color: BuytimeTheme.ErrorRed,
+                                    fontSize: 12.0,
+                                  ),
+                                  suffixText: AppLocalizations.of(context).currency),
+                              style: TextStyle(
+                                fontFamily: BuytimeTheme.FontFamily,
+                                color: Color(0xff666666),
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                          ),
+                        )),
+                    Container(
+                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 1, right: SizeConfig.blockSizeHorizontal * 1),
                     ),
-                  ),
-                )),
-                Container(
-                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 1, right: SizeConfig.blockSizeHorizontal * 1),
-                ),
 
-                ///Empty
-                Flexible(
-                    child: GestureDetector(
-                  onTap: () async {},
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 5.0),
-                    child: Container(),
-                  ),
-                ))
-              ],
-            )),
+                    ///Empty
+                    Flexible(
+                        child: GestureDetector(
+                          onTap: () async {},
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 5.0),
+                            child: Container(),
+                          ),
+                        ))
+                  ],
+                )),
           );
         });
   }
