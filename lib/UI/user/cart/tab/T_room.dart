@@ -32,9 +32,9 @@ class RoomState extends State<Room> {
     room = '???';
   }
 
-  List<String> tmpList = ['ciao', 'come'];
+  List<String> tmpList = [];
   List<Widget> creditCards = [];
-
+s
   @override
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;

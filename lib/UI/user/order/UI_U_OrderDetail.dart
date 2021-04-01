@@ -46,7 +46,7 @@ class UI_U_OrderDetailState extends State<UI_U_OrderDetail> {
             //StoreProvider.of<AppState>(context).dispatch(SetOrderToEmpty(""));
           },
           builder: (context, snapshot) {
-            Timestamp stamp = Timestamp.now(); //TODO snapshot.order.date; Salvare bene timestamp sul navigation
+            Timestamp stamp = Timestamp.now();
             DateTime date = stamp.toDate();
             String formattedDate = DateFormat().format(confirmedOrder.date);
             return Scaffold(

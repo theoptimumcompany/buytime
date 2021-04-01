@@ -853,7 +853,6 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                                                     fontWeight: FontWeight.w500,
                                                                                   ),
                                                                                 ),
-                                                                                // Text("Prezzo"),
                                                                               ],
                                                                             ),
                                                                             subtitle: Column(

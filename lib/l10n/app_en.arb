@@ -408,5 +408,15 @@
   "enterBookingCode": "Enter booking code",
   "startYourJourney": "Start your journey",
   "aboutBuytime": "About Buytime",
-  "discoverOurNetwork": "Discover our network"
+  "discoverOurNetwork": "Discover our network",
+  "days": "days",
+  "day": "day",
+  "hour": "hour",
+  "hours": "hours",
+  "pleaseInsertHour": "Please insert an hour",
+  "pleaseInsertMinute": "Please insert a minute",
+  "min": "min",
+  "limit": "limit",
+  "numberOf": "n°",
+  "copyLink": "COPY LINK"
 }

@@ -15,13 +15,13 @@ import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:share/share.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-
 // ignore: must_be_immutable
 class BookingDetails extends StatefulWidget {
   static String route = '/bookingDetails';
 
   BookingState bookingState;
   bool view;
+
   BookingDetails({Key key, this.bookingState, this.view}) : super(key: key);
 
   @override
@@ -29,9 +29,6 @@ class BookingDetails extends StatefulWidget {
 }
 
 class _BookingDetailsState extends State<BookingDetails> {
-
-
-
   ///Global key
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -86,8 +83,9 @@ class _BookingDetailsState extends State<BookingDetails> {
   }
 
   String link = '';
-  Future readDynamicLink(String id) async{
-    if(link.isEmpty){
+
+  Future readDynamicLink(String id) async {
+    if (link.isEmpty) {
       Uri tmp = await createDynamicLink(id);
       setState(() {
         link = '$tmp';
@@ -105,8 +103,7 @@ class _BookingDetailsState extends State<BookingDetails> {
     return StoreConnector<AppState, AppState>(
       converter: (store) => store.state,
       builder: (context, snapshot) {
-        if(bookingState == null)
-          bookingState = snapshot.booking;
+        if (bookingState == null) bookingState = snapshot.booking;
 
         _checkInController.text = DateFormat('dd/MM/yyyy').format(bookingState.start_date);
         _checkOutController.text = DateFormat('dd/MM/yyyy').format(bookingState.end_date);
@@ -122,6 +119,7 @@ class _BookingDetailsState extends State<BookingDetails> {
           child: Scaffold(
             drawerEnableOpenDragGesture: false,
             key: _drawerKey,
+
             ///Appbar
             appBar: AppBar(
               backgroundColor: BuytimeTheme.ManagerPrimary,
@@ -144,7 +142,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                   Icons.keyboard_arrow_left,
                   color: Colors.white,
                 ),
-                onPressed: () async{
+                onPressed: () async {
                   Navigator.of(context).pop();
                 },
               ),
@@ -178,6 +176,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                                   textAlign: TextAlign.left,
                                 ),
                               ),*/
+
                               ///Booking Code & Email & Name & Surname & Check In & Check Out & Number Of Guests
                               Container(
                                 height: SizeConfig.safeBlockVertical * 50,
@@ -187,20 +186,15 @@ class _BookingDetailsState extends State<BookingDetails> {
                                     ///Booking code
                                     Container(
                                       margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 4, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
-                                      child:  Row(
+                                      child: Row(
                                         crossAxisAlignment: CrossAxisAlignment.end,
                                         children: [
                                           Expanded(
                                             flex: 2,
                                             child: Container(
                                               child: Text(
-                                                'Booking id',
-                                                style: TextStyle(
-                                                    fontFamily: BuytimeTheme.FontFamily,
-                                                    color: BuytimeTheme.TextDark,
-                                                    fontWeight: FontWeight.w400,
-                                                    fontSize: 16
-                                                ),
+                                                AppLocalizations.of(context).bookingId,
+                                                style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextDark, fontWeight: FontWeight.w400, fontSize: 16),
                                               ),
                                             ),
                                           ),
@@ -212,12 +206,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                                                 Container(
                                                   child: Text(
                                                     bookingState.booking_code,
-                                                    style: TextStyle(
-                                                        fontFamily: BuytimeTheme.FontFamily,
-                                                        color: BuytimeTheme.TextDark,
-                                                        fontWeight: FontWeight.w600,
-                                                        fontSize: 24
-                                                    ),
+                                                    style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextDark, fontWeight: FontWeight.w600, fontSize: 24),
                                                   ),
                                                 )
                                               ],
@@ -226,6 +215,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                                         ],
                                       ),
                                     ),
+
                                     ///Full Name
                                     Expanded(
                                       child: Container(
@@ -236,35 +226,28 @@ class _BookingDetailsState extends State<BookingDetails> {
                                             ///Full Name Text
                                             Container(
                                               child: Text(
-                                                'Full Name',
-                                                style: TextStyle(
-                                                    fontFamily: BuytimeTheme.FontFamily,
-                                                    color: BuytimeTheme.TextMedium,
-                                                    fontWeight: FontWeight.w400,
-                                                    fontSize: 16
-                                                ),
+                                                AppLocalizations.of(context).fullName,
+                                                style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextMedium, fontWeight: FontWeight.w400, fontSize: 16),
                                               ),
                                             ),
+
                                             ///Full Name
-                                           Flexible(child:  Container(
-                                             margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
-                                             child: FittedBox(
-                                               fit: BoxFit.scaleDown,
-                                               child: Text(
-                                                 '${bookingState.user.first.name} ${bookingState.user.first.surname}',
-                                                 style: TextStyle(
-                                                     fontFamily: BuytimeTheme.FontFamily,
-                                                     color: BuytimeTheme.TextDark,
-                                                     fontWeight: FontWeight.w600,
-                                                     fontSize: 16
-                                                 ),
-                                               ),
-                                             ),
-                                           ))
+                                            Flexible(
+                                                child: Container(
+                                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
+                                              child: FittedBox(
+                                                fit: BoxFit.scaleDown,
+                                                child: Text(
+                                                  '${bookingState.user.first.name} ${bookingState.user.first.surname}',
+                                                  style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextDark, fontWeight: FontWeight.w600, fontSize: 16),
+                                                ),
+                                              ),
+                                            ))
                                           ],
                                         ),
                                       ),
                                     ),
+
                                     ///Email
                                     Expanded(
                                       child: Container(
@@ -275,15 +258,11 @@ class _BookingDetailsState extends State<BookingDetails> {
                                             ///Email Text
                                             Container(
                                               child: Text(
-                                                'Email',
-                                                style: TextStyle(
-                                                    fontFamily: BuytimeTheme.FontFamily,
-                                                    color: BuytimeTheme.TextMedium,
-                                                    fontWeight: FontWeight.w400,
-                                                    fontSize: 16
-                                                ),
+                                                AppLocalizations.of(context).email,
+                                                style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextMedium, fontWeight: FontWeight.w400, fontSize: 16),
                                               ),
                                             ),
+
                                             ///Email
                                             Flexible(
                                               child: Container(
@@ -292,12 +271,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                                                   fit: BoxFit.scaleDown,
                                                   child: Text(
                                                     bookingState.user.first.email ?? 'sample@gmail.com',
-                                                    style: TextStyle(
-                                                        fontFamily: BuytimeTheme.FontFamily,
-                                                        color: BuytimeTheme.TextDark,
-                                                        fontWeight: FontWeight.w600,
-                                                        fontSize: 16
-                                                    ),
+                                                    style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextDark, fontWeight: FontWeight.w600, fontSize: 16),
                                                   ),
                                                 ),
                                               ),
@@ -306,6 +280,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                                         ),
                                       ),
                                     ),
+
                                     ///Check In & Check Out
                                     Container(
                                         margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
@@ -315,118 +290,90 @@ class _BookingDetailsState extends State<BookingDetails> {
                                           children: [
                                             ///Check In
                                             Expanded(
-                                                child:  GestureDetector(
-                                                  onTap: ()async{
-                                                    //await _selectDate(context, _checkInController, checkIn, checkOut);
-                                                  },
-                                                  child: Container(
-                                                    width: 162,
-                                                    height: 56,
-                                                    child: TextFormField(
-                                                      enabled: false,
-                                                      controller: _checkInController,
-                                                      textAlign: TextAlign.start,
-                                                      keyboardType: TextInputType.datetime,
-                                                      decoration: InputDecoration(
-                                                          isDense: true,
-                                                          filled: true,
-                                                          fillColor: BuytimeTheme.DividerGrey,
-                                                          enabledBorder: OutlineInputBorder(
-                                                              borderSide: BorderSide(color: Color(0xffe0e0e0)),
-                                                              borderRadius: BorderRadius.all(Radius.circular(10.0))
-                                                          ),
-                                                          focusedBorder: OutlineInputBorder(
-                                                              borderSide: BorderSide(color: Color(0xff666666)),
-                                                              borderRadius: BorderRadius.all(Radius.circular(10.0))
-                                                          ),
-                                                          labelText: 'Check-in',
-                                                          //hintText: "email *",
-                                                          //hintStyle: TextStyle(color: Color(0xff666666)),
-                                                          labelStyle: TextStyle(
-                                                            fontFamily: BuytimeTheme.FontFamily,
-                                                            color: Color(0xff666666),
-                                                            fontWeight: FontWeight.w400,
-                                                          ),
-                                                          suffixIcon: Icon(
-                                                              Icons.calendar_today
-                                                          )
+                                                child: GestureDetector(
+                                              onTap: () async {
+                                                //await _selectDate(context, _checkInController, checkIn, checkOut);
+                                              },
+                                              child: Container(
+                                                width: 162,
+                                                height: 56,
+                                                child: TextFormField(
+                                                  enabled: false,
+                                                  controller: _checkInController,
+                                                  textAlign: TextAlign.start,
+                                                  keyboardType: TextInputType.datetime,
+                                                  decoration: InputDecoration(
+                                                      isDense: true,
+                                                      filled: true,
+                                                      fillColor: BuytimeTheme.DividerGrey,
+                                                      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                                      focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                                      labelText: AppLocalizations.of(context).checkIn,
+                                                      //hintText: "email *",
+                                                      //hintStyle: TextStyle(color: Color(0xff666666)),
+                                                      labelStyle: TextStyle(
+                                                        fontFamily: BuytimeTheme.FontFamily,
+                                                        color: Color(0xff666666),
+                                                        fontWeight: FontWeight.w400,
                                                       ),
-                                                      style: TextStyle(
-                                                          fontFamily: BuytimeTheme.FontFamily,
-                                                          color: BuytimeTheme.TextMedium,
-                                                          fontWeight: FontWeight.w600,
-                                                          fontSize: 16
-                                                      ),
-                                                      /*validator: (String value) {
+                                                      suffixIcon: Icon(Icons.calendar_today)),
+                                                  style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextMedium, fontWeight: FontWeight.w600, fontSize: 16),
+                                                  /*validator: (String value) {
                                                     if (value.isEmpty) {
                                                       return 'Please enter a valid interval of dates';
                                                     }
                                                     return null;
                                                   },*/
-                                                    ),
-                                                  ),
-                                                )),
+                                                ),
+                                              ),
+                                            )),
                                             Container(
                                               margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 1, right: SizeConfig.blockSizeHorizontal * 1),
                                             ),
+
                                             ///Check Out
                                             Expanded(
                                                 child: GestureDetector(
-                                                  onTap: () async{
-                                                    //await _selectDate(context, _checkOutController, checkIn, checkOut);
-                                                  },
-                                                  child: Container(
-                                                    width: 162,
-                                                    height: 56,
-                                                    child: TextFormField(
-                                                      enabled: false,
-                                                      controller: _checkOutController,
-                                                      textAlign: TextAlign.start,
-                                                      keyboardType: TextInputType.datetime,
-                                                      decoration: InputDecoration(
-                                                          isDense: true,
-                                                          filled: true,
-                                                          fillColor: BuytimeTheme.DividerGrey,
-                                                          enabledBorder: OutlineInputBorder(
-                                                              borderSide: BorderSide(color: Color(0xffe0e0e0)),
-                                                              borderRadius: BorderRadius.all(Radius.circular(10.0))
-                                                          ),
-                                                          focusedBorder: OutlineInputBorder(
-                                                              borderSide: BorderSide(color: Color(0xff666666)),
-                                                              borderRadius: BorderRadius.all(Radius.circular(10.0))
-                                                          ),
-                                                          labelText: 'Check-out',
-                                                          //hintText: "email *",
-                                                          //hintStyle: TextStyle(color: Color(0xff666666)),
-                                                          labelStyle: TextStyle(
-                                                            fontFamily: BuytimeTheme.FontFamily,
-                                                            color: Color(0xff666666),
-                                                            fontWeight: FontWeight.w400,
-                                                          ),
-                                                          suffixIcon: Icon(
-                                                              Icons.calendar_today
-                                                          )
+                                              onTap: () async {
+                                                //await _selectDate(context, _checkOutController, checkIn, checkOut);
+                                              },
+                                              child: Container(
+                                                width: 162,
+                                                height: 56,
+                                                child: TextFormField(
+                                                  enabled: false,
+                                                  controller: _checkOutController,
+                                                  textAlign: TextAlign.start,
+                                                  keyboardType: TextInputType.datetime,
+                                                  decoration: InputDecoration(
+                                                      isDense: true,
+                                                      filled: true,
+                                                      fillColor: BuytimeTheme.DividerGrey,
+                                                      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                                      focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                                      labelText: AppLocalizations.of(context).checkOut,
+                                                      //hintText: "email *",
+                                                      //hintStyle: TextStyle(color: Color(0xff666666)),
+                                                      labelStyle: TextStyle(
+                                                        fontFamily: BuytimeTheme.FontFamily,
+                                                        color: Color(0xff666666),
+                                                        fontWeight: FontWeight.w400,
                                                       ),
-                                                      style: TextStyle(
-                                                          fontFamily: BuytimeTheme.FontFamily,
-                                                          color: BuytimeTheme.TextMedium,
-                                                          fontWeight: FontWeight.w600,
-                                                          fontSize: 16
-                                                      ),
-                                                      /*validator: (String value) {
+                                                      suffixIcon: Icon(Icons.calendar_today)),
+                                                  style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextMedium, fontWeight: FontWeight.w600, fontSize: 16),
+                                                  /*validator: (String value) {
                                                     debugPrint('${checkIn.compareTo(checkOut)}');
                                                     if (value.isEmpty || checkIn.compareTo(checkOut) > 0) {
                                                       return 'Please enter a valid interval of dates';
                                                     }
                                                     return null;
                                                   },*/
-                                                    ),
-                                                  ),
-                                                )
-                                            )
+                                                ),
+                                              ),
+                                            ))
                                           ],
-                                        )
-                                    ),
+                                        )),
+
                                     ///Number of guests
                                     Expanded(
                                       child: Container(
@@ -441,19 +388,10 @@ class _BookingDetailsState extends State<BookingDetails> {
                                               isDense: true,
                                               filled: true,
                                               fillColor: BuytimeTheme.DividerGrey,
-                                              enabledBorder: OutlineInputBorder(
-                                                  borderSide: BorderSide(color: Color(0xffe0e0e0)),
-                                                  borderRadius: BorderRadius.all(Radius.circular(10.0))
-                                              ),
-                                              focusedBorder: OutlineInputBorder(
-                                                  borderSide: BorderSide(color: Color(0xff666666)),
-                                                  borderRadius: BorderRadius.all(Radius.circular(10.0))
-                                              ),
-                                              errorBorder: OutlineInputBorder(
-                                                  borderSide: BorderSide(color: Colors.redAccent),
-                                                  borderRadius: BorderRadius.all(Radius.circular(10.0))
-                                              ),
-                                              labelText: 'Number of guests',
+                                              enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                              focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                              errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                              labelText: AppLocalizations.of(context).numberOfGuest,
                                               //hintText: "email *",
                                               //hintStyle: TextStyle(color: Color(0xff666666)),
                                               labelStyle: TextStyle(
@@ -462,18 +400,13 @@ class _BookingDetailsState extends State<BookingDetails> {
                                                 fontWeight: FontWeight.w400,
                                               ),
                                             ),
-                                            style: TextStyle(
-                                              fontFamily: BuytimeTheme.FontFamily,
-                                                color: BuytimeTheme.TextMedium,
-                                                fontWeight: FontWeight.w600,
-                                                fontSize: 16
-                                            ),
-                                          )
-                                      ),
+                                            style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextMedium, fontWeight: FontWeight.w600, fontSize: 16),
+                                          )),
                                     )
                                   ],
                                 ),
                               ),
+
                               ///Qr Code
                               Flexible(
                                 flex: 2,
@@ -496,13 +429,16 @@ class _BookingDetailsState extends State<BookingDetails> {
                                   ],
                                 ),
                               ),
+
                               ///Send invitation
                               Flexible(
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Container(
-                                        width: 180, ///media.width * .5
+                                        width: 180,
+
+                                        ///media.width * .5
                                         height: 44,
                                         margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 4, bottom: SizeConfig.safeBlockVertical * 1),
                                         alignment: Alignment.bottomCenter,
@@ -511,13 +447,13 @@ class _BookingDetailsState extends State<BookingDetails> {
                                           hoverElevation: 0,
                                           focusElevation: 0,
                                           highlightElevation: 0,
-                                          onPressed: () async{
+                                          onPressed: () async {
                                             final RenderBox box = context.findRenderObject();
                                             //Uri link = await createDynamicLink(bookingState.booking_code);
                                             bookingState.status = Utils.enumToString(BookingStatus.sent);
                                             StoreProvider.of<AppState>(context).dispatch(UpdateBooking(bookingState)); //TODO: Create the booking status update epic
 
-                                            Share.share('check out Buytime App at $link', subject: 'Take your Time!', sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
+                                            Share.share(AppLocalizations.of(context).checkYourBuytimeApp + link, subject: AppLocalizations.of(context).takeYourTime, sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
                                           },
                                           textColor: BuytimeTheme.TextDark,
                                           color: BuytimeTheme.Secondary,
@@ -529,79 +465,68 @@ class _BookingDetailsState extends State<BookingDetails> {
                                             mainAxisAlignment: MainAxisAlignment.center,
                                             children: [
                                               Text(
-                                                "SEND INVITE",
-                                                style: TextStyle(
-                                                    fontSize: 14,
-                                                    fontFamily: BuytimeTheme.FontFamily,
-                                                    fontWeight: FontWeight.w600,
-                                                    color: BuytimeTheme.TextDark,
-                                                    letterSpacing: 1.25
-                                                ),
-                                              )],
+                                                AppLocalizations.of(context).sendInvite,
+                                                style: TextStyle(fontSize: 14, fontFamily: BuytimeTheme.FontFamily, fontWeight: FontWeight.w600, color: BuytimeTheme.TextDark, letterSpacing: 1.25),
+                                              )
+                                            ],
                                           ),
-                                        )
-                                    )
+                                        ))
                                   ],
                                 ),
                               ),
-                              view ?
-                                Flexible(
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                        width: 180, ///media.width * .5
-                                        height: 44,
-                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 2.5),
-                                        alignment: Alignment.bottomCenter,
-                                        child: MaterialButton(
-                                          elevation: 0,
-                                          hoverElevation: 0,
-                                          focusElevation: 0,
-                                          highlightElevation: 0,
-                                          onPressed: () async{
-                                            Clipboard.setData(ClipboardData(text: link));
-                                          },
-                                          textColor: BuytimeTheme.TextDark,
-                                          color: BuytimeTheme.Secondary,
-                                          padding: EdgeInsets.all(media.width * 0.02),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: new BorderRadius.circular(5),
-                                          ),
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            crossAxisAlignment: CrossAxisAlignment.center,
-                                            children: [
-                                              Container(
-                                                margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 2.5),
-                                                child:  Icon(
-                                                  MaterialDesignIcons.insert_link,
-                                                  color: BuytimeTheme.SymbolBlack,
-                                                  size: 24,
+                              view
+                                  ? Flexible(
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Container(
+                                              width: 180,
+
+                                              ///media.width * .5
+                                              height: 44,
+                                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 2.5),
+                                              alignment: Alignment.bottomCenter,
+                                              child: MaterialButton(
+                                                elevation: 0,
+                                                hoverElevation: 0,
+                                                focusElevation: 0,
+                                                highlightElevation: 0,
+                                                onPressed: () async {
+                                                  Clipboard.setData(ClipboardData(text: link));
+                                                },
+                                                textColor: BuytimeTheme.TextDark,
+                                                color: BuytimeTheme.Secondary,
+                                                padding: EdgeInsets.all(media.width * 0.02),
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius: new BorderRadius.circular(5),
                                                 ),
-                                              ),
-                                              Text(
-                                                'COPY LINK',
-                                              style: TextStyle(
-                                                  fontSize: 14,
-                                                  fontFamily: BuytimeTheme.FontFamily,
-                                                  fontWeight: FontWeight.w600,
-                                                  color: BuytimeTheme.TextDark,
-                                                  letterSpacing: 1.25
-                                              ),
-                                            )],
-                                          ),
-                                        )
+                                                child: Row(
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                                  children: [
+                                                    Container(
+                                                      margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 2.5),
+                                                      child: Icon(
+                                                        MaterialDesignIcons.insert_link,
+                                                        color: BuytimeTheme.SymbolBlack,
+                                                        size: 24,
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      AppLocalizations.of(context).copyLink,
+                                                      style: TextStyle(fontSize: 14, fontFamily: BuytimeTheme.FontFamily, fontWeight: FontWeight.w600, color: BuytimeTheme.TextDark, letterSpacing: 1.25),
+                                                    )
+                                                  ],
+                                                ),
+                                              ))
+                                        ],
+                                      ),
                                     )
-                                  ],
-                                ),
-                              ) :
-                                  Container()
+                                  : Container()
                             ],
                           ),
                         ),
-                      )
-                  ),
+                      )),
                 ),
               ),
             ),

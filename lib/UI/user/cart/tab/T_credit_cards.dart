@@ -36,7 +36,7 @@ class CreditCardsState extends State<CreditCards> {
     super.initState();
   }
 
-  List<String> tmpList = ['ciao', 'come'];
+  List<String> tmpList = [];
   List<CardState> creditCards = [];
   @override
   Widget build(BuildContext context) {
@@ -127,7 +127,7 @@ class CreditCardsState extends State<CreditCards> {
                           child: Container(
                             padding: EdgeInsets.all(5.0),
                             child: Text(
-                              'Add a Card',//AppLocalizations.of(context).somethingIsNotRight,
+                              AppLocalizations.of(context).addCard,
                               style: TextStyle(
                                   letterSpacing: 1.25,
                                   fontFamily: BuytimeTheme.FontFamily,

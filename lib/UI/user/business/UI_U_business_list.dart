@@ -19,12 +19,6 @@ class Struttura {
   Struttura(this.nome, this.immagine, this.comune);
 }
 
-var uno = new Struttura("Mach 1", "mach1.jpg", "Marina di Campo");
-var due = new Struttura("Rifrullo", "rifrullo.jpg", "Portoferraio");
-var tre = new Struttura("Approdo", "approdo.jpeg", "Rio Marina");
-var quattro = new Struttura("Zucchetta", "zucchetta.jpeg", "Portoferraio");
-var cinque = new Struttura("I Tre Archi", "3archi.jpg", "Portoferraio");
-
 class UI_U_BusinessList extends StatefulWidget {
   final String title = 'Business List';
 

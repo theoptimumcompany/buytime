@@ -282,7 +282,7 @@ class StepLengthState extends State<StepLength> {
                                   color: BuytimeTheme.ErrorRed,
                                   fontSize: 12.0,
                                 ),
-                                suffixText: 'days'),
+                                suffixText: AppLocalizations.of(context).days),
                             style: TextStyle(
                               fontFamily: BuytimeTheme.FontFamily,
                               color: Color(0xff666666),
@@ -329,7 +329,7 @@ class StepLengthState extends State<StepLength> {
                                   color: BuytimeTheme.ErrorRed,
                                   fontSize: 12.0,
                                 ),
-                                suffixText: 'hour'),
+                                suffixText: AppLocalizations.of(context).hour),
                             style: TextStyle(
                               fontFamily: BuytimeTheme.FontFamily,
                               color: Color(0xff666666),
@@ -337,7 +337,7 @@ class StepLengthState extends State<StepLength> {
                             ),
                             validator: (value) {
                               if (value.isEmpty) {
-                                return 'Please insert an hour';
+                                return AppLocalizations.of(context).pleaseInsertHour;
                               }
                               return null;
                             },
@@ -371,7 +371,7 @@ class StepLengthState extends State<StepLength> {
                                   color: BuytimeTheme.ErrorRed,
                                   fontSize: 12.0,
                                 ),
-                                suffixText: 'min'),
+                                suffixText: AppLocalizations.of(context).min),
                             style: TextStyle(
                               fontFamily: BuytimeTheme.FontFamily,
                               color: Color(0xff666666),
@@ -379,7 +379,7 @@ class StepLengthState extends State<StepLength> {
                             ),
                             validator: (value) {
                               if (value.isEmpty) {
-                                return 'Please insert a minute';
+                                return AppLocalizations.of(context).pleaseInsertMinute;
                               }
                               return null;
                             },
@@ -439,7 +439,7 @@ class StepLengthState extends State<StepLength> {
                                   color: BuytimeTheme.ErrorRed,
                                   fontSize: 12.0,
                                 ),
-                                suffixText: 'limit'),
+                                suffixText:  AppLocalizations.of(context).limit),
                             style: TextStyle(
                               fontFamily: BuytimeTheme.FontFamily,
                               color: Color(0xff666666),
@@ -505,7 +505,7 @@ class StepLengthState extends State<StepLength> {
                                   color: BuytimeTheme.ErrorRed,
                                   fontSize: 12.0,
                                 ),
-                                suffixText: 'n°'),
+                                suffixText:  AppLocalizations.of(context).numberOf),
                             style: TextStyle(
                               fontFamily: BuytimeTheme.FontFamily,
                               color: Color(0xff666666),
