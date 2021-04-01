@@ -397,5 +397,8 @@
   "pleaseSelectNumberOfMaxBookings": "Per favore seleziona il numero massimo di prenotazioni",
   "pleaseSelectNumberOfMaxCapacity": "Per favore seleziona la capacità massima",
   "admin": "Admin",
-  "manager": "Manager"
+  "manager": "Manager",
+  "pleaseAuthenticateShowAccountBalance": "Please authenticate to show account balance",
+  "pleaseAuthenticateUseCredentials": "Please authenticate to use the credentials",
+  "pleaseLogin": "Please Log In:"
 }
