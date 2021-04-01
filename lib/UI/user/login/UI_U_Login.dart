@@ -1072,8 +1072,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
                                                           padding: EdgeInsets.all(5.0),
                                                           child: FittedBox(
                                                             child: Text(
-                                                              /* AppLocalizations.of(context).createYourAccount*/
-                                                              'Forgot Password?',   // TODO: TRANS
+                                                              AppLocalizations.of(context).forgotPassword,
                                                               style: TextStyle(
                                                                 fontFamily: BuytimeTheme.FontFamily,
                                                                 color: BuytimeTheme.ManagerPrimary,

@@ -403,5 +403,10 @@
   "decline": "Decline",
   "canceled": "Canceled",
   "declined": "Declined",
-  "reOpen": "Re-Open"
+  "reOpen": "Re-Open",
+  "forgotPassword": "Forgot Password?",
+  "enterBookingCode": "Enter booking code",
+  "startYourJourney": "Start your journey",
+  "aboutBuytime": "About Buytime",
+  "discoverOurNetwork": "Discover our network"
 }

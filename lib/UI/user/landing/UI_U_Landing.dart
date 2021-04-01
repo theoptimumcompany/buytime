@@ -66,8 +66,8 @@ class LandingState extends State<Landing> {
   @override
   void initState() {
     super.initState();
-    cards.add(LandingCardWidget('Enter booking code', 'Start your journey', 'assets/img/booking_code.png', null));
-    cards.add(LandingCardWidget('About Buytime', 'Discover our network', 'assets/img/beach_girl.png', null));
+    cards.add(LandingCardWidget(AppLocalizations.of(context).enterBookingCode, AppLocalizations.of(context).startYourJourney, 'assets/img/booking_code.png', null));
+    cards.add(LandingCardWidget(AppLocalizations.of(context).aboutBuytime, AppLocalizations.of(context).discoverOurNetwork, 'assets/img/beach_girl.png', null));
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       initDynamicLinks();
       debugPrint('UI_U_Landing => initState()');
@@ -92,8 +92,7 @@ class LandingState extends State<Landing> {
         else if (deepLink.queryParameters.containsKey('categoryInvite')) {
           String businessId = deepLink.queryParameters['businessId'];
           debugPrint('UI_U_landing: businessId: $businessId');
-          StoreProvider.of<AppState>(context).dispatch(BusinessRequest(businessId));
-          Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => UI_M_Business()), (Route<dynamic> route) => false);
+          StoreProvider.of<AppState>(context).dispatch(BusinessRequestAndNavigate(businessId));
         }
       }
     }, onError: (OnLinkErrorException e) async {

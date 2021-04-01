@@ -208,7 +208,7 @@ class BusinessRequestService implements EpicClass<AppState> {
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<BusinessRequest>().asyncMap((event) async {
-      await BusinessRequestMethod(event, store, businessState, statisticsState);
+      businessState =  await BusinessRequestMethod(event, store, businessState, statisticsState);
     }).expand((element) => [
       BusinessRequestResponse(businessState),
       UpdateStatistics(statisticsState),
@@ -222,7 +222,7 @@ class BusinessRequestAndNavigateService implements EpicClass<AppState> {
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<BusinessRequestAndNavigate>().asyncMap((event) async {
-      await BusinessRequestMethod(event, store, businessState, statisticsState);
+      businessState = await BusinessRequestMethod(event, store, businessState, statisticsState);
     }).expand((element) => [
       BusinessRequestResponse(businessState),
       UpdateStatistics(statisticsState),
@@ -254,6 +254,7 @@ Future BusinessRequestMethod(dynamic event, EpicStore<AppState> store, BusinessS
   statisticsState.businessRequestServiceRead = reads;
   statisticsState.businessRequestServiceWrite = writes;
   statisticsState.businessRequestServiceDocuments = documents;
+  return businessState;
 }
 
 BusinessState businessStateImageLinksUpdate(
