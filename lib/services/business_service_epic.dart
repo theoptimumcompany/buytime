@@ -137,7 +137,7 @@ class BusinessAndNavigateRequestService implements EpicClass<AppState> {
   StatisticsState statisticsState;
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    return actions.whereType<BusinessAndNavigateRequest>().asyncMap((event) async {
+    return actions.whereType<BusinessServiceListAndNavigateRequest>().asyncMap((event) async {
       debugPrint("BUSINESS_SERVICE_EPIC - BusinessAndNavigateRequestService => DOCUMENT ID: ${event.businessStateId}");
 
       DocumentSnapshot businessSnapshot = await FirebaseFirestore.instance /// 1 READ - 1 DOC
@@ -208,32 +208,52 @@ class BusinessRequestService implements EpicClass<AppState> {
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<BusinessRequest>().asyncMap((event) async {
-      debugPrint("BUSINESS_SERVICE_EPIC - BusinessRequestService => DOCUMENT ID: ${event.businessStateId}");
-
-      DocumentSnapshot businessSnapshot = await FirebaseFirestore.instance /// 1 READ - 1 DOC
-          .collection("business")
-          .doc(event.businessStateId)
-          .get();
-
-     businessState =  BusinessState.fromJson(businessSnapshot.data());
-
-      statisticsState = store.state.statistics;
-      int reads = statisticsState.businessRequestServiceRead;
-      int writes = statisticsState.businessRequestServiceWrite;
-      int documents = statisticsState.businessRequestServiceDocuments;
-      debugPrint('BUSINESS_SERVICE_EPIC - BusinessRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
-      ++reads;
-      ++documents;
-      debugPrint('BUSINESS_SERVICE_EPIC - BusinessRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
-      statisticsState.businessRequestServiceRead = reads;
-      statisticsState.businessRequestServiceWrite = writes;
-      statisticsState.businessRequestServiceDocuments = documents;
-
+      await BusinessRequestMethod(event, store, businessState, statisticsState);
     }).expand((element) => [
       BusinessRequestResponse(businessState),
       UpdateStatistics(statisticsState),
     ]);
   }
+}
+
+class BusinessRequestAndNavigateService implements EpicClass<AppState> {
+  BusinessState businessState;
+  StatisticsState statisticsState;
+  @override
+  Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
+    return actions.whereType<BusinessRequestAndNavigate>().asyncMap((event) async {
+      await BusinessRequestMethod(event, store, businessState, statisticsState);
+    }).expand((element) => [
+      BusinessRequestResponse(businessState),
+      UpdateStatistics(statisticsState),
+      NavigatePushAction(AppRoutes.business)
+    ]);
+  }
+}
+
+
+
+Future BusinessRequestMethod(dynamic event, EpicStore<AppState> store, BusinessState businessState, StatisticsState statisticsState) async {
+  debugPrint("BUSINESS_SERVICE_EPIC - BusinessRequestService => DOCUMENT ID: ${event.businessStateId}");
+
+  DocumentSnapshot businessSnapshot = await FirebaseFirestore.instance /// 1 READ - 1 DOC
+      .collection("business")
+      .doc(event.businessStateId)
+      .get();
+
+  businessState =  BusinessState.fromJson(businessSnapshot.data());
+
+  statisticsState = store.state.statistics;
+  int reads = statisticsState.businessRequestServiceRead;
+  int writes = statisticsState.businessRequestServiceWrite;
+  int documents = statisticsState.businessRequestServiceDocuments;
+  debugPrint('BUSINESS_SERVICE_EPIC - BusinessRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+  ++reads;
+  ++documents;
+  debugPrint('BUSINESS_SERVICE_EPIC - BusinessRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+  statisticsState.businessRequestServiceRead = reads;
+  statisticsState.businessRequestServiceWrite = writes;
+  statisticsState.businessRequestServiceDocuments = documents;
 }
 
 BusinessState businessStateImageLinksUpdate(

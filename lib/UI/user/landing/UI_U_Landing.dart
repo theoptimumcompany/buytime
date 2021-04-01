@@ -1,5 +1,6 @@
 import 'dart:core';
 import 'package:Buytime/UI/management/activity/UI_M_activity_management.dart';
+import 'package:Buytime/UI/management/business/UI_M_business.dart';
 import 'package:Buytime/UI/management/business/UI_M_business_list.dart';
 import 'package:Buytime/UI/user/UI_U_Tabs.dart';
 import 'package:Buytime/UI/user/booking/UI_U_BookingPage.dart';
@@ -89,9 +90,10 @@ class LandingState extends State<Landing> {
           Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => InviteGuestForm(id)), (Route<dynamic> route) => false);
         }
         else if (deepLink.queryParameters.containsKey('categoryInvite')) {
-          String id = deepLink.queryParameters['categoryInvite'];
-          debugPrint('UI_U_landing: categoryInvite: $id');
-          Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => InviteGuestForm(id)), (Route<dynamic> route) => false);
+          String businessId = deepLink.queryParameters['businessId'];
+          debugPrint('UI_U_landing: businessId: $businessId');
+          StoreProvider.of<AppState>(context).dispatch(BusinessRequest(businessId));
+          Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => UI_M_Business()), (Route<dynamic> route) => false);
         }
       }
     }, onError: (OnLinkErrorException e) async {
@@ -183,7 +185,7 @@ class LandingState extends State<Landing> {
                 debugPrint('UI_U_Landing => Active booking found!');
                 StoreProvider.of<AppState>(context).dispatch(BookingRequestResponse(bookingList.first));
                 //Navigator.push(context, MaterialPageRoute(builder: (context) => BookingPage()));
-                StoreProvider.of<AppState>(context).dispatch(BusinessAndNavigateRequest(bookingList.first.business_id));
+                StoreProvider.of<AppState>(context).dispatch(BusinessServiceListAndNavigateRequest(bookingList.first.business_id));
               }
 
             }

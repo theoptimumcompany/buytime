@@ -128,7 +128,7 @@ class _BookingCardWidgetState extends State<BookingCardWidget> {
               splashColor: Colors.black.withOpacity(.3),
               onTap: !closed ? (){
                 StoreProvider.of<AppState>(context).dispatch(BookingRequestResponse(widget.bookingState));
-                StoreProvider.of<AppState>(context).dispatch(BusinessAndNavigateRequest(widget.bookingState.business_id));
+                StoreProvider.of<AppState>(context).dispatch(BusinessServiceListAndNavigateRequest(widget.bookingState.business_id));
               } : null,
               borderRadius: BorderRadius.all(Radius.circular(5.0)),
               child: Container(

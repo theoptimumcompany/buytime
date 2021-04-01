@@ -463,7 +463,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
   var localAuth = LocalAuthentication();
 
   void checkAuth() async {
-    bool didAuthenticate = await localAuth.authenticateWithBiometrics(localizedReason: 'Please authenticate to show account balance');
+    bool didAuthenticate = await localAuth.authenticateWithBiometrics(localizedReason: AppLocalizations.of(context).pleaseAuthenticateShowAccountBalance);
     debugPrint('UI_U_Login => $didAuthenticate');
   }
 
@@ -589,7 +589,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
                                   return GestureDetector(
                                     onTap: () async {
                                       if(!didAuthenticate){
-                                        didAuthenticate = await localAuth.authenticateWithBiometrics(localizedReason: 'Please authenticate to use the credentials');
+                                        didAuthenticate = await localAuth.authenticateWithBiometrics(localizedReason: AppLocalizations.of(context).pleaseAuthenticateUseCredentials);
                                         /*if(!didAuthenticate)
                                   didAuthenticate = true;*/
                                       }
@@ -866,8 +866,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
                                                   //width: 328,
                                                   margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 8),
                                                   child: Text(
-                                                    /* AppLocalizations.of(context).createYourAccount*/
-                                                    'Please Log In:',
+                                                    AppLocalizations.of(context).pleaseLogin,
                                                     style: TextStyle(
                                                       fontFamily: BuytimeTheme.FontFamily,
                                                       color: BuytimeTheme.TextBlack,
@@ -1074,7 +1073,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
                                                           child: FittedBox(
                                                             child: Text(
                                                               /* AppLocalizations.of(context).createYourAccount*/
-                                                              'Forgot Password?',
+                                                              'Forgot Password?',   // TODO: TRANS
                                                               style: TextStyle(
                                                                 fontFamily: BuytimeTheme.FontFamily,
                                                                 color: BuytimeTheme.ManagerPrimary,
