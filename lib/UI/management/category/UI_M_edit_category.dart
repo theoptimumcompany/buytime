@@ -237,10 +237,10 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
     );*/
   }
 
-  Future<Uri> createDynamicLink(String id) async {
+  Future<Uri> createDynamicLink(String id, String businessId) async {
     final DynamicLinkParameters parameters = DynamicLinkParameters(
       uriPrefix: 'https://buytime.page.link',
-      link: Uri.parse('https://buytime.page.link/categoryInvite/?categoryInvite=$id'),
+      link: Uri.parse('https://buytime.page.link/categoryInvite/?categoryInvite=$id&businessId=$businessId'),
       androidParameters: AndroidParameters(
         packageName: 'com.theoptimumcompany.buytime',
         minimumVersion: 1,
@@ -301,11 +301,7 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
 
               ///Avviare Spinner una volta pigiato invita, per attendere i controlli fatti dalla cloud function
               if (validateAndSaveInvite()) {
-                Uri link = await createDynamicLink(StoreProvider
-                    .of<AppState>(context)
-                    .state
-                    .category
-                    .id);
+                Uri link = await createDynamicLink(StoreProvider.of<AppState>(context).state.category.id, StoreProvider.of<AppState>(context).state.business.id_firestore);
 
                 ///Controllo se invito manager o worker e lancio la opportuna dispatch
                 CategoryInviteState categoryInvite = CategoryInviteState().toEmpty();

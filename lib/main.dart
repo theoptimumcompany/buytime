@@ -72,6 +72,7 @@ void main(){
     BusinessAndNavigateRequestService(),
     BusinessAndNavigateOnConfirmRequestService(),
     BusinessRequestService(),
+    BusinessRequestRedirectManagerService(),
     BusinessUpdateService(),
     BusinessCreateService(),
     BusinessListRequestService(),

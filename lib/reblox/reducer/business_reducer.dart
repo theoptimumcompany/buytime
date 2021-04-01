@@ -27,10 +27,18 @@ class BusinessRequest {
   String get businessStateId => _businessStateId;
 }
 
-class BusinessAndNavigateRequest {
+class BusinessServiceListAndNavigateRequest {
   String _businessStateId;
 
-  BusinessAndNavigateRequest(this._businessStateId);
+  BusinessServiceListAndNavigateRequest(this._businessStateId);
+
+  String get businessStateId => _businessStateId;
+}
+
+class BusinessRequestAndNavigate {
+  String _businessStateId;
+
+  BusinessRequestAndNavigate(this._businessStateId);
 
   String get businessStateId => _businessStateId;
 }
