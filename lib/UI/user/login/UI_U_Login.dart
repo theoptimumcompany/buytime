@@ -556,7 +556,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
                 Padding(
                   padding: const EdgeInsets.only(top: 5.0),
                   child: Container(
-                    height: autoCompleteList.length * 60.0,
+                    height: autoCompleteList.length == 1 ? 45 : autoCompleteList.length == 2 ? 90 : autoCompleteList.length == 3 ? 135 : SizeConfig.safeBlockVertical * 20,
                     decoration: BoxDecoration(
                       color: BuytimeTheme.BackgroundWhite,
                       //border: Border.all(color: BuytimeTheme.ButtonMalibu, width: 2),
@@ -579,6 +579,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
                         ),
                       ),
                       child: CustomScrollView(
+                        //physics: ClampingScrollPhysics(),
                           shrinkWrap: true,
                           slivers: [
                             SliverList(
@@ -608,7 +609,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
                                     },
                                     child: Container(
                                         width: SizeConfig.screenWidth - (SizeConfig.safeBlockHorizontal * 10 * 2),
-                                        height: 60 - 4.0,
+                                        height: 45,
                                         child: Row(
                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           crossAxisAlignment: CrossAxisAlignment.center,
