@@ -398,7 +398,7 @@
   "admin": "Admin",
   "manager": "Manager",  "pleaseAuthenticateShowAccountBalance": "Please authenticate to show account balance",
   "pleaseAuthenticateUseCredentials": "Please authenticate to use the credentials",
-  "pleaseLogin": "Please Log In:"
+  "pleaseLogin": "Please Log In:",
   "manager": "Manager",
   "decline": "Decline",
   "canceled": "Canceled",
