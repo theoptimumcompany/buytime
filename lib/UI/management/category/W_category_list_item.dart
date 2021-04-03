@@ -9,7 +9,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 class CategoryListItemWidget extends StatefulWidget {
 
   CategoryState categoryItem;
-  CategoryListItemWidget(this.categoryItem);
+  Color color;
+  CategoryListItemWidget(this.categoryItem, this.color);
 
   @override
   _CategoryListItemWidgetState createState() => _CategoryListItemWidgetState();
@@ -17,11 +18,13 @@ class CategoryListItemWidget extends StatefulWidget {
 class _CategoryListItemWidgetState extends State<CategoryListItemWidget> {
   ///Models
   CategoryState categoryItem;
+  Color color;
 
   @override
   void initState() {
     super.initState();
     categoryItem = widget.categoryItem;
+    color = widget.color;
   }
 
   @override
@@ -46,7 +49,7 @@ class _CategoryListItemWidgetState extends State<CategoryListItemWidget> {
                       height: 28,
                       width: 28,
                       decoration: BoxDecoration(
-                          color: BuytimeTheme.SymbolLime
+                          color: color,
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,

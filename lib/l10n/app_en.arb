@@ -421,6 +421,8 @@
   "copyLink": "COPY LINK",
   "closed": "Closed",
   "active": "Active",
-  "upcoming": "Upcoming"
-
+  "upcoming": "Upcoming",
+  "manageCategories": "MANAGE CATEGORIES",
+  "manageUpper": "MANAGE",
+  "categoriesUpper": "CATEGORIES"
 }

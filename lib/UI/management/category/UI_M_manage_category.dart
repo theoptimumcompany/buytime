@@ -130,7 +130,10 @@ class ManageCategoryState extends State<ManageCategory> {
                             StoreProvider.of<AppState>(context).state.categoryTree.numberOfCategories < 50
                                 ? Navigator.push(
                                     context,
-                                    MaterialPageRoute(builder: (context) => UI_M_CreateCategory(empty: false,)),
+                                    MaterialPageRoute(
+                                        builder: (context) => UI_M_CreateCategory(
+                                              empty: false,
+                                            )),
                                   )
                                 : showDialog(
                                     context: context,
@@ -176,7 +179,10 @@ class ManageCategoryState extends State<ManageCategory> {
                               StoreProvider.of<AppState>(context).state.categoryTree.numberOfCategories < 50
                                   ? Navigator.push(
                                       context,
-                                      MaterialPageRoute(builder: (context) => UI_M_CreateCategory(empty: false,)),
+                                      MaterialPageRoute(
+                                          builder: (context) => UI_M_CreateCategory(
+                                                empty: false,
+                                              )),
                                     )
                                   : showDialog(
                                       context: context,
@@ -215,8 +221,7 @@ class ManageCategoryState extends State<ManageCategory> {
   Widget buildBranchesRoot(List<dynamic> list, int index) {
     if (list != null) {
       return Padding(
-          padding: EdgeInsets.only(
-              bottom: 15.0, left: double.parse(list[index]["level"].toString()) * 12.0, right: (list[index]['nodeCategory'] != null && list[index]['nodeCategory'].length != 0) ? 0.0 : 39.0),
+          padding: EdgeInsets.only(bottom: 15.0, left: double.parse(list[index]["level"].toString()) * 12.0, right: (list[index]['nodeCategory'] != null && list[index]['nodeCategory'].length != 0) ? 0.0 : 39.0),
           child: Container(
             child: (list[index]['nodeCategory'] != null && list[index]['nodeCategory'].length != 0)
                 ? Container(
@@ -226,7 +231,7 @@ class ManageCategoryState extends State<ManageCategory> {
                           StoreProvider.of<AppState>(context).dispatch(CategoryRequest(list[index]["nodeId"]));
                           Future.delayed(const Duration(milliseconds: 500), () {
                             //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_EditCategory()),);
-                            Navigator.pushReplacement(context, EnterExitRoute(enterPage: UI_M_EditCategory() , exitPage: ManageCategory(), from: true));
+                            Navigator.pushReplacement(context, EnterExitRoute(enterPage: UI_M_EditCategory(), exitPage: ManageCategory(), from: true));
                           });
                         },
                         child: Row(
@@ -235,11 +240,7 @@ class ManageCategoryState extends State<ManageCategory> {
                             Text(
                               list[index]["nodeName"],
                               overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                  fontSize: 16.0,
-                                  fontWeight: FontWeight.w400,
-                                fontFamily: BuytimeTheme.FontFamily
-                              ),
+                              style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w400, fontFamily: BuytimeTheme.FontFamily),
                             ),
                             IconButton(
                               icon: const Icon(
@@ -252,8 +253,8 @@ class ManageCategoryState extends State<ManageCategory> {
                                 StoreProvider.of<AppState>(context).dispatch(CategoryRequest(list[index]["nodeId"]));
                                 StoreProvider.of<AppState>(context).state.categoryTree.numberOfCategories < 50
                                     ?
-                                //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_CreateCategory(empty: false,)),)
-                                Navigator.pushReplacement(context, EnterExitRoute(enterPage: UI_M_CreateCategory(empty: false) , exitPage: ManageCategory(), from: true))
+                                    //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_CreateCategory(empty: false,)),)
+                                    Navigator.pushReplacement(context, EnterExitRoute(enterPage: UI_M_CreateCategory(empty: false), exitPage: ManageCategory(), from: true))
                                     : showDialog(
                                         context: context,
                                         builder: (BuildContext context) {
@@ -297,8 +298,8 @@ class ManageCategoryState extends State<ManageCategory> {
                                   StoreProvider.of<AppState>(context).dispatch(CategoryRequest(list[index]["nodeId"]));
                                   StoreProvider.of<AppState>(context).state.categoryTree.numberOfCategories < 50
                                       ?
-                                  //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_CreateCategory(empty: false,)),)
-                                  Navigator.push(context, EnterExitRoute(enterPage: UI_M_CreateCategory(empty: false), exitPage: ManageCategory(), from: true))
+                                      //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_CreateCategory(empty: false,)),)
+                                      Navigator.push(context, EnterExitRoute(enterPage: UI_M_CreateCategory(empty: false), exitPage: ManageCategory(), from: true))
                                       : showDialog(
                                           context: context,
                                           builder: (BuildContext context) {
@@ -318,7 +319,7 @@ class ManageCategoryState extends State<ManageCategory> {
                       StoreProvider.of<AppState>(context).dispatch(CategoryRequest(list[index]["nodeId"]));
                       Future.delayed(const Duration(milliseconds: 500), () {
                         //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_EditCategory()),);
-                        Navigator.push(context, EnterExitRoute(enterPage: UI_M_EditCategory() , exitPage: ManageCategory(), from: true));
+                        Navigator.push(context, EnterExitRoute(enterPage: UI_M_EditCategory(), exitPage: ManageCategory(), from: true));
                       });
                     },
                   ),
@@ -383,16 +384,14 @@ class ManageCategoryState extends State<ManageCategory> {
               appBar: BuytimeAppbar(
                 children: [
                   IconButton(
-                    icon: const Icon(
-                      Icons.keyboard_arrow_left,
-                      color: Colors.white,
-                    ),
+                    icon: Icon(Icons.keyboard_arrow_left, color: Colors.white, size: 24),
                     tooltip: AppLocalizations.of(context).comeBack,
                     onPressed: () {
-                      Navigator.push(context, EnterExitRoute(enterPage: UI_M_Business(), exitPage: ManageCategory(), from: false));
-                      //Navigator.of(context).pop();
+                      // Navigator.push(context, EnterExitRoute(enterPage: UI_M_Business(), exitPage: ManageCategory(), from: false));
+                      Navigator.of(context).pop();
                     },
                   ),
+
                   ///Title
                   Utils.barTitle(AppLocalizations.of(context).categories),
                   IconButton(
@@ -403,11 +402,8 @@ class ManageCategoryState extends State<ManageCategory> {
                     ),
                     tooltip: AppLocalizations.of(context).createCategory,
                     onPressed: () {
-                      print("Numero categorie prima del create " + snapshot.categoryTree.numberOfCategories.toString());
                       snapshot.categoryTree.numberOfCategories < 50
-                          ?
-                      //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_CreateCategory(empty: true)),)
-                      Navigator.push(context, EnterExitRoute(enterPage: UI_M_CreateCategory(empty: true) , exitPage: ManageCategory(), from: true))
+                          ? Navigator.push(context, EnterExitRoute(enterPage: UI_M_CreateCategory(empty: true), exitPage: ManageCategory(), from: true))
                           : showDialog(
                               context: context,
                               builder: (BuildContext context) {

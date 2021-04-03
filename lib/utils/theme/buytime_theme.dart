@@ -49,6 +49,7 @@ class BuytimeTheme {
   static const Color BackgroundAntracite = Color.fromARGB(255, 33, 33, 33);
   static const Color ErrorRed = Color.fromARGB(255, 251, 36, 36);
   static const Color SymbolLightGrey = Color.fromARGB(255, 196, 196, 196);
+  static const Color Indigo = Color.fromARGB(255, 121, 134, 203);
 
 
 
