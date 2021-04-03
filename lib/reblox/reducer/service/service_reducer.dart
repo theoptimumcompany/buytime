@@ -1,4 +1,4 @@
-import 'package:Buytime/UI/management/service/class/service_slot_classes.dart';
+import 'package:Buytime/UI/management/service_internal/class/service_slot_classes.dart';
 import 'package:Buytime/reblox/model/file/optimum_file_to_upload.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/model/service/service_slot_time_state.dart';

@@ -427,5 +427,8 @@
   "upcoming": "Upcoming",
   "manageCategories": "MANAGE CATEGORIES",
   "manageUpper": "MANAGE",
-  "categoriesUpper": "CATEGORIES"
+  "categoriesUpper": "CATEGORIES",
+  "externalServices": "External Services",
+  "addNew": "Add new",
+  "attachedServices": "Attached Services"
 }

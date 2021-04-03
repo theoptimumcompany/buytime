@@ -1,4 +1,4 @@
-import 'package:Buytime/UI/management/service/class/service_slot_classes.dart';
+import 'package:Buytime/UI/management/service_internal/class/service_slot_classes.dart';
 import 'package:Buytime/reblox/reducer/service/service_slot_time_reducer.dart';
 import 'package:Buytime/reusable/checkbox/W_checkbox_parent_child.dart';
 import 'package:Buytime/reblox/model/app_state.dart';

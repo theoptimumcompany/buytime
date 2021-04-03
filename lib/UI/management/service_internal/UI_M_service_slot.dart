@@ -1,8 +1,8 @@
-import 'package:Buytime/UI/management/service/UI_M_service_list.dart';
-import 'package:Buytime/UI/management/service/widget/W_service_step_availabile_time.dart';
-import 'package:Buytime/UI/management/service/widget/W_service_step_calendar_availability.dart';
-import 'package:Buytime/UI/management/service/widget/W_service_step_length.dart';
-import 'package:Buytime/UI/management/service/widget/W_service_step_price.dart';
+import 'package:Buytime/UI/management/service_internal/UI_M_service_list.dart';
+import 'package:Buytime/UI/management/service_internal/widget/W_service_step_availabile_time.dart';
+import 'package:Buytime/UI/management/service_internal/widget/W_service_step_calendar_availability.dart';
+import 'package:Buytime/UI/management/service_internal/widget/W_service_step_length.dart';
+import 'package:Buytime/UI/management/service_internal/widget/W_service_step_price.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/reducer/service/service_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/service_slot_time_reducer.dart';

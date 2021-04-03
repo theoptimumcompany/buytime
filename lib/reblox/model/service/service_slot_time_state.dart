@@ -1,4 +1,4 @@
-import 'package:Buytime/UI/management/service/class/service_slot_classes.dart';
+import 'package:Buytime/UI/management/service_internal/class/service_slot_classes.dart';
 import 'package:json_annotation/json_annotation.dart';
 part 'service_slot_time_state.g.dart';
 

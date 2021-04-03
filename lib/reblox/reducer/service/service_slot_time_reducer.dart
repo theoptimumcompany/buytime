@@ -1,6 +1,4 @@
-
-
-import 'package:Buytime/UI/management/service/class/service_slot_classes.dart';
+import 'package:Buytime/UI/management/service_internal/class/service_slot_classes.dart';
 import 'package:Buytime/reblox/model/service/service_slot_time_state.dart';
 
 class SetServiceSlot {

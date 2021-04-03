@@ -1,6 +1,6 @@
-import 'package:Buytime/UI/management/service/UI_M_service_list.dart';
-import 'package:Buytime/UI/management/service/UI_M_service_slot.dart';
-import 'package:Buytime/UI/management/service/widget/W_service_photo.dart';
+import 'package:Buytime/UI/management/service_internal/UI_M_service_list.dart';
+import 'package:Buytime/UI/management/service_internal/UI_M_service_slot.dart';
+import 'package:Buytime/UI/management/service_internal/widget/W_service_photo.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/category/tree/category_tree_state.dart';
 import 'package:Buytime/reblox/model/snippet/parent.dart';

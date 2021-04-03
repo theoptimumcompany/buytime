@@ -3,7 +3,7 @@ import 'package:Buytime/UI/management/business/UI_M_business_list.dart';
 import 'package:Buytime/UI/management/category/UI_M_manage_category.dart';
 import 'package:Buytime/UI/management/invite/UI_M_BookingDetails.dart';
 import 'package:Buytime/UI/management/invite/UI_M_BookingList.dart';
-import 'package:Buytime/UI/management/service/UI_M_service_list.dart';
+import 'package:Buytime/UI/management/service_internal/UI_M_service_list.dart';
 import 'package:Buytime/UI/user/booking/UI_U_BookingPage.dart';
 import 'package:Buytime/UI/user/booking/UI_U_ConfirmBooking.dart';
 import 'package:Buytime/UI/user/booking/UI_U_MyBookings.dart';
