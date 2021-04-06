@@ -21,6 +21,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class UI_M_BusinessList extends StatefulWidget {
   static String route = '/businessList';
+
   @override
   State<StatefulWidget> createState() => UI_M_BusinessListState();
 }
@@ -43,15 +44,11 @@ class UI_M_BusinessListState extends State<UI_M_BusinessList> {
     var mediaHeight = media.height;
     return StoreConnector<AppState, BusinessListState>(
         converter: (store) => store.state.businessList,
-        onInit: (store) => {
-              print("Oninitbusinesslist"),
-              store.dispatch(BusinessListRequest(store.state.user.uid, store.state.user.getRole())),
-              startRequest = true
-            },
+        onInit: (store) => {print("Oninitbusinesslist"), store.dispatch(BusinessListRequest(store.state.user.uid, store.state.user.getRole())), startRequest = true},
         builder: (context, snapshot) {
-          if(snapshot.businessListState.isEmpty && startRequest){
+          if (snapshot.businessListState.isEmpty && startRequest) {
             noActivity = true;
-          }else{
+          } else {
             noActivity = false;
           }
           businessListState = snapshot.businessListState;
@@ -81,8 +78,10 @@ class UI_M_BusinessListState extends State<UI_M_BusinessList> {
                         ),
                       ],
                     ),
+
                     ///Title
                     Utils.barTitle(AppLocalizations.of(context).businessManagement),
+
                     ///Add Icon
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
@@ -108,8 +107,7 @@ class UI_M_BusinessListState extends State<UI_M_BusinessList> {
                     Expanded(
                       child: Padding(
                         padding: const EdgeInsets.only(top: 10.0),
-                        child:
-                        businessListState != null && businessListState.length > 0
+                        child: businessListState != null && businessListState.length > 0
                             ? ListView.builder(
                                 scrollDirection: Axis.vertical,
                                 shrinkWrap: true,
@@ -128,30 +126,30 @@ class UI_M_BusinessListState extends State<UI_M_BusinessList> {
                                       mediaSize: media,
                                     ),
                                   );
-                                }) :
-                            noActivity ?
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                CircularProgressIndicator(
-                                  valueColor: new AlwaysStoppedAnimation<Color>(BuytimeTheme.ManagerPrimary),
-                                )
-                              ],
-                            ) :
-                            Container(
-                              height: SizeConfig.safeBlockVertical * 8,
-                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
-                              decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
-                              child: Center(
-                                  child: Container(
-                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 4),
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      AppLocalizations.of(context).noActiveBusinesses,
-                                      style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextGrey, fontWeight: FontWeight.w500, fontSize: 16),
-                                    ),
-                                  )),
-                            ),
+                                })
+                            : noActivity
+                                ? Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      CircularProgressIndicator(
+                                        valueColor: new AlwaysStoppedAnimation<Color>(BuytimeTheme.ManagerPrimary),
+                                      )
+                                    ],
+                                  )
+                                : Container(
+                                    height: SizeConfig.safeBlockVertical * 8,
+                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                    decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
+                                    child: Center(
+                                        child: Container(
+                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 4),
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        AppLocalizations.of(context).noActiveBusinesses,
+                                        style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextGrey, fontWeight: FontWeight.w500, fontSize: 16),
+                                      ),
+                                    )),
+                                  ),
                       ),
                     ),
                   ],

@@ -1,57 +1,77 @@
 import 'package:json_annotation/json_annotation.dart';
+
 part 'service_snippet_state.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class ServiceSnippet {
-  String id;
-  String name;
+  @JsonKey(defaultValue: 0)
   int timesSold;
-  String image1;
+  @JsonKey(defaultValue: '')
+  String name;
+  @JsonKey(defaultValue: '')
+  String image;
+  @JsonKey(defaultValue: '')
   String visibility;
-
+  @JsonKey(defaultValue: '')
+  String connectedBusinessVisibility;
+  @JsonKey(defaultValue: '')
+  String absolutePath;
+  @JsonKey(defaultValue: '')
+  String internalPath;
 
   ServiceSnippet({
-    this.id,
-    this.name,
     this.timesSold,
-    this.image1,
+    this.name,
+    this.image,
     this.visibility,
+    this.connectedBusinessVisibility,
+    this.absolutePath,
+    this.internalPath,
   });
 
   ServiceSnippet.fromState(ServiceSnippet serviceSnippet) {
-    this.id = serviceSnippet.id;
-    this.name = serviceSnippet.name;
     this.timesSold = serviceSnippet.timesSold;
-    this.image1 = serviceSnippet.image1;
+    this.name = serviceSnippet.name;
+    this.image = serviceSnippet.image;
     this.visibility = serviceSnippet.visibility;
+    this.connectedBusinessVisibility = serviceSnippet.connectedBusinessVisibility;
+    this.absolutePath = serviceSnippet.absolutePath;
+    this.internalPath = serviceSnippet.internalPath;
   }
 
   ServiceSnippet copyWith({
-    String id,
-    String name,
     int timesSold,
-    int image1,
-    int visibility,
+    String name,
+    String image,
+    String visibility,
+    String connectedBusinessVisibility,
+    String absolutePath,
+    String internalPath,
   }) {
     return ServiceSnippet(
-      id: id ?? this.id,
-      name: name ?? this.name,
       timesSold: timesSold ?? this.timesSold,
-      image1: image1 ?? this.image1,
+      name: name ?? this.name,
+      image: image ?? this.image,
       visibility: visibility ?? this.visibility,
+      connectedBusinessVisibility: connectedBusinessVisibility ?? this.connectedBusinessVisibility,
+      absolutePath: absolutePath ?? this.absolutePath,
+      internalPath: internalPath ?? this.internalPath,
     );
   }
 
   ServiceSnippet toEmpty() {
     return ServiceSnippet(
-      id: '',
-      name: '',
       timesSold: 0,
-      image1: '',
+      name: '',
+      image: '',
       visibility: '',
+      connectedBusinessVisibility: '',
+      absolutePath: '',
+      internalPath: '',
     );
   }
 
   factory ServiceSnippet.fromJson(Map<String, dynamic> json) => _$ServiceSnippetFromJson(json);
+
   Map<String, dynamic> toJson() => _$ServiceSnippetToJson(this);
 }

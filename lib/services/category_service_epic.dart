@@ -577,8 +577,7 @@ class CategoryCreateService implements EpicClass<AppState> {
       //categoryState.categoryImage = store.state.category.categoryImage;
       categoryState.businessId = store.state.business.id_firestore;
       categoryState.id = docReference.id;
-      ServiceState serviceState = ServiceState().toEmpty();
-      categoryState.categorySnippet.mostSoldService = serviceState;
+
 
       if (event.categoryState.fileToUpload != null) {
         categoryState = await uploadFile(event.categoryState.fileToUpload, event.categoryState).catchError((error, stackTrace) {

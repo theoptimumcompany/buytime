@@ -8,20 +8,31 @@ part of 'category_snippet_state.dart';
 
 CategorySnippet _$CategorySnippetFromJson(Map<String, dynamic> json) {
   return CategorySnippet(
-    numberOfServices: json['numberOfServices'] as int,
-    mostSoldService: json['mostSoldService'] == null
-        ? null
-        : ServiceState.fromJson(
-            json['mostSoldService'] as Map<String, dynamic>),
-    numberOfManagers: json['numberOfManagers'] as int,
-    numberOfWorkers: json['numberOfWorkers'] as int,
+    serviceNumberInternal: json['serviceNumberInternal'] as int ?? 0,
+    serviceNumberExternal: json['serviceNumberExternal'] as int ?? 0,
+    image: json['image'] as String ?? '',
+    name: json['name'] as String ?? '',
+    absolutePath: json['absolutePath'] as String ?? '',
+    internalPath: json['internalPath'] as String ?? '',
+    tag: json['tag'] as String ?? '',
+    serviceSnippetList: (json['serviceSnippetList'] as List)
+            ?.map((e) => e == null
+                ? null
+                : ServiceSnippet.fromJson(e as Map<String, dynamic>))
+            ?.toList() ??
+        [],
   );
 }
 
 Map<String, dynamic> _$CategorySnippetToJson(CategorySnippet instance) =>
     <String, dynamic>{
-      'numberOfServices': instance.numberOfServices,
-      'mostSoldService': instance.mostSoldService?.toJson(),
-      'numberOfManagers': instance.numberOfManagers,
-      'numberOfWorkers': instance.numberOfWorkers,
+      'serviceNumberInternal': instance.serviceNumberInternal,
+      'serviceNumberExternal': instance.serviceNumberExternal,
+      'image': instance.image,
+      'name': instance.name,
+      'absolutePath': instance.absolutePath,
+      'internalPath': instance.internalPath,
+      'tag': instance.tag,
+      'serviceSnippetList':
+          instance.serviceSnippetList?.map((e) => e?.toJson())?.toList(),
     };

@@ -8,19 +8,24 @@ part of 'service_snippet_state.dart';
 
 ServiceSnippet _$ServiceSnippetFromJson(Map<String, dynamic> json) {
   return ServiceSnippet(
-    id: json['id'] as String,
-    name: json['name'] as String,
-    timesSold: json['timesSold'] as int,
-    image1: json['image1'] as String,
-    visibility: json['visibility'] as String,
+    timesSold: json['timesSold'] as int ?? 0,
+    name: json['name'] as String ?? '',
+    image: json['image'] as String ?? '',
+    visibility: json['visibility'] as String ?? '',
+    connectedBusinessVisibility:
+        json['connectedBusinessVisibility'] as String ?? '',
+    absolutePath: json['absolutePath'] as String ?? '',
+    internalPath: json['internalPath'] as String ?? '',
   );
 }
 
 Map<String, dynamic> _$ServiceSnippetToJson(ServiceSnippet instance) =>
     <String, dynamic>{
-      'id': instance.id,
-      'name': instance.name,
       'timesSold': instance.timesSold,
-      'image1': instance.image1,
+      'name': instance.name,
+      'image': instance.image,
       'visibility': instance.visibility,
+      'connectedBusinessVisibility': instance.connectedBusinessVisibility,
+      'absolutePath': instance.absolutePath,
+      'internalPath': instance.internalPath,
     };

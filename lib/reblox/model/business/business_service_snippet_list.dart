@@ -46,19 +46,19 @@ class BusinessServiceSnippetList {
     );
   }
 
-  BusinessServiceSnippetList.fromJson(Map<String, dynamic> json)
-      : snippetMap = List<ServiceSnippet>.from(json["snippetMap"].map((item) {
-          return new ServiceSnippet(
-            id: item["id"] != null ? item["id"] : "",
-            name: item["name"] != null ? item["name"] : "",
-            timesSold: item["timesSold"] != null ? item["timesSold"] : 0,
-            image1: item["image1"] != null ? item["image1"] : "",
-            visibility: item["visibility"] != null ? item["visibility"] : "",
-          );
-        })
-  );
-
-  Map<String, dynamic> toJson() => {
-        'snippetMap': convertToJson(snippetMap),
-      };
+  // BusinessServiceSnippetList.fromJson(Map<String, dynamic> json)
+  //     : snippetMap = List<ServiceSnippet>.from(json["snippetMap"].map((item) {
+  //         return new ServiceSnippet(
+  //           id: item["id"] != null ? item["id"] : "",
+  //           name: item["name"] != null ? item["name"] : "",
+  //           timesSold: item["timesSold"] != null ? item["timesSold"] : 0,
+  //           image: item["image1"] != null ? item["image1"] : "",
+  //           visibility: item["visibility"] != null ? item["visibility"] : "",
+  //         );
+  //       })
+  // );
+  //
+  // Map<String, dynamic> toJson() => {
+  //       'snippetMap': convertToJson(snippetMap),
+  //     };
 }
