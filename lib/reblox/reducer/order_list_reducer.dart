@@ -9,6 +9,9 @@ class OrderListRequest {
 
   String get userId => _userId;
 }
+class UserOrderListRequest{
+  UserOrderListRequest();
+}
 
 class OrderListReturned {
   List<OrderState> _orderListState;

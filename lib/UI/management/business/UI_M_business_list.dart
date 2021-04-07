@@ -78,10 +78,8 @@ class UI_M_BusinessListState extends State<UI_M_BusinessList> {
                         ),
                       ],
                     ),
-
                     ///Title
                     Utils.barTitle(AppLocalizations.of(context).businessManagement),
-
                     ///Add Icon
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),

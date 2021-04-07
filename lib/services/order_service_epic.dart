@@ -129,6 +129,77 @@ class OrderListRequestService implements EpicClass<AppState> {
   }
 }
 
+class UserOrderListRequestService implements EpicClass<AppState> {
+  StatisticsState statisticsState;
+  List<OrderState> orderStateList;
+  @override
+  Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
+    debugPrint("ORDER_SERVICE_EPIC - UserOrderListRequestService =>  CATCHED ACTION");
+    return actions.whereType<UserOrderListRequest>().asyncMap((event) async {
+      //debugPrint("ORDER_SERVICE_EPIC - OrderListRequestService =>  USER ID: ${store.state.user.uid}");
+      debugPrint("ORDER_SERVICE_EPIC - UserOrderListRequestService =>  BUSINESS ID: ${store.state.business.id_firestore}");
+
+      DateTime currentTime = DateTime.now();
+      currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0).toUtc();
+      debugPrint('order_service_epic => current Time: $currentTime');
+      List<DateTime> period = getPeriod(currentTime);
+      orderStateList = [];
+      int ordersFirebaseDocs = 0;
+      int read = 0;
+      //debugPrint("ORDER_SERVICE_EPIC - UserOrderListRequestService =>  BUSINESS ID: ${businessList[i].id_firestore}");
+      QuerySnapshot ordersFirebase = await FirebaseFirestore.instance.collection("order") /// 1 READ - ? DOC
+          //.where("progress", isEqualTo: "paid")
+          .where("progress", whereIn: ['paid',"pending"])
+          .where("businessId", isEqualTo: store.state.business.id_firestore)
+          .where("userId", isEqualTo: store.state.user.uid)
+          .where("date", isGreaterThanOrEqualTo: currentTime)
+          .get();
+
+      read++;
+
+      ordersFirebaseDocs += ordersFirebase.docs.length;
+      debugPrint("ORDER_SERVICE_EPIC - UserOrderListRequestService => OrderListService Firestore request");
+      /*ordersFirebase.docs.forEach((element) {
+          if(event.userId != "any"){
+            OrderState orderState = OrderState.fromJson(element.data());
+            if(orderState.progress == "paid" && orderState.user.id == store.state.stripe.u){
+              orderStateList.add(orderState);
+            }
+          }
+          else{
+            OrderState orderState = OrderState.fromJson(element.data());
+            if(orderState.progress == "paid" && orderState.user.id == store.state.business.ownerId && orderState.businessId == store.state.business.id_firestore){
+              orderStateList.add(orderState);
+            }
+          }
+        });*/
+      ordersFirebase.docs.forEach((element) {
+        OrderState orderState = OrderState.fromJson(element.data());
+        orderStateList.add(orderState);
+      });
+      debugPrint("ORDER_SERVICE_EPIC - UserOrderListRequestService => OrderListService return list with " + orderStateList.length.toString());
+
+      statisticsState = store.state.statistics;
+      int reads = statisticsState.orderListRequestServiceRead;
+      int writes = statisticsState.orderListRequestServiceWrite;
+      int documents = statisticsState.orderListRequestServiceDocuments;
+      debugPrint('ORDER_SERVICE_EPIC - UserOrderListRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      reads = reads + read;
+      documents = documents + ordersFirebaseDocs;
+      debugPrint('ORDER_SERVICE_EPIC - UserOrderListRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      statisticsState.orderListRequestServiceRead = reads;
+      statisticsState.orderListRequestServiceWrite = writes;
+      statisticsState.orderListRequestServiceDocuments = documents;
+
+      ///Return
+      //return new OrderListReturned(orderStateList);
+    }).expand((element) => [
+      OrderListReturned(orderStateList),
+      UpdateStatistics(statisticsState),
+    ]);
+  }
+}
+
 class OrderRequestService implements EpicClass<AppState> {
   StatisticsState statisticsState;
   OrderState orderState;
@@ -203,6 +274,7 @@ class OrderCreateService implements EpicClass<AppState> {
       orderState.user.name = store.state.user.name;
       orderState.businessId = store.state.business.id_firestore;
       orderState.userId = store.state.user.uid;
+      orderState.business.thumbnail = store.state.business.wide;
       // send document to orders collection
       var addedOrder = await FirebaseFirestore.instance.collection("order/").add(orderState.toJson());
       orderState.orderId = addedOrder.id;

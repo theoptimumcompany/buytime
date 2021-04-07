@@ -8,6 +8,7 @@ import 'package:Buytime/reblox/reducer/category_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_reducer.dart';
 import 'package:Buytime/reblox/model/snippet/manager.dart';
 import 'package:Buytime/reblox/model/snippet/worker.dart';
+import 'package:Buytime/reblox/reducer/service/service_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/statistics_reducer.dart';
 import 'package:Buytime/services/file_upload_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -59,6 +60,87 @@ class CategoryListRequestService implements EpicClass<AppState> {
           CategoryListReturned(categoryStateList),
           UpdateStatistics(statisticsState),
         ]);
+  }
+}
+
+class AllCategoryListRequestService implements EpicClass<AppState> {
+  StatisticsState statisticsState;
+  List<CategoryState> categoryStateList;
+
+  @override
+  Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
+    debugPrint("CATEGORY_SERVICE_EPIC - AllCategoryListRequestService => CATCHED ACTION");
+    List<ServiceState> serviceStateList = [];
+    return actions.whereType<AllRequestListCategory>().asyncMap((event) async {
+
+      QuerySnapshot businessListFromFirebase;
+      businessListFromFirebase = await FirebaseFirestore.instance /// 1 read - ? DOC
+          .collection("business")
+          .where("draft", isEqualTo: false)
+          .limit(20)
+          .get();
+
+      List<QuerySnapshot> queryList = [];
+      int read = 0;
+      categoryStateList = [];
+      int snapshotDocs = 0;
+      List<String> tmpBusinessIdList = [];
+
+      for(int i = 0; i < businessListFromFirebase.docs.length; i++){
+        QuerySnapshot snapshot = await FirebaseFirestore.instance /// 1 READ - ? DOC
+            .collection("business")
+            .doc(businessListFromFirebase.docs[i].id)
+            .collection("category")
+            .get();
+        read++;
+        snapshotDocs += snapshot.docs.length;
+        snapshot.docs.forEach((element) {
+          CategoryState categoryState = CategoryState.fromJson(element.data());
+          categoryState.businessId = businessListFromFirebase.docs[i].id;
+          categoryState.id = element.id;
+          categoryStateList.add(categoryState);
+        });
+
+        if(!tmpBusinessIdList.contains(businessListFromFirebase.docs[i].id)){
+          CollectionReference servicesFirebase = FirebaseFirestore.instance.collection("service");
+          Query query = servicesFirebase.where("businessId", isEqualTo: businessListFromFirebase.docs[i].id);
+
+          /// 1 READ - ? DOC
+          //   query = query.where("id_category", isEqualTo: categoryInviteState.id_category);
+          //serviceStateList.clear();
+          await query.get().then((value) {
+            snapshotDocs += value.docs.length;
+            value.docs.forEach((element) {
+              ServiceState serviceState = ServiceState.fromJson(element.data());
+
+              serviceStateList.add(serviceState);
+            });
+          });
+
+          read++;
+        }
+        tmpBusinessIdList.add(businessListFromFirebase.docs[i].id);
+      }
+
+      debugPrint('CATEGORY_SERVICE_EPIC - AllCategoryListRequestService => CATEGORY LENGHT: ${categoryStateList.length}');
+      debugPrint("CATEGORY_SERVICE_EPIC - AllCategoryListRequestService => Return list with ${categoryStateList.length}");
+
+      statisticsState = store.state.statistics;
+      int reads = statisticsState.categoryListRequestServiceRead;
+      int writes = statisticsState.categoryListRequestServiceWrite;
+      int documents = statisticsState.categoryListRequestServiceDocuments;
+      debugPrint('CATEGORY_SERVICE_EPIC - AllCategoryListRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      reads = reads + read;
+      documents = documents + snapshotDocs;
+      debugPrint('CATEGORY_SERVICE_EPIC - AllCategoryListRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      statisticsState.categoryListRequestServiceRead = reads;
+      statisticsState.categoryListRequestServiceWrite = writes;
+      statisticsState.categoryListRequestServiceDocuments = documents;
+    }).expand((element) => [
+      CategoryListReturned(categoryStateList),
+      ServiceListReturned(serviceStateList),
+      UpdateStatistics(statisticsState),
+    ]);
   }
 }
 

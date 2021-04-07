@@ -8,6 +8,9 @@ class RequestListCategory {
   RequestListCategory(this._businessId);
   String get businessId => _businessId;
 }
+class AllRequestListCategory {
+  AllRequestListCategory();
+}
 
 class UserRequestListCategory {
   String _businessId;

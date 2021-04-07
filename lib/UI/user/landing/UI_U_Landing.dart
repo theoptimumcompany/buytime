@@ -7,6 +7,7 @@ import 'package:Buytime/UI/user/booking/UI_U_BookingPage.dart';
 import 'package:Buytime/UI/user/booking/UI_U_MyBookings.dart';
 import 'package:Buytime/UI/user/landing/invite_guest_form.dart';
 import 'package:Buytime/UI/user/login/UI_U_Home.dart';
+import 'package:Buytime/UI/user/turist/UI_U_ServiceExplorer.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/model/role/role.dart';
@@ -578,7 +579,7 @@ class _OpenContainerWrapper extends StatelessWidget {
     return OpenContainer<bool>(
       transitionType: ContainerTransitionType.fadeThrough,
       openBuilder: (BuildContext context, VoidCallback _) {
-        return index == 0 ? InviteGuestForm('') : UI_U_Tabs();
+        return index == 0 ? InviteGuestForm('') : ServiceExplorer();
       },
       onClosed: onClosed,
       closedShape: RoundedRectangleBorder(

@@ -1,5 +1,5 @@
 import 'package:Buytime/UI/management/business/UI_M_business_list.dart';
-import 'package:Buytime/UI/user/booking/UI_U_MyBookings.dart';
+import 'package:Buytime/UI/user/booking/widget/user_service_card_widget.dart';
 import 'package:Buytime/UI/user/cart/UI_U_Cart.dart';
 import 'package:Buytime/UI/user/landing/UI_U_Landing.dart';
 import 'package:Buytime/UI/user/login/UI_U_Home.dart';
@@ -8,16 +8,12 @@ import 'package:Buytime/UI/user/service/UI_U_ServiceReserve.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
-import 'package:Buytime/reblox/model/business/snippet/business_snippet_state.dart';
 import 'package:Buytime/reblox/model/category/category_list_state.dart';
 import 'package:Buytime/reblox/model/category/category_state.dart';
-import 'package:Buytime/reblox/model/order/order_entry.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/role/role.dart';
 import 'package:Buytime/reblox/model/service/service_list_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
-import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
-import 'package:Buytime/reblox/navigation/navigation_reducer.dart';
 import 'package:Buytime/reblox/reducer/business_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/business_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_list_reducer.dart';
@@ -40,7 +36,6 @@ import 'package:Buytime/reusable/custom_bottom_button_widget.dart';
 import 'package:Buytime/reusable/find_your_inspiration_card_widget.dart';
 import 'package:Buytime/reusable/material_design_icons.dart';
 import 'package:Buytime/reusable/menu/UI_M_business_list_drawer.dart';
-import 'package:Buytime/utils/globals.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -73,6 +68,7 @@ class _BookingPageState extends State<BookingPage> {
   List<ServiceState> serviceList = [];
   CategoryListState categoryListState;
   List<CategoryState> categoryList = [];
+  List<OrderState> orderList = [];
 
   List<CategoryState> row1 = [];
   List<CategoryState> row2 = [];
@@ -175,28 +171,28 @@ class _BookingPageState extends State<BookingPage> {
         ///First showcase for each Row
         list.length >= 1
             ? Flexible(
-                flex: 1,
-                child: FindYourInspirationCardWidget(list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2,
-                    list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2, list[0], true),
-              )
+          flex: 1,
+          child: FindYourInspirationCardWidget(list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2,
+              list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2, list[0], true),
+        )
             : Container(),
 
         ///Second showcase for each Row
         list.length >= 2
             ? Flexible(
-                flex: 1,
-                child: FindYourInspirationCardWidget(list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2,
-                    list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2, list[1], true),
-              )
+          flex: 1,
+          child: FindYourInspirationCardWidget(list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2,
+              list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2, list[1], true),
+        )
             : Container(),
 
         ///Third showcase for each Row
         list.length == 3
             ? Flexible(
-                flex: 1,
-                child: FindYourInspirationCardWidget(list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2,
-                    list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2, list[2], true),
-              )
+          flex: 1,
+          child: FindYourInspirationCardWidget(list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2,
+              list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2, list[2], true),
+        )
             : Container(),
       ],
     );
@@ -219,11 +215,14 @@ class _BookingPageState extends State<BookingPage> {
     return StoreConnector<AppState, AppState>(
       converter: (store) => store.state,
       onInit: (store) {
-        //store.dispatch(BusinessAndNavigateRequest(store.state.booking.business_id));
+        store.dispatch(UserOrderListRequest());
         startRequest = true;
         rippleLoading = true;
       },
       builder: (context, snapshot) {
+        debugPrint('UI_U_BookingPage => Order List LENGTH: ${snapshot.orderList.orderListState.length}');
+        orderList.clear();
+        orderList.addAll(snapshot.orderList.orderListState);
         /*bookingState = snapshot.booking;
         businessState = snapshot.business;
         serviceListState = snapshot.serviceList;
@@ -584,65 +583,85 @@ class _BookingPageState extends State<BookingPage> {
                                             },
                                           ),
                                         ),
-                                        ///My next services
-                                        /*Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      ///Just show me
-                                      Container(
-                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1),
-                                        child: Text(
-                                          AppLocalizations.of(context).justShowMe,
-                                          style: TextStyle(
-                                            //letterSpacing: SizeConfig.safeBlockVertical * .4,
-                                              fontFamily: BuytimeTheme.FontFamily,
-                                              color: BuytimeTheme.TextBlack,
-                                              fontWeight: FontWeight.w400,
-                                              fontSize: 18
+                                        ///My bookings & View all
+                                        orderList.isNotEmpty ?
+                                        Column(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                ///My bookings
+                                                Container(
+                                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 1),
+                                                  child: Text(
+                                                    AppLocalizations.of(context).myBookings,
+                                                    style: TextStyle(
+                                                      //letterSpacing: SizeConfig.safeBlockVertical * .4,
+                                                        fontFamily: BuytimeTheme.FontFamily,
+                                                        color: BuytimeTheme.TextBlack,
+                                                        fontWeight: FontWeight.w400,
+                                                        fontSize: 18
 
-                                            ///SizeConfig.safeBlockHorizontal * 4
-                                          ),
-                                        ),
-                                      ),
-                                      subCategoryList.isNotEmpty ?
-                                      ///List
-                                      Container(
-                                        height: SizeConfig.screenWidth / 3,
-                                        width: double.infinity,
-                                        child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
-                                          SliverList(
-                                            delegate: SliverChildBuilderDelegate(
-                                                  (context, index) {
-                                                //MenuItemModel menuItem = menuItems.elementAt(index);
-                                                CategoryState category = subCategoryList.elementAt(index);
-                                                return Container(
-                                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 2),
-                                                  child: FindYourInspirationCardWidget(SizeConfig.screenWidth / 3 - 2, SizeConfig.screenWidth / 3 - 2, category, false),
-                                                );
-                                              },
-                                              childCount: subCategoryList.length,
+                                                      ///SizeConfig.safeBlockHorizontal * 4
+                                                    ),
+                                                  ),
+                                                ),
+                                                ///View All
+                                                Container(
+                                                    margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 2.5),
+                                                    alignment: Alignment.center,
+                                                    child: Material(
+                                                      color: Colors.transparent,
+                                                      child: InkWell(
+                                                          onTap: () {
+
+                                                          },
+                                                          borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                                          child: Container(
+                                                            padding: EdgeInsets.all(5.0),
+                                                            child: Text(
+                                                              AppLocalizations.of(context).viewAll,
+                                                              style: TextStyle(
+                                                                  letterSpacing: SizeConfig.safeBlockHorizontal * .2,
+                                                                  fontFamily: BuytimeTheme.FontFamily,
+                                                                  color: BuytimeTheme.UserPrimary,
+                                                                  fontWeight: FontWeight.w400,
+                                                                  fontSize: 16
+
+                                                                ///SizeConfig.safeBlockHorizontal * 4
+                                                              ),
+                                                            ),
+                                                          )),
+                                                    ))
+                                              ],
                                             ),
-                                          ),
-                                        ]),
-                                      ) :
-                                      ///No List
-                                      Container(
-                                        height: SizeConfig.safeBlockVertical * 8,
-                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
-                                        decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
-                                        child: Center(
-                                            child: Container(
-                                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 4),
-                                              alignment: Alignment.centerLeft,
-                                              child: Text(
-                                                AppLocalizations.of(context).noSubCategoryFound,
-                                                style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextGrey, fontWeight: FontWeight.w500, fontSize: 16),
-                                              ),
-                                            )),
-                                      ),
-                                    ],
-                                  ),*/
+                                            ///List
+                                            Container(
+                                              height: 120,
+                                              width: double.infinity,
+                                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
+                                              child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
+                                                SliverList(
+                                                  delegate: SliverChildBuilderDelegate(
+                                                        (context, index) {
+                                                      //MenuItemModel menuItem = menuItems.elementAt(index);
+                                                      OrderState order = orderList.elementAt(index);
+                                                      return Container(
+                                                        width: 151,
+                                                        height: 100,
+                                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1, right: SizeConfig.safeBlockHorizontal * 1),
+                                                        child: UserServiceCardWidget(order),
+                                                      );
+                                                    },
+                                                    childCount: orderList.length,
+                                                  ),
+                                                ),
+                                              ]),
+                                            )
+                                          ],
+                                        ) : Container(),
                                       ],
                                     ),
                                   ),

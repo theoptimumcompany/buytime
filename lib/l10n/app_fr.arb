@@ -427,5 +427,16 @@
   "categoriesUpper": "CATEGORIES",
   "externalServices": "External Services",
   "addNew": "Add new",
-  "attachedServices": "Attached Services"
+  "attachedServices": "Attached Services",
+  "todayLower": "Today",
+  "tomorrowLower": "Tomorrow",
+  "openUntil": "Open until",
+  "viewAll": "View All",
+  "directions": "Directions",
+  "conditions": "Conditions",
+  "discover": "Discover",
+  "popular": "Popular",
+  "popularSlogan": "Discover the most popular services in your area",
+  "recommended": "Recommended",
+  "recommendedSlogan": "Discover the best services recommended by us"
 }
