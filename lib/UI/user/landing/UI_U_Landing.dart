@@ -158,6 +158,8 @@ class LandingState extends State<Landing> {
             }
 
             if(bookingList.isNotEmpty && !onBookingCode && rippleLoading && !isManagerOrAbove){
+              if(bookingList.first.business_id == null)
+                bookingList.removeLast();
               rippleLoading = false;
               DateTime currentTime = DateTime.now();
               currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0);

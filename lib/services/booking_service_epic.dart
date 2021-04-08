@@ -204,6 +204,9 @@ class UserBookingListRequestService implements EpicClass<AppState> {
       statisticsState.userBookingListRequestServiceWrite = writes;
       statisticsState.userBookingListRequestServiceDocuments = documents;
 
+      if(bookingListState.isEmpty)
+        bookingListState.add(BookingState());
+
     }).expand((element) => [
       UserBookingListReturned(bookingListState),
       UpdateStatistics(statisticsState),
