@@ -440,5 +440,7 @@
   "popular": "Popular",
   "popularSlogan": "Discover the most popular services in your area",
   "recommended": "Recommended",
-  "recommendedSlogan": "Discover the best services recommended by us"
+  "recommendedSlogan": "Discover the best services recommended by us",
+  "allBookings": "All Bookings",
+  "noCategoryFound": "No category found"
 }

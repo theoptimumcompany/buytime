@@ -169,6 +169,7 @@ class OrderReservableCreateService implements EpicClass<AppState> {
       orderReservableState.user.name = store.state.user.name;
       orderReservableState.businessId = store.state.business.id_firestore;
       orderReservableState.userId = store.state.user.uid;
+      orderReservableState.business.thumbnail = store.state.business.wide;
       // send document to orders collection
       var addedOrderReservable = await FirebaseFirestore.instance.collection("order/").add(orderReservableState.toJson());
       orderReservableState.orderId = addedOrderReservable.id;

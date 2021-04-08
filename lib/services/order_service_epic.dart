@@ -152,10 +152,10 @@ class UserOrderListRequestService implements EpicClass<AppState> {
       //debugPrint("ORDER_SERVICE_EPIC - UserOrderListRequestService =>  BUSINESS ID: ${businessList[i].id_firestore}");
       QuerySnapshot ordersFirebase = await FirebaseFirestore.instance.collection("order") /// 1 READ - ? DOC
           //.where("progress", isEqualTo: "paid")
-          .where("progress", whereIn: ['paid',"pending"])
+          //.where("progress", whereIn: ['paid',"pending"])
           .where("businessId", isEqualTo: store.state.business.id_firestore)
           .where("userId", isEqualTo: store.state.user.uid)
-          .where("date", isGreaterThanOrEqualTo: currentTime)
+          //.where("date", isGreaterThanOrEqualTo: currentTime)
           .get();
 
       read++;

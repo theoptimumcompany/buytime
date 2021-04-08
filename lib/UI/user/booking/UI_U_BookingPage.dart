@@ -1,4 +1,5 @@
 import 'package:Buytime/UI/management/business/UI_M_business_list.dart';
+import 'package:Buytime/UI/user/booking/UI_U_AllBookings.dart';
 import 'package:Buytime/UI/user/booking/widget/user_service_card_widget.dart';
 import 'package:Buytime/UI/user/cart/UI_U_Cart.dart';
 import 'package:Buytime/UI/user/landing/UI_U_Landing.dart';
@@ -68,6 +69,7 @@ class _BookingPageState extends State<BookingPage> {
   List<ServiceState> serviceList = [];
   CategoryListState categoryListState;
   List<CategoryState> categoryList = [];
+  List<OrderState> userOrderList = [];
   List<OrderState> orderList = [];
 
   List<CategoryState> row1 = [];
@@ -222,7 +224,16 @@ class _BookingPageState extends State<BookingPage> {
       builder: (context, snapshot) {
         debugPrint('UI_U_BookingPage => Order List LENGTH: ${snapshot.orderList.orderListState.length}');
         orderList.clear();
+        userOrderList.clear();
+        DateTime currentTime = DateTime.now();
+        currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0).toUtc();
+        snapshot.orderList.orderListState.forEach((element) {
+          if((element.progress == 'paid' || element.progress == 'pending') && (element.date.isAtSameMomentAs(currentTime) || element.date.isAfter(currentTime)))
+            userOrderList.add(element);
+        });
         orderList.addAll(snapshot.orderList.orderListState);
+        userOrderList.sort((a,b) => a.date.isBefore(b.date) ? -1 : a.date.isAtSameMomentAs(b.date) ? 0 : 1);
+
         /*bookingState = snapshot.booking;
         businessState = snapshot.business;
         serviceListState = snapshot.serviceList;
@@ -584,7 +595,7 @@ class _BookingPageState extends State<BookingPage> {
                                           ),
                                         ),
                                         ///My bookings & View all
-                                        orderList.isNotEmpty ?
+                                        userOrderList.isNotEmpty ?
                                         Column(
                                           mainAxisAlignment: MainAxisAlignment.start,
                                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -616,7 +627,7 @@ class _BookingPageState extends State<BookingPage> {
                                                       color: Colors.transparent,
                                                       child: InkWell(
                                                           onTap: () {
-
+                                                            Navigator.push(context, MaterialPageRoute(builder: (context) => AllBookings(orderStateList: orderList,)),);
                                                           },
                                                           borderRadius: BorderRadius.all(Radius.circular(5.0)),
                                                           child: Container(
@@ -647,7 +658,7 @@ class _BookingPageState extends State<BookingPage> {
                                                   delegate: SliverChildBuilderDelegate(
                                                         (context, index) {
                                                       //MenuItemModel menuItem = menuItems.elementAt(index);
-                                                      OrderState order = orderList.elementAt(index);
+                                                      OrderState order = userOrderList.elementAt(index);
                                                       return Container(
                                                         width: 151,
                                                         height: 100,
@@ -655,7 +666,7 @@ class _BookingPageState extends State<BookingPage> {
                                                         child: UserServiceCardWidget(order),
                                                       );
                                                     },
-                                                    childCount: orderList.length,
+                                                    childCount: userOrderList.length,
                                                   ),
                                                 ),
                                               ]),

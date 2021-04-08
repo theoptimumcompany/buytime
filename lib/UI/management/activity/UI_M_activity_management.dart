@@ -51,6 +51,7 @@ class _ActivityManagementState extends State<ActivityManagement> {
 
   List<List> pendingList = [];
   List<List> acceptedList = [];
+  List<List> canceledList = [];
   List<List> orderList = [];
   List<List<List>> allOrderList = [];
 
@@ -279,6 +280,7 @@ class _ActivityManagementState extends State<ActivityManagement> {
       builder: (context, snapshot) {
         pendingList.clear();
         acceptedList.clear();
+        canceledList.clear();
         orderList.clear();
         orderMap.clear();
         allOrderList.clear();
@@ -303,9 +305,12 @@ class _ActivityManagementState extends State<ActivityManagement> {
           DateTime orderTime = element.date;
           orderTime = new DateTime(orderTime.year, orderTime.month, orderTime.day, 0, 0, 0, 0, 0);
 
-          if(element.progress != 'paid'){
-            listUp(element, currentTime, orderTime, pendingList);
+          if(element.progress == 'canceled' || element.progress == 'declined'){
+            listUp(element, currentTime, orderTime, canceledList);
             //pendingList.add(element);
+          }else if(element.progress == 'pending' || element.progress == 'unpaid'){
+            listUp(element, currentTime, orderTime, pendingList);
+            //acceptedList.add(element);
           }else{
             listUp(element, currentTime, orderTime, acceptedList);
             //acceptedList.add(element);
@@ -324,6 +329,12 @@ class _ActivityManagementState extends State<ActivityManagement> {
           orderMap[DateFormat('dd MM yyyy').format(acceptedTime)].add(accepted);
         });
 
+        canceledList.forEach((pending) {
+          DateTime pendingTime = pending[0].date;
+          pendingTime = DateTime(pendingTime.year, pendingTime.month, pendingTime.day, 0, 0, 0, 0, 0);
+          orderMap[DateFormat('dd MM yyyy').format(pendingTime)].add(pending);
+        });
+
         orderMap.forEach((key, value) {
           /*value.forEach((element) {
             debugPrint('UI_M_BookingList: value booking status: ${element.user.first.surname} ${element.status}');
@@ -335,6 +346,7 @@ class _ActivityManagementState extends State<ActivityManagement> {
 
         orderList.addAll(pendingList);
         orderList.addAll(acceptedList);
+        orderList.addAll(canceledList);
 
         String today = '${AppLocalizations.of(context).today.substring(0,1)}${AppLocalizations.of(context).today.substring(1,AppLocalizations.of(context).today.length-2).toLowerCase()}';
 

@@ -1,3 +1,4 @@
+import 'package:Buytime/UI/management/activity/widget/W_cancel_popup.dart';
 import 'package:Buytime/UI/management/activity/widget/W_dashboard_card.dart';
 import 'package:Buytime/UI/management/activity/widget/W_dashboard_list_item.dart';
 import 'package:Buytime/UI/management/business/UI_M_edit_business.dart';
@@ -103,6 +104,15 @@ class _ActivityManagementItemDetailsState extends State<ActivityManagementItemDe
 
       StoreProvider.of<AppState>(context).dispatch(UpdateOrder(snapshot));
     });
+  }
+
+  void onCancel(OrderState order){
+    showDialog(
+        context: context,
+        builder: (context) {
+          return CancelPop(order: order);
+        }
+    );
   }
 
 
@@ -505,7 +515,7 @@ class _ActivityManagementItemDetailsState extends State<ActivityManagementItemDe
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      widget.orderState.progress != 'paid' ?
+                      widget.orderState.progress != 'canceled' && widget.orderState.progress != 'declined' ?
                       ///Decline
                       Container(
                           width: 158, ///SizeConfig.safeBlockHorizontal * 40
@@ -521,7 +531,14 @@ class _ActivityManagementItemDetailsState extends State<ActivityManagementItemDe
                             focusElevation: 0,
                             highlightElevation: 0,
                             onPressed: () {
-
+                              if(widget.orderState.progress == 'paid'){
+                                //StoreProvider.of<AppState>(context).dispatch(SetOrderProgress('canceled'));
+                                onCancel(widget.orderState);
+                              }else{
+                                //StoreProvider.of<AppState>(context).dispatch(SetOrderProgress('declined'));
+                                widget.orderState.progress = 'declined';
+                                StoreProvider.of<AppState>(context).dispatch(UpdateOrder(widget.orderState));
+                              }
                             },
                             textColor: BuytimeTheme.TextWhite,
                             color: BuytimeTheme.ManagerPrimary,
@@ -530,7 +547,7 @@ class _ActivityManagementItemDetailsState extends State<ActivityManagementItemDe
                               borderRadius: new BorderRadius.circular(5),
                             ),
                             child: Text(
-                              AppLocalizations.of(context).cancel.toUpperCase(),
+                                widget.orderState.progress == 'paid' ? AppLocalizations.of(context).cancel.toUpperCase() : AppLocalizations.of(context).decline.toUpperCase(),
                               style: TextStyle(
                                   fontSize: 14,
                                   fontFamily: BuytimeTheme.FontFamily,
@@ -541,6 +558,7 @@ class _ActivityManagementItemDetailsState extends State<ActivityManagementItemDe
                           )
                       ) : Container(),
                       ///Accept
+                      widget.orderState.progress == 'canceled' || widget.orderState.progress == 'declined' ?
                       Container(
                           width: 158, ///SizeConfig.safeBlockHorizontal * 40
                           height: 44,
@@ -551,6 +569,39 @@ class _ActivityManagementItemDetailsState extends State<ActivityManagementItemDe
                             focusElevation: 0,
                             highlightElevation: 0,
                             onPressed: () {
+                              widget.orderState.progress = 'pending';
+                              StoreProvider.of<AppState>(context).dispatch(UpdateOrder(widget.orderState));
+                            },
+                            textColor: BuytimeTheme.TextWhite,
+                            color: BuytimeTheme.ManagerPrimary,
+                            padding: EdgeInsets.all(15),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: new BorderRadius.circular(5),
+                            ),
+                            child: Text(
+                              AppLocalizations.of(context).reOpen.toUpperCase(),
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  fontFamily: BuytimeTheme.FontFamily,
+                                  fontWeight: FontWeight.w500,
+                                  letterSpacing: 1.25
+                              ),
+                            ),
+                          )
+                      ) :
+                      widget.orderState.progress != 'paid' ?
+                      Container(
+                          width: 158, ///SizeConfig.safeBlockHorizontal * 40
+                          height: 44,
+                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, bottom: SizeConfig.safeBlockVertical * 2),
+                          child: MaterialButton(
+                            elevation: 0,
+                            hoverElevation: 0,
+                            focusElevation: 0,
+                            highlightElevation: 0,
+                            onPressed: () {
+                              widget.orderState.progress = 'paid';
+                              StoreProvider.of<AppState>(context).dispatch(UpdateOrder(widget.orderState));
                             },
                             textColor: BuytimeTheme.TextWhite,
                             color: BuytimeTheme.ManagerPrimary,
@@ -568,7 +619,8 @@ class _ActivityManagementItemDetailsState extends State<ActivityManagementItemDe
                               ),
                             ),
                           )
-                      ),
+                      ) :
+                      Container(),
                     ],
                   )
                 ],

@@ -68,29 +68,42 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
   }
 
   /*void undoDeletion(index, item) {
-    */
-  /*
   This method accepts the parameters index and item and re-inserts the {item} at
   index {index}
-  *//*
+
     setState(() {
       tmpServiceList.insert(index, item);
     });
-  }
+  }*/
 
-  void search(List<ServiceState> list) {
+  void searchPopular(List<ServiceState> list) {
     setState(() {
-      tmpServiceList.clear();
+      serviceState = list;
+      popularList.clear();
+      if (_searchController.text.isNotEmpty) {
+        serviceState.forEach((element) {
+          if (element.name.toLowerCase().contains(_searchController.text.toLowerCase())) {
+            popularList.add(element);
+          }
+        });
+      }
+      popularList.shuffle();
+    });
+  }
+  void searchRecommended(List<ServiceState> list) {
+    setState(() {
+      recommendedList.clear();
       serviceState = list;
       if (_searchController.text.isNotEmpty) {
         serviceState.forEach((element) {
           if (element.name.toLowerCase().contains(_searchController.text.toLowerCase())) {
-            tmpServiceList.add(element);
+            recommendedList.add(element);
           }
         });
       }
+      recommendedList.shuffle();
     });
-  }*/
+  }
   bool startRequest = false;
   bool noActivity = false;
 
@@ -108,17 +121,22 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
         startRequest = true;
       },
       builder: (context, snapshot) {
-        categoryList.clear();
+        //categoryList.clear();
         order = snapshot.order.itemList != null ? (snapshot.order.itemList.length > 0 ? snapshot.order : OrderState().toEmpty()) : OrderState().toEmpty();
-        categoryList.addAll(snapshot.categoryList.categoryListState);
-        categoryList.shuffle();
-        popularList.addAll(snapshot.serviceList.serviceListState);
-        popularList.shuffle();
-        recommendedList.addAll(snapshot.serviceList.serviceListState);
-        recommendedList.shuffle();
-        if(categoryList.isEmpty && popularList.isEmpty && recommendedList.isEmpty && startRequest){
+
+        if(snapshot.categoryList.categoryListState.isEmpty && snapshot.serviceList.serviceListState.isEmpty && startRequest){
           noActivity = true;
         }else{
+          if(snapshot.categoryList.categoryListState.isNotEmpty && snapshot.serviceList.serviceListState.isNotEmpty && categoryList.isEmpty && popularList.isEmpty && recommendedList.isEmpty || _searchController.text.isEmpty){
+            categoryList.addAll(snapshot.categoryList.categoryListState);
+            popularList.addAll(snapshot.serviceList.serviceListState);
+            recommendedList.addAll(snapshot.serviceList.serviceListState);
+            if(snapshot.categoryList.categoryListState.isNotEmpty && snapshot.serviceList.serviceListState.isNotEmpty && categoryList.isEmpty && popularList.isEmpty && recommendedList.isEmpty){
+              categoryList.shuffle();
+            }
+            popularList.shuffle();
+            recommendedList.shuffle();
+          }
           if(categoryList.isNotEmpty && categoryList.first.name == null)
             categoryList.removeLast();
           if(popularList.isNotEmpty && popularList.first.name == null)
@@ -126,7 +144,12 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
           if(recommendedList.isNotEmpty && recommendedList.first.name == null)
             recommendedList.removeLast();
           noActivity = false;
+          //categoryList.shuffle();
+          //popularList.shuffle();
+          //recommendedList.shuffle();
         }
+
+
 
 
         return GestureDetector(
@@ -295,7 +318,8 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                                   onTap: () {
                                     debugPrint('done');
                                     FocusScope.of(context).unfocus();
-                                    //search(snapshot.serviceList.serviceListState);
+                                    searchPopular(snapshot.serviceList.serviceListState);
+                                    searchRecommended(snapshot.serviceList.serviceListState);
                                   },
                                   child: Icon(
                                     // Based on passwordVisible state choose the icon
@@ -308,7 +332,8 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                               onEditingComplete: () {
                                 debugPrint('done');
                                 FocusScope.of(context).unfocus();
-                                //search(snapshot.serviceList.serviceListState);
+                                searchPopular(snapshot.serviceList.serviceListState);
+                                searchRecommended(snapshot.serviceList.serviceListState);
                               },
                             ),
                           ),
@@ -380,7 +405,7 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                                           margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 4),
                                           alignment: Alignment.centerLeft,
                                           child: Text(
-                                            AppLocalizations.of(context).noSubCategoryFound,
+                                            AppLocalizations.of(context).noCategoryFound,
                                             style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextGrey, fontWeight: FontWeight.w500, fontSize: 16),
                                           ),
                                         )),
@@ -485,6 +510,36 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                                       )
                                     ],
                                   ) :
+                                  _searchController.text.isNotEmpty
+                                      ? Container(
+                                    height: SizeConfig.safeBlockVertical * 8,
+                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                    decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
+                                    child: Center(
+                                        child: Container(
+                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 4),
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            AppLocalizations.of(context).noServiceFoundFromTheSearch,
+                                            style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextWhite, fontWeight: FontWeight.w500, fontSize: 16),
+                                          ),
+                                        )),
+                                  )
+                                      : popularList.isEmpty
+                                      ? Container(
+                                    height: SizeConfig.safeBlockVertical * 8,
+                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                    decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
+                                    child: Center(
+                                        child: Container(
+                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 4),
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            AppLocalizations.of(context).noServiceFound,
+                                            style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextWhite, fontWeight: FontWeight.w500, fontSize: 16),
+                                          ),
+                                        )),
+                                  ) :
                                   ///No List
                                   Container(
                                     height: SizeConfig.safeBlockVertical * 8,
@@ -495,7 +550,7 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                                           margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 4),
                                           alignment: Alignment.centerLeft,
                                           child: Text(
-                                            AppLocalizations.of(context).noSubCategoryFound,
+                                            AppLocalizations.of(context).noServiceFound,
                                             style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextWhite, fontWeight: FontWeight.w500, fontSize: 16),
                                           ),
                                         )),
@@ -600,6 +655,36 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                                       )
                                     ],
                                   ) :
+                                  _searchController.text.isNotEmpty
+                                      ? Container(
+                                    height: SizeConfig.safeBlockVertical * 8,
+                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                    decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
+                                    child: Center(
+                                        child: Container(
+                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 4),
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            AppLocalizations.of(context).noServiceFoundFromTheSearch,
+                                            style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextGrey, fontWeight: FontWeight.w500, fontSize: 16),
+                                          ),
+                                        )),
+                                  )
+                                      : recommendedList.isEmpty
+                                      ? Container(
+                                    height: SizeConfig.safeBlockVertical * 8,
+                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                    decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
+                                    child: Center(
+                                        child: Container(
+                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 4),
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            AppLocalizations.of(context).noServiceFound,
+                                            style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextGrey, fontWeight: FontWeight.w500, fontSize: 16),
+                                          ),
+                                        )),
+                                  ) :
                                   ///No List
                                   Container(
                                     height: SizeConfig.safeBlockVertical * 8,
@@ -610,7 +695,7 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                                           margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 4),
                                           alignment: Alignment.centerLeft,
                                           child: Text(
-                                            AppLocalizations.of(context).noSubCategoryFound,
+                                            AppLocalizations.of(context).noServiceFound,
                                             style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextGrey, fontWeight: FontWeight.w500, fontSize: 16),
                                           ),
                                         )),
