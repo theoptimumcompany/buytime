@@ -157,7 +157,7 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                               InkWell(
                                 onTap: () {
                                   StoreProvider.of<AppState>(context).dispatch(CategoryTreeCreateIfNotExists(snapshot.business.id_firestore, context));
-                                  Navigator.push(context, EnterExitRoute(enterPage: ManageCategory(), exitPage: UI_M_Business(), from: true));
+                                  Navigator.push(context, EnterExitRoute(enterPage: ManageCategory(), exitPage: UI_M_ServiceList(), from: true));
                                 },
                                 borderRadius: BorderRadius.all(Radius.circular(5.0)),
                                 child: Container(

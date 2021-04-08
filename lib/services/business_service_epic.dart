@@ -61,6 +61,9 @@ class BusinessListRequestService implements EpicClass<AppState> {
 
       businessListFromFirebaseDocs = businessListFromFirebase.docs.length;
 
+      if(businessListFromFirebase.docs.isEmpty)
+        businessStateList.add(BusinessState());
+
       businessListFromFirebase.docs.forEach((element) {
         BusinessState businessState = BusinessState.fromJson(element.data());
         businessState.id_firestore = element.id;

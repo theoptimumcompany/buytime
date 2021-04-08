@@ -283,14 +283,17 @@ class _ActivityManagementState extends State<ActivityManagement> {
         orderMap.clear();
         allOrderList.clear();
         print("UI_M_activity_management : Request: $startRequest - Number of orders is " + snapshot.orderList.orderListState.length.toString());
-        if(snapshot.orderList.orderListState.isEmpty && startRequest){
+        List<OrderState> tmp = snapshot.orderList.orderListState;
+        if(tmp.isEmpty && startRequest){
           noActivity = true;
         }else{
+          if(tmp.isNotEmpty && tmp.first.businessId == null)
+            tmp.removeLast();
           noActivity = false;
+          startRequest = false;
         }
         print("UI_M_activity_management : No activity: $noActivity");
 
-        List<OrderState> tmp = snapshot.orderList.orderListState;
 
 
         ///Current time

@@ -108,6 +108,9 @@ class OrderListRequestService implements EpicClass<AppState> {
         }
         debugPrint("ORDER_SERVICE_EPIC - OrderListRequestService => OrderListService return list with " + orderStateList.length.toString());
 
+        if(orderStateList.isEmpty)
+          orderStateList.add(OrderState());
+
         statisticsState = store.state.statistics;
         int reads = statisticsState.orderListRequestServiceRead;
         int writes = statisticsState.orderListRequestServiceWrite;

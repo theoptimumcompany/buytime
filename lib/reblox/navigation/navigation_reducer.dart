@@ -21,7 +21,9 @@ List<String> _navigatePush(List<String> route, NavigatePushAction action) {
 
 List<String> _navigatePop(List<String> route, NavigatePopAction action) {
   var result = List<String>.from(route);
-  result.removeLast();
+  if (result != null && result.isNotEmpty) {
+    result.removeLast();
+  }
   return result;
 }
 
@@ -49,6 +51,7 @@ class NavigatePushAction {
 
 class NavigatePopAction {
 
+  NavigatePopAction();
   @override
   String toString() {
     return 'NavigatePopAction';

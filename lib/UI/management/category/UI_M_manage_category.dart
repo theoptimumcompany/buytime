@@ -1,6 +1,7 @@
 import 'package:Buytime/UI/management/business/UI_M_business.dart';
 import 'package:Buytime/UI/management/business/UI_M_manage_business.dart';
 import 'package:Buytime/UI/management/category/UI_M_edit_category.dart';
+import 'package:Buytime/UI/management/service_internal/UI_M_service_list.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/UI/management/category/UI_M_create_category.dart';
 import 'package:Buytime/reblox/reducer/category_reducer.dart';
@@ -387,8 +388,8 @@ class ManageCategoryState extends State<ManageCategory> {
                     icon: Icon(Icons.keyboard_arrow_left, color: Colors.white, size: 24),
                     tooltip: AppLocalizations.of(context).comeBack,
                     onPressed: () {
-                      // Navigator.push(context, EnterExitRoute(enterPage: UI_M_Business(), exitPage: ManageCategory(), from: false));
-                      Navigator.of(context).pop();
+                       Navigator.pushReplacement(context, EnterExitRoute(enterPage: UI_M_ServiceList(), exitPage: ManageCategory(), from: false));
+                      //Navigator.of(context).pop();
                     },
                   ),
 

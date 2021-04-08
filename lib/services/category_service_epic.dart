@@ -136,6 +136,13 @@ class AllCategoryListRequestService implements EpicClass<AppState> {
       statisticsState.categoryListRequestServiceRead = reads;
       statisticsState.categoryListRequestServiceWrite = writes;
       statisticsState.categoryListRequestServiceDocuments = documents;
+      //categoryStateList.clear();
+      //serviceStateList.clear();
+      if(categoryStateList.isEmpty)
+        categoryStateList.add(CategoryState());
+      if(serviceStateList.isEmpty)
+        serviceStateList.add(ServiceState());
+
     }).expand((element) => [
       CategoryListReturned(categoryStateList),
       ServiceListReturned(serviceStateList),

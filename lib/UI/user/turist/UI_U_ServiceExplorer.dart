@@ -68,7 +68,8 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
   }
 
   /*void undoDeletion(index, item) {
-    *//*
+    */
+  /*
   This method accepts the parameters index and item and re-inserts the {item} at
   index {index}
   *//*
@@ -118,6 +119,12 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
         if(categoryList.isEmpty && popularList.isEmpty && recommendedList.isEmpty && startRequest){
           noActivity = true;
         }else{
+          if(categoryList.isNotEmpty && categoryList.first.name == null)
+            categoryList.removeLast();
+          if(popularList.isNotEmpty && popularList.first.name == null)
+            popularList.removeLast();
+          if(recommendedList.isNotEmpty && recommendedList.first.name == null)
+            recommendedList.removeLast();
           noActivity = false;
         }
 
@@ -358,7 +365,7 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Container(
-                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
+                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5),
                                         child: CircularProgressIndicator(),
                                       )
                                     ],
@@ -387,7 +394,7 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                             child: Container(
                               margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0),
                               padding: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2),
-                              height: popularList.isNotEmpty ? 310 : 160,
+                              height: popularList.isNotEmpty ? 310 : 200,
                               color: Color(0xff1E3C4F),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
@@ -473,7 +480,7 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Container(
-                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
+                                        margin: EdgeInsets.only(top: 200/4),
                                         child: CircularProgressIndicator(),
                                       )
                                     ],
@@ -481,7 +488,7 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                                   ///No List
                                   Container(
                                     height: SizeConfig.safeBlockVertical * 8,
-                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 3),
                                     decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
                                     child: Center(
                                         child: Container(
@@ -502,7 +509,7 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                             child: Container(
                               margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0),
                               padding: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2),
-                              height: recommendedList.isNotEmpty ? 310 : 160,
+                              height: recommendedList.isNotEmpty ? 310 : 200,
                               color: BuytimeTheme.BackgroundWhite,
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
@@ -588,7 +595,7 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Container(
-                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
+                                        margin: EdgeInsets.only(top: 200/4),
                                         child: CircularProgressIndicator(),
                                       )
                                     ],
@@ -596,7 +603,7 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                                   ///No List
                                   Container(
                                     height: SizeConfig.safeBlockVertical * 8,
-                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 3),
                                     decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
                                     child: Center(
                                         child: Container(
@@ -604,7 +611,7 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                                           alignment: Alignment.centerLeft,
                                           child: Text(
                                             AppLocalizations.of(context).noSubCategoryFound,
-                                            style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextWhite, fontWeight: FontWeight.w500, fontSize: 16),
+                                            style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextGrey, fontWeight: FontWeight.w500, fontSize: 16),
                                           ),
                                         )),
                                   ),

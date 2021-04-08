@@ -46,12 +46,15 @@ class UI_M_BusinessListState extends State<UI_M_BusinessList> {
         converter: (store) => store.state.businessList,
         onInit: (store) => {print("Oninitbusinesslist"), store.dispatch(BusinessListRequest(store.state.user.uid, store.state.user.getRole())), startRequest = true},
         builder: (context, snapshot) {
-          if (snapshot.businessListState.isEmpty && startRequest) {
+          businessListState = snapshot.businessListState;
+          if (businessListState.isEmpty && startRequest) {
             noActivity = true;
           } else {
+            if(businessListState.first.name == null){
+              businessListState.removeLast();
+            }
             noActivity = false;
           }
-          businessListState = snapshot.businessListState;
           return WillPopScope(
             onWillPop: () async => false,
             child: Scaffold(
@@ -102,53 +105,54 @@ class UI_M_BusinessListState extends State<UI_M_BusinessList> {
                 body: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    businessListState != null && businessListState.length > 0?
                     Expanded(
                       child: Padding(
-                        padding: const EdgeInsets.only(top: 10.0),
-                        child: businessListState != null && businessListState.length > 0
-                            ? ListView.builder(
-                                scrollDirection: Axis.vertical,
-                                shrinkWrap: true,
-                                itemCount: businessListState.length,
-                                itemBuilder: (BuildContext ctxt, int index) {
-                                  return Padding(
-                                    padding: const EdgeInsets.only(top: 1.0),
-                                    child: new OptimumBusinessCardMediumManager(
-                                      businessState: businessListState[index],
-                                      onBusinessCardTap: (BusinessState businessState) {
-                                        StoreProvider.of<AppState>(context).dispatch(SetBusiness(businessListState[index]));
-                                        //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_Business()),);
-                                        Navigator.push(context, EnterExitRoute(enterPage: UI_M_Business(), exitPage: UI_M_BusinessList(), from: true));
-                                      },
-                                      imageUrl: businessListState[index].profile,
-                                      mediaSize: media,
-                                    ),
-                                  );
-                                })
-                            : noActivity
-                                ? Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      CircularProgressIndicator(
-                                        valueColor: new AlwaysStoppedAnimation<Color>(BuytimeTheme.ManagerPrimary),
-                                      )
-                                    ],
-                                  )
-                                : Container(
-                                    height: SizeConfig.safeBlockVertical * 8,
-                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
-                                    decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
-                                    child: Center(
-                                        child: Container(
-                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 4),
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(
-                                        AppLocalizations.of(context).noActiveBusinesses,
-                                        style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextGrey, fontWeight: FontWeight.w500, fontSize: 16),
-                                      ),
-                                    )),
+                          padding: const EdgeInsets.only(top: 10.0),
+                          child: ListView.builder(
+                              scrollDirection: Axis.vertical,
+                              shrinkWrap: true,
+                              itemCount: businessListState.length,
+                              itemBuilder: (BuildContext ctxt, int index) {
+                                return Padding(
+                                  padding: const EdgeInsets.only(top: 1.0),
+                                  child: new OptimumBusinessCardMediumManager(
+                                    businessState: businessListState[index],
+                                    onBusinessCardTap: (BusinessState businessState) {
+                                      StoreProvider.of<AppState>(context).dispatch(SetBusiness(businessListState[index]));
+                                      //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_Business()),);
+                                      Navigator.push(context, EnterExitRoute(enterPage: UI_M_Business(), exitPage: UI_M_BusinessList(), from: true));
+                                    },
+                                    imageUrl: businessListState[index].profile,
+                                    mediaSize: media,
                                   ),
+                                );
+                              }
+                          )
+
                       ),
+                    ): noActivity
+                        ? Expanded(child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CircularProgressIndicator(
+                          valueColor: new AlwaysStoppedAnimation<Color>(BuytimeTheme.ManagerPrimary),
+                        )
+                      ],
+                    ))
+                        : Container(
+                      height: SizeConfig.safeBlockVertical * 8,
+                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                      decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
+                      child: Center(
+                          child: Container(
+                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 4),
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              AppLocalizations.of(context).noActiveBusinesses,
+                              style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextGrey, fontWeight: FontWeight.w500, fontSize: 16),
+                            ),
+                          )),
                     ),
                   ],
                 )),
