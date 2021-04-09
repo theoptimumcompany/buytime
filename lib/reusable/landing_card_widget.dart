@@ -84,8 +84,8 @@ class _LandingCardWidgetState extends State<LandingCardWidget> {
                       style: TextStyle(
                           fontFamily: BuytimeTheme.FontFamily,
                           color:  BuytimeTheme.TextWhite,
-                          fontWeight: FontWeight.w800,
-                          fontSize: 12 ///SizeConfig.safeBlockHorizontal * 4
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
                       ),
                     ),
                   ),

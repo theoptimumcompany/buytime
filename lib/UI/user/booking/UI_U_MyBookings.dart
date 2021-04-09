@@ -2,10 +2,12 @@ import 'dart:async';
 
 import 'package:Buytime/UI/user/booking/UI_U_BookingPage.dart';
 import 'package:Buytime/UI/user/landing/UI_U_Landing.dart';
+import 'package:Buytime/UI/user/landing/invite_guest_form.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/reducer/booking_reducer.dart';
 import 'package:Buytime/reblox/reducer/business_reducer.dart';
+import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
 import 'package:Buytime/reusable/custom_bottom_button_widget.dart';
 import 'package:Buytime/reusable/booking_card_widget.dart';
 import 'package:Buytime/services/business_service_epic.dart';
@@ -24,6 +26,8 @@ import 'package:url_launcher/url_launcher.dart';
 class MyBookings extends StatefulWidget {
 
   static String route = 'myBookings';
+  bool fromLanding = false;
+  MyBookings({Key key, this.fromLanding}) : super(key: key);
   @override
   _MyBookingsState createState() => _MyBookingsState();
 }
@@ -100,11 +104,38 @@ class _MyBookingsState extends State<MyBookings> {
           showList = false;
         
         return  Scaffold(
-          appBar: AppBar(
+          appBar: BuytimeAppbar(
+            width: SizeConfig.screenWidth,
+            background: BuytimeTheme.BackgroundCerulean,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.chevron_left, color: BuytimeTheme.TextWhite),
+                    onPressed: () {
+                      //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_Business()),);
+                      //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Landing()));
+                      if(widget.fromLanding == null)
+                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Landing()));
+                      else
+                        Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              ),
+              ///Title
+              Utils.barTitle(AppLocalizations.of(context).myBookings),
+              SizedBox(
+                width: 56.0,
+              )
+            ],
+          ),
+          /*AppBar(
             backgroundColor: BuytimeTheme.BackgroundCerulean,
             brightness: Brightness.dark,
             elevation: 0,
-            /*actions: [
+            actions: [
           IconButton(
             icon: Icon(
               Icons.help_outline,
@@ -114,7 +145,7 @@ class _MyBookingsState extends State<MyBookings> {
 
             },
           ),
-        ],*/
+        ],
             leading: IconButton(
               icon: Icon(
                 Icons.keyboard_arrow_left,
@@ -125,6 +156,18 @@ class _MyBookingsState extends State<MyBookings> {
                 Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Landing()));
               },
             ),
+          ),*/
+          floatingActionButton: Container(
+            margin: EdgeInsets.only(bottom: 50),
+            child: FloatingActionButton(
+              backgroundColor: BuytimeTheme.Secondary,
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => InviteGuestForm(id: '', fromLanding: true,)),);
+              },
+              child: Icon(
+                  Icons.add
+              ),
+            ),
           ),
           body: SafeArea(
             child: Center(
@@ -133,7 +176,7 @@ class _MyBookingsState extends State<MyBookings> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   ///Bookings Text
-                  Expanded(
+                  /*Expanded(
                     flex: 2,
                     child: Container(
                       color: BuytimeTheme.BackgroundCerulean,
@@ -156,7 +199,7 @@ class _MyBookingsState extends State<MyBookings> {
                         ],
                       ),
                     ),
-                  ),
+                  ),*/
                   Expanded(
                     flex: 18,
                     child: Column(

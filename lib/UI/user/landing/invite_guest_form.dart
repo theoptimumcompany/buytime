@@ -15,7 +15,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 class InviteGuestForm extends StatefulWidget {
 
   String id;
-  InviteGuestForm(this.id);
+  bool fromLanding;
+  //InviteGuestForm(this.id);
+  InviteGuestForm({Key key, this.id, this.fromLanding}) : super(key: key);
   @override
   _InviteGuestFormState createState() => _InviteGuestFormState();
 }
@@ -142,8 +144,10 @@ class _InviteGuestFormState extends State<InviteGuestForm> {
 
                             await Future.delayed(const Duration(milliseconds: 500));
                             StoreProvider.of<AppState>(context).dispatch(BookingRequestResponse(BookingState().toEmpty()));
-                            //Navigator.of(context).pop();
-                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Landing()));
+                            if(widget.fromLanding)
+                              Navigator.of(context).pop();
+                            else
+                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Landing()));
                           },
                         ),
                       ),

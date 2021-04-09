@@ -414,28 +414,40 @@ class _BookingPageState extends State<BookingPage> {
                                 Container(
                                   //margin: EdgeInsets.only(left: SizeConfig.safeBlockVertical * 1, right: SizeConfig.safeBlockHorizontal * 1),
                                   width: double.infinity,///25% SizeConfig.safeBlockVertical * 20
-                                  height: 150,///25% SizeConfig.safeBlockVertical * 20
+                                  height: 125,///25% SizeConfig.safeBlockVertical * 20
                                   decoration: BoxDecoration(
                                     color: Color(0xffE6E7E8),
-                                    /*borderRadius: BorderRadius.all(Radius.circular(SizeConfig.blockSizeHorizontal * 5)), ///12.5%
-                          border: Border.all(
-                              color: Color(0xffA694C6),
-                              width: 4
-                          ),*/
+                                      /*gradient: LinearGradient(
+                                        begin: Alignment.topCenter,
+                                        end: Alignment.bottomCenter,
+                                        colors: [
+                                          Colors.orange.withOpacity(.5),
+                                          Colors.white,
+                                        ],
+                                      )*/
                                   ),
-                                  child: CachedNetworkImage(
-                                    imageUrl: businessState.wide != null ? businessState.wide : 'https://firebasestorage.googleapis.com/v0/b/buytime-458a1.appspot.com/o/general%2Fimage_placeholder_200x200_1000x1000.png?alt=media&token=082a1896-32d8-4750-b7cc-141f00bc060c',
-                                    imageBuilder: (context, imageProvider) => Container(
-                                      //margin: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 5), ///5%
-                                      decoration: BoxDecoration(
-                                        //borderRadius: BorderRadius.all(Radius.circular(SizeConfig.blockSizeHorizontal * 5)), ///12.5%
-                                          image: DecorationImage(image: imageProvider, fit: BoxFit.cover)),
+                                  child: Container(
+                                    //width: 300,
+                                    height: 125,
+                                    child: CachedNetworkImage(
+                                      //width: 125,
+                                      imageUrl: businessState.wide != null ? businessState.wide : 'https://firebasestorage.googleapis.com/v0/b/buytime-458a1.appspot.com/o/general%2Fimage_placeholder_200x200_1000x1000.png?alt=media&token=082a1896-32d8-4750-b7cc-141f00bc060c',
+                                      imageBuilder: (context, imageProvider) => Container(
+                                        //margin: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 5), ///5%
+                                        decoration: BoxDecoration(
+                                          //borderRadius: BorderRadius.all(Radius.circular(SizeConfig.blockSizeHorizontal * 5)), ///12.5%
+                                            image: DecorationImage(
+                                              image: imageProvider,
+                                              fit: BoxFit.fitWidth,
+                                            )
+                                        ),
+                                      ),
+                                      placeholder: (context, url) => Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [CircularProgressIndicator()],
+                                      ),
+                                      errorWidget: (context, url, error) => Icon(Icons.error),
                                     ),
-                                    placeholder: (context, url) => Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [CircularProgressIndicator()],
-                                    ),
-                                    errorWidget: (context, url, error) => Icon(Icons.error),
                                   ),
                                 ),
                                 ///Greetings & Portfolio & Search

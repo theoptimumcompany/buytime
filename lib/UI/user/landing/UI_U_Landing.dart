@@ -87,7 +87,8 @@ class LandingState extends State<Landing> {
           setState(() {
             onBookingCode = true;
           });
-          Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => InviteGuestForm(id)), (Route<dynamic> route) => false);
+          Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => InviteGuestForm(id: id, fromLanding: false,)), (Route<dynamic> route) => false);
+          //Navigator.of(context).push(MaterialPageRoute(builder: (context) => InviteGuestForm(id: id, fromLanding: true,)));
         }
         else if (deepLink.queryParameters.containsKey('categoryInvite')) {
           String businessId = deepLink.queryParameters['businessId'];
@@ -113,12 +114,12 @@ class LandingState extends State<Landing> {
         setState(() {
           onBookingCode = true;
         });
-        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => InviteGuestForm(id)), ModalRoute.withName('/landing'));
+        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => InviteGuestForm(id: id, fromLanding: false)), ModalRoute.withName('/landing'));
       }
       else if (deepLink.queryParameters.containsKey('categoryInvite')) {
         String id = deepLink.queryParameters['categoryInvite'];
         debugPrint('UI_U_landing: categoryInvite: $id');
-        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => InviteGuestForm(id)), (Route<dynamic> route) => false);
+        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => InviteGuestForm(id: id, fromLanding: false)), (Route<dynamic> route) => false);
       }
     }
   }
@@ -133,8 +134,8 @@ class LandingState extends State<Landing> {
         converter: (store) => store.state,
         onInit: (store){
           debugPrint('UI_U_Landing => store on init()');
-          cards.add(LandingCardWidget(AppLocalizations.of(context).enterBookingCode, AppLocalizations.of(context).startYourJourney, 'assets/img/booking_code.png', null));
-          cards.add(LandingCardWidget(AppLocalizations.of(context).aboutBuytime, AppLocalizations.of(context).discoverOurNetwork, 'assets/img/beach_girl.png', null));
+          cards.add(LandingCardWidget(/*AppLocalizations.of(context).enterBookingCode*/'', AppLocalizations.of(context).startYourJourney, 'assets/img/booking_code.png', null));
+          cards.add(LandingCardWidget(/*AppLocalizations.of(context).aboutBuytime*/'', AppLocalizations.of(context).discoverOurNetwork, 'assets/img/beach_girl.png', null));
           //rippleLoading = false;
           //secondRippleLoading = false;
         },
@@ -144,6 +145,7 @@ class LandingState extends State<Landing> {
           isManagerOrAbove = snapshot.user != null && (snapshot.user.getRole() != Role.user) ? true : false;
 
           if(isManagerOrAbove && !switchToClient && !requestingBookings){
+            snapshot.bookingList.bookingListState.clear();
             requestingBookings = true;
             WidgetsBinding.instance.addPostFrameCallback((_) async {
               Navigator.push(context, MaterialPageRoute(builder: (context) => UI_M_BusinessList()));
@@ -181,7 +183,7 @@ class LandingState extends State<Landing> {
                   //bookingStatus = 'Upcoming';
                   debugPrint('UI_U_Landing => Upcoming booking found!');
                   WidgetsBinding.instance.addPostFrameCallback((_) async {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => MyBookings()));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => MyBookings(fromLanding: true,)));
                   });
                 } else{
                   //bookingStatus = 'Active';
@@ -330,18 +332,15 @@ class LandingState extends State<Landing> {
                                               ],
                                             )),
                                         ///Booking history
-                                        !isManagerOrAbove ?
-                                        Container(
+                                        //!isManagerOrAbove ?
+                                        /*Container(
                                             margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 6.5, bottom: SizeConfig.safeBlockVertical * 1, top: SizeConfig.safeBlockVertical * 1),
                                             alignment: Alignment.centerLeft,
                                             child: Material(
                                               color: Colors.transparent,
                                               child: InkWell(
                                                   onTap: () {
-                                                    /*Navigator.push(
-                                              context,
-                                              MaterialPageRoute(builder: (context) => MyBookings()),
-                                            );*/
+                                                    Navigator.push(context, MaterialPageRoute(builder: (context) => MyBookings()),);
                                                     //StoreProvider.of<AppState>(context).dispatch(UserBookingListRequest(StoreProvider.of<AppState>(context).state.user.email));
                                                     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MyBookings()));
                                                   },
@@ -359,8 +358,8 @@ class LandingState extends State<Landing> {
                                                       ),
                                                     ),
                                                   )),
-                                            )) :
-                                        Container(),
+                                            )):*/
+                                        //Container(),
                                       ],
                                     )
                                 ),
@@ -479,6 +478,7 @@ class LandingState extends State<Landing> {
                                                 StoreProvider.of<AppState>(context).dispatch(SetCategoryTreeToEmpty());
                                                 StoreProvider.of<AppState>(context).dispatch(SetOrderToEmpty(""));
                                                 StoreProvider.of<AppState>(context).dispatch(SetOrderListToEmpty());
+                                                StoreProvider.of<AppState>(context).dispatch(SetBookingListToEmpty());
                                                 StoreProvider.of<AppState>(context).dispatch(SetBusinessToEmpty());
                                                 StoreProvider.of<AppState>(context).dispatch(SetBusinessListToEmpty());
                                                 StoreProvider.of<AppState>(context).dispatch(SetServiceToEmpty());
@@ -582,7 +582,14 @@ class _OpenContainerWrapper extends StatelessWidget {
     return OpenContainer<bool>(
       transitionType: ContainerTransitionType.fadeThrough,
       openBuilder: (BuildContext context, VoidCallback _) {
-        return index == 0 ? InviteGuestForm('') : ServiceExplorer();
+        if(index == 0){
+          if(StoreProvider.of<AppState>(context).state.bookingList.bookingListState.isEmpty)
+            return InviteGuestForm(id: '', fromLanding: true,);
+          else
+            return  MyBookings(fromLanding: true,);
+        }else{
+          return ServiceExplorer();
+        }
       },
       onClosed: onClosed,
       closedShape: RoundedRectangleBorder(
