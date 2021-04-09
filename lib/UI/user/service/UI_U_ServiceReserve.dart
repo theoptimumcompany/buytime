@@ -33,8 +33,8 @@ import 'package:intl/intl.dart';
 class ServiceReserve extends StatefulWidget {
   static String route = '/serviceReserve';
   final ServiceState serviceState;
-
-  ServiceReserve({@required this.serviceState});
+  bool tourist;
+  ServiceReserve({@required this.serviceState, this.tourist});
 
   @override
   createState() => _ServiceReserveState();
@@ -350,7 +350,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
             onWillPop: () async => false,
             child: Scaffold(
               appBar: BuytimeAppbar(
-                background: BuytimeTheme.UserPrimary,
+                background: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
                 width: media.width,
                 children: [
                   ///Back Button
@@ -825,7 +825,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                         // go to the cart page
                                         Navigator.push(
                                           context,
-                                          MaterialPageRoute(builder: (context) => CartReservable(serviceState: widget.serviceState,)),
+                                          MaterialPageRoute(builder: (context) => CartReservable(serviceState: widget.serviceState, tourist: widget.tourist)),
                                         );
                                       }
                                       else {

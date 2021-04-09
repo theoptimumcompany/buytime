@@ -19,8 +19,8 @@ import 'package:flutter_redux/flutter_redux.dart';
 
 class CartReservable extends StatefulWidget {
   ServiceState serviceState;
-
-  CartReservable({Key key, this.serviceState}) : super(key: key);
+  bool tourist;
+  CartReservable({Key key, this.serviceState, this.tourist}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => CartReservableState();
@@ -99,7 +99,7 @@ class CartReservableState extends State<CartReservable> {
               return Scaffold(
                   resizeToAvoidBottomInset: false,
                   appBar: BuytimeAppbar(
-                    background: BuytimeTheme.UserPrimary,
+                    background: widget.tourist ? BuytimeTheme.BackgroundCerulean :BuytimeTheme.UserPrimary,
                     width: media.width,
                     children: [
                       ///Back Button
@@ -360,7 +360,7 @@ class CartReservableState extends State<CartReservable> {
                                             if(widget.serviceState.switchAutoConfirm){
                                               Navigator.push(
                                                 context,
-                                                MaterialPageRoute(builder: (context) => ConfirmOrder(reserve: true,)),
+                                                MaterialPageRoute(builder: (context) => ConfirmOrder(reserve: true, tourist: widget.tourist,)),
                                               );
                                             }else{
                                               ///TODO send notification and navigate ...

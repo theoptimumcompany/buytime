@@ -1,4 +1,6 @@
 import 'package:Buytime/UI/management/business/UI_M_business_list.dart';
+import 'package:Buytime/reblox/reducer/booking_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/booking_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_tree_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/service_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/service_reducer.dart';
@@ -153,34 +155,22 @@ class MenuDrawer extends StatelessWidget {
                         //cartCounter = 0;
 
                         //Svuotare lo Store sul Logout
-                        StoreProvider.of<AppState>(context)
-                            .dispatch(SetCategoryToEmpty());
-                        StoreProvider.of<AppState>(context)
-                            .dispatch(SetCategoryListToEmpty());
-                        StoreProvider.of<AppState>(context)
-                            .dispatch(SetCategoryTreeToEmpty());
-                        StoreProvider.of<AppState>(context)
-                            .dispatch(SetOrderToEmpty(""));
-                        StoreProvider.of<AppState>(context)
-                            .dispatch(SetOrderListToEmpty());
-                        StoreProvider.of<AppState>(context)
-                            .dispatch(SetBusinessToEmpty());
-                        StoreProvider.of<AppState>(context)
-                            .dispatch(SetBusinessListToEmpty());
-                        StoreProvider.of<AppState>(context)
-                            .dispatch(SetServiceToEmpty());
-                        StoreProvider.of<AppState>(context)
-                            .dispatch(SetServiceListToEmpty());
-                        StoreProvider.of<AppState>(context)
-                            .dispatch(SetServiceSlotToEmpty());
-                        StoreProvider.of<AppState>(context)
-                            .dispatch(SetPipelineToEmpty());
-                        StoreProvider.of<AppState>(context)
-                            .dispatch(SetPipelineListToEmpty());
-                        StoreProvider.of<AppState>(context)
-                            .dispatch(SetStripeToEmpty());
-                        StoreProvider.of<AppState>(context)
-                            .dispatch(SetUserStateToEmpty());
+                        StoreProvider.of<AppState>(context).dispatch(SetCategoryToEmpty());
+                        StoreProvider.of<AppState>(context).dispatch(SetCategoryListToEmpty());
+                        StoreProvider.of<AppState>(context).dispatch(SetCategoryTreeToEmpty());
+                        StoreProvider.of<AppState>(context).dispatch(SetOrderToEmpty(""));
+                        StoreProvider.of<AppState>(context).dispatch(SetOrderListToEmpty());
+                        StoreProvider.of<AppState>(context).dispatch(SetBookingListToEmpty());
+                        StoreProvider.of<AppState>(context).dispatch(SetBookingToEmpty(''));
+                        StoreProvider.of<AppState>(context).dispatch(SetBusinessToEmpty());
+                        StoreProvider.of<AppState>(context).dispatch(SetBusinessListToEmpty());
+                        StoreProvider.of<AppState>(context).dispatch(SetServiceToEmpty());
+                        StoreProvider.of<AppState>(context).dispatch(SetServiceListToEmpty());
+                        StoreProvider.of<AppState>(context).dispatch(SetServiceSlotToEmpty());
+                        StoreProvider.of<AppState>(context).dispatch(SetPipelineToEmpty());
+                        StoreProvider.of<AppState>(context).dispatch(SetPipelineListToEmpty());
+                        StoreProvider.of<AppState>(context).dispatch(SetStripeToEmpty());
+                        StoreProvider.of<AppState>(context).dispatch(SetUserStateToEmpty());
                         //Torno al Login
                         Navigator.pushReplacement(
                           context,

@@ -2,6 +2,8 @@ import 'package:Buytime/UI/management/activity/UI_M_activity_management.dart';
 import 'package:Buytime/UI/management/business/UI_M_business_list.dart';
 import 'package:Buytime/UI/user/landing/UI_U_Landing.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
+import 'package:Buytime/reblox/reducer/booking_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/booking_reducer.dart';
 import 'package:Buytime/reblox/reducer/business_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/business_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_list_reducer.dart';
@@ -268,6 +270,8 @@ class _UI_M_BusinessListDrawerState extends State<UI_M_BusinessListDrawer> {
                             StoreProvider.of<AppState>(context).dispatch(SetCategoryTreeToEmpty());
                             StoreProvider.of<AppState>(context).dispatch(SetOrderToEmpty(""));
                             StoreProvider.of<AppState>(context).dispatch(SetOrderListToEmpty());
+                            StoreProvider.of<AppState>(context).dispatch(SetBookingListToEmpty());
+                            StoreProvider.of<AppState>(context).dispatch(SetBookingToEmpty(''));
                             StoreProvider.of<AppState>(context).dispatch(SetBusinessToEmpty());
                             StoreProvider.of<AppState>(context).dispatch(SetBusinessListToEmpty());
                             StoreProvider.of<AppState>(context).dispatch(SetServiceToEmpty());

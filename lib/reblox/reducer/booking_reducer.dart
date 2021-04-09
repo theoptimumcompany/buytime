@@ -109,6 +109,12 @@ class UpdatedBooking {
   BookingState get bookingState => _bookingState;
 }
 
+class SetBookingToEmpty {
+  String _something;
+  SetBookingToEmpty(this._something);
+  String get something => _something;
+}
+
 
 BookingState bookingReducer(BookingState state, action) {
   BookingState bookingState = new BookingState.fromState(state);
@@ -142,6 +148,9 @@ BookingState bookingReducer(BookingState state, action) {
     debugPrint('booking_reducer: booking status: ${bookingState.status}');
     return bookingState;
   }
-  
+  if (action is SetBookingToEmpty) {
+    bookingState = BookingState().toEmpty();
+    return bookingState;
+  }
   return state;
 }

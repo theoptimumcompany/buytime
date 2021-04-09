@@ -526,7 +526,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                             StoreProvider.of<AppState>(context).dispatch(OrderReservableListRequest(widget.serviceState.serviceId));
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => ServiceReserve(serviceState: serviceState)),
+                              MaterialPageRoute(builder: (context) => ServiceReserve(serviceState: serviceState, tourist: widget.tourist)),
                             );
                           } : null,
                           elevation: 0,

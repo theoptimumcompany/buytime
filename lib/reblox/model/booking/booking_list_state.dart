@@ -28,7 +28,7 @@ class BookingListState {
   }
 
   BookingListState toEmpty() {
-    return BookingListState(bookingListState: List<BookingState>());
+    return BookingListState(bookingListState:[]);
   }
 
   factory BookingListState.fromJson(Map<String, dynamic> json) => _$BookingListStateFromJson(json);

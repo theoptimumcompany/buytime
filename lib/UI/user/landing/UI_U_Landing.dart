@@ -486,6 +486,7 @@ class LandingState extends State<Landing> {
                                                 StoreProvider.of<AppState>(context).dispatch(SetOrderToEmpty(""));
                                                 StoreProvider.of<AppState>(context).dispatch(SetOrderListToEmpty());
                                                 StoreProvider.of<AppState>(context).dispatch(SetBookingListToEmpty());
+                                                StoreProvider.of<AppState>(context).dispatch(SetBookingToEmpty(''));
                                                 StoreProvider.of<AppState>(context).dispatch(SetBusinessToEmpty());
                                                 StoreProvider.of<AppState>(context).dispatch(SetBusinessListToEmpty());
                                                 StoreProvider.of<AppState>(context).dispatch(SetServiceToEmpty());

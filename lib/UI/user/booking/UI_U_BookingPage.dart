@@ -15,6 +15,8 @@ import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/role/role.dart';
 import 'package:Buytime/reblox/model/service/service_list_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
+import 'package:Buytime/reblox/reducer/booking_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/booking_reducer.dart';
 import 'package:Buytime/reblox/reducer/business_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/business_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_list_reducer.dart';
@@ -1146,6 +1148,8 @@ class _BookingPageState extends State<BookingPage> {
                                               StoreProvider.of<AppState>(context).dispatch(SetCategoryTreeToEmpty());
                                               StoreProvider.of<AppState>(context).dispatch(SetOrderToEmpty(""));
                                               StoreProvider.of<AppState>(context).dispatch(SetOrderListToEmpty());
+                                              StoreProvider.of<AppState>(context).dispatch(SetBookingListToEmpty());
+                                              StoreProvider.of<AppState>(context).dispatch(SetBookingToEmpty(''));
                                               StoreProvider.of<AppState>(context).dispatch(SetBusinessToEmpty());
                                               StoreProvider.of<AppState>(context).dispatch(SetBusinessListToEmpty());
                                               StoreProvider.of<AppState>(context).dispatch(SetServiceToEmpty());

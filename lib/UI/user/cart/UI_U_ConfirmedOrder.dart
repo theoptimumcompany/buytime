@@ -1,6 +1,7 @@
 import 'package:Buytime/UI/user/UI_U_Tabs.dart';
 import 'package:Buytime/UI/user/booking/UI_U_BookingPage.dart';
 import 'package:Buytime/UI/user/cart/tab/T_room.dart';
+import 'package:Buytime/UI/user/turist/UI_U_ServiceExplorer.dart';
 import 'package:Buytime/reblox/model/business/snippet/business_snippet_state.dart';
 import 'package:Buytime/reblox/model/card/card_state.dart';
 import 'package:Buytime/reblox/model/order/order_entry.dart';
@@ -392,6 +393,7 @@ class ConfirmedOrderState extends State<ConfirmedOrder> with SingleTickerProvide
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     ///Back to home button
+                                    !widget.tourist ?
                                     Container(
                                         margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5, bottom: SizeConfig.safeBlockVertical * 2.5),
                                         width: 158,
@@ -411,9 +413,6 @@ class ConfirmedOrderState extends State<ConfirmedOrder> with SingleTickerProvide
                                             widget.reserve ?
                                               StoreProvider.of<AppState>(context).dispatch(SetOrderReservable(OrderReservableState().toEmpty())) :
                                               StoreProvider.of<AppState>(context).dispatch(SetOrder(OrderState().toEmpty()));
-                                            if(widget.tourist)
-                                              Navigator.of(context).popUntil(ModalRoute.withName('/serviceExplorer'));
-                                            else
                                               Navigator.of(context).popUntil(ModalRoute.withName('/bookingPage'));
                                           },
                                           textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
@@ -430,7 +429,8 @@ class ConfirmedOrderState extends State<ConfirmedOrder> with SingleTickerProvide
                                             ),
                                           ),
                                         )
-                                    ),
+                                    ) :
+                                    Container(),
                                   ],
                                 ),
                               ),
