@@ -490,8 +490,8 @@ class _BookingPageState extends State<BookingPage> {
                                               margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 0.5),
                                               child: Text(
                                                 sameMonth
-                                                    ? '${DateFormat('dd').format(bookingState.start_date)}-${DateFormat('dd MMMM').format(bookingState.end_date)}'
-                                                    : '${DateFormat('dd MMMM').format(bookingState.start_date)}',
+                                                    ? '${DateFormat('dd').format(bookingState.start_date)} - ${DateFormat('dd MMMM').format(bookingState.end_date)}'
+                                                    : '${DateFormat('dd MMM').format(bookingState.start_date)} - ${DateFormat('dd MMM').format(bookingState.end_date)}',
                                                 style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextMedium, fontWeight: FontWeight.w400, fontSize: 16
 
                                                   ///izeConfig.safeBlockHorizontal * 4

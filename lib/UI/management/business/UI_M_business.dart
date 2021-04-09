@@ -149,7 +149,7 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
             drawer: UI_M_BusinessListDrawer(),
             body: SingleChildScrollView(
               child: ConstrainedBox(
-                constraints: BoxConstraints(maxHeight: media.height * 0.85),
+                constraints: BoxConstraints(maxHeight: media.height * 0.88),
                 child: Center(
                   child: Container(
                     child: Column(

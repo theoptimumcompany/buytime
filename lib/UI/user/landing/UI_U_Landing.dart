@@ -147,6 +147,8 @@ class LandingState extends State<Landing> {
           if(isManagerOrAbove && !switchToClient && !requestingBookings){
             snapshot.bookingList.bookingListState.clear();
             requestingBookings = true;
+            debugPrint('UI_U_Landing => USER EMAIL: ${snapshot.user.email}');
+            StoreProvider.of<AppState>(context).dispatch(UserBookingListRequest(snapshot.user.email, false));
             WidgetsBinding.instance.addPostFrameCallback((_) async {
               Navigator.push(context, MaterialPageRoute(builder: (context) => UI_M_BusinessList()));
             });

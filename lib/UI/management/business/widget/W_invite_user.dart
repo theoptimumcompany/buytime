@@ -32,7 +32,6 @@ class InviteUserState extends State<InviteUser> {
       padding: const EdgeInsets.only(top: 10.0),
       child: Container(
         child:
-
             ///Invite
             widget.hotel
                 ? Align(

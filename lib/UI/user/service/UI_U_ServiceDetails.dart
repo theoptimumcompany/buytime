@@ -82,6 +82,8 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
         if(widget.serviceState.image3.isNotEmpty)
           images.add(widget.serviceState.image3);
 
+        debugPrint('UI_U_ServiceDetails => IMAGES: ${images.length}');
+
         if(widget.serviceState.switchSlots){
           double tmpPrice;
           debugPrint('UI_U_ServiceDetails => SLOTS LENGTH: ${widget.serviceState.serviceSlot.length}');
@@ -264,7 +266,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                             Container(
                               height: SizeConfig.safeBlockVertical * 55,
                               //width: double.infinity,
-                              child: Carousel(
+                              child: images.isNotEmpty ? Carousel(
                                 boxFit: BoxFit.cover,
                                 autoplay: false,
                                 animationCurve: Curves.bounceIn,
@@ -305,6 +307,32 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                   ),
                                   errorWidget: (context, url, error) => Icon(Icons.error),
                                 )).toList(),
+                              ) : CachedNetworkImage(
+                                imageUrl: 'https://firebasestorage.googleapis.com/v0/b/buytime-458a1.appspot.com/o/general%2Fimage_placeholder_200x200_1000x1000.png?alt=media&token=082a1896-32d8-4750-b7cc-141f00bc060c',
+                                imageBuilder: (context, imageProvider) => Container(
+                                  //margin: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 5), ///5%
+                                  height: SizeConfig.safeBlockVertical * 55,
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                    //borderRadius: BorderRadius.all(Radius.circular(SizeConfig.blockSizeHorizontal * 5)), ///12.5%
+                                      image: DecorationImage(image: imageProvider, fit: BoxFit.fill,)),
+                                ),
+                                placeholder: (context, url) => Container(
+                                  height: SizeConfig.safeBlockVertical * 55,
+                                  width: double.infinity,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                        //padding: EdgeInsets.only(top: 80, bottom: 80, left: 50, right: 50),
+                                        child: CircularProgressIndicator(
+                                          //valueColor: new AlwaysStoppedAnimation<Color>(BuytimeTheme.ManagerPrimary),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                errorWidget: (context, url, error) => Icon(Icons.error),
                               )
                             ),
                             ///Service Name
