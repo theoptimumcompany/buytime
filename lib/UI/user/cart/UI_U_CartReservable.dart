@@ -367,7 +367,7 @@ class CartReservableState extends State<CartReservable> {
                                             }
                                           },
                                           textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
-                                          color: BuytimeTheme.UserPrimary,
+                                          color:  widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
                                           shape: RoundedRectangleBorder(
                                             borderRadius: new BorderRadius.circular(5),
                                           ),

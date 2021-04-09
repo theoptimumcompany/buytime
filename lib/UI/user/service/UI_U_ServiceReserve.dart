@@ -507,7 +507,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                           ) :
                           Container(
                             margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, bottom: SizeConfig.safeBlockVertical * 3, right: SizeConfig.safeBlockVertical * 5, left: SizeConfig.safeBlockVertical * 2),
-                            width: 179,
+                            width: 150,
                             height: 120,
                             decoration: BoxDecoration(
                               color: BuytimeTheme.BackgroundLightBlue.withOpacity(.2),
@@ -548,7 +548,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                       style: TextStyle(
                                         //letterSpacing: 1.25,
                                           fontFamily: BuytimeTheme.FontFamily,
-                                          color: BuytimeTheme.UserPrimary,
+                                          color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
                                           fontWeight: FontWeight.w400,
                                           fontSize: 16 ///SizeConfig.safeBlockHorizontal * 4
                                       ),
@@ -605,11 +605,11 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                   child: FittedBox(
                                     fit: BoxFit.scaleDown,
                                     child: Text(
-                                      'No service found!',  //TODO: Translate
+                                        AppLocalizations.of(context).noServiceFound,
                                       style: TextStyle(
                                         //letterSpacing: 1.25,
                                           fontFamily: BuytimeTheme.FontFamily,
-                                          color: BuytimeTheme.UserPrimary,
+                                          color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
                                           fontWeight: FontWeight.w400,
                                           fontSize: 16 ///SizeConfig.safeBlockHorizontal * 4
                                       ),
@@ -680,7 +680,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                     children: [
                                       ///Blue part
                                       Container(
-                                        color: BuytimeTheme.UserPrimary,
+                                        color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
                                         height: 20,
                                         child: Row(
                                           mainAxisAlignment: MainAxisAlignment.start,
@@ -728,7 +728,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                       color:  BuytimeTheme.BackgroundWhite,
                                                       borderRadius: BorderRadius.all(Radius.circular(5)),
                                                       border: Border.all(
-                                                          color: select[i] ? BuytimeTheme.UserPrimary.withOpacity(0.5) : BuytimeTheme.BackgroundWhite
+                                                          color: select[i] ? ( widget.tourist ? BuytimeTheme.BackgroundCerulean.withOpacity(0.5) : BuytimeTheme.UserPrimary.withOpacity(0.5)) : BuytimeTheme.BackgroundWhite
                                                       ),
                                                       boxShadow: [
                                                         BoxShadow(
@@ -850,7 +850,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                       }
                                     },
                                     textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
-                                    color: BuytimeTheme.UserPrimary,
+                                    color:  widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
                                     padding: EdgeInsets.all(media.width * 0.03),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: new BorderRadius.circular(5),

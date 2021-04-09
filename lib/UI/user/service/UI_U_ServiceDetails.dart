@@ -273,7 +273,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                 autoplay: false,
                                 animationCurve: Curves.bounceIn,
                                 //animationDuration: Duration(milliseconds: 1000),
-                                dotSize: SizeConfig.blockSizeVertical * 1, ///1%
+                                dotSize: images.length > 1 ? SizeConfig.blockSizeVertical * 1 : SizeConfig.blockSizeVertical * 0, ///1%
                                 dotIncreasedColor: BuytimeTheme.UserPrimary,
                                 dotColor: BuytimeTheme.BackgroundWhite,
                                 dotBgColor: Colors.transparent,
@@ -371,7 +371,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                     price,
                                     style: TextStyle(
                                         fontFamily: BuytimeTheme.FontFamily,
-                                        color: BuytimeTheme.UserPrimary,
+                                        color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
                                         fontWeight: FontWeight.w400,
                                         fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
                                     ),
@@ -427,7 +427,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                               decoration: BoxDecoration(
                                   borderRadius: new BorderRadius.circular(5),
                                   border: Border.all(
-                                      color: StoreProvider.of<AppState>(context).state.user.getRole() == Role.user ? BuytimeTheme.UserPrimary : BuytimeTheme.SymbolGrey
+                                      color: StoreProvider.of<AppState>(context).state.user.getRole() == Role.user ? (widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary) : BuytimeTheme.SymbolGrey
                                   )
                               ),
                               child: MaterialButton(
@@ -445,7 +445,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                   //StoreProvider.of<AppState>(context).dispatch(SetOrderCartCounter(order.cartCounter));
                                   StoreProvider.of<AppState>(context).dispatch(SetOrder(order));
                                 } : null,
-                                textColor: BuytimeTheme.UserPrimary,
+                                textColor:  widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
                                 disabledTextColor: BuytimeTheme.SymbolGrey,
                                 color: BuytimeTheme.BackgroundWhite,
                                 //padding: EdgeInsets.all(15),
@@ -486,12 +486,12 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
 
                                   Navigator.push(
                                     context,
-                                    MaterialPageRoute(builder: (context) => ConfirmOrder(reserve: false,)),
+                                    MaterialPageRoute(builder: (context) => ConfirmOrder(reserve: false,tourist: widget.tourist,)),
                                   );
                                 } : null,
                                 textColor: BuytimeTheme.TextWhite,
                                 disabledTextColor: BuytimeTheme.TextWhite,
-                                color: BuytimeTheme.UserPrimary,
+                                color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
                                 disabledColor: BuytimeTheme.SymbolGrey,
                                 //padding: EdgeInsets.all(15),
                                 shape: RoundedRectangleBorder(
@@ -535,7 +535,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                           highlightElevation: 0,
                           textColor: BuytimeTheme.TextWhite,
                           disabledTextColor: BuytimeTheme.TextWhite,
-                          color: BuytimeTheme.UserPrimary,
+                          color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
                           disabledColor: BuytimeTheme.SymbolGrey,
                           //padding: EdgeInsets.all(15),
                           shape: RoundedRectangleBorder(

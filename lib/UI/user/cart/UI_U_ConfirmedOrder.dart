@@ -211,7 +211,7 @@ class ConfirmedOrderState extends State<ConfirmedOrder> with SingleTickerProvide
                                             ),
                                             ///Charge Summary
                                             Container(
-                                              color: BuytimeTheme.UserPrimary,
+                                              color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
                                               height: SizeConfig.safeBlockVertical * 7,
                                               child: Row(
                                                 mainAxisAlignment: MainAxisAlignment.start,
@@ -297,7 +297,7 @@ class ConfirmedOrderState extends State<ConfirmedOrder> with SingleTickerProvide
                                                       style: TextStyle(
                                                         letterSpacing: 1.25,
                                                         fontFamily: BuytimeTheme.FontFamily,
-                                                        color: BuytimeTheme.UserPrimary,
+                                                        color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
                                                         fontSize: 16, ///SizeConfig.safeBlockHorizontal * 3.5
                                                         fontWeight: FontWeight.w600,
                                                       ),
@@ -416,7 +416,7 @@ class ConfirmedOrderState extends State<ConfirmedOrder> with SingleTickerProvide
                                               Navigator.of(context).popUntil(ModalRoute.withName('/bookingPage'));
                                           },
                                           textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
-                                          color: BuytimeTheme.UserPrimary,
+                                          color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
                                           padding: EdgeInsets.all(media.width * 0.03),
                                           shape: RoundedRectangleBorder(
                                             borderRadius: new BorderRadius.circular(5),

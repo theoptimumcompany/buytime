@@ -25,6 +25,10 @@ import 'package:flutter_redux/flutter_redux.dart';
 class CreditCards extends StatefulWidget {
   final String title = 'Cart';
 
+  bool tourist;
+  bool reserve;
+  CreditCards({Key key, this.reserve, this.tourist}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() => CreditCardsState();
 }
@@ -131,7 +135,7 @@ class CreditCardsState extends State<CreditCards> {
                               style: TextStyle(
                                   letterSpacing: 1.25,
                                   fontFamily: BuytimeTheme.FontFamily,
-                                  color: BuytimeTheme.UserPrimary,
+                                  color:  widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
                                   fontWeight: FontWeight.w600,
                                   fontSize: 16
                               ),

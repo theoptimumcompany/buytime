@@ -17,6 +17,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
 class Room extends StatefulWidget {
+
+  bool tourist;
+  bool reserve;
+  Room({Key key, this.reserve, this.tourist}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() => RoomState();
 }
@@ -24,6 +29,8 @@ class Room extends StatefulWidget {
 class RoomState extends State<Room> {
   String fullName = '';
   String room = '';
+
+
 
   @override
   void initState() {
@@ -163,19 +170,22 @@ class RoomState extends State<Room> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Container(
-                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
-                        padding: EdgeInsets.all(5.0),
-                        child: Text(
-                          AppLocalizations.of(context).pleaseChargeAmountToMyBill,
-                          style: TextStyle(
-                            letterSpacing: 0.5,
-                            fontFamily: BuytimeTheme.FontFamily,
-                            color: BuytimeTheme.UserPrimary,
-                            fontSize: 16,
+                      Flexible(
+                        child: Container(
+                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
+                          padding: EdgeInsets.all(20.0),
+                          child: Text(
+                            AppLocalizations.of(context).pleaseChargeAmountToMyBill,
+                            overflow: TextOverflow.clip,
+                            style: TextStyle(
+                              letterSpacing: 0.5,
+                              fontFamily: BuytimeTheme.FontFamily,
+                              color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+                              fontSize: 16,
 
-                            ///SizeConfig.safeBlockHorizontal * 3.5
-                            fontWeight: FontWeight.w600,
+                              ///SizeConfig.safeBlockHorizontal * 3.5
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                         ),
                       )

@@ -210,7 +210,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                     preferredSize: Size.fromHeight(kToolbarHeight),
                                     child: Container(
                                       decoration: BoxDecoration(
-                                        color: BuytimeTheme.UserPrimary,
+                                        color:  widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
                                         boxShadow: [
                                           BoxShadow(
                                             color: Colors.black87.withOpacity(.3),
@@ -246,7 +246,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                     ),
                                   ),
                                   ///Tab
-                                  _controller.index == 0 ? CreditCards() : Room(),
+                                  _controller.index == 0 ? CreditCards(tourist: widget.tourist) : Room(tourist: widget.tourist),
                                 ],
                               ),
                             ),
@@ -308,7 +308,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                             Navigator.push(context, MaterialPageRoute(builder: (context) => ConfirmedOrder(_controller.index, widget.reserve, widget.tourist)),);
                                           } : null,
                                           textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
-                                          color: BuytimeTheme.UserPrimary,
+                                          color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
                                           disabledColor: BuytimeTheme.SymbolLightGrey,
                                           padding: EdgeInsets.all(media.width * 0.03),
                                           shape: RoundedRectangleBorder(

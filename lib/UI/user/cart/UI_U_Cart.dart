@@ -284,7 +284,7 @@ class CartState extends State<Cart> {
                                             );
                                           },
                                           textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
-                                          color: BuytimeTheme.UserPrimary,
+                                          color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
                                           //padding: EdgeInsets.all(media.width * 0.03),
                                           shape: RoundedRectangleBorder(
                                             borderRadius: new BorderRadius.circular(5),
@@ -315,7 +315,7 @@ class CartState extends State<Cart> {
 
                                                       ///SizeConfig.safeBlockHorizontal * .2
                                                       fontFamily: BuytimeTheme.FontFamily,
-                                                      color: BuytimeTheme.UserPrimary,
+                                                      color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
                                                       fontWeight: FontWeight.w600,
                                                       fontSize: 14
 
