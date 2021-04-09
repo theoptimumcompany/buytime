@@ -136,7 +136,9 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
             fontWeight: FontWeight.w500,
           ),
         ),
-        selectedTextStyle: TextStyle(color: Colors.blue),
+        confirmTextStyle: TextStyle(color: BuytimeTheme.ManagerPrimary),
+        cancelTextStyle: TextStyle(color: BuytimeTheme.ManagerPrimary),
+        selectedTextStyle: TextStyle(color:BuytimeTheme.ManagerPrimary),
         onCancel: () {
           return 0;
         },
@@ -151,11 +153,13 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
 
             setState(() {
               startTime[indexController] = format24;
-              if (StoreProvider.of<AppState>(context).state.serviceSlot.day > 0) {
+              setStopTimeOvercome24h(startTime[indexController], indexController);
+              _formSlotTimeKey[indexController].currentState.validate();
+              /*if (StoreProvider.of<AppState>(context).state.serviceSlot.day > 0) {
                 setStopTimeOvercome24h(startTime[indexController], indexController);
               } else {
                 _formSlotTimeKey[indexController].currentState.validate();
-              }
+              }*/
             });
           }
         }).showDialog(context);
@@ -166,7 +170,9 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
     int hourDuration = StoreProvider.of<AppState>(context).state.serviceSlot.hour;
     int minuteDuration = StoreProvider.of<AppState>(context).state.serviceSlot.minute;
     DateTime finalDate = initialDate.add(Duration(hours: hourDuration, minutes: minuteDuration));
-    String finalDateString = finalDate.hour.toString() + ":" + finalDate.minute.toString();
+    String finalDateString =
+        (finalDate.hour < 10 ? "0" + finalDate.hour.toString() : finalDate.hour.toString())+ ":" +
+            (finalDate.minute < 10 ? "0" + finalDate.minute.toString() : finalDate.minute.toString());
     stopController[indexController].text = finalDateString;
     stopTime[indexController] = finalDateString;
     StoreProvider.of<AppState>(context).dispatch(SetServiceSlotStopTime(stopTime));
@@ -204,7 +210,9 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
             fontWeight: FontWeight.w500,
           ),
         ),
-        selectedTextStyle: TextStyle(color: Colors.blue),
+        confirmTextStyle: TextStyle(color: BuytimeTheme.ManagerPrimary),
+        cancelTextStyle: TextStyle(color: BuytimeTheme.ManagerPrimary),
+        selectedTextStyle: TextStyle(color: BuytimeTheme.ManagerPrimary),
         onCancel: () {
           return 0;
         },
@@ -214,6 +222,7 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
             String hour = value[0] < 10 ? "0" + value[0].toString() : value[0].toString();
             String format24 = hour + ":" + minute;
             stopController[indexController].text = format24;
+            debugPrint('W_service_step_availabile_time => stop time: $format24');
             List<String> controllerList = convertListTextEditingControllerToListString(stopController);
             StoreProvider.of<AppState>(context).dispatch(SetServiceSlotStopTime(controllerList));
             setState(() {
@@ -616,7 +625,9 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
                                                                       fontWeight: FontWeight.w800,
                                                                     ),
                                                                     validator: (value) {
-                                                                      errorStartTime[i] = showErrorStartTime(i);
+                                                                        if (snapshot.serviceSlot.day > 0) {
+                                                                          errorStartTime[i] = showErrorStartTime(i);
+                                                                        }
                                                                       return value;
                                                                     },
                                                                   ),
@@ -703,7 +714,7 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
                                                         }
                                                       },
                                                       checkboxType: CheckboxType.Parent,
-                                                      activeColor: Colors.indigo,
+                                                      activeColor: BuytimeTheme.ManagerPrimary,
                                                     ),
                                                   ],
                                                 ),
@@ -720,7 +731,7 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
                                                             _manageTristate(index, value, i);
                                                           },
                                                           checkboxType: CheckboxType.Child,
-                                                          activeColor: Colors.indigo,
+                                                          activeColor: BuytimeTheme.ManagerPrimary,
                                                         ),
                                                         shrinkWrap: true,
                                                         physics: ClampingScrollPhysics(),

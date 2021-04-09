@@ -64,7 +64,20 @@ class _BookingCreationState extends State<BookingCreation> {
         context: context,
         initialDateRange: DateTimeRange(start: cIn, end: cOut),
         firstDate: new DateTime(DateTime.now().year,DateTime.now().month, DateTime.now().day),
-        lastDate: new DateTime(2025)
+        lastDate: new DateTime(2025),
+        builder: (BuildContext context, Widget child) {
+          return Theme(
+            data: ThemeData(
+                primaryColor: BuytimeTheme.ManagerPrimary,
+                splashColor: BuytimeTheme.ManagerPrimary,
+                colorScheme: ColorScheme.light(
+                    onPrimary: Colors.white,
+                    primary: BuytimeTheme.ManagerPrimary
+                )
+            ),
+            child: child,
+          );
+        }
     );
     if (picked != null && picked.start != null && picked.end != null) {
       print(picked);

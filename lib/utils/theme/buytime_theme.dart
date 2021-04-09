@@ -19,7 +19,11 @@ class BuytimeTheme {
   };
 
   ///Custom Colors ordered as Figma
-  static const Color ManagerPrimary = Color.fromARGB(255, 0, 103, 145);
+  //static const Color ManagerPrimary = Color.fromARGB(255, 0, 103, 145);
+  static const MaterialColor ManagerPrimary = MaterialColor(0xFF006791, managerPrimarySwatch);
+  static const Map<int, Color> managerPrimarySwatch =  {
+    900: Color.fromARGB(255, 0, 103, 145),
+  };
   static const Color Secondary = Color.fromARGB(255, 253, 192, 47);
   static const Color TextDark = Color.fromARGB(255, 16, 5, 14);
   static const Color TextMedium = Color.fromARGB(255, 117, 117, 117);

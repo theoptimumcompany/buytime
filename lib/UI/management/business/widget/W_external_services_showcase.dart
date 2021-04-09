@@ -54,7 +54,7 @@ class ExternalServiceShowcaseState extends State<ExternalServiceShowcase> {
 
           ///Categories list top part
           Container(
-            padding: EdgeInsets.only(left: 20.0, right: 20.0, top: 20.0, bottom: 0.0),
+            padding: EdgeInsets.only(left: 20.0, right: 20.0, top: 20.0, bottom: 10.0),
             decoration: BoxDecoration(color: Colors.blueGrey.withOpacity(0.1)),
             child: Row(
               children: [

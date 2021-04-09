@@ -121,7 +121,6 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                     ),
                   ],
                 ),
-
                 ///Title
                 Utils.barTitle(AppLocalizations.of(context).dashboard),
                 Padding(

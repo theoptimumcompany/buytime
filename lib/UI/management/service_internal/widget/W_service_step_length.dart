@@ -85,7 +85,9 @@ class StepLengthState extends State<StepLength> {
               color: BuytimeTheme.TextBlack,
               fontWeight: FontWeight.w500,
             )),
-        selectedTextStyle: TextStyle(color: Colors.blue),
+        confirmTextStyle: TextStyle(color: BuytimeTheme.ManagerPrimary),
+        cancelTextStyle: TextStyle(color: BuytimeTheme.ManagerPrimary),
+        selectedTextStyle: TextStyle(color:BuytimeTheme.ManagerPrimary),
         onCancel: () {
           return 0;
         },
@@ -113,7 +115,9 @@ class StepLengthState extends State<StepLength> {
               color: BuytimeTheme.TextBlack,
               fontWeight: FontWeight.w500,
             )),
-        selectedTextStyle: TextStyle(color: Colors.blue),
+        confirmTextStyle: TextStyle(color: BuytimeTheme.ManagerPrimary),
+        cancelTextStyle: TextStyle(color: BuytimeTheme.ManagerPrimary),
+        selectedTextStyle: TextStyle(color:BuytimeTheme.ManagerPrimary),
         onCancel: () {
           return 0;
         },
@@ -141,7 +145,9 @@ class StepLengthState extends State<StepLength> {
               color: BuytimeTheme.TextBlack,
               fontWeight: FontWeight.w500,
             )),
-        selectedTextStyle: TextStyle(color: Colors.blue),
+        confirmTextStyle: TextStyle(color: BuytimeTheme.ManagerPrimary),
+        cancelTextStyle: TextStyle(color: BuytimeTheme.ManagerPrimary),
+        selectedTextStyle: TextStyle(color:BuytimeTheme.ManagerPrimary),
         onCancel: () {
           return 0;
         },
@@ -185,7 +191,9 @@ class StepLengthState extends State<StepLength> {
               color: BuytimeTheme.TextBlack,
               fontWeight: FontWeight.w500,
             )),
-        selectedTextStyle: TextStyle(color: Colors.blue),
+        confirmTextStyle: TextStyle(color: BuytimeTheme.ManagerPrimary),
+        cancelTextStyle: TextStyle(color: BuytimeTheme.ManagerPrimary),
+        selectedTextStyle: TextStyle(color:BuytimeTheme.ManagerPrimary),
         onCancel: () {
           return 0;
         },
@@ -210,7 +218,9 @@ class StepLengthState extends State<StepLength> {
               color: BuytimeTheme.TextBlack,
               fontWeight: FontWeight.w500,
             )),
-        selectedTextStyle: TextStyle(color: Colors.blue),
+        confirmTextStyle: TextStyle(color: BuytimeTheme.ManagerPrimary),
+        cancelTextStyle: TextStyle(color: BuytimeTheme.ManagerPrimary),
+        selectedTextStyle: TextStyle(color:BuytimeTheme.ManagerPrimary),
         onCancel: () {
           return 0;
         },

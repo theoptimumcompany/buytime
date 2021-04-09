@@ -38,10 +38,38 @@ class CalendarAvailabilityState extends State<CalendarAvailability> {
     currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0);
     if(checkIn.isBefore(currentTime) && !checkIn.isAtSameMomentAs(currentTime)){
       picked = await showDateRangePicker(
-          context: context, firstDate: DateTime.now(), lastDate: new DateTime(2025));
+          context: context, firstDate: DateTime.now(), lastDate: new DateTime(2025),
+          builder: (BuildContext context, Widget child) {
+            return Theme(
+              data: ThemeData(
+                  primaryColor: BuytimeTheme.ManagerPrimary,
+                  splashColor: BuytimeTheme.ManagerPrimary,
+                  colorScheme: ColorScheme.light(
+                      onPrimary: Colors.white,
+                      primary: BuytimeTheme.ManagerPrimary
+                  )
+              ),
+              child: child,
+            );
+          }
+      );
     }else{
       picked = await showDateRangePicker(
-          context: context, initialDateRange: DateTimeRange(start: cIn, end: cOut), firstDate: checkIn, lastDate: new DateTime(2025));
+          context: context, initialDateRange: DateTimeRange(start: cIn, end: cOut), firstDate: checkIn, lastDate: new DateTime(2025),
+          builder: (BuildContext context, Widget child) {
+            return Theme(
+              data: ThemeData(
+                  primaryColor: BuytimeTheme.ManagerPrimary,
+                  splashColor: BuytimeTheme.ManagerPrimary,
+                  colorScheme: ColorScheme.light(
+                      onPrimary: Colors.white,
+                      primary: BuytimeTheme.ManagerPrimary
+                  )
+              ),
+              child: child,
+            );
+          }
+      );
     }
     if (picked != null && picked.start != null && picked.end != null) {
       setState(() {

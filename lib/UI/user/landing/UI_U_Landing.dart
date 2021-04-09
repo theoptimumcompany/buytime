@@ -158,39 +158,40 @@ class LandingState extends State<Landing> {
             }
 
             if(bookingList.isNotEmpty && !onBookingCode && rippleLoading && !isManagerOrAbove){
+              rippleLoading = false;
               if(bookingList.first.business_id == null)
                 bookingList.removeLast();
-              rippleLoading = false;
-              DateTime currentTime = DateTime.now();
-              currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0);
+              else{
+                DateTime currentTime = DateTime.now();
+                currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0);
 
-              DateTime endTime = DateTime.now();
-              //DateTime startTime = DateTime.now();
-              endTime = new DateTime(bookingList.first.end_date.year, bookingList.first.end_date.month, bookingList.first.end_date.day, 0, 0, 0, 0, 0);
-              if(endTime.isBefore(currentTime)){
-                //bookingStatus = 'Closed';
-                debugPrint('UI_U_Landing => No active booking found!');
-                //rippleLoading = false;
-              }else if(bookingList.first.start_date.isAtSameMomentAs(currentTime)){
-                //bookingStatus = 'Active';
-                debugPrint('UI_U_Landing => Active booking found!');
-                //StoreProvider.of<AppState>(context).dispatch(BookingRequestResponse(bookingList.first));
-                //StoreProvider.of<AppState>(context).dispatch(BusinessAndNavigateRequest(bookingList.first.business_id));
-              } else if(bookingList.first.start_date.isAfter(currentTime)){
-                //bookingStatus = 'Upcoming';
-                debugPrint('UI_U_Landing => Upcoming booking found!');
-                WidgetsBinding.instance.addPostFrameCallback((_) async {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => MyBookings()));
-                });
-              } else{
-                //bookingStatus = 'Active';
-                secondRippleLoading = true;
-                debugPrint('UI_U_Landing => Active booking found!');
-                StoreProvider.of<AppState>(context).dispatch(BookingRequestResponse(bookingList.first));
-                //Navigator.push(context, MaterialPageRoute(builder: (context) => BookingPage()));
-                StoreProvider.of<AppState>(context).dispatch(BusinessServiceListAndNavigateRequest(bookingList.first.business_id));
+                DateTime endTime = DateTime.now();
+                //DateTime startTime = DateTime.now();
+                endTime = new DateTime(bookingList.first.end_date.year, bookingList.first.end_date.month, bookingList.first.end_date.day, 0, 0, 0, 0, 0);
+                if(endTime.isBefore(currentTime)){
+                  //bookingStatus = 'Closed';
+                  debugPrint('UI_U_Landing => No active booking found!');
+                  //rippleLoading = false;
+                }else if(bookingList.first.start_date.isAtSameMomentAs(currentTime)){
+                  //bookingStatus = 'Active';
+                  debugPrint('UI_U_Landing => Active booking found!');
+                  //StoreProvider.of<AppState>(context).dispatch(BookingRequestResponse(bookingList.first));
+                  //StoreProvider.of<AppState>(context).dispatch(BusinessAndNavigateRequest(bookingList.first.business_id));
+                } else if(bookingList.first.start_date.isAfter(currentTime)){
+                  //bookingStatus = 'Upcoming';
+                  debugPrint('UI_U_Landing => Upcoming booking found!');
+                  WidgetsBinding.instance.addPostFrameCallback((_) async {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => MyBookings()));
+                  });
+                } else{
+                  //bookingStatus = 'Active';
+                  secondRippleLoading = true;
+                  debugPrint('UI_U_Landing => Active booking found!');
+                  StoreProvider.of<AppState>(context).dispatch(BookingRequestResponse(bookingList.first));
+                  //Navigator.push(context, MaterialPageRoute(builder: (context) => BookingPage()));
+                  StoreProvider.of<AppState>(context).dispatch(BusinessServiceListAndNavigateRequest(bookingList.first.business_id));
+                }
               }
-
             }
           }
 

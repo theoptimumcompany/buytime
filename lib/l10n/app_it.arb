@@ -109,7 +109,6 @@
   "youCannotMoveBranch": "Non puoi muovere il ramo selezionato al genitore scelto!",
   "managers": "Responsabile",
   "workers": "Lavoratori",
-  "noWorkersHere": "Non ci sono lavoratori assegnati a questa categoria",
   "deleteCategory": "Cancella Categoria",
   "categoryCreated": "Categoria Creata!",
   "categoryEdited": "Categoria Modificata!",
@@ -442,5 +441,7 @@
   "recommended": "Recommended",
   "recommendedSlogan": "Discover the best services recommended by us",
   "allBookings": "All Bookings",
-  "noCategoryFound": "No category found"
+  "noCategoryFound": "No category found",
+  "noManagerAssigned": "No Manager assigned to category",
+  "noWorkersHere": "No Worker assigned to category"
 }

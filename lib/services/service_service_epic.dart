@@ -78,6 +78,9 @@ class ServiceListRequestService implements EpicClass<AppState> {
       statisticsState.serviceListRequestServiceWrite = writes;
       statisticsState.serviceListRequestServiceDocuments = documents;
 
+      if(serviceStateList.isEmpty)
+        serviceStateList.add(ServiceState());
+
     }).expand((element) => [
           ServiceListReturned(serviceStateList),
           UpdateStatistics(statisticsState),

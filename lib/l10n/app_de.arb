@@ -109,7 +109,6 @@
   "youCannotMoveBranch": "You can't move the branch to selected parent!",
   "managers": "Managers",
   "workers": "Workers",
-  "noWorkersHere": "There are no workers assigned to this category",
   "deleteCategory": "Delete Category",
   "categoryCreated": "Category Created!",
   "categoryEdited": "Category Edited!",
@@ -442,5 +441,8 @@
   "recommended": "Recommended",
   "recommendedSlogan": "Discover the best services recommended by us",
   "allBookings": "All Bookings",
-  "noCategoryFound": "No category found"
+  "noCategoryFound": "No category found",
+  "noManagerAssigned": "No Manager assigned to category",
+  "noWorkersHere": "No Worker assigned to category"
+
 }

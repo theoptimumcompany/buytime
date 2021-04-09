@@ -347,7 +347,18 @@ class ManageCategoryState extends State<ManageCategory> {
       branches.add(Padding(
         padding: const EdgeInsets.all(10.0),
         child: Container(
-          child: Center(child: Text(AppLocalizations.of(context).noCategoriesForBusiness)),
+          height: SizeConfig.safeBlockVertical * 8,
+          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * .5),
+          decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
+          child: Center(
+              child: Container(
+                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 4),
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  AppLocalizations.of(context).noCategoriesForBusiness,
+                  style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextGrey, fontWeight: FontWeight.w500, fontSize: 16),
+                ),
+              )),
         ),
       ));
     }
@@ -398,8 +409,8 @@ class ManageCategoryState extends State<ManageCategory> {
                   IconButton(
                     icon: const Icon(
                       Icons.add,
-                      color: Colors.white,
-                      size: 30.0,
+                      color: BuytimeTheme.SymbolWhite,
+                      size: 24.0,
                     ),
                     tooltip: AppLocalizations.of(context).createCategory,
                     onPressed: () {

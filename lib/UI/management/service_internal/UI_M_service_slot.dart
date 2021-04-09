@@ -94,7 +94,7 @@ class UI_M_ServiceSlotState extends State<UI_M_ServiceSlot> {
                         ),
                         body: Theme(
                           data: ThemeData(
-                              primaryColor: BuytimeTheme.PrimaryMalibu
+                              primaryColor: BuytimeTheme.ManagerPrimary
                           ),
                           child: SafeArea(
                             child: SingleChildScrollView(

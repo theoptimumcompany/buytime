@@ -10,6 +10,7 @@ import 'package:Buytime/reblox/model/category/category_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
+import 'package:Buytime/reblox/reducer/category_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_tree_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/service_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/service_reducer.dart';
@@ -89,18 +90,35 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
             ));
           }
         },
-        onInit: (store) => {store.state.serviceList.serviceListState.clear(), store.dispatch(ServiceListRequest(store.state.business.id_firestore, 'manager')), startRequest = true},
+        onInit: (store){
+          store.state.serviceList.serviceListState.clear();
+          store.dispatch(ServiceListRequest(store.state.business.id_firestore, 'manager'));
+          store.dispatch(RequestRootListCategory(store.state.business.id_firestore));
+          startRequest = true;
+          noActivity = false;
+          debugPrint('UI_M_service_list => no activity ON INIT: ${noActivity}');
+        },
         //onWillChange: (store, storeNew) => setServiceLists(storeNew.categoryList.categoryListState, storeNew.serviceList.serviceListState),
         builder: (context, snapshot) {
           List<CategoryState> categoryRootList = snapshot.categoryList.categoryListState;
-          categoryRootList.sort((a, b) => a.name.compareTo(b.name));
-          if (snapshot.serviceList.serviceListState.isEmpty && startRequest) {
-            noActivity = true;
-          } else {
-            noActivity = false;
-            setServiceLists(snapshot.categoryList.categoryListState, snapshot.serviceList.serviceListState);
-          }
           List<ServiceState> serviceList = snapshot.serviceList.serviceListState;
+          categoryRootList.sort((a, b) => a.name.compareTo(b.name));
+          debugPrint('UI_M_service_list => SERVICE LIST LENGTH: ${serviceList.length}');
+          if (serviceList.isEmpty && startRequest) {
+            noActivity = true;
+            startRequest = false;
+            debugPrint('UI_M_service_list => no activity IF: ${noActivity}');
+          } else {
+            debugPrint('UI_M_service_list => no activity ELSE BEFORE: ${noActivity}  | no activity ELSE BEFORE: $startRequest} ');
+            noActivity = false;
+            startRequest = false;
+            debugPrint('UI_M_service_list => no activity ELSE AFTER: ${noActivity}');
+            if(serviceList.isNotEmpty && serviceList.first.businessId == null)
+              serviceList.removeLast();
+            else
+              setServiceLists(snapshot.categoryList.categoryListState, snapshot.serviceList.serviceListState);
+          }
+
           order = snapshot.order.itemList != null ? (snapshot.order.itemList.length > 0 ? snapshot.order : OrderState().toEmpty()) : OrderState().toEmpty();
 
           return WillPopScope(
@@ -126,7 +144,7 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                       },
                     ),
                     Utils.barTitle(AppLocalizations.of(context).serviceList),
-                    IconButton(
+                    snapshot.categoryList.categoryListState.isNotEmpty ? IconButton(
                       icon: Icon(Icons.add, color: BuytimeTheme.SymbolWhite),
                       onPressed: () {
                         StoreProvider.of<AppState>(context).dispatch(SetService(ServiceState().toEmpty()));
@@ -140,6 +158,8 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                                 exitPage: UI_M_ServiceList(),
                                 from: true));
                       },
+                    ) : SizedBox(
+                      width: 56.0,
                     ),
                   ],
                 ),
@@ -416,11 +436,13 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                                           ),
                                         )
                                       : noActivity
-                                          ? Column(
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              children: [CircularProgressIndicator()],
-                                            )
-                                          : Container(),
+                                          ? Container(
+                                                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5),
+                                              child: Column(
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                children: [CircularProgressIndicator()],
+                                              ),
+                                  ) : Container(),
                                 ],
                               ),
                             );

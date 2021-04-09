@@ -31,7 +31,8 @@ class StepPriceState extends State<StepPrice> {
       price = StoreProvider.of<AppState>(context).state.serviceSlot.price;
       List<String> format = [];
       format = price.toString().split(".");
-      priceController.text = format[0].toString() + "." + (int.parse(format[1]) < 10 ? format[1].toString() + "0" : format[1].toString());
+      priceController.text = format[0].toString() + (format[1] == '0' ? '' : "." + (int.parse(format[1]) < 10 ? format[1].toString() + '0': format[1].toString()));
+
     });
   }
 
@@ -112,6 +113,11 @@ class StepPriceState extends State<StepPrice> {
                               enabled: true,
                               controller: priceController,
                               //  initialValue: snapshot.serviceSlot.price.toString(),
+                              onTap: (){
+                                setState(() {
+                                  priceController.clear();
+                                });
+                              },
                               onChanged: (value) {
                                 if (value == "") {
                                   setState(() {

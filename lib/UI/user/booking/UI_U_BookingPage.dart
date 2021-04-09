@@ -39,6 +39,7 @@ import 'package:Buytime/reusable/material_design_icons.dart';
 import 'package:Buytime/reusable/menu/UI_M_business_list_drawer.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
+import 'package:Buytime/utils/utils.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -320,16 +321,7 @@ class _BookingPageState extends State<BookingPage> {
                         ],
                       ),
                       ///Title
-                      Container(
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 10.0),
-                          child: Text(
-                            AppLocalizations.of(context).buytime,
-                            textAlign: TextAlign.start,
-                            style: BuytimeTheme.appbarTitle,
-                          ),
-                        ),
-                      ),
+                      Utils.barTitle(snapshot.business.name),
                       ///Cart
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 10.0),
@@ -421,10 +413,8 @@ class _BookingPageState extends State<BookingPage> {
                                 ///Business Logo
                                 Container(
                                   //margin: EdgeInsets.only(left: SizeConfig.safeBlockVertical * 1, right: SizeConfig.safeBlockHorizontal * 1),
-                                  width: 125,
-                                  ///25% SizeConfig.safeBlockVertical * 20
-                                  height: 125,
-                                  ///25% SizeConfig.safeBlockVertical * 20
+                                  width: double.infinity,///25% SizeConfig.safeBlockVertical * 20
+                                  height: 150,///25% SizeConfig.safeBlockVertical * 20
                                   decoration: BoxDecoration(
                                     color: Color(0xffE6E7E8),
                                     /*borderRadius: BorderRadius.all(Radius.circular(SizeConfig.blockSizeHorizontal * 5)), ///12.5%
@@ -434,14 +424,17 @@ class _BookingPageState extends State<BookingPage> {
                           ),*/
                                   ),
                                   child: CachedNetworkImage(
-                                    imageUrl: businessState.logo,
+                                    imageUrl: businessState.wide != null ? businessState.wide : 'https://firebasestorage.googleapis.com/v0/b/buytime-458a1.appspot.com/o/general%2Fimage_placeholder_200x200_1000x1000.png?alt=media&token=082a1896-32d8-4750-b7cc-141f00bc060c',
                                     imageBuilder: (context, imageProvider) => Container(
                                       //margin: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 5), ///5%
                                       decoration: BoxDecoration(
                                         //borderRadius: BorderRadius.all(Radius.circular(SizeConfig.blockSizeHorizontal * 5)), ///12.5%
                                           image: DecorationImage(image: imageProvider, fit: BoxFit.cover)),
                                     ),
-                                    placeholder: (context, url) => CircularProgressIndicator(),
+                                    placeholder: (context, url) => Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [CircularProgressIndicator()],
+                                    ),
                                     errorWidget: (context, url, error) => Icon(Icons.error),
                                   ),
                                 ),
