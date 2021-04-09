@@ -138,7 +138,7 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                           AppLocalizations.of(context).edit,
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: media.height * 0.025,
+                            fontSize: 14,
                             fontWeight: FontWeight.w400,
                           ),
                         ),

@@ -418,9 +418,12 @@ class ConfirmedOrderState extends State<ConfirmedOrder> with SingleTickerProvide
                                           shape: RoundedRectangleBorder(
                                             borderRadius: new BorderRadius.circular(5),
                                           ),
-                                          child: Text(
-                                            AppLocalizations.of(context).backToHome,
-                                            style: TextStyle(fontSize: 14, fontFamily: BuytimeTheme.FontFamily, fontWeight: FontWeight.w500, color: BuytimeTheme.TextWhite, letterSpacing: 1.25),
+                                          child: FittedBox(
+                                            fit: BoxFit.scaleDown,
+                                            child: Text(
+                                              AppLocalizations.of(context).backToHome,
+                                              style: TextStyle(fontSize: 14, fontFamily: BuytimeTheme.FontFamily, fontWeight: FontWeight.w500, color: BuytimeTheme.TextWhite, letterSpacing: 1.25),
+                                            ),
                                           ),
                                         )
                                     ),

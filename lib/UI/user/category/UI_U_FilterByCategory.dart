@@ -7,6 +7,7 @@ import 'package:Buytime/reblox/model/category/category_list_state.dart';
 import 'package:Buytime/reblox/model/category/category_state.dart';
 import 'package:Buytime/reblox/model/order/order_entry.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
+import 'package:Buytime/reblox/model/role/role.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
@@ -604,36 +605,46 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                                       setState(() {
                                                         tmpServiceList.removeAt(index);
                                                       });
-                                                      if (direction == DismissDirection.startToEnd) {
-                                                        debugPrint('UI_U_SearchPage => DX to DELETE');
-                                                        // Show a snackbar. This snackbar could also contain "Undo" actions.
-                                                        Scaffold.of(context).showSnackBar(SnackBar(
-                                                            content: Text("${service.name} removed"),
-                                                            action: SnackBarAction(
-                                                                label: AppLocalizations.of(context).undo,
-                                                                onPressed: () {
-                                                                  //To undo deletion
-                                                                  undoDeletion(index, service);
-                                                                })));
-                                                      } else {
-                                                        debugPrint('UI_U_SearchPage => SX to BOOK');
-                                                        if (service.switchSlots) {
-                                                          StoreProvider.of<AppState>(context).dispatch(OrderReservableListRequest(service.serviceId));
-                                                          Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(builder: (context) => ServiceReserve(serviceState: service)),
-                                                          );
+                                                      if(StoreProvider.of<AppState>(context).state.user.getRole() == Role.user){
+                                                        if (direction == DismissDirection.startToEnd) {
+                                                          debugPrint('UI_U_SearchPage => DX to DELETE');
+                                                          // Show a snackbar. This snackbar could also contain "Undo" actions.
+                                                          Scaffold.of(context).showSnackBar(SnackBar(
+                                                              content: Text("${service.name} removed"),
+                                                              action: SnackBarAction(
+                                                                  label: AppLocalizations.of(context).undo,
+                                                                  onPressed: () {
+                                                                    //To undo deletion
+                                                                    undoDeletion(index, service);
+                                                                  })));
                                                         } else {
-                                                          order.business.name = snapshot.business.name;
-                                                          order.business.id = snapshot.business.id_firestore;
-                                                          order.user.name = snapshot.user.name;
-                                                          order.user.id = snapshot.user.uid;
-                                                          order.addItem(service, snapshot.business.ownerId);
-                                                          order.cartCounter++;
-                                                          //StoreProvider.of<AppState>(context).dispatch(SetOrderCartCounter(order.cartCounter));
-                                                          StoreProvider.of<AppState>(context).dispatch(SetOrder(order));
+                                                          debugPrint('UI_U_SearchPage => SX to BOOK');
+                                                          if (service.switchSlots) {
+                                                            StoreProvider.of<AppState>(context).dispatch(OrderReservableListRequest(service.serviceId));
+                                                            Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(builder: (context) => ServiceReserve(serviceState: service)),
+                                                            );
+                                                          } else {
+                                                            order.business.name = snapshot.business.name;
+                                                            order.business.id = snapshot.business.id_firestore;
+                                                            order.user.name = snapshot.user.name;
+                                                            order.user.id = snapshot.user.uid;
+                                                            order.addItem(service, snapshot.business.ownerId);
+                                                            order.cartCounter++;
+                                                            //StoreProvider.of<AppState>(context).dispatch(SetOrderCartCounter(order.cartCounter));
+                                                            StoreProvider.of<AppState>(context).dispatch(SetOrder(order));
+                                                          }
+                                                          undoDeletion(index, service);
                                                         }
-                                                        undoDeletion(index, service);
+                                                      }else{
+                                                        if (direction == DismissDirection.startToEnd) {
+                                                          debugPrint('UI_U_SearchPage => DX to DELETE');
+
+                                                        } else {
+                                                          debugPrint('UI_U_SearchPage => SX to BOOK');
+                                                          undoDeletion(index, service);
+                                                        }
                                                       }
                                                     },
                                                     child: Column(

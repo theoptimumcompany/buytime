@@ -77,7 +77,6 @@ class AllCategoryListRequestService implements EpicClass<AppState> {
       businessListFromFirebase = await FirebaseFirestore.instance /// 1 read - ? DOC
           .collection("business")
           .where("draft", isEqualTo: false)
-          .limit(20)
           .get();
 
       List<QuerySnapshot> queryList = [];
@@ -92,6 +91,7 @@ class AllCategoryListRequestService implements EpicClass<AppState> {
             .doc(businessListFromFirebase.docs[i].id)
             .collection("category")
             .where("level", isEqualTo: 0)
+            .limit(10)
             .get();
         read++;
         snapshotDocs += snapshot.docs.length;
@@ -104,7 +104,7 @@ class AllCategoryListRequestService implements EpicClass<AppState> {
 
         if(!tmpBusinessIdList.contains(businessListFromFirebase.docs[i].id)){
           CollectionReference servicesFirebase = FirebaseFirestore.instance.collection("service");
-          Query query = servicesFirebase.where("businessId", isEqualTo: businessListFromFirebase.docs[i].id);
+          Query query = servicesFirebase.where("businessId", isEqualTo: businessListFromFirebase.docs[i].id).limit(20);
 
           /// 1 READ - ? DOC
           //   query = query.where("id_category", isEqualTo: categoryInviteState.id_category);

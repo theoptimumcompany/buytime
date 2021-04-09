@@ -4,6 +4,7 @@ import 'package:Buytime/UI/user/cart/UI_U_ConfirmOrder.dart';
 import 'package:Buytime/UI/user/service/UI_U_ServiceReserve.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
+import 'package:Buytime/reblox/model/role/role.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reservable_list_reducer.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
@@ -425,7 +426,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                               decoration: BoxDecoration(
                                   borderRadius: new BorderRadius.circular(5),
                                   border: Border.all(
-                                      color: BuytimeTheme.UserPrimary
+                                      color: StoreProvider.of<AppState>(context).state.user.getRole() == Role.user ? BuytimeTheme.UserPrimary : BuytimeTheme.SymbolGrey
                                   )
                               ),
                               child: MaterialButton(
@@ -433,7 +434,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                 hoverElevation: 0,
                                 focusElevation: 0,
                                 highlightElevation: 0,
-                                onPressed: () {
+                                onPressed: StoreProvider.of<AppState>(context).state.user.getRole() == Role.user ? () {
                                   order.business.name = snapshot.business.name;
                                   order.business.id = snapshot.business.id_firestore;
                                   order.user.name = snapshot.user.name;
@@ -442,8 +443,9 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                   order.cartCounter++;
                                   //StoreProvider.of<AppState>(context).dispatch(SetOrderCartCounter(order.cartCounter));
                                   StoreProvider.of<AppState>(context).dispatch(SetOrder(order));
-                                },
+                                } : null,
                                 textColor: BuytimeTheme.UserPrimary,
+                                disabledTextColor: BuytimeTheme.SymbolGrey,
                                 color: BuytimeTheme.BackgroundWhite,
                                 //padding: EdgeInsets.all(15),
                                 shape: RoundedRectangleBorder(
@@ -470,7 +472,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                 hoverElevation: 0,
                                 focusElevation: 0,
                                 highlightElevation: 0,
-                                onPressed: () {
+                                onPressed: StoreProvider.of<AppState>(context).state.user.getRole() == Role.user ? () {
                                   order.business.name = snapshot.business.name;
                                   order.business.id = snapshot.business.id_firestore;
                                   order.user.name = snapshot.user.name;
@@ -483,11 +485,13 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
 
                                   Navigator.push(
                                     context,
-                                    MaterialPageRoute(builder: (context) => ConfirmOrder()),
+                                    MaterialPageRoute(builder: (context) => ConfirmOrder(reserve: false,)),
                                   );
-                                },
+                                } : null,
                                 textColor: BuytimeTheme.TextWhite,
+                                disabledTextColor: BuytimeTheme.TextWhite,
                                 color: BuytimeTheme.UserPrimary,
+                                disabledColor: BuytimeTheme.SymbolGrey,
                                 //padding: EdgeInsets.all(15),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: new BorderRadius.circular(5),
@@ -512,24 +516,26 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                         margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, bottom: SizeConfig.safeBlockVertical * 2, right: SizeConfig.safeBlockHorizontal * 0),
                         decoration: BoxDecoration(
                             borderRadius: new BorderRadius.circular(5),
-                            border: Border.all(
+                            /*border: Border.all(
                                 color: BuytimeTheme.UserPrimary
-                            )
+                            )*/
                         ),
                         child: MaterialButton(
-                          onPressed: () {
+                          onPressed: StoreProvider.of<AppState>(context).state.user.getRole() == Role.user ?  () {
                             StoreProvider.of<AppState>(context).dispatch(OrderReservableListRequest(widget.serviceState.serviceId));
                             Navigator.push(
                               context,
                               MaterialPageRoute(builder: (context) => ServiceReserve(serviceState: serviceState)),
                             );
-                          },
+                          } : null,
                           elevation: 0,
                           hoverElevation: 0,
                           focusElevation: 0,
                           highlightElevation: 0,
                           textColor: BuytimeTheme.TextWhite,
+                          disabledTextColor: BuytimeTheme.TextWhite,
                           color: BuytimeTheme.UserPrimary,
+                          disabledColor: BuytimeTheme.SymbolGrey,
                           //padding: EdgeInsets.all(15),
                           shape: RoundedRectangleBorder(
                             borderRadius: new BorderRadius.circular(5),

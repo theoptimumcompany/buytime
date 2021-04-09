@@ -729,22 +729,25 @@ class _BookingPageState extends State<BookingPage> {
                                                       serviceList.removeAt(index);
                                                     });
                                                     debugPrint('UI_U_SearchPage => SX to BOOK');
-                                                    if (service.switchSlots) {
-                                                      StoreProvider.of<AppState>(context).dispatch(OrderReservableListRequest(service.serviceId));
-                                                      Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(builder: (context) => ServiceReserve(serviceState: service)),
-                                                      );
-                                                    } else {
-                                                      order.business.name = snapshot.business.name;
-                                                      order.business.id = snapshot.business.id_firestore;
-                                                      order.user.name = snapshot.user.name;
-                                                      order.user.id = snapshot.user.uid;
-                                                      order.addItem(service, snapshot.business.ownerId);
-                                                      order.cartCounter++;
-                                                      //StoreProvider.of<AppState>(context).dispatch(SetOrderCartCounter(order.cartCounter));
-                                                      StoreProvider.of<AppState>(context).dispatch(SetOrder(order));
+                                                    if(StoreProvider.of<AppState>(context).state.user.getRole() == Role.user){
+                                                      if (service.switchSlots) {
+                                                        StoreProvider.of<AppState>(context).dispatch(OrderReservableListRequest(service.serviceId));
+                                                        Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(builder: (context) => ServiceReserve(serviceState: service)),
+                                                        );
+                                                      } else {
+                                                        order.business.name = snapshot.business.name;
+                                                        order.business.id = snapshot.business.id_firestore;
+                                                        order.user.name = snapshot.user.name;
+                                                        order.user.id = snapshot.user.uid;
+                                                        order.addItem(service, snapshot.business.ownerId);
+                                                        order.cartCounter++;
+                                                        //StoreProvider.of<AppState>(context).dispatch(SetOrderCartCounter(order.cartCounter));
+                                                        StoreProvider.of<AppState>(context).dispatch(SetOrder(order));
+                                                      }
                                                     }
+
                                                     undoDeletion(index, service);
                                                   },
                                                   child: Column(
