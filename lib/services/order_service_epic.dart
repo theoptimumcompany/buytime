@@ -42,7 +42,7 @@ List<DateTime> getPeriod(DateTime dateTime){
     period = getStringPeriod(unix, 6, 0);
   }
 
-  debugPrint('Period: $period');
+  debugPrint('ORDER_SERVICE_EPIC => Period: $period');
 
   return period;
 }
@@ -69,7 +69,7 @@ class OrderListRequestService implements EpicClass<AppState> {
         List<BusinessState> businessList = store.state.businessList.businessListState;
         DateTime currentTime = DateTime.now();
         currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0).toUtc();
-        debugPrint('order_service_epic => current Time: $currentTime');
+        debugPrint('ORDER_SERVICE_EPIC => current Time: $currentTime');
         List<DateTime> period = getPeriod(currentTime);
         orderStateList = [];
         int ordersFirebaseDocs = 0;

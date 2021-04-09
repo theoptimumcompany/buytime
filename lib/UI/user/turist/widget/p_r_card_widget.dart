@@ -1,4 +1,5 @@
 import 'package:Buytime/UI/user/category/UI_U_FilterByCategory.dart';
+import 'package:Buytime/UI/user/service/UI_U_ServiceDetails.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
@@ -50,6 +51,7 @@ class _PRCardWidgetState extends State<PRCardWidget> {
               child: InkWell(
                 splashColor: Colors.black.withOpacity(.3),
                 onTap: (){
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => ServiceDetails(serviceState: widget.serviceState, tourist: true,)));
                   /*widget.fromBookingPage ?
               Navigator.push(context, MaterialPageRoute(builder: (context) => FilterByCategory(fromBookingPage: true, categoryState: widget.categoryState,))) :
               Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => FilterByCategory(fromBookingPage: false,categoryState: widget.categoryState,)));*/

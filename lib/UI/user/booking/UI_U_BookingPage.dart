@@ -176,7 +176,7 @@ class _BookingPageState extends State<BookingPage> {
             ? Flexible(
           flex: 1,
           child: FindYourInspirationCardWidget(list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2,
-              list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2, list[0], true),
+              list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2, list[0], true, false),
         )
             : Container(),
 
@@ -185,7 +185,7 @@ class _BookingPageState extends State<BookingPage> {
             ? Flexible(
           flex: 1,
           child: FindYourInspirationCardWidget(list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2,
-              list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2, list[1], true),
+              list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2, list[1], true, false),
         )
             : Container(),
 
@@ -194,7 +194,7 @@ class _BookingPageState extends State<BookingPage> {
             ? Flexible(
           flex: 1,
           child: FindYourInspirationCardWidget(list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2,
-              list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2, list[2], true),
+              list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2, list[2], true, false),
         )
             : Container(),
       ],
@@ -346,7 +346,7 @@ class _BookingPageState extends State<BookingPage> {
                                         // go to the cart page
                                         Navigator.push(
                                           context,
-                                          MaterialPageRoute(builder: (context) => Cart()),
+                                          MaterialPageRoute(builder: (context) => Cart(tourist: false,)),
                                         );
                                       } else {
                                         showDialog(
@@ -752,7 +752,7 @@ class _BookingPageState extends State<BookingPage> {
                                                   },
                                                   child: Column(
                                                     children: [
-                                                      BookingListServiceListItem(service),
+                                                      BookingListServiceListItem(service, false),
                                                       Container(
                                                         margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 30),
                                                         height: SizeConfig.safeBlockVertical * .2,
@@ -1202,7 +1202,7 @@ class _BookingPageState extends State<BookingPage> {
               alignment: Alignment.center,
               child: Container(
                   margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3),
-                  height: SizeConfig.safeBlockVertical * 100,
+                  height: double.infinity,
                   decoration: BoxDecoration(
                     color: BuytimeTheme.BackgroundCerulean.withOpacity(.8),
                   ),

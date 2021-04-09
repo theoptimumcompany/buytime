@@ -162,7 +162,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                                     // go to the cart page
                                     Navigator.push(
                                       context,
-                                      MaterialPageRoute(builder: (context) => Cart()),
+                                      MaterialPageRoute(builder: (context) => Cart(tourist: false,)),
                                     );
                                   } else {
                                     showDialog(

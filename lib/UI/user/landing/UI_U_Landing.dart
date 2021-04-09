@@ -149,6 +149,7 @@ class LandingState extends State<Landing> {
             requestingBookings = true;
             debugPrint('UI_U_Landing => USER EMAIL: ${snapshot.user.email}');
             StoreProvider.of<AppState>(context).dispatch(UserBookingListRequest(snapshot.user.email, false));
+
             WidgetsBinding.instance.addPostFrameCallback((_) async {
               Navigator.push(context, MaterialPageRoute(builder: (context) => UI_M_BusinessList()));
             });
@@ -163,9 +164,11 @@ class LandingState extends State<Landing> {
 
             if(bookingList.isNotEmpty && !onBookingCode && rippleLoading && !isManagerOrAbove){
               rippleLoading = false;
-              if(bookingList.first.business_id == null)
+              debugPrint('UI_U_Landing => FIRST BUSINESS ID: ${bookingList.first.business_id}');
+              if(bookingList.first.business_id == null){
+                snapshot.bookingList.bookingListState.removeLast();
                 bookingList.removeLast();
-              else{
+              }else{
                 DateTime currentTime = DateTime.now();
                 currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0);
 
@@ -198,6 +201,8 @@ class LandingState extends State<Landing> {
               }
             }
           }
+
+          debugPrint('UI_U_Landing => BOOKINGS: ${bookingList.length}');
 
           return Stack(children: [
             Positioned.fill(
@@ -541,7 +546,7 @@ class LandingState extends State<Landing> {
                 alignment: Alignment.center,
                 child: Container(
                     margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3),
-                    height: SizeConfig.safeBlockVertical * 100,
+                    height: double.infinity,
                     decoration: BoxDecoration(
                       color: BuytimeTheme.BackgroundCerulean.withOpacity(.8),
                     ),

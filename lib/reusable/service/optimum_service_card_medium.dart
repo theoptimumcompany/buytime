@@ -75,7 +75,7 @@ class _OptimumServiceCardMediumState extends State<OptimumServiceCardMedium> {
           onServiceCardTap(serviceState);
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => ServiceDetails(serviceState: serviceState,)),
+            MaterialPageRoute(builder: (context) => ServiceDetails(serviceState: serviceState, tourist: false,)),
           );
         },
         child: Row(

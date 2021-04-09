@@ -66,7 +66,13 @@ class _MyBookingsState extends State<MyBookings> {
       converter: (store) => store.state,
       onInit: (store){
         debugPrint('UI_U_MyBookings => onInit');
+
+        if(store.state.bookingList.bookingListState.first.business_id == null){
+          store.state.bookingList.bookingListState.removeLast();
+          //bookings.removeLast();
+        }
         bookings = store.state.bookingList.bookingListState;
+        debugPrint('UI_U_MyBookings => bookings length: ${bookings.length}');
         List<BookingState> tmpOpened = [];
         List<BookingState> tmpClosed = [];
 

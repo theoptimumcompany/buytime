@@ -26,8 +26,9 @@ import 'package:flutter_redux/flutter_redux.dart';
 class ConfirmOrder extends StatefulWidget{
   final String title = 'confirmOrder';
 
+  bool tourist;
   bool reserve;
-  ConfirmOrder({Key key, this.reserve}) : super(key: key);
+  ConfirmOrder({Key key, this.reserve, this.tourist}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => ConfirmOrderState();
@@ -83,7 +84,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
 
               return Scaffold(
                   appBar: BuytimeAppbar(
-                    background: BuytimeTheme.UserPrimary,
+                    background: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
                     width: media.width,
                     children: [
                       ///Back Button
@@ -302,9 +303,9 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                               StoreProvider.of<AppState>(context).dispatch(SetOrderProgress("in_progress"));
                                               StoreProvider.of<AppState>(context).dispatch(CreateOrder(snapshot.order));
                                             }
-                                            Navigator.push(context, MaterialPageRoute(builder: (context) => ConfirmedOrder(_controller.index, widget.reserve)),);
+                                            Navigator.push(context, MaterialPageRoute(builder: (context) => ConfirmedOrder(_controller.index, widget.reserve, widget.tourist)),);
                                           } : _selectedIndex == 1 ? (){
-                                            Navigator.push(context, MaterialPageRoute(builder: (context) => ConfirmedOrder(_controller.index, widget.reserve)),);
+                                            Navigator.push(context, MaterialPageRoute(builder: (context) => ConfirmedOrder(_controller.index, widget.reserve, widget.tourist)),);
                                           } : null,
                                           textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
                                           color: BuytimeTheme.UserPrimary,

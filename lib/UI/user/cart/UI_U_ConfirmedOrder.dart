@@ -31,7 +31,8 @@ class ConfirmedOrder extends StatefulWidget{
 
   int from;
   bool reserve;
-  ConfirmedOrder(this.from, this.reserve);
+  bool tourist;
+  ConfirmedOrder(this.from, this.reserve, this.tourist);
 
   @override
   State<StatefulWidget> createState() => ConfirmedOrderState();
@@ -97,7 +98,7 @@ class ConfirmedOrderState extends State<ConfirmedOrder> with SingleTickerProvide
               //order = snapshot.order.itemList != null ? (snapshot.order.itemList.length > 0 ? snapshot.order : OrderState().toEmpty()) : OrderState().toEmpty();
               return Scaffold(
                   appBar: BuytimeAppbar(
-                    background: BuytimeTheme.UserPrimary,
+                    background: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
                     width: media.width,
                     children: [
                       ///Back Button
@@ -410,7 +411,10 @@ class ConfirmedOrderState extends State<ConfirmedOrder> with SingleTickerProvide
                                             widget.reserve ?
                                               StoreProvider.of<AppState>(context).dispatch(SetOrderReservable(OrderReservableState().toEmpty())) :
                                               StoreProvider.of<AppState>(context).dispatch(SetOrder(OrderState().toEmpty()));
-                                            Navigator.of(context).popUntil(ModalRoute.withName('/bookingPage'));
+                                            if(widget.tourist)
+                                              Navigator.of(context).popUntil(ModalRoute.withName('/serviceExplorer'));
+                                            else
+                                              Navigator.of(context).popUntil(ModalRoute.withName('/bookingPage'));
                                           },
                                           textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
                                           color: BuytimeTheme.UserPrimary,

@@ -227,7 +227,7 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                                     // go to the cart page
                                     Navigator.push(
                                       context,
-                                      MaterialPageRoute(builder: (context) => Cart()),
+                                      MaterialPageRoute(builder: (context) => Cart(tourist: true,)),
                                     );
                                   } else {
                                     showDialog(
@@ -342,7 +342,7 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                             child: Container(
                               margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
                               padding: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2),
-                              height: categoryList.isNotEmpty ? 160 : 160,
+                              height: categoryList.isNotEmpty ? 170 : 160,
                               color: BuytimeTheme.BackgroundWhite,
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
@@ -377,7 +377,7 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                                             CategoryState category = categoryList.elementAt(index);
                                             return Container(
                                               margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 2),
-                                              child: DiscoverCardWidget(80, 80, category, false),
+                                              child: DiscoverCardWidget(80, 80, category, true),
                                             );
                                           },
                                           childCount: categoryList.length,

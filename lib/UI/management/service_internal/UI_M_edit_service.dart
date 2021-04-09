@@ -960,7 +960,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                     alignment: Alignment.center,
                     child: Container(
                         margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3),
-                        height: SizeConfig.safeBlockVertical * 100,
+                        height: double.infinity,
                         decoration: BoxDecoration(
                           color: BuytimeTheme.BackgroundCerulean.withOpacity(.8),
                         ),

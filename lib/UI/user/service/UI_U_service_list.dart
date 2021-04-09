@@ -190,7 +190,7 @@ class CartIconAppBar extends StatelessWidget {
           // go to the cart page
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => Cart()),
+            MaterialPageRoute(builder: (context) => Cart(tourist: true,)),
           );
         } else {
           showDialog(

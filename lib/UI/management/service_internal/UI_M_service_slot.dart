@@ -229,7 +229,7 @@ class UI_M_ServiceSlotState extends State<UI_M_ServiceSlot> {
                           alignment: Alignment.center,
                           child: Container(
                               margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3),
-                              height: SizeConfig.safeBlockVertical * 100,
+                              height: double.infinity,
                               decoration: BoxDecoration(
                                 color: BuytimeTheme.BackgroundCerulean.withOpacity(.8),
                               ),

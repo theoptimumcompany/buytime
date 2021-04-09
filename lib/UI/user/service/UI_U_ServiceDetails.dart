@@ -24,7 +24,8 @@ import 'package:intl/intl.dart';
 class ServiceDetails extends StatefulWidget {
   final ServiceState serviceState;
   static String route = '/serviceDetails';
-  ServiceDetails({@required this.serviceState});
+  bool tourist;
+  ServiceDetails({@required this.serviceState, this.tourist});
 
   @override
   createState() => _ServiceDetailsState();
@@ -132,7 +133,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
             onWillPop: () async => false,
             child: Scaffold(
               appBar: BuytimeAppbar(
-                background: BuytimeTheme.UserPrimary,
+                background: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
                 width: media.width,
                 children: [
                   ///Back Button
@@ -200,7 +201,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                     // go to the cart page
                                     Navigator.push(
                                       context,
-                                      MaterialPageRoute(builder: (context) => Cart()),
+                                      MaterialPageRoute(builder: (context) => Cart(tourist: widget.tourist,)),
                                     );
                                   } else {
                                     showDialog(

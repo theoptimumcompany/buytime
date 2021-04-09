@@ -10,7 +10,8 @@ import 'package:Buytime/UI/user/service/UI_U_ServiceDetails.dart';
 class BookingListServiceListItem extends StatefulWidget {
 
   ServiceState serviceState;
-  BookingListServiceListItem(this.serviceState);
+  bool tourist;
+  BookingListServiceListItem(this.serviceState, this.tourist);
 
   @override
   _BookingListServiceListItemState createState() => _BookingListServiceListItemState();
@@ -31,7 +32,7 @@ class _BookingListServiceListItemState extends State<BookingListServiceListItem>
               onTap: () async {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => ServiceDetails(serviceState: widget.serviceState,)),
+                  MaterialPageRoute(builder: (context) => ServiceDetails(serviceState: widget.serviceState, tourist: widget.tourist,)),
                 );
               },
               child: Container(

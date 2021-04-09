@@ -10,6 +10,7 @@ import 'package:Buytime/UI/user/booking/UI_U_MyBookings.dart';
 import 'package:Buytime/UI/user/cart/UI_U_ConfirmOrder.dart';
 import 'package:Buytime/UI/user/landing/UI_U_Landing.dart';
 import 'package:Buytime/UI/user/service/UI_U_ServiceDetails.dart';
+import 'package:Buytime/UI/user/turist/UI_U_ServiceExplorer.dart';
 import 'package:Buytime/reblox/model/autoComplete/auto_complete_list_state.dart';
 import 'package:Buytime/reblox/model/autoComplete/auto_complete_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_list_state.dart';
@@ -226,6 +227,8 @@ class Buytime extends StatelessWidget {
         return FabRoute(BookingList(), settings: settings);
       case AppRoutes.serviceDetails:
         return FabRoute(ServiceDetails(), settings: settings);
+      case AppRoutes.serviceExplorer:
+        return FabRoute(ServiceExplorer(), settings: settings);
     }
   }
 

@@ -49,9 +49,9 @@ class _DiscoverCardWidgetState extends State<DiscoverCardWidget> {
           child: InkWell(
             splashColor: Colors.black.withOpacity(.3),
             onTap: (){
-              /*widget.fromBookingPage ?
-              Navigator.push(context, MaterialPageRoute(builder: (context) => FilterByCategory(fromBookingPage: true, categoryState: widget.categoryState,))) :
-              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => FilterByCategory(fromBookingPage: false,categoryState: widget.categoryState,)));*/
+              widget.fromBookingPage ?
+              Navigator.push(context, MaterialPageRoute(builder: (context) => FilterByCategory(fromBookingPage: true, categoryState: widget.categoryState, tourist: true,))) :
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => FilterByCategory(fromBookingPage: false,categoryState: widget.categoryState, tourist: true)));
             },
             borderRadius: BorderRadius.all(Radius.circular(5)),
             child: Container(
@@ -78,16 +78,14 @@ class _DiscoverCardWidgetState extends State<DiscoverCardWidget> {
                     //margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, bottom: SizeConfig.safeBlockVertical * 2),
                     child: Container(
                       margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5),
-                      child: FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: Text(
-                          widget.categoryState.name,
-                          style: TextStyle(
-                              fontFamily: BuytimeTheme.FontFamily,
-                              color: BuytimeTheme.TextWhite,
-                              fontWeight: FontWeight.w400,
-                              fontSize: 16 ///SizeConfig.safeBlockHorizontal * 4
-                          ),
+                      child: Text(
+                        widget.categoryState.name,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                            fontFamily: BuytimeTheme.FontFamily,
+                            color: BuytimeTheme.TextWhite,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
                         ),
                       ),
                     ),

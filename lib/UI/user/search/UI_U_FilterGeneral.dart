@@ -158,7 +158,7 @@ class _FilterGeneralState extends State<FilterGeneral> {
                                     // go to the cart page
                                     Navigator.push(
                                       context,
-                                      MaterialPageRoute(builder: (context) => Cart()),
+                                      MaterialPageRoute(builder: (context) => Cart(tourist: false,)),
                                     );
                                   } else {
                                     showDialog(
@@ -428,7 +428,7 @@ class _FilterGeneralState extends State<FilterGeneral> {
                                               },
                                               child: Column(
                                                 children: [
-                                                  BookingListServiceListItem(service),
+                                                  BookingListServiceListItem(service, false),
                                                   Container(
                                                     margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 30),
                                                     height: SizeConfig.safeBlockVertical * .2,

@@ -28,8 +28,8 @@ class FilterByCategory extends StatefulWidget {
   static String route = '/filterByCategory';
   bool fromBookingPage;
   CategoryState categoryState;
-
-  FilterByCategory({Key key, this.fromBookingPage, this.categoryState}) : super(key: key);
+  bool tourist;
+  FilterByCategory({Key key, this.fromBookingPage, this.categoryState, this.tourist}) : super(key: key);
 
   @override
   _FilterByCategoryState createState() => _FilterByCategoryState();
@@ -43,6 +43,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
   List<CategoryState> subCategoryList = [];
   List<ServiceState> serviceState = [];
   List<ServiceState> tmpServiceList = [];
+  List<ServiceState> serviceList = [];
   String searched = '';
   String sortBy = '';
 
@@ -74,8 +75,8 @@ class _FilterByCategoryState extends State<FilterByCategory> {
 
   void search(List<ServiceState> list) {
     setState(() {
-      tmpServiceList.clear();
       serviceState = list;
+      tmpServiceList.clear();
       if (_searchController.text.isNotEmpty) {
         serviceState.forEach((element) {
           if (element.name.toLowerCase().contains(_searchController.text.toLowerCase())) {
@@ -151,7 +152,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
             ? Flexible(
                 flex: 1,
                 child: FindYourInspirationCardWidget(list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2,
-                    list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2, list[0], false),
+                    list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2, list[0], false, widget.tourist),
               )
             : Container(),
 
@@ -160,7 +161,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
             ? Flexible(
                 flex: 1,
                 child: FindYourInspirationCardWidget(list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2,
-                    list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2, list[1], false),
+                    list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2, list[1], false, widget.tourist),
               )
             : Container(),
 
@@ -169,7 +170,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
             ? Flexible(
                 flex: 1,
                 child: FindYourInspirationCardWidget(list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2,
-                    list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2, list[2], false),
+                    list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2, list[2], false, widget.tourist),
               )
             : Container(),
       ],
@@ -212,11 +213,13 @@ class _FilterByCategoryState extends State<FilterByCategory> {
 
         if (_searchController.text.isEmpty) {
           tmpServiceList.clear();
+          serviceList.clear();
           s.addAll(snapshot.serviceList.serviceListState);
           s.forEach((element) {
             element.categoryId.forEach((element2) {
               if (element2 == widget.categoryState.id) {
                 tmpServiceList.add(element);
+                serviceList.add(element);
               }
             });
           });
@@ -235,7 +238,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
             onWillPop: () async => false,
             child: Scaffold(
               appBar: BuytimeAppbar(
-                background: BuytimeTheme.UserPrimary,
+                background: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
                 width: media.width,
                 children: [
                   ///Back Button
@@ -298,7 +301,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                     // go to the cart page
                                     Navigator.push(
                                       context,
-                                      MaterialPageRoute(builder: (context) => Cart()),
+                                      MaterialPageRoute(builder: (context) => Cart(tourist: widget.tourist,)),
                                     );
                                   } else {
                                     showDialog(
@@ -397,7 +400,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                                 CategoryState category = subCategoryList.elementAt(index);
                                                 return Container(
                                                   margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 2),
-                                                  child: FindYourInspirationCardWidget(SizeConfig.screenWidth / 3 - 2, SizeConfig.screenWidth / 3 - 2, category, false),
+                                                  child: FindYourInspirationCardWidget(SizeConfig.screenWidth / 3 - 2, SizeConfig.screenWidth / 3 - 2, category, false, widget.tourist),
                                                 );
                                               },
                                               childCount: subCategoryList.length,
@@ -471,7 +474,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                         onTap: () {
                                           debugPrint('done');
                                           FocusScope.of(context).unfocus();
-                                          search(tmpServiceList);
+                                          search(serviceList);
                                         },
                                         child: Icon(
                                           // Based on passwordVisible state choose the icon
@@ -484,7 +487,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                     onEditingComplete: () {
                                       debugPrint('done');
                                       FocusScope.of(context).unfocus();
-                                      search(tmpServiceList);
+                                      search(serviceList);
                                     },
                                   ),
                                 ),
@@ -649,7 +652,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                                     },
                                                     child: Column(
                                                       children: [
-                                                        BookingListServiceListItem(service),
+                                                        BookingListServiceListItem(service, widget.tourist),
                                                         Container(
                                                           margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 30),
                                                           height: SizeConfig.safeBlockVertical * .2,

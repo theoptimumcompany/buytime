@@ -18,8 +18,8 @@ import 'package:flutter_redux/flutter_redux.dart';
 
 class Cart extends StatefulWidget {
   ServiceState serviceState;
-
-  Cart({Key key, this.serviceState}) : super(key: key);
+  bool tourist;
+  Cart({Key key, this.serviceState, this.tourist}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => CartState();
@@ -102,7 +102,7 @@ class CartState extends State<Cart> {
               return Scaffold(
                   resizeToAvoidBottomInset: false,
                   appBar: BuytimeAppbar(
-                    background: BuytimeTheme.UserPrimary,
+                    background: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
                     width: media.width,
                     children: [
                       ///Back Button
@@ -280,7 +280,7 @@ class CartState extends State<Cart> {
                                           onPressed: () {
                                             Navigator.push(
                                               context,
-                                              MaterialPageRoute(builder: (context) => ConfirmOrder(reserve: false,)),
+                                              MaterialPageRoute(builder: (context) => ConfirmOrder(reserve: false, tourist: widget.tourist)),
                                             );
                                           },
                                           textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),

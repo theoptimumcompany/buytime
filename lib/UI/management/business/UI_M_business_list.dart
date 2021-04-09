@@ -49,10 +49,12 @@ class UI_M_BusinessListState extends State<UI_M_BusinessList> {
           businessListState = snapshot.businessListState;
           if (businessListState.isEmpty && startRequest) {
             noActivity = true;
+            startRequest = false;
           } else {
-            if(businessListState.first.name == null){
+            if(businessListState.isNotEmpty && businessListState.first.name == null){
               businessListState.removeLast();
             }
+            //startRequest = false;
             noActivity = false;
           }
           return WillPopScope(

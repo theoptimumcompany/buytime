@@ -204,7 +204,7 @@ class _AllBookingsState extends State<AllBookings> {
                                         // go to the cart page
                                         Navigator.push(
                                           context,
-                                          MaterialPageRoute(builder: (context) => Cart()),
+                                          MaterialPageRoute(builder: (context) => Cart(tourist: false,)),
                                         );
                                       } else {
                                         showDialog(
@@ -316,7 +316,7 @@ class _AllBookingsState extends State<AllBookings> {
               alignment: Alignment.center,
               child: Container(
                   margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3),
-                  height: SizeConfig.safeBlockVertical * 100,
+                  height: double.infinity,
                   decoration: BoxDecoration(
                     color: BuytimeTheme.BackgroundCerulean.withOpacity(.8),
                   ),
