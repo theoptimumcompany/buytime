@@ -157,6 +157,7 @@ class _CreditCardState extends State<CreditCard> {
                               child: Container(
                                 padding: EdgeInsets.all(5.0),
                                 child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     Icon(
                                       !widget.cardState.selected ? Icons.add : MaterialDesignIcons.done,
@@ -165,11 +166,11 @@ class _CreditCardState extends State<CreditCard> {
                                     Text(
                                       !widget.cardState.selected ? AppLocalizations.of(context).select : AppLocalizations.of(context).selected,
                                       style: TextStyle(
-                                          letterSpacing: 0.25,
+                                          letterSpacing: 0.2,
                                           fontFamily: BuytimeTheme.FontFamily,
                                           color: !widget.cardState.selected ? BuytimeTheme.TextGrey : BuytimeTheme.ActionButton,
                                           fontWeight: FontWeight.w600,
-                                          fontSize: 14
+                                          fontSize: 13
                                       ),
                                     )
                                   ],
