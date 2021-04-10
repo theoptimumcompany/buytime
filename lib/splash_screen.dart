@@ -34,6 +34,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -60,15 +61,15 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
   StatisticsState statisticsState;
 
   readFromStorage() async {
-    String firstStart = await FlutterSecureStorage().read(key: 'firstStart');
 
-    if (firstStart == null) {
-      auth.User user = auth.FirebaseAuth.instance.currentUser;
-      if (user != null) {
-        debugPrint('spalsh_screen => SIGN OUT');
-        FirebaseAuth.instance.signOut();
-      }
-      await FlutterSecureStorage().write(key: 'firstStart', value: 'true');
+    final prefs = await SharedPreferences.getInstance();
+
+    if (prefs.getBool('first_run') ?? true) {
+      FlutterSecureStorage storage = FlutterSecureStorage();
+
+      await storage.deleteAll();
+
+      prefs.setBool('first_run', false);
     }
 
     //await FlutterSecureStorage().delete(key: 'ccs');
