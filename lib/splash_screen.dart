@@ -60,6 +60,16 @@ class _SplashScreenState extends State<SplashScreen>  with WidgetsBindingObserve
   StatisticsState statisticsState;
 
   readFromStorage() async{
+
+    if(await FlutterSecureStorage().read(key: 'firstStart') == null){
+      auth.User user = auth.FirebaseAuth.instance.currentUser;
+      if(user != null){
+        debugPrint('spalsh_screen => SIGN OUT');
+        FirebaseAuth.instance.signOut();
+      }
+      await FlutterSecureStorage().write(key: 'firstStart', value: 'true');
+    }
+
     //await FlutterSecureStorage().delete(key: 'ccs');
     //await FlutterSecureStorage().delete(key: 'autoComplete');
     statisticsState = await StatisticsState().readFromStorage();
@@ -71,13 +81,7 @@ class _SplashScreenState extends State<SplashScreen>  with WidgetsBindingObserve
 
     List<AutoCompleteState> completes = await AutoCompleteState().readFromStorage();
     debugPrint('splash_screen => AUTO COMPLETE LENGTH: ${completes.length}');
-    if(completes.isEmpty){
-      auth.User user = auth.FirebaseAuth.instance.currentUser;
-      if(user != null){
-        debugPrint('spalsh_screen => SIGN OUT');
-        FirebaseAuth.instance.signOut();
-      }
-    }
+
     StoreProvider.of<AppState>(context).dispatch(AddAutoCompleteToList(completes));
   }
 
