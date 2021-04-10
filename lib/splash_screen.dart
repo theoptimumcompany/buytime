@@ -40,13 +40,13 @@ class SplashScreen extends StatefulWidget {
   _SplashScreenState createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen>  with WidgetsBindingObserver {
+class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver {
   Timer _timerLink;
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state){
+  void didChangeAppLifecycleState(AppLifecycleState state) {
     print('state = $state');
-    if(state == AppLifecycleState.paused){
+    if (state == AppLifecycleState.paused) {
       StatisticsState().log('PAUSED', StoreProvider.of<AppState>(context).state.statistics);
       StatisticsState().writeToStorage(StoreProvider.of<AppState>(context).state.statistics);
     }
@@ -59,11 +59,12 @@ class _SplashScreenState extends State<SplashScreen>  with WidgetsBindingObserve
 
   StatisticsState statisticsState;
 
-  readFromStorage() async{
+  readFromStorage() async {
+    String firstStart = await FlutterSecureStorage().read(key: 'firstStart');
 
-    if(await FlutterSecureStorage().read(key: 'firstStart') == null){
+    if (firstStart == null) {
       auth.User user = auth.FirebaseAuth.instance.currentUser;
-      if(user != null){
+      if (user != null) {
         debugPrint('spalsh_screen => SIGN OUT');
         FirebaseAuth.instance.signOut();
       }
@@ -94,7 +95,6 @@ class _SplashScreenState extends State<SplashScreen>  with WidgetsBindingObserve
   void initState() {
     WidgetsBinding.instance.addObserver(this);
     super.initState();
-    readFromStorage();
     logger.d("Init Splash screen");
     //DynamicLinkService().retrieveDynamicLink(context);
 
@@ -138,7 +138,7 @@ class _SplashScreenState extends State<SplashScreen>  with WidgetsBindingObserve
         // Save newToken
         serverToken = newToken;
       });
-
+      readFromStorage();
       Timer(Duration(seconds: 1), () => check_logged());
     }).catchError((onError) {
       print("error on firebase application start: " + onError.toString());
@@ -146,8 +146,6 @@ class _SplashScreenState extends State<SplashScreen>  with WidgetsBindingObserve
 
     initPlatformState();
   }
-
-
 
   /// Replace with server token from firebase console settings.
   String serverToken = 'AAAA6xUtyfE:APA91bGHhEzVUY9fnj4FbTXJX57qcgF-8GBrfBbGIa8kEpEIdsXRgQxbtsvbhL-w-_MQYKIj0XVlSaDSf2s6O3D3SM3o-z_AZnHQwBNLiw1ygyZOuVAKa5YmXeu6Da9eBqRD9uwFHSPi';
