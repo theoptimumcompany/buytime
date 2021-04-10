@@ -32,7 +32,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../utils/globals.dart';
 
 final GoogleSignIn googleSignIn = new GoogleSignIn();
-final FacebookLogin facebookSignIn = new FacebookLogin();
 
 class MenuDrawer extends StatelessWidget {
   const  MenuDrawer({
@@ -145,16 +144,9 @@ class MenuDrawer extends StatelessWidget {
                       SharedPreferences prefs =
                           await SharedPreferences.getInstance();
 
-                      await prefs.setBool('easy_check_in', false);
-                      await prefs.setBool('star_explanation', false);
                       FirebaseAuth.instance.signOut().then((_) {
                         googleSignIn.signOut();
-
-                        facebookSignIn.logOut();
-                        //Resetto il carrello
-                        //cartCounter = 0;
-
-                        //Svuotare lo Store sul Logout
+                           //Svuotare lo Store sul Logout
                         StoreProvider.of<AppState>(context).dispatch(SetCategoryToEmpty());
                         StoreProvider.of<AppState>(context).dispatch(SetCategoryListToEmpty());
                         StoreProvider.of<AppState>(context).dispatch(SetCategoryTreeToEmpty());

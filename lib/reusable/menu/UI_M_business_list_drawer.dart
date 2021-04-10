@@ -66,7 +66,7 @@ class _UI_M_BusinessListDrawerState extends State<UI_M_BusinessListDrawer> {
             children: <Widget>[
               ///Header
               Container(
-                height: 225,
+                height: 235,
                 child: DrawerHeader(
                   margin: EdgeInsets.all(0),
                   child: Column(
