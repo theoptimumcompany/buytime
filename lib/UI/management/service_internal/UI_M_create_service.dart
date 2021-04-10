@@ -387,7 +387,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                                   _servicePrice = double.parse(value);
                                                 });
                                               }
-                                              //StoreProvider.of<AppState>(context).dispatch(SetServiceSlotPrice(_servicePrice));
+                                              StoreProvider.of<AppState>(context).dispatch(SetServicePrice(_servicePrice));
                                             },
                                             onFieldSubmitted: (value) {
                                               if (value == "") {
