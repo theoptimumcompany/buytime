@@ -45,6 +45,7 @@ class UI_M_CreateCategoryState extends State<UI_M_CreateCategory> {
   Parent newParent;
   bool changeParent = false;
   bool stopBuildDropDown = false;
+  bool errorCategoryImage = false;
   String inviteMail = '';
 
   String bookingRequest = '';
@@ -64,19 +65,18 @@ class UI_M_CreateCategoryState extends State<UI_M_CreateCategory> {
     }
   }
 
-  bool validateAndSaveInvite() {
-    final FormState form = _formInviteKey.currentState;
-    if (form.validate()) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  bool validateEmail(String value) {
-    Pattern pattern = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-    RegExp regex = new RegExp(pattern);
-    return (!regex.hasMatch(value)) ? false : true;
+  bool validateCategoryImage(){
+   if( StoreProvider.of<AppState>(context).state.category.fileToUpload == null){
+     setState(() {
+       errorCategoryImage = true;
+     });
+     return false;
+   }else{
+     setState(() {
+       errorCategoryImage = false;
+     });
+     return true;
+   }
   }
 
   setNewCategoryParent(Parent contentSelectDrop, List<dynamic> list) {
@@ -150,13 +150,6 @@ class UI_M_CreateCategoryState extends State<UI_M_CreateCategory> {
     return items;
   }
 
-  Future<bool> _onWillPop() {
-    /*Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => ManageCategory()),
-    );*/
-  }
-
   Parent searchDropdownParent(var snapshot) {
     for (var element in _dropdownMenuParentCategory) {
       if (snapshot.category.id == element.value.id) {
@@ -198,212 +191,226 @@ class UI_M_CreateCategoryState extends State<UI_M_CreateCategory> {
                 Positioned.fill(
                   child: Align(
                       alignment: Alignment.topCenter,
-                      child: WillPopScope(
-                        onWillPop: _onWillPop,
-                        child: Scaffold(
-                          resizeToAvoidBottomInset: false,
-                          appBar: BuytimeAppbar(
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
-                                    child: IconButton(
-                                      icon: const Icon(
-                                        Icons.keyboard_arrow_left,
-                                        color: Colors.white,
-                                        size: 25.0,
+                      child: Scaffold(
+                        resizeToAvoidBottomInset: false,
+                        appBar: BuytimeAppbar(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
+                                  child: IconButton(
+                                    icon: const Icon(
+                                      Icons.keyboard_arrow_left,
+                                      color: Colors.white,
+                                      size: 25.0,
+                                    ),
+                                    tooltip: AppLocalizations.of(context).comeBack,
+                                    onPressed: () {
+                                      //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ManageCategory()),);
+                                      Navigator.of(context).pop();
+                                      //Navigator.pushReplacement(context, EnterExitRoute(enterPage: ManageCategory(), exitPage: UI_M_CreateCategory(empty: true,), from: false));
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Utils.barTitle(AppLocalizations.of(context).createCategory),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
+                              child: IconButton(
+                                icon: const Icon(
+                                  Icons.check,
+                                  color: BuytimeTheme.SymbolWhite,
+                                  size: 24.0,
+                                ),
+                                tooltip: AppLocalizations.of(context).submitNewCategory,
+                                onPressed: () {
+                                  if (validateAndSave() && validateCategoryImage()) {
+                                    if (changeParent == false) {
+
+                                      setState(() {
+                                        bookingRequest = 'send';
+                                      });
+
+                                      print("CategoryCreate : Parent non Scelto");
+                                      CategoryState categoryCreate = snapshot.category != null ? snapshot.category : CategoryState().toEmpty();
+                                      Parent newCategoryParent = selectedParentDropValue;
+                                      print("Livello prima : " + snapshot.category.level.toString());
+                                      categoryCreate.parent = newCategoryParent;
+                                      if (categoryCreate.parent != _dropdownMenuParentCategory.first.value) {
+                                        categoryCreate.level = newCategoryParent.level + 1;
+                                      } else {
+                                        categoryCreate.level = 0;
+                                      }
+
+                                      StoreProvider.of<AppState>(context).dispatch(new CreateCategory(categoryCreate));
+                                      StoreProvider.of<AppState>(context).dispatch(new AddCategoryTree(newCategoryParent));
+                                    } else {
+                                      CategoryState categoryCreate = snapshot.category != null ? snapshot.category : CategoryState().toEmpty();
+
+                                      if(categoryCreate.parent.id == 'no_parent'){
+                                        categoryCreate.level = 0;
+                                      }
+                                      StoreProvider.of<AppState>(context).dispatch(new CreateCategory(categoryCreate));
+                                      StoreProvider.of<AppState>(context).dispatch(new AddCategoryTree(newParent));
+                                    }
+
+                                  }
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                        body: Column(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.all(10.0),
+                              child: Column(
+                                children: <Widget>[
+                                  ///Category Image
+                                  Column(
+                                    children: [
+                                      OptimumFormMultiPhoto(
+                                        text: AppLocalizations.of(context).categoryImage,
+                                        remotePath: "business/" + businessName + "/category",
+                                        maxHeight: 1000,
+                                        maxPhoto: 1,
+                                        maxWidth: 800,
+                                        minHeight: 200,
+                                        minWidth: 600,
+                                        cropAspectRatioPreset: CropAspectRatioPreset.square,
+                                        onFilePicked: (fileToUpload) {
+                                          if(fileToUpload != null){
+                                            setState(() {
+                                              errorCategoryImage = false;
+                                            });
+                                          }
+                                          fileToUpload.remoteFolder = "business/" + businessName + "/category";
+                                          StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInCategory(fileToUpload, fileToUpload.state, 0));
+                                        },
                                       ),
-                                      tooltip: AppLocalizations.of(context).comeBack,
-                                      onPressed: () {
-                                        //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ManageCategory()),);
-                                        Navigator.of(context).pop();
-                                        //Navigator.pushReplacement(context, EnterExitRoute(enterPage: ManageCategory(), exitPage: UI_M_CreateCategory(empty: true,), from: false));
-                                      },
+                                      ///Error message Empty CategoryList
+                                      errorCategoryImage
+                                          ? Center(
+                                              child: Text(
+                                                AppLocalizations.of(context).noCategoryImageSet,
+                                                style: TextStyle(
+                                                  fontSize: media.height * 0.018,
+                                                  color: BuytimeTheme.ErrorRed,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ))
+                                          : Container(),
+                                    ],
+                                  ),
+                                  ///Category Name
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+                                    child: Center(
+                                      child: Container(
+                                        width: media.width * 0.9,
+                                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
+                                        child: Form(
+                                            key: _formKey,
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(top: 0.0, bottom: 5.0, left: 10.0, right: 10.0),
+                                              child: TextFormField(
+                                                validator: (value) => value.isEmpty ? AppLocalizations.of(context).categoryNameIsBlank : null,
+                                                initialValue: _selectedCategoryName,
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    _selectedCategoryName = value;
+                                                    setNewCategoryName(value);
+                                                  });
+                                                },
+                                                decoration: InputDecoration(labelText: AppLocalizations.of(context).categoryName),
+                                              ),
+                                            )),
+                                      ),
+                                    ),
+                                  ),
+                                  ///Category Tag
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
+                                    child: Center(
+                                      child: Container(
+                                        width: media.width * 0.9,
+                                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(6.0),
+                                          child: DropdownButtonHideUnderline(
+                                            child: DropdownButtonFormField<CustomTag>(
+                                                isExpanded: true,
+                                                value: customTag,
+                                                items: [
+                                                  DropdownMenuItem(
+                                                    child: Text(
+                                                      Utils.enumToString(CustomTag.showcase),
+                                                      overflow: TextOverflow.ellipsis,
+                                                    ),
+                                                    value: CustomTag.showcase,
+                                                  ),
+                                                  DropdownMenuItem(
+                                                    child: Text(
+                                                      Utils.enumToString(CustomTag.external),
+                                                      overflow: TextOverflow.ellipsis,
+                                                    ),
+                                                    value: CustomTag.external,
+                                                  ),
+                                                  DropdownMenuItem(
+                                                    child: Text(
+                                                      Utils.enumToString(CustomTag.other),
+                                                      overflow: TextOverflow.ellipsis,
+                                                    ),
+                                                    value: CustomTag.other,
+                                                  ),
+                                                ],
+                                                decoration: InputDecoration(labelText: AppLocalizations.of(context).customTag, enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white))),
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    customTag = value;
+                                                    setNewCategoryCustomTag(customTag);
+                                                  });
+                                                }),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+                                    child: Center(
+                                      child: Container(
+                                        width: media.width * 0.9,
+                                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: DropdownButtonHideUnderline(
+                                            child: DropdownButtonFormField<Parent>(
+                                                isExpanded: true,
+                                                value: selectedParentDropValue,
+                                                items: _dropdownMenuParentCategory,
+                                                decoration: InputDecoration(labelText: AppLocalizations.of(context).parentCategory, enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white))),
+                                                onChanged: (Parent newValue) {
+                                                  setState(() {
+                                                    changeParent = true;
+                                                    selectedParentDropValue = newValue;
+                                                    newParent = newValue;
+                                                    print("Drop Selezionato su onchangedrop : " + selectedParentDropValue.name);
+                                                    setNewCategoryParent(selectedParentDropValue, snapshot.categoryTree.categoryNodeList);
+                                                  });
+                                                }),
+                                          ),
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ],
                               ),
-                              Utils.barTitle(AppLocalizations.of(context).createCategory),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
-                                child: IconButton(
-                                  icon: const Icon(
-                                    Icons.check,
-                                    color: BuytimeTheme.SymbolWhite,
-                                    size: 24.0,
-                                  ),
-                                  tooltip: AppLocalizations.of(context).submitNewCategory,
-                                  onPressed: () {
-                                    if (validateAndSave()) {
-                                      if (changeParent == false) {
-
-                                        setState(() {
-                                          bookingRequest = 'send';
-                                        });
-
-                                        print("CategoryCreate : Parent non Scelto");
-                                        CategoryState categoryCreate = snapshot.category != null ? snapshot.category : CategoryState().toEmpty();
-                                        Parent newCategoryParent = selectedParentDropValue;
-                                        print("Livello prima : " + snapshot.category.level.toString());
-                                        categoryCreate.parent = newCategoryParent;
-                                        if (categoryCreate.parent != _dropdownMenuParentCategory.first.value) {
-                                          categoryCreate.level = newCategoryParent.level + 1;
-                                        } else {
-                                          categoryCreate.level = 0;
-                                        }
-
-                                        StoreProvider.of<AppState>(context).dispatch(new CreateCategory(categoryCreate));
-                                        StoreProvider.of<AppState>(context).dispatch(new AddCategoryTree(newCategoryParent));
-                                      } else {
-                                        CategoryState categoryCreate = snapshot.category != null ? snapshot.category : CategoryState().toEmpty();
-
-                                        if(categoryCreate.parent.id == 'no_parent'){
-                                          categoryCreate.level = 0;
-                                        }
-                                        StoreProvider.of<AppState>(context).dispatch(new CreateCategory(categoryCreate));
-                                        StoreProvider.of<AppState>(context).dispatch(new AddCategoryTree(newParent));
-                                      }
-
-                                      /*Future.delayed(const Duration(milliseconds: 500), () {
-                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ManageCategory(created: true,),
-                            );
-                          });*/
-                                    }
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                          body: Column(
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.all(10.0),
-                                child: Column(
-                                  children: <Widget>[
-                                    ///Caterogry Image
-                                    OptimumFormMultiPhoto(
-                                      text: AppLocalizations.of(context).categoryImage,
-                                      remotePath: "business/" + businessName + "/category",
-                                      maxHeight: 1000,
-                                      maxPhoto: 1,
-                                      maxWidth: 800,
-                                      minHeight: 200,
-                                      minWidth: 600,
-                                      cropAspectRatioPreset: CropAspectRatioPreset.square,
-                                      onFilePicked: (fileToUpload) {
-                                        fileToUpload.remoteFolder = "business/" + businessName + "/category";
-                                        StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInCategory(fileToUpload, fileToUpload.state, 0));
-                                      },
-                                    ),
-                                    ///Category Name
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
-                                      child: Center(
-                                        child: Container(
-                                          width: media.width * 0.9,
-                                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
-                                          child: Form(
-                                              key: _formKey,
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(top: 0.0, bottom: 5.0, left: 10.0, right: 10.0),
-                                                child: TextFormField(
-                                                  validator: (value) => value.isEmpty ? AppLocalizations.of(context).categoryNameIsBlank : null,
-                                                  initialValue: _selectedCategoryName,
-                                                  onChanged: (value) {
-                                                    setState(() {
-                                                      _selectedCategoryName = value;
-                                                      setNewCategoryName(value);
-                                                    });
-                                                  },
-                                                  decoration: InputDecoration(labelText: AppLocalizations.of(context).categoryName),
-                                                ),
-                                              )),
-                                        ),
-                                      ),
-                                    ),
-                                    ///Category Tag
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
-                                      child: Center(
-                                        child: Container(
-                                          width: media.width * 0.9,
-                                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(6.0),
-                                            child: DropdownButtonHideUnderline(
-                                              child: DropdownButtonFormField<CustomTag>(
-                                                  isExpanded: true,
-                                                  value: customTag,
-                                                  items: [
-                                                    DropdownMenuItem(
-                                                      child: Text(
-                                                        Utils.enumToString(CustomTag.showcase),
-                                                        overflow: TextOverflow.ellipsis,
-                                                      ),
-                                                      value: CustomTag.showcase,
-                                                    ),
-                                                    DropdownMenuItem(
-                                                      child: Text(
-                                                        Utils.enumToString(CustomTag.external),
-                                                        overflow: TextOverflow.ellipsis,
-                                                      ),
-                                                      value: CustomTag.external,
-                                                    ),
-                                                    DropdownMenuItem(
-                                                      child: Text(
-                                                        Utils.enumToString(CustomTag.other),
-                                                        overflow: TextOverflow.ellipsis,
-                                                      ),
-                                                      value: CustomTag.other,
-                                                    ),
-                                                  ],
-                                                  decoration: InputDecoration(labelText: AppLocalizations.of(context).customTag, enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white))),
-                                                  onChanged: (value) {
-                                                    setState(() {
-                                                      customTag = value;
-                                                      setNewCategoryCustomTag(customTag);
-                                                    });
-                                                  }),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
-                                      child: Center(
-                                        child: Container(
-                                          width: media.width * 0.9,
-                                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: DropdownButtonHideUnderline(
-                                              child: DropdownButtonFormField<Parent>(
-                                                  isExpanded: true,
-                                                  value: selectedParentDropValue,
-                                                  items: _dropdownMenuParentCategory,
-                                                  decoration: InputDecoration(labelText: AppLocalizations.of(context).parentCategory, enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white))),
-                                                  onChanged: (Parent newValue) {
-                                                    setState(() {
-                                                      changeParent = true;
-                                                      selectedParentDropValue = newValue;
-                                                      newParent = newValue;
-                                                      print("Drop Selezionato su onchangedrop : " + selectedParentDropValue.name);
-                                                      setNewCategoryParent(selectedParentDropValue, snapshot.categoryTree.categoryNodeList);
-                                                    });
-                                                  }),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       )
                   ),

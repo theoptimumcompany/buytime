@@ -9,7 +9,6 @@ import 'package:Buytime/reblox/reducer/order_reservable_list_reducer.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
 import 'package:Buytime/reusable/buytime_icons.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/utils/size_config.dart';

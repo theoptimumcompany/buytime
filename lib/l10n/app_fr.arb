@@ -441,5 +441,7 @@
   "allBookings": "All Bookings",
   "noCategoryFound": "No category found",
   "noManagerAssigned": "No Manager assigned to category",
-  "noWorkersHere": "No Worker assigned to category"
+  "noWorkersHere": "No Worker assigned to category",
+  "noCategoryImageSet": "Category image has to be set",
+  "thereAreNoExternalServicesAttached": "There are no attached external services for this business"
 }

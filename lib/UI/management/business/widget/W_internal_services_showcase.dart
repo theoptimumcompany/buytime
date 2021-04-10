@@ -129,8 +129,11 @@ class InternalServiceShowcaseState extends State<InternalServiceShowcase> {
                       )
                     : Container(
                         height: SizeConfig.screenHeight * 0.1,
-                        child: Center(
-                          child: Text(AppLocalizations.of(context).noActiveCategory),
+                        child:  Center(
+                          child: Text(
+                            AppLocalizations.of(context).thereAreNoServicesInThisBusiness,
+                            style: TextStyle(fontWeight: FontWeight.w500, fontFamily: BuytimeTheme.FontFamily, fontSize: 13, color: BuytimeTheme.TextBlack,),
+                          ),
                         ),
                       ),
               ],
