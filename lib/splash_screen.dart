@@ -68,6 +68,7 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
       FlutterSecureStorage storage = FlutterSecureStorage();
 
       await storage.deleteAll();
+      await FirebaseAuth.instance.signOut();
 
       prefs.setBool('first_run', false);
     }
