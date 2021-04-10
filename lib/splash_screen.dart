@@ -23,6 +23,7 @@ import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reblox/reducer/user_reducer.dart';
 import 'package:Buytime/UI/user/login/UI_U_Home.dart';
 import 'package:device_info/device_info.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -70,6 +71,13 @@ class _SplashScreenState extends State<SplashScreen>  with WidgetsBindingObserve
 
     List<AutoCompleteState> completes = await AutoCompleteState().readFromStorage();
     debugPrint('splash_screen => AUTO COMPLETE LENGTH: ${completes.length}');
+    if(completes.isEmpty){
+      auth.User user = auth.FirebaseAuth.instance.currentUser;
+      if(user != null){
+        debugPrint('spalsh_screen => SIGN OUT');
+        FirebaseAuth.instance.signOut();
+      }
+    }
     StoreProvider.of<AppState>(context).dispatch(AddAutoCompleteToList(completes));
   }
 
