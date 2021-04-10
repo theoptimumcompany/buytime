@@ -427,7 +427,7 @@
   "categoriesUpper": "CATEGORIE",
   "externalServices": "Servizi Esterni",
   "addNew": "Aggiungi nuovo",
-  "attachedServices": "Servizi allegati",
+  "attachedServices": "Servizi associati",
   "todayLower": "Oggi",
   "tomorrowLower": "Domani",
   "openUntil": "Aperto fino a",
@@ -442,5 +442,7 @@
   "allBookings": "Tutte le prenotazioni",
   "noCategoryFound": "Nessuna categoria trovata",
   "noManagerAssigned": "Nessun Manager assegnato a questa categoria",
-  "noWorkersHere": "Nessun Lavoratore assegnato a questa categoria"
+  "noWorkersHere": "Nessun Lavoratore assegnato a questa categoria",
+  "noCategoryImageSet": "L'immagine della categoria deve essere inserita",
+  "thereAreNoExternalServicesAttached": "Non ci sono servizi esterni associati in questa compagnia"
 }

@@ -77,11 +77,11 @@ class ManageCategoryState extends State<ManageCategory> {
       } else if (widget.deleted) {
         final snackBar = SnackBar(
           elevation: 5,
-          backgroundColor: Colors.blue,
+          backgroundColor: BuytimeTheme.ManagerPrimary,
           duration: Duration(seconds: 3),
           content: Text(
             AppLocalizations.of(context).categoryDeleted,
-            style: TextStyle(color: Colors.white),
+            style: TextStyle(color: BuytimeTheme.TextWhite),
           ),
         );
         widget._keyScaffoldCategory.currentState.showSnackBar(snackBar);

@@ -102,9 +102,7 @@ class UI_M_ExternalServiceListState extends State<UI_M_ExternalServiceList> {
                           shrinkWrap: true,
                           itemCount: 3,
                           itemBuilder: (context, i) {
-                            return Container(
-                              child: Text("Oplà " + i.toString()),
-                            );
+                            return Container();
                           },
                         ),
                       ),

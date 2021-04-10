@@ -38,7 +38,7 @@ class ExternalServiceShowcaseState extends State<ExternalServiceShowcase> {
                   ///Manage External Services
                   InkWell(
                     onTap: () {
-                       Navigator.push(context, EnterExitRoute(enterPage: UI_M_ExternalServiceList(), exitPage: UI_M_Business(), from: true));
+                      Navigator.push(context, EnterExitRoute(enterPage: UI_M_ExternalServiceList(), exitPage: UI_M_Business(), from: true));
                     },
                     borderRadius: BorderRadius.all(Radius.circular(5.0)),
                     child: Container(
@@ -87,45 +87,55 @@ class ExternalServiceShowcaseState extends State<ExternalServiceShowcase> {
           Expanded(
             child: Stack(
               children: [
-                widget.categoryRootList.length > 0
-                    ?
-
-                    ///Categories list
-                    Positioned.fill(
-                        child: Align(
-                          alignment: Alignment.topCenter,
-                          child: Container(
-                            color: Colors.blueGrey.withOpacity(0.1),
-                            // margin: EdgeInsets.only(bottom: 60.0),
-                            padding: EdgeInsets.only(top: 10.0, bottom: 20.0),
-                            child: CustomScrollView(shrinkWrap: true, slivers: [
-                              SliverList(
-                                delegate: SliverChildBuilderDelegate(
-                                  (context, index) {
-                                    //MenuItemModel menuItem = menuItems.elementAt(index);
-                                    CategoryState categoryItem = widget.categoryRootList.elementAt(index);
-                                    return CategoryListItemWidget(categoryItem, BuytimeTheme.Indigo);
-                                    // return InkWell(
-                                    //   onTap: () {
-                                    //     debugPrint('Category Item: ${categoryItem.name.toUpperCase()} Clicked!');
-                                    //   },
-                                    //   //child: MenuItemListItemWidget(menuItem),
-                                    //   child: CategoryListItemWidget(categoryItem),
-                                    // );
-                                  },
-                                  childCount: widget.categoryRootList.length,
-                                ),
-                              ),
-                            ]),
-                          ),
-                        ),
-                      )
-                    : Container(
-                        height: SizeConfig.screenHeight * 0.1,
-                        child: Center(
-                          child: Text(AppLocalizations.of(context).noActiveCategory),
-                        ),
-                      ),
+                Container(
+                  height: SizeConfig.screenHeight * 0.1,
+                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5),
+                  child: Center(
+                    child: Text(
+                      AppLocalizations.of(context).thereAreNoExternalServicesAttached,
+                      style: TextStyle(fontWeight: FontWeight.w500, fontFamily: BuytimeTheme.FontFamily, fontSize: 13, color: BuytimeTheme.TextBlack,),
+                    ),
+                  ),
+                ),
+                // widget.categoryRootList.length > 0
+                //     ?
+                //
+                //     ///Categories list
+                //     Positioned.fill(
+                //         child: Align(
+                //           alignment: Alignment.topCenter,
+                //           child: Container(
+                //             color: Colors.blueGrey.withOpacity(0.1),
+                //             // margin: EdgeInsets.only(bottom: 60.0),
+                //             padding: EdgeInsets.only(top: 10.0, bottom: 20.0),
+                //             child: CustomScrollView(shrinkWrap: true, slivers: [
+                //               SliverList(
+                //                 delegate: SliverChildBuilderDelegate(
+                //                   (context, index) {
+                //                     //MenuItemModel menuItem = menuItems.elementAt(index);
+                //                     CategoryState categoryItem = widget.categoryRootList.elementAt(index);
+                //                     return CategoryListItemWidget(categoryItem, BuytimeTheme.Indigo);
+                //                     // return InkWell(
+                //                     //   onTap: () {
+                //                     //     debugPrint('Category Item: ${categoryItem.name.toUpperCase()} Clicked!');
+                //                     //   },
+                //                     //   //child: MenuItemListItemWidget(menuItem),
+                //                     //   child: CategoryListItemWidget(categoryItem),
+                //                     // );
+                //                   },
+                //                   childCount: widget.categoryRootList.length,
+                //                 ),
+                //               ),
+                //             ]),
+                //           ),
+                //         ),
+                //       )
+                //     : Container(
+                //         height: SizeConfig.screenHeight * 0.1,
+                //         child: Center(
+                //           child: Text(AppLocalizations.of(context).thereAreNoExternalServicesAttached),
+                //         ),
+                //       ),
               ],
             ),
           ),
