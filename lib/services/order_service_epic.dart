@@ -15,7 +15,7 @@ import 'package:redux_epics/redux_epics.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:http/http.dart' as http;
 import 'package:Buytime/services/file_upload_service.dart' if (dart.library.html) 'package:Buytime/services/file_upload_service_web.dart';
-import 'package:stripe_sdk/stripe_sdk.dart';
+// import 'package:stripe_sdk/stripe_sdk.dart';
 
 List<DateTime> getPeriod(DateTime dateTime){
   //String weekdayDate = DateFormat('E d M y').format(dateTime);
@@ -315,25 +315,25 @@ class OrderCreateService implements EpicClass<AppState> {
           print('ORDER_SERVICE_EPIC - OrderCreateService => JSON RESPONSE: $jsonResponse');
           // if an action is required, send the user to the confirmation link
           if (jsonResponse != null && jsonResponse["next_action_url"] != null ) {
-            final Stripe stripe = Stripe(
-              stripeTestKey, // our publishable key
-              stripeAccount: jsonResponse["stripeAccount"], // the connected account
-              returnUrlForSca: "stripesdk://3ds.stripesdk.io", //Return URL for SCA
-            );
+            // final Stripe stripe = Stripe(
+            //   stripeTestKey, // our publishable key
+            //   stripeAccount: jsonResponse["stripeAccount"], // the connected account
+            //   returnUrlForSca: "stripesdk://3ds.stripesdk.io", //Return URL for SCA
+            // );
             var clientSecret = jsonResponse["client_secret"];
-            var paymentIntentRes = await confirmPayment3DSecure(clientSecret, jsonResponse["payment_method_id"], stripe);
-            if (paymentIntentRes["status"] == "succeeded") {
-              ++write;
-              var updatedOrder = await FirebaseFirestore.instance.collection("order/").doc(addedOrder.id.toString()).update({ /// 1 WRITE
-                'progress': "paid",
-                'orderId': addedOrder.id
-              });
-              state = 'paid';
-              //return SetOrderProgress("paid");
-            } else {
-              state = 'failed';
-              //return SetOrderProgress("failed");
-            }
+            // var paymentIntentRes = await confirmPayment3DSecure(clientSecret, jsonResponse["payment_method_id"], stripe);
+            // if (paymentIntentRes["status"] == "succeeded") {
+            //   ++write;
+            //   var updatedOrder = await FirebaseFirestore.instance.collection("order/").doc(addedOrder.id.toString()).update({ /// 1 WRITE
+            //     'progress': "paid",
+            //     'orderId': addedOrder.id
+            //   });
+            //   state = 'paid';
+            //   //return SetOrderProgress("paid");
+            // } else {
+            //   state = 'failed';
+            //   //return SetOrderProgress("failed");
+            // }
           } else {
             ++write;
             var updatedOrder = await FirebaseFirestore.instance.collection("order/").doc(addedOrder.id.toString()).update({ /// 1 WRITE
@@ -406,17 +406,6 @@ class AddingStripePaymentMethodRequest implements EpicClass<AppState> {
 
     ]);
   }
-}
-
-Future<Map<String, dynamic>> confirmPayment3DSecure(String clientSecret, String paymentMethodId, Stripe stripe) async{
-  Map<String, dynamic> paymentIntentRes_3dSecure;
-  try{
-    await stripe.confirmPayment(clientSecret, paymentMethodId: paymentMethodId);
-    paymentIntentRes_3dSecure = await stripe.api.retrievePaymentIntent(clientSecret);
-  }catch(e){
-    print("ERROR_ConfirmPayment3DSecure: $e");
-  }
-  return paymentIntentRes_3dSecure;
 }
 
 class OrderDeleteService implements EpicClass<AppState> {

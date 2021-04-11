@@ -443,5 +443,20 @@
   "noManagerAssigned": "No Manager assigned to category",
   "noWorkersHere": "No Worker assigned to category",
   "noCategoryImageSet": "Category image has to be set",
-  "thereAreNoExternalServicesAttached": "There are no attached external services for this business"
+  "thereAreNoExternalServicesAttached": "There are no attached external services for this business",
+  "noWorkersHere": "No Worker assigned to category",
+  "prev": "Prev",
+  "done": "Done",
+  "cardNumber": "Card Number",
+  "cardHolderName": "Cardholder Name",
+  "validThru": "Valid Thru",
+  "securityCode": "Security Code (CVC)",
+  "nameSurname": "Name Surname",
+  "nativePay": "Pay",
+  "googlePay": "Google Pay",
+  "creditCardSimple": "Credit Card",
+  "roomSimple": "Room",
+  "payWithGooglePay": "Pay with Google Pay",
+  "payWithApplePay": "Pay with Apple Pay",
+  "reset": "Reset"
 }

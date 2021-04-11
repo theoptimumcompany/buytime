@@ -19,10 +19,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_localizations: # Add this line
+  flutter_localizations:
     sdk: flutter
   google_sign_in: ^4.5.9
-  flutter_facebook_login: ^3.0.0
+#  flutter_facebook_login: ^3.0.0
   cloud_firestore: ^0.16.0
   firebase_storage: ^7.0.0
   email_validator: ^1.0.6
@@ -37,18 +37,11 @@ dependencies:
   redux_epics: 0.14.0
   rxdart: ^0.24.0
   permission_handler: ^5.0.1+1
-#  permission_handler:
-#    git:
-#      url: https://github.com/romme86/flutter-permission-handler/permission_handler
   image_picker: ^0.6.7+21
   image_picker_for_web: ^0.1.0+2
   firebase_dynamic_links: ^0.7.0+1
   firebase_messaging: ^8.0.0-dev.14
   device_info: ^1.0.0
-#  stripe_sdk: ^4.0.2
-  stripe_sdk:
-    git:
-      url: https://github.com/romme86/stripe-sdk
   share: ^0.6.5+4
   uuid: ^2.2.2
   crop: any
@@ -56,9 +49,10 @@ dependencies:
   flutter_svg: ^0.19.3
   badges: ^1.1.6
   url_launcher: ^5.7.2
-  stripe_payment: ^1.0.9
+  stripe_payment: ^1.0.11
+  credit_card_input_form: ^2.3.0
   http: ^0.12.2
-  modal_progress_hud: ^0.1.3
+#  modal_progress_hud: ^0.1.3
   flutter_redux_navigation: ^0.6.0
   video_player: ^1.0.1
   flutter_pdfview: ^1.0.4
@@ -75,7 +69,7 @@ dependencies:
   flutter_screenutil: ^4.0.3+2
   json_annotation: ^3.1.1
   json_serializable: ^3.5.1
-  logger_flutter: ^0.7.1
+#  logger_flutter: ^0.7.1
   logger: ^0.7.0
   add_2_calendar: ^1.4.0
   local_auth: ^0.6.3+4
@@ -83,6 +77,7 @@ dependencies:
   credit_card_type_detector: ^1.1.0
   flutter_picker: ^2.0.1
   carousel_pro: ^1.0.0
+  flutter_icons: ^1.1.0
 
 dependency_overrides:
   intl: ^0.17.0-nullsafety.2

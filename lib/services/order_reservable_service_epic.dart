@@ -16,7 +16,7 @@ import 'package:redux_epics/redux_epics.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:http/http.dart' as http;
 import 'package:Buytime/services/file_upload_service.dart' if (dart.library.html) 'package:Buytime/services/file_upload_service_web.dart';
-import 'package:stripe_sdk/stripe_sdk.dart';
+// import 'package:stripe_sdk/stripe_sdk.dart';
 
 class OrderReservableListRequestService implements EpicClass<AppState> {
   StatisticsState statisticsState;
@@ -206,25 +206,25 @@ class OrderReservableCreateService implements EpicClass<AppState> {
           print('ORDER_RESERVABLE_SERVICE_EPIC - OrderReservableCreateService => JSON RESPONSE: $jsonResponse');
           // if an action is required, send the user to the confirmation link
           if (jsonResponse != null && jsonResponse["next_action_url"] != null ) {
-            final Stripe stripe = Stripe(
-              stripeTestKey, // our publishable key
-              stripeAccount: jsonResponse["stripeAccount"], // the connected account
-              returnUrlForSca: "stripesdk://3ds.stripesdk.io", //Return URL for SCA
-            );
+            // final Stripe stripe = Stripe(
+            //   stripeTestKey, // our publishable key
+            //   stripeAccount: jsonResponse["stripeAccount"], // the connected account
+            //   returnUrlForSca: "stripesdk://3ds.stripesdk.io", //Return URL for SCA
+            // );
             var clientSecret = jsonResponse["client_secret"];
-            var paymentIntentRes = await confirmPayment3DSecure(clientSecret, jsonResponse["payment_method_id"], stripe);
-            if (paymentIntentRes["status"] == "succeeded") {
-              ++write;
-              var updatedOrderReservable = await FirebaseFirestore.instance.collection("order/").doc(addedOrderReservable.id.toString()).update({ /// 1 WRITE
-                'progress': "paid",
-                'orderId': addedOrderReservable.id
-              });
-              state = 'paid';
-              //return SetOrderReservableProgress("paid");
-            } else {
-              state = 'failed';
-              //return SetOrderReservableProgress("failed");
-            }
+            // var paymentIntentRes = await confirmPayment3DSecure(clientSecret, jsonResponse["payment_method_id"], stripe);
+            // if (paymentIntentRes["status"] == "succeeded") {
+            //   ++write;
+            //   var updatedOrderReservable = await FirebaseFirestore.instance.collection("order/").doc(addedOrderReservable.id.toString()).update({ /// 1 WRITE
+            //     'progress': "paid",
+            //     'orderId': addedOrderReservable.id
+            //   });
+            //   state = 'paid';
+            //   //return SetOrderReservableProgress("paid");
+            // } else {
+            //   state = 'failed';
+            //   //return SetOrderReservableProgress("failed");
+            // }
           } else {
             ++write;
             var updatedOrderReservable = await FirebaseFirestore.instance.collection("order/").doc(addedOrderReservable.id.toString()).update({ /// 1 WRITE
@@ -299,16 +299,16 @@ class AddingReservableStripePaymentMethodRequest implements EpicClass<AppState> 
   }
 }
 
-Future<Map<String, dynamic>> confirmPayment3DSecure(String clientSecret, String paymentMethodId, Stripe stripe) async{
-  Map<String, dynamic> paymentIntentRes_3dSecure;
-  try{
-    await stripe.confirmPayment(clientSecret, paymentMethodId: paymentMethodId);
-    paymentIntentRes_3dSecure = await stripe.api.retrievePaymentIntent(clientSecret);
-  }catch(e){
-    print("ERROR_ConfirmPayment3DSecure: $e");
-  }
-  return paymentIntentRes_3dSecure;
-}
+// Future<Map<String, dynamic>> confirmPayment3DSecure(String clientSecret, String paymentMethodId, Stripe stripe) async{
+//   Map<String, dynamic> paymentIntentRes_3dSecure;
+//   try{
+//     await stripe.confirmPayment(clientSecret, paymentMethodId: paymentMethodId);
+//     paymentIntentRes_3dSecure = await stripe.api.retrievePaymentIntent(clientSecret);
+//   }catch(e){
+//     print("ERROR_ConfirmPayment3DSecure: $e");
+//   }
+//   return paymentIntentRes_3dSecure;
+// }
 
 class OrderReservableDeleteService implements EpicClass<AppState> {
   @override

@@ -22,6 +22,19 @@ class StripeCardListResult {
   StripeCardResponse get stripeCardResponse => _stripeCardResponse;
 }
 
+///  Checks if the Stripe customer has been created in the backend for the user
+///  triggers the corresponding epic
+///  return null
+class CheckStripeCustomer {
+  CheckStripeCustomer();
+}
+
+class CheckedStripeCustomer {
+  bool _stripeCustomerCreated;
+  CheckedStripeCustomer(this._stripeCustomerCreated);
+  bool get stripeCustomerCreated => _stripeCustomerCreated;
+}
+
 class AddStripePaymentMethod
 {
   Map<String, dynamic> _stripePaymentMethod;
@@ -106,6 +119,10 @@ StripeState stripePaymentReducer(StripeState state, action) {
   }
   if (action is ErrorDisposePaymentMethodIntent) {
     stripeState.error = 'error';
+    return stripeState.copyWith();
+  }
+  if (action is CheckedStripeCustomer) {
+    stripeState.stripeCustomerCreated = action.stripeCustomerCreated;
     return stripeState.copyWith();
   }
 

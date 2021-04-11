@@ -77,6 +77,7 @@ class StatisticsState{
 
   ///Stripe
   int stripePaymentAddPaymentMethodRead, stripePaymentAddPaymentMethodWrite, stripePaymentAddPaymentMethodDocuments;
+  int stripeCheckCustomerRead;
   int stripePaymentCardListRequestRead, stripePaymentCardListRequestWrite, stripePaymentCardListRequestDocuments;
   int stripeDetachPaymentMethodRequestRead, stripeDetachPaymentMethodRequestWrite, stripeDetachPaymentMethodRequestDocuments;
 
@@ -243,6 +244,7 @@ class StatisticsState{
       this.stripeDetachPaymentMethodRequestRead,
       this.stripeDetachPaymentMethodRequestWrite,
       this.stripeDetachPaymentMethodRequestDocuments,
+      this.stripeCheckCustomerRead,
       this.userRequestServiceRead,
       this.userRequestServiceWrite,
       this.userRequestServiceDocuments,
@@ -412,6 +414,7 @@ class StatisticsState{
       stripeDetachPaymentMethodRequestRead: 0,
       stripeDetachPaymentMethodRequestWrite: 0,
       stripeDetachPaymentMethodRequestDocuments: 0,
+      stripeCheckCustomerRead: 0,
       userRequestServiceRead: 0,
       userRequestServiceWrite: 0,
       userRequestServiceDocuments: 0,
@@ -581,6 +584,7 @@ class StatisticsState{
     this.stripeDetachPaymentMethodRequestRead = state.stripeDetachPaymentMethodRequestRead;
     this.stripeDetachPaymentMethodRequestWrite = state.stripeDetachPaymentMethodRequestWrite;
     this.stripeDetachPaymentMethodRequestDocuments = state.stripeDetachPaymentMethodRequestDocuments;
+    this.stripeCheckCustomerRead = state.stripeCheckCustomerRead;
     this.userRequestServiceRead = state.userRequestServiceRead;
     this.userRequestServiceWrite = state.userRequestServiceWrite;
     this.userRequestServiceDocuments = state.userRequestServiceDocuments;
@@ -749,6 +753,7 @@ class StatisticsState{
     int stripeDetachPaymentMethodRequestRead,
     int stripeDetachPaymentMethodRequestWrite,
     int stripeDetachPaymentMethodRequestDocuments,
+    int stripeCheckCustomerRead,
     int userRequestServiceRead,
     int userRequestServiceWrite,
     int userRequestServiceDocuments,
@@ -916,6 +921,7 @@ class StatisticsState{
       stripeDetachPaymentMethodRequestRead: stripeDetachPaymentMethodRequestRead ?? this.stripeDetachPaymentMethodRequestRead,
       stripeDetachPaymentMethodRequestWrite: stripeDetachPaymentMethodRequestWrite ?? this.stripeDetachPaymentMethodRequestWrite,
       stripeDetachPaymentMethodRequestDocuments: stripeDetachPaymentMethodRequestDocuments ?? this.stripeDetachPaymentMethodRequestDocuments,
+      stripeCheckCustomerRead: stripeCheckCustomerRead ?? this.stripeCheckCustomerRead,
       userRequestServiceRead: userRequestServiceRead ?? this.userRequestServiceRead,
       userRequestServiceWrite: userRequestServiceWrite ?? this.userRequestServiceWrite,
       userRequestServiceDocuments: userRequestServiceDocuments ?? this.userRequestServiceDocuments,
@@ -1085,6 +1091,7 @@ class StatisticsState{
     await storage.write(key: 'stripeDetachPaymentMethodRequestRead', value: state.stripeDetachPaymentMethodRequestRead.toString());
     await storage.write(key: 'stripeDetachPaymentMethodRequestWrite', value: state.stripeDetachPaymentMethodRequestWrite.toString());
     await storage.write(key: 'stripeDetachPaymentMethodRequestDocuments', value: state.stripeDetachPaymentMethodRequestDocuments.toString());
+    await storage.write(key: 'stripeCheckCustomerRead', value: state.stripeCheckCustomerRead.toString());
     await storage.write(key: 'userRequestServiceRead', value: state.userRequestServiceRead.toString());
     await storage.write(key: 'userRequestServiceWrite', value: state.userRequestServiceWrite.toString());
     await storage.write(key: 'userRequestServiceDocuments', value: state.userRequestServiceDocuments.toString());
@@ -1328,6 +1335,7 @@ class StatisticsState{
 
     debugPrint('$from - StripePaymentAddPaymentMethod => READS: ${statisticsState.stripePaymentAddPaymentMethodRead}, WRITES: ${statisticsState.stripePaymentAddPaymentMethodWrite}, DOCUMENTS: ${statisticsState.stripePaymentAddPaymentMethodDocuments}');
     debugPrint('$from - StripePaymentCardListRequest => READS: ${statisticsState.stripePaymentCardListRequestRead}, WRITES: ${statisticsState.stripePaymentCardListRequestWrite}, DOCUMENTS: ${statisticsState.stripePaymentCardListRequestDocuments}');
+    debugPrint('$from - StripePaymentCardListRequest => READS: ${statisticsState.stripeCheckCustomerRead}');
     debugPrint('$from - StripeDetachPaymentMethodRequest => READS: ${statisticsState.stripeDetachPaymentMethodRequestRead}, WRITES: ${statisticsState.stripeDetachPaymentMethodRequestWrite}, DOCUMENTS: ${statisticsState.stripeDetachPaymentMethodRequestDocuments}');
 
     debugPrint('$from - UserRequestService => READS: ${statisticsState.userRequestServiceRead}, WRITES: ${statisticsState.userRequestServiceWrite}, DOCUMENTS: ${statisticsState.userRequestServiceDocuments}');

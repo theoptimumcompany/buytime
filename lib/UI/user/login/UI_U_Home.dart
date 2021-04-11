@@ -64,12 +64,11 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     ).animate(new CurvedAnimation(parent: _animationController, curve: new Interval(0.6, 1.0, curve: Curves.ease)));
 
     super.initState();
-
-    //backgroundVideoList.add('star_trails.mp4');
-    backgroundVideoList.add('duomo.mov');
     backgroundVideoList.add('waves.mp4');
-    backgroundVideoList.add('snow.mov');
-    //backgroundVideoList.add('world.mp4');
+    backgroundVideoList.add('waves_2.mp4');
+    backgroundVideoList.add('bath_terrace.mp4');
+    // backgroundVideoList.add('castle.mp4');
+    // backgroundVideoList.add('sail.mp4');
 
     Random random = new Random();
     randomNumber = random.nextInt(backgroundVideoList.length); // from 0 upto 99 included

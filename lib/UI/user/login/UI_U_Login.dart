@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'package:Buytime/UI/management/business/UI_M_business_list.dart';
-import 'package:Buytime/UI/user/UI_U_Tabs.dart';
 import 'package:Buytime/UI/user/landing/UI_U_Landing.dart';
 import 'package:Buytime/UI/user/login/UI_U_ForgotPassword.dart';
 import 'package:Buytime/reblox/model/autoComplete/auto_complete_state.dart';
@@ -10,10 +9,6 @@ import 'package:Buytime/reblox/model/role/role.dart';
 import 'package:Buytime/reblox/model/snippet/device.dart';
 import 'package:Buytime/reblox/model/snippet/token.dart';
 import 'package:Buytime/reblox/reducer/auto_complete_list_reducer.dart';
-import 'package:Buytime/reblox/reducer/booking_reducer.dart';
-import 'package:Buytime/utils/arrowClipper.dart';
-import 'package:Buytime/utils/b_cube_grid_spinner.dart';
-import 'package:Buytime/utils/customDropdown.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/reblox/model/user/user_state.dart';
@@ -28,7 +23,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/services.dart';
-import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -234,7 +228,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
       StoreProvider.of<AppState>(context).dispatch(new LoggedUser(UserState.fromFirebaseUser(user, deviceId, [serverToken])));
       Device device = Device(name: "device", id: deviceId, user_uid: user.uid);
       StoreProvider.of<AppState>(context).dispatch(new UpdateUserDevice(device));
-      Token token = Token(name: "token", id: serverToken, user_uid: user.uid);
+      TokenB token = TokenB(name: "token", id: serverToken, user_uid: user.uid);
       StoreProvider.of<AppState>(context).dispatch(new UpdateUserToken(token));
       // return 'signInWithGoogle succeeded: $user';
       await pr.hide();
@@ -334,101 +328,13 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
       StoreProvider.of<AppState>(context).dispatch(new LoggedUser(UserState.fromFirebaseUser(user, deviceId, [serverToken])));
       Device device = Device(name: "device", id: deviceId, user_uid: user.uid);
       StoreProvider.of<AppState>(context).dispatch(new UpdateUserDevice(device));
-      Token token = Token(name: "token", id: serverToken, user_uid: user.uid);
+      TokenB token = TokenB(name: "token", id: serverToken, user_uid: user.uid);
       StoreProvider.of<AppState>(context).dispatch(new UpdateUserToken(token));
       // return 'signInWithGoogle succeeded: $user';
       await pr.hide();
       return 1;
     }
     return 0;
-  }
-
-  ///Init Facebook sign in
-  void initiateFacebookSignIn() {
-    _handleSignIn().then((result) {
-      if (result == 1) {
-        setState(() {
-          isLoggedIn = true;
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => Landing()),
-          );
-        });
-      } else {}
-    });
-  }
-
-  ///Facebook sign in
-  Future<int> _handleSignIn() async {
-    FacebookLoginResult facebookLoginResult = await _handleFBSignIn();
-    debugPrint('UI_U_Login - facebookLoginResult 2 : ' + facebookLoginResult.toString());
-
-    ProgressDialog pr = new ProgressDialog(context);
-    pr.style(
-        message: AppLocalizations.of(context).authentication,
-        borderRadius: 10.0,
-        backgroundColor: Colors.white,
-        progressWidget: CircularProgressIndicator(),
-        elevation: 10.0,
-        insetAnimCurve: Curves.easeInOut,
-        progress: 0.0,
-        maxProgress: 100.0,
-        progressTextStyle: TextStyle(color: Colors.blue, fontSize: 13.0, fontWeight: FontWeight.w400),
-        messageTextStyle: TextStyle(color: Colors.black, fontSize: 19.0, fontWeight: FontWeight.w600));
-    await pr.show();
-
-    if (facebookLoginResult.status == FacebookLoginStatus.loggedIn) {
-      final accessToken = facebookLoginResult.accessToken.token;
-      final facebookAuthCred = auth.FacebookAuthProvider.credential(accessToken);
-      final facebookUserFromFirebase = await _auth.signInWithCredential(facebookAuthCred);
-      /*print("User : " + user.displayName);*/
-      await pr.hide();
-
-      String deviceId = "web";
-      if (!kIsWeb) {
-        try {
-          if (Platform.isAndroid) {
-            var build = await deviceInfoPlugin.androidInfo;
-            deviceId = build.androidId; //UUID for Android
-          } else if (Platform.isIOS) {
-            var data = await deviceInfoPlugin.iosInfo;
-            deviceId = data.identifierForVendor; //UUID for iOS
-          }
-        } on PlatformException {
-          print('Failed to get platform version');
-        }
-      }
-
-      print("Device ID : " + deviceId);
-
-      StoreProvider.of<AppState>(context).dispatch(new LoggedUser(UserState.fromFirebaseUser(facebookUserFromFirebase.user, deviceId, [serverToken])));
-      Device device = Device(name: "device", id: deviceId, user_uid: facebookUserFromFirebase.user.uid);
-      StoreProvider.of<AppState>(context).dispatch(new UpdateUserDevice(device));
-      Token token = Token(name: "token", id: serverToken, user_uid: facebookUserFromFirebase.user.uid);
-      StoreProvider.of<AppState>(context).dispatch(new UpdateUserToken(token));
-      return 1;
-    } else
-      await pr.hide();
-    return 0;
-  }
-
-  ///Handle facebook sign in
-  Future<FacebookLoginResult> _handleFBSignIn() async {
-    FacebookLogin facebookLogin = FacebookLogin();
-    FacebookLoginResult facebookLoginResult = await facebookLogin.logIn(['email']);
-    debugPrint('UI_U_Login - facebookLoginResult 1 : ' + facebookLoginResult.status.toString());
-    switch (facebookLoginResult.status) {
-      case FacebookLoginStatus.cancelledByUser:
-        print("Cancelled");
-        break;
-      case FacebookLoginStatus.error:
-        print("error");
-        break;
-      case FacebookLoginStatus.loggedIn:
-        print("Logged In");
-        break;
-    }
-    return facebookLoginResult;
   }
 
   List<AutoCompleteState> autoCompleteList = [];
@@ -1309,7 +1215,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
       StoreProvider.of<AppState>(context).dispatch(new LoggedUser(UserState.fromFirebaseUser(user, deviceId, [serverToken])));
       Device device = Device(name: "device", id: deviceId, user_uid: user.uid);
       StoreProvider.of<AppState>(context).dispatch(new UpdateUserDevice(device));
-      Token token = Token(name: "token", id: serverToken, user_uid: user.uid);
+      TokenB token = TokenB(name: "token", id: serverToken, user_uid: user.uid);
       StoreProvider.of<AppState>(context).dispatch(new UpdateUserToken(token));
       setState(() {
         _success = true;

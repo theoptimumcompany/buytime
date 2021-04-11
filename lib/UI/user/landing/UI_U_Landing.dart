@@ -1,9 +1,6 @@
 import 'dart:core';
 import 'package:Buytime/UI/management/activity/UI_M_activity_management.dart';
-import 'package:Buytime/UI/management/business/UI_M_business.dart';
 import 'package:Buytime/UI/management/business/UI_M_business_list.dart';
-import 'package:Buytime/UI/user/UI_U_Tabs.dart';
-import 'package:Buytime/UI/user/booking/UI_U_BookingPage.dart';
 import 'package:Buytime/UI/user/booking/UI_U_MyBookings.dart';
 import 'package:Buytime/UI/user/landing/invite_guest_form.dart';
 import 'package:Buytime/UI/user/login/UI_U_Home.dart';
@@ -31,7 +28,6 @@ import 'package:Buytime/reusable/custom_bottom_button_widget.dart';
 import 'package:Buytime/reusable/landing_card_widget.dart';
 import 'package:Buytime/reusable/material_design_icons.dart';
 import 'package:Buytime/reusable/menu/UI_M_business_list_drawer.dart';
-import 'package:Buytime/utils/globals.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
@@ -42,8 +38,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:logger_flutter/logger_flutter.dart';
-import 'package:share/share.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -101,7 +95,7 @@ class LandingState extends State<Landing> {
       print(e.message);
     });
 
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(Duration(seconds: 2)); // TODO: vi spezzo le gambine.
 
     ///Serve un delay che altrimenti getInitialLink torna NULL
     final PendingDynamicLinkData data = await FirebaseDynamicLinks.instance.getInitialLink();
@@ -474,11 +468,8 @@ class LandingState extends State<Landing> {
 
                                               FirebaseAuth.instance.signOut().then((_) {
                                                 googleSignIn.signOut();
-
-                                                facebookSignIn.logOut();
                                                 //Resetto il carrello
                                                 //cartCounter = 0;
-
                                                 //Svuotare lo Store sul Logout
                                                 StoreProvider.of<AppState>(context).dispatch(SetCategoryToEmpty());
                                                 StoreProvider.of<AppState>(context).dispatch(SetCategoryListToEmpty());

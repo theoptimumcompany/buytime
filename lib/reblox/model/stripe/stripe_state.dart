@@ -11,6 +11,8 @@ class StripeState {
   StripeCardResponse stripeCard;
   String URL = "";
   String error = "";
+  @JsonKey(ignore: true)
+  bool stripeCustomerCreated = false;
 
   StripeState({
     this.paymentMethodList,
@@ -20,6 +22,7 @@ class StripeState {
     this.stripeCard,
     this.URL,
     this.error,
+    this.stripeCustomerCreated = false,
   });
 
   StripeState.fromState(StripeState state) {
@@ -30,6 +33,7 @@ class StripeState {
     this.stripeCard = state.stripeCard;
     this.URL = state.URL;
     this.error = state.error;
+    this.stripeCustomerCreated = state.stripeCustomerCreated;
   }
 
   StripeState copyWith({
@@ -40,6 +44,7 @@ class StripeState {
     StripeCardResponse stripeCard,
     String URL,
     String error,
+    String stripeCustomerCreated,
   }) {
     return StripeState(
       paymentMethodList: paymentMethodList ?? this.paymentMethodList,
@@ -49,6 +54,7 @@ class StripeState {
       stripeCard: stripeCard ?? this.stripeCard,
       URL: URL ?? this.URL,
       error: error ?? this.error,
+      stripeCustomerCreated: stripeCustomerCreated ?? this.stripeCustomerCreated,
     );
   }
 
@@ -61,6 +67,7 @@ class StripeState {
       stripeCard: StripeCardResponse(),
       URL: "",
       error: "",
+      stripeCustomerCreated: false,
     );
   }
 

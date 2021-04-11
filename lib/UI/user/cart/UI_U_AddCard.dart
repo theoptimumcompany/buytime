@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:Buytime/utils/utils.dart';
 import 'package:credit_card_type_detector/credit_card_type_detector.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
@@ -11,17 +12,23 @@ import 'package:Buytime/reblox/reducer/stripe_payment_reducer.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
 import 'package:Buytime/services/stripe_payment_service_epic.dart';
 import 'package:Buytime/utils/size_config.dart';
+import 'package:credit_card_input_form/credit_card_input_form.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart' as http;
-import 'package:stripe_sdk/stripe_sdk_ui.dart';
+// import 'package:stripe_sdk/stripe_sdk_ui.dart';
+import 'package:stripe_payment/stripe_payment.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 // TODO separate service and UI
 class UI_U_AddCard extends StatefulWidget {
   UI_U_AddCard({Key key}) : super(key: key);
+
+
 
   @override
   _UI_U_AddCardState createState() => _UI_U_AddCardState();
@@ -29,8 +36,17 @@ class UI_U_AddCard extends StatefulWidget {
 
 class _UI_U_AddCardState extends State<UI_U_AddCard> {
 
+  @override
+  initState() {
+    super.initState();
+
+
+  }
+
+  Future<void> processPaymentAsDirectCharge(PaymentMethod paymentMethod) async {}
+
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  final StripeCard card = StripeCard();
+  // final StripeCard card = StripeCard();
 
   bool remeberMe = false;
 
@@ -126,16 +142,46 @@ class _UI_U_AddCardState extends State<UI_U_AddCard> {
                                           )
                                       ),
                                       ///Card Form
-                                      CardForm(
-                                        formKey: formKey,
-                                        card: card,
-                                        cardDecoration: BoxDecoration(
-                                            color: Color.fromRGBO(200, 200, 200, 1.0)
-                                        ),
-                                        cardCvcTextStyle: TextStyle(color: Colors.black),
-                                        cardExpiryTextStyle: TextStyle(color: Colors.black),
-                                        cardNumberTextStyle: TextStyle(color: Colors.black),
+                                      CreditCardInputForm(
+                                        cardHeight: 170,
+                                        showResetButton : true,
+                                        onStateChange: (currentState, cardInfo) {
+                                          print(currentState);
+                                          print(cardInfo);
+                                        },
+                                        customCaptions: {
+                                          'PREV': AppLocalizations.of(context).prev,
+                                          'NEXT': AppLocalizations.of(context).next,
+                                          'DONE': AppLocalizations.of(context).done,
+                                          'CARD_NUMBER': AppLocalizations.of(context).cardNumber,
+                                          'CARDHOLDER_NAME': AppLocalizations.of(context).cardHolderName,
+                                          'VALID_THRU': AppLocalizations.of(context).validThru,
+                                          'SECURITY_CODE_CVC': AppLocalizations.of(context).securityCode,
+                                          'NAME_SURNAME': AppLocalizations.of(context).nameSurname,
+                                          'MM_YY': 'MM/YY',
+                                          'RESET': AppLocalizations.of(context).reset,
+                                        },
+                                        frontCardDecoration: cardDecoration,
+                                        backCardDecoration: cardDecoration,
+                                        prevButtonDecoration: buttonStyle,
+                                        nextButtonDecoration: buttonStyle,
+                                        resetButtonDecoration : buttonStyle,
+                                        prevButtonTextStyle: buttonTextStyle,
+                                        nextButtonTextStyle: buttonTextStyle,
+                                        resetButtonTextStyle: buttonTextStyle,
+                                        initialAutoFocus: true, // optional
+
                                       ),
+                                      // CardForm(
+                                      //   formKey: formKey,
+                                      //   card: card,
+                                      //   cardDecoration: BoxDecoration(
+                                      //       color: Color.fromRGBO(200, 200, 200, 1.0)
+                                      //   ),
+                                      //   cardCvcTextStyle: TextStyle(color: Colors.black),
+                                      //   cardExpiryTextStyle: TextStyle(color: Colors.black),
+                                      //   cardNumberTextStyle: TextStyle(color: Colors.black),
+                                      // ),
 
                                       SizedBox(
                                         height: media.height * 0.05,
@@ -159,16 +205,16 @@ class _UI_U_AddCardState extends State<UI_U_AddCard> {
                                                     onPressed: () {
                                                       if(formKey.currentState.validate()) {
                                                         formKey.currentState.save();
-                                                        debugPrint('UI_AddCArd => BRAND: ${Utils.enumToString(detectCCType(card.number))}');
+                                                        // debugPrint('UI_AddCArd => BRAND: ${Utils.enumToString(detectCCType(card.number))}');
                                                         StoreProvider.of<AppState>(context).dispatch(AddingStripePaymentMethodWithNavigation(snapshot.user.uid));
-                                                        addPaymentMethodWithSetupIntent(context, snapshot.user.uid);
+                                                        // addPaymentMethodWithSetupIntent(context, snapshot.user.uid);
 
                                                         StripeCardResponse tmpCard = StripeCardResponse();
-                                                        tmpCard.brand = Utils.enumToString(detectCCType(card.number));
-                                                        tmpCard.expMonth = card.expMonth;
-                                                        tmpCard.expYear = card.expYear;
-                                                        tmpCard.last4 = card.last4;
-                                                        tmpCard.secretToken = card.cvc;
+                                                        // tmpCard.brand = Utils.enumToString(detectCCType(card.number));
+                                                        // tmpCard.expMonth = card.expMonth;
+                                                        // tmpCard.expYear = card.expYear;
+                                                        // tmpCard.last4 = card.last4;
+                                                        // tmpCard.secretToken = card.cvc;
 
                                                         StripeState stripeState = StripeState().toEmpty();
                                                         stripeState.stripeCard = tmpCard;
@@ -205,6 +251,16 @@ class _UI_U_AddCardState extends State<UI_U_AddCard> {
                                                     ),
                                                   )
                                               ),
+                                              Container(
+                                                child: MaterialButton(
+                                                  child: Text(
+                                                    AppLocalizations.of(context).friday,
+                                                  ),
+                                                  onPressed: () {
+                                                    // TODO: add a card process start
+                                                  },
+                                                ),
+                                              )
                                             ],
                                           ),
                                         ),
@@ -255,102 +311,102 @@ class _UI_U_AddCardState extends State<UI_U_AddCard> {
           })
     );
   }
-
-  void buy(context) async {
-    final StripeCard stripeCard = card;
-    final String customerEmail = getCustomerEmail();
-
-    if (!stripeCard.validateCVC()) {
-      showAlertDialog(context, AppLocalizations.of(context).error, AppLocalizations.of(context).cvcNotValid);
-      return;
-    }
-    if (!stripeCard.validateDate()) {
-      showAlertDialog(context, AppLocalizations.of(context).error, AppLocalizations.of(context).dateNotValid);
-      return;
-    }
-    if (!stripeCard.validateNumber()) {
-      showAlertDialog(context, AppLocalizations.of(context).error, AppLocalizations.of(context).numberNotValid);
-      return;
-    }
-
-    Map<String, dynamic> paymentIntentRes = await createPaymentIntent(stripeCard, customerEmail);
-    String clientSecret = paymentIntentRes['client_secret'];
-    String paymentMethodId = paymentIntentRes['payment_method'];
-    String status = paymentIntentRes['status'];
-
-    if (status == 'requires_action') //3D secure is enable in this card
-      paymentIntentRes = await confirmPayment3DSecure(clientSecret, paymentMethodId);
-
-    if (paymentIntentRes['status'] != 'succeeded') {
-      showAlertDialog(context, AppLocalizations.of(context).warning, AppLocalizations.of(context).canceledTransaction);
-      return;
-    }
-
-    if (paymentIntentRes['status'] == 'succeeded') {
-      showAlertDialog(context, AppLocalizations.of(context).success, AppLocalizations.of(context).thanksForBuying);
-      return;
-    }
-    showAlertDialog(context, AppLocalizations.of(context).warning, AppLocalizations.of(context).transactionRejected);
-  }
-
-  void addPaymentMethod(context) async {
-    final StripeCard stripeCard = card;
-    final String customerEmail = getCustomerEmail();
-
-    if (!stripeCard.validateCVC()) {
-      showAlertDialog(context, AppLocalizations.of(context).error, AppLocalizations.of(context).cvcNotValid);
-      return;
-    }
-    if (!stripeCard.validateDate()) {
-      showAlertDialog(context, AppLocalizations.of(context).error, AppLocalizations.of(context).dateNotValid);
-      return;
-    }
-    if (!stripeCard.validateNumber()) {
-      showAlertDialog(context, AppLocalizations.of(context).error, AppLocalizations.of(context).numberNotValid);
-      return;
-    }
-
-    Map<String, dynamic> paymentIntentRes = await createPaymentIntent(stripeCard, customerEmail);
-    print("StripePayment payment method test");
-
-
-
-    // TODO confirm the payment method has been added or notify a failure to the user
-  }
-
-  void addPaymentMethodWithSetupIntent(context, userId) async {
-    final StripeCard stripeCard = card;
-    final String customerEmail = getCustomerEmail();
-
-    if (!stripeCard.validateCVC()) {
-      showAlertDialog(context, AppLocalizations.of(context).error, AppLocalizations.of(context).cvcNotValid);
-      return;
-    }
-    if (!stripeCard.validateDate()) {
-      showAlertDialog(context, AppLocalizations.of(context).error, AppLocalizations.of(context).dateNotValid);
-      return;
-    }
-    if (!stripeCard.validateNumber()) {
-      showAlertDialog(context, AppLocalizations.of(context).error, AppLocalizations.of(context).numberNotValid);
-      return;
-    }
-    // TODO take remotes requests away from this file.
-    // TODO show spinner on tap.
-    /*var stripeCustomerSetupIntentCreationReference = await FirebaseFirestore.instance.collection("stripeCustomer/" + userId + "_test/setupIntent").doc()
-        .set({
-      'status': "create request"
-    });
-    // now http request to create the actual setupIntent
-    final http.Response response = await http.post('https://europe-west1-buytime-458a1.cloudfunctions.net/createSetupIntent?userId=' + userId);
-
-    debugPrint('UI_U_AddCard: RESPONSE: ${response.statusCode}');
-
-    if(response.statusCode == 200)
-      StoreProvider.of<AppState>(context).dispatch(AddedStripePaymentMethod());*/
-    Map<String, dynamic> paymentIntentRes = await createPaymentIntent(stripeCard, customerEmail);
-
-    // TODO confirm the payment method has been added or notify a failure to the user
-  }
+  //
+  // void buy(context) async {
+  //   final StripeCard stripeCard = card;
+  //   final String customerEmail = getCustomerEmail();
+  //
+  //   if (!stripeCard.validateCVC()) {
+  //     showAlertDialog(context, AppLocalizations.of(context).error, AppLocalizations.of(context).cvcNotValid);
+  //     return;
+  //   }
+  //   if (!stripeCard.validateDate()) {
+  //     showAlertDialog(context, AppLocalizations.of(context).error, AppLocalizations.of(context).dateNotValid);
+  //     return;
+  //   }
+  //   if (!stripeCard.validateNumber()) {
+  //     showAlertDialog(context, AppLocalizations.of(context).error, AppLocalizations.of(context).numberNotValid);
+  //     return;
+  //   }
+  //
+  //   Map<String, dynamic> paymentIntentRes = await createPaymentIntent(stripeCard, customerEmail);
+  //   String clientSecret = paymentIntentRes['client_secret'];
+  //   String paymentMethodId = paymentIntentRes['payment_method'];
+  //   String status = paymentIntentRes['status'];
+  //
+  //   if (status == 'requires_action') //3D secure is enable in this card
+  //     paymentIntentRes = await confirmPayment3DSecure(clientSecret, paymentMethodId);
+  //
+  //   if (paymentIntentRes['status'] != 'succeeded') {
+  //     showAlertDialog(context, AppLocalizations.of(context).warning, AppLocalizations.of(context).canceledTransaction);
+  //     return;
+  //   }
+  //
+  //   if (paymentIntentRes['status'] == 'succeeded') {
+  //     showAlertDialog(context, AppLocalizations.of(context).success, AppLocalizations.of(context).thanksForBuying);
+  //     return;
+  //   }
+  //   showAlertDialog(context, AppLocalizations.of(context).warning, AppLocalizations.of(context).transactionRejected);
+  // }
+  //
+  // void addPaymentMethod(context) async {
+  //   final StripeCard stripeCard = card;
+  //   final String customerEmail = getCustomerEmail();
+  //
+  //   if (!stripeCard.validateCVC()) {
+  //     showAlertDialog(context, AppLocalizations.of(context).error, AppLocalizations.of(context).cvcNotValid);
+  //     return;
+  //   }
+  //   if (!stripeCard.validateDate()) {
+  //     showAlertDialog(context, AppLocalizations.of(context).error, AppLocalizations.of(context).dateNotValid);
+  //     return;
+  //   }
+  //   if (!stripeCard.validateNumber()) {
+  //     showAlertDialog(context, AppLocalizations.of(context).error, AppLocalizations.of(context).numberNotValid);
+  //     return;
+  //   }
+  //
+  //   Map<String, dynamic> paymentIntentRes = await createPaymentIntent(stripeCard, customerEmail);
+  //   print("StripePayment payment method test");
+  //
+  //
+  //
+  //   // TODO confirm the payment method has been added or notify a failure to the user
+  // }
+  //
+  // void addPaymentMethodWithSetupIntent(context, userId) async {
+  //   final StripeCard stripeCard = card;
+  //   final String customerEmail = getCustomerEmail();
+  //
+  //   if (!stripeCard.validateCVC()) {
+  //     showAlertDialog(context, AppLocalizations.of(context).error, AppLocalizations.of(context).cvcNotValid);
+  //     return;
+  //   }
+  //   if (!stripeCard.validateDate()) {
+  //     showAlertDialog(context, AppLocalizations.of(context).error, AppLocalizations.of(context).dateNotValid);
+  //     return;
+  //   }
+  //   if (!stripeCard.validateNumber()) {
+  //     showAlertDialog(context, AppLocalizations.of(context).error, AppLocalizations.of(context).numberNotValid);
+  //     return;
+  //   }
+  //   // TODO take remotes requests away from this file.
+  //   // TODO show spinner on tap.
+  //   /*var stripeCustomerSetupIntentCreationReference = await FirebaseFirestore.instance.collection("stripeCustomer/" + userId + "_test/setupIntent").doc()
+  //       .set({
+  //     'status': "create request"
+  //   });
+  //   // now http request to create the actual setupIntent
+  //   final http.Response response = await http.post('https://europe-west1-buytime-458a1.cloudfunctions.net/createSetupIntent?userId=' + userId);
+  //
+  //   debugPrint('UI_U_AddCard: RESPONSE: ${response.statusCode}');
+  //
+  //   if(response.statusCode == 200)
+  //     StoreProvider.of<AppState>(context).dispatch(AddedStripePaymentMethod());*/
+  //   Map<String, dynamic> paymentIntentRes = await createPaymentIntent(stripeCard, customerEmail);
+  //
+  //   // TODO confirm the payment method has been added or notify a failure to the user
+  // }
 
 //--------
 
@@ -385,29 +441,31 @@ class _UI_U_AddCardState extends State<UI_U_AddCard> {
       },
     );
   }
+  //
+  // Future<Map<String, dynamic>> createPaymentIntent(StripeCard stripeCard, String customerEmail) async {
+  //   String clientSecret;
+  //   Map<String, dynamic> paymentIntentRes, paymentMethod;
+  //   try {
+  //     // paymentMethod = await stripe.api.createPaymentMethodFromCard(stripeCard);
+  //     Map<String, dynamic> cardData;
+  //     cardData = {
+  //       "type": "card",
+  //       "card": {"number": stripeCard.number, "exp_month": stripeCard.expMonth, "exp_year": stripeCard.expYear, "cvc": stripeCard.cvc}
+  //     };
+  //     paymentMethod = await stripe.api.createPaymentMethod(cardData);
+  //     var userId = StoreProvider.of<AppState>(context).state.user.uid;
+  //     // save this on firebase to trigger the cloud function
+  //     StoreProvider.of<AppState>(context).dispatch(AddStripePaymentMethod(paymentMethod, userId));
+  //     //clientSecret = await postCreatePaymentIntent(customerEmail, paymentMethod['id']);
+  //     //paymentIntentRes = await stripe.api.retrievePaymentIntent(clientSecret);
+  //   } catch (e) {
+  //     print("ERROR_CreatePaymentIntentAndSubmit: $e");
+  //     showAlertDialog(context, AppLocalizations.of(context).error, AppLocalizations.of(context).somethingWentWrong);
+  //   }
+  //   return paymentIntentRes;
+  // }
+  //
 
-  Future<Map<String, dynamic>> createPaymentIntent(StripeCard stripeCard, String customerEmail) async {
-    String clientSecret;
-    Map<String, dynamic> paymentIntentRes, paymentMethod;
-    try {
-      // paymentMethod = await stripe.api.createPaymentMethodFromCard(stripeCard);
-      Map<String, dynamic> cardData;
-      cardData = {
-        "type": "card",
-        "card": {"number": stripeCard.number, "exp_month": stripeCard.expMonth, "exp_year": stripeCard.expYear, "cvc": stripeCard.cvc}
-      };
-      paymentMethod = await stripe.api.createPaymentMethod(cardData);
-      var userId = StoreProvider.of<AppState>(context).state.user.uid;
-      // save this on firebase to trigger the cloud function
-      StoreProvider.of<AppState>(context).dispatch(AddStripePaymentMethod(paymentMethod, userId));
-      //clientSecret = await postCreatePaymentIntent(customerEmail, paymentMethod['id']);
-      //paymentIntentRes = await stripe.api.retrievePaymentIntent(clientSecret);
-    } catch (e) {
-      print("ERROR_CreatePaymentIntentAndSubmit: $e");
-      showAlertDialog(context, AppLocalizations.of(context).error, AppLocalizations.of(context).somethingWentWrong);
-    }
-    return paymentIntentRes;
-  }
   final String postCreateIntentURL = "https:/yourserver/postPaymentIntent";
   Future<String> postCreatePaymentIntent(String email, String paymentMethodId) async {
     String clientSecret;
@@ -425,17 +483,17 @@ class _UI_U_AddCardState extends State<UI_U_AddCard> {
     return clientSecret;
   }
 
-  Future<Map<String, dynamic>> confirmPayment3DSecure(String clientSecret, String paymentMethodId) async {
-    Map<String, dynamic> paymentIntentRes_3dSecure;
-    try {
-      await stripe.confirmPayment(clientSecret, paymentMethodId: paymentMethodId);
-      paymentIntentRes_3dSecure = await stripe.api.retrievePaymentIntent(clientSecret);
-    } catch (e) {
-      print("ERROR_ConfirmPayment3DSecure: $e");
-      showAlertDialog(context, AppLocalizations.of(context).error, AppLocalizations.of(context).somethingWentWrong);
-    }
-    return paymentIntentRes_3dSecure;
-  }
+  // Future<Map<String, dynamic>> confirmPayment3DSecure(String clientSecret, String paymentMethodId) async {
+  //   Map<String, dynamic> paymentIntentRes_3dSecure;
+  //   try {
+  //     await stripe.confirmPayment(clientSecret, paymentMethodId: paymentMethodId);
+  //     paymentIntentRes_3dSecure = await stripe.api.retrievePaymentIntent(clientSecret);
+  //   } catch (e) {
+  //     print("ERROR_ConfirmPayment3DSecure: $e");
+  //     showAlertDialog(context, AppLocalizations.of(context).error, AppLocalizations.of(context).somethingWentWrong);
+  //   }
+  //   return paymentIntentRes_3dSecure;
+  // }
 
   Container AddCardButton(Size media, String text, Color color) {
     return Container(
@@ -455,5 +513,83 @@ class _UI_U_AddCardState extends State<UI_U_AddCard> {
     );
   }
 
+  final cardDecoration = BoxDecoration(
+      boxShadow: <BoxShadow>[
+        BoxShadow(color: Colors.black54, blurRadius: 15.0, offset: Offset(0, 8))
+      ],
+      gradient: LinearGradient(
+          colors: [
+            BuytimeTheme.Indigo,
+            BuytimeTheme.UserPrimary,
+          ],
+          begin: const FractionalOffset(0.0, 0.0),
+          end: const FractionalOffset(1.0, 0.0),
+          stops: [0.0, 1.0],
+          tileMode: TileMode.clamp),
+      borderRadius: BorderRadius.all(Radius.circular(15)));
 
+  final buttonStyle = BoxDecoration(
+    borderRadius: BorderRadius.circular(4.0),
+    gradient: LinearGradient(
+        colors: [
+          BuytimeTheme.UserPrimary,
+          BuytimeTheme.UserPrimary,
+        ],
+        begin: const FractionalOffset(0.0, 0.0),
+        end: const FractionalOffset(1.0, 0.0),
+        stops: [0.0, 1.0],
+        tileMode: TileMode.clamp),
+  );
+
+  final buttonTextStyle = TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18);
+
+}
+class ShowDialogToDismiss extends StatelessWidget {
+  final String content;
+  final String title;
+  final String buttonText;
+  ShowDialogToDismiss({this.title, this.buttonText, this.content});
+  @override
+  Widget build(BuildContext context) {
+    if (!Platform.isIOS) {
+      return AlertDialog(
+        title: new Text(
+          title,
+        ),
+        content: new Text(
+          this.content,
+        ),
+        actions: <Widget>[
+          new ElevatedButton(
+            child: new Text(
+              buttonText,
+            ),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+    } else {
+      return CupertinoAlertDialog(
+          title: Text(
+            title,
+          ),
+          content: new Text(
+            this.content,
+          ),
+          actions: <Widget>[
+            CupertinoDialogAction(
+              isDefaultAction: true,
+              child: new Text(
+                buttonText[0].toUpperCase() +
+                    buttonText.substring(1).toLowerCase(),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            )
+          ]);
+    }
+  }
 }

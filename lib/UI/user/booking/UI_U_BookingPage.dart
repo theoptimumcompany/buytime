@@ -1139,9 +1139,6 @@ class _BookingPageState extends State<BookingPage> {
 
                                             FirebaseAuth.instance.signOut().then((_) {
                                               googleSignIn.signOut();
-
-                                              facebookSignIn.logOut();
-
                                               //Svuotare lo Store sul Logout
                                               StoreProvider.of<AppState>(context).dispatch(SetCategoryToEmpty());
                                               StoreProvider.of<AppState>(context).dispatch(SetCategoryListToEmpty());

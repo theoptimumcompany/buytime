@@ -486,7 +486,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
 
                                   Navigator.push(
                                     context,
-                                    MaterialPageRoute(builder: (context) => ConfirmOrder(reserve: false,tourist: widget.tourist,)),
+                                    MaterialPageRoute(builder: (context) => ConfirmOrder(reserve: false, tourist: widget.tourist,)),
                                   );
                                 } : null,
                                 textColor: BuytimeTheme.TextWhite,

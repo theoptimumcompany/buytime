@@ -54,10 +54,7 @@ import 'package:Buytime/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_screenutil/screen_util.dart';
 import 'package:logger/logger.dart';
-import 'package:logger_flutter/logger_flutter.dart';
 import 'package:redux/redux.dart';
 import 'package:redux_epics/redux_epics.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
@@ -110,6 +107,7 @@ void main(){
     // StripePaymentCardListRequest(),
     StripeListPaymentCardListRequest(),
     StripeDetachPaymentMethodRequest(),
+    CheckStripeCustomerService(),
     ServiceUpdateService(),
     ServiceUpdateServiceVisibility(),
     ServiceDeleteService(),

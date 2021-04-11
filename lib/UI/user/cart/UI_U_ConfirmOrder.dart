@@ -1,5 +1,7 @@
+import 'dart:io';
 
 import 'package:Buytime/UI/user/cart/UI_U_ConfirmedOrder.dart';
+import 'package:Buytime/UI/user/cart/tab/T_NativeGoogle.dart';
 import 'package:Buytime/UI/user/cart/tab/T_credit_cards.dart';
 import 'package:Buytime/UI/user/cart/tab/T_room.dart';
 import 'package:Buytime/reblox/model/card/card_state.dart';
@@ -7,27 +9,25 @@ import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
 import 'package:Buytime/reblox/reducer/order_reservable_reducer.dart';
 import 'package:Buytime/reblox/reducer/stripe_list_payment_reducer.dart';
 import 'package:Buytime/reblox/reducer/stripe_payment_reducer.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
-import 'package:Buytime/UI/user/service/UI_U_service_list.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
-import 'package:Buytime/utils/globals.dart';
-import 'package:Buytime/reusable/order/optimum_order_item_card_medium.dart';
 import 'package:Buytime/reusable/order/order_total.dart';
-import 'package:Buytime/UI/user/cart/UI_U_stripe_payment.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:stripe_payment/stripe_payment.dart';
 
 class ConfirmOrder extends StatefulWidget{
   final String title = 'confirmOrder';
-
   bool tourist;
-  bool reserve;
+  bool reserve = false;
   ConfirmOrder({Key key, this.reserve, this.tourist}) : super(key: key);
 
   @override
@@ -41,10 +41,12 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
 
   OrderState orderState;
   OrderReservableState orderReservableState;
+
   @override
   void initState() {
     super.initState();
-    _controller = TabController(length: 2, vsync: this);
+    _controller = TabController(length: 3, vsync: this);
+
 
     _controller.addListener(() {
       setState(() {
@@ -64,16 +66,16 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
         },
         child: StoreConnector<AppState, AppState>(
             onInit: (store) {
-              store?.dispatch(StripeListCardListRequest('${store?.state?.user?.uid}_test'));
+              /// check if the stripe customer have been created for this user:
+              store?.dispatch(CheckStripeCustomer());
               debugPrint('UI_U_ConfirmOrder => ON INIT');
-            }, ///TODO Rememebr _test
+            },
             converter: (store) => store.state,
             builder: (context, snapshot) {
-              if(widget.reserve)
+              if(widget.reserve != null && widget.reserve)
                 orderReservableState = snapshot.orderReservable;
               else
                 orderState = snapshot.order;
-
               bool selected = false;
               List<CardState> tmpList = StoreProvider.of<AppState>(context).state.cardListState.cardListState;
               tmpList.forEach((element) {
@@ -160,7 +162,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                           converter: (store) => store.state,
                                           rebuildOnChange: true,
                                           builder: (context, snapshot) {
-                                            if(widget.reserve){
+                                            if(widget.reserve != null && widget.reserve){
                                               print("UI_U_ConfirmOrder => " + snapshot.orderReservable.itemList.length.toString());
                                               return OrderTotal(media: media, orderState: OrderState.fromReservableState(snapshot.orderReservable));
                                             }else{
@@ -233,20 +235,35 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                         indicatorPadding: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2, right: SizeConfig.safeBlockHorizontal * 2),
                                         controller: _controller,
                                         tabs: [
-                                          ///Credit Card
-                                          Tab(
-                                            text: AppLocalizations.of(context).creditCardUpper,
-                                          ),
                                           ///Room
                                           Tab(
-                                            text: AppLocalizations.of(context).roomUpper,
+                                            text: AppLocalizations.of(context).roomSimple,
                                           ),
+                                          ///Credit Card
+                                          Tab(
+                                            icon: Platform.isAndroid ?
+                                            Text(AppLocalizations.of(context).googlePay) :
+                                            Icon(FontAwesome5Brands.apple_pay,size: 40.0,)
+                                          ),
+                                          ///Credit Card
+                                          Tab(
+                                            text: AppLocalizations.of(context).creditCardSimple,
+                                          ),
+
                                         ],
                                       ),
                                     ),
                                   ),
                                   ///Tab
-                                  _controller.index == 0 ? CreditCards(tourist: widget.tourist) : Room(tourist: widget.tourist),
+                                  (() {
+                                    if (_controller.index == 0) {
+                                      return Room(tourist: widget.tourist);
+                                    } else if (_controller.index == 1) {
+                                      return NativeGoogle();
+                                    } else if (_controller.index == 2) {
+                                      return CreditCards(tourist: widget.tourist);
+                                    }
+                                  }())
                                 ],
                               ),
                             ),
@@ -270,43 +287,19 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                           hoverElevation: 0,
                                           focusElevation: 0,
                                           highlightElevation: 0,
-                                          onPressed: selected && _selectedIndex == 0 ? () {
-                                            if(widget.reserve){
-                                              StoreProvider.of<AppState>(context).dispatch(SetOrderReservableProgress("in_progress"));
-                                              for(int i = 0; i < snapshot.orderReservable.itemList.length; i++){
-                                                OrderReservableState reservable = OrderReservableState(
-                                                  position: snapshot.orderReservable.position,
-                                                    date: snapshot.orderReservable.itemList[i].date,
-                                                    itemList: [snapshot.orderReservable.itemList[i]],
-                                                    total: snapshot.orderReservable.itemList[i].price,
-                                                    tip: snapshot.orderReservable.tip,
-                                                    tax: snapshot.orderReservable.tax,
-                                                    taxPercent: snapshot.orderReservable.taxPercent,
-                                                    amount: 1,
-                                                    progress: snapshot.orderReservable.progress,
-                                                    addCardProgress: snapshot.orderReservable.addCardProgress,
-                                                    navigate: snapshot.orderReservable.navigate,
-                                                    businessId: snapshot.orderReservable.businessId,
-                                                    userId: snapshot.orderReservable.userId,
-                                                    business: snapshot.orderReservable.business,
-                                                    user: snapshot.orderReservable.user,
-                                                    selected: [snapshot.orderReservable.selected[i]],
-                                                    cartCounter: snapshot.orderReservable.cartCounter,
-                                                    serviceId: snapshot.orderReservable.serviceId
-                                                );
-
-                                                debugPrint('UI_U_ConfirmOrder => Date: ${reservable.date}');
-                                                StoreProvider.of<AppState>(context).dispatch(CreateOrderReservable(reservable));
-                                              }
-                                              //StoreProvider.of<AppState>(context).dispatch(CreateOrderReservable(snapshot.orderReservable));
-                                            }else{
-                                              StoreProvider.of<AppState>(context).dispatch(SetOrderProgress("in_progress"));
-                                              StoreProvider.of<AppState>(context).dispatch(CreateOrder(snapshot.order));
+                                          onPressed: () {
+                                            if (selected && _selectedIndex == 0) {
+                                              debugPrint("UI_U_ConfirmOrder confirmation 0");
+                                              /// TODO room payment logic starts
+                                              Navigator.push(context, MaterialPageRoute(builder: (context) => ConfirmedOrder(_controller.index, widget.reserve, widget.tourist)),);
+                                            } else if (_selectedIndex == 1) {
+                                              debugPrint("UI_U_ConfirmOrder confirmation 1");
+                                              confirmationNative(context, snapshot);
+                                            } else if (_selectedIndex == 2) {
+                                              debugPrint("UI_U_ConfirmOrder  confirmation 2");
+                                              confirmationCard(context, snapshot);
                                             }
-                                            Navigator.push(context, MaterialPageRoute(builder: (context) => ConfirmedOrder(_controller.index, widget.reserve, widget.tourist)),);
-                                          } : _selectedIndex == 1 ? (){
-                                            Navigator.push(context, MaterialPageRoute(builder: (context) => ConfirmedOrder(_controller.index, widget.reserve, widget.tourist)),);
-                                          } : null,
+                                          },
                                           textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
                                           color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
                                           disabledColor: BuytimeTheme.SymbolLightGrey,
@@ -317,7 +310,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                           child: FittedBox(
                                             fit: BoxFit.scaleDown,
                                             child: Text(
-                                              !widget.reserve
+                                              !(widget.reserve!= null && widget.reserve)
                                                   ? AppLocalizations.of(context).confirmUpper
                                                   : '${AppLocalizations.of(context).completeBooking.toString().toUpperCase()}',
                                               style: TextStyle(
@@ -331,149 +324,12 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                           ),
                                         )
                                     ),
-                                    /*Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () {
-                                          // trigger payment information page
-                                          Navigator.pushReplacement(
-                                            context,
-                                            MaterialPageRoute(builder: (context) => UI_U_StripePayment()),
-                                          );
-                                        },
-                                        child: Padding(
-                                          padding: EdgeInsets.only(top: (media.height * 0.05)),
-                                          child: Container(
-                                            width: media.width * 0.55,
-                                            decoration: BoxDecoration(color: Color.fromRGBO(1, 175, 81, 1.0), borderRadius: BorderRadius.all(Radius.circular(5.0))),
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(8.0),
-                                              child: Row(
-                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                children: [Icon(Icons.credit_card, color: Colors.white), SizedBox(width: 10.0), Text(AppLocalizations.of(context).orderAndPay, style: TextStyle(color: Colors.white))],
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  // Row(
-                                  //   mainAxisAlignment: MainAxisAlignment.center,
-                                  //   children: [
-                                  //     GestureDetector(
-                                  //       onTap: () {
-                                  //         // trigger payment information page
-                                  //         print("Dispatch Order create!");
-                                  //         StoreProvider.of<AppState>(context).dispatch(CreateOrder(OrderState(
-                                  //             itemList: snapshot.order.itemList,
-                                  //             date: snapshot.order.date,
-                                  //             progress: "paid",
-                                  //             position: snapshot.order.position,
-                                  //             total: snapshot.order.total,
-                                  //             business: snapshot.order.business,
-                                  //             user: snapshot.order.user,
-                                  //             businessId: snapshot.business.id_firestore)));
-                                  //         StoreProvider.of<AppState>(context).dispatch(OrderListRequest());
-                                  //       },
-                                  //       child: Padding(
-                                  //         padding: EdgeInsets.only(top: (media.height * 0.05)),
-                                  //         child: Container(
-                                  //           width: media.width * 0.55,
-                                  //           decoration: BoxDecoration(color: Color.fromRGBO(1, 175, 81, 1.0), borderRadius: BorderRadius.all(Radius.circular(5.0))),
-                                  //           child: Padding(
-                                  //             padding: const EdgeInsets.all(8.0),
-                                  //             child: Row(
-                                  //               mainAxisAlignment: MainAxisAlignment.center,
-                                  //               children: [Icon(Icons.credit_card, color: Colors.white), SizedBox(width: 10.0), Text("Test Order Create", style: TextStyle(color: Colors.white))],
-                                  //             ),
-                                  //           ),
-                                  //         ),
-                                  //       ),
-                                  //     ),
-                                  //   ],
-                                  // ),
-                                  SizedBox(
-                                    height: media.height * 0.05,
-                                  )*/
-                                  ],
+                                   ],
                                 ),
                               ),
-                            )
-                            /*Flexible(
-                              flex: 2,
-                              child: Container(
-                                height: double.infinity,
-                                width: double.infinity,
-                                color: Colors.black87,
-                                child:  DefaultTabController(
-                                  length: 2,
-                                  child: Scaffold(
-                                    appBar: PreferredSize(
-                                      preferredSize: Size.fromHeight(kToolbarHeight),
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          color: BuytimeTheme.UserPrimary,
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.black87.withOpacity(.3),
-                                              spreadRadius: 1,
-                                              blurRadius: 1,
-                                              offset: Offset(0, 2), // changes position of shadow
-                                            ),
-                                          ],
-                                        ),
-                                        child: TabBar(
-                                          indicatorWeight: SizeConfig.safeBlockHorizontal * 1,
-                                          indicatorColor: BuytimeTheme.BackgroundWhite,
-                                          indicatorPadding: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2, right: SizeConfig.safeBlockHorizontal * 2),
-                                          controller: _controller,
-                                          tabs: [
-                                            ///Credit Card
-                                            Tab(
-                                              child: Text(
-                                                'CREDIT CARD',//AppLocalizations.of(context).somethingIsNotRight,
-                                                style: TextStyle(
-                                                    letterSpacing: SizeConfig.safeBlockHorizontal * .2,
-                                                    fontFamily: BuytimeTheme.FontFamily,
-                                                    color: BuytimeTheme.TextWhite,
-                                                    fontWeight: FontWeight.w600,
-                                                    fontSize: SizeConfig.safeBlockHorizontal * 4
-                                                ),
-                                              ),
-                                            ),
-                                            ///Room
-                                            Tab(
-                                                child: Text(
-                                                  'ROOM',//AppLocalizations.of(context).somethingIsNotRight,
-                                                  style: TextStyle(
-                                                      letterSpacing: SizeConfig.safeBlockHorizontal * .2,
-                                                      fontFamily: BuytimeTheme.FontFamily,
-                                                      color: BuytimeTheme.TextWhite,
-                                                      fontWeight: FontWeight.w600,
-                                                      fontSize: SizeConfig.safeBlockHorizontal * 4
-                                                  ),
-                                                )
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    body: ConstrainedBox(
-                                      constraints: BoxConstraints(),
-                                      child: TabBarView(
-                                        controller: _controller,
-                                        children: [
-                                          CreditCardTab(),
-                                          Icon(Icons.directions_transit),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            )*/
+                            ),
+                            !snapshot.stripe.stripeCustomerCreated ? /// TODO: insert the ripple effect @nipuna
+                            Text('load') : Container()
                           ],
                         ),
                       ),
@@ -483,5 +339,102 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
             }
         )
     );
+  }
+
+  void confirmationCard(BuildContext context, AppState snapshot) {
+    if(widget.reserve != null && widget.reserve){
+      /// Reservable payment process starts
+      debugPrint('UI_U_ConfirmOrder => start reservable payment process with Credit Card');
+      StoreProvider.of<AppState>(context).dispatch(SetOrderReservableProgress("in_progress"));
+      for(int i = 0; i < snapshot.orderReservable.itemList.length; i++){
+        OrderReservableState reservable = OrderReservableState(
+          position: snapshot.orderReservable.position,
+            date: snapshot.orderReservable.itemList[i].date,
+            itemList: [snapshot.orderReservable.itemList[i]],
+            total: snapshot.orderReservable.itemList[i].price,
+            tip: snapshot.orderReservable.tip,
+            tax: snapshot.orderReservable.tax,
+            taxPercent: snapshot.orderReservable.taxPercent,
+            amount: 1,
+            progress: snapshot.orderReservable.progress,
+            addCardProgress: snapshot.orderReservable.addCardProgress,
+            navigate: snapshot.orderReservable.navigate,
+            businessId: snapshot.orderReservable.businessId,
+            userId: snapshot.orderReservable.userId,
+            business: snapshot.orderReservable.business,
+            user: snapshot.orderReservable.user,
+            selected: [snapshot.orderReservable.selected[i]],
+            cartCounter: snapshot.orderReservable.cartCounter,
+            serviceId: snapshot.orderReservable.serviceId
+        );
+    
+        debugPrint('UI_U_ConfirmOrder => Date: ${reservable.date}');
+        StoreProvider.of<AppState>(context).dispatch(CreateOrderReservable(reservable));
+      }
+      //StoreProvider.of<AppState>(context).dispatch(CreateOrderReservable(snapshot.orderReservable));
+    } else {
+      /// Direct Card Payment
+      debugPrint('UI_U_ConfirmOrder => start direct payment process with Credit Card');
+
+      //.catchError(err); // TODO: reactivate
+    }
+    Navigator.push(context, MaterialPageRoute(builder: (context) => ConfirmedOrder(_controller.index, widget.reserve, widget.tourist)),);
+  }
+  void confirmationNative(BuildContext context, AppState snapshot) {
+
+    if(widget.reserve != null && widget.reserve){
+      /// Reservable payment process starts with Native Method
+      debugPrint('UI_U_ConfirmOrder => start reservable payment process with Native Method');
+      StripePayment.paymentRequestWithNativePay(
+        androidPayOptions: AndroidPayPaymentRequest(
+          totalPrice: "1.20",
+          currencyCode: "EUR",
+        ),
+        applePayOptions: ApplePayPaymentOptions(
+          countryCode: 'DE',
+          currencyCode: 'EUR',
+          items: [
+            ApplePayItem(
+              label: 'Test',
+              amount: '13',
+            )
+          ],
+        ),
+      ).then((token) {
+        StoreProvider.of<AppState>(context).dispatch(SetOrderProgress("in_progress"));
+        StoreProvider.of<AppState>(context).dispatch(CreateOrder(snapshot.order));
+      }).catchError((error){
+        /// TODO: Show error to the user
+        debugPrint('UI_U_ConfirmOrder => error in direct payment process with Native Method:' + error);
+      });
+    } else {
+      /// Direct Payment process starts with Native Method
+      debugPrint('UI_U_ConfirmOrder => start direct payment process with Native Method');
+      StripePayment.paymentRequestWithNativePay(
+        androidPayOptions: AndroidPayPaymentRequest(
+          totalPrice: "1.20",
+          currencyCode: "EUR",
+        ),
+        applePayOptions: ApplePayPaymentOptions(
+          countryCode: 'DE',
+          currencyCode: 'EUR',
+          items: [
+            ApplePayItem(
+              label: 'Test',
+              amount: '13',
+            )
+          ],
+        ),
+      ).then((token) {
+        StoreProvider.of<AppState>(context).dispatch(SetOrderProgress("in_progress"));
+        StoreProvider.of<AppState>(context).dispatch(CreateOrder(snapshot.order));
+      }).catchError((error){
+        /// TODO: Show error to the user
+        debugPrint('UI_U_ConfirmOrder => error in direct payment process with Native Method:' + error);
+      });
+    }
+
+
+    // Navigator.push(context, MaterialPageRoute(builder: (context) => ConfirmedOrder(_controller.index, widget.reserve, widget.tourist)),);
   }
 }

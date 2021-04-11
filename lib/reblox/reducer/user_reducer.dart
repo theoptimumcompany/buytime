@@ -46,9 +46,9 @@ class UpdateUserDevice {
 }
 
 class UpdateUserToken {
-  Token _token;
+  TokenB _token;
   UpdateUserToken(this._token);
-  Token get token => _token;
+  TokenB get token => _token;
 }
 
 class CreatedUser {

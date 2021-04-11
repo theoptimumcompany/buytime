@@ -11,18 +11,19 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:redux_epics/redux_epics.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:stripe_sdk/stripe_sdk.dart';
+import 'package:stripe_payment/stripe_payment.dart';
+
 import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
 
 String stripeTestKey = "pk_test_51HS20eHr13hxRBpCZl1V0CKFQ7XzJbku7UipKLLIcuNGh3rp4QVsEDCThtV0l2AQ3jMtLsDN2zdC0fQ4JAK6yCOp003FIf3Wjz";
 String stripeKey = "pk_live_51HS20eHr13hxRBpCLHzfi0SXeqw8Efu911cWdYEE96BAV0zSOesvE83OiqqzRucKIxgCcKHUvTCJGY6cXRtkDVCm003CmGXYzy";
 
-final Stripe stripe = Stripe(
-  stripeTestKey,
-  stripeAccount: "acct_1HS20eHr13hxRBpC",
-  returnUrlForSca: "stripesdk://3ds.stripesdk.io", //Return URL for SCA
-);
+// final Stripe stripe = Stripe(
+//   stripeTestKey,
+//   stripeAccount: "acct_1HS20eHr13hxRBpC",
+//   returnUrlForSca: "stripesdk://3ds.stripesdk.io", //Return URL for SCA
+// );
 
 class StripePaymentAddPaymentMethod implements EpicClass<AppState> {
   String userId = '';
@@ -46,23 +47,23 @@ class StripePaymentAddPaymentMethod implements EpicClass<AppState> {
         String paymentMethodId = stripePaymentMethod["id"];
 
         // confirm the setupIntent (and in doing so add the card to stripe)
-        Future<Map<String,dynamic>> confirmationResult = stripe.api.confirmSetupIntent(customerSecret,data: {'payment_method': paymentMethodId});
-        var confirmationResultResolved = await confirmationResult;
-        if (event.stripePaymentMethod['card'] != null && event.stripePaymentMethod['card']['three_d_secure_usage'] != null){
-          debugPrint("STRIPE_PAYMENT_SERVICE_EPIC - StripePaymentAddPaymentMethod => Requires 3D secure auth");
-          if ( confirmationResultResolved['next_action'] != null &&  confirmationResultResolved['next_action']['use_stripe_sdk'] != null && confirmationResultResolved['next_action']['use_stripe_sdk']['stripe_js'] != null ) {
-            var card3Dsecurelink = confirmationResultResolved['next_action']['use_stripe_sdk']['stripe_js'];
-            if (await canLaunch(card3Dsecurelink)) {
-              await launch(card3Dsecurelink);
-            } else {
-              throw 'Could not launch $card3Dsecurelink';
-              // return "problems with 3D auth";
-            }
-          }
-        }
+        // Future<Map<String,dynamic>> confirmationResult = stripe.api.confirmSetupIntent(customerSecret,data: {'payment_method': paymentMethodId});
+        // var confirmationResultResolved = await confirmationResult;
+        // if (event.stripePaymentMethod['card'] != null && event.stripePaymentMethod['card']['three_d_secure_usage'] != null){
+        //   debugPrint("STRIPE_PAYMENT_SERVICE_EPIC - StripePaymentAddPaymentMethod => Requires 3D secure auth");
+        //   if ( confirmationResultResolved['next_action'] != null &&  confirmationResultResolved['next_action']['use_stripe_sdk'] != null && confirmationResultResolved['next_action']['use_stripe_sdk']['stripe_js'] != null ) {
+        //     var card3Dsecurelink = confirmationResultResolved['next_action']['use_stripe_sdk']['stripe_js'];
+        //     if (await canLaunch(card3Dsecurelink)) {
+        //       await launch(card3Dsecurelink);
+        //     } else {
+        //       throw 'Could not launch $card3Dsecurelink';
+        //       // return "problems with 3D auth";
+        //     }
+        //   }
+        // }
 
         // save the card also on firestore
-        await FirebaseFirestore.instance.collection("stripeCustomer/" + userId + "/card/").doc().set(confirmationResultResolved); /// 1 WRITE
+        // await FirebaseFirestore.instance.collection("stripeCustomer/" + userId + "/card/").doc().set(confirmationResultResolved); /// 1 WRITE
 
         // ask for the card list
 
@@ -87,6 +88,37 @@ class StripePaymentAddPaymentMethod implements EpicClass<AppState> {
     }).expand((element) => [
       userId.isNotEmpty ? StripeCardListRequest(userId) : null,
       UpdateStatistics(statisticsState),
+    ]);
+  }
+}
+
+/// Checks if the stripe_customer document for the current logged in user has been created,
+/// always checks the production document.
+/// If the production document has been created, the test document should also be there.
+class CheckStripeCustomerService implements EpicClass<AppState> {
+  StatisticsState statisticsState;
+  String userId = '';
+  bool stripeCustomerCreated = false;
+  @override
+  Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
+    return actions.whereType<CheckStripeCustomer>().asyncMap((event) async {
+      userId = store.state.user.uid;
+      debugPrint("stripe_payment_service_epic: CheckStripeCustomerService - searching for a stripe customer");
+      if (userId.isNotEmpty) {
+        DocumentSnapshot stripeCustomerReference = await FirebaseFirestore.instance.collection("stripeCustomer/").doc(userId).get(); /// 1 READ
+        statisticsState = store.state.statistics;
+        statisticsState.stripeCheckCustomerRead = statisticsState.stripeCheckCustomerRead + 1;
+        if (stripeCustomerReference.exists) {
+          stripeCustomerCreated = true;
+          debugPrint("stripe_payment_service_epic: CheckStripeCustomerService - a stripe customer has been found");
+        }
+      }
+    }).expand((element) => [
+      CheckedStripeCustomer(stripeCustomerCreated),
+      UpdateStatistics(statisticsState),
+      stripeCustomerCreated ? StripeListCardListRequest('${userId}_test') : null,
+      ///TODO change the null value with the error popup action
+      ///TODO Remember _test when switching to production
     ]);
   }
 }
@@ -330,6 +362,78 @@ class StripeDetachPaymentMethodRequest implements EpicClass<AppState> {
       UpdateStatistics(statisticsState),
     ]);
   }
+}
+
+class StripePaymentService {
+
+  String text = 'Click the button to start the payment';
+  double totalCost = 10.0;
+  double tip = 1.0;
+  double tax = 0.0;
+  double taxPercent = 0.2;
+  int amount = 0;
+  bool showSpinner = false;
+  String url = ''; //'https://us-central1-demostripe-b9557.cloudfunctions.net/StripePI';
+
+  Future<void> createPaymentMethodNative() async {
+    print('started NATIVE payment...');
+    StripePayment.setStripeAccount(null);
+    List<ApplePayItem> items = [];
+    items.add(ApplePayItem(
+      label: 'Demo Order',
+      amount: totalCost.toString(),
+    ));
+    if (tip != 0.0)
+      items.add(ApplePayItem(
+        label: 'Tip',
+        amount: tip.toString(),
+      ));
+    if (taxPercent != 0.0) {
+      tax = ((totalCost * taxPercent) * 100).ceil() / 100;
+      items.add(ApplePayItem(
+        label: 'Tax',
+        amount: tax.toString(),
+      ));
+    }
+    items.add(ApplePayItem(
+      label: 'Vendor A',
+      amount: (totalCost + tip + tax).toString(),
+    ));
+    amount = ((totalCost + tip + tax) * 100).toInt();
+    print('amount in pence/cent which will be charged = $amount');
+    //step 1: add card
+    PaymentMethod paymentMethod = PaymentMethod();
+    Token token = await StripePayment.paymentRequestWithNativePay(
+      androidPayOptions: AndroidPayPaymentRequest(
+        totalPrice: (totalCost + tax + tip).toStringAsFixed(2),
+        currencyCode: 'GBP',
+      ),
+      applePayOptions: ApplePayPaymentOptions(
+        countryCode: 'GB',
+        currencyCode: 'GBP',
+        items: items,
+      ),
+    );
+    paymentMethod = await StripePayment.createPaymentMethod(
+      PaymentMethodRequest(
+        card: CreditCard(
+          token: token.tokenId,
+        ),
+      ),
+    );
+    // paymentMethod != null
+    //     ? processPaymentAsDirectCharge(paymentMethod)
+    //     : showDialog(
+    //     context: context,
+    //     builder: (BuildContext context) => ShowDialogToDismiss(
+    //         title: 'Error',
+    //         content:
+    //         'It is not possible to pay with this card. Please try again with a different card',
+    //         buttonText: 'CLOSE'));
+  }
+
+
+
 }
 
 // Stream<dynamic> stripePaymentCardListRequestEpic(Stream<dynamic> actions, EpicStore<AppState> store) {

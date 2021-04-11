@@ -2,9 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
-
 import 'package:Buytime/UI/user/landing/UI_U_Landing.dart';
-import 'package:Buytime/UI/user/landing/invite_guest_form.dart';
 import 'package:Buytime/main.dart';
 import 'package:Buytime/reblox/model/autoComplete/auto_complete_state.dart';
 import 'package:Buytime/reblox/model/card/card_state.dart';
@@ -12,7 +10,6 @@ import 'package:Buytime/reblox/model/snippet/device.dart';
 import 'package:Buytime/reblox/model/snippet/token.dart';
 import 'package:Buytime/reblox/model/statistics_state.dart';
 import 'package:Buytime/reblox/reducer/auto_complete_list_reducer.dart';
-import 'package:Buytime/reblox/reducer/booking_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/card_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/statistics_reducer.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
@@ -25,7 +22,6 @@ import 'package:Buytime/UI/user/login/UI_U_Home.dart';
 import 'package:device_info/device_info.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -36,6 +32,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:stripe_payment/stripe_payment.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -147,8 +144,22 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
     }).catchError((onError) {
       print("error on firebase application start: " + onError.toString());
     });
-
+    checkIfNativePayReady();
     initPlatformState();
+  }
+
+  void checkIfNativePayReady() async {
+    StripePayment.setOptions(StripeOptions(
+        publishableKey: "pk_test_51HS20eHr13hxRBpCZl1V0CKFQ7XzJbku7UipKLLIcuNGh3rp4QVsEDCThtV0l2AQ3jMtLsDN2zdC0fQ4JAK6yCOp003FIf3Wjz",
+        merchantId: "Test",
+        androidPayMode: 'test'));
+
+    debugPrint('splash_screen: started to check if native pay ready');
+    bool deviceSupportNativePay = await StripePayment.deviceSupportsNativePay();
+    bool isNativeReady = await StripePayment.canMakeNativePayPayments(['american_express', 'visa', 'maestro', 'master_card']);
+    debugPrint('splash_screen: deviceSupportNativePay: ' + deviceSupportNativePay.toString() + ' - isNativeReady: ' + isNativeReady.toString());
+
+    // deviceSupportNativePay && isNativeReady ? createPaymentMethodNative() : createPaymentMethod();
   }
 
   /// Replace with server token from firebase console settings.
@@ -297,7 +308,7 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
         StoreProvider.of<AppState>(context).dispatch(new LoggedUser(UserState.fromFirebaseUser(user, deviceId, [serverToken])));
         Device device = Device(name: "device", id: deviceId, user_uid: user.uid);
         StoreProvider.of<AppState>(context).dispatch(new UpdateUserDevice(device));
-        Token token = Token(name: "token", id: serverToken, user_uid: user.uid);
+        TokenB token = TokenB(name: "token", id: serverToken, user_uid: user.uid);
         StoreProvider.of<AppState>(context).dispatch(new UpdateUserToken(token));
 
         //StoreProvider.of<AppState>(context).dispatch(new UserBookingRequest(user.email));
