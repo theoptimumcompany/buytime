@@ -462,5 +462,9 @@
   "noWorkersHere": "No hay Trabajadores asignados a esta categoría",
   "noCategoryImageSet": "Hay que asignar una imagen de categoría",
   "thereAreNoExternalServicesAttached": "No hay servicios externos agregados para este negocio"
-}
 
+  "onlyTotal": "Total",
+  "multipleOrders": "Multiple orders",
+  "product": "Product",
+  "products": "Products"
+}

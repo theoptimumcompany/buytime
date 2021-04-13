@@ -2,6 +2,7 @@ import 'package:Buytime/UI/user/cart/UI_U_ConfirmOrder.dart';
 import 'package:Buytime/reblox/model/order/order_entry.dart';
 import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
+import 'package:Buytime/reblox/reducer/order_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reservable_reducer.dart';
 import 'package:Buytime/reusable/buytime_icons.dart';
 import 'package:Buytime/utils/size_config.dart';
@@ -364,6 +365,13 @@ class CartReservableState extends State<CartReservable> {
                                               );
                                             }else{
                                               ///TODO send notification and navigate ...
+                                              /*StoreProvider.of<AppState>(context).dispatch(SetOrderProgress("in_progress"));
+                                              StoreProvider.of<AppState>(context).dispatch(CreateOrder(snapshot.order));*/
+
+                                              StoreProvider.of<AppState>(context).dispatch(SetOrderReservable(OrderReservableState().toEmpty()));
+                                              //StoreProvider.of<AppState>(context).dispatch(SetOrder(OrderState().toEmpty()));
+                                              //StoreProvider.of<AppState>(context).dispatch(UserOrderListRequest());
+                                              Navigator.of(context).popUntil(ModalRoute.withName('/bookingPage'));
                                             }
                                           },
                                           textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),

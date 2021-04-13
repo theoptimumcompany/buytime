@@ -38,6 +38,8 @@ OrderReservableState _$OrderReservableStateFromJson(Map<String, dynamic> json) {
         ?.toList(),
     cartCounter: json['cartCounter'] as int,
     serviceId: json['serviceId'] as String,
+    cardType: json['cardType'] as String,
+    cardLast4Digit: json['cardLast4Digit'] as String,
   );
 }
 
@@ -63,4 +65,6 @@ Map<String, dynamic> _$OrderReservableStateToJson(
       'selected': instance.selected?.map((e) => e?.toJson())?.toList(),
       'cartCounter': instance.cartCounter,
       'serviceId': instance.serviceId,
+      'cardType': instance.cardType,
+      'cardLast4Digit': instance.cardLast4Digit,
     };

@@ -121,7 +121,6 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
           //debugPrint('UI_U_ServiceReserve => LOOKED DATE: ${startDate.add(Duration(days: i))} - CURRENT DATE: ${currentTime}');
           if(startDate.add(Duration(days: i)).isAfter(currentTime) || startDate.add(Duration(days: i)).isAtSameMomentAs(currentTime)) {
               //tmpSlots.add(List.generate(slot.startTime.length, (index) => [index, slot]));
-
                bool isIn = false;
               bool isReserved = false;
               tmpSlots.add([]);
@@ -133,11 +132,12 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                     for(int j = 0; j < slot.startTime.length; j++) {
                       debugPrint('UI_U_ServiceReserve => LOOKING TIME: ${slot.startTime[j]} - TIME: ${item.time}');
                       if(isValid(startDate.add(Duration(days: i)), slot.daysInterval[j])){
-                        isIn = true;
                         if(slot.startTime[j] == item.time){
                           isReserved = true;
                           debugPrint('UI_U_ServiceReserve => LOOKED TIME: ${item.time} - RESERVED: ${slot.startTime[j]}');
                         }else{
+                          isIn = true;
+                          debugPrint('UI_U_ServiceReserve => VALID FROM RESERVED: ${DateFormat('dd MMMM yyyy').format(startDate.add(Duration(days: i)))} - ${slot.startTime[j]}');
                           tmpSlots.last.add([j, slot]);
                         }
                       }
@@ -152,16 +152,23 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                 for(int j = 0; j < slot.startTime.length; j++) {
                   //debugPrint('UI_U_ServiceReserve => LOOKING TIME: ${slot.startTime[j]} - TIME: ${item.time}');
                   if(isValid(startDate.add(Duration(days: i)), slot.daysInterval[j])){
+                    debugPrint('UI_U_ServiceReserve => VALID : ${DateFormat('dd MMMM yyyy').format(startDate.add(Duration(days: i)))} - ${slot.startTime[j]}');
                     isIn = true;
                     tmpSlots.last.add([j, slot]);
                   }
                 }
               }
-
+               debugPrint('UI_U_ServiceReserve => BEFORE | tmpSlots LENGTH: ${tmpSlots.length}');
               if(isIn){
+                debugPrint('UI_U_ServiceReserve => IS IN');
                 days.add(startDate.add(Duration(days: i)));
-              }else
+                if(tmpSlots.last.isEmpty)
+                  tmpSlots.removeLast();
+              }else{
+                debugPrint('UI_U_ServiceReserve => NOT IN');
                 tmpSlots.removeLast();
+              }
+               debugPrint('UI_U_ServiceReserve => AFTER | tmpSlots LENGTH: ${tmpSlots.length}');
 
                //days.add(startDate.add(Duration(days: i)));
             }
@@ -202,22 +209,22 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
         startRequest = true;
 
         double tmpPrice;
-        debugPrint('UI_U_ServiceDetails => SLOTS LENGTH: ${widget.serviceState.serviceSlot.length}');
+        debugPrint('UI_U_ServiceReserve => SLOTS LENGTH: ${widget.serviceState.serviceSlot.length}');
         DateTime currentTime = DateTime.now();
         currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0);
         widget.serviceState.serviceSlot.forEach((element) {
           DateTime checkOut = DateFormat('dd/MM/yyyy').parse(element.checkOut);
           if(checkOut.isAtSameMomentAs(currentTime) || checkOut.isAfter(currentTime)){
-            debugPrint('UI_U_ServiceDetails => VALID: ${element.checkIn}');
+            debugPrint('UI_U_ServiceReserve => VALID: ${element.checkIn}');
             tmpPrice = element.price;
             if(element.price <= tmpPrice){
               if(element.day != 0){
-                debugPrint('UI_U_ServiceDetails => SLOT WITH DAYS');
+                debugPrint('UI_U_ServiceReserve => SLOT WITH DAYS');
               }else{
-                debugPrint('UI_U_ServiceDetails => SLOT WITHOUT DAYS');
+                debugPrint('UI_U_ServiceReserve => SLOT WITHOUT DAYS');
                 int tmpMin = element.hour * 60 + element.minute;
                 if(tmpMin > 90)
-                  price = ' ${element.price.toStringAsFixed(0)}/${element.hour} h ${element.minute} ${AppLocalizations.of(context).spaceMinSpace}';
+                  price = ' ${element.price.toStringAsFixed(0)} / ${element.hour} h ${element.minute} ${AppLocalizations.of(context).spaceMinSpace}';
                 else
                   price = ' ${element.price.toStringAsFixed(0)} / $tmpMin${AppLocalizations.of(context).spaceMinSpace}';
               }
@@ -233,7 +240,6 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
         }
         else{
           noActivity = false;
-
           dates.clear();
           slots.clear();
           widget.serviceState.serviceSlot.forEach((element) {
@@ -241,31 +247,38 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
             DateTime tmpEndDate = DateFormat('dd/MM/yyyy').parse(element.checkOut);
             if(dates.isEmpty){
               dates = getDaysInBeteween(tmpStartDate, tmpEndDate, snapshot.booking.start_date,  snapshot.booking.end_date, element, snapshot.orderReservableList.orderReservableListState);
-              slots.addAll(tmpSlots);
-              slots.forEach((element) {
-                picked.add(List.generate(element.length, (index) => false));
-                selectedSlot.add(List.generate(element.length, (index) => false));
-                indexes.add(List.generate(element.length, (index) => SelectedEntry(first: 0, last: 0)));
-              });
+              if(tmpSlots.isNotEmpty){
+                slots.addAll(tmpSlots);
+                slots.forEach((element) {
+                  picked.add(List.generate(element.length, (index) => false));
+                  selectedSlot.add(List.generate(element.length, (index) => false));
+                  indexes.add(List.generate(element.length, (index) => SelectedEntry(first: 0, last: 0)));
+                });
+              }
             }else{
               List<DateTime> tmpDates = getDaysInBeteween(tmpStartDate, tmpEndDate, snapshot.booking.start_date,  snapshot.booking.end_date, element, snapshot.orderReservableList.orderReservableListState);
               for(int i = 0; i < dates.length; i++){
                 for(int j = 0; j < tmpDates.length; j++){
                   if(dates[i] == tmpDates[j]){
-                    slots[i].addAll(tmpSlots[j]);
-                    picked[i].addAll(List.generate(tmpSlots[j].length, (index) => false));
-                    selectedSlot[i].addAll(List.generate(tmpSlots[j].length, (index) => false));
-                    indexes[i].addAll(List.generate(tmpSlots[j].length, (index) => SelectedEntry(first: 0, last: 0)));
+                    if(tmpSlots[j].isNotEmpty){
+                      slots[i].addAll(tmpSlots[j]);
+                      picked[i].addAll(List.generate(tmpSlots[j].length, (index) => false));
+                      selectedSlot[i].addAll(List.generate(tmpSlots[j].length, (index) => false));
+                      indexes[i].addAll(List.generate(tmpSlots[j].length, (index) => SelectedEntry(first: 0, last: 0)));
+                    }
                   }
                 }
               }
               for(int i = 0; i < tmpDates.length; i++){
                 if(!dates.contains(tmpDates[i])){
                   dates.add(tmpDates[i]);
-                  slots.add(tmpSlots[i]);
-                  picked.add(List.generate(tmpSlots[i].length, (index) => false));
-                  selectedSlot.add(List.generate(tmpSlots[i].length, (index) => false));
-                  indexes.add(List.generate(tmpSlots[i].length, (index) => SelectedEntry(first: 0, last: 0)));
+                  if(tmpSlots[i].isNotEmpty){
+                    slots.add(tmpSlots[i]);
+                    picked.add(List.generate(tmpSlots[i].length, (index) => false));
+                    selectedSlot.add(List.generate(tmpSlots[i].length, (index) => false));
+                    indexes.add(List.generate(tmpSlots[i].length, (index) => SelectedEntry(first: 0, last: 0)));
+                  }
+
                 }
               }
             }
@@ -276,22 +289,25 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
           });
 
 
-          debugPrint("UI_U_ServiceReserve => SLOTS: ${slots}");
+          debugPrint("UI_U_ServiceReserve => SLOTS LENGTH: ${slots.length}");
 
           /*slots.forEach((element) {
             picked.add(List.generate(element.length, (index) => false));
             selectedSlot.add(List.generate(element.length, (index) => false));
             indexes.add(List.generate(element.length, (index) => SelectedEntry(first: 0, last: 0)));
           });*/
+
+          if(slots.isNotEmpty){
+            int tmpMin = slots[0][0][1].hour * 60 + slots[0][0][1].minute;
+            if(tmpMin > 90)
+              firstSlot = '${slots[0][0][1].hour} h ${slots[0][0][1].minute} ${AppLocalizations.of(context).spaceMinSpace}';
+            else
+              firstSlot = '$tmpMin${AppLocalizations.of(context).spaceMinSpace}';
+
+          }
         }
 
-        if(slots.isNotEmpty){
-          int tmpMin = slots[0][0][1].hour * 60 + slots[0][0][1].minute;
-          if(tmpMin > 90)
-            firstSlot = '${slots[0][0][1].hour} h ${slots[0][0][1].minute} ${AppLocalizations.of(context).spaceMinSpace}';
-          else
-            firstSlot = '$tmpMin${AppLocalizations.of(context).spaceMinSpace}';
-        }
+
 
         order = snapshot.orderReservable.itemList != null ? (snapshot.orderReservable.itemList.length > 0 ? snapshot.orderReservable : OrderReservableState().toEmpty()) : OrderReservableState().toEmpty();
         int start = int.parse(widget.serviceState.serviceSlot.first.checkIn.substring(0,2));

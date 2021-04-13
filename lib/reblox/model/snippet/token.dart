@@ -13,6 +13,6 @@ class TokenB {
     this.user_uid,
   });
 
-  factory TokenB.fromJson(Map<String, dynamic> json) => _$TokenFromJson(json);
-  Map<String, dynamic> toJson() => _$TokenToJson(this);
+  factory TokenB.fromJson(Map<String, dynamic> json) => _$TokenBFromJson(json);
+  Map<String, dynamic> toJson() => _$TokenBToJson(this);
 }

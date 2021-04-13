@@ -143,19 +143,21 @@ class UserOrderListRequestService implements EpicClass<AppState> {
       debugPrint("ORDER_SERVICE_EPIC - UserOrderListRequestService =>  BUSINESS ID: ${store.state.business.id_firestore}");
 
       DateTime currentTime = DateTime.now();
-      currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0).toUtc();
+      //currentTime = new DateTime(currentTime.year, currentTime.month - 1, currentTime.day, 0, 0, 0, 0, 0).toUtc();
       debugPrint('order_service_epic => current Time: $currentTime');
       List<DateTime> period = getPeriod(currentTime);
       orderStateList = [];
       int ordersFirebaseDocs = 0;
       int read = 0;
+      currentTime = currentTime.subtract(Duration(days: 15));
       //debugPrint("ORDER_SERVICE_EPIC - UserOrderListRequestService =>  BUSINESS ID: ${businessList[i].id_firestore}");
       QuerySnapshot ordersFirebase = await FirebaseFirestore.instance.collection("order") /// 1 READ - ? DOC
           //.where("progress", isEqualTo: "paid")
           //.where("progress", whereIn: ['paid',"pending"])
           .where("businessId", isEqualTo: store.state.business.id_firestore)
           .where("userId", isEqualTo: store.state.user.uid)
-          //.where("date", isGreaterThanOrEqualTo: currentTime)
+          .where("date", isGreaterThanOrEqualTo: currentTime)
+          .limit(50)
           .get();
 
       read++;
@@ -234,11 +236,11 @@ class OrderRequestService implements EpicClass<AppState> {
   }
 }
 
-class OrderUpdateService implements EpicClass<AppState> {
+class OrderUpdateByManagerService implements EpicClass<AppState> {
   OrderState orderState;
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    return actions.whereType<UpdateOrder>().asyncMap((event) async{
+    return actions.whereType<UpdateOrderByManager>().asyncMap((event) async{
     //   if (event.serviceState.fileToUploadList != null) {
     //     uploadFiles(event.serviceState.fileToUploadList, event.serviceState).then((ServiceState updatedServiceState) {
     //       return updateService(updatedServiceState);
@@ -253,8 +255,33 @@ class OrderUpdateService implements EpicClass<AppState> {
       await FirebaseFirestore.instance /// 1 WRITE
           .collection("order")
           .doc(event.orderState.orderId)
-          .update(event.orderState.toJson())
-      ;
+          .update(event.orderState.toJson());
+     }).expand((element) => [
+       UpdatedOrder(orderState)
+    ]);
+  }
+}
+
+class OrderUpdateService implements EpicClass<AppState> {
+  OrderState orderState;
+  @override
+  Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
+    return actions.whereType<UpdateOrder>().asyncMap((event) async{
+    //   if (event.serviceState.fileToUploadList != null) {
+    //     uploadFiles(event.serviceState.fileToUploadList, event.serviceState).then((ServiceState updatedServiceState) {
+    //       return updateService(updatedServiceState);
+    //     });
+    //   }
+    //   return updateService(event.serviceState);
+
+      /*print("ORDER_SERVICE_EPIC - OrderUpdateService => ORDER ID: ${event.orderState.orderId}");
+
+      orderState = event.orderState;
+
+      await FirebaseFirestore.instance /// 1 WRITE
+          .collection("order")
+          .doc(event.orderState.orderId)
+          .update(event.orderState.toJson());*/
      }).expand((element) => [
        UpdatedOrder(orderState)
     ]);
@@ -278,6 +305,12 @@ class OrderCreateService implements EpicClass<AppState> {
       orderState.businessId = store.state.business.id_firestore;
       orderState.userId = store.state.user.uid;
       orderState.business.thumbnail = store.state.business.wide;
+      store.state.cardListState.cardListState.forEach((element) {
+        if(element.selected){
+          orderState.cardType = element.stripeState.stripeCard.brand;
+          orderState.cardLast4Digit = element.stripeState.stripeCard.last4;
+        }
+      });
       // send document to orders collection
       var addedOrder = await FirebaseFirestore.instance.collection("order/").add(orderState.toJson());
       orderState.orderId = addedOrder.id;

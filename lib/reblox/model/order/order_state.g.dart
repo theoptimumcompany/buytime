@@ -37,6 +37,8 @@ OrderState _$OrderStateFromJson(Map<String, dynamic> json) {
             : SelectedEntry.fromJson(e as Map<String, dynamic>))
         ?.toList(),
     cartCounter: json['cartCounter'] as int,
+    cardType: json['cardType'] as String,
+    cardLast4Digit: json['cardLast4Digit'] as String,
   );
 }
 
@@ -60,4 +62,6 @@ Map<String, dynamic> _$OrderStateToJson(OrderState instance) =>
       'orderId': instance.orderId,
       'selected': instance.selected?.map((e) => e?.toJson())?.toList(),
       'cartCounter': instance.cartCounter,
+      'cardType': instance.cardType,
+      'cardLast4Digit': instance.cardLast4Digit,
     };

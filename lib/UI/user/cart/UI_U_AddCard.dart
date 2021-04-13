@@ -105,87 +105,94 @@ class _UI_U_AddCardState extends State<UI_U_AddCard> {
                               ),
                             ),
                             SizedBox(
-                              width: 40.0,
+                              width: 56.0,
                             )
                           ],
                         ),
                         body: new SingleChildScrollView(
                           child: SafeArea(
                             child: Container(
+                              height: (SizeConfig.safeBlockVertical * 100) - 80,
                               child: Padding(
                                   padding: const EdgeInsets.all(12.0),
                                   child: Column(
                                     children: [
-                                      ///Card Information Text
-                                      Container(
-                                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5, bottom: SizeConfig.safeBlockVertical * 0),
-                                          alignment: Alignment.center,
-                                          child: Material(
-                                            color: Colors.transparent,
-                                            child: InkWell(
-                                                onTap: null,
-                                                borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                                                child: Container(
-                                                  padding: EdgeInsets.all(5.0),
-                                                  child: Text(
-                                                    AppLocalizations.of(context).cardInformation,
-                                                    style: TextStyle(
-                                                        letterSpacing: SizeConfig.safeBlockHorizontal * .2,
-                                                        fontFamily: BuytimeTheme.FontFamily,
-                                                        color: BuytimeTheme.UserPrimary,
-                                                        fontWeight: FontWeight.w600,
-                                                        fontSize: SizeConfig.safeBlockHorizontal * 4
-                                                    ),
+                                      Expanded(
+                                        child: Column(
+                                          children: [
+                                            ///Card Information Text
+                                            Container(
+                                                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5, bottom: SizeConfig.safeBlockVertical * 1),
+                                                alignment: Alignment.center,
+                                                child: Material(
+                                                  color: Colors.transparent,
+                                                  child: InkWell(
+                                                      onTap: null,
+                                                      borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                                      child: Container(
+                                                        padding: EdgeInsets.all(5.0),
+                                                        child: Text(
+                                                          AppLocalizations.of(context).cardInformation,
+                                                          style: TextStyle(
+                                                              letterSpacing: SizeConfig.safeBlockHorizontal * .2,
+                                                              fontFamily: BuytimeTheme.FontFamily,
+                                                              color: BuytimeTheme.UserPrimary,
+                                                              fontWeight: FontWeight.w600,
+                                                              fontSize: SizeConfig.safeBlockHorizontal * 4
+                                                          ),
+                                                        ),
+                                                      )
                                                   ),
                                                 )
                                             ),
-                                          )
-                                      ),
-                                      ///Card Form
-                                      CreditCardInputForm(
-                                        cardHeight: 170,
-                                        showResetButton : true,
-                                        onStateChange: (currentState, cardInfo) {
-                                          print(currentState);
-                                          print(cardInfo);
-                                        },
-                                        customCaptions: {
-                                          'PREV': AppLocalizations.of(context).prev,
-                                          'NEXT': AppLocalizations.of(context).next,
-                                          'DONE': AppLocalizations.of(context).done,
-                                          'CARD_NUMBER': AppLocalizations.of(context).cardNumber,
-                                          'CARDHOLDER_NAME': AppLocalizations.of(context).cardHolderName,
-                                          'VALID_THRU': AppLocalizations.of(context).validThru,
-                                          'SECURITY_CODE_CVC': AppLocalizations.of(context).securityCode,
-                                          'NAME_SURNAME': AppLocalizations.of(context).nameSurname,
-                                          'MM_YY': 'MM/YY',
-                                          'RESET': AppLocalizations.of(context).reset,
-                                        },
-                                        frontCardDecoration: cardDecoration,
-                                        backCardDecoration: cardDecoration,
-                                        prevButtonDecoration: buttonStyle,
-                                        nextButtonDecoration: buttonStyle,
-                                        resetButtonDecoration : buttonStyle,
-                                        prevButtonTextStyle: buttonTextStyle,
-                                        nextButtonTextStyle: buttonTextStyle,
-                                        resetButtonTextStyle: buttonTextStyle,
-                                        initialAutoFocus: true, // optional
+                                            ///Card Form
+                                            CreditCardInputForm(
+                                              cardHeight: 225,
+                                              showResetButton : true,
+                                              onStateChange: (currentState, cardInfo) {
+                                                print(currentState);
+                                                print(cardInfo);
+                                              },
+                                              customCaptions: {
+                                                'PREV': AppLocalizations.of(context).prev,
+                                                'NEXT': AppLocalizations.of(context).next,
+                                                'DONE': AppLocalizations.of(context).done,
+                                                'CARD_NUMBER': AppLocalizations.of(context).cardNumber,
+                                                'CARDHOLDER_NAME': AppLocalizations.of(context).cardHolderName,
+                                                'VALID_THRU': AppLocalizations.of(context).validThru,
+                                                'SECURITY_CODE_CVC': AppLocalizations.of(context).securityCode,
+                                                'NAME_SURNAME': AppLocalizations.of(context).nameSurname,
+                                                'MM_YY': 'MM/YY',
+                                                'RESET': AppLocalizations.of(context).reset,
+                                              },
+                                              frontCardDecoration: cardDecoration,
+                                              backCardDecoration: cardDecoration,
+                                              prevButtonDecoration: buttonStyle,
+                                              nextButtonDecoration: buttonStyle,
+                                              resetButtonDecoration : buttonStyle,
+                                              prevButtonTextStyle: buttonTextStyle,
+                                              nextButtonTextStyle: buttonTextStyle,
+                                              resetButtonTextStyle: buttonTextStyle,
+                                              initialAutoFocus: true, // optional
+                                            ),
+                                            // CardForm(
+                                            //   formKey: formKey,
+                                            //   card: card,
+                                            //   cardDecoration: BoxDecoration(
+                                            //       color: Color.fromRGBO(200, 200, 200, 1.0)
+                                            //   ),
+                                            //   cardCvcTextStyle: TextStyle(color: Colors.black),
+                                            //   cardExpiryTextStyle: TextStyle(color: Colors.black),
+                                            //   cardNumberTextStyle: TextStyle(color: Colors.black),
+                                            // ),
 
+                                            SizedBox(
+                                              height: SizeConfig.safeBlockVertical * 2,
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                      // CardForm(
-                                      //   formKey: formKey,
-                                      //   card: card,
-                                      //   cardDecoration: BoxDecoration(
-                                      //       color: Color.fromRGBO(200, 200, 200, 1.0)
-                                      //   ),
-                                      //   cardCvcTextStyle: TextStyle(color: Colors.black),
-                                      //   cardExpiryTextStyle: TextStyle(color: Colors.black),
-                                      //   cardNumberTextStyle: TextStyle(color: Colors.black),
-                                      // ),
 
-                                      SizedBox(
-                                        height: media.height * 0.05,
-                                      ),
                                       Align(
                                         alignment: Alignment.bottomCenter,
                                         child: Container(
@@ -196,7 +203,8 @@ class _UI_U_AddCardState extends State<UI_U_AddCard> {
                                               ///Add Card
                                               Container(
                                                   margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5),
-                                                  width: media.width * .4,
+                                                  width: 198,
+                                                  height: 44,
                                                   child: MaterialButton(
                                                     elevation: 0,
                                                     hoverElevation: 0,
@@ -243,15 +251,15 @@ class _UI_U_AddCardState extends State<UI_U_AddCard> {
                                                     child: Text(
                                                       AppLocalizations.of(context).addCardUpper,
                                                       style: TextStyle(
-                                                          fontSize: 18,
+                                                          fontSize: 16,
                                                           fontFamily: BuytimeTheme.FontFamily,
-                                                          fontWeight: FontWeight.w500,
+                                                          fontWeight: FontWeight.w600,
                                                           color: BuytimeTheme.TextWhite
                                                       ),
                                                     ),
                                                   )
                                               ),
-                                              Container(
+                                              /*Container(
                                                 child: MaterialButton(
                                                   child: Text(
                                                     AppLocalizations.of(context).friday,
@@ -260,7 +268,7 @@ class _UI_U_AddCardState extends State<UI_U_AddCard> {
                                                     // TODO: add a card process start
                                                   },
                                                 ),
-                                              )
+                                              )*/
                                             ],
                                           ),
                                         ),
@@ -515,7 +523,7 @@ class _UI_U_AddCardState extends State<UI_U_AddCard> {
 
   final cardDecoration = BoxDecoration(
       boxShadow: <BoxShadow>[
-        BoxShadow(color: Colors.black54, blurRadius: 15.0, offset: Offset(0, 8))
+        BoxShadow(color: Colors.black54, blurRadius: 5.0, offset: Offset(0, 2))
       ],
       gradient: LinearGradient(
           colors: [
@@ -541,7 +549,7 @@ class _UI_U_AddCardState extends State<UI_U_AddCard> {
         tileMode: TileMode.clamp),
   );
 
-  final buttonTextStyle = TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18);
+  final buttonTextStyle = TextStyle(color: BuytimeTheme.TextWhite, fontWeight: FontWeight.w600, fontSize: 16);
 
 }
 class ShowDialogToDismiss extends StatelessWidget {

@@ -6,7 +6,7 @@ part of 'token.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-TokenB _$TokenFromJson(Map<String, dynamic> json) {
+TokenB _$TokenBFromJson(Map<String, dynamic> json) {
   return TokenB(
     id: json['id'] as String,
     name: json['name'] as String,
@@ -14,7 +14,7 @@ TokenB _$TokenFromJson(Map<String, dynamic> json) {
   );
 }
 
-Map<String, dynamic> _$TokenToJson(TokenB instance) => <String, dynamic>{
+Map<String, dynamic> _$TokenBToJson(TokenB instance) => <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
       'user_uid': instance.user_uid,

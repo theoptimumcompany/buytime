@@ -2,6 +2,7 @@ import 'package:Buytime/UI/management/category/UI_M_manage_category.dart';
 import 'package:Buytime/reblox/model/category/category_state.dart';
 import 'package:Buytime/reblox/model/category/invitation/category_invite_state.dart';
 import 'package:Buytime/reblox/model/category/tree/category_tree_state.dart';
+import 'package:Buytime/reblox/model/role/role.dart';
 import 'package:Buytime/reblox/reducer/business_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_invite_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_tree_reducer.dart';
@@ -727,6 +728,7 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                                             child: Padding(
                                               padding: const EdgeInsets.only(top: 0.0, bottom: 5.0, left: 20.0, right: 20.0),
                                               child: TextFormField(
+                                                enabled: StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin ? true :false,
                                                 validator: (value) => value.isEmpty ? AppLocalizations.of(context).categoryNameIsBlank : null,
                                                 controller: nameController,
                                                 keyboardType: TextInputType.name,
@@ -736,9 +738,13 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                                                     setNewCategoryName(value);
                                                   });
                                                 },
+                                                style: TextStyle(
+                                                  color: StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin ? BuytimeTheme.TextBlack : BuytimeTheme.TextGrey
+                                                ),
                                                 decoration: InputDecoration(
                                                   labelText: AppLocalizations.of(context).categoryName,
                                                   enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: BuytimeTheme.DividerGrey), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                  disabledBorder: OutlineInputBorder(borderSide: BorderSide(color: BuytimeTheme.DividerGrey), borderRadius: BorderRadius.all(Radius.circular(8.0))),
                                                   focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: BuytimeTheme.SymbolGrey), borderRadius: BorderRadius.all(Radius.circular(8.0))),
                                                   errorBorder: OutlineInputBorder(borderSide: BorderSide(color: BuytimeTheme.AccentRed), borderRadius: BorderRadius.all(Radius.circular(8.0))),
                                                 ),
@@ -813,8 +819,10 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                                                 value: selectedParentCategory,
                                                 items: _dropdownMenuParentCategory,
                                                 decoration: InputDecoration(
-                                                    labelText: AppLocalizations.of(context).parentCategory, enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white))),
-                                                onChanged: (value) {
+                                                  enabled: StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin ? true : false,
+                                                    labelText: AppLocalizations.of(context).parentCategory,
+                                                    enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white))),
+                                                onChanged: StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin ? (value) {
                                                   setState(() {
                                                     selectedParentCategory = value;
                                                     checkNumberLevelToMove(snapshot.categoryTree.categoryNodeList, snapshot.category.id);
@@ -827,7 +835,7 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                                                       numberLevel = 0;
                                                     }
                                                   });
-                                                }),
+                                                } : null),
                                           ),
                                         ),
                                       ),
@@ -887,6 +895,7 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                                                   height: media.height * 0.15,
                                                   child: ListView.builder(
                                                     itemCount: managerList.length,
+                                                    physics: ClampingScrollPhysics(),
                                                     itemBuilder: (context, i) {
                                                       return Row(
                                                         children: [
@@ -1038,6 +1047,7 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                                       ],
                                     ),
                                   ),
+                                  ///Delete
                                   Padding(
                                     padding: const EdgeInsets.only(top: 10.0),
                                     child: Container(
@@ -1057,7 +1067,7 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                                               !hasChild
                                                   ? GestureDetector(
                                                 behavior: HitTestBehavior.opaque,
-                                                onTap: () {
+                                                onTap: StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin ? () {
                                                   print("CategoryEdit ::: Elimino nodo categoria dall'albero");
                                                   StoreProvider.of<AppState>(context).dispatch(DeleteCategoryTree(snapshot.category.id));
                                                   print("CategoryEdit ::: Elimino categoria " + snapshot.category.id);
@@ -1068,14 +1078,14 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                                                       MaterialPageRoute(builder: (context) => ManageCategory(deleted: true)),
                                                     );
                                                   });
-                                                },
+                                                }  :null,
                                                 child: Row(
                                                   children: [
                                                     Container(
                                                       child: Icon(
                                                         Icons.delete,
                                                         size: 25,
-                                                        color: BuytimeTheme.AccentRed,
+                                                        color: StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin ? BuytimeTheme.AccentRed : BuytimeTheme.SymbolGrey,
                                                       ),
                                                     ),
                                                     Container(
@@ -1085,7 +1095,7 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                                                           AppLocalizations.of(context).deleteCategory,
                                                           textAlign: TextAlign.start,
                                                           style: TextStyle(
-                                                            color: BuytimeTheme.AccentRed,
+                                                            color: StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin ? BuytimeTheme.AccentRed : BuytimeTheme.TextGrey,
                                                             fontSize: 18,
                                                             fontWeight: FontWeight.w500,
                                                           ),

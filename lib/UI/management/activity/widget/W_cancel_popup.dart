@@ -225,7 +225,7 @@ class _CancelPopState extends State<CancelPop> {
                                   child: InkWell(
                                       onTap: () {
                                         widget.order.progress = 'canceled';
-                                        StoreProvider.of<AppState>(context).dispatch(UpdateOrder(widget.order));
+                                        StoreProvider.of<AppState>(context).dispatch(UpdateOrderByManager(widget.order));
                                         Navigator.of(context).pop();
                                       },
                                       borderRadius: BorderRadius.all(Radius.circular(5.0)),

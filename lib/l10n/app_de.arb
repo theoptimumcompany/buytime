@@ -460,5 +460,10 @@
   "payWithGooglePay": "Pay with Google Pay",
   "payWithApplePay": "Pay with Apple Pay",
   "nameSurname": "Name Surname",
-  "reset": "Reset"
+  "reset": "Reset",
+
+  "onlyTotal": "Total",
+  "multipleOrders": "Multiple orders",
+  "product": "Product",
+  "products": "Products"
 }

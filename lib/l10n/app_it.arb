@@ -457,5 +457,10 @@
   "noManagerAssigned": "Nessun Manager assegnato a questa categoria",
   "noWorkersHere": "Nessun Lavoratore assegnato a questa categoria",
   "noCategoryImageSet": "L'immagine della categoria deve essere inserita",
-  "thereAreNoExternalServicesAttached": "Non ci sono servizi esterni associati in questa compagnia"
+  "thereAreNoExternalServicesAttached": "Non ci sono servizi esterni associati in questa compagnia",
+
+  "onlyTotal": "Total",
+  "multipleOrders": "Multiple orders",
+  "product": "Product",
+  "products": "Products"
 }

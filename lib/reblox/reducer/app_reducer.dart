@@ -11,6 +11,8 @@ import 'package:Buytime/reblox/model/category/category_list_state.dart';
 import 'package:Buytime/reblox/model/category/category_state.dart';
 import 'package:Buytime/reblox/model/category/invitation/category_invite_state.dart';
 import 'package:Buytime/reblox/model/category/tree/category_tree_state.dart';
+import 'package:Buytime/reblox/model/notification/notification_list_state.dart';
+import 'package:Buytime/reblox/model/notification/notification_state.dart';
 import 'package:Buytime/reblox/model/order/order_list_state.dart';
 import 'package:Buytime/reblox/model/order/order_reservable_list_state.dart';
 import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
@@ -29,6 +31,8 @@ import 'package:Buytime/reblox/reducer/auto_complete_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/auto_complete_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_invite_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/notification_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/notification_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reservable_list_reducer.dart';
@@ -81,6 +85,8 @@ AppState appReducer(AppState state, dynamic action) {
   CardListState cardListState = cardListReducer(state.cardListState, action);
   AutoCompleteState autoCompleteState = autoCompleteReducer(state.autoCompleteState, action);
   AutoCompleteListState autoCompleteListState = autoCompleteListReducer(state.autoCompleteListState, action);
+  NotificationState notificationState = notificationReducer(state.notificationState, action);
+  NotificationListState notificationListState = notificationListReducer(state.notificationListState, action);
 
   AppState newState = AppState.copyWith(
       business: businessState,
@@ -108,7 +114,9 @@ AppState appReducer(AppState state, dynamic action) {
       cardState: cardState,
       cardListState: cardListState,
       autoCompleteState: autoCompleteState,
-      autoCompleteListState: autoCompleteListState
+      autoCompleteListState: autoCompleteListState,
+      notificationState: notificationState,
+      notificationListState: notificationListState
   );
 
   if (action is ClickOnBusinessState) {

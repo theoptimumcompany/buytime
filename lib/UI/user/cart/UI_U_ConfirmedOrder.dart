@@ -261,7 +261,7 @@ class ConfirmedOrderState extends State<ConfirmedOrder> with SingleTickerProvide
                                                     Container(
                                                       margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 5),
                                                       child: Text(
-                                                        widget.from == 0 ? '${cardState.stripeState.stripeCard.brand} **** ${cardState.stripeState.stripeCard.last4}' : AppLocalizations.of(context).roomNumber,
+                                                        widget.from == 2 ? '${cardState.stripeState.stripeCard.brand} **** ${cardState.stripeState.stripeCard.last4}' : AppLocalizations.of(context).roomNumber,
                                                         textAlign: TextAlign.start,
                                                         style: TextStyle(
                                                           letterSpacing: 0.5,
@@ -413,6 +413,7 @@ class ConfirmedOrderState extends State<ConfirmedOrder> with SingleTickerProvide
                                             widget.reserve ?
                                               StoreProvider.of<AppState>(context).dispatch(SetOrderReservable(OrderReservableState().toEmpty())) :
                                               StoreProvider.of<AppState>(context).dispatch(SetOrder(OrderState().toEmpty()));
+                                              StoreProvider.of<AppState>(context).dispatch(UserOrderListRequest());
                                               Navigator.of(context).popUntil(ModalRoute.withName('/bookingPage'));
                                           },
                                           textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),

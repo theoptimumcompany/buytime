@@ -32,6 +32,8 @@ class OrderState {
   String orderId;
   List<SelectedEntry> selected;
   int cartCounter = 0;
+  String cardType;
+  String cardLast4Digit;
 
   OrderState({
     @required this.itemList,
@@ -52,6 +54,8 @@ class OrderState {
     this.orderId,
     this.selected,
     this.cartCounter,
+    this.cardType,
+    this.cardLast4Digit,
   });
 
 
@@ -75,6 +79,8 @@ class OrderState {
     this.user = state.user;
     this.selected = state.selected;
     this.cartCounter = state.cartCounter;
+    this.cardType = state.cardType;
+    this.cardLast4Digit = state.cardLast4Digit;
   }
 
   OrderState.fromReservableState(OrderReservableState state) {
@@ -96,6 +102,8 @@ class OrderState {
     this.user = state.user;
     this.selected = state.selected;
     this.cartCounter = state.cartCounter;
+    this.cardType = state.cardType;
+    this.cardLast4Digit = state.cardLast4Digit;
   }
 
   OrderState copyWith({
@@ -116,7 +124,9 @@ class OrderState {
     BusinessSnippet business,
     UserSnippet user,
     List<SelectedEntry> selected,
-    int cartCounter
+    int cartCounter,
+    String cardType,
+    String cardLast4Digit
   }) {
     return OrderState(
       itemList: itemList ?? this.itemList,
@@ -137,6 +147,8 @@ class OrderState {
       user: user ?? this.user,
       selected: selected ?? this.selected,
       cartCounter: cartCounter ?? this.cartCounter,
+      cardType: cardType ?? this.cardType,
+      cardLast4Digit: cardLast4Digit ?? this.cardLast4Digit,
     );
   }
 
@@ -159,7 +171,9 @@ class OrderState {
       business: BusinessSnippet().toEmpty(),
       user: UserSnippet().toEmpty(),
       selected: [],
-        cartCounter: 0
+        cartCounter: 0,
+        cardType: '',
+      cardLast4Digit: '',
     );
   }
 

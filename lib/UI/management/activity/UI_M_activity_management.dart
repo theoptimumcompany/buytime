@@ -154,7 +154,7 @@ class _ActivityManagementState extends State<ActivityManagement> {
                               child: InkWell(
                                   onTap: () {
                                     order.progress = 'pending';
-                                    StoreProvider.of<AppState>(context).dispatch(UpdateOrder(order));
+                                    StoreProvider.of<AppState>(context).dispatch(UpdateOrderByManager(order));
                                   },
                                   borderRadius: BorderRadius.all(Radius.circular(5.0)),
                                   child: Container(
@@ -181,7 +181,7 @@ class _ActivityManagementState extends State<ActivityManagement> {
                               child: InkWell(
                                   onTap: () {
                                     order.progress = 'paid';
-                                    StoreProvider.of<AppState>(context).dispatch(UpdateOrder(order));
+                                    StoreProvider.of<AppState>(context).dispatch(UpdateOrderByManager(order));
                                   },
                                   borderRadius: BorderRadius.all(Radius.circular(5.0)),
                                   child: Container(
@@ -215,7 +215,7 @@ class _ActivityManagementState extends State<ActivityManagement> {
                                     }else{
                                       //StoreProvider.of<AppState>(context).dispatch(SetOrderProgress('declined'));
                                       order.progress = 'declined';
-                                      StoreProvider.of<AppState>(context).dispatch(UpdateOrder(order));
+                                      StoreProvider.of<AppState>(context).dispatch(UpdateOrderByManager(order));
                                     }
                                   },
                                   borderRadius: BorderRadius.all(Radius.circular(5.0)),
@@ -531,7 +531,7 @@ class _ActivityManagementState extends State<ActivityManagement> {
                                             child: InkWell(
                                                 onTap: () {
                                                   order.progress = 'pending';
-                                                  StoreProvider.of<AppState>(context).dispatch(UpdateOrder(order));
+                                                  StoreProvider.of<AppState>(context).dispatch(UpdateOrderByManager(order));
                                                 },
                                                 borderRadius: BorderRadius.all(Radius.circular(5.0)),
                                                 child: Container(
@@ -558,7 +558,7 @@ class _ActivityManagementState extends State<ActivityManagement> {
                                             child: InkWell(
                                                 onTap: () {
                                                   order.progress = 'paid';
-                                                  StoreProvider.of<AppState>(context).dispatch(UpdateOrder(order));
+                                                  StoreProvider.of<AppState>(context).dispatch(UpdateOrderByManager(order));
                                                 },
                                                 borderRadius: BorderRadius.all(Radius.circular(5.0)),
                                                 child: Container(
@@ -592,7 +592,7 @@ class _ActivityManagementState extends State<ActivityManagement> {
                                                   }else{
                                                     //StoreProvider.of<AppState>(context).dispatch(SetOrderProgress('declined'));
                                                     order.progress = 'declined';
-                                                    StoreProvider.of<AppState>(context).dispatch(UpdateOrder(order));
+                                                    StoreProvider.of<AppState>(context).dispatch(UpdateOrderByManager(order));
                                                   }
                                                 },
                                                 borderRadius: BorderRadius.all(Radius.circular(5.0)),

@@ -35,6 +35,12 @@ class UpdateOrder {
   OrderState get orderState => _orderState;
 }
 
+class UpdateOrderByManager{
+  OrderState _orderState;
+  UpdateOrderByManager(this._orderState);
+  OrderState get orderState => _orderState;
+}
+
 class UpdatedOrder {
   OrderState _orderState;
   UpdatedOrder(this._orderState);

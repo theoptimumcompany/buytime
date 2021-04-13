@@ -36,11 +36,17 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
   String date = '';
   String currentDate = '';
   String nextDate = '';
+  String card = '';
+  List<String> cc = ['v','mc','e'];
 
   @override
   void initState() {
     super.initState();
     //debugPrint('${widget.imageUrl}');
+    if(widget.orderState.cardType != null)
+      card = widget.orderState.cardType.toLowerCase().substring(0,1) == 'v' ? 'v' : 'mc';
+    else
+      card = 'e';
     date = DateFormat('MMM dd').format(widget.orderState.date).toUpperCase();
     currentDate = DateFormat('MMM dd').format(DateTime.now()).toUpperCase();
     nextDate = DateFormat('MMM dd').format(DateTime.now().add(Duration(days: 1))).toUpperCase();
@@ -64,6 +70,21 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
       result = "https://firebasestorage.googleapis.com/v0/b/buytime-458a1.appspot.com/o/general%2Fimage_placeholder_200x200.png?alt=media&token=d40ccab1-7fb5-4290-91c6-634871b7a4f3";
     }
     return result;
+  }
+
+  String whichDate(DateTime orderDate){
+    if(widget.orderState.itemList.first.time != null){
+      return currentDate == date ?
+      AppLocalizations.of(context).todayLower + ' ${DateFormat('dd EEE').format(orderDate)}, ${widget.orderState.itemList.first.time} h' :
+      nextDate == date ? AppLocalizations.of(context).tomorrowLower + ' ${DateFormat('dd EEE').format(orderDate)}, ${widget.orderState.itemList.first.time} h' :
+      '${DateFormat('dd EEE').format(orderDate)},  ${widget.orderState.itemList.first.time} h';
+    }else{
+      return currentDate == date ?
+      AppLocalizations.of(context).todayLower + ' ${DateFormat('dd EEE').format(orderDate)}, ${DateFormat('HH:mm').format(widget.orderState.date)} h' :
+      nextDate == date ? AppLocalizations.of(context).tomorrowLower + ' ${DateFormat('dd EEE').format(orderDate)}, ${DateFormat('HH:mm').format(widget.orderState.date)} h' :
+      '${DateFormat('dd EEE').format(orderDate)},  ${DateFormat('HH:mm').format(widget.orderState.date)} h';
+    }
+
   }
 
   @override
@@ -128,7 +149,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                       child: FittedBox(
                         fit: BoxFit.scaleDown,
                         child: Text(
-                          widget.orderState.itemList.first.name,
+                          widget.orderState.itemList.length > 1 ? widget.orderState.business.name : widget.orderState.itemList.first.name,
                           textAlign: TextAlign.start,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
@@ -224,7 +245,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                       children: [
                         ///Image
                         CachedNetworkImage(
-                          imageUrl: version1000(widget.orderState.business.thumbnail),
+                          imageUrl:  widget.orderState.itemList.length > 1 ? version1000(widget.orderState.business.thumbnail) : version1000(widget.orderState.itemList.first.thumbnail),
                           imageBuilder: (context, imageProvider) => Container(
                             //margin: EdgeInsets.all(SizeConfig.safeBlockVertical*.25),
                             //width: double.infinity,
@@ -259,23 +280,23 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                                         borderRadius: BorderRadius.only(
                                             bottomLeft: Radius.circular(5),
                                             bottomRight: Radius.circular(5)),
-                                        color: Colors.black.withOpacity(.2)
+                                        color: Colors.black.withOpacity(.4)
                                     ),
                                     //margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, bottom: SizeConfig.safeBlockVertical * 2),
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Container(
-                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5),
+                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
                                           child: FittedBox(
                                             fit: BoxFit.scaleDown,
                                             child: Text(
-                                              widget.orderState.itemList[0].name,
+                                              widget.orderState.itemList.length > 1 ? AppLocalizations.of(context).multipleOrders : widget.orderState.itemList[0].name,
                                               style: TextStyle(
                                                   fontFamily: BuytimeTheme.FontFamily,
                                                   color: BuytimeTheme.TextWhite,
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16 ///SizeConfig.safeBlockHorizontal * 4
                                               ),
                                             ),
                                           ),
@@ -300,6 +321,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                           errorWidget: (context, url, error) => Icon(Icons.error),
                         ),
                         ///Address & Map
+                        widget.orderState.itemList.first.time != null ?
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
@@ -434,13 +456,14 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                               ],
                             )
                           ],
-                        ),
+                        ) : Container(),
                         ///Divider
+                        widget.orderState.itemList.first.time != null ?
                         Container(
                           margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
                           height: 15,
                           color: BuytimeTheme.DividerGrey,
-                        ),
+                        ) : Container(),
                         ///Order status
                         Container(
                           margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
@@ -458,7 +481,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                                   letterSpacing: 1.5,
                                   fontFamily: BuytimeTheme.FontFamily,
                                   color: widget.orderState.progress == 'canceled' ? BuytimeTheme.AccentRed : widget.orderState.progress == 'pending' ? BuytimeTheme.Secondary : BuytimeTheme.ActionButton,
-                                  fontWeight: FontWeight.w500,
+                                  fontWeight: FontWeight.w600,
                                   fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
                               ),
                             ),
@@ -470,7 +493,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                           child: FittedBox(
                             fit: BoxFit.scaleDown,
                             child: Text(
-                              currentDate == date ? AppLocalizations.of(context).todayLower + ' ${DateFormat('dd EEE').format(widget.orderState.date)}, ${widget.orderState.itemList.first.time} h' : nextDate == date ? AppLocalizations.of(context).tomorrowLower + ' ${DateFormat('dd EEE').format(widget.orderState.date)}, ${widget.orderState.itemList.first.time} h' : '${DateFormat('dd EEE').format(widget.orderState.date)},  ${widget.orderState.itemList.first.time} h',
+                              whichDate(widget.orderState.itemList.first.date),
                               style: TextStyle(
                                   fontFamily: BuytimeTheme.FontFamily,
                                   color: BuytimeTheme.TextBlack,
@@ -481,6 +504,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                           ),
                         ),
                         ///Conditions
+                        widget.orderState.itemList.first.time != null  ?
                         Container(
                           margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                           child: FittedBox(
@@ -496,8 +520,9 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                               ),
                             ),
                           ),
-                        ),
+                        ) : Container(),
                         ///Conditions value
+                        widget.orderState.itemList.first.time != null  ?
                         Container(
                           margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
                           child: FittedBox(
@@ -513,7 +538,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                               ),
                             ),
                           ),
-                        ),
+                        ) : Container(),
                         ///Payment method
                         Container(
                           margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
@@ -529,6 +554,52 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                                   fontSize: 10 ///SizeConfig.safeBlockHorizontal * 4
                               ),
                             ),
+                          ),
+                        ),
+                        ///Payment value
+                        Container(
+                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Container(
+                                height: 30,
+                                width: 50,
+                                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, right: SizeConfig.safeBlockHorizontal * 2.5),
+                                decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                        image: AssetImage(
+                                            'assets/img/cc/$card.png'
+                                        )
+                                    )
+                                ),
+                              ),
+                              ///Card Name
+                              Text(
+                                widget.orderState.cardType != null ?
+                                  widget.orderState.cardType.substring(0,1).toUpperCase() + widget.orderState.cardType.substring(1, widget.orderState.cardType.length) + '  ' :
+                                  'Sample  ',
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    fontFamily: BuytimeTheme.FontFamily,
+                                    fontWeight: FontWeight.w600,
+                                    color: BuytimeTheme.TextBlack
+                                ),
+                              ),
+                              ///Ending **** ....
+                              Text(
+                                widget.orderState.cardType != null ?
+                                  '**** ' + widget.orderState.cardLast4Digit :
+                                 '**** 0000',
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    fontFamily: BuytimeTheme.FontFamily,
+                                    fontWeight: FontWeight.w600,
+                                    color: BuytimeTheme.TextBlack
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                         ///Price
@@ -548,9 +619,109 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                             ),
                           ),
                         ),
-                        ///Price value
+                        widget.orderState.itemList.first.time == null  ?
+                        widget.orderState.itemList.length > 1 ?
+                            ((){
+                        List<Widget> tmpOrders = [];
+                          widget.orderState.itemList.forEach((element) {
+                            tmpOrders.add(
+                              Container(
+                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      element.number > 1 ?
+                                      '${element.number} x ${element.name}' :
+                                      '${element.number} x ${element.name}',
+                                      style: TextStyle(
+                                          letterSpacing: 0.15,
+                                          fontFamily: BuytimeTheme.FontFamily,
+                                          color: BuytimeTheme.TextBlack,
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
+                                      ),
+                                    ),
+                                    Text(
+                                      '${element.number} x ${element.price.toStringAsFixed(2)} €',
+                                      style: TextStyle(
+                                          letterSpacing: 0.15,
+                                          fontFamily: BuytimeTheme.FontFamily,
+                                          color: BuytimeTheme.TextBlack,
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              )
+                            );
+                          });
+                          return Column(
+                            children: tmpOrders.map((e) => e).toList(),
+                          );
+                        }()) :
                         Container(
-                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 2),
+                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                widget.orderState.itemList.first.number > 1 ?
+                                '${widget.orderState.itemList.first.number} x ${AppLocalizations.of(context).products}' :
+                                '${widget.orderState.itemList.first.number} x ${AppLocalizations.of(context).product}',
+                                style: TextStyle(
+                                    letterSpacing: 0.15,
+                                    fontFamily: BuytimeTheme.FontFamily,
+                                    color: BuytimeTheme.TextBlack,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
+                                ),
+                              ),
+                              Text(
+                                '${widget.orderState.itemList.first.number} x ${widget.orderState.itemList.first.price.toStringAsFixed(2)} €',
+                                style: TextStyle(
+                                    letterSpacing: 0.15,
+                                    fontFamily: BuytimeTheme.FontFamily,
+                                    color: BuytimeTheme.TextBlack,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
+                                ),
+                              )
+                            ],
+                          ),
+                        ) : Container(),
+                        ///Price value
+                        widget.orderState.itemList.first.time == null ? Container(
+                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 2),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                '${AppLocalizations.of(context).onlyTotal}',
+                                style: TextStyle(
+                                    letterSpacing: 0.15,
+                                    fontFamily: BuytimeTheme.FontFamily,
+                                    color: BuytimeTheme.TextBlack,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16 ///SizeConfig.safeBlockHorizontal * 4
+                                ),
+                              ),
+                              Text(
+                                '${AppLocalizations.of(context).euroSpace}${widget.orderState.total.toStringAsFixed(2)}',
+                                style: TextStyle(
+                                    letterSpacing: 0.15,
+                                    fontFamily: BuytimeTheme.FontFamily,
+                                    color: BuytimeTheme.TextBlack,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16 ///SizeConfig.safeBlockHorizontal * 4
+                                ),
+                              )
+                            ],
+                          ),
+                        ) :
+                        Container(
+                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 2),
                           child: FittedBox(
                             fit: BoxFit.scaleDown,
                             child: Text(
@@ -559,7 +730,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                                   letterSpacing: 0.15,
                                   fontFamily: BuytimeTheme.FontFamily,
                                   color: BuytimeTheme.TextBlack,
-                                  fontWeight: FontWeight.w500,
+                                  fontWeight: FontWeight.bold,
                                   fontSize: 16 ///SizeConfig.safeBlockHorizontal * 4
                               ),
                             ),

@@ -4,6 +4,7 @@ import 'package:Buytime/UI/management/category/UI_M_edit_category.dart';
 import 'package:Buytime/UI/management/service_internal/UI_M_service_list.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/UI/management/category/UI_M_create_category.dart';
+import 'package:Buytime/reblox/model/role/role.dart';
 import 'package:Buytime/reblox/reducer/category_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_tree_reducer.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
@@ -119,6 +120,7 @@ class ManageCategoryState extends State<ManageCategory> {
                             ),
                           ),
                         ),
+                        StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin ?
                         IconButton(
                           icon: const Icon(
                             Icons.add_circle_sharp,
@@ -147,7 +149,7 @@ class ManageCategoryState extends State<ManageCategory> {
                                     },
                                   );
                           },
-                        ),
+                        ) : Container(),
                       ],
                     )),
                 children: [
@@ -243,6 +245,7 @@ class ManageCategoryState extends State<ManageCategory> {
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w400, fontFamily: BuytimeTheme.FontFamily),
                             ),
+                            StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin ?
                             IconButton(
                               icon: const Icon(
                                 Icons.add_circle_sharp,
@@ -267,7 +270,7 @@ class ManageCategoryState extends State<ManageCategory> {
                                         },
                                       );
                               },
-                            ),
+                            ) : Container(),
                           ],
                         ),
                       ),
@@ -288,7 +291,8 @@ class ManageCategoryState extends State<ManageCategory> {
                           ),
                         ),
                         list[index]['level'] < 4
-                            ? IconButton(
+                            ? StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin ?
+                                IconButton(
                                 icon: const Icon(
                                   Icons.add_circle_sharp,
                                   color: Colors.black,
@@ -312,7 +316,7 @@ class ManageCategoryState extends State<ManageCategory> {
                                           },
                                         );
                                 },
-                              )
+                              ) : Container()
                             : Container(),
                       ],
                     ),
@@ -406,7 +410,8 @@ class ManageCategoryState extends State<ManageCategory> {
 
                   ///Title
                   Utils.barTitle(AppLocalizations.of(context).categories),
-                  IconButton(
+                  StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin ?
+                    IconButton(
                     icon: const Icon(
                       Icons.add,
                       color: BuytimeTheme.SymbolWhite,
@@ -427,6 +432,8 @@ class ManageCategoryState extends State<ManageCategory> {
                               },
                             );
                     },
+                  ) : SizedBox(
+                    width: 50.0,
                   ),
                 ],
               ),

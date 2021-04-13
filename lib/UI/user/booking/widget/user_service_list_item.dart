@@ -41,7 +41,13 @@ class _UserServiceListItemState extends State<UserServiceListItem> {
                   children: [
                     ///Service Image
                     CachedNetworkImage(
-                      imageUrl: widget.orderState.business.thumbnail != null && widget.orderState.business.thumbnail.isNotEmpty ? widget.orderState.business.thumbnail : 'https://firebasestorage.googleapis.com/v0/b/buytime-458a1.appspot.com/o/general%2Fimage_placeholder_200x200_1000x1000.png?alt=media&token=082a1896-32d8-4750-b7cc-141f00bc060c',
+                      imageUrl: widget.orderState.itemList.length > 1 ?
+                        widget.orderState.business.thumbnail != null && widget.orderState.business.thumbnail.isNotEmpty ?
+                          widget.orderState.business.thumbnail :
+                          'https://firebasestorage.googleapis.com/v0/b/buytime-458a1.appspot.com/o/general%2Fimage_placeholder_200x200_1000x1000.png?alt=media&token=082a1896-32d8-4750-b7cc-141f00bc060c' :
+                      widget.orderState.itemList.first.thumbnail != null && widget.orderState.itemList.first.thumbnail.isNotEmpty ?
+                      widget.orderState.itemList.first.thumbnail :
+                      'https://firebasestorage.googleapis.com/v0/b/buytime-458a1.appspot.com/o/general%2Fimage_placeholder_200x200_1000x1000.png?alt=media&token=082a1896-32d8-4750-b7cc-141f00bc060c',
                       imageBuilder: (context, imageProvider) => Container(
                         //margin: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 5), ///5%
                         height: 91,
@@ -104,14 +110,32 @@ class _UserServiceListItemState extends State<UserServiceListItem> {
                                     letterSpacing: 1.5,
                                     fontFamily: BuytimeTheme.FontFamily,
                                     color: widget.orderState.progress == 'canceled' ? BuytimeTheme.AccentRed : widget.orderState.progress == 'pending' || widget.orderState.progress == 'unpaid' ? BuytimeTheme.Secondary : BuytimeTheme.ActionButton,
-                                    fontWeight: FontWeight.w500,
+                                    fontWeight: FontWeight.w800,
                                     fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
                                 ),
                               ),
                             ),
                           ),
                           ///Order Name
-                          FittedBox(
+                          widget.orderState.itemList.length > 1 ? FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Container(
+                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 0, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1),
+                              width: SizeConfig.safeBlockHorizontal * 50,
+                              child: Text(
+                                AppLocalizations.of(context).multipleOrders,
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                                style: TextStyle(
+                                    letterSpacing: 0.15,
+                                    fontFamily: BuytimeTheme.FontFamily,
+                                    color: BuytimeTheme.TextBlack,
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 16 /// SizeConfig.safeBlockHorizontal * 4
+                                ),
+                              ),
+                            ),
+                          ) : FittedBox(
                             fit: BoxFit.scaleDown,
                             child: Container(
                               margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 0, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1),
@@ -159,7 +183,7 @@ class _UserServiceListItemState extends State<UserServiceListItem> {
                               //height: 20, ///SizeConfig.safeBlockVertical * 10
                               margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * .5),
                               child: Text(
-                                AppLocalizations.of(context).euroSpace + widget.orderState.itemList[0].price.toStringAsFixed(2) ?? '',
+                                AppLocalizations.of(context).euroSpace + widget.orderState.total.toStringAsFixed(2) ?? '',
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 2,
                                 style: TextStyle(

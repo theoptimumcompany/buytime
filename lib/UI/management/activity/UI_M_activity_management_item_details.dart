@@ -89,7 +89,7 @@ class _ActivityManagementItemDetailsState extends State<ActivityManagementItemDe
         //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ServiceList()),);
         Navigator.of(context).pop();
       }
-      StoreProvider.of<AppState>(context).dispatch(UpdateOrder(snapshot));
+      StoreProvider.of<AppState>(context).dispatch(UpdateOrderByManager(snapshot));
     });
   }
 
@@ -102,7 +102,7 @@ class _ActivityManagementItemDetailsState extends State<ActivityManagementItemDe
       snapshot.itemList.remove(entry);
       if (snapshot.itemList.length == 0) Navigator.of(context).pop();
 
-      StoreProvider.of<AppState>(context).dispatch(UpdateOrder(snapshot));
+      StoreProvider.of<AppState>(context).dispatch(UpdateOrderByManager(snapshot));
     });
   }
 
@@ -537,7 +537,7 @@ class _ActivityManagementItemDetailsState extends State<ActivityManagementItemDe
                               }else{
                                 //StoreProvider.of<AppState>(context).dispatch(SetOrderProgress('declined'));
                                 widget.orderState.progress = 'declined';
-                                StoreProvider.of<AppState>(context).dispatch(UpdateOrder(widget.orderState));
+                                StoreProvider.of<AppState>(context).dispatch(UpdateOrderByManager(widget.orderState));
                               }
                             },
                             textColor: BuytimeTheme.TextWhite,
@@ -570,7 +570,7 @@ class _ActivityManagementItemDetailsState extends State<ActivityManagementItemDe
                             highlightElevation: 0,
                             onPressed: () {
                               widget.orderState.progress = 'pending';
-                              StoreProvider.of<AppState>(context).dispatch(UpdateOrder(widget.orderState));
+                              StoreProvider.of<AppState>(context).dispatch(UpdateOrderByManager(widget.orderState));
                             },
                             textColor: BuytimeTheme.TextWhite,
                             color: BuytimeTheme.ManagerPrimary,
@@ -601,7 +601,7 @@ class _ActivityManagementItemDetailsState extends State<ActivityManagementItemDe
                             highlightElevation: 0,
                             onPressed: () {
                               widget.orderState.progress = 'paid';
-                              StoreProvider.of<AppState>(context).dispatch(UpdateOrder(widget.orderState));
+                              StoreProvider.of<AppState>(context).dispatch(UpdateOrderByManager(widget.orderState));
                             },
                             textColor: BuytimeTheme.TextWhite,
                             color: BuytimeTheme.ManagerPrimary,

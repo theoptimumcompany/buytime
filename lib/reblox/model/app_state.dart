@@ -9,6 +9,8 @@ import 'package:Buytime/reblox/model/card/card_state.dart';
 import 'package:Buytime/reblox/model/category/category_list_state.dart';
 import 'package:Buytime/reblox/model/category/category_state.dart';
 import 'package:Buytime/reblox/model/category/invitation/category_invite_state.dart';
+import 'package:Buytime/reblox/model/notification/notification_list_state.dart';
+import 'package:Buytime/reblox/model/notification/notification_state.dart';
 import 'package:Buytime/reblox/model/order/order_list_state.dart';
 import 'package:Buytime/reblox/model/order/order_reservable_list_state.dart';
 import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
@@ -73,6 +75,8 @@ class AppState {
   CardListState cardListState;
   AutoCompleteState autoCompleteState;
   AutoCompleteListState autoCompleteListState;
+  NotificationState notificationState;
+  NotificationListState notificationListState;
 
   AppState({
     @required this.business,
@@ -100,7 +104,9 @@ class AppState {
     this.cardState,
     this.cardListState,
     this.autoCompleteState,
-    this.autoCompleteListState
+    this.autoCompleteListState,
+    this.notificationState,
+    this.notificationListState
   });
 
   AppState.initialState() {
@@ -129,6 +135,8 @@ class AppState {
     cardListState = CardListState();
     autoCompleteState = AutoCompleteState();
     autoCompleteListState = AutoCompleteListState();
+    notificationState = NotificationState();
+    notificationListState = NotificationListState();
   }
 
   AppState.copyWith(
@@ -158,7 +166,9 @@ class AppState {
         CardState cardState,
         CardListState cardListState,
         AutoCompleteState autoCompleteState,
-        AutoCompleteListState autoCompleteListState
+        AutoCompleteListState autoCompleteListState,
+        NotificationState notificationState,
+        NotificationListState notificationListState
       }) {
     this.business = business;
     this.booking = booking;
@@ -186,6 +196,8 @@ class AppState {
     this.cardListState = cardListState;
     this.autoCompleteState = autoCompleteState;
     this.autoCompleteListState = autoCompleteListState;
+    this.notificationState = notificationState;
+    this.notificationListState = notificationListState;
   }
   //
   // AppState.fromJson(Map json) {

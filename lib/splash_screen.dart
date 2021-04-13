@@ -61,7 +61,7 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
   readFromStorage() async {
 
     final prefs = await SharedPreferences.getInstance();
-
+    //prefs.setBool('first_run', true);
     if (prefs.getBool('first_run') ?? true) {
       FlutterSecureStorage storage = FlutterSecureStorage();
 

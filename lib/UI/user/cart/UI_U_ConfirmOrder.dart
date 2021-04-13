@@ -287,19 +287,18 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                           hoverElevation: 0,
                                           focusElevation: 0,
                                           highlightElevation: 0,
-                                          onPressed: () {
-                                            if (selected && _selectedIndex == 0) {
-                                              debugPrint("UI_U_ConfirmOrder confirmation 0");
-                                              /// TODO room payment logic starts
-                                              Navigator.push(context, MaterialPageRoute(builder: (context) => ConfirmedOrder(_controller.index, widget.reserve, widget.tourist)),);
-                                            } else if (_selectedIndex == 1) {
-                                              debugPrint("UI_U_ConfirmOrder confirmation 1");
-                                              confirmationNative(context, snapshot);
-                                            } else if (_selectedIndex == 2) {
-                                              debugPrint("UI_U_ConfirmOrder  confirmation 2");
-                                              confirmationCard(context, snapshot);
-                                            }
-                                          },
+                                          onPressed: _selectedIndex == 0 ? () {
+                                            debugPrint("UI_U_ConfirmOrder confirmation 0");
+                                            /// TODO room payment logic starts
+                                            Navigator.push(context, MaterialPageRoute(builder: (context) => ConfirmedOrder(_controller.index, widget.reserve, widget.tourist)),);
+                                          } : _selectedIndex == 1 ?
+                                          (){
+                                            debugPrint("UI_U_ConfirmOrder confirmation 1");
+                                            confirmationNative(context, snapshot);
+                                          } : selected && _selectedIndex == 2 ? (){
+                                            debugPrint("UI_U_ConfirmOrder  confirmation 2");
+                                            confirmationCard(context, snapshot);
+                                          } : null,
                                           textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
                                           color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
                                           disabledColor: BuytimeTheme.SymbolLightGrey,
@@ -375,7 +374,8 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
     } else {
       /// Direct Card Payment
       debugPrint('UI_U_ConfirmOrder => start direct payment process with Credit Card');
-
+      StoreProvider.of<AppState>(context).dispatch(SetOrderProgress("in_progress"));
+      StoreProvider.of<AppState>(context).dispatch(CreateOrder(snapshot.order));
       //.catchError(err); // TODO: reactivate
     }
     Navigator.push(context, MaterialPageRoute(builder: (context) => ConfirmedOrder(_controller.index, widget.reserve, widget.tourist)),);

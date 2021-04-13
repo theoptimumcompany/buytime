@@ -18,6 +18,8 @@ import 'package:Buytime/reblox/model/card/card_list_state.dart';
 import 'package:Buytime/reblox/model/card/card_state.dart';
 import 'package:Buytime/reblox/model/category/invitation/category_invite_state.dart';
 import 'package:Buytime/reblox/model/category/tree/category_tree_state.dart';
+import 'package:Buytime/reblox/model/notification/notification_list_state.dart';
+import 'package:Buytime/reblox/model/notification/notification_state.dart';
 import 'package:Buytime/reblox/model/order/order_reservable_list_state.dart';
 import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
 import 'package:Buytime/reblox/model/service/service_slot_time_state.dart';
@@ -123,6 +125,7 @@ void main(){
     OrderRequestService(),
     OrderReservableRequestService(),
     OrderUpdateService(),
+    OrderUpdateByManagerService(),
     OrderReservableUpdateService(),
     OrderCreateService(),
     OrderReservableCreateService(),
@@ -154,7 +157,9 @@ void main(){
     cardState: CardState().toEmpty(),
     cardListState: CardListState().toEmpty(),
     autoCompleteState: AutoCompleteState().toEmpty(),
-    autoCompleteListState: AutoCompleteListState().toEmpty()
+    autoCompleteListState: AutoCompleteListState().toEmpty(),
+    notificationState: NotificationState().toEmpty(),
+    notificationListState: NotificationListState().toEmpty(),
   );
   final store = new Store<AppState>(
     appReducer,
