@@ -18,6 +18,9 @@ import 'package:Buytime/reblox/model/card/card_list_state.dart';
 import 'package:Buytime/reblox/model/card/card_state.dart';
 import 'package:Buytime/reblox/model/category/invitation/category_invite_state.dart';
 import 'package:Buytime/reblox/model/category/tree/category_tree_state.dart';
+import 'package:Buytime/reblox/model/email/email_state.dart';
+import 'package:Buytime/reblox/model/email/template_data_state.dart';
+import 'package:Buytime/reblox/model/email/template_state.dart';
 import 'package:Buytime/reblox/model/notification/notification_list_state.dart';
 import 'package:Buytime/reblox/model/notification/notification_state.dart';
 import 'package:Buytime/reblox/model/order/order_reservable_list_state.dart';
@@ -26,6 +29,7 @@ import 'package:Buytime/reblox/model/service/service_slot_time_state.dart';
 import 'package:Buytime/reblox/model/statistics_state.dart';
 import 'package:Buytime/reblox/model/stripe/stripe_list_state.dart';
 import 'package:Buytime/services/category_invite_service_epic.dart';
+import 'package:Buytime/services/email_service_epic.dart';
 import 'package:Buytime/services/order_reservable_service_epic.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/UI/user/login/UI_U_Home.dart';
@@ -131,6 +135,7 @@ void main(){
     OrderReservableCreateService(),
     AddingStripePaymentMethodRequest(),
     AddingReservableStripePaymentMethodRequest(),
+    EmailCreateService()
   ]);
   final _initialState = AppState(
     category: CategoryState().toEmpty(),
@@ -160,6 +165,9 @@ void main(){
     autoCompleteListState: AutoCompleteListState().toEmpty(),
     notificationState: NotificationState().toEmpty(),
     notificationListState: NotificationListState().toEmpty(),
+    emailState: EmailState().toEmpty(),
+    templateState: TemplateState().toEmpty(),
+    templateDataState: TemplateDataState().toEmpty(),
   );
   final store = new Store<AppState>(
     appReducer,

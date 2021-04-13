@@ -7,6 +7,9 @@ import 'package:Buytime/UI/user/login/UI_U_Home.dart';
 import 'package:Buytime/UI/user/turist/UI_U_ServiceExplorer.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
+import 'package:Buytime/reblox/model/email/email_state.dart';
+import 'package:Buytime/reblox/model/email/template_data_state.dart';
+import 'package:Buytime/reblox/model/email/template_state.dart';
 import 'package:Buytime/reblox/model/role/role.dart';
 import 'package:Buytime/reblox/reducer/booking_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/booking_reducer.dart';
@@ -15,6 +18,7 @@ import 'package:Buytime/reblox/reducer/business_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_tree_reducer.dart';
+import 'package:Buytime/reblox/reducer/email_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reblox/reducer/pipeline_list_reducer.dart';
@@ -32,6 +36,7 @@ import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:animations/animations.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/cupertino.dart';
@@ -273,6 +278,17 @@ class LandingState extends State<Landing> {
                                               'https://play.google.com/store/apps/details?id=com.theoptimumcompany.buytime' :
                                           'Test'
                                               , sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);*/
+
+                                                         /* EmailState emailState = EmailState();
+                                                          TemplateState templateState = TemplateState();
+                                                          TemplateDataState templateDataState = TemplateDataState();
+                                                          emailState.to = 'rukshannipuna12@gmail.com';
+                                                          templateState.name = 'welcome';
+                                                          templateDataState.name = 'Nipuna Perera';
+                                                          templateDataState.link = 'https://buytime.network/';
+                                                          templateState.data = templateDataState;
+                                                          emailState.template = templateState;
+                                                          StoreProvider.of<AppState>(context).dispatch(SendEmail(emailState));*/
                                                         },
                                                         icon: Icon(
                                                           Icons.share,

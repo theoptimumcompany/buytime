@@ -1,7 +1,11 @@
 import 'dart:core';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
+import 'package:Buytime/reblox/model/email/email_state.dart';
+import 'package:Buytime/reblox/model/email/template_data_state.dart';
+import 'package:Buytime/reblox/model/email/template_state.dart';
 import 'package:Buytime/reblox/reducer/booking_reducer.dart';
+import 'package:Buytime/reblox/reducer/email_reducer.dart';
 import 'package:Buytime/reusable/material_design_icons.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
@@ -45,11 +49,10 @@ class _BookingDetailsState extends State<BookingDetails> {
 
   BookingState bookingState;
   bool view;
-
+  EmailState emailState;
   @override
   void initState() {
     super.initState();
-
     bookingState = widget.bookingState;
     view = widget.view ?? false;
     /*bookingState = widget.bookingState;
@@ -113,6 +116,13 @@ class _BookingDetailsState extends State<BookingDetails> {
         readDynamicLink(bookingState.booking_code);
 
         debugPrint('UI_M_BookingDetails => BOOKING CODE: ${bookingState.booking_code}');
+        //emailState = snapshot.emailState;
+        if(snapshot.emailState.sent != null && snapshot.emailState.sent){
+          debugPrint('UI_M_BookingDetails => EMAIL SENT');
+          snapshot.emailState.sent = null;
+        }else{
+          debugPrint('UI_M_BookingDetails => EMAIL NOT SENT');
+        }
 
         return WillPopScope(
           onWillPop: () async => false,
@@ -447,15 +457,29 @@ class _BookingDetailsState extends State<BookingDetails> {
                                           hoverElevation: 0,
                                           focusElevation: 0,
                                           highlightElevation: 0,
-                                          onPressed: () async {
+                                          disabledColor: BuytimeTheme.SymbolGrey,
+                                          onPressed: snapshot.emailState.sent == null || snapshot.emailState.sent ? () async {
                                             final RenderBox box = context.findRenderObject();
                                             //Uri link = await createDynamicLink(bookingState.booking_code);
                                             bookingState.status = Utils.enumToString(BookingStatus.sent);
                                             StoreProvider.of<AppState>(context).dispatch(UpdateBooking(bookingState)); //TODO: Create the booking status update epic
 
-                                            Share.share(AppLocalizations.of(context).checkYourBuytimeApp + link, subject: AppLocalizations.of(context).takeYourTime, sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
-                                          },
-                                          textColor: BuytimeTheme.TextDark,
+                                            EmailState emailState = EmailState();
+                                            TemplateState templateState = TemplateState();
+                                            TemplateDataState templateDataState = TemplateDataState();
+                                            emailState.to = widget.bookingState != null ? widget.bookingState.user.first.email :snapshot.booking.user.first.email;
+                                            templateState.name = 'welcome';
+                                            templateDataState.name = widget.bookingState != null ? widget.bookingState.user.first.name + ' ' + widget.bookingState.user.first.surname :
+                                                                      snapshot.booking.user.first.name  + ' ' + snapshot.booking.user.first.surname;
+                                            templateDataState.link = link;
+                                            templateState.data = templateDataState;
+                                            emailState.template = templateState;
+                                            emailState.sent = false;
+                                            //StoreProvider.of<AppState>(context).dispatch(SentEmail(emailState));
+                                            StoreProvider.of<AppState>(context).dispatch(SendEmail(emailState));
+                                            //Share.share(AppLocalizations.of(context).checkYourBuytimeApp + link, subject: AppLocalizations.of(context).takeYourTime, sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
+                                          } : null,
+                                          textColor: snapshot.emailState.sent != null && !snapshot.emailState.sent ? BuytimeTheme.TextWhite : BuytimeTheme.TextDark,
                                           color: BuytimeTheme.Secondary,
                                           padding: EdgeInsets.all(media.width * 0.03),
                                           shape: RoundedRectangleBorder(

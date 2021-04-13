@@ -11,6 +11,7 @@ import 'package:Buytime/reblox/model/category/category_list_state.dart';
 import 'package:Buytime/reblox/model/category/category_state.dart';
 import 'package:Buytime/reblox/model/category/invitation/category_invite_state.dart';
 import 'package:Buytime/reblox/model/category/tree/category_tree_state.dart';
+import 'package:Buytime/reblox/model/email/email_state.dart';
 import 'package:Buytime/reblox/model/notification/notification_list_state.dart';
 import 'package:Buytime/reblox/model/notification/notification_state.dart';
 import 'package:Buytime/reblox/model/order/order_list_state.dart';
@@ -31,6 +32,7 @@ import 'package:Buytime/reblox/reducer/auto_complete_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/auto_complete_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_invite_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/email_reducer.dart';
 import 'package:Buytime/reblox/reducer/notification_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/notification_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_list_reducer.dart';
@@ -87,6 +89,7 @@ AppState appReducer(AppState state, dynamic action) {
   AutoCompleteListState autoCompleteListState = autoCompleteListReducer(state.autoCompleteListState, action);
   NotificationState notificationState = notificationReducer(state.notificationState, action);
   NotificationListState notificationListState = notificationListReducer(state.notificationListState, action);
+  EmailState emailState = emailReducer(state.emailState, action);
 
   AppState newState = AppState.copyWith(
       business: businessState,
@@ -116,7 +119,8 @@ AppState appReducer(AppState state, dynamic action) {
       autoCompleteState: autoCompleteState,
       autoCompleteListState: autoCompleteListState,
       notificationState: notificationState,
-      notificationListState: notificationListState
+      notificationListState: notificationListState,
+      emailState: emailState
   );
 
   if (action is ClickOnBusinessState) {

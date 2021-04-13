@@ -43,6 +43,7 @@ import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/utils/utils.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -325,76 +326,121 @@ class _BookingPageState extends State<BookingPage> {
                       ///Title
                       Utils.barTitle(snapshot.business.name),
                       ///Cart
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 10.0),
-                        child: Container(
-                          width: 50,
-                          height: 50,
-                          child: Stack(
-                            children: [
-                              Positioned.fill(
-                                child: Align(
-                                  alignment: Alignment.center,
-                                  child: IconButton(
-                                    icon: Icon(
-                                      BuytimeIcons.shopping_cart,
-                                      color: BuytimeTheme.TextWhite,
-                                      size: 24.0,
+                      Container(
+                        width: 100,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Flexible(child: Container(
+                              child: Stack(
+                                children: [
+                                  Positioned.fill(
+                                    child: Align(
+                                      alignment: Alignment.center,
+                                      child: IconButton(
+                                        icon: Icon(
+                                          Icons.notifications_none_outlined,
+                                          color: BuytimeTheme.TextWhite,
+                                          size: 30.0,
+                                        ),
+                                        onPressed: () async{
+
+                                        },
+                                      ),
                                     ),
-                                    onPressed: () {
-                                      if (order.cartCounter > 0) {
-                                        // dispatch the order
-                                        StoreProvider.of<AppState>(context).dispatch(SetOrder(order));
-                                        // go to the cart page
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(builder: (context) => Cart(tourist: false,)),
-                                        );
-                                      } else {
-                                        showDialog(
-                                            context: context,
-                                            builder: (_) => new AlertDialog(
-                                              title: new Text(AppLocalizations.of(context).warning),
-                                              content: new Text(AppLocalizations.of(context).emptyCart),
-                                              actions: <Widget>[
-                                                MaterialButton(
-                                                  elevation: 0,
-                                                  hoverElevation: 0,
-                                                  focusElevation: 0,
-                                                  highlightElevation: 0,
-                                                  child: Text(AppLocalizations.of(context).ok),
-                                                  onPressed: () {
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                )
-                                              ],
-                                            )
-                                        );
-                                      }
-                                    },
                                   ),
-                                ),
+                                  /*order.cartCounter > 0
+                                      ? Positioned.fill(
+                                    top: 5,
+                                    left: 2.5,
+                                    child: Align(
+                                      alignment: Alignment.topCenter,
+                                      child: Text(
+                                        '${order.cartCounter}',
+                                        textAlign: TextAlign.start,
+                                        style: TextStyle(
+                                          fontSize: SizeConfig.safeBlockHorizontal * 3,
+                                          color: BuytimeTheme.TextWhite,
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                      : Container(),*/
+                                ],
                               ),
-                              order.cartCounter > 0
-                                  ? Positioned.fill(
-                                top: 5,
-                                left: 2.5,
-                                child: Align(
-                                  alignment: Alignment.topCenter,
-                                  child: Text(
-                                    '${order.cartCounter}',
-                                    textAlign: TextAlign.start,
-                                    style: TextStyle(
-                                      fontSize: SizeConfig.safeBlockHorizontal * 3,
-                                      color: BuytimeTheme.TextWhite,
-                                      fontWeight: FontWeight.w400,
-                                    ),
+                            )),
+                            Flexible(
+                                child:
+                                Container(
+                                  margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 2.5),
+                                  child: Stack(
+                                    children: [
+                                      Positioned.fill(
+                                        child: Align(
+                                          alignment: Alignment.center,
+                                          child: IconButton(
+                                            icon: Icon(
+                                              BuytimeIcons.shopping_cart,
+                                              color: BuytimeTheme.TextWhite,
+                                              size: 24.0,
+                                            ),
+                                            onPressed: () {
+                                              if (order.cartCounter > 0) {
+                                                // dispatch the order
+                                                StoreProvider.of<AppState>(context).dispatch(SetOrder(order));
+                                                // go to the cart page
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(builder: (context) => Cart(tourist: false,)),
+                                                );
+                                              } else {
+                                                showDialog(
+                                                    context: context,
+                                                    builder: (_) => new AlertDialog(
+                                                      title: new Text(AppLocalizations.of(context).warning),
+                                                      content: new Text(AppLocalizations.of(context).emptyCart),
+                                                      actions: <Widget>[
+                                                        MaterialButton(
+                                                          elevation: 0,
+                                                          hoverElevation: 0,
+                                                          focusElevation: 0,
+                                                          highlightElevation: 0,
+                                                          child: Text(AppLocalizations.of(context).ok),
+                                                          onPressed: () {
+                                                            Navigator.of(context).pop();
+                                                          },
+                                                        )
+                                                      ],
+                                                    )
+                                                );
+                                              }
+                                            },
+                                          ),
+                                        ),
+                                      ),
+                                      order.cartCounter > 0
+                                          ? Positioned.fill(
+                                        top: 5,
+                                        left: 2.5,
+                                        child: Align(
+                                          alignment: Alignment.topCenter,
+                                          child: Text(
+                                            '${order.cartCounter}',
+                                            textAlign: TextAlign.start,
+                                            style: TextStyle(
+                                              fontSize: SizeConfig.safeBlockHorizontal * 3,
+                                              color: BuytimeTheme.TextWhite,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                          : Container(),
+                                    ],
                                   ),
-                                ),
-                              )
-                                  : Container(),
-                            ],
-                          ),
+                                ))
+                          ],
                         ),
                       )
                     ],
@@ -419,7 +465,7 @@ class _BookingPageState extends State<BookingPage> {
                                   height: 125,///25% SizeConfig.safeBlockVertical * 20
                                   decoration: BoxDecoration(
                                     color: Color(0xffE6E7E8),
-                                      /*gradient: LinearGradient(
+                                    /*gradient: LinearGradient(
                                         begin: Alignment.topCenter,
                                         end: Alignment.bottomCenter,
                                         colors: [

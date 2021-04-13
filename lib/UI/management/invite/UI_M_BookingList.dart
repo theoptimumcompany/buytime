@@ -62,16 +62,16 @@ class _BookingListState extends State<BookingList> {
       onInit: (store) {
         print("Oninitbookinglist");
         List<BookingState> bookings = store.state.bookingList.bookingListState;
-        debugPrint('UI_M_BookingList => BOOKING LENGTH: ${bookings.length}');
+        //debugPrint('UI_M_BookingList => BOOKING LENGTH: ${bookings.length}');
 
         DateTime currentTime = DateTime.now();
         currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0);
-        debugPrint('UI_M_BookingList => ${currentTime}');
+        //debugPrint('UI_M_BookingList => ${currentTime}');
         bookings.forEach((element) {
           DateTime endTime = element.end_date;
           endTime = new DateTime(endTime.year, endTime.month, endTime.day, 0, 0, 0, 0, 0);
           if(endTime.isBefore(currentTime) && element.status != 'closed'){
-            debugPrint('UI_M_BookingList => ${element.end_date}');
+            //debugPrint('UI_M_BookingList => ${element.end_date}');
             element.status = Utils.enumToString(BookingStatus.closed);
             StoreProvider.of<AppState>(context).dispatch(UpdateBooking(element));
           }
@@ -84,13 +84,13 @@ class _BookingListState extends State<BookingList> {
         checkedOutBookingMap.clear();
         checkedOutBookingList.clear();
 
-        debugPrint('UI_M_BookingList: snapshot: ${snapshot.bookingList.bookingListState.length}');
+        //debugPrint('UI_M_BookingList: snapshot: ${snapshot.bookingList.bookingListState.length}');
         bookingList = snapshot.bookingList.bookingListState;
 
         bookingList.sort((a,b) => DateFormat('MM').format(a.start_date).compareTo(DateFormat('MM').format(b.start_date)));
         //DateFormat('dd/MM').format(widget.booking.start_date)
         bookingList.forEach((element) {
-          debugPrint('UI_M_BookingList: snapshot booking Date Time: ${element.start_date} - ${element.end_date} | ${element.start_date.isUtc} - ${element.end_date.isUtc} | ${element.start_date.timeZoneName} - ${element.end_date.timeZoneName} | ${element.start_date.timeZoneOffset} - ${element.end_date.timeZoneOffset}');
+          //debugPrint('UI_M_BookingList: snapshot booking Date Time: ${element.start_date} - ${element.end_date} | ${element.start_date.isUtc} - ${element.end_date.isUtc} | ${element.start_date.timeZoneName} - ${element.end_date.timeZoneName} | ${element.start_date.timeZoneOffset} - ${element.end_date.timeZoneOffset}');
           //debugPrint('UI_M_BookingList: snapshot booking status: ${element.user.first.surname} ${element.status}');
           if(element.status != 'closed'){
             bookingMap.putIfAbsent(DateFormat('MMM yyyy').format(element.start_date), () => []);
@@ -172,7 +172,7 @@ class _BookingListState extends State<BookingList> {
                                         //MenuItemModel menuItem = menuItems.elementAt(index);
                                         List<BookingState> bookings = activeBookingList.elementAt(index);
                                         bookings.forEach((element) {
-                                          debugPrint('UI_M_BookingList: bookings booking status: ${element.user.first.surname} ${element.status}');
+                                          //debugPrint('UI_M_BookingList: bookings booking status: ${element.user.first.surname} ${element.status}');
                                         });
                                         return BookingMonthList(bookings);
                                       },

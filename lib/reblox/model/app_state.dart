@@ -9,6 +9,9 @@ import 'package:Buytime/reblox/model/card/card_state.dart';
 import 'package:Buytime/reblox/model/category/category_list_state.dart';
 import 'package:Buytime/reblox/model/category/category_state.dart';
 import 'package:Buytime/reblox/model/category/invitation/category_invite_state.dart';
+import 'package:Buytime/reblox/model/email/email_state.dart';
+import 'package:Buytime/reblox/model/email/template_data_state.dart';
+import 'package:Buytime/reblox/model/email/template_state.dart';
 import 'package:Buytime/reblox/model/notification/notification_list_state.dart';
 import 'package:Buytime/reblox/model/notification/notification_state.dart';
 import 'package:Buytime/reblox/model/order/order_list_state.dart';
@@ -77,6 +80,9 @@ class AppState {
   AutoCompleteListState autoCompleteListState;
   NotificationState notificationState;
   NotificationListState notificationListState;
+  EmailState emailState;
+  TemplateState templateState;
+  TemplateDataState templateDataState;
 
   AppState({
     @required this.business,
@@ -106,7 +112,10 @@ class AppState {
     this.autoCompleteState,
     this.autoCompleteListState,
     this.notificationState,
-    this.notificationListState
+    this.notificationListState,
+    this.emailState,
+    this.templateState,
+    this.templateDataState
   });
 
   AppState.initialState() {
@@ -137,10 +146,12 @@ class AppState {
     autoCompleteListState = AutoCompleteListState();
     notificationState = NotificationState();
     notificationListState = NotificationListState();
+    emailState = EmailState();
+    templateState = TemplateState();
+    templateDataState = TemplateDataState();
   }
 
-  AppState.copyWith(
-      {
+  AppState.copyWith({
       BusinessState business,
       BookingState booking,
       OrderState order,
@@ -168,7 +179,10 @@ class AppState {
         AutoCompleteState autoCompleteState,
         AutoCompleteListState autoCompleteListState,
         NotificationState notificationState,
-        NotificationListState notificationListState
+        NotificationListState notificationListState,
+        EmailState emailState,
+        TemplateState templateState,
+        TemplateDataState templateDataState
       }) {
     this.business = business;
     this.booking = booking;
@@ -198,6 +212,9 @@ class AppState {
     this.autoCompleteListState = autoCompleteListState;
     this.notificationState = notificationState;
     this.notificationListState = notificationListState;
+    this.emailState = emailState;
+    this.templateState = templateState;
+    this.templateDataState = templateDataState;
   }
   //
   // AppState.fromJson(Map json) {
