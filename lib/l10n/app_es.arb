@@ -335,7 +335,7 @@
   "roomUpper": "HABITACIÓN",
   "backToHome": "VUELVE A LA HOME",
   "search": "Busca",
-  "sortBy": "ORDENA POR",
+  "sortBy": "Ordena por",
   "spaceRemoved": " quitado",
   "undo": "DESHACER",
   "noServiceFoundFromTheSearch": "La busqueda no ha encontrado algún servicio",
@@ -466,5 +466,15 @@
   "onlyTotal": "Total",
   "multipleOrders": "Multiple orders",
   "product": "Product",
-  "products": "Products"
+  "products": "Products",
+  "servicesByPartners": "Services by Partners",
+  "noExternalServiceFound": "No external service found",
+  "addExternalService": "Add External Service",
+  "searchBusinessOrServiceName": "Search business or service name",
+  "noResultsFor": "No results for",
+  "tryAnotherSearch": "Try another search or contact Buytime",
+  "viewBusiness": "View Business",
+  "addToYourNetwork": "Add to your network",
+  "popularService": "Popular Services",
+  "allService": "All Services"
 }
