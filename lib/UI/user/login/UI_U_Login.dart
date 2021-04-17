@@ -78,7 +78,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
   Map<String, dynamic> _deviceData = <String, dynamic>{};
 
   String serverToken = 'AAAA6xUtyfE:APA91bGHhEzVUY9fnj4FbTXJX57qcgF-8GBrfBbGIa8kEpEIdsXRgQxbtsvbhL-w-_MQYKIj0XVlSaDSf2s6O3D3SM3o-z_AZnHQwBNLiw1ygyZOuVAKa5YmXeu6Da9eBqRD9uwFHSPi';
-  final FirebaseMessaging firebaseMessaging = FirebaseMessaging();
+  final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
 
   ///Validation variables
   bool emailHasError = true;
@@ -349,7 +349,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
 
     super.initState();
     Firebase.initializeApp().then((value) {
-      firebaseMessaging.requestNotificationPermissions();
+      firebaseMessaging.requestPermission();
 
       firebaseMessaging.getToken().then((String token) {
         assert(token != null);

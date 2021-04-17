@@ -172,7 +172,7 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
     await firebaseMessaging.requestPermission(sound: true, badge: true, alert: true, provisional: false);
 
     await http.post(
-      'https://fcm.googleapis.com/fcm/send',
+      Uri.parse('https://fcm.googleapis.com/fcm/send'),
       headers: <String, String>{
         'Content-Type': 'application/json',
         'Authorization': 'key=$serverToken',

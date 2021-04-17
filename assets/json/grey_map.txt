@@ -1,0 +1,25 @@
+[
+  {
+    "stylers": [
+      {
+        "saturation": -100
+      }
+    ]
+  },
+  {
+    "elementType": "labels.icon",
+    "stylers": [
+      {
+        "color": "#bfbfbf"
+      }
+    ]
+  },
+  {
+    "featureType": "water",
+    "stylers": [
+      {
+        "color": "#d1d1d1"
+      }
+    ]
+  }
+]

@@ -472,5 +472,13 @@
   "viewBusiness": "View Business",
   "addToYourNetwork": "Add to your network",
   "popularService": "Popular Services",
-  "allService": "All Services"
+  "allService": "All Services",
+  "notifications": "Notifications",
+  "internalServices": "Internal Services",
+  "reschedule": "Reschedule",
+  "noNotificationFound": "No notification found",
+  "openInGoogleMaps": "Open in Google Maps",
+  "copyAddress": "Copy Address",
+  "getDirections": "Get Directions",
+  "copiedToClipboard": "Copied to clipboard"
 }

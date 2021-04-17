@@ -1,5 +1,6 @@
 import 'package:Buytime/UI/management/business/UI_M_business_list.dart';
 import 'package:Buytime/UI/user/booking/UI_U_AllBookings.dart';
+import 'package:Buytime/UI/user/booking/UI_U_notifications.dart';
 import 'package:Buytime/UI/user/booking/widget/user_service_card_widget.dart';
 import 'package:Buytime/UI/user/cart/UI_U_Cart.dart';
 import 'package:Buytime/UI/user/landing/UI_U_Landing.dart';
@@ -352,29 +353,26 @@ class _BookingPageState extends State<BookingPage> {
                                             size: 30.0,
                                           ),
                                           onPressed: () async{
-
+                                            Navigator.push(context, MaterialPageRoute(builder: (context) => Notifications()));
                                           },
                                         ),
                                       ),
                                     ),
-                                    /*order.cartCounter > 0
-                                      ? Positioned.fill(
-                                    top: 5,
-                                    left: 2.5,
-                                    child: Align(
-                                      alignment: Alignment.topCenter,
-                                      child: Text(
-                                        '${order.cartCounter}',
-                                        textAlign: TextAlign.start,
-                                        style: TextStyle(
-                                          fontSize: SizeConfig.safeBlockHorizontal * 3,
-                                          color: BuytimeTheme.TextWhite,
-                                          fontWeight: FontWeight.w400,
+                                    Positioned.fill(
+                                      bottom: 20,
+                                      left: 15,
+                                      child: Align(
+                                        alignment: Alignment.center,
+                                        child: Container(
+                                          width: 15,
+                                          height: 15,
+                                          decoration: BoxDecoration(
+                                            color: BuytimeTheme.AccentRed,
+                                            borderRadius: BorderRadius.all(Radius.circular(7.5))
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  )
-                                      : Container(),*/
                                   ],
                                 ),
                               )),
@@ -429,10 +427,10 @@ class _BookingPageState extends State<BookingPage> {
                                         ),
                                         order.cartCounter > 0
                                             ? Positioned.fill(
-                                          top: 5,
+                                          bottom: 20,
                                           left: 2.5,
                                           child: Align(
-                                            alignment: Alignment.topCenter,
+                                            alignment: Alignment.center,
                                             child: Text(
                                               '${order.cartCounter}',
                                               textAlign: TextAlign.start,
@@ -791,7 +789,7 @@ class _BookingPageState extends State<BookingPage> {
                                                         StoreProvider.of<AppState>(context).dispatch(OrderReservableListRequest(service.serviceId));
                                                         Navigator.push(
                                                           context,
-                                                          MaterialPageRoute(builder: (context) => ServiceReserve(serviceState: service)),
+                                                          MaterialPageRoute(builder: (context) => ServiceReserve(serviceState: service, tourist: false,)),
                                                         );
                                                       } else {
                                                         order.business.name = snapshot.business.name;

@@ -316,7 +316,9 @@ class OrderCreateService implements EpicClass<AppState> {
       orderState.orderId = addedOrder.id;
       //await FirebaseFirestore.instance.collection("order/").doc(addedOrder.id.toString()).update(orderState.toJson()); /// 1 WRITE
       //++write;
-      final http.Response response = await http.post('https://europe-west1-buytime-458a1.cloudfunctions.net/StripePIOnOrder?orderId=' + addedOrder.id);
+      //final http.Response response = await http.post('https://europe-west1-buytime-458a1.cloudfunctions.net/StripePIOnOrder?orderId=' + addedOrder.id);
+      var url = Uri.parse('https://europe-west1-buytime-458a1.cloudfunctions.net/StripePIOnOrder');
+      final http.Response response = await http.post(url, body: {'orderId': '${addedOrder.id}'});
       print("ORDER_SERVICE_EPIC - OrderCreateService => Order_service epic - response is done");
       print('ORDER_SERVICE_EPIC - OrderCreateService => RESPONSE: $response');
 
@@ -415,7 +417,9 @@ class AddingStripePaymentMethodRequest implements EpicClass<AppState> {
       'status': "create request"
     });
     // now http request to create the actual setupIntent
-    response = await http.post('https://europe-west1-buytime-458a1.cloudfunctions.net/createSetupIntent?userId=' + userId);
+    //response = await http.post('https://europe-west1-buytime-458a1.cloudfunctions.net/createSetupIntent?userId=' + userId);
+      var url = Uri.parse('https://europe-west1-buytime-458a1.cloudfunctions.net/createSetupIntent');
+      response = await http.post(url, body: {'userId': '$userId'});
 
       statisticsState = store.state.statistics;
       /*statisticsState = store.state.statistics;

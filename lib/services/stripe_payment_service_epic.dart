@@ -337,7 +337,9 @@ class StripeDetachPaymentMethodRequest implements EpicClass<AppState> {
       });
       debugPrint("STRIPE_PAYMENT_SERVICE_EPIC - StripeDetachPaymentMethodRequest => Detach document created");
       // call the endpoint to trigger the cloud function for the detach
-      response = await http.post('https://europe-west1-buytime-458a1.cloudfunctions.net/detachPaymentMethod?userId=' + event.userId.toString());
+      //response = await http.post('https://europe-west1-buytime-458a1.cloudfunctions.net/detachPaymentMethod?userId=' + event.userId.toString());
+      var url = Uri.parse('https://europe-west1-buytime-458a1.cloudfunctions.net/detachPaymentMethod');
+      response = await http.post(url, body: {'userId': '${event.userId.toString()}'});
 
       statisticsState = store.state.statistics;
       int reads = statisticsState.stripeDetachPaymentMethodRequestRead;

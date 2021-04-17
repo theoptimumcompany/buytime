@@ -311,7 +311,7 @@ class ConfirmedOrderState extends State<ConfirmedOrder> with SingleTickerProvide
                                               width: SizeConfig.safeBlockVertical * 20,
                                               height: SizeConfig.safeBlockVertical * 20,
                                               child: Center(
-                                                child: _videorController.value.initialized
+                                                child: _videorController.value.isInitialized
                                                 ? SizedBox.expand(
                                                   child: FittedBox(
                                                     // If your background video doesn't look right, try changing the BoxFit property.

@@ -14,6 +14,7 @@ import Flutter
       if #available(iOS 10.0, *) {
         UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
       }
+      GMSServices.provideAPIKey("AIzaSyBwDB1i6FveSGC0rFar4ZYcJM3xacQqZ1g")
     GeneratedPluginRegistrant.register(with: self)
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }

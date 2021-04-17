@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:Buytime/UI/user/cart/UI_U_Cart.dart';
 import 'package:Buytime/UI/user/cart/UI_U_ConfirmOrder.dart';
 import 'package:Buytime/UI/user/service/UI_U_ServiceReserve.dart';
@@ -8,6 +9,8 @@ import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reservable_list_reducer.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
 import 'package:Buytime/reusable/buytime_icons.dart';
+import 'package:Buytime/utils/theme/buytime_config.dart';
+import 'package:Buytime/utils/utils.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
@@ -17,6 +20,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:intl/intl.dart';
+import 'package:Buytime/UI/user/map/UI_U_map.dart';
+import 'package:Buytime/UI/user/map/animated_screen.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 
 class OrderDetails extends StatefulWidget {
@@ -38,10 +44,12 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
   String nextDate = '';
   String card = '';
   List<String> cc = ['v','mc','e'];
-
+  double lat = 0.0;
+  double lng = 0.0;
   @override
   void initState() {
     super.initState();
+
     //debugPrint('${widget.imageUrl}');
     if(widget.orderState.cardType != null)
       card = widget.orderState.cardType.toLowerCase().substring(0,1) == 'v' ? 'v' : 'mc';
@@ -87,6 +95,18 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
 
   }
 
+  String getShopLocationImage(String coordinates){
+
+
+    String url;
+    if(Platform.isIOS)
+      url = 'https://maps.googleapis.com/maps/api/staticmap?center=$lat,$lng&zoom=18&size=640x640&scale=2&markers=color:red|$lat,$lng&key=${BuytimeConfig.AndroidApiKey}';
+    else
+      url = 'https://maps.googleapis.com/maps/api/staticmap?center=$lat,$lng&zoom=18&size=640x640&scale=2&markers=color:red|$lat,$lng&key=${BuytimeConfig.AndroidApiKey}';
+
+    return url;
+  }
+
   @override
   Widget build(BuildContext context) {
     // the media containing information on width and height
@@ -97,6 +117,9 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
     return StoreConnector<AppState, AppState>(
       converter: (store) => store.state,
       onInit: (store){
+        List<String> latLng = store.state.business.coordinate.split(', ');
+        lat = double.parse(latLng[0]);
+        lng = double.parse(latLng[1]);
       },
       builder: (context, snapshot) {
         debugPrint('UI_U_ServiceDetails => SNAPSHOT CART COUNT: ${snapshot.order}');
@@ -323,7 +346,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                         ///Address & Map
                         widget.orderState.itemList.first.time != null ?
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -351,7 +374,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                                   child: FittedBox(
                                     fit: BoxFit.scaleDown,
                                     child: Text(
-                                      '...',
+                                      snapshot.business.street + ', ' + snapshot.business.street_number + ', ' + snapshot.business.ZIP + ', ' + snapshot.business.state_province,
                                       style: TextStyle(
                                           letterSpacing: 0.15,
                                           fontFamily: BuytimeTheme.FontFamily,
@@ -431,7 +454,10 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                                             color: Colors.transparent,
                                             child: InkWell(
                                                 onTap: () {
-
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(builder: (context) => BuytimeMap(user: true, title: widget.orderState.itemList.length > 1 ? widget.orderState.business.name : widget.orderState.itemList.first.name, businessState: snapshot.business,)),
+                                                  );
                                                 },
                                                 borderRadius: BorderRadius.all(Radius.circular(5.0)),
                                                 child: Container(
@@ -454,13 +480,65 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                                   ),
                                 )
                               ],
-                            )
+                            ),
+                            ///Map
+                            InkWell(
+                              onTap: (){
+                                String address = widget.orderState.itemList.length > 1 ? widget.orderState.business.name : widget.orderState.itemList.first.name;
+                                //Utils.openMap(lat, lng);
+                                //Navigator.push(context, MaterialPageRoute(builder: (context) => BuytimeMap(user: true, title: widget.orderState.itemList.length > 1 ? widget.orderState.business.name : widget.orderState.itemList.first.name, businessState: snapshot.business,)),);
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => BuytimeMap(user: true, title: address, businessState: snapshot.business,)),);
+                                //Navigator.push(context, MaterialPageRoute(builder: (context) => AnimatedScreen()));
+                              },
+                              child: Container(
+                                width: 174,
+                                height: 169,
+                                //margin: EdgeInsets.only(left:10.0, right: 10.0),
+                                child: CachedNetworkImage(
+                                  imageUrl:  getShopLocationImage(snapshot.business.coordinate),
+                                  imageBuilder: (context, imageProvider) => Container(
+                                    decoration: BoxDecoration(
+                                        color: BuytimeTheme.BackgroundWhite,
+                                        //borderRadius: BorderRadius.all(Radius.circular(5)),
+                                        image: DecorationImage(
+                                          image: imageProvider,
+                                          fit: BoxFit.cover,
+                                        )
+                                    ),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        gradient: LinearGradient(
+                                          colors: [
+                                            BuytimeTheme.BackgroundWhite,
+                                            BuytimeTheme.BackgroundWhite.withOpacity(0.1),
+                                          ],
+                                          begin : Alignment.centerLeft,
+                                          end : Alignment.centerRight,
+                                          //tileMode: TileMode.
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  placeholder: (context, url) => Container(
+                                    // width: 200, ///SizeConfig.safeBlockVertical * widget.width
+                                    height: 100, ///SizeConfig.safeBlockVertical * widget.width
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        CircularProgressIndicator()
+                                      ],
+                                    ),
+                                  ),
+                                  errorWidget: (context, url, error) => Icon(Icons.error),
+                                ),
+                              ),
+                            ),
                           ],
                         ) : Container(),
                         ///Divider
                         widget.orderState.itemList.first.time != null ?
                         Container(
-                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
+                          //margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
                           height: 15,
                           color: BuytimeTheme.DividerGrey,
                         ) : Container(),

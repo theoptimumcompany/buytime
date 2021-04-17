@@ -73,7 +73,7 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
     var mediaHeight = media.height;
     return StoreConnector<AppState, AppState>(
         converter: (store) => store.state,
-        onDidChange: (store) {
+        /*onDidChange: (store) {
           if (store.serviceState.serviceCreated) {
             store.serviceState.serviceCreated = false;
             StoreProvider.of<AppState>(context).dispatch(SetCreatedService(false));
@@ -89,7 +89,7 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
               duration: Duration(seconds: 3),
             ));
           }
-        },
+        },*/
         onInit: (store){
           store.state.serviceList.serviceListState.clear();
           store.dispatch(ServiceListRequest(store.state.business.id_firestore, 'manager'));
@@ -117,6 +117,22 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
               serviceList.removeLast();
             else
               setServiceLists(snapshot.categoryList.categoryListState, snapshot.serviceList.serviceListState);
+          }
+
+          if (snapshot.serviceState.serviceCreated) { //TODO Check
+            snapshot.serviceState.serviceCreated = false;
+            StoreProvider.of<AppState>(context).dispatch(SetCreatedService(false));
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(AppLocalizations.of(context).serviceCreated),
+              duration: Duration(seconds: 3),
+            ));
+          } else if (snapshot.serviceState.serviceEdited) {
+            snapshot.serviceState.serviceEdited = false;
+            StoreProvider.of<AppState>(context).dispatch(SetEditedService(false));
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(AppLocalizations.of(context).serviceEdited),
+              duration: Duration(seconds: 3),
+            ));
           }
 
           order = snapshot.order.itemList != null ? (snapshot.order.itemList.length > 0 ? snapshot.order : OrderState().toEmpty()) : OrderState().toEmpty();

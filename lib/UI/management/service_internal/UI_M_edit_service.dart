@@ -203,8 +203,9 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
       child: StoreConnector<AppState, AppState>(
           converter: (store) => store.state,
           onInit: (store) => store.dispatch(CategoryTreeRequest()),
-          onDidChange: (store) => validateReservableService(),
+          //onDidChange: (store) => validateReservableService(),
           builder: (context, snapshot) {
+            validateReservableService(); //TODO Check
             ///Popolo le categorie
             setCategoryList();
             return GestureDetector(

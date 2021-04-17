@@ -67,7 +67,7 @@ class RegistrationState extends State<Registration> {
   Map<String, dynamic> _deviceData = <String, dynamic>{};
   String uid;
   String serverToken;
-  final FirebaseMessaging firebaseMessaging = FirebaseMessaging();
+  final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
   bool emailHasError = true;
   bool passwordHasError = true;
   String responseMessage = '';
@@ -80,7 +80,7 @@ class RegistrationState extends State<Registration> {
   void initState() {
     super.initState();
     Firebase.initializeApp().then((value) {
-      firebaseMessaging.requestNotificationPermissions();
+      firebaseMessaging.requestPermission();
       firebaseMessaging.getToken().then((String token) {
         assert(token != null);
         print("UI_U_Registration Token " + token);

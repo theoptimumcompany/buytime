@@ -33,8 +33,14 @@ class ExternalServiceShowcaseState extends State<ExternalServiceShowcase> {
           Container(
               margin: EdgeInsets.only(left: 20.0, top: 20.0, right: 10.0, bottom: SizeConfig.safeBlockVertical * 1),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  Container(
+                    child: Text(
+                      AppLocalizations.of(context).externalServices,
+                      style: TextStyle(fontWeight: FontWeight.w700, fontFamily: BuytimeTheme.FontFamily, fontSize: 18, color: BuytimeTheme.TextBlack),
+                    ),
+                  ),
                   ///Manage External Services
                   InkWell(
                     onTap: () {

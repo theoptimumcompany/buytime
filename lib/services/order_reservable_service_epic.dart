@@ -181,7 +181,9 @@ class OrderReservableCreateService implements EpicClass<AppState> {
       orderReservableState.orderId = addedOrderReservable.id;
       //await FirebaseFirestore.instance.collection("order/").doc(addedOrderReservable.id.toString()).update(orderReservableState.toJson()); /// 1 WRITE
       //++write;
-      final http.Response response = await http.post('https://europe-west1-buytime-458a1.cloudfunctions.net/StripePIOnOrder?orderId=' + addedOrderReservable.id);
+      //final http.Response response = await http.post('https://europe-west1-buytime-458a1.cloudfunctions.net/StripePIOnOrder?orderId=' + addedOrderReservable.id);
+      var url = Uri.parse('https://europe-west1-buytime-458a1.cloudfunctions.net/StripePIOnOrder');
+      final http.Response response = await http.post(url, body: {'orderId': '${addedOrderReservable.id}'});
       print("ORDER_RESERVABLE_SERVICE_EPIC - OrderReservableCreateService => OrderReservable_service epic - response is done");
       print('ORDER_RESERVABLE_SERVICE_EPIC - OrderReservableCreateService => RESPONSE: ${response.body}');
       if (response != null && response.body == "Error: could not handle the request\n") {
@@ -279,8 +281,9 @@ class AddingReservableStripePaymentMethodRequest implements EpicClass<AppState> 
       'status': "create request"
     });
     // now http request to create the actual setupIntent
-    response = await http.post('https://europe-west1-buytime-458a1.cloudfunctions.net/createSetupIntent?userId=' + userId);
-
+    //response = await http.post('https://europe-west1-buytime-458a1.cloudfunctions.net/createSetupIntent?userId=' + userId);
+      var url = Uri.parse('https://europe-west1-buytime-458a1.cloudfunctions.net/createSetupIntent');
+      response = await http.post(url, body: {'userId': '$userId'});
       statisticsState = store.state.statistics;
       /*statisticsState = store.state.statistics;
       int reads = statisticsState.orderCreateServiceRead;
