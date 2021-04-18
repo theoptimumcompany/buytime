@@ -4,6 +4,7 @@ import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
 import 'package:Buytime/reblox/model/order/selected_entry.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
+import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -34,6 +35,8 @@ class OrderState {
   int cartCounter = 0;
   String cardType;
   String cardLast4Digit;
+  @JsonKey(ignore: true)
+  bool confirmOrderWait = false;
 
   OrderState({
     @required this.itemList,
@@ -56,6 +59,7 @@ class OrderState {
     this.cartCounter,
     this.cardType,
     this.cardLast4Digit,
+    this.confirmOrderWait = false,
   });
 
 
@@ -81,6 +85,7 @@ class OrderState {
     this.cartCounter = state.cartCounter;
     this.cardType = state.cardType;
     this.cardLast4Digit = state.cardLast4Digit;
+    this.confirmOrderWait = state.confirmOrderWait;
   }
 
   OrderState.fromReservableState(OrderReservableState state) {
@@ -104,6 +109,7 @@ class OrderState {
     this.cartCounter = state.cartCounter;
     this.cardType = state.cardType;
     this.cardLast4Digit = state.cardLast4Digit;
+    this.confirmOrderWait = state.confirmOrderWait;
   }
 
   OrderState copyWith({
@@ -126,7 +132,8 @@ class OrderState {
     List<SelectedEntry> selected,
     int cartCounter,
     String cardType,
-    String cardLast4Digit
+    String cardLast4Digit,
+    bool confirmOrderWait
   }) {
     return OrderState(
       itemList: itemList ?? this.itemList,
@@ -149,6 +156,7 @@ class OrderState {
       cartCounter: cartCounter ?? this.cartCounter,
       cardType: cardType ?? this.cardType,
       cardLast4Digit: cardLast4Digit ?? this.cardLast4Digit,
+      confirmOrderWait: confirmOrderWait ?? this.confirmOrderWait,
     );
   }
 
@@ -174,6 +182,7 @@ class OrderState {
         cartCounter: 0,
         cardType: '',
       cardLast4Digit: '',
+      confirmOrderWait: false,
     );
   }
 
@@ -194,7 +203,9 @@ class OrderState {
           thumbnail: itemToAdd.image1,
           id: itemToAdd.serviceId,
           id_business: itemToAdd.businessId,
-          id_owner: idOwner));
+          id_owner: idOwner,
+          switchAutoConfirm: itemToAdd.switchAutoConfirm
+      ));
     }
     this.total += itemToAdd.price;
   }
@@ -218,7 +229,8 @@ class OrderState {
         id_owner: idOwner,
       time: time,
       minutes: minutes,
-      date: date
+      date: date,
+      switchAutoConfirm: itemToAdd.switchAutoConfirm
     ));
     this.total += price;
   }
@@ -237,7 +249,19 @@ class OrderState {
 
   void removeReserveItem(OrderEntry entry) {
     this.total -= (entry.price);
+
   }
+
+  bool isOrderAutoConfirmable() {
+    for(int i = 0; i < this.itemList.length; i++) {
+      if (!this.itemList[i].switchAutoConfirm){
+        return false;
+      }
+    }
+    return true;
+  }
+
   factory OrderState.fromJson(Map<String, dynamic> json) => _$OrderStateFromJson(json);
   Map<String, dynamic> toJson() => _$OrderStateToJson(this);
+
 }

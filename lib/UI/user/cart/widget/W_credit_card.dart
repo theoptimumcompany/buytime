@@ -1,6 +1,8 @@
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/card/card_state.dart';
+import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/card_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/stripe_payment_reducer.dart';
 import 'package:Buytime/reusable/buytime_icons.dart';
 import 'package:Buytime/reusable/material_design_icons.dart';
 import 'package:Buytime/utils/size_config.dart';
@@ -10,16 +12,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
 // ignore: must_be_immutable
-class CreditCard extends StatefulWidget {
+class CreditCardListElement extends StatefulWidget {
 
   CardState cardState;
-  CreditCard(this.cardState);
+  CreditCardListElement(this.cardState);
 
   @override
-  _CreditCardState createState() => _CreditCardState();
+  _CreditCardListElementState createState() => _CreditCardListElementState();
 }
 
-class _CreditCardState extends State<CreditCard> {
+class _CreditCardListElementState extends State<CreditCardListElement> {
 
   String bookingStatus = '';
   bool selected = false;
@@ -29,6 +31,7 @@ class _CreditCardState extends State<CreditCard> {
   String ownerCard ='';
   String cardName = '';
   String cardEndWith = '';
+  String firestoreCardId = '';
 
   @override
   void initState() {
@@ -38,6 +41,7 @@ class _CreditCardState extends State<CreditCard> {
     ownerCard = widget.cardState.cardOwner ?? '';
     cardName = widget.cardState.stripeState.stripeCard.brand;
     cardEndWith = widget.cardState.stripeState.stripeCard.last4;
+    firestoreCardId = widget.cardState.stripeState.stripeCard.firestore_id;
   }
 
   @override
@@ -58,7 +62,8 @@ class _CreditCardState extends State<CreditCard> {
                 color: Colors.transparent,
                 child: InkWell(
                     onTap: (){
-                      //StoreProvider.of<AppState>(context).dispatch(CreateDisposePaymentMethodIntent(stripeCreditCardResponse, snapshot.user.uid);
+                      StoreProvider.of<AppState>(context).dispatch(CreateDisposePaymentMethodIntent(firestoreCardId, StoreProvider.of<AppState>(context).state.user.uid));
+                      StoreProvider.of<AppState>(context).dispatch(DeletingStripePaymentMethod());
                       //StoreProvider.of<AppState>(context).dispatch(AddCardToList(tmpList));
                     },
                     borderRadius: BorderRadius.all(Radius.circular(5.0)),

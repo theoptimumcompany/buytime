@@ -180,7 +180,7 @@ class RoomState extends State<Room> {
                             style: TextStyle(
                               letterSpacing: 0.5,
                               fontFamily: BuytimeTheme.FontFamily,
-                              color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+                              color: widget.tourist != null && widget.tourist  ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
                               fontSize: 16,
 
                               ///SizeConfig.safeBlockHorizontal * 3.5

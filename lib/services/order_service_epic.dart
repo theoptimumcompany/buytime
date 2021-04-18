@@ -401,46 +401,6 @@ class OrderCreateService implements EpicClass<AppState> {
   }
 }
 
-class AddingStripePaymentMethodRequest implements EpicClass<AppState> {
-  StatisticsState statisticsState;
-  String state = '';
-  http.Response response;
-
-  @override
-  Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    return actions.whereType<AddingStripePaymentMethodWithNavigation>().asyncMap((event) async {
-      String userId = event.userId;
-      var stripeCustomerSetupIntentCreationReference = await FirebaseFirestore.instance.collection("stripeCustomer/" + userId + "_test/setupIntent").doc() ///TODO Remember _test
-        .set({ ///1 WRITE
-      'status': "create request"
-    });
-    // now http request to create the actual setupIntent
-    response = await http.post('https://europe-west1-buytime-458a1.cloudfunctions.net/createSetupIntent?userId=' + userId);
-
-      statisticsState = store.state.statistics;
-      /*statisticsState = store.state.statistics;
-      int reads = statisticsState.orderCreateServiceRead;
-      int writes = statisticsState.orderCreateServiceWrite;
-      int documents = statisticsState.orderCreateServiceDocuments;
-      debugPrint('ORDER_SERVICE_EPIC - OrderCreateService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
-      ++writes;
-      debugPrint('ORDER_SERVICE_EPIC - OrderCreateService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
-      statisticsState.orderCreateServiceRead = reads;
-      statisticsState.orderCreateServiceWrite = writes;
-      statisticsState.orderCreateServiceDocuments = documents;*/
-
-      debugPrint('order_service_epic: RESPONSE: ${response.statusCode}');
-
-    }).expand((element) => [
-      //SetOrderProgress(state),,
-      response.statusCode == 200 ? AddedStripePaymentMethodAndNavigate() : AddedStripePaymentMethod(),
-      UpdateStatistics(statisticsState),
-      //response.statusCode == 200 ? NavigatePopAction() : AddedStripePaymentMethod(),
-
-    ]);
-  }
-}
-
 class OrderDeleteService implements EpicClass<AppState> {
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {

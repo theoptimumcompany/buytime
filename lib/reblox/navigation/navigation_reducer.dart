@@ -7,6 +7,7 @@ final navigationReducer = combineReducers<List<String>>([
   TypedReducer<List<String>, NavigateReplaceAction>(_navigateReplace),
   TypedReducer<List<String>, NavigatePushAction>(_navigatePush),
   TypedReducer<List<String>, NavigatePopAction>(_navigatePop),
+  TypedReducer<List<String>, NavigatePopUntilAction>(_navigatePopUntil),
 ]);
 
 List<String> _navigateReplace(
@@ -16,6 +17,15 @@ List<String> _navigateReplace(
 List<String> _navigatePush(List<String> route, NavigatePushAction action) {
   var result = List<String>.from(route);
   result.add(action.routeName);
+  return result;
+}
+
+// TODO adjust logic
+List<String> _navigatePopUntil(List<String> route, NavigatePopUntilAction action) {
+  var result = List<String>.from(route);
+  if (result != null && result.isNotEmpty) {
+    result.removeLast();
+  }
   return result;
 }
 
@@ -46,6 +56,17 @@ class NavigatePushAction {
   @override
   String toString() {
     return 'NavigatePushAction{routeName: $routeName}';
+  }
+}
+
+class NavigatePopUntilAction {
+  final String routeName;
+
+  NavigatePopUntilAction(this.routeName);
+
+  @override
+  String toString() {
+    return 'NavigatePopUntilAction{routeName: $routeName}';
   }
 }
 

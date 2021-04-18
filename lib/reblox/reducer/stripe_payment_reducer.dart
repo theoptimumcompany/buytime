@@ -3,6 +3,8 @@ import 'package:Buytime/reblox/model/stripe/stripe_card_response.dart';
 import 'package:Buytime/reblox/model/stripe/stripe_state.dart';
 import 'package:Buytime/UI/user/cart/UI_U_stripe_payment.dart';
 import 'package:flutter/material.dart';
+import 'package:stripe_sdk/stripe_sdk_ui.dart' as StripeUnofficialUI;
+
 
 class SetStripeState {
   StripeState _stripeState;
@@ -37,18 +39,18 @@ class CheckedStripeCustomer {
 
 class AddStripePaymentMethod
 {
-  Map<String, dynamic> _stripePaymentMethod;
+  StripeUnofficialUI.StripeCard _stripeCard;
   String _userId;
-  AddStripePaymentMethod(this._stripePaymentMethod, this._userId);
-  Map<String, dynamic> get stripePaymentMethod => _stripePaymentMethod;
+  AddStripePaymentMethod(this._stripeCard, this._userId);
+  StripeUnofficialUI.StripeCard get stripeCard => _stripeCard;
   String get userId => _userId;
 }
 class CreateDisposePaymentMethodIntent
 {
-  StripeCardResponse _stripePaymentMethodResponse;
+  String _firestoreCardId;
   String _userId;
-  CreateDisposePaymentMethodIntent(this._stripePaymentMethodResponse, this._userId);
-  StripeCardResponse get stripePaymentMethodResponse => _stripePaymentMethodResponse;
+  CreateDisposePaymentMethodIntent(this._firestoreCardId, this._userId);
+  String get firestoreCardId => _firestoreCardId;
   String get userId => _userId;
 }
 class DisposedPaymentMethodIntent
@@ -89,6 +91,9 @@ class SetStripeToEmpty {
   SetStripeToEmpty();
   String get something => _something;
 }
+
+
+
 
 StripeState stripePaymentReducer(StripeState state, action) {
   StripeState stripeState = new StripeState.fromState(state);

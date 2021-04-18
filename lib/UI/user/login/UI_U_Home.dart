@@ -66,7 +66,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     super.initState();
     backgroundVideoList.add('waves.mp4');
     backgroundVideoList.add('waves_2.mp4');
-    backgroundVideoList.add('bath_terrace.mp4');
+    backgroundVideoList.add('sea_trees.mp4');
     // backgroundVideoList.add('castle.mp4');
     // backgroundVideoList.add('sail.mp4');
 

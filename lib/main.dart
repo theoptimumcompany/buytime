@@ -110,7 +110,6 @@ void main(){
     CategoryTreeAddService(),
     CategoryTreeDeleteService(),
     StripePaymentAddPaymentMethod(),
-    // StripePaymentCardListRequest(),
     StripeListPaymentCardListRequest(),
     StripeDetachPaymentMethodRequest(),
     CheckStripeCustomerService(),
@@ -133,7 +132,6 @@ void main(){
     OrderReservableUpdateService(),
     OrderCreateService(),
     OrderReservableCreateService(),
-    AddingStripePaymentMethodRequest(),
     AddingReservableStripePaymentMethodRequest(),
     EmailCreateService()
   ]);

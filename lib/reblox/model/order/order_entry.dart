@@ -19,6 +19,8 @@ class OrderEntry {
   String minutes;
   @JsonKey(fromJson: Utils.getDate, toJson: Utils.setDate)
   DateTime date;
+  @JsonKey(defaultValue: false)
+  bool switchAutoConfirm = false;
 
   OrderEntry({
     this.number = 0,
@@ -32,6 +34,7 @@ class OrderEntry {
     this.time,
     this.minutes,
     this.date,
+    this.switchAutoConfirm,
   });
 
   factory OrderEntry.fromJson(Map<String, dynamic> json) => _$OrderEntryFromJson(json);
