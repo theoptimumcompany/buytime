@@ -1,6 +1,7 @@
 import 'package:Buytime/UI/management/business/UI_M_business.dart';
 import 'package:Buytime/UI/management/service_external/UI_M_add_external_service_list.dart';
 import 'package:Buytime/UI/management/service_external/widget/W_external_business_list_item.dart';
+import 'package:Buytime/UI/management/service_external/widget/W_external_service_item.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
@@ -14,33 +15,37 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
-class ExternalServiceList extends StatefulWidget {
+class PAServiceList extends StatefulWidget {
+  List<ServiceState> serviceState;
+  String title;
+  PAServiceList(this.serviceState, this.title);
   @override
-  State<StatefulWidget> createState() => ExternalServiceListState();
+  State<StatefulWidget> createState() => PAServiceListState();
 }
 
-class ExternalServiceListState extends State<ExternalServiceList> {
+class PAServiceListState extends State<PAServiceList> {
 
-  List<BusinessState> externalServiceList = [];
+  List<ServiceState> serviceList = [];
 
   BusinessState tmpBusiness = BusinessState();
 
   @override
   void initState() {
     super.initState();
-    externalServiceList.add(tmpBusiness);
+    serviceList = widget.serviceState;
+    //serviceList.add(tmpBusiness);
   }
 
   Future<bool> _onWillPop() {}
 
-  void undoDeletion(index, BusinessState item) {
+  void undoDeletion(index, ServiceState item) {
     /*
   This method accepts the parameters index and item and re-inserts the {item} at
   index {index}
   */
     setState(() {
       //orderState.addReserveItem(item., snapshot.business.ownerId, widget.serviceState.serviceSlot.first.startTime[i], widget.serviceState.serviceSlot.first.minDuration.toString(), dates[index]);
-      externalServiceList.insert(index, item);
+      serviceList.insert(index, item);
       //orderState.total += item.price * item.number;
     });
   }
@@ -73,10 +78,11 @@ class ExternalServiceListState extends State<ExternalServiceList> {
                       icon: Icon(Icons.keyboard_arrow_left, color: Colors.white),
                       onPressed: () {
                         //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_Business()))
-                        Navigator.pushReplacement(context, EnterExitRoute(enterPage: UI_M_Business(), exitPage: ExternalServiceList(), from: false));
+                        //Navigator.pushReplacement(context, EnterExitRoute(enterPage: UI_M_Business(), exitPage: PAServiceList(), from: false));
+                        Navigator.of(context).pop();
                       },
                     ),
-                    Utils.barTitle(AppLocalizations.of(context).externalServices),
+                    Utils.barTitle(widget.title),
                     IconButton(
                       icon: Icon(Icons.add, color: BuytimeTheme.ManagerPrimary),
                       onPressed: () {
@@ -90,14 +96,14 @@ class ExternalServiceListState extends State<ExternalServiceList> {
                   child: Column(
                     children: [
                       ///Container Redirect To Add New External Service into the network
-                      Container(
+                      /*Container(
                           margin: EdgeInsets.only(left: 20.0, top: 20.0, right: 10.0, bottom: SizeConfig.safeBlockVertical * 1),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Container(
                                 child: Text(
-                                  AppLocalizations.of(context).servicesByPartners,
+                                  widget.title,
                                   style: TextStyle(
                                     color: BuytimeTheme.TextBlack,
                                     fontSize: 18,
@@ -105,31 +111,18 @@ class ExternalServiceListState extends State<ExternalServiceList> {
                                   ),
                                 ),
                               ),
-
-                              ///Add new
-                              InkWell(
-                                onTap: () {
-                                  Navigator.pushReplacement(context, EnterExitRoute(enterPage: AddExternalServiceList(), exitPage: ExternalServiceList(), from: true));
-                                },
-                                borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                                child: Container(
-                                  padding: EdgeInsets.all(5.0),
-                                  child: Text(
-                                    AppLocalizations.of(context).addNew,
-                                    style: TextStyle(fontWeight: FontWeight.w600, fontFamily: BuytimeTheme.FontFamily, fontSize: 14, color: BuytimeTheme.ManagerPrimary),
-                                  ),
-                                ),
-                              ),
                             ],
-                          )),
-                       externalServiceList.isNotEmpty ?
+                          )),*/
+                       serviceList.isNotEmpty ?
                       Expanded(
-                        child: CustomScrollView(
-                          shrinkWrap: true,
-                          slivers: [
-                            SliverList(
-                              delegate: SliverChildBuilderDelegate((context, index){
-                                BusinessState item = externalServiceList.elementAt(index);
+                        child: Container(
+                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
+                          child: CustomScrollView(
+                            shrinkWrap: true,
+                            slivers: [
+                              SliverList(
+                                delegate: SliverChildBuilderDelegate((context, index){
+                                  ServiceState item = serviceList.elementAt(index);
                                   return Dismissible(
                                     // Each Dismissible must contain a Key. Keys allow Flutter to
                                     // uniquely identify widgets.
@@ -140,7 +133,7 @@ class ExternalServiceListState extends State<ExternalServiceList> {
                                     onDismissed: (direction) {
                                       // Remove the item from the data source.
                                       setState(() {
-                                        externalServiceList.removeAt(index);
+                                        serviceList.removeAt(index);
                                       });
                                       if (direction == DismissDirection.endToStart) {
 
@@ -155,10 +148,19 @@ class ExternalServiceListState extends State<ExternalServiceList> {
                                                   undoDeletion(index, item);
                                                 })));
                                       } else {
-                                        externalServiceList.insert(index, item);
+                                        serviceList.insert(index, item);
                                       }
                                     },
-                                    child: ExternalBusinessListItem(item),
+                                    child: Column(
+                                      children: [
+                                        ExternalServiceItem(item, false, widget.serviceState, widget.title),
+                                        Container(
+                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 30),
+                                          height: SizeConfig.safeBlockVertical * .2,
+                                          color: BuytimeTheme.DividerGrey,
+                                        )
+                                      ],
+                                    ),
                                     background: Container(
                                       color: BuytimeTheme.BackgroundWhite,
                                       //margin: EdgeInsets.symmetric(horizontal: 15),
@@ -181,10 +183,11 @@ class ExternalServiceListState extends State<ExternalServiceList> {
                                     ),
                                   );
                                 },
-                                childCount: externalServiceList.length,
+                                  childCount: serviceList.length,
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       )  : Container(
                          height: SizeConfig.safeBlockVertical * 8,
@@ -195,7 +198,7 @@ class ExternalServiceListState extends State<ExternalServiceList> {
                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 4),
                                alignment: Alignment.centerLeft,
                                child: Text(
-                                 AppLocalizations.of(context).noExternalServiceFound,
+                                 AppLocalizations.of(context).noServiceFound,
                                  style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextGrey, fontWeight: FontWeight.w500, fontSize: 16),
                                ),
                              )),

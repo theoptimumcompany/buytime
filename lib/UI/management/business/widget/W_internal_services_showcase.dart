@@ -37,7 +37,7 @@ class InternalServiceShowcaseState extends State<InternalServiceShowcase> {
                 children: [
                   Container(
                     child: Text(
-                      AppLocalizations.of(context).services,
+                      AppLocalizations.of(context).internalServices,
                       style: TextStyle(fontWeight: FontWeight.w700, fontFamily: BuytimeTheme.FontFamily, fontSize: 18, color: BuytimeTheme.TextBlack),
                     ),
                   ),

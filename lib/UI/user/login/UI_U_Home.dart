@@ -183,7 +183,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                       Positioned.fill(
                         child: Align(
                             alignment: Alignment.center,
-                            child: _controller.value.initialized
+                            child: _controller.value.isInitialized
                                 ? SizedBox.expand(
                                     child: FittedBox(
                                       // If your background video doesn't look right, try changing the BoxFit property.

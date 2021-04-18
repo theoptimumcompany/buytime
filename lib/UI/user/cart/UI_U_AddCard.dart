@@ -291,7 +291,7 @@ class _UI_U_AddCardState extends State<UI_U_AddCard> {
   Future<String> postCreatePaymentIntent(String email, String paymentMethodId) async {
     String clientSecret;
     http.Response response = await http.post(
-      postCreateIntentURL,
+      Uri.parse(postCreateIntentURL),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },

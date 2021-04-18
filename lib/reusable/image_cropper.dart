@@ -64,7 +64,8 @@ class _ImageCropperScreenState extends State<ImageCropperScreen> {
   }
 
   Future<Null> _pickImage() async {
-    imageFile = await ImagePicker.pickImage(source: ImageSource.gallery);
+    PickedFile pickedFile = await ImagePicker().getImage(source: ImageSource.gallery);
+    imageFile = File(pickedFile.path);
     if (imageFile != null) {
       setState(() {
         state = AppState.picked;
