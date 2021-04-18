@@ -51,7 +51,9 @@ class StripePaymentAddPaymentMethod implements EpicClass<AppState> {
         try {
           /// create setupIntent on the user
           FirebaseFirestore.instance.collection("stripeCustomer/" + userId + "_test/setupIntent").doc().set({'status': "create request"}).then((value) async {
-            final http.Response response = await http.post('https://europe-west1-buytime-458a1.cloudfunctions.net/createSetupIntent?userId=' + userId);
+            var url = Uri.parse('https://europe-west1-buytime-458a1.cloudfunctions.net/createSetupIntent');
+            final http.Response response = await http.post(url, body: {'userId': '$userId'});
+
             if (response.statusCode == 200 && !response.body.contains('error')) {
               /// requesting back the secretKey (aka the setupIntent)
               DocumentSnapshot stripeCustomerReference = await FirebaseFirestore.instance.collection("stripeCustomer/").doc(userId + "_test").get();
@@ -394,7 +396,7 @@ class StripePaymentService {
           'paymentMethod': paymentMethod
         });
         /// process payment
-        processPaymentAsDirectCharge(paymentMethod);
+        processPaymentAsDirectCharge(orderState.orderId);
       } else {
         /// TODO: show error message to the user:
         /// 'It is not possible to pay with this card. Please try again with a different card',
@@ -408,9 +410,10 @@ class StripePaymentService {
     return paymentResult;
   }
 
-  Future<void> processPaymentAsDirectCharge(StripeRecommended.PaymentMethod paymentMethod) async {
+  Future<void> processPaymentAsDirectCharge(String orderId) async {
     //step 2: request to create PaymentIntent, attempt to confirm the payment & return PaymentIntent
-    final http.Response response = await http.post('$url?amount=$amount&currency=GBP&paym=${paymentMethod.id}');
+    var url = Uri.parse('https://europe-west1-buytime-458a1.cloudfunctions.net/StripePIOnOrder');
+    final http.Response response = await http.post(url, body: {'orderId': '$orderId', 'currency': 'EUR'});
     debugPrint('Now i decode');
     if (response.body != null && response.body != 'error') {
       final paymentIntentX = jsonDecode(response.body);
