@@ -1,18 +1,23 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:Buytime/UI/management/service_external/UI_M_external_service_list.dart';
 import 'package:Buytime/UI/management/service_external/UI_M_p_a_service_list.dart';
 import 'package:Buytime/UI/management/service_external/widget/W_external_service_item.dart';
 import 'package:Buytime/UI/user/cart/UI_U_cart.dart';
 import 'package:Buytime/UI/user/cart/UI_U_ConfirmOrder.dart';
+import 'package:Buytime/UI/user/map/UI_U_map.dart';
 import 'package:Buytime/UI/user/service/UI_U_service_reserve.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
+import 'package:Buytime/reblox/model/business/external_business_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reservable_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/service/service_list_reducer.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
 import 'package:Buytime/reusable/buytime_icons.dart';
 import 'package:Buytime/reusable/enterExitRoute.dart';
+import 'package:Buytime/utils/theme/buytime_config.dart';
 import 'package:Buytime/utils/utils.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -26,10 +31,10 @@ import 'package:intl/intl.dart';
 
 
 class ExternalBusinessDetails extends StatefulWidget {
-  final BusinessState businessState;
+  final ExternalBusinessState externalBusinessState;
   bool fromMy;
   static String route = '/externalServiceDetails';
-  ExternalBusinessDetails({@required this.businessState, this.fromMy});
+  ExternalBusinessDetails({@required this.externalBusinessState, this.fromMy});
 
   @override
   createState() => _ExternalBusinessDetailsState();
@@ -42,11 +47,16 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
   List<ServiceState> allServiceList = [];
 
   ServiceState tmpService = ServiceState();
+  double lat = 0.0;
+  double lng = 0.0;
+
+  bool startRequest = false;
+  bool noActivity = false;
 
   @override
   void initState() {
     super.initState();
-    popularServiceList.add(tmpService);
+    //popularServiceList.add(tmpService);
    }
 
   @override
@@ -86,6 +96,16 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
     });
   }
 
+  String getShopLocationImage(String coordinates){
+    String url;
+    if(Platform.isIOS)
+      url = 'https://maps.googleapis.com/maps/api/staticmap?center=$lat,$lng&zoom=18&size=640x640&scale=2&markers=color:red|$lat,$lng&key=${BuytimeConfig.AndroidApiKey}';
+    else
+      url = 'https://maps.googleapis.com/maps/api/staticmap?center=$lat,$lng&zoom=18&size=640x640&scale=2&markers=color:red|$lat,$lng&key=${BuytimeConfig.AndroidApiKey}';
+
+    return url;
+  }
+
   @override
   Widget build(BuildContext context) {
     // the media containing information on width and height
@@ -96,9 +116,37 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
     return StoreConnector<AppState, AppState>(
       converter: (store) => store.state,
       onInit: (store){
+        if(widget.externalBusinessState.id_firestore != null){
+          debugPrint('UI_U_external_business_details => Business coordinate: ${widget.externalBusinessState.coordinate}');
+          debugPrint('UI_U_external_business_details => Business id: ${widget.externalBusinessState.id_firestore}');
+          store.state.serviceList.serviceListState.clear();
+          store.dispatch(ServiceListRequest(widget.externalBusinessState.id_firestore, 'user'));
+          if(widget.externalBusinessState.coordinate.isNotEmpty){
+            List<String> latLng = widget.externalBusinessState.coordinate.split(', ');
+            if(latLng.length == 2){
+              lat = double.parse(latLng[0]);
+              lng = double.parse(latLng[1]);
+            }
+          }
+          startRequest = true;
+        }
       },
       builder: (context, snapshot) {
-
+        popularServiceList.clear();
+        allServiceList.clear();
+        List<ServiceState> tmpServiceList = snapshot.serviceList.serviceListState;
+        if(tmpServiceList.isEmpty && startRequest){
+          noActivity = true;
+        }else{
+          if(tmpServiceList.isNotEmpty && tmpServiceList.first.businessId == null)
+            tmpServiceList.removeLast();
+          else{
+            popularServiceList.addAll(snapshot.serviceList.serviceListState);
+            allServiceList.addAll(snapshot.serviceList.serviceListState);
+          }
+          noActivity = false;
+          startRequest = false;
+        }
         return  GestureDetector(
           onTap: (){
             FocusScopeNode currentFocus = FocusScope.of(context);
@@ -128,10 +176,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                           ),
                           tooltip: AppLocalizations.of(context).comeBack,
                           onPressed: () {
-                            //widget.fromConfirm != null ? Navigator.of(context).pop() : Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Landing()),);
-                            Future.delayed(Duration(seconds: 1), () {
-                              Navigator.of(context).pop();
-                            });
+                            Navigator.of(context).pop();
                           },
                         ),
                       ),
@@ -139,7 +184,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                     ],
                   ),
                   ///Title
-                  Utils.barTitle('test'),
+                  Utils.barTitle(widget.externalBusinessState.name ?? 'Test'),
                   SizedBox(
                     width: 56,
                   )
@@ -205,7 +250,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                       children: [
                         ///Image
                         CachedNetworkImage(
-                          imageUrl:  version1000(widget.businessState.wide),
+                          imageUrl:  version1000(widget.externalBusinessState.wide),
                           imageBuilder: (context, imageProvider) => Container(
                             //margin: EdgeInsets.all(SizeConfig.safeBlockVertical*.25),
                             //width: double.infinity,
@@ -251,7 +296,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                           child: FittedBox(
                                             fit: BoxFit.scaleDown,
                                             child: Text(
-                                              widget.businessState.name ?? 'test',
+                                              widget.externalBusinessState.name ?? 'test',
                                               style: TextStyle(
                                                   fontFamily: BuytimeTheme.FontFamily,
                                                   color: BuytimeTheme.TextWhite,
@@ -282,143 +327,206 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                         ),
                         ///Address & Map
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                ///Address text
-                                Container(
-                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
-                                  child: FittedBox(
-                                    fit: BoxFit.scaleDown,
-                                    child: Text(
-                                      AppLocalizations.of(context).address.toUpperCase(),
-                                      style: TextStyle(
-                                          letterSpacing: 1.5,
-                                          fontFamily: BuytimeTheme.FontFamily,
-                                          color: BuytimeTheme.TextMedium,
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 10 ///SizeConfig.safeBlockHorizontal * 4
+                            Flexible(
+                              flex: 3,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  ///Address text
+                                  Container(
+                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                    child: FittedBox(
+                                      fit: BoxFit.scaleDown,
+                                      child: Text(
+                                        AppLocalizations.of(context).address.toUpperCase(),
+                                        style: TextStyle(
+                                            letterSpacing: 1.5,
+                                            fontFamily: BuytimeTheme.FontFamily,
+                                            color: BuytimeTheme.TextMedium,
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 10 ///SizeConfig.safeBlockHorizontal * 4
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                                ///Address value
-                                Container(
-                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
-                                  child: FittedBox(
-                                    fit: BoxFit.scaleDown,
-                                    child: Text(
-                                      '...',
-                                      style: TextStyle(
-                                          letterSpacing: 0.15,
-                                          fontFamily: BuytimeTheme.FontFamily,
-                                          color: BuytimeTheme.TextBlack,
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 16 ///SizeConfig.safeBlockHorizontal * 4
+                                  ///Address value
+                                  Container(
+                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
+                                    child: FittedBox(
+                                      fit: BoxFit.scaleDown,
+                                      child: Text(
+                                        widget.externalBusinessState.id_firestore != null ?
+                                        widget.externalBusinessState.street + ', ' + widget.externalBusinessState.street_number + ', ' + widget.externalBusinessState.ZIP + ', ' + widget.externalBusinessState.state_province :
+                                        'Test',
+                                        style: TextStyle(
+                                            letterSpacing: 0.15,
+                                            fontFamily: BuytimeTheme.FontFamily,
+                                            color: BuytimeTheme.TextBlack,
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 16 ///SizeConfig.safeBlockHorizontal * 4
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                                ///Hour text
-                                Container(
-                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
-                                  child: FittedBox(
-                                    fit: BoxFit.scaleDown,
-                                    child: Text(
-                                      AppLocalizations.of(context).hours.toUpperCase(),
-                                      style: TextStyle(
-                                          letterSpacing: 1.5,
-                                          fontFamily: BuytimeTheme.FontFamily,
-                                          color: BuytimeTheme.TextMedium,
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 10 ///SizeConfig.safeBlockHorizontal * 4
+                                  ///Hour text
+                                  Container(
+                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                    child: FittedBox(
+                                      fit: BoxFit.scaleDown,
+                                      child: Text(
+                                        AppLocalizations.of(context).hours.toUpperCase(),
+                                        style: TextStyle(
+                                            letterSpacing: 1.5,
+                                            fontFamily: BuytimeTheme.FontFamily,
+                                            color: BuytimeTheme.TextMedium,
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 10 ///SizeConfig.safeBlockHorizontal * 4
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                                ///Open until value
-                                Container(
-                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
-                                  child: FittedBox(
-                                    fit: BoxFit.scaleDown,
-                                    child: Text(
-                                      AppLocalizations.of(context).openUntil + ' ...',
-                                      style: TextStyle(
-                                          letterSpacing: 0.15,
-                                          fontFamily: BuytimeTheme.FontFamily,
-                                          color: BuytimeTheme.TextBlack,
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 16 ///SizeConfig.safeBlockHorizontal * 4
+                                  ///Open until value
+                                  Container(
+                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
+                                    child: FittedBox(
+                                      fit: BoxFit.scaleDown,
+                                      child: Text(
+                                        AppLocalizations.of(context).openUntil + ' ...',
+                                        style: TextStyle(
+                                            letterSpacing: 0.15,
+                                            fontFamily: BuytimeTheme.FontFamily,
+                                            color: BuytimeTheme.TextBlack,
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 16 ///SizeConfig.safeBlockHorizontal * 4
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                                ///Directions
-                                Container(
-                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
-                                  child: Row(
-                                    children: [
-                                      Icon(
-                                        Icons.directions_walk,
-                                        size: 14,
-                                        color: BuytimeTheme.SymbolGrey,
-                                      ),
-                                      ///Min
-                                      Container(
-                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 1.5, right: SizeConfig.safeBlockHorizontal * 1, top: SizeConfig.safeBlockVertical * 0),
-                                        child: FittedBox(
-                                          fit: BoxFit.scaleDown,
-                                          child: Text(
-                                            '? ' + AppLocalizations.of(context).min,
-                                            style: TextStyle(
-                                                letterSpacing: 0.25,
-                                                fontFamily: BuytimeTheme.FontFamily,
-                                                color: BuytimeTheme.TextMedium,
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
+                                  ///Directions
+                                  Container(
+                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          Icons.directions_walk,
+                                          size: 14,
+                                          color: BuytimeTheme.SymbolGrey,
+                                        ),
+                                        ///Min
+                                        Container(
+                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 1.5, right: SizeConfig.safeBlockHorizontal * 1, top: SizeConfig.safeBlockVertical * 0),
+                                          child: FittedBox(
+                                            fit: BoxFit.scaleDown,
+                                            child: Text(
+                                              '? ' + AppLocalizations.of(context).min,
+                                              style: TextStyle(
+                                                  letterSpacing: 0.25,
+                                                  fontFamily: BuytimeTheme.FontFamily,
+                                                  color: BuytimeTheme.TextMedium,
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
+                                              ),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                      ///Directions
-                                      Container(
-                                          margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 2.5),
-                                          alignment: Alignment.center,
-                                          child: Material(
-                                            color: Colors.transparent,
-                                            child: InkWell(
-                                                onTap: () {
+                                        ///Directions
+                                        Container(
+                                            margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 2.5),
+                                            alignment: Alignment.center,
+                                            child: Material(
+                                              color: Colors.transparent,
+                                              child: InkWell(
+                                                  onTap: () {
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(builder: (context) => BuytimeMap(user: false, title: widget.externalBusinessState.name, businessState: BusinessState.fromExternalState(widget.externalBusinessState),)),
+                                                    );
+                                                  },
+                                                  borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                                  child: Container(
+                                                    padding: EdgeInsets.all(5.0),
+                                                    child: Text(
+                                                      AppLocalizations.of(context).directions,
+                                                      style: TextStyle(
+                                                          letterSpacing: SizeConfig.safeBlockHorizontal * .2,
+                                                          fontFamily: BuytimeTheme.FontFamily,
+                                                          color: BuytimeTheme.UserPrimary,
+                                                          fontWeight: FontWeight.w400,
+                                                          fontSize: 14
 
-                                                },
-                                                borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                                                child: Container(
-                                                  padding: EdgeInsets.all(5.0),
-                                                  child: Text(
-                                                    AppLocalizations.of(context).directions,
-                                                    style: TextStyle(
-                                                        letterSpacing: SizeConfig.safeBlockHorizontal * .2,
-                                                        fontFamily: BuytimeTheme.FontFamily,
-                                                        color: BuytimeTheme.UserPrimary,
-                                                        fontWeight: FontWeight.w400,
-                                                        fontSize: 14
-
-                                                      ///SizeConfig.safeBlockHorizontal * 4
+                                                        ///SizeConfig.safeBlockHorizontal * 4
+                                                      ),
                                                     ),
-                                                  ),
-                                                )),
-                                          ))
-                                    ],
+                                                  )),
+                                            ))
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                            ///Map
+                            Flexible(
+                              flex: 2,
+                              child: InkWell(
+                                onTap: (){
+                                  String address = widget.externalBusinessState.name;
+                                  //Utils.openMap(lat, lng);
+                                  //Navigator.push(context, MaterialPageRoute(builder: (context) => BuytimeMap(user: true, title: widget.orderState.itemList.length > 1 ? widget.orderState.business.name : widget.orderState.itemList.first.name, businessState: snapshot.business,)),);
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => BuytimeMap(user: false, title: address, businessState: BusinessState.fromExternalState(widget.externalBusinessState),)),);
+                                  //Navigator.push(context, MaterialPageRoute(builder: (context) => AnimatedScreen()));
+                                },
+                                child: Container(
+                                  width: 174,
+                                  height: 169,
+                                  //margin: EdgeInsets.only(left:10.0, right: 10.0),
+                                  child: CachedNetworkImage(
+                                    imageUrl:  getShopLocationImage(snapshot.business.coordinate),
+                                    imageBuilder: (context, imageProvider) => Container(
+                                      decoration: BoxDecoration(
+                                          color: BuytimeTheme.BackgroundWhite,
+                                          //borderRadius: BorderRadius.all(Radius.circular(5)),
+                                          image: DecorationImage(
+                                            image: imageProvider,
+                                            fit: BoxFit.cover,
+                                          )
+                                      ),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                            colors: [
+                                              BuytimeTheme.BackgroundWhite,
+                                              BuytimeTheme.BackgroundWhite.withOpacity(0.1),
+                                            ],
+                                            begin : Alignment.centerLeft,
+                                            end : Alignment.centerRight,
+                                            //tileMode: TileMode.
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    placeholder: (context, url) => Container(
+                                      // width: 200, ///SizeConfig.safeBlockVertical * widget.width
+                                      height: 100, ///SizeConfig.safeBlockVertical * widget.width
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          CircularProgressIndicator()
+                                        ],
+                                      ),
+                                    ),
+                                    errorWidget: (context, url, error) => Icon(Icons.error),
                                   ),
-                                )
-                              ],
-                            )
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                         ///Divider
                         Container(
-                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
+                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0),
                           height: 15,
                           color: BuytimeTheme.DividerGrey,
                         ),
@@ -434,7 +542,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                         ///View business
                                         InkWell(
                                           onTap: () {
-                                            Navigator.push(context, EnterExitRoute(enterPage: ExternalBusinessDetails(businessState: widget.businessState, fromMy: false,), exitPage: ExternalBusinessDetails(businessState: widget.businessState, fromMy: true,), from: true));
+                                            Navigator.push(context, EnterExitRoute(enterPage: ExternalBusinessDetails(externalBusinessState: widget.externalBusinessState, fromMy: false,), exitPage: ExternalBusinessDetails(externalBusinessState: widget.externalBusinessState, fromMy: true,), from: true));
                                           },
                                           borderRadius: BorderRadius.all(Radius.circular(5.0)),
                                           child: Container(
@@ -483,7 +591,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                                 ///Show all
                                                 InkWell(
                                                   onTap: () {
-                                                    Navigator.push(context, EnterExitRoute(enterPage: PAServiceList(popularServiceList, AppLocalizations.of(context).popularService), exitPage: ExternalBusinessDetails(businessState: widget.businessState, fromMy: widget.fromMy,), from: true));
+                                                    Navigator.push(context, EnterExitRoute(enterPage: PAServiceList(popularServiceList, AppLocalizations.of(context).popularService), exitPage: ExternalBusinessDetails(externalBusinessState: widget.externalBusinessState, fromMy: widget.fromMy,), from: true));
                                                   },
                                                   borderRadius: BorderRadius.all(Radius.circular(5.0)),
                                                   child: Container(
@@ -526,7 +634,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                                   },
                                                   child: Column(
                                                     children: [
-                                                      ExternalServiceItem(service, true, popularServiceList, AppLocalizations.of(context).popularService),
+                                                      ExternalServiceItem(service, true, popularServiceList, AppLocalizations.of(context).popularService, widget.externalBusinessState),
                                                       Container(
                                                         margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 30),
                                                         height: SizeConfig.safeBlockVertical * .2,
@@ -562,6 +670,15 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                               ],
                                             );
                                           }).toList(),
+                                        ) : noActivity ?
+                                        Container(
+                                          margin: EdgeInsets.only(top: 10),
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              CircularProgressIndicator()
+                                            ],
+                                          ),
                                         ) :
                                         ///No List
                                         Container(
@@ -581,7 +698,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                       ],
                                     ),
                                   ),
-                                ),
+                                ) ,
                                 ///Divider
                                 Container(
                                   margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
@@ -619,7 +736,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                                 ///Show all
                                                 InkWell(
                                                   onTap: () {
-                                                    Navigator.push(context, EnterExitRoute(enterPage: PAServiceList(allServiceList, AppLocalizations.of(context).allService), exitPage: ExternalBusinessDetails(businessState: widget.businessState, fromMy: widget.fromMy,), from: true));
+                                                    Navigator.push(context, EnterExitRoute(enterPage: PAServiceList(allServiceList, AppLocalizations.of(context).allService), exitPage: ExternalBusinessDetails(externalBusinessState: widget.externalBusinessState, fromMy: widget.fromMy,), from: true));
                                                   },
                                                   borderRadius: BorderRadius.all(Radius.circular(5.0)),
                                                   child: Container(
@@ -662,7 +779,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                                   },
                                                   child: Column(
                                                     children: [
-                                                      ExternalServiceItem(service, true, allServiceList, AppLocalizations.of(context).allService),
+                                                      ExternalServiceItem(service, true, allServiceList, AppLocalizations.of(context).allService, widget.externalBusinessState),
                                                       Container(
                                                         margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 30),
                                                         height: SizeConfig.safeBlockVertical * .2,
@@ -698,6 +815,15 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                               ],
                                             );
                                           }).toList(),
+                                        ) : noActivity ?
+                                        Container(
+                                          margin: EdgeInsets.only(top: 10),
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              CircularProgressIndicator()
+                                            ],
+                                          ),
                                         ) :
                                         ///No List
                                         Container(

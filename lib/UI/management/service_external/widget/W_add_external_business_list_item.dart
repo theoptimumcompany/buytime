@@ -1,7 +1,8 @@
+import 'dart:math';
+
+import 'package:Buytime/UI/management/service_external/UI_M_add_external_service_list.dart';
 import 'package:Buytime/UI/management/service_external/UI_M_external_service_list.dart';
-import 'package:Buytime/UI/management/service_external/UI_M_p_a_service_list.dart';
 import 'package:Buytime/UI/management/service_external/UI_U_external_business_details.dart';
-import 'package:Buytime/UI/management/service_external/UI_U_external_service_details.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/model/business/external_business_state.dart';
@@ -15,49 +16,50 @@ import 'package:flutter/material.dart';
 import 'package:share/share.dart';
 import 'package:Buytime/UI/user/service/UI_U_service_details.dart';
 
-class ExternalServiceItem extends StatefulWidget {
+class AddExternalBusinessListItem extends StatefulWidget {
 
-  ServiceState serviceState;
-  List<ServiceState> serviceList;
-  String title;
-  bool fromBusiness;
   ExternalBusinessState externalBusinessState;
-  ExternalServiceItem(this.serviceState, this.fromBusiness, this.serviceList, this.title, this.externalBusinessState);
+  BusinessState businessState;
+  //bool tourist;
+  bool fromMy;
+  AddExternalBusinessListItem(this.externalBusinessState, this.businessState, this.fromMy);
 
   @override
-  _ExternalServiceItemState createState() => _ExternalServiceItemState();
+  _AddExternalBusinessListItemState createState() => _AddExternalBusinessListItemState();
 }
 
-class _ExternalServiceItemState extends State<ExternalServiceItem> {
+class _AddExternalBusinessListItemState extends State<AddExternalBusinessListItem> {
 
-
-  @override
-  void initState() {
-    super.initState();
-
-
+  double calculateDistance(){
+    double lat1 = 0.0;
+    double lon1 = 0.0;
+    double lat2 = 0.0;
+    double lon2 = 0.0;
+   if(widget.businessState.coordinate.isNotEmpty){
+     List<String> latLng1 = widget.businessState.coordinate.split(', ');
+     if(latLng1.length == 2){
+       lat1 = double.parse(latLng1[0]);
+       lon1 = double.parse(latLng1[1]);
+     }
+   }
+    if(widget.externalBusinessState.coordinate.isNotEmpty){
+      List<String> latLng2 = widget.externalBusinessState.coordinate.split(', ');
+      if(latLng2.length == 2){
+        lat2 = double.parse(latLng2[0]);
+        lon2 = double.parse(latLng2[1]);
+      }
+    }
+    var p = 0.017453292519943295;
+    var c = cos;
+    var a = 0.5 - c((lat2 - lat1) * p)/2 +
+        c(lat1 * p) * c(lat2 * p) *
+            (1 - c((lon2 - lon1) * p))/2;
+    return (12742 * asin(sqrt(a))) / 1000;
   }
 
   @override
   Widget build(BuildContext context) {
-    String duration = '';
-    if(widget.serviceState.serviceSlot.isNotEmpty){
-      widget.serviceState.serviceSlot.forEach((element) {
-        if(element.day != 0){
-          debugPrint('W_external_service_item => SLOT WITH DAYS');
-          duration = '${element.day} d';
-        }else{
-          debugPrint('W_external_service_item => SLOT WITHOUT DAYS');
-          int tmpMin = element.hour * 60 + element.minute;
-          if(tmpMin > 90)
-            duration = '${element.hour} h ${element.minute}${AppLocalizations.of(context).spaceMinSpace}';
-          else
-            duration = '$tmpMin${AppLocalizations.of(context).spaceMinSpace}';
-        }
-      });
-    }else{
-      duration = 'depends';
-    }
+
     //debugPrint('image: ${widget.serviceState.image1}');
     return Container(
         //margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 4, right: SizeConfig.safeBlockHorizontal * 4),
@@ -67,8 +69,7 @@ class _ExternalServiceItemState extends State<ExternalServiceItem> {
             child: InkWell(
               borderRadius: BorderRadius.all(Radius.circular(10)),
               onTap: () async {
-                Navigator.push(context, EnterExitRoute(enterPage: ExternalServiceDetails(serviceState: widget.serviceState), exitPage: widget.fromBusiness ? ExternalBusinessDetails(externalBusinessState: widget.externalBusinessState, fromMy: false,): PAServiceList(widget.serviceList, widget.title), from: true));
-                //Navigator.push(context, MaterialPageRoute(builder: (context) => ExternalServiceDetails(serviceState: widget.serviceState)),);;
+                Navigator.push(context, EnterExitRoute(enterPage: ExternalBusinessDetails(externalBusinessState: widget.externalBusinessState, fromMy: widget.fromMy), exitPage: AddExternalServiceList(false), from: true));
               },
               child: Container(
                 height: 91,  ///SizeConfig.safeBlockVertical * 15
@@ -80,7 +81,7 @@ class _ExternalServiceItemState extends State<ExternalServiceItem> {
                       children: [
                         ///Service Image
                         CachedNetworkImage(
-                          imageUrl: widget.serviceState.image1 != null && widget.serviceState.image1 .isNotEmpty ? widget.serviceState.image1  : 'https://firebasestorage.googleapis.com/v0/b/buytime-458a1.appspot.com/o/general%2Fimage_placeholder_200x200_1000x1000.png?alt=media&token=082a1896-32d8-4750-b7cc-141f00bc060c',
+                          imageUrl: widget.externalBusinessState.logo != null && widget.externalBusinessState.logo.isNotEmpty ? widget.externalBusinessState.logo : 'https://firebasestorage.googleapis.com/v0/b/buytime-458a1.appspot.com/o/general%2Fimage_placeholder_200x200_1000x1000.png?alt=media&token=082a1896-32d8-4750-b7cc-141f00bc060c',
                           imageBuilder: (context, imageProvider) => Container(
                             //margin: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 5), ///5%
                             height: 91,
@@ -119,7 +120,7 @@ class _ExternalServiceItemState extends State<ExternalServiceItem> {
                                 child: Container(
                                   width: SizeConfig.safeBlockHorizontal * 50,
                                   child: Text(
-                                    widget.serviceState.name ?? '..............',
+                                    widget.externalBusinessState.name ?? '..............',
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 1,
                                     style: TextStyle(
@@ -132,37 +133,15 @@ class _ExternalServiceItemState extends State<ExternalServiceItem> {
                                   ),
                                 ),
                               ),
-                              widget.serviceState.serviceSlot.isNotEmpty ?
-                              ///Duration
+                              ///Description
                               FittedBox(
                                 fit: BoxFit.fitHeight,
                                 child: Container(
                                   width: 180, ///SizeConfig.safeBlockHorizontal * 50
-                                  height: 20, ///SizeConfig.safeBlockVertical * 10
-                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * .25),
+                                  height: 40, ///SizeConfig.safeBlockVertical * 10
+                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
                                   child: Text(
-                                    duration,
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 2,
-                                    style: TextStyle(
-                                        letterSpacing: 0.25,
-                                        fontFamily: BuytimeTheme.FontFamily,
-                                        color: BuytimeTheme.TextGrey,
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
-                                    ),
-                                  ),
-                                ),
-                              ) : Container(),
-                              ///Price
-                              FittedBox(
-                                fit: BoxFit.fitHeight,
-                                child: Container(
-                                  width: 180, ///SizeConfig.safeBlockHorizontal * 50
-                                  height: 20, ///SizeConfig.safeBlockVertical * 10
-                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * .25),
-                                  child: Text(
-                                   '${widget.serviceState.price.toStringAsFixed(0)} ${AppLocalizations.of(context).euroSpace}',
+                                    calculateDistance().toStringAsFixed(1) + ' Km',
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 2,
                                     style: TextStyle(
@@ -191,7 +170,5 @@ class _ExternalServiceItemState extends State<ExternalServiceItem> {
         )
     );
   }
-
-
 }
 

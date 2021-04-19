@@ -19,6 +19,7 @@ OrderEntry _$OrderEntryFromJson(Map<String, dynamic> json) {
     time: json['time'] as String,
     minutes: json['minutes'] as String,
     date: Utils.getDate(json['date'] as Timestamp),
+    switchAutoConfirm: json['switchAutoConfirm'] as bool ?? false,
   );
 }
 
@@ -35,4 +36,5 @@ Map<String, dynamic> _$OrderEntryToJson(OrderEntry instance) =>
       'time': instance.time,
       'minutes': instance.minutes,
       'date': Utils.setDate(instance.date),
+      'switchAutoConfirm': instance.switchAutoConfirm,
     };

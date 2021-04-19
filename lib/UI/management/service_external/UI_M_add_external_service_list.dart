@@ -1,9 +1,13 @@
+import 'dart:math';
+
 import 'package:Buytime/UI/management/business/UI_M_business.dart';
 import 'package:Buytime/UI/management/service_external/UI_M_external_service_list.dart';
-import 'package:Buytime/UI/management/service_external/widget/W_external_business_list_item.dart';
+import 'package:Buytime/UI/management/service_external/widget/W_add_external_business_list_item.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
+import 'package:Buytime/reblox/model/business/external_business_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
+import 'package:Buytime/reblox/reducer/external_business_list_reducer.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
 import 'package:Buytime/reusable/buytime_icons.dart';
 import 'package:Buytime/reusable/enterExitRoute.dart';
@@ -16,25 +20,31 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
 class AddExternalServiceList extends StatefulWidget {
+  bool fromMy;
+  AddExternalServiceList(this.fromMy);
   @override
   State<StatefulWidget> createState() => AddExternalServiceListState();
 }
 
 class AddExternalServiceListState extends State<AddExternalServiceList> {
 
-  List<BusinessState> externalServiceList = [];
+  List<ExternalBusinessState> externalServiceList = [];
   TextEditingController _searchController = TextEditingController();
   String sortBy = '';
-  BusinessState tmpBusiness = BusinessState();
+  ExternalBusinessState tmpBusiness = ExternalBusinessState();
+
+  bool startRequest = false;
+  bool noActivity = false;
+
   @override
   void initState() {
     super.initState();
-    externalServiceList.add(tmpBusiness);
+    //externalServiceList.add(tmpBusiness);
   }
 
   Future<bool> _onWillPop() {}
 
-  void undoDeletion(index, BusinessState item) {
+  void undoDeletion(index, ExternalBusinessState item) {
     /*
   This method accepts the parameters index and item and re-inserts the {item} at
   index {index}
@@ -46,17 +56,17 @@ class AddExternalServiceListState extends State<AddExternalServiceList> {
     });
   }
 
-  void search(List<BusinessState> list) {
+  void search(List<ExternalBusinessState> list) {
     setState(() {
       externalServiceList.clear();
-      /*serviceState = list;
+      List<ExternalBusinessState> serviceState = list;
       if (_searchController.text.isNotEmpty) {
         serviceState.forEach((element) {
           if (element.name.toLowerCase().contains(_searchController.text.toLowerCase())) {
-            tmpServiceList.add(element);
+            externalServiceList.add(element);
           }
         });
-      }*/
+      }
     });
   }
 
@@ -67,8 +77,26 @@ class AddExternalServiceListState extends State<AddExternalServiceList> {
     var mediaHeight = media.height;
     return StoreConnector<AppState, AppState>(
         converter: (store) => store.state,
-        onInit: (store) => {},
+        onInit: (store){
+          if(widget.fromMy){
+            store.dispatch(ExternalBusinessListRequest('any', store.state.user.getRole()));
+            startRequest = true;
+          }
+        },
         builder: (context, snapshot) {
+          if (_searchController.text.isEmpty) {
+            externalServiceList.clear();
+            externalServiceList.addAll(snapshot.externalBusinessList.externalBusinessListState);
+          }
+          debugPrint('UI_M_add_external_service_list => EXTERNAL BUSINESS LIST: ${externalServiceList.length}');
+          if(snapshot.externalBusinessList.externalBusinessListState.isEmpty && startRequest){
+            noActivity = true;
+          }else{
+            if(snapshot.externalBusinessList.externalBusinessListState.isNotEmpty && snapshot.externalBusinessList.externalBusinessListState.first.id_firestore == null)
+              snapshot.externalBusinessList.externalBusinessListState.removeLast();
+            noActivity = false;
+            startRequest = false;
+          }
           return WillPopScope(
               onWillPop: () async {
                 ///Block iOS Back Swipe
@@ -88,7 +116,7 @@ class AddExternalServiceListState extends State<AddExternalServiceList> {
                       icon: Icon(Icons.keyboard_arrow_left, color: Colors.white),
                       onPressed: () {
                         //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_Business()))
-                        Navigator.pushReplacement(context, EnterExitRoute(enterPage: ExternalServiceList(), exitPage: AddExternalServiceList(), from: false));
+                        Navigator.pushReplacement(context, EnterExitRoute(enterPage: ExternalServiceList(), exitPage: AddExternalServiceList(false), from: false));
                       },
                     ),
                     Utils.barTitle(AppLocalizations.of(context).addExternalService),
@@ -133,7 +161,7 @@ class AddExternalServiceListState extends State<AddExternalServiceList> {
                               onTap: () {
                                 debugPrint('done');
                                 FocusScope.of(context).unfocus();
-                                search(externalServiceList);
+                                search(snapshot.externalBusinessList.externalBusinessListState);
                               },
                               child: Icon(
                                 // Based on passwordVisible state choose the icon
@@ -146,7 +174,7 @@ class AddExternalServiceListState extends State<AddExternalServiceList> {
                           onEditingComplete: () {
                             debugPrint('done');
                             FocusScope.of(context).unfocus();
-                            search(externalServiceList);
+                            search(snapshot.externalBusinessList.externalBusinessListState);
                           },
                         ),
                       ),
@@ -187,7 +215,6 @@ class AddExternalServiceListState extends State<AddExternalServiceList> {
                                           textAlign: TextAlign.start,
                                           style: TextStyle(
                                             fontSize: 14,
-
                                             ///SizeConfig.safeBlockHorizontal * 4
                                             color: BuytimeTheme.TextMedium,
                                             fontWeight: FontWeight.w400,
@@ -215,7 +242,7 @@ class AddExternalServiceListState extends State<AddExternalServiceList> {
                                 isExpanded: false,
                                 iconSize: 0,
                                 style: TextStyle(color: Colors.blue),
-                                items: ['A-Z', 'Z-A'].map(
+                                items: [AppLocalizations.of(context).distance].map(
                                       (val) {
                                     return DropdownMenuItem<String>(
                                       value: val,
@@ -253,7 +280,7 @@ class AddExternalServiceListState extends State<AddExternalServiceList> {
                                         () {
                                       //_dropDownValue = val;
                                       sortBy = val;
-                                      if (sortBy == 'A-Z') {
+                                      if (sortBy == AppLocalizations.of(context).distance) {
                                         //externalServiceList.sort((a, b) => a.name.compareTo(b.name));
                                       } else {
                                         //externalServiceList.sort((a, b) => b.name.compareTo(a.name));
@@ -274,7 +301,7 @@ class AddExternalServiceListState extends State<AddExternalServiceList> {
                           slivers: [
                             SliverList(
                               delegate: SliverChildBuilderDelegate((context, index){
-                                BusinessState item = externalServiceList.elementAt(index);
+                                ExternalBusinessState item = externalServiceList.elementAt(index);
                                 return Dismissible(
                                   // Each Dismissible must contain a Key. Keys allow Flutter to
                                   // uniquely identify widgets.
@@ -303,7 +330,16 @@ class AddExternalServiceListState extends State<AddExternalServiceList> {
                                       externalServiceList.insert(index, item);
                                     }
                                   },
-                                  child: ExternalBusinessListItem(item),
+                                  child: Column(
+                                    children: [
+                                      AddExternalBusinessListItem(item, snapshot.business, false),
+                                      Container(
+                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 30),
+                                        height: SizeConfig.safeBlockVertical * .2,
+                                        color: BuytimeTheme.DividerGrey,
+                                      )
+                                    ],
+                                  ),
                                   background: Container(
                                     color: BuytimeTheme.BackgroundWhite,
                                     //margin: EdgeInsets.symmetric(horizontal: 15),
@@ -438,7 +474,15 @@ class AddExternalServiceListState extends State<AddExternalServiceList> {
                           ],
                         ),
                       ) : externalServiceList.isEmpty
-                          ? Container(
+                          ? noActivity ?
+                      Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            CircularProgressIndicator()
+                          ],
+                        ),
+                      ) : Container(
                         height: SizeConfig.safeBlockVertical * 8,
                         margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                         decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),

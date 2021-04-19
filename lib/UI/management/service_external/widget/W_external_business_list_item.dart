@@ -1,7 +1,10 @@
+import 'dart:math';
+
 import 'package:Buytime/UI/management/service_external/UI_M_external_service_list.dart';
 import 'package:Buytime/UI/management/service_external/UI_U_external_business_details.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
+import 'package:Buytime/reblox/model/business/external_business_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reusable/enterExitRoute.dart';
 import 'package:Buytime/utils/size_config.dart';
@@ -14,15 +17,26 @@ import 'package:Buytime/UI/user/service/UI_U_service_details.dart';
 
 class ExternalBusinessListItem extends StatefulWidget {
 
-  BusinessState businessState;
+  ExternalBusinessState externalBusinessState;
   //bool tourist;
-  ExternalBusinessListItem(this.businessState);
+  bool fromMy;
+  ExternalBusinessListItem(this.externalBusinessState, this.fromMy);
 
   @override
   _ExternalBusinessListItemState createState() => _ExternalBusinessListItemState();
 }
 
 class _ExternalBusinessListItemState extends State<ExternalBusinessListItem> {
+
+  double calculateDistance(lat1, lon1, lat2, lon2){
+    var p = 0.017453292519943295;
+    var c = cos;
+    var a = 0.5 - c((lat2 - lat1) * p)/2 +
+        c(lat1 * p) * c(lat2 * p) *
+            (1 - c((lon2 - lon1) * p))/2;
+    return 12742 * asin(sqrt(a));
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -35,7 +49,7 @@ class _ExternalBusinessListItemState extends State<ExternalBusinessListItem> {
             child: InkWell(
               borderRadius: BorderRadius.all(Radius.circular(10)),
               onTap: () async {
-                Navigator.push(context, EnterExitRoute(enterPage: ExternalBusinessDetails(businessState: widget.businessState, fromMy: true), exitPage: ExternalServiceList(), from: true));
+                Navigator.push(context, EnterExitRoute(enterPage: ExternalBusinessDetails(externalBusinessState: widget.externalBusinessState, fromMy: widget.fromMy), exitPage: ExternalServiceList(), from: true));
               },
               child: Container(
                 height: 91,  ///SizeConfig.safeBlockVertical * 15
@@ -47,7 +61,7 @@ class _ExternalBusinessListItemState extends State<ExternalBusinessListItem> {
                       children: [
                         ///Service Image
                         CachedNetworkImage(
-                          imageUrl: widget.businessState.logo != null && widget.businessState.logo.isNotEmpty ? widget.businessState.logo : 'https://firebasestorage.googleapis.com/v0/b/buytime-458a1.appspot.com/o/general%2Fimage_placeholder_200x200_1000x1000.png?alt=media&token=082a1896-32d8-4750-b7cc-141f00bc060c',
+                          imageUrl: widget.externalBusinessState.logo != null && widget.externalBusinessState.logo.isNotEmpty ? widget.externalBusinessState.logo : 'https://firebasestorage.googleapis.com/v0/b/buytime-458a1.appspot.com/o/general%2Fimage_placeholder_200x200_1000x1000.png?alt=media&token=082a1896-32d8-4750-b7cc-141f00bc060c',
                           imageBuilder: (context, imageProvider) => Container(
                             //margin: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 5), ///5%
                             height: 91,
@@ -86,7 +100,7 @@ class _ExternalBusinessListItemState extends State<ExternalBusinessListItem> {
                                 child: Container(
                                   width: SizeConfig.safeBlockHorizontal * 50,
                                   child: Text(
-                                    widget.businessState.name ?? '..............',
+                                    widget.externalBusinessState.name ?? '..............',
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 1,
                                     style: TextStyle(
@@ -107,7 +121,7 @@ class _ExternalBusinessListItemState extends State<ExternalBusinessListItem> {
                                   height: 40, ///SizeConfig.safeBlockVertical * 10
                                   margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
                                   child: Text(
-                                    '.. .........',
+                                    '.. ........',
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 2,
                                     style: TextStyle(

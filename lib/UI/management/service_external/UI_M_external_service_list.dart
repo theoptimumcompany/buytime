@@ -3,6 +3,7 @@ import 'package:Buytime/UI/management/service_external/UI_M_add_external_service
 import 'package:Buytime/UI/management/service_external/widget/W_external_business_list_item.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
+import 'package:Buytime/reblox/model/business/external_business_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
 import 'package:Buytime/reusable/buytime_icons.dart';
@@ -21,9 +22,9 @@ class ExternalServiceList extends StatefulWidget {
 
 class ExternalServiceListState extends State<ExternalServiceList> {
 
-  List<BusinessState> externalServiceList = [];
+  List<ExternalBusinessState> externalServiceList = [];
 
-  BusinessState tmpBusiness = BusinessState();
+  ExternalBusinessState tmpBusiness = ExternalBusinessState();
 
   @override
   void initState() {
@@ -33,7 +34,7 @@ class ExternalServiceListState extends State<ExternalServiceList> {
 
   Future<bool> _onWillPop() {}
 
-  void undoDeletion(index, BusinessState item) {
+  void undoDeletion(index, ExternalBusinessState item) {
     /*
   This method accepts the parameters index and item and re-inserts the {item} at
   index {index}
@@ -109,7 +110,7 @@ class ExternalServiceListState extends State<ExternalServiceList> {
                               ///Add new
                               InkWell(
                                 onTap: () {
-                                  Navigator.pushReplacement(context, EnterExitRoute(enterPage: AddExternalServiceList(), exitPage: ExternalServiceList(), from: true));
+                                  Navigator.pushReplacement(context, EnterExitRoute(enterPage: AddExternalServiceList(true), exitPage: ExternalServiceList(), from: true));
                                 },
                                 borderRadius: BorderRadius.all(Radius.circular(5.0)),
                                 child: Container(
@@ -129,7 +130,7 @@ class ExternalServiceListState extends State<ExternalServiceList> {
                           slivers: [
                             SliverList(
                               delegate: SliverChildBuilderDelegate((context, index){
-                                BusinessState item = externalServiceList.elementAt(index);
+                                ExternalBusinessState item = externalServiceList.elementAt(index);
                                   return Dismissible(
                                     // Each Dismissible must contain a Key. Keys allow Flutter to
                                     // uniquely identify widgets.
@@ -158,7 +159,7 @@ class ExternalServiceListState extends State<ExternalServiceList> {
                                         externalServiceList.insert(index, item);
                                       }
                                     },
-                                    child: ExternalBusinessListItem(item),
+                                    child: ExternalBusinessListItem(item, true),
                                     background: Container(
                                       color: BuytimeTheme.BackgroundWhite,
                                       //margin: EdgeInsets.symmetric(horizontal: 15),

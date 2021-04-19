@@ -114,13 +114,13 @@ class _ExternalServiceDetailsState extends State<ExternalServiceDetails> with Si
                     ],
                   ),
                   ///Title
-                  Utils.barTitle('test'),
+                  Utils.barTitle(widget.serviceState.name ?? 'test'),
                   SizedBox(
                     width: 56,
                   )
                 ],
               ),
-              floatingActionButton: Container(
+              /*floatingActionButton: Container(
                   margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5, bottom: SizeConfig.safeBlockVertical *4),
                   width: 272, ///media.width * .4
                   height: 44,
@@ -165,240 +165,340 @@ class _ExternalServiceDetailsState extends State<ExternalServiceDetails> with Si
                     ),
                   )
               ),
-              floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+              floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,*/
               body: SafeArea(
-                child: SingleChildScrollView(
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      //minHeight: (SizeConfig.safeBlockVertical * 100) - 60
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        ///Image
-                        CachedNetworkImage(
-                          imageUrl:  version1000(widget.serviceState.image1),
-                          imageBuilder: (context, imageProvider) => Container(
-                            //margin: EdgeInsets.all(SizeConfig.safeBlockVertical*.25),
-                            //width: double.infinity,
-                            //height: double.infinity,
-                            //width: 200, ///SizeConfig.safeBlockVertical * widget.width
-                            height: 275, ///SizeConfig.safeBlockVertical * widget.width
-                            decoration: BoxDecoration(
-                                color: BuytimeTheme.BackgroundWhite,
-                                //borderRadius: BorderRadius.all(Radius.circular(5)),
-                                image: DecorationImage(
-                                  image: imageProvider,
-                                  fit: BoxFit.cover,
-                                )
-                            ),
-                            child: Container(
-                              //width: 375,
-                              height: 375,
-                              decoration: BoxDecoration(
-                                //borderRadius: BorderRadius.all(Radius.circular(5)),
-                                //color: Colors.black.withOpacity(.2)
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    //minHeight: (SizeConfig.safeBlockVertical * 100) - 60
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    //crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Expanded(
+                        //height: SizeConfig.safeBlockVertical * 81,
+                        child: ListView(
+                          children: [
+                            ///Image
+                            CachedNetworkImage(
+                              imageUrl:  version1000(widget.serviceState.image1),
+                              imageBuilder: (context, imageProvider) => Container(
+                                //margin: EdgeInsets.all(SizeConfig.safeBlockVertical*.25),
+                                //width: double.infinity,
+                                //height: double.infinity,
+                                //width: 200, ///SizeConfig.safeBlockVertical * widget.width
+                                height: 275, ///SizeConfig.safeBlockVertical * widget.width
+                                decoration: BoxDecoration(
+                                    color: BuytimeTheme.BackgroundWhite,
+                                    //borderRadius: BorderRadius.all(Radius.circular(5)),
+                                    image: DecorationImage(
+                                      image: imageProvider,
+                                      fit: BoxFit.cover,
+                                    )
+                                ),
+                                child: Container(
+                                  //width: 375,
+                                  height: 375,
+                                  decoration: BoxDecoration(
+                                    //borderRadius: BorderRadius.all(Radius.circular(5)),
+                                    //color: Colors.black.withOpacity(.2)
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      ///Service name
+                                      Container(
+                                        //width: 200,
+                                        height: 100/3,
+                                        alignment: Alignment.centerLeft,
+                                        decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.only(
+                                                bottomLeft: Radius.circular(5),
+                                                bottomRight: Radius.circular(5)),
+                                            color: Colors.black.withOpacity(.4)
+                                        ),
+                                        //margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, bottom: SizeConfig.safeBlockVertical * 2),
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Container(
+                                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
+                                              child: FittedBox(
+                                                fit: BoxFit.scaleDown,
+                                                child: Text(
+                                                  widget.serviceState.name ?? 'test',
+                                                  style: TextStyle(
+                                                      fontFamily: BuytimeTheme.FontFamily,
+                                                      color: BuytimeTheme.TextWhite,
+                                                      fontWeight: FontWeight.bold,
+                                                      fontSize: 16 ///SizeConfig.safeBlockHorizontal * 4
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  ///Service name
-                                  Container(
-                                    //width: 200,
-                                    height: 100/3,
-                                    alignment: Alignment.centerLeft,
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.only(
-                                            bottomLeft: Radius.circular(5),
-                                            bottomRight: Radius.circular(5)),
-                                        color: Colors.black.withOpacity(.4)
+                              placeholder: (context, url) => Container(
+                                // width: 200, ///SizeConfig.safeBlockVertical * widget.width
+                                height: 100, ///SizeConfig.safeBlockVertical * widget.width
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    CircularProgressIndicator()
+                                  ],
+                                ),
+                              ),
+                              errorWidget: (context, url, error) => Icon(Icons.error),
+                            ),
+                            ///Address & Map
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    ///Address text
+                                    Container(
+                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                      child: FittedBox(
+                                        fit: BoxFit.scaleDown,
+                                        child: Text(
+                                          AppLocalizations.of(context).address.toUpperCase(),
+                                          style: TextStyle(
+                                              letterSpacing: 1.5,
+                                              fontFamily: BuytimeTheme.FontFamily,
+                                              color: BuytimeTheme.TextMedium,
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 10 ///SizeConfig.safeBlockHorizontal * 4
+                                          ),
+                                        ),
+                                      ),
                                     ),
-                                    //margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, bottom: SizeConfig.safeBlockVertical * 2),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
-                                          child: FittedBox(
-                                            fit: BoxFit.scaleDown,
-                                            child: Text(
-                                              widget.serviceState.name ?? 'test',
-                                              style: TextStyle(
-                                                  fontFamily: BuytimeTheme.FontFamily,
-                                                  color: BuytimeTheme.TextWhite,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 16 ///SizeConfig.safeBlockHorizontal * 4
+                                    ///Address value
+                                    Container(
+                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
+                                      child: FittedBox(
+                                        fit: BoxFit.scaleDown,
+                                        child: Text(
+                                          '...',
+                                          style: TextStyle(
+                                              letterSpacing: 0.15,
+                                              fontFamily: BuytimeTheme.FontFamily,
+                                              color: BuytimeTheme.TextBlack,
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 16 ///SizeConfig.safeBlockHorizontal * 4
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    ///Hour text
+                                    Container(
+                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                      child: FittedBox(
+                                        fit: BoxFit.scaleDown,
+                                        child: Text(
+                                          AppLocalizations.of(context).hours.toUpperCase(),
+                                          style: TextStyle(
+                                              letterSpacing: 1.5,
+                                              fontFamily: BuytimeTheme.FontFamily,
+                                              color: BuytimeTheme.TextMedium,
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 10 ///SizeConfig.safeBlockHorizontal * 4
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    ///Open until value
+                                    Container(
+                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
+                                      child: FittedBox(
+                                        fit: BoxFit.scaleDown,
+                                        child: Text(
+                                          AppLocalizations.of(context).openUntil + ' ...',
+                                          style: TextStyle(
+                                              letterSpacing: 0.15,
+                                              fontFamily: BuytimeTheme.FontFamily,
+                                              color: BuytimeTheme.TextBlack,
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 16 ///SizeConfig.safeBlockHorizontal * 4
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    ///Directions
+                                    Container(
+                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                      child: Row(
+                                        children: [
+                                          Icon(
+                                            Icons.directions_walk,
+                                            size: 14,
+                                            color: BuytimeTheme.SymbolGrey,
+                                          ),
+                                          ///Min
+                                          Container(
+                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 1.5, right: SizeConfig.safeBlockHorizontal * 1, top: SizeConfig.safeBlockVertical * 0),
+                                            child: FittedBox(
+                                              fit: BoxFit.scaleDown,
+                                              child: Text(
+                                                '? ' + AppLocalizations.of(context).min,
+                                                style: TextStyle(
+                                                    letterSpacing: 0.25,
+                                                    fontFamily: BuytimeTheme.FontFamily,
+                                                    color: BuytimeTheme.TextMedium,
+                                                    fontWeight: FontWeight.w500,
+                                                    fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
+                                                ),
                                               ),
                                             ),
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          placeholder: (context, url) => Container(
-                            // width: 200, ///SizeConfig.safeBlockVertical * widget.width
-                            height: 100, ///SizeConfig.safeBlockVertical * widget.width
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                CircularProgressIndicator()
+                                          ///Directions
+                                          Container(
+                                              margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 2.5),
+                                              alignment: Alignment.center,
+                                              child: Material(
+                                                color: Colors.transparent,
+                                                child: InkWell(
+                                                    onTap: () {
+
+                                                    },
+                                                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                                    child: Container(
+                                                      padding: EdgeInsets.all(5.0),
+                                                      child: Text(
+                                                        AppLocalizations.of(context).directions,
+                                                        style: TextStyle(
+                                                            letterSpacing: SizeConfig.safeBlockHorizontal * .2,
+                                                            fontFamily: BuytimeTheme.FontFamily,
+                                                            color: BuytimeTheme.UserPrimary,
+                                                            fontWeight: FontWeight.w400,
+                                                            fontSize: 14
+
+                                                          ///SizeConfig.safeBlockHorizontal * 4
+                                                        ),
+                                                      ),
+                                                    )),
+                                              ))
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                )
                               ],
                             ),
-                          ),
-                          errorWidget: (context, url, error) => Icon(Icons.error),
+                            ///Divider
+                            Container(
+                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
+                              height: 15,
+                              color: BuytimeTheme.DividerGrey,
+                            ),
+                           Column(
+                             crossAxisAlignment: CrossAxisAlignment.start,
+                             mainAxisSize: MainAxisSize.min,
+                             children: [
+                               ///Amount
+                               Container(
+                                 margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                 child: Text(
+                                   '${AppLocalizations.of(context).startingFromCurrency} ${widget.serviceState.price}',
+                                   style: TextStyle(
+                                       fontFamily: BuytimeTheme.FontFamily,
+                                       color: BuytimeTheme.ManagerPrimary,
+                                       fontWeight: FontWeight.w400,
+                                       fontSize: 16 ///SizeConfig.safeBlockHorizontal * 4
+                                   ),
+                                 ),
+                               ),
+                               ///Description
+                               Flexible(
+                                 child: Container(
+                                   width: double.infinity,
+                                   margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, bottom: SizeConfig.safeBlockVertical * 1, top: SizeConfig.safeBlockVertical * 2),
+                                   child: Column(
+                                     crossAxisAlignment: CrossAxisAlignment.start,
+                                     children: [
+                                       /*Container(
+                                         margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3),
+                                         child: Text(
+                                           AppLocalizations.of(context).serviceDescription,
+                                           style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w600, fontSize: 18
+
+                                             ///SizeConfig.safeBlockHorizontal * 5
+                                           ),
+                                         ),
+                                       ),*/
+                                       Container(
+                                         margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 2),
+                                         child: Text(
+                                           widget.serviceState.description.isNotEmpty ? widget.serviceState.description : AppLocalizations.of(context).loreIpsum,
+                                           style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w400, fontSize: 16
+
+                                             ///SizeConfig.safeBlockHorizontal * 4
+                                           ),
+                                         ),
+                                       )
+                                     ],
+                                   ),
+                                 ),
+                               )
+                             ],
+                           )
+                          ],
                         ),
-                        ///Address & Map
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                      ),
+                      Container(
+                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5, bottom: SizeConfig.safeBlockVertical *4),
+                          width: 272, ///media.width * .4
+                          height: 44,
+                          child: MaterialButton(
+                            elevation: 0,
+                            hoverElevation: 0,
+                            focusElevation: 0,
+                            highlightElevation: 0,
+                            onPressed: () {
+
+                            },
+                            textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
+                            color:  BuytimeTheme.ActionButton,
+                            padding: EdgeInsets.all(media.width * 0.03),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: new BorderRadius.circular(5),
+                            ),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                ///Address text
                                 Container(
-                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
-                                  child: FittedBox(
-                                    fit: BoxFit.scaleDown,
-                                    child: Text(
-                                      AppLocalizations.of(context).address.toUpperCase(),
-                                      style: TextStyle(
-                                          letterSpacing: 1.5,
-                                          fontFamily: BuytimeTheme.FontFamily,
-                                          color: BuytimeTheme.TextMedium,
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 10 ///SizeConfig.safeBlockHorizontal * 4
-                                      ),
-                                    ),
+                                  margin: EdgeInsets.only(right: 10.0, bottom: 5),
+                                  child: Icon(
+                                    Icons.settings_ethernet,
+                                    color: BuytimeTheme.SymbolWhite,
+                                    size: 19,
                                   ),
                                 ),
-                                ///Address value
-                                Container(
-                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
-                                  child: FittedBox(
-                                    fit: BoxFit.scaleDown,
-                                    child: Text(
-                                      '...',
-                                      style: TextStyle(
-                                          letterSpacing: 0.15,
-                                          fontFamily: BuytimeTheme.FontFamily,
-                                          color: BuytimeTheme.TextBlack,
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 16 ///SizeConfig.safeBlockHorizontal * 4
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                ///Hour text
-                                Container(
-                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
-                                  child: FittedBox(
-                                    fit: BoxFit.scaleDown,
-                                    child: Text(
-                                      AppLocalizations.of(context).hours.toUpperCase(),
-                                      style: TextStyle(
-                                          letterSpacing: 1.5,
-                                          fontFamily: BuytimeTheme.FontFamily,
-                                          color: BuytimeTheme.TextMedium,
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 10 ///SizeConfig.safeBlockHorizontal * 4
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                ///Open until value
-                                Container(
-                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
-                                  child: FittedBox(
-                                    fit: BoxFit.scaleDown,
-                                    child: Text(
-                                      AppLocalizations.of(context).openUntil + ' ...',
-                                      style: TextStyle(
-                                          letterSpacing: 0.15,
-                                          fontFamily: BuytimeTheme.FontFamily,
-                                          color: BuytimeTheme.TextBlack,
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 16 ///SizeConfig.safeBlockHorizontal * 4
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                ///Directions
-                                Container(
-                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
-                                  child: Row(
-                                    children: [
-                                      Icon(
-                                        Icons.directions_walk,
-                                        size: 14,
-                                        color: BuytimeTheme.SymbolGrey,
-                                      ),
-                                      ///Min
-                                      Container(
-                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 1.5, right: SizeConfig.safeBlockHorizontal * 1, top: SizeConfig.safeBlockVertical * 0),
-                                        child: FittedBox(
-                                          fit: BoxFit.scaleDown,
-                                          child: Text(
-                                            '? ' + AppLocalizations.of(context).min,
-                                            style: TextStyle(
-                                                letterSpacing: 0.25,
-                                                fontFamily: BuytimeTheme.FontFamily,
-                                                color: BuytimeTheme.TextMedium,
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      ///Directions
-                                      Container(
-                                          margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 2.5),
-                                          alignment: Alignment.center,
-                                          child: Material(
-                                            color: Colors.transparent,
-                                            child: InkWell(
-                                                onTap: () {
+                                Text(
+                                  AppLocalizations.of(context).addToYourNetwork.toUpperCase(),
+                                  style: TextStyle(
+                                    letterSpacing: 1.25,
+                                    fontSize: 14,
+                                    fontFamily: BuytimeTheme.FontFamily,
+                                    fontWeight: FontWeight.w500,
+                                    color: BuytimeTheme.TextWhite,
 
-                                                },
-                                                borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                                                child: Container(
-                                                  padding: EdgeInsets.all(5.0),
-                                                  child: Text(
-                                                    AppLocalizations.of(context).directions,
-                                                    style: TextStyle(
-                                                        letterSpacing: SizeConfig.safeBlockHorizontal * .2,
-                                                        fontFamily: BuytimeTheme.FontFamily,
-                                                        color: BuytimeTheme.UserPrimary,
-                                                        fontWeight: FontWeight.w400,
-                                                        fontSize: 14
-
-                                                      ///SizeConfig.safeBlockHorizontal * 4
-                                                    ),
-                                                  ),
-                                                )),
-                                          ))
-                                    ],
                                   ),
                                 )
                               ],
-                            )
-                          ],
-                        ),
-                        ///Divider
-                        Container(
-                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
-                          height: 15,
-                          color: BuytimeTheme.DividerGrey,
-                        ),
-                        Container()
-                      ],
-                    ),
+                            ),
+                          )
+                      )
+                    ],
                   ),
                 ),
               ),

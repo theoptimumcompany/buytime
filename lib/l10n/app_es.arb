@@ -484,5 +484,7 @@
   "openInGoogleMaps": "Open in Google Maps",
   "copyAddress": "Copy Address",
   "getDirections": "Get Directions",
-  "copiedToClipboard": "Copied to clipboard"
+  "copiedToClipboard": "Copied to clipboard",
+  "distance": "Distance"
+
 }

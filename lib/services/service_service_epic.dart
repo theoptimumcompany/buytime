@@ -22,6 +22,7 @@ class ServiceListRequestService implements EpicClass<AppState> {
     List<ServiceState> serviceStateList = [];
     return actions.whereType<ServiceListRequest>().asyncMap((event) async {
       debugPrint("SERVICE_SERVICE_EPIC - ServiceListRequestService => ServiceListService Firestore request");
+      debugPrint("SERVICE_SERVICE_EPIC - ServiceListRequestService => Business Id: ${event.businessId}");
       int docs = 0;
       int read = 0;
       if (event.permission == "user") {

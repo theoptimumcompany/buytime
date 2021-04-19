@@ -5,6 +5,8 @@ import 'package:Buytime/reblox/model/business/business_list_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_list_state.dart';
+import 'package:Buytime/reblox/model/business/external_business_list_state.dart';
+import 'package:Buytime/reblox/model/business/external_business_state.dart';
 import 'package:Buytime/reblox/model/card/card_list_state.dart';
 import 'package:Buytime/reblox/model/card/card_state.dart';
 import 'package:Buytime/reblox/model/category/category_list_state.dart';
@@ -33,6 +35,8 @@ import 'package:Buytime/reblox/reducer/auto_complete_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_invite_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/email_reducer.dart';
+import 'package:Buytime/reblox/reducer/external_business_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/external_business_reducer.dart';
 import 'package:Buytime/reblox/reducer/notification_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/notification_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_list_reducer.dart';
@@ -63,12 +67,14 @@ class ClickOnBusinessState {}
 
 AppState appReducer(AppState state, dynamic action) {
   BusinessState businessState = businessReducer(state.business, action);
+  ExternalBusinessState externalBusinessState = externalBusinessReducer(state.externalBusiness, action);
   BookingState bookingState = bookingReducer(state.booking, action);
   OrderState orderState = orderReducer(state.order, action);
   OrderReservableState orderReservableState = orderReservableReducer(state.orderReservable, action);
   OrderListState orderListState = orderListReducer(state.orderList, action);
   OrderReservableListState orderReservableListState = orderReservableListReducer(state.orderReservableList, action);
   BusinessListState businessListState = businessListReducer(state.businessList, action);
+  ExternalBusinessListState externalBusinessListState = externalBusinessListReducer(state.externalBusinessList, action);
   BookingListState bookingListState = bookingListReducer(state.bookingList, action);
   StripeState stripeState = stripePaymentReducer(state.stripe, action);
   StripeListState stripeListState = stripeListPaymentReducer(state.stripeListState, action);
@@ -93,12 +99,14 @@ AppState appReducer(AppState state, dynamic action) {
 
   AppState newState = AppState.copyWith(
       business: businessState,
+      externalBusiness: externalBusinessState,
       booking: bookingState,
       order: orderState,
       orderReservable: orderReservableState,
       orderList: orderListState,
       orderReservableList: orderReservableListState,
       businessList: businessListState,
+      externalBusinessList: externalBusinessListState,
       bookingList: bookingListState,
       user: userState,
       stripe: stripeState,

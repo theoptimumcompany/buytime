@@ -14,6 +14,8 @@ import 'package:Buytime/UI/user/turist/UI_U_service_explorer.dart';
 import 'package:Buytime/reblox/model/autoComplete/auto_complete_list_state.dart';
 import 'package:Buytime/reblox/model/autoComplete/auto_complete_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_list_state.dart';
+import 'package:Buytime/reblox/model/business/external_business_list_state.dart';
+import 'package:Buytime/reblox/model/business/external_business_state.dart';
 import 'package:Buytime/reblox/model/card/card_list_state.dart';
 import 'package:Buytime/reblox/model/card/card_state.dart';
 import 'package:Buytime/reblox/model/category/invitation/category_invite_state.dart';
@@ -30,6 +32,7 @@ import 'package:Buytime/reblox/model/statistics_state.dart';
 import 'package:Buytime/reblox/model/stripe/stripe_list_state.dart';
 import 'package:Buytime/services/category_invite_service_epic.dart';
 import 'package:Buytime/services/email_service_epic.dart';
+import 'package:Buytime/services/external_business_service_epic.dart';
 import 'package:Buytime/services/order_reservable_service_epic.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/UI/user/login/UI_U_home.dart';
@@ -80,6 +83,13 @@ void main(){
     BusinessUpdateService(),
     BusinessCreateService(),
     BusinessListRequestService(),
+    ExternalBusinessAndNavigateRequestService(),
+    ExternalBusinessAndNavigateOnConfirmRequestService(),
+    ExternalBusinessRequestService(),
+    ExternalBusinessRequestAndNavigateService(),
+    ExternalBusinessUpdateService(),
+    ExternalBusinessCreateService(),
+    ExternalBusinessListRequestService(),
     BookingCreateRequestService(),
     BookingRequestService(),
     UserBookingListRequestService(),
@@ -140,6 +150,7 @@ void main(){
     categoryInvite: CategoryInviteState().toEmpty(),
     categoryTree: CategoryTree().toEmpty(),
     business: BusinessState().toEmpty(),
+    externalBusiness: ExternalBusinessState().toEmpty(),
     booking: BookingState().toEmpty(),
     order: OrderState().toEmpty(),
     orderReservable: OrderReservableState().toEmpty(),
@@ -148,6 +159,7 @@ void main(){
     stripe: StripeState().toEmpty(),
     stripeListState: StripeListState().toEmpty(),
     businessList: BusinessListState().toEmpty(),
+    externalBusinessList: ExternalBusinessListState().toEmpty(),
     bookingList: BookingListState().toEmpty(),
     categoryList: CategoryListState().toEmpty(),
     serviceList: ServiceListState().toEmpty(),

@@ -422,7 +422,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                           _servicePrice = double.parse(value);
                                                         });
                                                       }
-                                                      StoreProvider.of<AppState>(context).dispatch(SetServiceSlotPrice(_servicePrice));
+                                                      StoreProvider.of<AppState>(context).dispatch(SetServicePrice(_servicePrice));
                                                     },
                                                     onFieldSubmitted: (value) {
                                                       if (value == "") {
@@ -448,7 +448,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                           priceController.text = value;
                                                         });
                                                       }
-                                                      StoreProvider.of<AppState>(context).dispatch(SetServiceSlotPrice(_servicePrice));
+                                                      StoreProvider.of<AppState>(context).dispatch(SetServicePrice(_servicePrice));
                                                     },
                                                     decoration: InputDecoration(
                                                       labelText: AppLocalizations.of(context).price,

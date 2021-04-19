@@ -4,6 +4,7 @@ import 'package:Buytime/UI/management/service_external/widget/W_external_busines
 import 'package:Buytime/UI/management/service_external/widget/W_external_service_item.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
+import 'package:Buytime/reblox/model/business/external_business_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
 import 'package:Buytime/reusable/buytime_icons.dart';
@@ -153,7 +154,7 @@ class PAServiceListState extends State<PAServiceList> {
                                     },
                                     child: Column(
                                       children: [
-                                        ExternalServiceItem(item, false, widget.serviceState, widget.title),
+                                        ExternalServiceItem(item, false, widget.serviceState, widget.title, ExternalBusinessState()),
                                         Container(
                                           margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 30),
                                           height: SizeConfig.safeBlockVertical * .2,

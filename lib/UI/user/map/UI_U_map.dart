@@ -90,9 +90,13 @@ class _BuytimeMapState extends State<BuytimeMap> with SingleTickerProviderStateM
 
     _containerAnimationController.forward();
 
-    List<String> latLng = widget.businessState.coordinate.split(', ');
-    lat = double.parse(latLng[0]);
-    lng = double.parse(latLng[1]);
+    if(widget.businessState.coordinate.isNotEmpty){
+      List<String> latLng = widget.businessState.coordinate.split(', ');
+      if(latLng.length == 2){
+        lat = double.parse(latLng[0]);
+        lng = double.parse(latLng[1]);
+      }
+    }
     _center = LatLng(lat, lng);
     markers.add(Marker(
       // This marker id can be anything that uniquely identifies each marker.

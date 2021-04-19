@@ -4,6 +4,8 @@ import 'package:Buytime/reblox/model/booking/booking_list_state.dart';
 import 'package:Buytime/reblox/model/business/business_list_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
+import 'package:Buytime/reblox/model/business/external_business_list_state.dart';
+import 'package:Buytime/reblox/model/business/external_business_state.dart';
 import 'package:Buytime/reblox/model/card/card_list_state.dart';
 import 'package:Buytime/reblox/model/card/card_state.dart';
 import 'package:Buytime/reblox/model/category/category_list_state.dart';
@@ -53,8 +55,10 @@ class AppRoutes {
 
 class AppState {
   BusinessState business;
+  ExternalBusinessState externalBusiness;
   BookingState booking;
   BusinessListState businessList;
+  ExternalBusinessListState externalBusinessList;
   BookingListState bookingList;
   OrderState order;
   OrderReservableState orderReservable;
@@ -86,6 +90,7 @@ class AppState {
 
   AppState({
     @required this.business,
+    @required this.externalBusiness,
     @required this.booking,
     @required this.order,
     @required this.orderReservable,
@@ -94,6 +99,7 @@ class AppState {
     @required this.stripe,
     this.stripeListState,
     @required this.businessList,
+    @required this.externalBusinessList,
     @required this.bookingList,
     @required this.user,
     @required this.category,
@@ -120,6 +126,7 @@ class AppState {
 
   AppState.initialState() {
     business = BusinessState();
+    externalBusiness = ExternalBusinessState();
     booking = BookingState();
     order = OrderState();
     orderReservable = OrderReservableState();
@@ -128,6 +135,7 @@ class AppState {
     orderList = OrderListState();
     orderReservableList = OrderReservableListState();
     businessList = BusinessListState();
+    externalBusinessList = ExternalBusinessListState();
     bookingList = BookingListState();
     user = UserState();
     category = CategoryState();
@@ -153,6 +161,7 @@ class AppState {
 
   AppState.copyWith({
       BusinessState business,
+      ExternalBusinessState externalBusiness,
       BookingState booking,
       OrderState order,
       OrderReservableState orderReservable,
@@ -161,6 +170,7 @@ class AppState {
       StripeState stripe,
         StripeListState stripeListState,
       BusinessListState businessList,
+      ExternalBusinessListState externalBusinessList,
         BookingListState bookingList,
       UserState user,
       CategoryState category,
@@ -185,6 +195,7 @@ class AppState {
         TemplateDataState templateDataState
       }) {
     this.business = business;
+    this.externalBusiness = externalBusiness;
     this.booking = booking;
     this.order = order;
     this.orderReservable = orderReservable;
@@ -193,6 +204,7 @@ class AppState {
     this.stripe = stripe;
     this.stripeListState = stripeListState;
     this.businessList = businessList;
+    this.externalBusinessList = externalBusinessList;
     this.bookingList = bookingList;
     this.user = user;
     this.category = category;

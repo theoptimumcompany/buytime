@@ -1,12 +1,11 @@
-import 'package:Buytime/reblox/model/business/external_business_state.dart';
 import 'package:Buytime/reblox/model/snippet/generic.dart';
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import '../file/optimum_file_to_upload.dart';
-part 'business_state.g.dart';
+part 'external_business_state.g.dart';
 
 @JsonSerializable(explicitToJson: true)
-class BusinessState {
+class ExternalBusinessState {
   String name;
   String responsible_person_name;
   String responsible_person_surname;
@@ -38,7 +37,7 @@ class BusinessState {
   List<OptimumFileToUpload> fileToUploadList;
   List<String> tag;
 
-  BusinessState({
+  ExternalBusinessState({
     @required this.name,
     @required this.responsible_person_name,
     @required this.responsible_person_surname,
@@ -70,8 +69,8 @@ class BusinessState {
     this.tag,
   });
 
-  BusinessState toEmpty() {
-    return BusinessState(
+  ExternalBusinessState toEmpty() {
+    return ExternalBusinessState(
       name: "",
       responsible_person_name: "",
       responsible_person_surname: "",
@@ -104,7 +103,7 @@ class BusinessState {
     );
   }
 
-  BusinessState.fromState(BusinessState state) {
+  ExternalBusinessState.fromState(ExternalBusinessState state) {
     this.name = state.name;
     this.responsible_person_name = state.responsible_person_name;
     this.responsible_person_surname = state.responsible_person_surname;
@@ -136,39 +135,7 @@ class BusinessState {
     this.tag = state.tag;
   }
 
-  BusinessState.fromExternalState(ExternalBusinessState state) {
-    this.name = state.name;
-    this.responsible_person_name = state.responsible_person_name;
-    this.responsible_person_surname = state.responsible_person_surname;
-    this.responsible_person_email = state.responsible_person_email;
-    this.phone_number = state.phone_number;
-    this.email = state.email;
-    this.VAT = state.VAT;
-    this.street = state.street;
-    this.municipality = state.municipality;
-    this.street_number = state.street_number;
-    this.ZIP = state.ZIP;
-    this.state_province = state.state_province;
-    this.nation = state.nation;
-    this.coordinate = state.coordinate;
-    this.profile = state.profile;
-    this.gallery = state.gallery;
-    this.hasAccess = state.hasAccess;
-    this.wide = state.wide;
-    this.logo = state.logo;
-    this.business_type = state.business_type;
-    this.description = state.description;
-    this.id_firestore = state.id_firestore;
-    this.salesman = state.salesman;
-    this.salesmanId = state.salesmanId;
-    this.owner = state.owner;
-    this.ownerId = state.ownerId;
-    this.draft = state.draft;
-    this.fileToUploadList = state.fileToUploadList;
-    this.tag = state.tag;
-  }
-
-  BusinessState copyWith({
+  ExternalBusinessState copyWith({
     String name,
     String responsible_person_name,
     String responsible_person_surname,
@@ -199,7 +166,7 @@ class BusinessState {
     List<OptimumFileToUpload> fileToUploadList,
     List<String> tag
   }) {
-    return BusinessState(
+    return ExternalBusinessState(
       name: name ?? this.name,
       responsible_person_name: responsible_person_name ?? this.responsible_person_name,
       responsible_person_surname: responsible_person_surname ?? this.responsible_person_surname,
@@ -232,7 +199,7 @@ class BusinessState {
     );
   }
 
-  factory BusinessState.fromJson(Map<String, dynamic> json) => _$BusinessStateFromJson(json);
-  Map<String, dynamic> toJson() => _$BusinessStateToJson(this);
+  factory ExternalBusinessState.fromJson(Map<String, dynamic> json) => _$ExternalBusinessStateFromJson(json);
+  Map<String, dynamic> toJson() => _$ExternalBusinessStateToJson(this);
 
 }
