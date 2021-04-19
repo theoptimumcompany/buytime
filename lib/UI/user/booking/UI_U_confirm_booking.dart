@@ -1,6 +1,6 @@
 import 'dart:async';
-import 'package:Buytime/UI/user/booking/UI_U_BookingPage.dart';
-import 'package:Buytime/UI/user/landing/UI_U_Landing.dart';
+import 'package:Buytime/UI/user/booking/UI_U_booking_page.dart';
+import 'package:Buytime/UI/user/landing/UI_U_landing.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/reducer/booking_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/booking_reducer.dart';

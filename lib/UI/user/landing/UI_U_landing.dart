@@ -1,10 +1,10 @@
 import 'dart:core';
 import 'package:Buytime/UI/management/activity/UI_M_activity_management.dart';
 import 'package:Buytime/UI/management/business/UI_M_business_list.dart';
-import 'package:Buytime/UI/user/booking/UI_U_MyBookings.dart';
+import 'package:Buytime/UI/user/booking/UI_U_my_bookings.dart';
 import 'package:Buytime/UI/user/landing/invite_guest_form.dart';
-import 'package:Buytime/UI/user/login/UI_U_Home.dart';
-import 'package:Buytime/UI/user/turist/UI_U_ServiceExplorer.dart';
+import 'package:Buytime/UI/user/login/UI_U_home.dart';
+import 'package:Buytime/UI/user/turist/UI_U_service_explorer.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/model/email/email_state.dart';

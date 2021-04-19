@@ -1,5 +1,5 @@
-import 'package:Buytime/UI/user/category/UI_U_FilterByCategory.dart';
-import 'package:Buytime/UI/user/service/UI_U_ServiceDetails.dart';
+import 'package:Buytime/UI/user/category/UI_U_filter_by_category.dart';
+import 'package:Buytime/UI/user/service/UI_U_service_details.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';

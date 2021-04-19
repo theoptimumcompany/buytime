@@ -1,7 +1,7 @@
-import 'package:Buytime/UI/user/about_us/UI_U_About_Us.dart';
+import 'package:Buytime/UI/user/about_us/UI_U_about_us.dart';
 import 'package:Buytime/UI/user/business/UI_U_business_list.dart';
-import 'package:Buytime/UI/user/model/User_tab_navigation_item.dart';
-import 'package:Buytime/UI/user/order/UI_U_OrderHistory.dart';
+import 'package:Buytime/UI/user/model/user_tab_navigation_item.dart';
+import 'package:Buytime/UI/user/order/UI_U_order_history.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/role/role.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';

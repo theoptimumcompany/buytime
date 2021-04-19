@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 class BuytimeAppbar extends StatelessWidget implements PreferredSizeWidget {
   List<Widget> children = [];
-  final double _preferredHeight = 70.0;
+  final double _preferredHeight = 65.0;
   double width;
   double height;
   Color background; //BuytimeTheme.ManagerPrimary;

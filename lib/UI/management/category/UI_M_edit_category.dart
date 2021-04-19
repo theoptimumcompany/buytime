@@ -182,46 +182,33 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
 
   openTree(List<dynamic> list, List<DropdownMenuItem<Parent>> items) {
     for (int i = 0; i < list.length; i++) {
-      if (list[i]['nodeId'] == StoreProvider
-          .of<AppState>(context)
-          .state
-          .category
-          .parent && StoreProvider
-          .of<AppState>(context)
-          .state
-          .category
-          .parent != "no_parent") {
+      if (list[i]['nodeId'] == StoreProvider.of<AppState>(context).state.category.parent && StoreProvider.of<AppState>(context).state.category.parent != "no_parent") {
         Parent parent = Parent(name: list[i]['nodeName'].toString(), id: list[i]['nodeId'], level: list[i]['level'], parentRootId: list[i]['categoryRootId']);
         parentValue = parent;
       }
-      if (list[i]['nodeId'] == StoreProvider
-          .of<AppState>(context)
-          .state
-          .category
-          .id) {
+      if (list[i]['nodeId'] == StoreProvider.of<AppState>(context).state.category.id) {
         if (list[i]['nodeCategory'] != null && list[i]['nodeCategory'].length != 0) {
           hasChild = true;
         } else {
           hasChild = false;
         }
       }
-      if (list[i]['nodeId'] != StoreProvider
-          .of<AppState>(context)
-          .state
-          .category
-          .id) {
-        Parent objectState = Parent(name: list[i]['nodeName'].toString(), id: list[i]['nodeId'], level: list[i]['level'], parentRootId: list[i]['categoryRootId']);
-        items.add(
-          DropdownMenuItem(
-            child: Padding(
-              padding: EdgeInsets.only(
-                left: double.parse(list[i]["level"].toString()) * 12.0,
+      if (list[i]['nodeId'] != StoreProvider.of<AppState>(context).state.category.id) {
+        debugPrint('UI_M_edit_category => NODE LEVEL: ${list[i]['level']}');
+        if(list[i]['level'] == 0 && list[i]['nodeName'] != StoreProvider.of<AppState>(context).state.category.name){
+          Parent objectState = Parent(name: list[i]['nodeName'].toString(), id: list[i]['nodeId'], level: list[i]['level'], parentRootId: list[i]['categoryRootId']);
+          items.add(
+            DropdownMenuItem(
+              child: Padding(
+                padding: EdgeInsets.only(
+                  left: double.parse(list[i]["level"].toString()) * 12.0,
+                ),
+                child: Text(objectState.name),
               ),
-              child: Text(objectState.name),
+              value: objectState,
             ),
-            value: objectState,
-          ),
-        );
+          );
+        }
       }
 
       if (list[i]['nodeCategory'] != null) {
@@ -822,7 +809,7 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                                                   enabled: StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin ? true : false,
                                                     labelText: AppLocalizations.of(context).parentCategory,
                                                     enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white))),
-                                                onChanged: StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin ? (value) {
+                                                onChanged: StoreProvider.of<AppState>(context).state.user.getRole() == Role.owner ? (value) {
                                                   setState(() {
                                                     selectedParentCategory = value;
                                                     checkNumberLevelToMove(snapshot.categoryTree.categoryNodeList, snapshot.category.id);

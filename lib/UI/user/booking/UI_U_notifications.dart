@@ -1,5 +1,5 @@
 import 'package:Buytime/UI/user/booking/widget/user_notification_list_item.dart';
-import 'package:Buytime/UI/user/cart/UI_U_Cart.dart';
+import 'package:Buytime/UI/user/cart/UI_U_cart.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';

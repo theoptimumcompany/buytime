@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:Buytime/UI/management/service_internal/class/service_slot_classes.dart';
-import 'package:Buytime/UI/user/cart/UI_U_Cart.dart';
-import 'package:Buytime/UI/user/cart/UI_U_CartReservable.dart';
+import 'package:Buytime/UI/user/cart/UI_U_cart.dart';
+import 'package:Buytime/UI/user/cart/UI_U_cart_reservable.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/business/snippet/business_snippet_state.dart';
 import 'package:Buytime/reblox/model/order/order_entry.dart';

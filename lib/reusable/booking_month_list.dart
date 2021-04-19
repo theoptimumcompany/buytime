@@ -1,4 +1,4 @@
-import 'package:Buytime/UI/management/invite/UI_M_BookingDetails.dart';
+import 'package:Buytime/UI/management/invite/UI_M_booking_details.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reusable/booking_list_item.dart';
 import 'package:Buytime/utils/size_config.dart';

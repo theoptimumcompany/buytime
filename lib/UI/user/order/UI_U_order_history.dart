@@ -1,5 +1,5 @@
 import 'package:Buytime/utils/theme/buytime_theme.dart';
-import 'package:Buytime/UI/user/order/UI_U_OrderDetail.dart';
+import 'package:Buytime/UI/user/order/UI_U_order_detail.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/reducer/order_list_reducer.dart';

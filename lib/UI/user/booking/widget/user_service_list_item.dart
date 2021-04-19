@@ -1,4 +1,4 @@
-import 'package:Buytime/UI/user/booking/UI_U_OrderDetails.dart';
+import 'package:Buytime/UI/user/booking/UI_U_order_details.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/utils/size_config.dart';
@@ -8,7 +8,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:share/share.dart';
-import 'package:Buytime/UI/user/service/UI_U_ServiceDetails.dart';
+import 'package:Buytime/UI/user/service/UI_U_service_details.dart';
 
 class UserServiceListItem extends StatefulWidget {
 

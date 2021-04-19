@@ -1,7 +1,7 @@
-import 'package:Buytime/UI/user/UI_U_Tabs.dart';
-import 'package:Buytime/UI/user/booking/UI_U_BookingPage.dart';
+import 'package:Buytime/UI/user/UI_U_tabs.dart';
+import 'package:Buytime/UI/user/booking/UI_U_booking_page.dart';
 import 'package:Buytime/UI/user/cart/tab/T_room.dart';
-import 'package:Buytime/UI/user/turist/UI_U_ServiceExplorer.dart';
+import 'package:Buytime/UI/user/turist/UI_U_service_explorer.dart';
 import 'package:Buytime/reblox/model/business/snippet/business_snippet_state.dart';
 import 'package:Buytime/reblox/model/card/card_state.dart';
 import 'package:Buytime/reblox/model/order/order_entry.dart';

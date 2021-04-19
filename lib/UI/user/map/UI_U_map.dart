@@ -7,9 +7,9 @@ import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/utils/utils.dart';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:Buytime/UI/user/login/UI_U_ToS_TermsConditons.dart';
-import 'package:Buytime/UI/user/login/UI_U_Login.dart';
-import 'package:Buytime/UI/user/login/UI_U_Registration.dart';
+import 'package:Buytime/UI/user/login/UI_U_t_o_s_terms_conditons.dart';
+import 'package:Buytime/UI/user/login/UI_U_login.dart';
+import 'package:Buytime/UI/user/login/UI_U_registration.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
@@ -33,11 +33,10 @@ class BuytimeMap extends StatefulWidget {
 }
 
 class _BuytimeMapState extends State<BuytimeMap> with SingleTickerProviderStateMixin, TickerProviderStateMixin {
-  Animation _containerRadiusAnimation,
-      _containerSizeAnimation,
-      _containerColorAnimation;
+  Animation _containerRadiusAnimation, _containerSizeAnimation, _containerColorAnimation;
+
   AnimationController _containerAnimationController;
-    GoogleMapController mapController;
+  GoogleMapController mapController;
 
   LatLng _center;
 

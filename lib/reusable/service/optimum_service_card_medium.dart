@@ -1,4 +1,4 @@
-import 'package:Buytime/UI/user/service/UI_U_ServiceDetails.dart';
+import 'package:Buytime/UI/user/service/UI_U_service_details.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';

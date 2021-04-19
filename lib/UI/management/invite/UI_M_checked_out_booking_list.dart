@@ -14,7 +14,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:intl/intl.dart';
 
-import 'UI_M_BookingCreation.dart';
+import 'UI_M_booking_creation.dart';
 
 // ignore: must_be_immutable
 class CheckedOutBookingList extends StatefulWidget {

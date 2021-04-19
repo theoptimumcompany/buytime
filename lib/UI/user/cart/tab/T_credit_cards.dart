@@ -1,4 +1,4 @@
-import 'package:Buytime/UI/user/cart/UI_U_AddCard.dart';
+import 'package:Buytime/UI/user/cart/UI_U_add_card.dart';
 import 'package:Buytime/UI/user/cart/UI_U_ConfirmOrder.dart';
 import 'package:Buytime/UI/user/cart/widget/W_credit_card.dart';
 import 'package:Buytime/reblox/model/card/card_list_state.dart';

@@ -1,4 +1,4 @@
-import 'package:Buytime/UI/management/invite/UI_M_CheckedOutBookingList.dart';
+import 'package:Buytime/UI/management/invite/UI_M_checked_out_booking_list.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_list_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
@@ -17,7 +17,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:intl/intl.dart';
 
-import 'UI_M_BookingCreation.dart';
+import 'UI_M_booking_creation.dart';
 
 // ignore: must_be_immutable
 class BookingList extends StatefulWidget {

@@ -1,6 +1,6 @@
-import 'package:Buytime/UI/user/login/UI_U_Login.dart';
+import 'package:Buytime/UI/user/login/UI_U_login.dart';
 import 'package:Buytime/reblox/model/autoComplete/auto_complete_state.dart';
-import 'package:Buytime/utils/arrowClipper.dart';
+import 'package:Buytime/utils/arrow_clipper.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

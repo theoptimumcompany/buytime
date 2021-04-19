@@ -1,6 +1,6 @@
-import 'package:Buytime/UI/user/cart/UI_U_Cart.dart';
-import 'package:Buytime/UI/user/search/UI_U_FilterGeneral.dart';
-import 'package:Buytime/UI/user/service/UI_U_ServiceReserve.dart';
+import 'package:Buytime/UI/user/cart/UI_U_cart.dart';
+import 'package:Buytime/UI/user/search/UI_U_filter_general.dart';
+import 'package:Buytime/UI/user/service/UI_U_service_reserve.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/business/snippet/business_snippet_state.dart';
 import 'package:Buytime/reblox/model/category/category_list_state.dart';

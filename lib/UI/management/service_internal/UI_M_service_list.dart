@@ -218,7 +218,7 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                                 children: [
                                   ///Category Name
                                   Padding(
-                                    padding: const EdgeInsets.only(left: 20.0),
+                                    padding: const EdgeInsets.only(left: 20.0, top: 5.0),
                                     child: Container(
                                       child: Row(
                                         children: [

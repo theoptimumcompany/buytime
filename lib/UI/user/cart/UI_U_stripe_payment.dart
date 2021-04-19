@@ -1,5 +1,5 @@
 // import 'dart:convert';
-// import 'package:Buytime/UI/user/order/UI_U_OrderDetail.dart';
+// import 'package:Buytime/UI/user/order/UI_U_order_detail.dart';
 // import 'package:Buytime/reblox/model/app_state.dart';
 // import 'package:Buytime/reblox/reducer/order_reducer.dart';
 // import 'package:Buytime/reblox/reducer/stripe_list_payment_reducer.dart';

@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:Buytime/UI/user/cart/UI_U_Cart.dart';
+import 'package:Buytime/UI/user/cart/UI_U_cart.dart';
 import 'package:Buytime/UI/user/cart/UI_U_ConfirmOrder.dart';
-import 'package:Buytime/UI/user/service/UI_U_ServiceReserve.dart';
+import 'package:Buytime/UI/user/service/UI_U_service_reserve.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';

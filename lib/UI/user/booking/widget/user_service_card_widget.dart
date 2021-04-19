@@ -1,4 +1,4 @@
-import 'package:Buytime/UI/user/booking/UI_U_OrderDetails.dart';
+import 'package:Buytime/UI/user/booking/UI_U_order_details.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';

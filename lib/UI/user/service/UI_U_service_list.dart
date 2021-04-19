@@ -2,7 +2,7 @@ import 'dart:core';
 import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/reducer/service/service_list_reducer.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:Buytime/UI/user/cart/UI_U_Cart.dart';
+import 'package:Buytime/UI/user/cart/UI_U_cart.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/business/snippet/business_snippet_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';

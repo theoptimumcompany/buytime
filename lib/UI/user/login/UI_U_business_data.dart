@@ -1,7 +1,7 @@
 import 'package:Buytime/reusable/back_button_blue.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'UI_U_TermsAndConditions.dart';
+import 'UI_U_terms_and_conditions.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class BusinessData extends StatefulWidget {

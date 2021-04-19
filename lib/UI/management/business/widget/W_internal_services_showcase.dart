@@ -1,5 +1,5 @@
 import 'package:Buytime/UI/management/business/UI_M_business.dart';
-import 'package:Buytime/UI/management/category/W_category_list_item.dart';
+import 'package:Buytime/UI/management/category/widget/W_category_list_item.dart';
 import 'package:Buytime/UI/management/service_internal/UI_M_service_list.dart';
 import 'package:Buytime/reblox/model/category/category_state.dart';
 import 'package:Buytime/reusable/enterExitRoute.dart';

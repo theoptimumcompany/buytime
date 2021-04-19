@@ -1,5 +1,5 @@
-import 'package:Buytime/UI/user/cart/UI_U_Cart.dart';
-import 'package:Buytime/UI/user/login/UI_U_Home.dart';
+import 'package:Buytime/UI/user/cart/UI_U_cart.dart';
+import 'package:Buytime/UI/user/login/UI_U_home.dart';
 import 'package:Buytime/UI/user/turist/widget/discover_card_widget.dart';
 import 'package:Buytime/UI/user/turist/widget/p_r_card_widget.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
