@@ -8,24 +8,24 @@ part of 'service_snippet_state.dart';
 
 ServiceSnippet _$ServiceSnippetFromJson(Map<String, dynamic> json) {
   return ServiceSnippet(
-    timesSold: json['timesSold'] as int ?? 0,
-    name: json['name'] as String ?? '',
-    image: json['image'] as String ?? '',
-    visibility: json['visibility'] as String ?? '',
-    connectedBusinessVisibility:
-        json['connectedBusinessVisibility'] as String ?? '',
-    absolutePath: json['absolutePath'] as String ?? '',
-    internalPath: json['internalPath'] as String ?? '',
+    serviceAbsolutePath: json['serviceAbsolutePath'] as String ?? '',
+    serviceName: json['serviceName'] as String ?? '',
+    servicePrice: (json['servicePrice'] as num)?.toDouble() ?? 0.0,
+    serviceImage: json['serviceImage'] as String ?? '',
+    serviceVisibility: json['serviceVisibility'] as String ?? '',
+    connectedBusinessId: (json['connectedBusinessId'] as List)
+            ?.map((e) => e as String)
+            ?.toList() ??
+        [],
   );
 }
 
 Map<String, dynamic> _$ServiceSnippetToJson(ServiceSnippet instance) =>
     <String, dynamic>{
-      'timesSold': instance.timesSold,
-      'name': instance.name,
-      'image': instance.image,
-      'visibility': instance.visibility,
-      'connectedBusinessVisibility': instance.connectedBusinessVisibility,
-      'absolutePath': instance.absolutePath,
-      'internalPath': instance.internalPath,
+      'serviceAbsolutePath': instance.serviceAbsolutePath,
+      'serviceName': instance.serviceName,
+      'servicePrice': instance.servicePrice,
+      'serviceImage': instance.serviceImage,
+      'serviceVisibility': instance.serviceVisibility,
+      'connectedBusinessId': instance.connectedBusinessId,
     };

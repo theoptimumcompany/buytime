@@ -4,70 +4,64 @@ part 'service_snippet_state.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class ServiceSnippet {
-  @JsonKey(defaultValue: 0)
-  int timesSold;
+
   @JsonKey(defaultValue: '')
-  String name;
+  String serviceAbsolutePath;
   @JsonKey(defaultValue: '')
-  String image;
+  String serviceName;
+  @JsonKey(defaultValue: 0.0)
+  double servicePrice;
   @JsonKey(defaultValue: '')
-  String visibility;
+  String serviceImage;
   @JsonKey(defaultValue: '')
-  String connectedBusinessVisibility;
-  @JsonKey(defaultValue: '')
-  String absolutePath;
-  @JsonKey(defaultValue: '')
-  String internalPath;
+  String serviceVisibility;
+  @JsonKey(defaultValue: [])
+  List<String> connectedBusinessId;
 
   ServiceSnippet({
-    this.timesSold,
-    this.name,
-    this.image,
-    this.visibility,
-    this.connectedBusinessVisibility,
-    this.absolutePath,
-    this.internalPath,
+    this.serviceAbsolutePath,
+    this.serviceName,
+    this.servicePrice,
+    this.serviceImage,
+    this.serviceVisibility,
+    this.connectedBusinessId,
   });
 
   ServiceSnippet.fromState(ServiceSnippet serviceSnippet) {
-    this.timesSold = serviceSnippet.timesSold;
-    this.name = serviceSnippet.name;
-    this.image = serviceSnippet.image;
-    this.visibility = serviceSnippet.visibility;
-    this.connectedBusinessVisibility = serviceSnippet.connectedBusinessVisibility;
-    this.absolutePath = serviceSnippet.absolutePath;
-    this.internalPath = serviceSnippet.internalPath;
+    this.serviceAbsolutePath = serviceSnippet.serviceAbsolutePath;
+    this.serviceName = serviceSnippet.serviceName;
+    this.servicePrice = serviceSnippet.servicePrice;
+    this.serviceImage = serviceSnippet.serviceImage;
+    this.serviceVisibility = serviceSnippet.serviceVisibility;
+    this.connectedBusinessId = serviceSnippet.connectedBusinessId;
   }
 
   ServiceSnippet copyWith({
-    int timesSold,
-    String name,
-    String image,
-    String visibility,
-    String connectedBusinessVisibility,
-    String absolutePath,
-    String internalPath,
+    String serviceAbsolutePath,
+    String serviceName,
+    double servicePrice,
+    String serviceImage,
+    String serviceVisibility,
+    List<String> connectedBusinessId,
   }) {
     return ServiceSnippet(
-      timesSold: timesSold ?? this.timesSold,
-      name: name ?? this.name,
-      image: image ?? this.image,
-      visibility: visibility ?? this.visibility,
-      connectedBusinessVisibility: connectedBusinessVisibility ?? this.connectedBusinessVisibility,
-      absolutePath: absolutePath ?? this.absolutePath,
-      internalPath: internalPath ?? this.internalPath,
+      serviceAbsolutePath: serviceAbsolutePath ?? this.serviceAbsolutePath,
+      serviceName: serviceName ?? this.serviceName,
+      servicePrice: servicePrice ?? this.servicePrice,
+      serviceImage: serviceImage ?? this.serviceImage,
+      serviceVisibility: serviceVisibility ?? this.serviceVisibility,
+      connectedBusinessId: connectedBusinessId ?? this.connectedBusinessId,
     );
   }
 
   ServiceSnippet toEmpty() {
     return ServiceSnippet(
-      timesSold: 0,
-      name: '',
-      image: '',
-      visibility: '',
-      connectedBusinessVisibility: '',
-      absolutePath: '',
-      internalPath: '',
+      serviceAbsolutePath: '',
+      serviceName: '',
+      servicePrice: 0.0,
+      serviceImage: '',
+      serviceVisibility: '',
+      connectedBusinessId: [],
     );
   }
 
