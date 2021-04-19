@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:Buytime/UI/user/cart/UI_U_ConfirmedOrder.dart';
+import 'package:Buytime/UI/user/cart/tab/T_native_apple.dart';
 import 'package:Buytime/UI/user/cart/tab/T_native_google.dart';
 import 'package:Buytime/UI/user/cart/tab/T_credit_cards.dart';
 import 'package:Buytime/UI/user/cart/tab/T_room.dart';
