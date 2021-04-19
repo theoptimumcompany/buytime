@@ -119,8 +119,22 @@ class SetOrderUser
   UserSnippet get user => _user;
 }
 
+class ConfirmOrderWait
+{
+  bool _confirmOrderWait;
+  ConfirmOrderWait(this._confirmOrderWait);
+  bool get confirmOrderWait => _confirmOrderWait;
+}
+
 class AddingStripePaymentMethod {
   AddingStripePaymentMethod();
+}
+
+class DeletingStripePaymentMethod {
+  DeletingStripePaymentMethod();
+}
+class DeletedStripePaymentMethod {
+  DeletedStripePaymentMethod();
 }
 
 class AddingStripePaymentMethodWithNavigation {
@@ -186,6 +200,10 @@ OrderState orderReducer(OrderState state, action) {
     return orderState;
   }
   if (action is AddedStripePaymentMethod) {
+    orderState.addCardProgress = false;
+    return orderState;
+  }
+  if (action is DeletedStripePaymentMethod) {
     orderState.addCardProgress = false;
     return orderState;
   }

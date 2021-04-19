@@ -34,6 +34,8 @@ class OrderReservableState {
   String serviceId;
   String cardType;
   String cardLast4Digit;
+  @JsonKey(ignore: true)
+  bool confirmOrderWait = false;
 
   OrderReservableState({
     @required this.itemList,
@@ -57,6 +59,7 @@ class OrderReservableState {
     this.serviceId,
     this.cardType,
     this.cardLast4Digit,
+    this.confirmOrderWait,
   });
 
 
@@ -83,6 +86,7 @@ class OrderReservableState {
     this.serviceId = state.serviceId;
     this.cardType = state.cardType;
     this.cardLast4Digit = state.cardLast4Digit;
+    this.confirmOrderWait = state.confirmOrderWait;
   }
 
   OrderReservableState copyWith({
@@ -106,7 +110,8 @@ class OrderReservableState {
     int cartCounter,
     String serviceId,
     String cardType,
-    String cardLast4Digit
+    String cardLast4Digit,
+    bool confirmOrderWait
   }) {
     return OrderReservableState(
       itemList: itemList ?? this.itemList,
@@ -130,6 +135,7 @@ class OrderReservableState {
       serviceId: serviceId ?? this.serviceId,
       cardType: cardType ?? this.cardType,
       cardLast4Digit: cardLast4Digit ?? this.cardLast4Digit,
+      confirmOrderWait: confirmOrderWait ?? this.confirmOrderWait,
     );
   }
 
@@ -155,7 +161,8 @@ class OrderReservableState {
         cartCounter: 0,
       serviceId: '',
         cardType: '',
-        cardLast4Digit: ''
+        cardLast4Digit: '',
+        confirmOrderWait: false
     );
   }
 
@@ -176,7 +183,8 @@ class OrderReservableState {
           thumbnail: itemToAdd.image1,
           id: itemToAdd.serviceId,
           id_business: itemToAdd.businessId,
-          id_owner: idOwner));
+          id_owner: idOwner,
+          switchAutoConfirm: itemToAdd.switchAutoConfirm));
     }
     this.total += itemToAdd.price;
   }
@@ -200,7 +208,8 @@ class OrderReservableState {
         id_owner: idOwner,
       time: time,
       minutes: minutes,
-      date: date
+      date: date,
+        switchAutoConfirm: itemToAdd.switchAutoConfirm
     ));
     this.total += price;
   }
@@ -220,6 +229,16 @@ class OrderReservableState {
   void removeReserveItem(OrderEntry entry) {
     this.total -= (entry.price);
   }
+
+  bool isOrderAutoConfirmable() {
+    for(int i = 0; i < this.itemList.length; i++) {
+      if (!this.itemList[i].switchAutoConfirm){
+        return false;
+      }
+    }
+    return true;
+  }
+
   factory OrderReservableState.fromJson(Map<String, dynamic> json) => _$OrderReservableStateFromJson(json);
   Map<String, dynamic> toJson() => _$OrderReservableStateToJson(this);
 }

@@ -1,14 +1,10 @@
 import 'dart:convert';
-import 'dart:io';
-import 'package:Buytime/utils/utils.dart';
-import 'package:credit_card_type_detector/credit_card_type_detector.dart';
-import 'package:Buytime/reblox/model/app_state.dart';
-import 'package:Buytime/reblox/model/card/card_state.dart';
-import 'package:Buytime/reblox/model/stripe/stripe_card_response.dart';
-import 'package:Buytime/reblox/model/stripe/stripe_state.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/card_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/stripe_payment_reducer.dart';
+import 'package:Buytime/reusable/stripe/show_dialog_to_dismiss.dart';
+import 'package:credit_card_input_form/constants/constanst.dart';
+import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
 import 'package:Buytime/services/stripe_payment_service_epic.dart';
 import 'package:Buytime/utils/size_config.dart';
@@ -19,9 +15,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart' as http;
-// import 'package:stripe_sdk/stripe_sdk_ui.dart';
-import 'package:stripe_payment/stripe_payment.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:stripe_sdk/stripe_sdk_ui.dart' as StripeUnofficialUI;
+import 'package:stripe_sdk/stripe_sdk.dart' as StripeUnofficial;
 
 
 // TODO separate service and UI
@@ -43,11 +39,9 @@ class _UI_U_AddCardState extends State<UI_U_AddCard> {
 
   }
 
-  Future<void> processPaymentAsDirectCharge(PaymentMethod paymentMethod) async {}
-
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   // final StripeCard card = StripeCard();
-
+  Map<String, dynamic> cardData;
   bool remeberMe = false;
 
   @override
@@ -149,9 +143,28 @@ class _UI_U_AddCardState extends State<UI_U_AddCard> {
                                             CreditCardInputForm(
                                               cardHeight: 225,
                                               showResetButton : true,
-                                              onStateChange: (currentState, cardInfo) {
+                                              onStateChange: (currentState, cardInfo) async {
+                                                /// Set the card data to give to Stripe
                                                 print(currentState);
                                                 print(cardInfo);
+                                                if (currentState == InputState.DONE) {
+                                                  /// trigger the ripple wait
+                                                  StoreProvider.of<AppState>(context).dispatch(AddingStripePaymentMethod());
+                                                  /// create the StripeCard
+                                                  String expMonth = cardInfo.validate.split('/')[0];
+                                                  String expYear = cardInfo.validate.split('/')[1];
+                                                  String last4 = cardInfo.cardNumber.substring(cardInfo.cardNumber.length - 4);
+                                                  StripeUnofficialUI.StripeCard stripeCard = StripeUnofficialUI.StripeCard(
+                                                      number: cardInfo.cardNumber,
+                                                      cvc: cardInfo.cvv,
+                                                      expMonth: int.parse(expMonth),
+                                                      expYear: int.parse(expYear),
+                                                      last4: last4
+                                                  );
+                                                  /// call the saving in the stripe account
+                                                  StoreProvider.of<AppState>(context).dispatch(AddStripePaymentMethod(stripeCard, snapshot.user.uid));
+
+                                                }
                                               },
                                               customCaptions: {
                                                 'PREV': AppLocalizations.of(context).prev,
@@ -175,104 +188,12 @@ class _UI_U_AddCardState extends State<UI_U_AddCard> {
                                               resetButtonTextStyle: buttonTextStyle,
                                               initialAutoFocus: true, // optional
                                             ),
-                                            // CardForm(
-                                            //   formKey: formKey,
-                                            //   card: card,
-                                            //   cardDecoration: BoxDecoration(
-                                            //       color: Color.fromRGBO(200, 200, 200, 1.0)
-                                            //   ),
-                                            //   cardCvcTextStyle: TextStyle(color: Colors.black),
-                                            //   cardExpiryTextStyle: TextStyle(color: Colors.black),
-                                            //   cardNumberTextStyle: TextStyle(color: Colors.black),
-                                            // ),
-
                                             SizedBox(
                                               height: SizeConfig.safeBlockVertical * 2,
                                             ),
                                           ],
                                         ),
                                       ),
-
-                                      Align(
-                                        alignment: Alignment.bottomCenter,
-                                        child: Container(
-                                          child: Column(
-                                            mainAxisAlignment: MainAxisAlignment.end,
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              ///Add Card
-                                              Container(
-                                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5),
-                                                  width: 198,
-                                                  height: 44,
-                                                  child: MaterialButton(
-                                                    elevation: 0,
-                                                    hoverElevation: 0,
-                                                    focusElevation: 0,
-                                                    highlightElevation: 0,
-                                                    onPressed: () {
-                                                      if(formKey.currentState.validate()) {
-                                                        formKey.currentState.save();
-                                                        // debugPrint('UI_AddCArd => BRAND: ${Utils.enumToString(detectCCType(card.number))}');
-                                                        StoreProvider.of<AppState>(context).dispatch(AddingStripePaymentMethodWithNavigation(snapshot.user.uid));
-                                                        // addPaymentMethodWithSetupIntent(context, snapshot.user.uid);
-
-                                                        StripeCardResponse tmpCard = StripeCardResponse();
-                                                        // tmpCard.brand = Utils.enumToString(detectCCType(card.number));
-                                                        // tmpCard.expMonth = card.expMonth;
-                                                        // tmpCard.expYear = card.expYear;
-                                                        // tmpCard.last4 = card.last4;
-                                                        // tmpCard.secretToken = card.cvc;
-
-                                                        StripeState stripeState = StripeState().toEmpty();
-                                                        stripeState.stripeCard = tmpCard;
-                                                        CardState cardState = CardState().toEmpty();
-                                                        cardState.stripeState = stripeState;
-                                                        List<CardState> tmpList = snapshot.cardListState.cardListState;
-                                                        bool canAdd = false;
-                                                        tmpList.forEach((element) {
-                                                          if(element.stripeState.stripeCard.secretToken != cardState.stripeState.stripeCard.secretToken)
-                                                            canAdd = true;
-                                                        });
-                                                        if(canAdd)
-                                                          tmpList.add(cardState);
-
-                                                        StoreProvider.of<AppState>(context).dispatch(AddCardToList(tmpList));
-                                                      }
-
-
-                                                    },
-                                                    textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
-                                                    color: BuytimeTheme.UserPrimary,
-                                                    padding: EdgeInsets.all(media.width * 0.03),
-                                                    shape: RoundedRectangleBorder(
-                                                      borderRadius: new BorderRadius.circular(5),
-                                                    ),
-                                                    child: Text(
-                                                      AppLocalizations.of(context).addCardUpper,
-                                                      style: TextStyle(
-                                                          fontSize: 16,
-                                                          fontFamily: BuytimeTheme.FontFamily,
-                                                          fontWeight: FontWeight.w600,
-                                                          color: BuytimeTheme.TextWhite
-                                                      ),
-                                                    ),
-                                                  )
-                                              ),
-                                              /*Container(
-                                                child: MaterialButton(
-                                                  child: Text(
-                                                    AppLocalizations.of(context).friday,
-                                                  ),
-                                                  onPressed: () {
-                                                    // TODO: add a card process start
-                                                  },
-                                                ),
-                                              )*/
-                                            ],
-                                          ),
-                                        ),
-                                      )
                                     ],
                                   )
                               ),
@@ -283,7 +204,7 @@ class _UI_U_AddCardState extends State<UI_U_AddCard> {
                     )
                 ),
                   ///Ripple Effect
-                  (snapshot?.stripe?.stripeCard?.last4 != null && snapshot?.order?.addCardProgress) ?
+                  (snapshot?.order?.addCardProgress) ?
                   Positioned.fill(
                   child: Align(
                     alignment: Alignment.center,
@@ -318,114 +239,6 @@ class _UI_U_AddCardState extends State<UI_U_AddCard> {
             );
           })
     );
-  }
-  //
-  // void buy(context) async {
-  //   final StripeCard stripeCard = card;
-  //   final String customerEmail = getCustomerEmail();
-  //
-  //   if (!stripeCard.validateCVC()) {
-  //     showAlertDialog(context, AppLocalizations.of(context).error, AppLocalizations.of(context).cvcNotValid);
-  //     return;
-  //   }
-  //   if (!stripeCard.validateDate()) {
-  //     showAlertDialog(context, AppLocalizations.of(context).error, AppLocalizations.of(context).dateNotValid);
-  //     return;
-  //   }
-  //   if (!stripeCard.validateNumber()) {
-  //     showAlertDialog(context, AppLocalizations.of(context).error, AppLocalizations.of(context).numberNotValid);
-  //     return;
-  //   }
-  //
-  //   Map<String, dynamic> paymentIntentRes = await createPaymentIntent(stripeCard, customerEmail);
-  //   String clientSecret = paymentIntentRes['client_secret'];
-  //   String paymentMethodId = paymentIntentRes['payment_method'];
-  //   String status = paymentIntentRes['status'];
-  //
-  //   if (status == 'requires_action') //3D secure is enable in this card
-  //     paymentIntentRes = await confirmPayment3DSecure(clientSecret, paymentMethodId);
-  //
-  //   if (paymentIntentRes['status'] != 'succeeded') {
-  //     showAlertDialog(context, AppLocalizations.of(context).warning, AppLocalizations.of(context).canceledTransaction);
-  //     return;
-  //   }
-  //
-  //   if (paymentIntentRes['status'] == 'succeeded') {
-  //     showAlertDialog(context, AppLocalizations.of(context).success, AppLocalizations.of(context).thanksForBuying);
-  //     return;
-  //   }
-  //   showAlertDialog(context, AppLocalizations.of(context).warning, AppLocalizations.of(context).transactionRejected);
-  // }
-  //
-  // void addPaymentMethod(context) async {
-  //   final StripeCard stripeCard = card;
-  //   final String customerEmail = getCustomerEmail();
-  //
-  //   if (!stripeCard.validateCVC()) {
-  //     showAlertDialog(context, AppLocalizations.of(context).error, AppLocalizations.of(context).cvcNotValid);
-  //     return;
-  //   }
-  //   if (!stripeCard.validateDate()) {
-  //     showAlertDialog(context, AppLocalizations.of(context).error, AppLocalizations.of(context).dateNotValid);
-  //     return;
-  //   }
-  //   if (!stripeCard.validateNumber()) {
-  //     showAlertDialog(context, AppLocalizations.of(context).error, AppLocalizations.of(context).numberNotValid);
-  //     return;
-  //   }
-  //
-  //   Map<String, dynamic> paymentIntentRes = await createPaymentIntent(stripeCard, customerEmail);
-  //   print("StripePayment payment method test");
-  //
-  //
-  //
-  //   // TODO confirm the payment method has been added or notify a failure to the user
-  // }
-  //
-  // void addPaymentMethodWithSetupIntent(context, userId) async {
-  //   final StripeCard stripeCard = card;
-  //   final String customerEmail = getCustomerEmail();
-  //
-  //   if (!stripeCard.validateCVC()) {
-  //     showAlertDialog(context, AppLocalizations.of(context).error, AppLocalizations.of(context).cvcNotValid);
-  //     return;
-  //   }
-  //   if (!stripeCard.validateDate()) {
-  //     showAlertDialog(context, AppLocalizations.of(context).error, AppLocalizations.of(context).dateNotValid);
-  //     return;
-  //   }
-  //   if (!stripeCard.validateNumber()) {
-  //     showAlertDialog(context, AppLocalizations.of(context).error, AppLocalizations.of(context).numberNotValid);
-  //     return;
-  //   }
-  //   // TODO take remotes requests away from this file.
-  //   // TODO show spinner on tap.
-  //   /*var stripeCustomerSetupIntentCreationReference = await FirebaseFirestore.instance.collection("stripeCustomer/" + userId + "_test/setupIntent").doc()
-  //       .set({
-  //     'status': "create request"
-  //   });
-  //   // now http request to create the actual setupIntent
-  //   final http.Response response = await http.post('https://europe-west1-buytime-458a1.cloudfunctions.net/createSetupIntent?userId=' + userId);
-  //
-  //   debugPrint('UI_U_AddCard: RESPONSE: ${response.statusCode}');
-  //
-  //   if(response.statusCode == 200)
-  //     StoreProvider.of<AppState>(context).dispatch(AddedStripePaymentMethod());*/
-  //   Map<String, dynamic> paymentIntentRes = await createPaymentIntent(stripeCard, customerEmail);
-  //
-  //   // TODO confirm the payment method has been added or notify a failure to the user
-  // }
-
-//--------
-
-  String getCustomerEmail() {
-    String customerEmail;
-    //Define how to get this info.
-    // -Ask to the customer through a textfield.
-    // -Get it from firebase Account.
-    customerEmail = StoreProvider.of<AppState>(context).state.user.email;
-    print("StripePayment user email: " + customerEmail);
-    return customerEmail;
   }
 
   showAlertDialog(BuildContext context, String title, String message) {
@@ -552,52 +365,5 @@ class _UI_U_AddCardState extends State<UI_U_AddCard> {
   final buttonTextStyle = TextStyle(color: BuytimeTheme.TextWhite, fontWeight: FontWeight.w600, fontSize: 16);
 
 }
-class ShowDialogToDismiss extends StatelessWidget {
-  final String content;
-  final String title;
-  final String buttonText;
-  ShowDialogToDismiss({this.title, this.buttonText, this.content});
-  @override
-  Widget build(BuildContext context) {
-    if (!Platform.isIOS) {
-      return AlertDialog(
-        title: new Text(
-          title,
-        ),
-        content: new Text(
-          this.content,
-        ),
-        actions: <Widget>[
-          new ElevatedButton(
-            child: new Text(
-              buttonText,
-            ),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-        ],
-      );
-    } else {
-      return CupertinoAlertDialog(
-          title: Text(
-            title,
-          ),
-          content: new Text(
-            this.content,
-          ),
-          actions: <Widget>[
-            CupertinoDialogAction(
-              isDefaultAction: true,
-              child: new Text(
-                buttonText[0].toUpperCase() +
-                    buttonText.substring(1).toLowerCase(),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            )
-          ]);
-    }
-  }
-}
+
+

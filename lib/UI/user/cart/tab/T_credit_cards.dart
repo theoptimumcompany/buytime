@@ -1,23 +1,11 @@
 import 'package:Buytime/UI/user/cart/UI_U_add_card.dart';
 import 'package:Buytime/UI/user/cart/UI_U_ConfirmOrder.dart';
 import 'package:Buytime/UI/user/cart/widget/W_credit_card.dart';
-import 'package:Buytime/reblox/model/card/card_list_state.dart';
 import 'package:Buytime/reblox/model/card/card_state.dart';
-import 'package:Buytime/reblox/model/stripe/stripe_card_response.dart';
-import 'package:Buytime/reblox/reducer/service/card_list_reducer.dart';
-import 'package:Buytime/reblox/reducer/stripe_payment_reducer.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
-import 'package:Buytime/UI/user/service/UI_U_service_list.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
-import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:Buytime/reblox/reducer/order_reducer.dart';
-import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
-import 'package:Buytime/utils/globals.dart';
-import 'package:Buytime/reusable/order/optimum_order_item_card_medium.dart';
-import 'package:Buytime/reusable/order/order_total.dart';
-import 'package:Buytime/UI/user/cart/UI_U_stripe_payment.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -99,7 +87,7 @@ class CreditCardsState extends State<CreditCards> {
                             delegate: SliverChildBuilderDelegate((context, index) {
                               //MenuItemModel menuItem = menuItems.elementAt(index);
                               CardState card = creditCards.elementAt(index);
-                              return CreditCard(card);
+                              return CreditCardListElement(card);
                             },
                               childCount: creditCards.length,
                             ),
@@ -118,14 +106,8 @@ class CreditCardsState extends State<CreditCards> {
                     child: Material(
                       color: Colors.transparent,
                       child: InkWell(
-                          onTap: (){
-                            /*setState(() {
-                              //tmpList.add('scemo');
-                              creditCards.add(CreditCard());
-                            });*/
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => UI_U_AddCard()),);
-                            //Navigator.push(context, MaterialPageRoute(builder: (context) => UI_U_StripePayment()),);
-                            //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ServiceList()),);
+                          onTap: () async {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => UI_U_AddCard()));
                           },
                           borderRadius: BorderRadius.all(Radius.circular(5.0)),
                           child: Container(
