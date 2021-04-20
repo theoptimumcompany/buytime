@@ -1,4 +1,3 @@
-import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/model/service/snippet/service_snippet_state.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -6,64 +5,58 @@ part 'category_snippet_state.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class CategorySnippet {
+  @JsonKey(defaultValue: "")
+  String categoryAbsolutePath;
+  @JsonKey(defaultValue: "")
+  String categoryName;
+  @JsonKey(defaultValue: '')
+  String categoryImage;
   @JsonKey(defaultValue: 0)
   int serviceNumberInternal;
   @JsonKey(defaultValue: 0)
   int serviceNumberExternal;
-  @JsonKey(defaultValue: '')
-  String image;
-  @JsonKey(defaultValue: '')
-  String name;
-  @JsonKey(defaultValue: '')
-  String absolutePath;
-  @JsonKey(defaultValue: '')
-  String internalPath;
-  @JsonKey(defaultValue: '')
-  String tag;
   @JsonKey(defaultValue: [])
-  List<ServiceSnippet> serviceSnippetList;
+  List<String> tags;
+  @JsonKey(defaultValue: [])
+  List<ServiceSnippet> serviceList;
 
   CategorySnippet({
+    this.categoryAbsolutePath,
+    this.categoryName,
+    this.categoryImage,
     this.serviceNumberInternal,
     this.serviceNumberExternal,
-    this.image,
-    this.name,
-    this.absolutePath,
-    this.internalPath,
-    this.tag,
-    this.serviceSnippetList,
+    this.tags,
+    this.serviceList,
   });
 
   CategorySnippet.fromState(CategorySnippet categorySnippet) {
+    this.categoryAbsolutePath = categorySnippet.categoryAbsolutePath;
+    this.categoryName = categorySnippet.categoryName;
+    this.categoryImage = categorySnippet.categoryImage;
     this.serviceNumberInternal = categorySnippet.serviceNumberInternal;
     this.serviceNumberExternal = categorySnippet.serviceNumberExternal;
-    this.image = categorySnippet.image;
-    this.name = categorySnippet.name;
-    this.absolutePath = categorySnippet.absolutePath;
-    this.internalPath = categorySnippet.internalPath;
-    this.tag = categorySnippet.tag;
-    this.serviceSnippetList = categorySnippet.serviceSnippetList;
+    this.tags = categorySnippet.tags;
+    this.serviceList = categorySnippet.serviceList;
   }
 
   CategorySnippet copyWith({
+    String categoryAbsolutePath,
+    String categoryName,
+    String categoryImage,
     int serviceNumberInternal,
     int serviceNumberExternal,
-    String image,
-    String name,
-    String absolutePath,
-    String internalPath,
-    String tag,
-    List<ServiceSnippet> serviceSnippetList,
+    List<String> tags,
+    List<ServiceSnippet> serviceList,
   }) {
     return CategorySnippet(
+      categoryAbsolutePath: categoryAbsolutePath ?? this.categoryAbsolutePath,
+      categoryName: categoryName ?? this.categoryName,
+      categoryImage: categoryImage ?? this.categoryImage,
       serviceNumberInternal: serviceNumberInternal ?? this.serviceNumberInternal,
       serviceNumberExternal: serviceNumberExternal ?? this.serviceNumberExternal,
-      image: image ?? this.image,
-      name: name ?? this.name,
-      absolutePath: absolutePath ?? this.absolutePath,
-      internalPath: internalPath ?? this.internalPath,
-      tag: tag ?? this.tag,
-      serviceSnippetList: serviceSnippetList ?? this.serviceSnippetList,
+      tags: tags ?? this.tags,
+      serviceList: serviceList ?? this.serviceList,
     );
   }
 
@@ -73,14 +66,13 @@ class CategorySnippet {
 
   CategorySnippet toEmpty() {
     return CategorySnippet(
+      categoryAbsolutePath: '',
+      categoryName: '',
+      categoryImage: '',
       serviceNumberInternal: 0,
       serviceNumberExternal: 0,
-      image: '',
-      name: '',
-      absolutePath: '',
-      internalPath: '',
-      tag: '',
-      serviceSnippetList: [],
+      tags: [],
+      serviceList: [],
     );
   }
 }
