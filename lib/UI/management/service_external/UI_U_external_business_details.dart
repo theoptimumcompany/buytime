@@ -186,7 +186,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                   ///Title
                   Utils.barTitle(widget.externalBusinessState.name ?? 'Test'),
                   SizedBox(
-                    width: 56,
+                    width: 50,
                   )
                 ],
               ),
@@ -285,7 +285,16 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                         borderRadius: BorderRadius.only(
                                             bottomLeft: Radius.circular(5),
                                             bottomRight: Radius.circular(5)),
-                                        color: Colors.black.withOpacity(.4)
+                                      gradient: LinearGradient(
+                                        colors: [
+                                          Colors.transparent,
+                                          BuytimeTheme.BackgroundBlack.withOpacity(0.5),
+                                        ],
+                                        begin : Alignment.topCenter,
+                                        end : Alignment.bottomCenter,
+                                        stops: [0.0, 5.0],
+                                        //tileMode: TileMode.
+                                      ),
                                     ),
                                     //margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, bottom: SizeConfig.safeBlockVertical * 2),
                                     child: Column(
@@ -607,6 +616,71 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                         ///List
                                         popularServiceList.isNotEmpty ?
                                         ///Service List
+                                        popularServiceList.length >= 6 ?
+                                        Column(
+                                          children: popularServiceList.sublist(0, 6)
+                                              .map((ServiceState service) {
+                                            int index;
+                                            for (int i = 0; i < popularServiceList.length; i++) {
+                                              if (popularServiceList[i].serviceId == service.serviceId) index = i;
+                                            }
+                                            return Column(
+                                              children: [
+                                                Dismissible(
+                                                  // Each Dismissible must contain a Key. Keys allow Flutter to
+                                                  // uniquely identify widgets.
+                                                  key: UniqueKey(),
+                                                  // Provide a function that tells the app
+                                                  // what to do after an item has been swiped away.
+                                                  direction: DismissDirection.endToStart,
+                                                  onDismissed: (direction) {
+                                                    // Remove the item from the data source.
+                                                    setState(() {
+                                                      popularServiceList.removeAt(index);
+                                                    });
+                                                    debugPrint('UI_U_SearchPage => SX to BOOK');
+
+                                                    undoPopularDeletion(index, service);
+                                                  },
+                                                  child: Column(
+                                                    children: [
+                                                      ExternalServiceItem(service, true, popularServiceList, AppLocalizations.of(context).popularService, widget.externalBusinessState),
+                                                      Container(
+                                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 30),
+                                                        height: SizeConfig.safeBlockVertical * .2,
+                                                        color: BuytimeTheme.DividerGrey,
+                                                      )
+                                                    ],
+                                                  ),
+                                                  background: Container(
+                                                    color: BuytimeTheme.BackgroundWhite,
+                                                    //margin: EdgeInsets.symmetric(horizontal: 15),
+                                                    alignment: Alignment.centerRight,
+                                                  ),
+                                                  secondaryBackground: Container(
+                                                    color: BuytimeTheme.ManagerPrimary,
+                                                    //margin: EdgeInsets.symmetric(horizontal: 15),
+                                                    alignment: Alignment.centerRight,
+                                                    child: Container(
+                                                      margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 2.5),
+                                                      child: Icon(
+                                                        Icons.add_circle_outline,
+                                                        size: 24,
+                                                        ///SizeConfig.safeBlockHorizontal * 7
+                                                        color: BuytimeTheme.SymbolWhite,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                /*Container(
+                                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 38),
+                                                  height: SizeConfig.safeBlockVertical * .2,
+                                                  color: BuytimeTheme.DividerGrey,
+                                                )*/
+                                              ],
+                                            );
+                                          }).toList(),
+                                        ) :
                                         Column(
                                           children: popularServiceList
                                               .map((ServiceState service) {
@@ -752,6 +826,71 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                         ///List
                                         allServiceList.isNotEmpty ?
                                         ///Service List
+                                        allServiceList.length >= 6 ?
+                                        Column(
+                                          children: allServiceList.sublist(0, 6)
+                                              .map((ServiceState service) {
+                                            int index;
+                                            for (int i = 0; i < allServiceList.length; i++) {
+                                              if (allServiceList[i].serviceId == service.serviceId) index = i;
+                                            }
+                                            return Column(
+                                              children: [
+                                                Dismissible(
+                                                  // Each Dismissible must contain a Key. Keys allow Flutter to
+                                                  // uniquely identify widgets.
+                                                  key: UniqueKey(),
+                                                  // Provide a function that tells the app
+                                                  // what to do after an item has been swiped away.
+                                                  direction: DismissDirection.endToStart,
+                                                  onDismissed: (direction) {
+                                                    // Remove the item from the data source.
+                                                    setState(() {
+                                                      allServiceList.removeAt(index);
+                                                    });
+                                                    debugPrint('UI_U_SearchPage => SX to BOOK');
+
+                                                    undoAllDeletion(index, service);
+                                                  },
+                                                  child: Column(
+                                                    children: [
+                                                      ExternalServiceItem(service, true, allServiceList, AppLocalizations.of(context).allService, widget.externalBusinessState),
+                                                      Container(
+                                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 30),
+                                                        height: SizeConfig.safeBlockVertical * .2,
+                                                        color: BuytimeTheme.DividerGrey,
+                                                      )
+                                                    ],
+                                                  ),
+                                                  background: Container(
+                                                    color: BuytimeTheme.BackgroundWhite,
+                                                    //margin: EdgeInsets.symmetric(horizontal: 15),
+                                                    alignment: Alignment.centerRight,
+                                                  ),
+                                                  secondaryBackground: Container(
+                                                    color: BuytimeTheme.ManagerPrimary,
+                                                    //margin: EdgeInsets.symmetric(horizontal: 15),
+                                                    alignment: Alignment.centerRight,
+                                                    child: Container(
+                                                      margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 2.5),
+                                                      child: Icon(
+                                                        Icons.add_circle_outline,
+                                                        size: 24,
+                                                        ///SizeConfig.safeBlockHorizontal * 7
+                                                        color: BuytimeTheme.SymbolWhite,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                /*Container(
+                                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 38),
+                                                  height: SizeConfig.safeBlockVertical * .2,
+                                                  color: BuytimeTheme.DividerGrey,
+                                                )*/
+                                              ],
+                                            );
+                                          }).toList(),
+                                        ) :
                                         Column(
                                           children: allServiceList
                                               .map((ServiceState service) {

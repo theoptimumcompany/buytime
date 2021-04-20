@@ -30,6 +30,7 @@ class AddExternalServiceListState extends State<AddExternalServiceList> {
 
   List<ExternalBusinessState> externalServiceList = [];
   TextEditingController _searchController = TextEditingController();
+  TextEditingController _errorController = TextEditingController();
   String sortBy = '';
   ExternalBusinessState tmpBusiness = ExternalBusinessState();
 
@@ -116,7 +117,8 @@ class AddExternalServiceListState extends State<AddExternalServiceList> {
                       icon: Icon(Icons.keyboard_arrow_left, color: Colors.white),
                       onPressed: () {
                         //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_Business()))
-                        Navigator.pushReplacement(context, EnterExitRoute(enterPage: ExternalServiceList(), exitPage: AddExternalServiceList(false), from: false));
+                        //Navigator.pushReplacement(context, EnterExitRoute(enterPage: ExternalServiceList(), exitPage: AddExternalServiceList(false), from: false));
+                        Navigator.of(context).pop();
                       },
                     ),
                     Utils.barTitle(AppLocalizations.of(context).addExternalService),
@@ -410,6 +412,7 @@ class AddExternalServiceListState extends State<AddExternalServiceList> {
                                       ))
                                     ],
                                   ),
+                                  ///Try another search
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
@@ -422,6 +425,54 @@ class AddExternalServiceListState extends State<AddExternalServiceList> {
                                         ),
                                       )
                                     ],
+                                  ),
+                                  ///What are you looking for
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 0, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 5),
+                                        alignment: Alignment.centerLeft,
+                                        child: Text(
+                                          AppLocalizations.of(context).whatAreYouLookingFor,
+                                          style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w600, fontSize: 18),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                  Container(
+                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 0, right: SizeConfig.safeBlockHorizontal * 0),
+                                    height: SizeConfig.safeBlockHorizontal * 50,
+                                    child: TextFormField(
+                                      controller: _errorController,
+                                      textAlign: TextAlign.start,
+                                      textInputAction: TextInputAction.search,
+                                      maxLines: 4,
+                                      decoration: InputDecoration(
+                                        enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                        focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                        errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                        //labelText: AppLocalizations.of(context).writeThe,
+                                        //helperText: AppLocalizations.of(context).searchForServicesAndIdeasAroundYou,
+                                        hintText: AppLocalizations.of(context).writeThe,
+                                        hintStyle: TextStyle(
+                                          fontFamily: BuytimeTheme.FontFamily,
+                                          color: Color(0xff666666),
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                        labelStyle: TextStyle(
+                                          fontFamily: BuytimeTheme.FontFamily,
+                                          color: Color(0xff666666),
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                        helperStyle: TextStyle(
+                                          fontFamily: BuytimeTheme.FontFamily,
+                                          color: Color(0xff666666),
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                      ),
+                                      style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextMedium, fontWeight: FontWeight.w400, fontSize: 16),
+                                    ),
                                   )
                                 ],
                               ),
@@ -455,7 +506,7 @@ class AddExternalServiceListState extends State<AddExternalServiceList> {
                                             borderRadius: new BorderRadius.circular(5),
                                           ),
                                           child: Text(
-                                            AppLocalizations.of(context).contactUs.toUpperCase(),
+                                            AppLocalizations.of(context).send.toUpperCase(),
                                             style: TextStyle(
                                               letterSpacing: 1.25,
                                               fontSize: 14,

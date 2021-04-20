@@ -103,16 +103,16 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
           List<CategoryState> categoryRootList = snapshot.categoryList.categoryListState;
           List<ServiceState> serviceList = snapshot.serviceList.serviceListState;
           categoryRootList.sort((a, b) => a.name.compareTo(b.name));
-          debugPrint('UI_M_service_list => SERVICE LIST LENGTH: ${serviceList.length}');
+          //debugPrint('UI_M_service_list => SERVICE LIST LENGTH: ${serviceList.length}');
           if (serviceList.isEmpty && startRequest) {
             noActivity = true;
             startRequest = false;
-            debugPrint('UI_M_service_list => no activity IF: ${noActivity}');
+           // debugPrint('UI_M_service_list => no activity IF: ${noActivity}');
           } else {
-            debugPrint('UI_M_service_list => no activity ELSE BEFORE: ${noActivity}  | no activity ELSE BEFORE: $startRequest} ');
+            //debugPrint('UI_M_service_list => no activity ELSE BEFORE: ${noActivity}  | no activity ELSE BEFORE: $startRequest} ');
             noActivity = false;
             startRequest = false;
-            debugPrint('UI_M_service_list => no activity ELSE AFTER: ${noActivity}');
+            //debugPrint('UI_M_service_list => no activity ELSE AFTER: ${noActivity}');
             if(serviceList.isNotEmpty && serviceList.first.businessId == null)
               serviceList.removeLast();
             else
@@ -218,7 +218,7 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                                 children: [
                                   ///Category Name
                                   Padding(
-                                    padding: const EdgeInsets.only(left: 20.0, top: 5.0),
+                                    padding: const EdgeInsets.only(left: 20.0, top: 10.0),
                                     child: Container(
                                       child: Row(
                                         children: [
@@ -226,12 +226,12 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                                             categoryRootList[i].name,
                                             textAlign: TextAlign.start,
                                             style: TextStyle(
-                                              fontSize: 16,
+                                              fontSize: 18,
 
                                               ///widget.mediaSize.height * 0.019
                                               color: BuytimeTheme.TextBlack,
                                               fontFamily: BuytimeTheme.FontFamily,
-                                              fontWeight: FontWeight.w400,
+                                              fontWeight: FontWeight.w800,
                                             ),
                                           )
                                         ],
@@ -264,7 +264,7 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                                               Padding(
                                                 padding: EdgeInsets.only(left: mediaWidth * 0.12, right: mediaWidth * 0.07),
                                                 child: Container(
-                                                  child: Icon(Icons.add_box_rounded, color: BuytimeTheme.SymbolGrey, size: mediaWidth * 0.07),
+                                                  child: Icon(Icons.add_box_rounded, color: BuytimeTheme.ManagerPrimary.withOpacity(0.6), size: mediaWidth * 0.07),
                                                 ),
                                               ),
                                               Expanded(
@@ -284,16 +284,15 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                                                         textAlign: TextAlign.start,
                                                         style: TextStyle(
                                                             fontSize: 16,
-
                                                             ///widget.mediaSize.height * 0.019
-                                                            color: BuytimeTheme.TextBlack,
+                                                            color: BuytimeTheme.ManagerPrimary.withOpacity(0.6),
                                                             fontFamily: BuytimeTheme.FontFamily,
-                                                            fontWeight: FontWeight.w400,
+                                                            fontWeight: FontWeight.w600,
                                                             letterSpacing: 0.15),
                                                       )),
-                                                      Container(
+                                                      /*Container(
                                                         child: Icon(Icons.keyboard_arrow_right, color: BuytimeTheme.SymbolGrey, size: 24),
-                                                      ),
+                                                      ),*/
                                                     ],
                                                   ),
                                                 ),
@@ -434,9 +433,9 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                                                                             ),
                                                                           )),
                                                                         ),
-                                                                        Container(
+                                                                        /*Container(
                                                                           child: Icon(Icons.keyboard_arrow_right, color: BuytimeTheme.SymbolGrey, size: 24),
-                                                                        ),
+                                                                        ),*/
                                                                       ],
                                                                     ),
                                                                   ),

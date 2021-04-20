@@ -110,7 +110,7 @@ class ExternalServiceListState extends State<ExternalServiceList> {
                               ///Add new
                               InkWell(
                                 onTap: () {
-                                  Navigator.pushReplacement(context, EnterExitRoute(enterPage: AddExternalServiceList(true), exitPage: ExternalServiceList(), from: true));
+                                  Navigator.push(context, EnterExitRoute(enterPage: AddExternalServiceList(true), exitPage: ExternalServiceList(), from: true));
                                 },
                                 borderRadius: BorderRadius.all(Radius.circular(5.0)),
                                 child: Container(

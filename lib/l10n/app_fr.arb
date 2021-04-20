@@ -482,5 +482,7 @@
   "copyAddress": "Copy Address",
   "getDirections": "Get Directions",
   "copiedToClipboard": "Copied to clipboard",
-  "distance": "Distance"
+  "distance": "Distance",
+  "send": "Send",
+  "writeThe": "Write the name of the service or business you are looking for"
 }

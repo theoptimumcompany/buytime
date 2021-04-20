@@ -51,6 +51,7 @@ class UI_M_CreateCategoryState extends State<UI_M_CreateCategory> {
   String bookingRequest = '';
 
   CustomTag customTag;
+  bool create = false;
 
   void initState() {
     super.initState();
@@ -226,8 +227,11 @@ class UI_M_CreateCategoryState extends State<UI_M_CreateCategory> {
                                   size: 24.0,
                                 ),
                                 tooltip: AppLocalizations.of(context).submitNewCategory,
-                                onPressed: () {
+                                onPressed: !create ? () {
                                   if (validateAndSave() && validateCategoryImage()) {
+                                    setState(() {
+                                      create = true;
+                                    });
                                     if (changeParent == false) {
 
                                       setState(() {
@@ -258,7 +262,7 @@ class UI_M_CreateCategoryState extends State<UI_M_CreateCategory> {
                                     }
 
                                   }
-                                },
+                                } : null,
                               ),
                             ),
                           ],

@@ -92,6 +92,52 @@ class PAServiceListState extends State<PAServiceList> {
                     ),
                   ],
                 ),
+                floatingActionButton: Container(
+                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5, bottom: SizeConfig.safeBlockVertical *4),
+                    width: 272, ///media.width * .4
+                    height: 44,
+                    child: MaterialButton(
+                      elevation: 0,
+                      hoverElevation: 0,
+                      focusElevation: 0,
+                      highlightElevation: 0,
+                      onPressed: () {
+
+                      },
+                      textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
+                      color:  BuytimeTheme.ActionButton,
+                      padding: EdgeInsets.all(media.width * 0.03),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: new BorderRadius.circular(5),
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            margin: EdgeInsets.only(right: 10.0, bottom: 5),
+                            child: Icon(
+                              Icons.settings_ethernet,
+                              color: BuytimeTheme.SymbolWhite,
+                              size: 19,
+                            ),
+                          ),
+                          Text(
+                            AppLocalizations.of(context).addToYourNetwork.toUpperCase(),
+                            style: TextStyle(
+                              letterSpacing: 1.25,
+                              fontSize: 14,
+                              fontFamily: BuytimeTheme.FontFamily,
+                              fontWeight: FontWeight.w500,
+                              color: BuytimeTheme.TextWhite,
+
+                            ),
+                          )
+                        ],
+                      ),
+                    )
+                ),
+                floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
                 body: ConstrainedBox(
                   constraints: BoxConstraints(),
                   child: Column(

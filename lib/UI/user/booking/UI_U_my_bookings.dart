@@ -133,7 +133,7 @@ class _MyBookingsState extends State<MyBookings> {
               ///Title
               Utils.barTitle(AppLocalizations.of(context).myBookings),
               SizedBox(
-                width: 56.0,
+                width: 50.0,
               )
             ],
           ),
@@ -209,6 +209,7 @@ class _MyBookingsState extends State<MyBookings> {
                   Expanded(
                     flex: 18,
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         ///Card list
                         Expanded(
@@ -216,7 +217,7 @@ class _MyBookingsState extends State<MyBookings> {
                             child: showList ?
                             Container(
                               margin: EdgeInsets.only(top: SizeConfig.safeBlockHorizontal * 4),
-                              alignment: Alignment.centerLeft,
+                              alignment: Alignment.topCenter,
                               child: MediaQuery.removePadding(
                                   removeTop: true,
                                   context: context,
