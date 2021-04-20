@@ -30,7 +30,7 @@ class ExternalServiceShowcaseState extends State<ExternalServiceShowcase> {
         children: [
           ///External Services
           Container(
-              margin: EdgeInsets.only(left: 20.0, top: 20.0, right: 10.0, bottom: SizeConfig.safeBlockVertical * 1),
+              margin: EdgeInsets.only(left: 20.0, top: 15.0, right: 10.0, bottom: SizeConfig.safeBlockVertical * 1),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -93,15 +93,18 @@ class ExternalServiceShowcaseState extends State<ExternalServiceShowcase> {
             child: Stack(
               children: [
                 Container(
-                  height: SizeConfig.screenHeight * 0.1,
-                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5),
-                  child: Center(
-                    child: Text(
-                      AppLocalizations.of(context).thereAreNoExternalServicesAttached,
-                      style: TextStyle(fontWeight: FontWeight.w500, fontFamily: BuytimeTheme.FontFamily, fontSize: 13, color: BuytimeTheme.TextBlack,),
+                  decoration: BoxDecoration(color: Colors.blueGrey.withOpacity(0.1)),
+                  child: Container(
+                    height: SizeConfig.screenHeight * 0.1,
+                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5),
+                    child: Center(
+                      child: Text(
+                        AppLocalizations.of(context).thereAreNoExternalServicesAttached,
+                        style: TextStyle(fontWeight: FontWeight.w500, fontFamily: BuytimeTheme.FontFamily, fontSize: 13, color: BuytimeTheme.TextBlack,),
+                      ),
                     ),
                   ),
-                ),
+                )
                 // widget.categoryRootList.length > 0
                 //     ?
                 //

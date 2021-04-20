@@ -58,7 +58,6 @@ class InternalServiceShowcaseState extends State<InternalServiceShowcase> {
                   ),
                 ],
               )),
-
           ///Categories list top part
           Container(
             padding: EdgeInsets.only(left: 20.0, right: 20.0, top: 20.0, bottom: 10.0),
@@ -89,14 +88,12 @@ class InternalServiceShowcaseState extends State<InternalServiceShowcase> {
               ],
             ),
           ),
-
-          ///Categories list & Invite user
+          ///Categories list
           Expanded(
             child: Stack(
               children: [
                 widget.categoryRootList.length > 0
                     ?
-
                     ///Categories list
                     Positioned.fill(
                         child: Align(
@@ -104,7 +101,7 @@ class InternalServiceShowcaseState extends State<InternalServiceShowcase> {
                           child: Container(
                             color: Colors.blueGrey.withOpacity(0.1),
                             //margin: EdgeInsets.only(bottom: 60.0),
-                            padding: EdgeInsets.only(top: 10.0, bottom: 20.0),
+                            padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
                             child: CustomScrollView(shrinkWrap: true, slivers: [
                               SliverList(
                                 delegate: SliverChildBuilderDelegate(

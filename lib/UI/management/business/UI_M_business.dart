@@ -121,7 +121,8 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                   ],
                 ),
                 ///Title
-                Utils.barTitle(AppLocalizations.of(context).dashboard),
+                //Utils.barTitle(AppLocalizations.of(context).dashboard),
+                Utils.barTitle('${snapshot.business.name} ${AppLocalizations.of(context).justDashboard}'),
                 Padding(
                     padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
                     child: InkWell(
@@ -146,25 +147,21 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
               ],
             ),
             drawer: UI_M_BusinessListDrawer(),
-            body: SingleChildScrollView(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(maxHeight: media.height * 0.88),
-                child: Center(
-                  child: Container(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        BusinessHeader(),
-                        InternalServiceShowcase(categoryRootList: categoryRootList),
-                        ExternalServiceShowcase(categoryRootList: categoryRootList),
-                        InviteUser(
-                          hotel: hotel,
-                        ),
-                        //Expanded(child: calendarButtonOrCalendar()),
-                      ],
+            body: ConstrainedBox(
+              constraints: BoxConstraints(),
+              child: Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    BusinessHeader(),
+                    InternalServiceShowcase(categoryRootList: categoryRootList),
+                    ExternalServiceShowcase(categoryRootList: categoryRootList),
+                    InviteUser(
+                      hotel: hotel,
                     ),
-                  ),
+                    //Expanded(child: calendarButtonOrCalendar()),
+                  ],
                 ),
               ),
             ),

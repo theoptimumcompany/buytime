@@ -7,6 +7,9 @@ import 'package:Buytime/UI/user/login/UI_U_home.dart';
 import 'package:Buytime/UI/user/turist/UI_U_service_explorer.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
+import 'package:Buytime/reblox/model/email/email_state.dart';
+import 'package:Buytime/reblox/model/email/template_data_state.dart';
+import 'package:Buytime/reblox/model/email/template_state.dart';
 import 'package:Buytime/reblox/model/role/role.dart';
 import 'package:Buytime/reblox/reducer/booking_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/booking_reducer.dart';
@@ -15,6 +18,7 @@ import 'package:Buytime/reblox/reducer/business_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_tree_reducer.dart';
+import 'package:Buytime/reblox/reducer/email_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reblox/reducer/pipeline_list_reducer.dart';
@@ -274,13 +278,18 @@ class LandingState extends State<Landing> {
                                           'Test'
                                               , sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);*/
 
-                                                         /* EmailState emailState = EmailState();
+                                                          /*EmailState emailState = EmailState();
                                                           TemplateState templateState = TemplateState();
                                                           TemplateDataState templateDataState = TemplateDataState();
                                                           emailState.to = 'rukshannipuna12@gmail.com';
-                                                          templateState.name = 'welcome';
-                                                          templateDataState.name = 'Nipuna Perera';
-                                                          templateDataState.link = 'https://buytime.network/';
+                                                          emailState.cc = 'f.romeo.f@gmail.com';
+                                                          templateState.name = 'search';
+                                                          //templateDataState.name = 'Nipuna Perera';
+                                                          //templateDataState.link = 'https://buytime.network/';
+                                                          templateDataState.userEmail = 'test_owner@buytime.network';
+                                                          templateDataState.businessName = 'Test Business';
+                                                          templateDataState.businessId = '22pBIWUaCnIKc5jZVDaM';
+                                                          templateDataState.searched = 'chilly';
                                                           templateState.data = templateDataState;
                                                           emailState.template = templateState;
                                                           StoreProvider.of<AppState>(context).dispatch(SendEmail(emailState));*/

@@ -34,9 +34,9 @@ class _BookingMonthListState extends State<BookingMonthList> {
             DateFormat('MMM yyyy').format(widget.bookingList.first.start_date).toUpperCase(),
             style: TextStyle(
                 fontFamily: BuytimeTheme.FontFamily,
-                color: Colors.black,
+                color: BuytimeTheme.ManagerPrimary,
                 fontWeight: FontWeight.bold,
-                fontSize: 12,
+                fontSize: 14,
               letterSpacing: 1.5
             ),
             textAlign: TextAlign.left,

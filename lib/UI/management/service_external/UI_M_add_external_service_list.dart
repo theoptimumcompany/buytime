@@ -6,7 +6,11 @@ import 'package:Buytime/UI/management/service_external/widget/W_add_external_bus
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/model/business/external_business_state.dart';
+import 'package:Buytime/reblox/model/email/email_state.dart';
+import 'package:Buytime/reblox/model/email/template_data_state.dart';
+import 'package:Buytime/reblox/model/email/template_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
+import 'package:Buytime/reblox/reducer/email_reducer.dart';
 import 'package:Buytime/reblox/reducer/external_business_list_reducer.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
 import 'package:Buytime/reusable/buytime_icons.dart';
@@ -15,6 +19,7 @@ import 'package:Buytime/reusable/material_design_icons.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/utils/utils.dart';
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -70,6 +75,49 @@ class AddExternalServiceListState extends State<AddExternalServiceList> {
       }
     });
   }
+  double calculateDistance(ExternalBusinessState first, ExternalBusinessState second){
+    double lat1 = 0.0;
+    double lon1 = 0.0;
+    double lat2 = 0.0;
+    double lon2 = 0.0;
+    if(first.coordinate.isNotEmpty){
+      List<String> latLng1 = first.coordinate.split(', ');
+      if(latLng1.length == 2){
+        lat1 = double.parse(latLng1[0]);
+        lon1 = double.parse(latLng1[1]);
+      }
+    }
+    if(second.coordinate.isNotEmpty){
+      List<String> latLng2 = second.coordinate.split(', ');
+      if(latLng2.length == 2){
+        lat2 = double.parse(latLng2[0]);
+        lon2 = double.parse(latLng2[1]);
+      }
+    }
+    var p = 0.017453292519943295;
+    var c = cos;
+    var a = 0.5 - c((lat2 - lat1) * p)/2 +
+        c(lat1 * p) * c(lat2 * p) *
+            (1 - c((lon2 - lon1) * p))/2;
+    return (12742 * asin(sqrt(a))) / 1000;
+  }
+
+
+  void sortfun() async {
+    for (int c = 0; c < (externalServiceList.length - 1); c++) {
+      for (int d = 0; d < externalServiceList.length - c - 1; d++) {
+        if (calculateDistance(externalServiceList[c], externalServiceList[d]) >
+            calculateDistance(externalServiceList[c],
+                externalServiceList[d + 1])) /* For descending order use < */
+        {
+          var swap = externalServiceList[d];
+          externalServiceList[d] = externalServiceList[d + 1];
+          externalServiceList[d + 1] = swap;
+        }
+      }
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -284,6 +332,7 @@ class AddExternalServiceListState extends State<AddExternalServiceList> {
                                       sortBy = val;
                                       if (sortBy == AppLocalizations.of(context).distance) {
                                         //externalServiceList.sort((a, b) => a.name.compareTo(b.name));
+                                        sortfun();
                                       } else {
                                         //externalServiceList.sort((a, b) => b.name.compareTo(a.name));
                                       }
@@ -446,7 +495,7 @@ class AddExternalServiceListState extends State<AddExternalServiceList> {
                                     child: TextFormField(
                                       controller: _errorController,
                                       textAlign: TextAlign.start,
-                                      textInputAction: TextInputAction.search,
+                                      textInputAction: TextInputAction.done,
                                       maxLines: 4,
                                       decoration: InputDecoration(
                                         enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
@@ -496,11 +545,56 @@ class AddExternalServiceListState extends State<AddExternalServiceList> {
                                           hoverElevation: 0,
                                           focusElevation: 0,
                                           highlightElevation: 0,
-                                          onPressed: () {
-
-                                          },
+                                          onPressed: _errorController.text.isNotEmpty && (snapshot.emailState.sent == null || snapshot.emailState.sent) ? () {
+                                            EmailState emailState = EmailState();
+                                            TemplateState templateState = TemplateState();
+                                            TemplateDataState templateDataState = TemplateDataState();
+                                            //emailState.to = 'rukshannipuna12@gmail.com';
+                                            emailState.to = 'rukshannipuna12@gmail.com';
+                                            //emailState.cc = 'f.romeo.f@gmail.com';
+                                            emailState.cc = 'f.romeo.f@gmail.com';
+                                            templateState.name = 'search';
+                                            //templateDataState.name = 'Nipuna Perera';
+                                            //templateDataState.link = 'https://buytime.network/';
+                                            templateDataState.userEmail = snapshot.business.email;
+                                            templateDataState.businessName = snapshot.business.name;
+                                            templateDataState.businessId = snapshot.business.id_firestore;
+                                            templateDataState.searched = _errorController.text;
+                                            templateState.data = templateDataState;
+                                            emailState.template = templateState;
+                                            emailState.sent = false;
+                                            StoreProvider.of<AppState>(context).dispatch(SendEmail(emailState));
+                                            Flushbar(
+                                              padding: EdgeInsets.all(SizeConfig.safeBlockVertical * 2),
+                                              margin: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2, left: SizeConfig.blockSizeHorizontal * 20, right: SizeConfig.blockSizeHorizontal * 20), ///2% - 20% - 20%
+                                              borderRadius: BorderRadius.all(Radius.circular(8)),
+                                              backgroundColor: BuytimeTheme.SymbolGrey,
+                                              boxShadows: [
+                                                BoxShadow(
+                                                  color: Colors.black45,
+                                                  offset: Offset(3, 3),
+                                                  blurRadius: 3,
+                                                ),
+                                              ],
+                                              // All of the previous Flushbars could be dismissed by swiping down
+                                              // now we want to swipe to the sides
+                                              //dismissDirection: FlushbarDismissDirection.HORIZONTAL,
+                                              // The default curve is Curves.easeOut
+                                              duration:  Duration(seconds: 2),
+                                              forwardAnimationCurve: Curves.fastLinearToSlowEaseIn,
+                                              messageText: Text(
+                                                AppLocalizations.of(context).sendEmail,
+                                                style: TextStyle(
+                                                    color: BuytimeTheme.TextWhite,
+                                                    fontWeight: FontWeight.bold
+                                                ),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            )..show(context);
+                                          } : null,
                                           textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
                                           color:  BuytimeTheme.ManagerPrimary,
+                                          disabledColor: BuytimeTheme.SymbolGrey,
                                           padding: EdgeInsets.all(media.width * 0.03),
                                           shape: RoundedRectangleBorder(
                                             borderRadius: new BorderRadius.circular(5),

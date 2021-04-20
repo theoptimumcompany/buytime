@@ -478,6 +478,33 @@ class _BookingDetailsState extends State<BookingDetails> {
                                             emailState.sent = false;
                                             //StoreProvider.of<AppState>(context).dispatch(SentEmail(emailState));
                                             StoreProvider.of<AppState>(context).dispatch(SendEmail(emailState));
+                                            Flushbar(
+                                              padding: EdgeInsets.all(SizeConfig.safeBlockVertical * 2),
+                                              margin: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2, left: SizeConfig.blockSizeHorizontal * 20, right: SizeConfig.blockSizeHorizontal * 20), ///2% - 20% - 20%
+                                              borderRadius: BorderRadius.all(Radius.circular(8)),
+                                              backgroundColor: BuytimeTheme.SymbolGrey,
+                                              boxShadows: [
+                                                BoxShadow(
+                                                  color: Colors.black45,
+                                                  offset: Offset(3, 3),
+                                                  blurRadius: 3,
+                                                ),
+                                              ],
+                                              // All of the previous Flushbars could be dismissed by swiping down
+                                              // now we want to swipe to the sides
+                                              //dismissDirection: FlushbarDismissDirection.HORIZONTAL,
+                                              // The default curve is Curves.easeOut
+                                              duration:  Duration(seconds: 2),
+                                              forwardAnimationCurve: Curves.fastLinearToSlowEaseIn,
+                                              messageText: Text(
+                                                AppLocalizations.of(context).sendEmail,
+                                                style: TextStyle(
+                                                    color: BuytimeTheme.TextWhite,
+                                                    fontWeight: FontWeight.bold
+                                                ),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            )..show(context);
                                             //Share.share(AppLocalizations.of(context).checkYourBuytimeApp + link, subject: AppLocalizations.of(context).takeYourTime, sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
                                           } : null,
                                           textColor: snapshot.emailState.sent != null && !snapshot.emailState.sent ? BuytimeTheme.TextWhite : BuytimeTheme.TextDark,

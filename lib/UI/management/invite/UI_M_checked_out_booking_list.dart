@@ -9,6 +9,7 @@ import 'package:Buytime/reusable/menu/UI_M_business_list_drawer.dart';
 import 'package:Buytime/services/booking_service_epic.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
+import 'package:Buytime/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -54,20 +55,8 @@ class _CheckedOutBookingListState extends State<CheckedOutBookingList> {
         ///Appbar
         appBar: AppBar(
           backgroundColor: BuytimeTheme.ManagerPrimary,
-          title: Container(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 0.0),
-              child: Text(
-                AppLocalizations.of(context).checkedOutBookings,
-                textAlign: TextAlign.start,
-                style: TextStyle(
-                  color: BuytimeTheme.TextWhite,
-                  fontSize: media.height * 0.025,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-            ),
-          ),
+          title: Utils.barTitle(AppLocalizations.of(context).checkedOutBookings),
+          centerTitle: true,
           leading: IconButton(
             icon: Icon(
               Icons.keyboard_arrow_left,
@@ -98,7 +87,7 @@ class _CheckedOutBookingListState extends State<CheckedOutBookingList> {
                             alignment: Alignment.topCenter,
                             child: Container(
                               //color: Colors.blueGrey.withOpacity(0.1),
-                              margin: EdgeInsets.only(bottom: 60.0),
+                              //margin: EdgeInsets.only(bottom: 60.0),
                               padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
                               child: CustomScrollView(shrinkWrap: true, slivers: [
                                 SliverList(

@@ -9,6 +9,7 @@ part of 'email_state.dart';
 EmailState _$EmailStateFromJson(Map<String, dynamic> json) {
   return EmailState(
     to: json['to'] as String,
+    cc: json['cc'] as String,
     template: json['template'] == null
         ? null
         : TemplateState.fromJson(json['template'] as Map<String, dynamic>),
@@ -19,6 +20,7 @@ EmailState _$EmailStateFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$EmailStateToJson(EmailState instance) =>
     <String, dynamic>{
       'to': instance.to,
+      'cc': instance.cc,
       'template': instance.template?.toJson(),
       'sent': instance.sent,
     };

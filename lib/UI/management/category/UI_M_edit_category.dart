@@ -68,6 +68,8 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
   CustomTag customTag;
   String bookingRequest = '';
 
+  bool edit = false;
+
   void initState() {
     super.initState();
     // WidgetsBinding.instance
@@ -195,7 +197,7 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
       }
       if (list[i]['nodeId'] != StoreProvider.of<AppState>(context).state.category.id) {
         debugPrint('UI_M_edit_category => NODE LEVEL: ${list[i]['level']}');
-        if(list[i]['level'] == 0 && list[i]['nodeName'] != StoreProvider.of<AppState>(context).state.category.name){
+        if(list[i]['nodeName'] != StoreProvider.of<AppState>(context).state.category.name){
           Parent objectState = Parent(name: list[i]['nodeName'].toString(), id: list[i]['nodeId'], level: list[i]['level'], parentRootId: list[i]['categoryRootId']);
           items.add(
             DropdownMenuItem(
@@ -638,8 +640,11 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                                       size: 25.0,
                                     ),
                                     tooltip: AppLocalizations.of(context).submitNewCategory,
-                                    onPressed: () {
+                                    onPressed: !edit ? () {
                                       if (validateAndSave()) {
+                                        /*setState(() {
+                                          edit = true;
+                                        });*/
                                         if (canMoveToParent) {
                                           setState(() {
                                             bookingRequest = 'send';
@@ -666,7 +671,7 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                                           );
                                         }
                                       }
-                                    }),
+                                    } : null),
                               ),
                             ],
                           ),
