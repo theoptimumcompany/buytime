@@ -5,64 +5,76 @@ import 'package:json_annotation/json_annotation.dart';
 part 'service_list_snippet_state.g.dart';
 
 @JsonSerializable(explicitToJson: true)
-class ServiceListSnippet {
+class ServiceListSnippetState {
   @JsonKey(defaultValue: [])
-  List<BusinessSnippet> givenConnectedBusinessIds;
+  List<BusinessSnippetState> givenConnectedBusinessIds;
   @JsonKey(defaultValue: [])
-  List<BusinessSnippet> takenConnectedBusinessIds;
+  List<BusinessSnippetState> takenConnectedBusinessIds;
   String businessId;
+  String businessName;
+  String businessImage;
   @JsonKey(defaultValue: 0)
   int businessServiceNumberInternal;
   @JsonKey(defaultValue: 0)
   int businessServiceNumberExternal;
   @JsonKey(defaultValue: [])
-  List<CategorySnippet> businessSnippet;
+  List<CategorySnippetState> businessSnippet;
 
-  ServiceListSnippet({
+  ServiceListSnippetState({
     this.givenConnectedBusinessIds,
     this.takenConnectedBusinessIds,
     this.businessId,
+    this.businessName,
+    this.businessImage,
     this.businessServiceNumberInternal,
     this.businessServiceNumberExternal,
     this.businessSnippet,
   });
 
-  ServiceListSnippet.fromState(ServiceListSnippet serviceListSnippet) {
+  ServiceListSnippetState.fromState(ServiceListSnippetState serviceListSnippet) {
     this.givenConnectedBusinessIds = serviceListSnippet.givenConnectedBusinessIds;
     this.takenConnectedBusinessIds = serviceListSnippet.takenConnectedBusinessIds;
     this.businessId = serviceListSnippet.businessId;
+    this.businessName = serviceListSnippet.businessName;
+    this.businessImage = serviceListSnippet.businessImage;
     this.businessServiceNumberInternal = serviceListSnippet.businessServiceNumberInternal;
     this.businessServiceNumberExternal = serviceListSnippet.businessServiceNumberExternal;
     this.businessSnippet = serviceListSnippet.businessSnippet;
   }
 
-  ServiceListSnippet copyWith({
-    List<BusinessSnippet> givenConnectedBusinessIds,
-    List<BusinessSnippet> takenConnectedBusinessIds,
+  ServiceListSnippetState copyWith({
+    List<BusinessSnippetState> givenConnectedBusinessIds,
+    List<BusinessSnippetState> takenConnectedBusinessIds,
     String businessId,
+    String businessName,
+    String businessImage,
     int businessServiceNumberInternal,
     int businessServiceNumberExternal,
-    List<CategorySnippet> businessSnippet,
+    List<CategorySnippetState> businessSnippet,
   }) {
-    return ServiceListSnippet(
+    return ServiceListSnippetState(
       givenConnectedBusinessIds: givenConnectedBusinessIds ?? this.givenConnectedBusinessIds,
       takenConnectedBusinessIds: takenConnectedBusinessIds ?? this.takenConnectedBusinessIds,
       businessId: businessId ?? this.businessId,
+      businessName: businessName ?? this.businessName,
+      businessImage: businessImage ?? this.businessImage,
       businessServiceNumberInternal: businessServiceNumberInternal ?? this.businessServiceNumberInternal,
       businessServiceNumberExternal: businessServiceNumberExternal ?? this.businessServiceNumberExternal,
       businessSnippet: businessSnippet ?? this.businessSnippet,
     );
   }
 
-  factory ServiceListSnippet.fromJson(Map<String, dynamic> json) => _$ServiceListSnippetFromJson(json);
+  factory ServiceListSnippetState.fromJson(Map<String, dynamic> json) => _$ServiceListSnippetStateFromJson(json);
 
-  Map<String, dynamic> toJson() => _$ServiceListSnippetToJson(this);
+  Map<String, dynamic> toJson() => _$ServiceListSnippetStateToJson(this);
 
-  ServiceListSnippet toEmpty() {
-    return ServiceListSnippet(
+  ServiceListSnippetState toEmpty() {
+    return ServiceListSnippetState(
       givenConnectedBusinessIds: [],
       takenConnectedBusinessIds: [],
       businessId: '',
+      businessName: '',
+      businessImage: '',
       businessServiceNumberInternal: 0,
       businessServiceNumberExternal: 0,
       businessSnippet: [],

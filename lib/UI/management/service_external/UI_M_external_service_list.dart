@@ -5,6 +5,8 @@ import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/model/business/external_business_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
+import 'package:Buytime/reblox/reducer/external_service_imported_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/service_list_snippet_list_reducer.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
 import 'package:Buytime/reusable/buytime_icons.dart';
 import 'package:Buytime/reusable/enterExitRoute.dart';
@@ -22,14 +24,15 @@ class ExternalServiceList extends StatefulWidget {
 
 class ExternalServiceListState extends State<ExternalServiceList> {
 
-  List<ExternalBusinessState> externalServiceList = [];
+  List<ExternalBusinessState> externalBusinessList = [];
+  List<int> externalServiceCount = [];
 
   ExternalBusinessState tmpBusiness = ExternalBusinessState();
 
   @override
   void initState() {
     super.initState();
-    externalServiceList.add(tmpBusiness);
+    //externalServiceList.add(tmpBusiness);
   }
 
   Future<bool> _onWillPop() {}
@@ -41,10 +44,13 @@ class ExternalServiceListState extends State<ExternalServiceList> {
   */
     setState(() {
       //orderState.addReserveItem(item., snapshot.business.ownerId, widget.serviceState.serviceSlot.first.startTime[i], widget.serviceState.serviceSlot.first.minDuration.toString(), dates[index]);
-      externalServiceList.insert(index, item);
+      externalBusinessList.insert(index, item);
       //orderState.total += item.price * item.number;
     });
   }
+
+  bool startRequest = false;
+  bool noActivity = false;
 
   @override
   Widget build(BuildContext context) {
@@ -53,8 +59,79 @@ class ExternalServiceListState extends State<ExternalServiceList> {
     var mediaHeight = media.height;
     return StoreConnector<AppState, AppState>(
         converter: (store) => store.state,
-        onInit: (store) => {},
+        onInit: (store) {
+          //store.state.serviceListSnippetListState.serviceListSnippetListState.clear();
+          List<ExternalBusinessState> businessStateList = [];
+          store.state.externalServiceImportedListState.externalServiceImported.forEach((element) {
+            bool found = false;
+            businessStateList.forEach((bSL) {
+              if(bSL.id_firestore == element.externalBusinessId)
+                found = true;
+            });
+            if(!found){
+              businessStateList.add(ExternalBusinessState(
+                  id_firestore: element.externalBusinessId
+              ));
+            }
+          });
+
+          store.dispatch(ServiceListSnippetListRequest(businessStateList));
+          startRequest = true;
+        },
         builder: (context, snapshot) {
+          externalServiceCount.clear();
+          externalBusinessList.clear();
+          debugPrint('UI_M_external_service_list => IMPORTED SERVICE LENGTH: ${snapshot.externalServiceImportedListState.externalServiceImported.length}');
+          debugPrint('UI_M_external_service_list => IMPORTED SNIPPET LENGTH: ${snapshot.serviceListSnippetListState.serviceListSnippetListState.length}');
+          if(snapshot.serviceListSnippetListState.serviceListSnippetListState.isEmpty && startRequest){
+            debugPrint('UI_M_external_service_list => Requesting');
+            noActivity = true;
+            startRequest = false;
+          }else{
+            if(snapshot.serviceListSnippetListState.serviceListSnippetListState.isNotEmpty){
+              if(snapshot.serviceListSnippetListState.serviceListSnippetListState.first.businessId == null){
+                startRequest = false;
+                snapshot.serviceListSnippetListState.serviceListSnippetListState.removeLast();
+              }else{
+                if(snapshot.serviceListSnippetState.businessId != null){
+                  /*snapshot.serviceListSnippetListState.serviceListSnippetListState.forEach((sLSLS) {
+                    snapshot.serviceListSnippetState.takenConnectedBusinessIds.forEach((tCBI) {
+                      if(tCBI.businessId == sLSLS.businessId){
+                        externalBusinessList.add(
+                            ExternalBusinessState(
+                                name: tCBI.businessName,
+                                profile: tCBI.businessImage,
+                                id_firestore: tCBI.businessId
+                            )
+                        );
+                        externalServiceCount.add(tCBI.serviceTakenNumber);
+                      }
+                    });
+
+                  });*/
+
+                  snapshot.serviceListSnippetListState.serviceListSnippetListState.forEach((sLSLS) {
+                    sLSLS.givenConnectedBusinessIds.forEach((gCBI) {
+                      if(gCBI.businessId == snapshot.business.id_firestore){
+                        externalBusinessList.add(
+                            ExternalBusinessState(
+                                name: sLSLS.businessName,
+                                profile: sLSLS.businessImage,
+                                id_firestore: sLSLS.businessId
+                            )
+                        );
+                        externalServiceCount.add(gCBI.serviceGivenNumber);
+                      }
+                    });
+
+                  });
+                }
+
+              }
+            }
+            noActivity = false;
+            startRequest = false;
+          }
           return WillPopScope(
               onWillPop: () async {
                 ///Block iOS Back Swipe
@@ -123,14 +200,14 @@ class ExternalServiceListState extends State<ExternalServiceList> {
                               ),
                             ],
                           )),
-                       externalServiceList.isNotEmpty ?
+                       externalBusinessList.isNotEmpty ?
                       Expanded(
                         child: CustomScrollView(
                           shrinkWrap: true,
                           slivers: [
                             SliverList(
                               delegate: SliverChildBuilderDelegate((context, index){
-                                ExternalBusinessState item = externalServiceList.elementAt(index);
+                                ExternalBusinessState item = externalBusinessList.elementAt(index);
                                   return Dismissible(
                                     // Each Dismissible must contain a Key. Keys allow Flutter to
                                     // uniquely identify widgets.
@@ -141,7 +218,7 @@ class ExternalServiceListState extends State<ExternalServiceList> {
                                     onDismissed: (direction) {
                                       // Remove the item from the data source.
                                       setState(() {
-                                        externalServiceList.removeAt(index);
+                                        externalBusinessList.removeAt(index);
                                       });
                                       if (direction == DismissDirection.endToStart) {
 
@@ -156,10 +233,10 @@ class ExternalServiceListState extends State<ExternalServiceList> {
                                                   undoDeletion(index, item);
                                                 })));
                                       } else {
-                                        externalServiceList.insert(index, item);
+                                        externalBusinessList.insert(index, item);
                                       }
                                     },
-                                    child: ExternalBusinessListItem(item, true),
+                                    child: ExternalBusinessListItem(item, true, externalServiceCount[index]),
                                     background: Container(
                                       color: BuytimeTheme.BackgroundWhite,
                                       //margin: EdgeInsets.symmetric(horizontal: 15),
@@ -182,12 +259,20 @@ class ExternalServiceListState extends State<ExternalServiceList> {
                                     ),
                                   );
                                 },
-                                childCount: externalServiceList.length,
+                                childCount: externalBusinessList.length,
                               ),
                             ),
                           ],
                         ),
-                      )  : Container(
+                      )  : noActivity ?
+                       Expanded(
+                         child: Column(
+                           mainAxisAlignment: MainAxisAlignment.center,
+                           children: [
+                             CircularProgressIndicator()
+                           ],
+                         ),
+                       ) : Container(
                          height: SizeConfig.safeBlockVertical * 8,
                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                          decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),

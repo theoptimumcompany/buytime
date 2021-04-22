@@ -138,6 +138,7 @@ class AddExternalServiceListState extends State<AddExternalServiceList> {
             externalServiceList.addAll(snapshot.externalBusinessList.externalBusinessListState);
           }
           debugPrint('UI_M_add_external_service_list => EXTERNAL BUSINESS LIST: ${externalServiceList.length}');
+          debugPrint('UI_M_add_external_service_list => EXTERNAL SNIPPET LIST: ${snapshot.serviceListSnippetListState.serviceListSnippetListState.length}');
           if(snapshot.externalBusinessList.externalBusinessListState.isEmpty && startRequest){
             noActivity = true;
           }else{
@@ -165,8 +166,8 @@ class AddExternalServiceListState extends State<AddExternalServiceList> {
                       icon: Icon(Icons.keyboard_arrow_left, color: Colors.white),
                       onPressed: () {
                         //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_Business()))
-                        //Navigator.pushReplacement(context, EnterExitRoute(enterPage: ExternalServiceList(), exitPage: AddExternalServiceList(false), from: false));
-                        Navigator.of(context).pop();
+                        Navigator.pushReplacement(context, EnterExitRoute(enterPage: ExternalServiceList(), exitPage: AddExternalServiceList(false), from: false));
+                        //Navigator.of(context).pop();
                       },
                     ),
                     Utils.barTitle(AppLocalizations.of(context).addExternalService),
@@ -550,9 +551,9 @@ class AddExternalServiceListState extends State<AddExternalServiceList> {
                                             TemplateState templateState = TemplateState();
                                             TemplateDataState templateDataState = TemplateDataState();
                                             //emailState.to = 'rukshannipuna12@gmail.com';
-                                            emailState.to = 'rukshannipuna12@gmail.com';
+                                            emailState.to = 'flavio@buytime.network';
                                             //emailState.cc = 'f.romeo.f@gmail.com';
-                                            emailState.cc = 'f.romeo.f@gmail.com';
+                                            emailState.cc = 'aruna@buytime.network';
                                             templateState.name = 'search';
                                             //templateDataState.name = 'Nipuna Perera';
                                             //templateDataState.link = 'https://buytime.network/';

@@ -92,7 +92,7 @@ class BusinessListRequestService implements EpicClass<AppState> {
 }
 
 class BusinessServiceSnippetListRequestService implements EpicClass<AppState> {
-  List<ServiceSnippet> businessServiceSnippetList;
+  List<ServiceSnippetState> businessServiceSnippetList;
   StatisticsState statisticsState;
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
@@ -108,7 +108,7 @@ class BusinessServiceSnippetListRequestService implements EpicClass<AppState> {
       serviceSnippetListFromFirebaseDocs = serviceSnippetListFromFirebase.docs.length;
 
       serviceSnippetListFromFirebase.docs.forEach((element) {
-        ServiceSnippet serviceSnippet = ServiceSnippet.fromJson(element.data());
+        ServiceSnippetState serviceSnippet = ServiceSnippetState.fromJson(element.data());
         businessServiceSnippetList.add(serviceSnippet);
       });
 

@@ -1,4 +1,5 @@
 import 'package:Buytime/reblox/model/business/snippet/business_snippet_state.dart';
+import 'package:Buytime/reblox/model/business/snippet/order_business_snippet_state.dart';
 import 'package:Buytime/reblox/model/order/order_entry.dart';
 import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
 
@@ -102,9 +103,9 @@ class SetOrderReservableCartCounter
 
 class SetOrderReservableBusiness
 {
-  BusinessSnippet _business;
+  OrderBusinessSnippetState _business;
   SetOrderReservableBusiness(this._business);
-  BusinessSnippet get business => _business;
+  OrderBusinessSnippetState get business => _business;
 }
 
 class SetOrderReservableUser

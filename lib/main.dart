@@ -14,8 +14,12 @@ import 'package:Buytime/UI/user/turist/UI_U_service_explorer.dart';
 import 'package:Buytime/reblox/model/autoComplete/auto_complete_list_state.dart';
 import 'package:Buytime/reblox/model/autoComplete/auto_complete_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_list_state.dart';
+import 'package:Buytime/reblox/model/business/external_business_imported_list_state.dart';
+import 'package:Buytime/reblox/model/business/external_business_imported_state.dart';
 import 'package:Buytime/reblox/model/business/external_business_list_state.dart';
 import 'package:Buytime/reblox/model/business/external_business_state.dart';
+import 'package:Buytime/reblox/model/business/snippet/business_snippet_state.dart';
+import 'package:Buytime/reblox/model/business/snippet/order_business_snippet_state.dart';
 import 'package:Buytime/reblox/model/card/card_list_state.dart';
 import 'package:Buytime/reblox/model/card/card_state.dart';
 import 'package:Buytime/reblox/model/category/invitation/category_invite_state.dart';
@@ -27,12 +31,17 @@ import 'package:Buytime/reblox/model/notification/notification_list_state.dart';
 import 'package:Buytime/reblox/model/notification/notification_state.dart';
 import 'package:Buytime/reblox/model/order/order_reservable_list_state.dart';
 import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
+import 'package:Buytime/reblox/model/service/external_service_imported_list_state.dart';
+import 'package:Buytime/reblox/model/service/external_service_imported_state.dart';
 import 'package:Buytime/reblox/model/service/service_slot_time_state.dart';
+import 'package:Buytime/reblox/model/snippet/service_list_snippet_list_state.dart';
+import 'package:Buytime/reblox/model/snippet/service_list_snippet_state.dart';
 import 'package:Buytime/reblox/model/statistics_state.dart';
 import 'package:Buytime/reblox/model/stripe/stripe_list_state.dart';
 import 'package:Buytime/services/category_invite_service_epic.dart';
 import 'package:Buytime/services/email_service_epic.dart';
 import 'package:Buytime/services/external_business_service_epic.dart';
+import 'package:Buytime/services/external_service_imported_service_epic.dart';
 import 'package:Buytime/services/order_reservable_service_epic.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/UI/user/login/UI_U_home.dart';
@@ -124,6 +133,7 @@ void main(){
     StripeDetachPaymentMethodRequest(),
     CheckStripeCustomerService(),
     ServiceUpdateService(),
+    ServiceRequestService(),
     ServiceUpdateServiceVisibility(),
     ServiceDeleteService(),
     ServiceCreateService(),
@@ -143,7 +153,12 @@ void main(){
     OrderCreateService(),
     OrderReservableCreateService(),
     AddingReservableStripePaymentMethodRequest(),
-    EmailCreateService()
+    EmailCreateService(),
+    ServiceListSnippetRequestService(),
+    ServiceListSnippetListRequestService(),
+    ExternalServiceImportedCreateService(),
+    ExternalServiceImportedListRequestService(),
+    ServiceListByIdsRequestService()
   ]);
   final _initialState = AppState(
     category: CategoryState().toEmpty(),
@@ -178,6 +193,14 @@ void main(){
     emailState: EmailState().toEmpty(),
     templateState: TemplateState().toEmpty(),
     templateDataState: TemplateDataState().toEmpty(),
+    serviceListSnippetState: ServiceListSnippetState().toEmpty(),
+    serviceListSnippetListState: ServiceListSnippetListState().toEmpty(),
+    externalBusinessImportedState: ExternalBusinessImportedState().toEmpty(),
+    externalBusinessImportedListState: ExternalBusinessImportedListState().toEmpty(),
+      externalServiceImportedState: ExternalServiceImportedState().toEmpty(),
+    externalServiceImportedListState: ExternalServiceImportedListState().toEmpty(),
+    businessSnippetState: BusinessSnippetState().toEmpty(),
+    orderBusinessSnippetState: OrderBusinessSnippetState().toEmpty()
   );
   final store = new Store<AppState>(
     appReducer,
@@ -227,7 +250,7 @@ class Buytime extends StatelessWidget {
       case AppRoutes.bookingDetails:
         return FabRoute(BookingDetails(), settings: settings);
       case AppRoutes.categories:
-        return FabRoute(ManageCategory(), settings: settings);
+        return SlideRoute(ManageCategory(), settings: settings);
       case AppRoutes.businessList:
         return FabRoute(UI_M_BusinessList(), settings: settings);
       case AppRoutes.business:
@@ -239,7 +262,7 @@ class Buytime extends StatelessWidget {
       case AppRoutes.landing:
         return FabRoute(Landing(), settings: settings);
       case AppRoutes.managerServiceList:
-        return FabRoute(UI_M_ServiceList(), settings: settings);
+        return SlideRoute(UI_M_ServiceList(), settings: settings);
       case AppRoutes.myBookings:
         return FabRoute(MyBookings(), settings: settings);
       case AppRoutes.confirmOrder:
@@ -326,6 +349,23 @@ class FabRoute<T> extends MaterialPageRoute<T> {
           end: Offset.zero,
         ).animate(animation),
         child: child);
+  }
+}
+
+class SlideRoute<T> extends MaterialPageRoute<T> {
+  SlideRoute(Widget widget, {RouteSettings settings})
+      : super(builder: (_) => RouteAwareWidget(child: widget), settings: settings);
+
+  @override
+  Widget buildTransitions(
+      BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
+    return SlideTransition(
+      position: Tween(
+          begin: Offset(-1.0, 0.0),
+          end: Offset(0.0, 0.0))
+          .animate(animation),
+      child: child,
+    );
   }
 }
 

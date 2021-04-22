@@ -21,9 +21,9 @@ class ExternalBusinessServiceSnippetListRequest {
 }
 
 class ExternalBusinessServiceSnippetListReturned {
-  List<ServiceSnippet> _businessServiceSnippetList;
+  List<ServiceSnippetState> _businessServiceSnippetList;
   ExternalBusinessServiceSnippetListReturned(this._businessServiceSnippetList);
-  List<ServiceSnippet> get businessServiceSnippetList => _businessServiceSnippetList;
+  List<ServiceSnippetState> get businessServiceSnippetList => _businessServiceSnippetList;
 }
 
 

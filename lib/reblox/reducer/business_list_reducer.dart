@@ -19,9 +19,9 @@ class BusinessServiceSnippetListRequest {
 }
 
 class BusinessServiceSnippetListReturned {
-  List<ServiceSnippet> _businessServiceSnippetList;
+  List<ServiceSnippetState> _businessServiceSnippetList;
   BusinessServiceSnippetListReturned(this._businessServiceSnippetList);
-  List<ServiceSnippet> get businessServiceSnippetList => _businessServiceSnippetList;
+  List<ServiceSnippetState> get businessServiceSnippetList => _businessServiceSnippetList;
 }
 
 

@@ -48,7 +48,7 @@ class ServiceExplorer extends StatefulWidget {
 
 class _ServiceExplorerState extends State<ServiceExplorer> {
   TextEditingController _searchController = TextEditingController();
-  List<ServiceState> serviceState = [];
+  //List<ServiceState> serviceState = [];
   List<ServiceState> popularList = [];
   List<ServiceState> recommendedList = [];
   List<CategoryState> categoryList = [];
@@ -70,15 +70,42 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
       tmpServiceList.insert(index, item);
     });
   }*/
-
+  void searchCategory(List<CategoryState> list) {
+    setState(() {
+      List<CategoryState> categoryState = list;
+      categoryList.clear();
+      if (_searchController.text.isNotEmpty) {
+        categoryState.forEach((element) {
+          if (element.name.toLowerCase().contains(_searchController.text.toLowerCase())) {
+            categoryList.add(element);
+          }
+          if (element.customTag != null && element.customTag.isNotEmpty && element.customTag.toLowerCase().contains(_searchController.text.toLowerCase())) {
+            if(!categoryList.contains(element)){
+              categoryList.add(element);
+            }
+          }
+        });
+      }
+      //popularList.shuffle();
+    });
+  }
   void searchPopular(List<ServiceState> list) {
     setState(() {
-      serviceState = list;
+      List<ServiceState> serviceState = list;
       popularList.clear();
       if (_searchController.text.isNotEmpty) {
         serviceState.forEach((element) {
           if (element.name.toLowerCase().contains(_searchController.text.toLowerCase())) {
             popularList.add(element);
+          }
+          if(element.tag != null && element.tag.isNotEmpty){
+            element.tag.forEach((tag) {
+              if (tag.toLowerCase().contains(_searchController.text.toLowerCase())) {
+                if(!popularList.contains(element)){
+                  popularList.add(element);
+                }
+              }
+            });
           }
         });
       }
@@ -88,11 +115,20 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
   void searchRecommended(List<ServiceState> list) {
     setState(() {
       recommendedList.clear();
-      serviceState = list;
+      List<ServiceState> serviceState = list;
       if (_searchController.text.isNotEmpty) {
         serviceState.forEach((element) {
           if (element.name.toLowerCase().contains(_searchController.text.toLowerCase())) {
             recommendedList.add(element);
+          }
+          if(element.tag != null && element.tag.isNotEmpty){
+            element.tag.forEach((tag) {
+              if (tag.toLowerCase().contains(_searchController.text.toLowerCase())) {
+                if(!recommendedList.contains(element)){
+                  recommendedList.add(element);
+                }
+              }
+            });
           }
         });
       }
@@ -116,33 +152,37 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
         startRequest = true;
       },
       builder: (context, snapshot) {
-        //categoryList.clear();
-        order = snapshot.order.itemList != null ? (snapshot.order.itemList.length > 0 ? snapshot.order : OrderState().toEmpty()) : OrderState().toEmpty();
+        if(_searchController.text.isEmpty){
+          categoryList.clear();
+          popularList.clear();
+          recommendedList.clear();
 
-        if(snapshot.categoryList.categoryListState.isEmpty && snapshot.serviceList.serviceListState.isEmpty && startRequest){
-          noActivity = true;
-        }else{
-          if(snapshot.categoryList.categoryListState.isNotEmpty && snapshot.serviceList.serviceListState.isNotEmpty && categoryList.isEmpty && popularList.isEmpty && recommendedList.isEmpty || _searchController.text.isEmpty){
-            categoryList.addAll(snapshot.categoryList.categoryListState);
-            popularList.addAll(snapshot.serviceList.serviceListState);
-            recommendedList.addAll(snapshot.serviceList.serviceListState);
-            if(snapshot.categoryList.categoryListState.isNotEmpty && snapshot.serviceList.serviceListState.isNotEmpty && categoryList.isEmpty && popularList.isEmpty && recommendedList.isEmpty){
-              categoryList.shuffle();
+          if(snapshot.categoryList.categoryListState.isEmpty && snapshot.serviceList.serviceListState.isEmpty && startRequest){
+            noActivity = true;
+          }else{
+            if(snapshot.categoryList.categoryListState.isNotEmpty && snapshot.serviceList.serviceListState.isNotEmpty && categoryList.isEmpty && popularList.isEmpty && recommendedList.isEmpty || _searchController.text.isEmpty){
+              categoryList.addAll(snapshot.categoryList.categoryListState);
+              popularList.addAll(snapshot.serviceList.serviceListState);
+              recommendedList.addAll(snapshot.serviceList.serviceListState);
+              if(snapshot.categoryList.categoryListState.isNotEmpty && snapshot.serviceList.serviceListState.isNotEmpty && categoryList.isEmpty && popularList.isEmpty && recommendedList.isEmpty){
+                categoryList.shuffle();
+              }
+              popularList.shuffle();
+              recommendedList.shuffle();
             }
-            popularList.shuffle();
-            recommendedList.shuffle();
+            if(categoryList.isNotEmpty && categoryList.first.name == null)
+              categoryList.removeLast();
+            if(popularList.isNotEmpty && popularList.first.name == null)
+              popularList.removeLast();
+            if(recommendedList.isNotEmpty && recommendedList.first.name == null)
+              recommendedList.removeLast();
+            noActivity = false;
+            //categoryList.shuffle();
+            //popularList.shuffle();
+            //recommendedList.shuffle();
           }
-          if(categoryList.isNotEmpty && categoryList.first.name == null)
-            categoryList.removeLast();
-          if(popularList.isNotEmpty && popularList.first.name == null)
-            popularList.removeLast();
-          if(recommendedList.isNotEmpty && recommendedList.first.name == null)
-            recommendedList.removeLast();
-          noActivity = false;
-          //categoryList.shuffle();
-          //popularList.shuffle();
-          //recommendedList.shuffle();
         }
+        order = snapshot.order.itemList != null ? (snapshot.order.itemList.length > 0 ? snapshot.order : OrderState().toEmpty()) : OrderState().toEmpty();
 
         return GestureDetector(
           onTap: () {
@@ -310,6 +350,7 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                                   onTap: () {
                                     debugPrint('done');
                                     FocusScope.of(context).unfocus();
+                                    searchCategory(snapshot.categoryList.categoryListState);
                                     searchPopular(snapshot.serviceList.serviceListState);
                                     searchRecommended(snapshot.serviceList.serviceListState);
                                   },
@@ -324,6 +365,7 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                               onEditingComplete: () {
                                 debugPrint('done');
                                 FocusScope.of(context).unfocus();
+                                searchCategory(snapshot.categoryList.categoryListState);
                                 searchPopular(snapshot.serviceList.serviceListState);
                                 searchRecommended(snapshot.serviceList.serviceListState);
                               },

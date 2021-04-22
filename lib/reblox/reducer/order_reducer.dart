@@ -1,4 +1,5 @@
 import 'package:Buytime/reblox/model/business/snippet/business_snippet_state.dart';
+import 'package:Buytime/reblox/model/business/snippet/order_business_snippet_state.dart';
 import 'package:Buytime/reblox/model/order/order_entry.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/snippet/generic.dart';
@@ -107,9 +108,9 @@ class SetOrderCartCounter
 
 class SetOrderBusiness
 {
-  BusinessSnippet _business;
+  OrderBusinessSnippetState _business;
   SetOrderBusiness(this._business);
-  BusinessSnippet get business => _business;
+  OrderBusinessSnippetState get business => _business;
 }
 
 class SetOrderUser

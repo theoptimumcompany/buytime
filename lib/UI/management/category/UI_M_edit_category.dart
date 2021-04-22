@@ -9,6 +9,7 @@ import 'package:Buytime/reblox/reducer/category_tree_reducer.dart';
 import 'package:Buytime/reblox/model/snippet/manager.dart';
 import 'package:Buytime/reblox/model/snippet/parent.dart';
 import 'package:Buytime/reblox/model/snippet/worker.dart';
+import 'package:Buytime/reblox/reducer/service_list_snippet_reducer.dart';
 import 'package:Buytime/reusable/enterExitRoute.dart';
 import 'package:Buytime/reusable/form/optimum_form_multi_photo.dart';
 import 'package:Buytime/utils/size_config.dart';
@@ -652,12 +653,11 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
 
                                           Parent newCategoryParent = selectedParentCategory;
                                           print("Aggiorno " + newCategoryParent.name);
-
-                                          ///aggiorno singola categoria
-                                          StoreProvider.of<AppState>(context).dispatch(new UpdateCategory(snapshot.category));
-
+                                          //StoreProvider.of<AppState>(context).dispatch(ServiceListSnippetRequest(snapshot.business.id_firestore));
                                           ///aggiorno category tree
                                           StoreProvider.of<AppState>(context).dispatch(new UpdateCategoryTree(newCategoryParent));
+                                          ///aggiorno singola categoria
+                                          StoreProvider.of<AppState>(context).dispatch(new UpdateCategory(snapshot.category));
                                         } else {
                                           showDialog(
                                             context: context,
@@ -812,7 +812,7 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                                                       enabled: StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin ? true : false,
                                                       labelText: AppLocalizations.of(context).parentCategory,
                                                       enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white))),
-                                                  onChanged: StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin ? (value) {
+                                                  onChanged: StoreProvider.of<AppState>(context).state.user.getRole() == Role.owner ? (value) {
                                                     setState(() {
                                                       selectedParentCategory = value;
                                                       checkNumberLevelToMove(snapshot.categoryTree.categoryNodeList, snapshot.category.id);

@@ -132,11 +132,10 @@ class OrderReservableUpdateService implements EpicClass<AppState> {
 
       orderReservableState = event.orderReservableState;
 
-      await FirebaseFirestore.instance /// 1 WRITE
+      /*await FirebaseFirestore.instance /// 1 WRITE
           .collection("order")
           .doc(event.orderReservableState.userId)
-          .update(event.orderReservableState.toJson())
-      ;
+          .update(event.orderReservableState.toJson());*/
 
       /*statisticsState = store.state.statistics;
       int reads = statisticsState.bookingListRequestServiceRead;

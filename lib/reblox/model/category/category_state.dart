@@ -26,7 +26,8 @@ class CategoryState {
   String businessId;
   List<Worker> worker;
   List<String> workerMailList;
-  CategorySnippet categorySnippet;
+  @JsonKey(ignore: true)
+  CategorySnippetState categorySnippet;
   @JsonKey(ignore: true)
   OptimumFileToUpload fileToUpload;
   String categoryImage;
@@ -63,7 +64,7 @@ class CategoryState {
       businessId: "",
       worker: [],
       workerMailList: [],
-      categorySnippet: CategorySnippet().toEmpty(),
+      categorySnippet: CategorySnippetState().toEmpty(),
       fileToUpload: null,
         categoryImage: '',
       customTag: ''
@@ -100,7 +101,7 @@ class CategoryState {
       String businessId,
       List<Worker> worker,
       List<String> workerMailList,
-      CategorySnippet categorySnippet,
+      CategorySnippetState categorySnippet,
         OptimumFileToUpload fileToUpload,
         String categoryImage,
         String customTag

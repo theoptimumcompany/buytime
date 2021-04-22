@@ -422,7 +422,7 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
                  ),
                ),
              ),
-             ///Minutes
+             ///Minutes or Days
              Expanded(
                flex: 1,
                child: Container(
@@ -434,7 +434,7 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
                    ),
                  ),
                  child: Text(
-                   '${orderEntry.minutes}${AppLocalizations.of(context).spaceMinutes}',
+                   '${orderEntry.minutes}',
                    overflow: TextOverflow.ellipsis,
                    style: TextStyle(
                        fontFamily: BuytimeTheme.FontFamily,

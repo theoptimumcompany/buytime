@@ -9,6 +9,7 @@ import 'package:Buytime/reblox/reducer/category_reducer.dart';
 import 'package:Buytime/reblox/model/snippet/manager.dart';
 import 'package:Buytime/reblox/model/snippet/worker.dart';
 import 'package:Buytime/reblox/reducer/service/service_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/service_list_snippet_reducer.dart';
 import 'package:Buytime/reblox/reducer/statistics_reducer.dart';
 import 'package:Buytime/services/file_upload_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -66,11 +67,11 @@ class CategoryListRequestService implements EpicClass<AppState> {
 class AllCategoryListRequestService implements EpicClass<AppState> {
   StatisticsState statisticsState;
   List<CategoryState> categoryStateList;
-
+  List<ServiceState> serviceStateList;
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     debugPrint("CATEGORY_SERVICE_EPIC - AllCategoryListRequestService => CATCHED ACTION");
-    List<ServiceState> serviceStateList = [];
+
     return actions.whereType<AllRequestListCategory>().asyncMap((event) async {
 
       QuerySnapshot businessListFromFirebase;
@@ -82,6 +83,7 @@ class AllCategoryListRequestService implements EpicClass<AppState> {
       List<QuerySnapshot> queryList = [];
       int read = 0;
       categoryStateList = [];
+      serviceStateList = [];
       int snapshotDocs = 0;
       List<String> tmpBusinessIdList = [];
 
@@ -113,7 +115,6 @@ class AllCategoryListRequestService implements EpicClass<AppState> {
             snapshotDocs += value.docs.length;
             value.docs.forEach((element) {
               ServiceState serviceState = ServiceState.fromJson(element.data());
-
               serviceStateList.add(serviceState);
             });
           });
@@ -617,6 +618,25 @@ class CategoryUpdateService implements EpicClass<AppState> {
           .update(event.categoryState.toJson())
           .then((value) {
         debugPrint("CATEGORY_SERVICE_EPIC - CategoryUpdateService => Category Service should be updated online ");
+        debugPrint('CATEGORY_SERVICE_EPIC - CategoryUpdateService => CATEGORY ROOT ID: ${categoryState.categoryRootId} | CATEGORY ID: ${categoryState.id}');
+        String parentPath = '';
+        store.state.serviceListSnippetState.businessSnippet.forEach((element) {
+          List<String> tmp = element.categoryAbsolutePath.split('/');
+          if(tmp.last == categoryState.parent.id){
+            debugPrint('CATEGORY_SERVICE_EPIC - CategoryUpdateService => P1: ${tmp.last} | P2: ${categoryState.parent.id}');
+            parentPath = element.categoryAbsolutePath;
+            debugPrint('CATEGORY_SERVICE_EPIC - CategoryUpdateService => P1: PARENT PATH: ${element.categoryAbsolutePath}');
+          }
+          if(tmp.last == categoryState.id){
+            debugPrint('CATEGORY_SERVICE_EPIC - CategoryUpdateService => MATCH');
+            debugPrint('CATEGORY_SERVICE_EPIC - CategoryUpdateService => CURRENT PATH: ${element.categoryAbsolutePath}');
+            if(categoryState.categoryRootId != categoryState.id)
+              element.categoryAbsolutePath = parentPath + '/' + categoryState.id;
+            else
+              element.categoryAbsolutePath = categoryState.businessId + '/' + categoryState.id;
+            debugPrint('CATEGORY_SERVICE_EPIC - CategoryUpdateService => NEW PATH: ${element.categoryAbsolutePath}');
+          }
+        });
       });
 
       statisticsState = store.state.statistics;
@@ -632,6 +652,7 @@ class CategoryUpdateService implements EpicClass<AppState> {
       statisticsState.categoryUpdateServiceWrite = writes;
       statisticsState.categoryUpdateServiceDocuments = documents;
     }).expand((element) => [
+          ServiceListSnippetRequestResponse(store.state.serviceListSnippetState),
           UpdatedCategory(categoryState),
           UpdateStatistics(statisticsState),
           NavigatePushAction(AppRoutes.categories),

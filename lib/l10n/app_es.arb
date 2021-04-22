@@ -489,6 +489,12 @@
   "send": "Send",
   "writeThe": "Write the name of the service or business you are looking for",
   "justDashboard": "Dashboard",
-  "sendEmail": "An email has been sent"
+  "sendEmail": "An email has been sent",
+  "networkService": "network service",
+  "networkServices": "network services",
+  "justEmployee": "employee",
+  "justEmployees": "employees",
+  "others": "Others",
+  "externalServiceAdded": "Service added to your network"
 
 }
