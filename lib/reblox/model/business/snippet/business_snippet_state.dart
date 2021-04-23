@@ -2,43 +2,55 @@ import 'package:json_annotation/json_annotation.dart';
 part 'business_snippet_state.g.dart';
 
 @JsonSerializable(explicitToJson: true)
-class BusinessSnippet {
-  String id;
-  String name;
-  String thumbnail;
+class BusinessSnippetState {
+  String businessId;
+  String businessName;
+  String businessImage;
+  int serviceTakenNumber;
+  int serviceGivenNumber;
 
-  BusinessSnippet({
-    this.id,
-    this.name,
-    this.thumbnail,
+  BusinessSnippetState({
+    this.businessId,
+    this.businessName,
+    this.businessImage,
+    this.serviceTakenNumber,
+    this.serviceGivenNumber,
   });
 
-  BusinessSnippet.fromState(BusinessSnippet businessSnippet) {
-    this.id = businessSnippet.id;
-    this.name = businessSnippet.name;
-    this.thumbnail = businessSnippet.thumbnail;
+  BusinessSnippetState.fromState(BusinessSnippetState businessSnippet) {
+    this.businessId = businessSnippet.businessId;
+    this.businessName = businessSnippet.businessName;
+    this.businessImage = businessSnippet.businessImage;
+    this.serviceTakenNumber = businessSnippet.serviceTakenNumber;
+    this.serviceGivenNumber = businessSnippet.serviceGivenNumber;
   }
 
-  BusinessSnippet copyWith({
-    String id,
-    String name,
-    String thumbnail,
+  BusinessSnippetState copyWith({
+    String businessId,
+    String businessName,
+    String businessImage,
+    int serviceTakenNumber,
+    int serviceGivenNumber,
   }) {
-    return BusinessSnippet(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      thumbnail: thumbnail ?? this.thumbnail,
+    return BusinessSnippetState(
+      businessId: businessId ?? this.businessId,
+      businessName: businessName ?? this.businessName,
+      businessImage: businessImage ?? this.businessImage,
+      serviceTakenNumber: serviceTakenNumber ?? this.serviceTakenNumber,
+      serviceGivenNumber: serviceGivenNumber ?? this.serviceGivenNumber,
     );
   }
 
-  BusinessSnippet toEmpty() {
-    return BusinessSnippet(
-      id: '',
-      name: '',
-      thumbnail: '',
+  BusinessSnippetState toEmpty() {
+    return BusinessSnippetState(
+      businessId: '',
+      businessName: '',
+      businessImage: '',
+      serviceTakenNumber: 0,
+      serviceGivenNumber: 0,
     );
   }
 
-  factory BusinessSnippet.fromJson(Map<String, dynamic> json) => _$BusinessSnippetFromJson(json);
-  Map<String, dynamic> toJson() => _$BusinessSnippetToJson(this);
+  factory BusinessSnippetState.fromJson(Map<String, dynamic> json) => _$BusinessSnippetStateFromJson(json);
+  Map<String, dynamic> toJson() => _$BusinessSnippetStateToJson(this);
 }

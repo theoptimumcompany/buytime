@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:Buytime/UI/management/service_external/UI_M_external_service_list.dart';
-import 'package:Buytime/UI/management/service_external/UI_U_external_business_details.dart';
+import 'package:Buytime/UI/management/service_external/UI_M_external_business_details.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/model/business/external_business_state.dart';
@@ -19,8 +19,9 @@ class ExternalBusinessListItem extends StatefulWidget {
 
   ExternalBusinessState externalBusinessState;
   //bool tourist;
-  bool fromMy;
-  ExternalBusinessListItem(this.externalBusinessState, this.fromMy);
+  bool fromMyList;
+  int count;
+  ExternalBusinessListItem(this.externalBusinessState, this.fromMyList, this.count);
 
   @override
   _ExternalBusinessListItemState createState() => _ExternalBusinessListItemState();
@@ -49,7 +50,7 @@ class _ExternalBusinessListItemState extends State<ExternalBusinessListItem> {
             child: InkWell(
               borderRadius: BorderRadius.all(Radius.circular(10)),
               onTap: () async {
-                Navigator.push(context, EnterExitRoute(enterPage: ExternalBusinessDetails(externalBusinessState: widget.externalBusinessState, fromMy: widget.fromMy), exitPage: ExternalServiceList(), from: true));
+                Navigator.push(context, EnterExitRoute(enterPage: ExternalBusinessDetails(widget.externalBusinessState, widget.fromMyList, false), exitPage: ExternalServiceList(), from: true));
               },
               child: Container(
                 height: 91,  ///SizeConfig.safeBlockVertical * 15
@@ -61,7 +62,7 @@ class _ExternalBusinessListItemState extends State<ExternalBusinessListItem> {
                       children: [
                         ///Service Image
                         CachedNetworkImage(
-                          imageUrl: widget.externalBusinessState.logo != null && widget.externalBusinessState.logo.isNotEmpty ? widget.externalBusinessState.logo : 'https://firebasestorage.googleapis.com/v0/b/buytime-458a1.appspot.com/o/general%2Fimage_placeholder_200x200_1000x1000.png?alt=media&token=082a1896-32d8-4750-b7cc-141f00bc060c',
+                          imageUrl: widget.externalBusinessState.profile != null && widget.externalBusinessState.profile.isNotEmpty ? widget.externalBusinessState.profile : 'https://firebasestorage.googleapis.com/v0/b/buytime-458a1.appspot.com/o/general%2Fimage_placeholder_200x200_1000x1000.png?alt=media&token=082a1896-32d8-4750-b7cc-141f00bc060c',
                           imageBuilder: (context, imageProvider) => Container(
                             //margin: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 5), ///5%
                             height: 91,
@@ -89,7 +90,7 @@ class _ExternalBusinessListItemState extends State<ExternalBusinessListItem> {
                         ),
                         ///Service Name & Description
                         Container(
-                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1),
+                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1.5),
                           child:  Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -113,7 +114,7 @@ class _ExternalBusinessListItemState extends State<ExternalBusinessListItem> {
                                   ),
                                 ),
                               ),
-                              ///Description
+                              ///Count
                               FittedBox(
                                 fit: BoxFit.fitHeight,
                                 child: Container(
@@ -121,7 +122,7 @@ class _ExternalBusinessListItemState extends State<ExternalBusinessListItem> {
                                   height: 40, ///SizeConfig.safeBlockVertical * 10
                                   margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
                                   child: Text(
-                                    '.. ........',
+                                    '${widget.count} ${AppLocalizations.of(context).services}',
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 2,
                                     style: TextStyle(

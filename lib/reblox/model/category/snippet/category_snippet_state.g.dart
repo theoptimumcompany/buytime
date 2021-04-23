@@ -6,8 +6,8 @@ part of 'category_snippet_state.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-CategorySnippet _$CategorySnippetFromJson(Map<String, dynamic> json) {
-  return CategorySnippet(
+CategorySnippetState _$CategorySnippetStateFromJson(Map<String, dynamic> json) {
+  return CategorySnippetState(
     categoryAbsolutePath: json['categoryAbsolutePath'] as String ?? '',
     categoryName: json['categoryName'] as String ?? '',
     categoryImage: json['categoryImage'] as String ?? '',
@@ -17,13 +17,14 @@ CategorySnippet _$CategorySnippetFromJson(Map<String, dynamic> json) {
     serviceList: (json['serviceList'] as List)
             ?.map((e) => e == null
                 ? null
-                : ServiceSnippet.fromJson(e as Map<String, dynamic>))
+                : ServiceSnippetState.fromJson(e as Map<String, dynamic>))
             ?.toList() ??
         [],
   );
 }
 
-Map<String, dynamic> _$CategorySnippetToJson(CategorySnippet instance) =>
+Map<String, dynamic> _$CategorySnippetStateToJson(
+        CategorySnippetState instance) =>
     <String, dynamic>{
       'categoryAbsolutePath': instance.categoryAbsolutePath,
       'categoryName': instance.categoryName,

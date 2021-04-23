@@ -7,13 +7,17 @@ import 'package:Buytime/UI/user/cart/UI_U_ConfirmOrder.dart';
 import 'package:Buytime/UI/user/service/UI_U_service_reserve.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
+import 'package:Buytime/reblox/model/business/external_business_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
+import 'package:Buytime/reblox/model/service/external_service_imported_state.dart';
+import 'package:Buytime/reblox/reducer/external_service_imported_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reservable_list_reducer.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
 import 'package:Buytime/reusable/buytime_icons.dart';
 import 'package:Buytime/reusable/enterExitRoute.dart';
 import 'package:Buytime/utils/utils.dart';
+import 'package:another_flushbar/flushbar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
@@ -27,9 +31,10 @@ import 'package:intl/intl.dart';
 
 class ExternalServiceDetails extends StatefulWidget {
   final ServiceState serviceState;
+  final ExternalBusinessState externalBusinessState;
   //bool fromMy;
   static String route = '/externalServiceDetails';
-  ExternalServiceDetails({@required this.serviceState});
+  ExternalServiceDetails(this.serviceState, this.externalBusinessState);
 
   @override
   createState() => _ExternalServiceDetailsState();
@@ -73,7 +78,12 @@ class _ExternalServiceDetailsState extends State<ExternalServiceDetails> with Si
       onInit: (store){
       },
       builder: (context, snapshot) {
-
+        bool equal = false;
+        StoreProvider.of<AppState>(context).state.externalServiceImportedListState.externalServiceImported.forEach((element) {
+          if(element.externalServiceId == widget.serviceState.serviceId){
+            equal = true;
+          }
+        });
         return  GestureDetector(
           onTap: (){
             FocusScopeNode currentFocus = FocusScope.of(context);
@@ -529,11 +539,55 @@ class _ExternalServiceDetailsState extends State<ExternalServiceDetails> with Si
                             hoverElevation: 0,
                             focusElevation: 0,
                             highlightElevation: 0,
-                            onPressed: () {
-
-                            },
+                            onPressed: !equal ? () {
+                              ExternalServiceImportedState eSIS = ExternalServiceImportedState();
+                              eSIS.internalBusinessId = snapshot.business.id_firestore;
+                              eSIS.internalBusinessName = snapshot.business.name;
+                              eSIS.externalBusinessId = widget.externalBusinessState.id_firestore;
+                              eSIS.externalBusinessName = widget.externalBusinessState.name;
+                              eSIS.externalServiceId = widget.serviceState.serviceId;
+                              eSIS.importTimestamp = DateTime.now();
+                              snapshot.serviceListSnippetListState.serviceListSnippetListState.forEach((sLSL) {
+                                sLSL.businessSnippet.forEach((bS) {
+                                  bS.serviceList.forEach((sL) {
+                                    if(sL.serviceAbsolutePath.split('/').last == widget.serviceState.serviceId){
+                                      eSIS.externalCategoryName = bS.categoryName;
+                                    }
+                                  });
+                                });
+                              });
+                              StoreProvider.of<AppState>(context).dispatch(CreateExternalServiceImported(eSIS));
+                              Flushbar(
+                                padding: EdgeInsets.all(SizeConfig.safeBlockVertical * 2),
+                                margin: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2, left: SizeConfig.blockSizeHorizontal * 20, right: SizeConfig.blockSizeHorizontal * 20), ///2% - 20% - 20%
+                                borderRadius: BorderRadius.all(Radius.circular(8)),
+                                backgroundColor: BuytimeTheme.SymbolGrey,
+                                boxShadows: [
+                                  BoxShadow(
+                                    color: Colors.black45,
+                                    offset: Offset(3, 3),
+                                    blurRadius: 3,
+                                  ),
+                                ],
+                                // All of the previous Flushbars could be dismissed by swiping down
+                                // now we want to swipe to the sides
+                                //dismissDirection: FlushbarDismissDirection.HORIZONTAL,
+                                // The default curve is Curves.easeOut
+                                duration:  Duration(seconds: 2),
+                                forwardAnimationCurve: Curves.fastLinearToSlowEaseIn,
+                                messageText: Text(
+                                  AppLocalizations.of(context).externalServiceAdded,
+                                  style: TextStyle(
+                                      color: BuytimeTheme.TextWhite,
+                                      fontWeight: FontWeight.bold
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              )..show(context);
+                            } : null,
                             textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
                             color:  BuytimeTheme.ActionButton,
+                            disabledColor: BuytimeTheme.SymbolGrey,
                             padding: EdgeInsets.all(media.width * 0.03),
                             shape: RoundedRectangleBorder(
                               borderRadius: new BorderRadius.circular(5),

@@ -103,19 +103,22 @@ class AddExternalServiceListState extends State<AddExternalServiceList> {
   }
 
 
-  void sortfun() async {
+  void sortfun(String coordinates) async {
     for (int c = 0; c < (externalServiceList.length - 1); c++) {
-      for (int d = 0; d < externalServiceList.length - c - 1; d++) {
-        if (calculateDistance(externalServiceList[c], externalServiceList[d]) >
-            calculateDistance(externalServiceList[c],
-                externalServiceList[d + 1])) /* For descending order use < */
-        {
-          var swap = externalServiceList[d];
-          externalServiceList[d] = externalServiceList[d + 1];
-          externalServiceList[d + 1] = swap;
-        }
+      debugPrint('UI_M_add_external_service_list => B1 Name: ${externalServiceList[c].name} - ${calculateDistance(ExternalBusinessState(coordinate: coordinates), externalServiceList[c])}'
+          ' | ${calculateDistance(ExternalBusinessState(coordinate: coordinates), externalServiceList[c+1])}  B2 Name: ${externalServiceList[c+1].name} ');
+      if (calculateDistance(ExternalBusinessState(coordinate: coordinates), externalServiceList[c]) >
+          calculateDistance(ExternalBusinessState(coordinate: coordinates), externalServiceList[c + 1])) /* For descending order use < */
+      {
+        var swap = externalServiceList[c];
+        externalServiceList[c] = externalServiceList[c + 1];
+        externalServiceList[c + 1] = swap;
       }
     }
+
+    externalServiceList.forEach((element) {
+      debugPrint('UI_M_add_external_service_list => B Name: ${element.name} - ${calculateDistance(ExternalBusinessState(coordinate: coordinates), element)}');
+    });
   }
 
 
@@ -133,11 +136,12 @@ class AddExternalServiceListState extends State<AddExternalServiceList> {
           }
         },
         builder: (context, snapshot) {
-          if (_searchController.text.isEmpty) {
+          if (_searchController.text.isEmpty && sortBy.isEmpty) {
             externalServiceList.clear();
             externalServiceList.addAll(snapshot.externalBusinessList.externalBusinessListState);
           }
           debugPrint('UI_M_add_external_service_list => EXTERNAL BUSINESS LIST: ${externalServiceList.length}');
+          debugPrint('UI_M_add_external_service_list => EXTERNAL SNIPPET LIST: ${snapshot.serviceListSnippetListState.serviceListSnippetListState.length}');
           if(snapshot.externalBusinessList.externalBusinessListState.isEmpty && startRequest){
             noActivity = true;
           }else{
@@ -165,8 +169,8 @@ class AddExternalServiceListState extends State<AddExternalServiceList> {
                       icon: Icon(Icons.keyboard_arrow_left, color: Colors.white),
                       onPressed: () {
                         //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_Business()))
-                        //Navigator.pushReplacement(context, EnterExitRoute(enterPage: ExternalServiceList(), exitPage: AddExternalServiceList(false), from: false));
-                        Navigator.of(context).pop();
+                        Navigator.pushReplacement(context, EnterExitRoute(enterPage: ExternalServiceList(), exitPage: AddExternalServiceList(false), from: false));
+                        //Navigator.of(context).pop();
                       },
                     ),
                     Utils.barTitle(AppLocalizations.of(context).addExternalService),
@@ -292,7 +296,7 @@ class AddExternalServiceListState extends State<AddExternalServiceList> {
                                 isExpanded: false,
                                 iconSize: 0,
                                 style: TextStyle(color: Colors.blue),
-                                items: [AppLocalizations.of(context).distance].map(
+                                items: [AppLocalizations.of(context).distance, 'None'].map(
                                       (val) {
                                     return DropdownMenuItem<String>(
                                       value: val,
@@ -332,8 +336,19 @@ class AddExternalServiceListState extends State<AddExternalServiceList> {
                                       sortBy = val;
                                       if (sortBy == AppLocalizations.of(context).distance) {
                                         //externalServiceList.sort((a, b) => a.name.compareTo(b.name));
-                                        sortfun();
+                                        //sortfun(snapshot.business.coordinate);
+                                        ExternalBusinessState tmpE = ExternalBusinessState(coordinate: snapshot.business.coordinate);
+                                        /*externalServiceList.forEach((element) {
+                                          debugPrint('UI_M_add_external_service_list => B Name: ${element.name} - ${calculateDistance(tmpE, element)}');
+                                        });
+                                        List<ExternalBusinessState> tmpEList = [];
+                                        tmpEList.addAll(snapshot.externalBusinessList.externalBusinessListState);*/
+                                        externalServiceList.sort((a,b) => calculateDistance(tmpE, a).compareTo(calculateDistance(tmpE, b)));
+                                        //externalServiceList.clear();
+                                        //externalServiceList.addAll(tmpEList);
+                                        //externalServiceList.sort((a,b) => calculateDistance(tmpE, a).compareTo(calculateDistance(tmpE, b)));
                                       } else {
+                                        sortBy = '';
                                         //externalServiceList.sort((a, b) => b.name.compareTo(a.name));
                                       }
                                     },
@@ -550,9 +565,9 @@ class AddExternalServiceListState extends State<AddExternalServiceList> {
                                             TemplateState templateState = TemplateState();
                                             TemplateDataState templateDataState = TemplateDataState();
                                             //emailState.to = 'rukshannipuna12@gmail.com';
-                                            emailState.to = 'rukshannipuna12@gmail.com';
+                                            emailState.to = 'flavio@buytime.network';
                                             //emailState.cc = 'f.romeo.f@gmail.com';
-                                            emailState.cc = 'f.romeo.f@gmail.com';
+                                            emailState.cc = 'aruna@buytime.network';
                                             templateState.name = 'search';
                                             //templateDataState.name = 'Nipuna Perera';
                                             //templateDataState.link = 'https://buytime.network/';

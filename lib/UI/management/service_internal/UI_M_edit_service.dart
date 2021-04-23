@@ -3,6 +3,7 @@ import 'package:Buytime/UI/management/service_internal/UI_M_service_slot.dart';
 import 'package:Buytime/UI/management/service_internal/widget/W_service_photo.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/category/tree/category_tree_state.dart';
+import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/model/snippet/parent.dart';
 import 'package:Buytime/reblox/reducer/category_tree_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/service_reducer.dart';
@@ -21,6 +22,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class UI_EditService extends StatefulWidget {
+  String serviceId;
+  String serviceName;
+  UI_EditService(this.serviceId, this.serviceName);
   State<StatefulWidget> createState() => UI_EditServiceState();
 }
 
@@ -44,10 +48,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _servicePrice = StoreProvider.of<AppState>(context).state.serviceState.price;
-      List<String> format = [];
-      format = _servicePrice.toString().split(".");
-      priceController.text = format[0].toString() + "." + (int.parse(format[1]) < 10 ? format[1].toString() + "0" : format[1].toString());
+
     });
   }
 
@@ -188,6 +189,8 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
     }
     return text;
   }
+  bool startRequest = false;
+  bool noActivity = false;
 
   @override
   Widget build(BuildContext context) {
@@ -202,12 +205,25 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
       },
       child: StoreConnector<AppState, AppState>(
           converter: (store) => store.state,
-          onInit: (store) => store.dispatch(CategoryTreeRequest()),
+          onInit: (store){
+            store.state.serviceState = ServiceState();
+            store.dispatch(CategoryTreeRequest());
+            store.dispatch(ServiceRequestByID(widget.serviceId));
+            startRequest = true;
+          },
           //onDidChange: (store) => validateReservableService(),
           builder: (context, snapshot) {
-            validateReservableService(); //TODO Check
-            ///Popolo le categorie
-            setCategoryList();
+            if(snapshot.serviceState.serviceId != null){
+              validateReservableService(); //TODO Check
+              ///Popolo le categorie
+              setCategoryList();
+            }
+            if(snapshot.serviceState.price != null && priceController.text.isEmpty){
+              _servicePrice = StoreProvider.of<AppState>(context).state.serviceState.price;
+              List<String> format = [];
+              format = _servicePrice.toString().split(".");
+              priceController.text = format[0].toString() + "." + (int.parse(format[1]) < 10 ? format[1].toString() + "0" : format[1].toString());
+            }
             return GestureDetector(
               onTap: (){
                 FocusScopeNode currentFocus = FocusScope.of(context);
@@ -217,6 +233,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                 }
               },
               child: Stack(children: [
+                snapshot.serviceState.serviceId != null ?
                 Positioned.fill(
                     child: Align(
                         alignment: Alignment.topCenter,
@@ -952,8 +969,45 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                   ),
                                 ),
                               ),
-                            )))),
-
+                            )))) :
+                Positioned.fill(
+                    child: Align(
+                        alignment: Alignment.topCenter,
+                        child: Scaffold(
+                            appBar: BuytimeAppbar(
+                              width: media.width,
+                              children: [
+                                Container(
+                                    child: IconButton(
+                                        icon: Icon(Icons.keyboard_arrow_left, color: Colors.white, size: 24),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                          //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_ServiceList()),);
+                                          //Navigator.pushReplacement(context, EnterExitRoute(enterPage: UI_M_ServiceList(), exitPage: UI_EditService(), from: false));
+                                        })),
+                                Flexible(
+                                  child: Utils.barTitle(AppLocalizations.of(context).editSpace + widget.serviceName),
+                                ),
+                                Container(
+                                  child: IconButton(
+                                      icon: Icon(Icons.check, color: BuytimeTheme.SymbolLightGrey),
+                                      onPressed: null,
+                                  )
+                                ),
+                              ],
+                            ),
+                            body: SafeArea(
+                              child: Center(
+                                child: SingleChildScrollView(
+                                  child: ConstrainedBox(
+                                    constraints: BoxConstraints(),
+                                    child: Center(
+                                      child: CircularProgressIndicator(),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            )))) ,
                 ///Ripple Effect
                 rippleLoading
                     ? Positioned.fill(

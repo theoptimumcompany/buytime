@@ -5,7 +5,9 @@ import 'package:Buytime/UI/management/service_external/widget/W_external_service
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/model/business/external_business_state.dart';
+import 'package:Buytime/reblox/model/service/external_service_imported_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
+import 'package:Buytime/reblox/reducer/external_service_imported_reducer.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
 import 'package:Buytime/reusable/buytime_icons.dart';
 import 'package:Buytime/reusable/enterExitRoute.dart';
@@ -19,7 +21,8 @@ import 'package:flutter_redux/flutter_redux.dart';
 class PAServiceList extends StatefulWidget {
   List<ServiceState> serviceState;
   String title;
-  PAServiceList(this.serviceState, this.title);
+  ExternalBusinessState externalBusinessState;
+  PAServiceList(this.serviceState, this.title, this.externalBusinessState);
   @override
   State<StatefulWidget> createState() => PAServiceListState();
 }
@@ -60,6 +63,22 @@ class PAServiceListState extends State<PAServiceList> {
         converter: (store) => store.state,
         onInit: (store) => {},
         builder: (context, snapshot) {
+          bool equal = false;
+          List<String> tmp = [];
+          StoreProvider.of<AppState>(context).state.externalServiceImportedListState.externalServiceImported.forEach((element) {
+            if(widget.externalBusinessState.id_firestore == element.externalBusinessId){
+              if(!tmp.contains(element.externalServiceId)){
+                tmp.add(element.externalServiceId);
+              }
+            }
+          });
+
+          snapshot.serviceListSnippetListState.serviceListSnippetListState.forEach((element) {
+            if(element.businessId == widget.externalBusinessState.id_firestore){
+              if(element.businessServiceNumberInternal == tmp.length)
+                equal = true;
+            }
+          });
           return WillPopScope(
               onWillPop: () async {
                 ///Block iOS Back Swipe
@@ -101,11 +120,12 @@ class PAServiceListState extends State<PAServiceList> {
                       hoverElevation: 0,
                       focusElevation: 0,
                       highlightElevation: 0,
-                      onPressed: () {
+                      onPressed: !equal ? () {
 
-                      },
+                      } : null,
                       textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
                       color:  BuytimeTheme.ActionButton,
+                      disabledColor: BuytimeTheme.SymbolGrey,
                       padding: EdgeInsets.all(media.width * 0.03),
                       shape: RoundedRectangleBorder(
                         borderRadius: new BorderRadius.circular(5),
@@ -182,25 +202,29 @@ class PAServiceListState extends State<PAServiceList> {
                                       setState(() {
                                         serviceList.removeAt(index);
                                       });
-                                      if (direction == DismissDirection.endToStart) {
-
-                                        debugPrint('UI_U_external_service_list => DX to DELETE');
-                                        // Show a snackbar. This snackbar could also contain "Undo" actions.
-                                        Scaffold.of(context).showSnackBar(SnackBar(
-                                            content: Text(AppLocalizations.of(context).spaceRemoved),
-                                            action: SnackBarAction(
-                                                label: AppLocalizations.of(context).undo,
-                                                onPressed: () {
-                                                  //To undo deletion
-                                                  undoDeletion(index, item);
-                                                })));
-                                      } else {
-                                        serviceList.insert(index, item);
-                                      }
+                                      debugPrint('UI_U_external_business_details => SX to BOOK');
+                                      ExternalServiceImportedState eSIS = ExternalServiceImportedState();
+                                      eSIS.internalBusinessId = snapshot.business.id_firestore;
+                                      eSIS.internalBusinessName = snapshot.business.name;
+                                      eSIS.externalBusinessId = widget.externalBusinessState.id_firestore;
+                                      eSIS.externalBusinessName = widget.externalBusinessState.name;
+                                      eSIS.externalServiceId = item.serviceId;
+                                      eSIS.importTimestamp = DateTime.now();
+                                      snapshot.serviceListSnippetListState.serviceListSnippetListState.forEach((sLSL) {
+                                        sLSL.businessSnippet.forEach((bS) {
+                                          bS.serviceList.forEach((sL) {
+                                            if(sL.serviceAbsolutePath.split('/').last == item.serviceId){
+                                              eSIS.externalCategoryName = bS.categoryName;
+                                            }
+                                          });
+                                        });
+                                      });
+                                      StoreProvider.of<AppState>(context).dispatch(CreateExternalServiceImported(eSIS));
+                                      undoDeletion(index, item);
                                     },
                                     child: Column(
                                       children: [
-                                        ExternalServiceItem(item, false, widget.serviceState, widget.title, ExternalBusinessState()),
+                                        ExternalServiceItem(item, false, widget.serviceState, widget.title, widget.externalBusinessState),
                                         Container(
                                           margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 30),
                                           height: SizeConfig.safeBlockVertical * .2,
@@ -214,15 +238,14 @@ class PAServiceListState extends State<PAServiceList> {
                                       alignment: Alignment.centerRight,
                                     ),
                                     secondaryBackground: Container(
-                                      color: BuytimeTheme.AccentRed,
+                                      color: BuytimeTheme.ManagerPrimary,
                                       //margin: EdgeInsets.symmetric(horizontal: 15),
                                       alignment: Alignment.centerRight,
                                       child: Container(
                                         margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 2.5),
                                         child: Icon(
-                                          BuytimeIcons.remove,
+                                          Icons.add_circle_outline,
                                           size: 24,
-
                                           ///SizeConfig.safeBlockHorizontal * 7
                                           color: BuytimeTheme.SymbolWhite,
                                         ),

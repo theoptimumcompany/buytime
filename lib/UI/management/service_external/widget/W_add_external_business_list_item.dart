@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:Buytime/UI/management/service_external/UI_M_add_external_service_list.dart';
 import 'package:Buytime/UI/management/service_external/UI_M_external_service_list.dart';
-import 'package:Buytime/UI/management/service_external/UI_U_external_business_details.dart';
+import 'package:Buytime/UI/management/service_external/UI_M_external_business_details.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/model/business/external_business_state.dart';
@@ -36,14 +36,16 @@ class _AddExternalBusinessListItemState extends State<AddExternalBusinessListIte
     double lat2 = 0.0;
     double lon2 = 0.0;
    if(widget.businessState.coordinate.isNotEmpty){
-     List<String> latLng1 = widget.businessState.coordinate.split(', ');
+     List<String> latLng1 = widget.businessState.coordinate.replaceAll('(', '').replaceAll(')', '').split(', ');
+     //debugPrint('W_add_external_business_list_item => Cordinates 1: $latLng1');
      if(latLng1.length == 2){
        lat1 = double.parse(latLng1[0]);
        lon1 = double.parse(latLng1[1]);
      }
    }
     if(widget.externalBusinessState.coordinate.isNotEmpty){
-      List<String> latLng2 = widget.externalBusinessState.coordinate.split(', ');
+      List<String> latLng2 = widget.externalBusinessState.coordinate.replaceAll('(', '').replaceAll(')', '').split(', ');
+      //debugPrint('W_add_external_business_list_item => Cordinates 2: $latLng2');
       if(latLng2.length == 2){
         lat2 = double.parse(latLng2[0]);
         lon2 = double.parse(latLng2[1]);
@@ -69,7 +71,7 @@ class _AddExternalBusinessListItemState extends State<AddExternalBusinessListIte
             child: InkWell(
               borderRadius: BorderRadius.all(Radius.circular(10)),
               onTap: () async {
-                Navigator.push(context, EnterExitRoute(enterPage: ExternalBusinessDetails(externalBusinessState: widget.externalBusinessState, fromMy: widget.fromMy), exitPage: AddExternalServiceList(false), from: true));
+                Navigator.push(context, EnterExitRoute(enterPage: ExternalBusinessDetails(widget.externalBusinessState, widget.fromMy, false), exitPage: AddExternalServiceList(false), from: true));
               },
               child: Container(
                 height: 91,  ///SizeConfig.safeBlockVertical * 15

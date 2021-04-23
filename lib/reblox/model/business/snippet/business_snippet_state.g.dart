@@ -6,17 +6,22 @@ part of 'business_snippet_state.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-BusinessSnippet _$BusinessSnippetFromJson(Map<String, dynamic> json) {
-  return BusinessSnippet(
-    id: json['id'] as String,
-    name: json['name'] as String,
-    thumbnail: json['thumbnail'] as String,
+BusinessSnippetState _$BusinessSnippetStateFromJson(Map<String, dynamic> json) {
+  return BusinessSnippetState(
+    businessId: json['businessId'] as String,
+    businessName: json['businessName'] as String,
+    businessImage: json['businessImage'] as String,
+    serviceTakenNumber: json['serviceTakenNumber'] as int,
+    serviceGivenNumber: json['serviceGivenNumber'] as int,
   );
 }
 
-Map<String, dynamic> _$BusinessSnippetToJson(BusinessSnippet instance) =>
+Map<String, dynamic> _$BusinessSnippetStateToJson(
+        BusinessSnippetState instance) =>
     <String, dynamic>{
-      'id': instance.id,
-      'name': instance.name,
-      'thumbnail': instance.thumbnail,
+      'businessId': instance.businessId,
+      'businessName': instance.businessName,
+      'businessImage': instance.businessImage,
+      'serviceTakenNumber': instance.serviceTakenNumber,
+      'serviceGivenNumber': instance.serviceGivenNumber,
     };

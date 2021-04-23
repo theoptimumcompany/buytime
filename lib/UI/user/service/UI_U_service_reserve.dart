@@ -220,6 +220,10 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
             if(element.price <= tmpPrice){
               if(element.day != 0){
                 debugPrint('UI_U_ServiceReserve => SLOT WITH DAYS');
+                if(element.day > 1)
+                  price = ' ${element.price.toStringAsFixed(0)} / ${element.day} ${AppLocalizations.of(context).days}';
+                else
+                  price = ' ${element.price.toStringAsFixed(0)} / ${element.day} ${AppLocalizations.of(context).day}';
               }else{
                 debugPrint('UI_U_ServiceReserve => SLOT WITHOUT DAYS');
                 int tmpMin = element.hour * 60 + element.minute;
@@ -298,11 +302,19 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
           });*/
 
           if(slots.isNotEmpty){
-            int tmpMin = slots[0][0][1].hour * 60 + slots[0][0][1].minute;
-            if(tmpMin > 90)
-              firstSlot = '${slots[0][0][1].hour} h ${slots[0][0][1].minute} ${AppLocalizations.of(context).spaceMinSpace}';
-            else
-              firstSlot = '$tmpMin${AppLocalizations.of(context).spaceMinSpace}';
+            if(slots[0][0][1].day != 0){
+              if(slots[0][0][1].day > 1){
+                firstSlot = '${slots[0][0][1].day} ${AppLocalizations.of(context).days}';
+              }else{
+                firstSlot = '${slots[0][0][1].day} ${AppLocalizations.of(context).day}';
+              }
+            }else{
+              int tmpMin = slots[0][0][1].hour * 60 + slots[0][0][1].minute;
+              if(tmpMin > 90)
+                firstSlot = '${slots[0][0][1].hour} h ${slots[0][0][1].minute} ${AppLocalizations.of(context).spaceMinSpace}';
+              else
+                firstSlot = '$tmpMin${AppLocalizations.of(context).spaceMinSpace}';
+            }
 
           }
         }
@@ -764,12 +776,26 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                               select[i] = !select[i];
                                                             });
                                                             if(select[i]){
+                                                              String duration = '';
+                                                              if(serviceSlot[1].day != 0){
+                                                                if(serviceSlot[1].day > 1){
+                                                                  duration = '${serviceSlot[1].day} ${AppLocalizations.of(context).days}';
+                                                                }else{
+                                                                  duration = '${serviceSlot[1].day} ${AppLocalizations.of(context).day}';
+                                                                }
+                                                              }else{
+                                                                int tmpMin = serviceSlot[1].hour * 60 + serviceSlot[1].minute;
+                                                                if(tmpMin > 90)
+                                                                  duration = '${serviceSlot[1].hour} h ${serviceSlot[1].minute} ${AppLocalizations.of(context).min}';
+                                                                else
+                                                                  duration = '$tmpMin ${AppLocalizations.of(context).min}';
+                                                              }
                                                               order.serviceId = widget.serviceState.serviceId;
                                                               order.business.name = snapshot.business.name;
                                                               order.business.id = snapshot.business.id_firestore;
                                                               order.user.name = snapshot.user.name;
                                                               order.user.id = snapshot.user.uid;
-                                                              order.addReserveItem(widget.serviceState, snapshot.business.ownerId, serviceSlot[1].startTime[serviceSlot[0]], '0', dates[index], serviceSlot[1].price);
+                                                              order.addReserveItem(widget.serviceState, snapshot.business.ownerId, serviceSlot[1].startTime[serviceSlot[0]], duration , dates[index], serviceSlot[1].price);
                                                               order.selected.add(indexes[index][i]);
                                                               //order.selected.add(selected);
                                                               order.cartCounter++;

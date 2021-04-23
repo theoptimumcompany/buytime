@@ -108,7 +108,8 @@ class InternalServiceShowcaseState extends State<InternalServiceShowcase> {
                                   (context, index) {
                                     //MenuItemModel menuItem = menuItems.elementAt(index);
                                     CategoryState categoryItem = widget.categoryRootList.elementAt(index);
-                                    return CategoryListItemWidget(categoryItem, BuytimeTheme.SymbolLime);
+                                    //return CategoryListItemWidget(categoryItem, BuytimeTheme.SymbolLime);
+                                    return Container();
                                     // return InkWell(
                                     //   onTap: () {
                                     //     debugPrint('Category Item: ${categoryItem.name.toUpperCase()} Clicked!');

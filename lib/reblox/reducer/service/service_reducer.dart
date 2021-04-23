@@ -21,6 +21,22 @@ class ServiceRequest {
   ServiceState get serviceState => _serviceState;
 }
 
+class ServiceRequestByID {
+  String _serviceId;
+
+  ServiceRequestByID(this._serviceId);
+
+  String get serviceId => _serviceId;
+}
+
+class ServiceRequestByIDResponse {
+  ServiceState _serviceState;
+
+  ServiceRequestByIDResponse(this._serviceState);
+
+  ServiceState get serviceState => _serviceState;
+}
+
 class SetService {
   ServiceState _serviceState;
 
@@ -320,6 +336,10 @@ ServiceState serviceReducer(ServiceState state, action) {
     return serviceState;
   }
   if (action is ServiceRequestResponse) {
+    serviceState = action.serviceState.copyWith();
+    return serviceState;
+  }
+  if (action is ServiceRequestByIDResponse) {
     serviceState = action.serviceState.copyWith();
     return serviceState;
   }

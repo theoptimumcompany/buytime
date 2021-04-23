@@ -29,10 +29,6 @@ CategoryState _$CategoryStateFromJson(Map<String, dynamic> json) {
         ?.toList(),
     workerMailList:
         (json['workerMailList'] as List)?.map((e) => e as String)?.toList(),
-    categorySnippet: json['categorySnippet'] == null
-        ? null
-        : CategorySnippet.fromJson(
-            json['categorySnippet'] as Map<String, dynamic>),
     categoryImage: json['categoryImage'] as String,
     customTag: json['customTag'] as String,
   );
@@ -51,7 +47,6 @@ Map<String, dynamic> _$CategoryStateToJson(CategoryState instance) =>
       'businessId': instance.businessId,
       'worker': instance.worker?.map((e) => e?.toJson())?.toList(),
       'workerMailList': instance.workerMailList,
-      'categorySnippet': instance.categorySnippet?.toJson(),
       'categoryImage': instance.categoryImage,
       'customTag': instance.customTag,
     };

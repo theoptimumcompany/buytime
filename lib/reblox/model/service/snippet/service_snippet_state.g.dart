@@ -6,11 +6,12 @@ part of 'service_snippet_state.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-ServiceSnippet _$ServiceSnippetFromJson(Map<String, dynamic> json) {
-  return ServiceSnippet(
+ServiceSnippetState _$ServiceSnippetStateFromJson(Map<String, dynamic> json) {
+  return ServiceSnippetState(
     serviceAbsolutePath: json['serviceAbsolutePath'] as String ?? '',
     serviceName: json['serviceName'] as String ?? '',
     servicePrice: (json['servicePrice'] as num)?.toDouble() ?? 0.0,
+    serviceTimesSold: json['serviceTimesSold'] as int ?? 0,
     serviceImage: json['serviceImage'] as String ?? '',
     serviceVisibility: json['serviceVisibility'] as String ?? '',
     connectedBusinessId: (json['connectedBusinessId'] as List)
@@ -20,11 +21,13 @@ ServiceSnippet _$ServiceSnippetFromJson(Map<String, dynamic> json) {
   );
 }
 
-Map<String, dynamic> _$ServiceSnippetToJson(ServiceSnippet instance) =>
+Map<String, dynamic> _$ServiceSnippetStateToJson(
+        ServiceSnippetState instance) =>
     <String, dynamic>{
       'serviceAbsolutePath': instance.serviceAbsolutePath,
       'serviceName': instance.serviceName,
       'servicePrice': instance.servicePrice,
+      'serviceTimesSold': instance.serviceTimesSold,
       'serviceImage': instance.serviceImage,
       'serviceVisibility': instance.serviceVisibility,
       'connectedBusinessId': instance.connectedBusinessId,

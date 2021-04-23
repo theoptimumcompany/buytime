@@ -1,4 +1,5 @@
 import 'package:Buytime/reblox/model/business/snippet/business_snippet_state.dart';
+import 'package:Buytime/reblox/model/business/snippet/order_business_snippet_state.dart';
 import 'package:Buytime/reblox/model/order/order_entry.dart';
 import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
 import 'package:Buytime/reblox/model/order/selected_entry.dart';
@@ -27,7 +28,7 @@ class OrderState {
   @JsonKey(ignore: true)
   String addCardProgress = "notStarted";
   bool navigate = false;
-  BusinessSnippet business;
+  OrderBusinessSnippetState business;
   UserSnippet user;
   String businessId;
   String userId;
@@ -128,7 +129,7 @@ class OrderState {
     String businessId,
     String userId,
     String orderId,
-    BusinessSnippet business,
+    OrderBusinessSnippetState business,
     UserSnippet user,
     List<SelectedEntry> selected,
     int cartCounter,
@@ -177,7 +178,7 @@ class OrderState {
       businessId: "",
       userId: "",
         orderId: "",
-      business: BusinessSnippet().toEmpty(),
+      business: OrderBusinessSnippetState().toEmpty(),
       user: UserSnippet().toEmpty(),
       selected: [],
         cartCounter: 0,

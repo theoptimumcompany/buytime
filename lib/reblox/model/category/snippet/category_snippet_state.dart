@@ -4,7 +4,7 @@ import 'package:json_annotation/json_annotation.dart';
 part 'category_snippet_state.g.dart';
 
 @JsonSerializable(explicitToJson: true)
-class CategorySnippet {
+class CategorySnippetState {
   @JsonKey(defaultValue: "")
   String categoryAbsolutePath;
   @JsonKey(defaultValue: "")
@@ -18,9 +18,9 @@ class CategorySnippet {
   @JsonKey(defaultValue: [])
   List<String> tags;
   @JsonKey(defaultValue: [])
-  List<ServiceSnippet> serviceList;
+  List<ServiceSnippetState> serviceList;
 
-  CategorySnippet({
+  CategorySnippetState({
     this.categoryAbsolutePath,
     this.categoryName,
     this.categoryImage,
@@ -30,7 +30,7 @@ class CategorySnippet {
     this.serviceList,
   });
 
-  CategorySnippet.fromState(CategorySnippet categorySnippet) {
+  CategorySnippetState.fromState(CategorySnippetState categorySnippet) {
     this.categoryAbsolutePath = categorySnippet.categoryAbsolutePath;
     this.categoryName = categorySnippet.categoryName;
     this.categoryImage = categorySnippet.categoryImage;
@@ -40,16 +40,16 @@ class CategorySnippet {
     this.serviceList = categorySnippet.serviceList;
   }
 
-  CategorySnippet copyWith({
+  CategorySnippetState copyWith({
     String categoryAbsolutePath,
     String categoryName,
     String categoryImage,
     int serviceNumberInternal,
     int serviceNumberExternal,
     List<String> tags,
-    List<ServiceSnippet> serviceList,
+    List<ServiceSnippetState> serviceList,
   }) {
-    return CategorySnippet(
+    return CategorySnippetState(
       categoryAbsolutePath: categoryAbsolutePath ?? this.categoryAbsolutePath,
       categoryName: categoryName ?? this.categoryName,
       categoryImage: categoryImage ?? this.categoryImage,
@@ -60,12 +60,12 @@ class CategorySnippet {
     );
   }
 
-  factory CategorySnippet.fromJson(Map<String, dynamic> json) => _$CategorySnippetFromJson(json);
+  factory CategorySnippetState.fromJson(Map<String, dynamic> json) => _$CategorySnippetStateFromJson(json);
 
-  Map<String, dynamic> toJson() => _$CategorySnippetToJson(this);
+  Map<String, dynamic> toJson() => _$CategorySnippetStateToJson(this);
 
-  CategorySnippet toEmpty() {
-    return CategorySnippet(
+  CategorySnippetState toEmpty() {
+    return CategorySnippetState(
       categoryAbsolutePath: '',
       categoryName: '',
       categoryImage: '',

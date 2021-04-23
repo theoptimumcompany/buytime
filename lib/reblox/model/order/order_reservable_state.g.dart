@@ -23,7 +23,8 @@ OrderReservableState _$OrderReservableStateFromJson(Map<String, dynamic> json) {
     navigate: json['navigate'] as bool,
     business: json['business'] == null
         ? null
-        : BusinessSnippet.fromJson(json['business'] as Map<String, dynamic>),
+        : OrderBusinessSnippetState.fromJson(
+            json['business'] as Map<String, dynamic>),
     user: json['user'] == null
         ? null
         : UserSnippet.fromJson(json['user'] as Map<String, dynamic>),

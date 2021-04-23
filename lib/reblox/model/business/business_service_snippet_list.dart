@@ -6,9 +6,9 @@ import 'package:flutter/foundation.dart';
 import '../file/optimum_file_to_upload.dart';
 
 class BusinessServiceSnippetList {
-  List<ServiceSnippet> snippetMap;
+  List<ServiceSnippetState> snippetMap;
 
-  List<dynamic> convertToJson(List<ServiceSnippet> serviceSnippetList) {
+  List<dynamic> convertToJson(List<ServiceSnippetState> serviceSnippetList) {
     List<dynamic> list = <dynamic>[];
     serviceSnippetList.forEach((element) {
       list.add(element.toJson());
@@ -31,7 +31,7 @@ class BusinessServiceSnippetList {
   }
 
   companyStateFieldUpdate(
-    List<ServiceSnippet> snippetMap,
+    List<ServiceSnippetState> snippetMap,
   ) {
     BusinessServiceSnippetList(
       snippetMap: snippetMap ?? this.snippetMap,
@@ -39,7 +39,7 @@ class BusinessServiceSnippetList {
   }
 
   BusinessServiceSnippetList copyWith({
-    List<ServiceSnippet> snippetMap,
+    List<ServiceSnippetState> snippetMap,
   }) {
     return BusinessServiceSnippetList(
       snippetMap: snippetMap ?? this.snippetMap,

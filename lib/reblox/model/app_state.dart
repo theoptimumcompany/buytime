@@ -4,13 +4,18 @@ import 'package:Buytime/reblox/model/booking/booking_list_state.dart';
 import 'package:Buytime/reblox/model/business/business_list_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
+import 'package:Buytime/reblox/model/business/external_business_imported_list_state.dart';
+import 'package:Buytime/reblox/model/business/external_business_imported_state.dart';
 import 'package:Buytime/reblox/model/business/external_business_list_state.dart';
 import 'package:Buytime/reblox/model/business/external_business_state.dart';
+import 'package:Buytime/reblox/model/business/snippet/business_snippet_state.dart';
+import 'package:Buytime/reblox/model/business/snippet/order_business_snippet_state.dart';
 import 'package:Buytime/reblox/model/card/card_list_state.dart';
 import 'package:Buytime/reblox/model/card/card_state.dart';
 import 'package:Buytime/reblox/model/category/category_list_state.dart';
 import 'package:Buytime/reblox/model/category/category_state.dart';
 import 'package:Buytime/reblox/model/category/invitation/category_invite_state.dart';
+import 'package:Buytime/reblox/model/category/snippet/category_snippet_state.dart';
 import 'package:Buytime/reblox/model/email/email_state.dart';
 import 'package:Buytime/reblox/model/email/template_data_state.dart';
 import 'package:Buytime/reblox/model/email/template_state.dart';
@@ -22,9 +27,14 @@ import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/pipeline/pipeline.dart';
 import 'package:Buytime/reblox/model/pipeline/pipeline_list_state.dart';
+import 'package:Buytime/reblox/model/service/external_service_imported_list_state.dart';
+import 'package:Buytime/reblox/model/service/external_service_imported_state.dart';
 import 'package:Buytime/reblox/model/service/service_list_state.dart';
 import 'package:Buytime/reblox/model/service/service_slot_time_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
+import 'package:Buytime/reblox/model/service/snippet/service_snippet_state.dart';
+import 'package:Buytime/reblox/model/snippet/service_list_snippet_list_state.dart';
+import 'package:Buytime/reblox/model/snippet/service_list_snippet_state.dart';
 import 'package:Buytime/reblox/model/statistics_state.dart';
 import 'package:Buytime/reblox/model/stripe/stripe_state.dart';
 import 'package:Buytime/reblox/model/user/user_state.dart';
@@ -87,6 +97,16 @@ class AppState {
   TemplateDataState templateDataState;
   String lastError;
   String previousError;
+  ServiceListSnippetState serviceListSnippetState;
+  ServiceListSnippetListState serviceListSnippetListState;
+  BusinessSnippetState businessSnippetState;
+  OrderBusinessSnippetState orderBusinessSnippetState;
+  CategorySnippetState categorySnippetState;
+  ServiceSnippetState serviceSnippetState;
+  ExternalBusinessImportedState externalBusinessImportedState;
+  ExternalBusinessImportedListState externalBusinessImportedListState;
+  ExternalServiceImportedState externalServiceImportedState;
+  ExternalServiceImportedListState externalServiceImportedListState;
 
   AppState({
     @required this.business,
@@ -120,6 +140,17 @@ class AppState {
     this.notificationListState,
     this.emailState,
     this.templateState,
+    this.templateDataState,
+    this.serviceListSnippetState,
+    this.serviceListSnippetListState,
+    this.businessSnippetState,
+    this.orderBusinessSnippetState,
+    this.categorySnippetState,
+    this.serviceSnippetState,
+    this.externalBusinessImportedState,
+    this.externalBusinessImportedListState,
+    this.externalServiceImportedState,
+    this.externalServiceImportedListState,
     this.templateDataState,
     this.lastError = "",
     this.previousError = ""
@@ -157,6 +188,16 @@ class AppState {
     emailState = EmailState();
     templateState = TemplateState();
     templateDataState = TemplateDataState();
+    serviceListSnippetState = ServiceListSnippetState();
+    serviceListSnippetListState = ServiceListSnippetListState();
+    businessSnippetState = BusinessSnippetState();
+    orderBusinessSnippetState = OrderBusinessSnippetState();
+    categorySnippetState = CategorySnippetState();
+    serviceSnippetState = ServiceSnippetState();
+    externalBusinessImportedState = ExternalBusinessImportedState();
+    externalBusinessImportedListState = ExternalBusinessImportedListState();
+    externalServiceImportedState = ExternalServiceImportedState();
+    externalServiceImportedListState = ExternalServiceImportedListState();
     lastError = "";
     previousError = "";
 
@@ -195,6 +236,17 @@ class AppState {
         EmailState emailState,
         TemplateState templateState,
         TemplateDataState templateDataState,
+    ServiceListSnippetState serviceListSnippetState,
+    ServiceListSnippetListState serviceListSnippetListState,
+    BusinessSnippetState businessSnippetState,
+    OrderBusinessSnippetState orderBusinessSnippetState,
+    CategorySnippetState categorySnippetState,
+    ServiceSnippetState serviceSnippetState,
+    ExternalBusinessImportedState externalBusinessImportedState,
+    ExternalBusinessImportedListState externalBusinessImportedListState,
+    ExternalServiceImportedState externalServiceImportedState,
+    ExternalServiceImportedListState externalServiceImportedListState,
+        TemplateDataState templateDataState,
     String lastError,
     String previousError
       }) {
@@ -230,6 +282,16 @@ class AppState {
     this.emailState = emailState;
     this.templateState = templateState;
     this.templateDataState = templateDataState;
+    this.serviceListSnippetState = serviceListSnippetState;
+    this.serviceListSnippetListState = serviceListSnippetListState;
+    this.businessSnippetState = businessSnippetState;
+    this.orderBusinessSnippetState = orderBusinessSnippetState;
+    this.categorySnippetState = categorySnippetState;
+    this.serviceSnippetState = serviceSnippetState;
+    this.externalBusinessImportedState = externalBusinessImportedState;
+    this.externalBusinessImportedListState = externalBusinessImportedListState;
+    this.externalServiceImportedState = externalServiceImportedState;
+    this.externalServiceImportedListState = externalServiceImportedListState;
     this.lastError = lastError;
     this.previousError = previousError;
   }

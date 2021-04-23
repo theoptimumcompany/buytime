@@ -34,16 +34,25 @@ class _TimeSlotWidgetState extends State<TimeSlotWidget> {
   void initState() {
     super.initState();
 
-    int tmpMin = widget.serviceSlot.hour * 60 + widget.serviceSlot.minute;
-    if(tmpMin > 90)
-      duration = '${widget.serviceSlot.hour} h ${widget.serviceSlot.minute}';
-    else
-      duration = '$tmpMin';
+
+
   }
 
   @override
   Widget build(BuildContext context) {
-
+    if(widget.serviceSlot.day != 0){
+      if(widget.serviceSlot.day > 1){
+        duration = '${widget.serviceSlot.day} ${AppLocalizations.of(context).days}';
+      }else{
+        duration = '${widget.serviceSlot.day} ${AppLocalizations.of(context).day}';
+      }
+    }else{
+      int tmpMin = widget.serviceSlot.hour * 60 + widget.serviceSlot.minute;
+      if(tmpMin > 90)
+        duration = '${widget.serviceSlot.hour} h ${widget.serviceSlot.minute} ${AppLocalizations.of(context).min}';
+      else
+        duration = '$tmpMin ${AppLocalizations.of(context).min}';
+    }
     return Container(
       //margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 2),
       child: Column(
@@ -82,7 +91,7 @@ class _TimeSlotWidgetState extends State<TimeSlotWidget> {
                  child: FittedBox(
                    fit: BoxFit.scaleDown,
                    child: Text(
-                     '$duration ${AppLocalizations.of(context).min}',
+                     '$duration',
                      style: TextStyle(
                        //letterSpacing: 1.25,
                          fontFamily: BuytimeTheme.FontFamily,

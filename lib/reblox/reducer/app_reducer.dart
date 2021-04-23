@@ -5,6 +5,8 @@ import 'package:Buytime/reblox/model/business/business_list_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_list_state.dart';
+import 'package:Buytime/reblox/model/business/external_business_imported_list_state.dart';
+import 'package:Buytime/reblox/model/business/external_business_imported_state.dart';
 import 'package:Buytime/reblox/model/business/external_business_list_state.dart';
 import 'package:Buytime/reblox/model/business/external_business_state.dart';
 import 'package:Buytime/reblox/model/card/card_list_state.dart';
@@ -22,9 +24,13 @@ import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/pipeline/pipeline.dart';
 import 'package:Buytime/reblox/model/pipeline/pipeline_list_state.dart';
+import 'package:Buytime/reblox/model/service/external_service_imported_list_state.dart';
+import 'package:Buytime/reblox/model/service/external_service_imported_state.dart';
 import 'package:Buytime/reblox/model/service/service_list_state.dart';
 import 'package:Buytime/reblox/model/service/service_slot_time_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
+import 'package:Buytime/reblox/model/snippet/service_list_snippet_list_state.dart';
+import 'package:Buytime/reblox/model/snippet/service_list_snippet_state.dart';
 import 'package:Buytime/reblox/model/statistics_state.dart';
 import 'package:Buytime/reblox/model/stripe/stripe_state.dart';
 import 'package:Buytime/reblox/model/user/user_state.dart';
@@ -36,6 +42,8 @@ import 'package:Buytime/reblox/reducer/category_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/email_reducer.dart';
 import 'package:Buytime/reblox/reducer/external_business_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/external_business_reducer.dart';
+import 'package:Buytime/reblox/reducer/external_service_imported_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/external_service_imported_reducer.dart';
 import 'package:Buytime/reblox/reducer/notification_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/notification_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_list_reducer.dart';
@@ -49,11 +57,15 @@ import 'package:Buytime/reblox/reducer/service/card_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/service_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/service_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/service_slot_time_reducer.dart';
+import 'package:Buytime/reblox/reducer/service_list_snippet_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/service_list_snippet_reducer.dart';
 import 'package:Buytime/reblox/reducer/statistics_reducer.dart';
 import 'package:Buytime/reblox/reducer/stripe_payment_reducer.dart';
 import 'package:Buytime/reblox/reducer/user_reducer.dart';
 import 'package:Buytime/reblox/reducer/booking_reducer.dart';
 import 'package:Buytime/reblox/reducer/booking_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/external_business_imported_reducer.dart';
+import 'package:Buytime/reblox/reducer/external_business_imported_list_reducer.dart';
 import 'package:Buytime/utils/globals.dart';
 
 import 'business_reducer.dart';
@@ -101,6 +113,12 @@ AppState appReducer(AppState state, dynamic action) {
   EmailState emailState = emailReducer(state.emailState, action);
   String lastError = "";
   String previousError = "";
+  ServiceListSnippetState serviceListSnippetState = serviceListSnippetReducer(state.serviceListSnippetState, action);
+  ServiceListSnippetListState serviceListSnippetListState = serviceListSnippetListReducer(state.serviceListSnippetListState, action);
+  ExternalBusinessImportedState externalBusinessImportedState = externalBusinessImportedReducer(state.externalBusinessImportedState, action);
+  ExternalBusinessImportedListState externalBusinessImportedListState = externalBusinessImportedListReducer(state.externalBusinessImportedListState, action);
+  ExternalServiceImportedState externalServiceImportedState = externalServiceImportedReducer(state.externalServiceImportedState, action);
+  ExternalServiceImportedListState externalServiceImportedListState = externalServiceImportedListReducer(state.externalServiceImportedListState, action);
 
   AppState newState = AppState.copyWith(
       business: businessState,
@@ -134,7 +152,14 @@ AppState appReducer(AppState state, dynamic action) {
       notificationListState: notificationListState,
       emailState: emailState,
       lastError: lastError,
-      previousError: previousError
+      previousError: previousError,
+      emailState: emailState,
+      serviceListSnippetState: serviceListSnippetState,
+      serviceListSnippetListState: serviceListSnippetListState,
+      externalBusinessImportedState: externalBusinessImportedState,
+      externalBusinessImportedListState: externalBusinessImportedListState,
+    externalServiceImportedState: externalServiceImportedState,
+    externalServiceImportedListState: externalServiceImportedListState
   );
 
   if (action is ClickOnBusinessState) {

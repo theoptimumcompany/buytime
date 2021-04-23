@@ -100,11 +100,15 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
               if(element.price <= tmpPrice){
                 if(element.day != 0){
                   debugPrint('UI_U_ServiceDetails => SLOT WITH DAYS');
+                  if(element.day > 1)
+                    price = AppLocalizations.of(context).startingFromCurrency + ' ${element.price.toStringAsFixed(0)} / ${element.day} ${AppLocalizations.of(context).days}';
+                  else
+                    price = AppLocalizations.of(context).startingFromCurrency + ' ${element.price.toStringAsFixed(0)} / ${element.day} ${AppLocalizations.of(context).day}';
                 }else{
                   debugPrint('UI_U_ServiceDetails => SLOT WITHOUT DAYS');
                   int tmpMin = element.hour * 60 + element.minute;
                   if(tmpMin > 90)
-                    price = AppLocalizations.of(context).startingFromCurrency + ' ${element.price.toStringAsFixed(0)}/${element.hour} h ${element.minute} ${AppLocalizations.of(context).spaceMinSpace}';
+                    price = AppLocalizations.of(context).startingFromCurrency + ' ${element.price.toStringAsFixed(0)} / ${element.hour} h ${element.minute} ${AppLocalizations.of(context).spaceMinSpace}';
                   else
                     price = AppLocalizations.of(context).startingFromCurrency + ' ${element.price.toStringAsFixed(0)} / $tmpMin${AppLocalizations.of(context).spaceMinSpace}';
                 }

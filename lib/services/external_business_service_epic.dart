@@ -11,6 +11,7 @@ import 'package:Buytime/reblox/reducer/business_reducer.dart';
 import 'package:Buytime/reblox/reducer/external_business_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/external_business_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/service_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/service_list_snippet_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/statistics_reducer.dart';
 import 'package:Buytime/services/file_upload_service.dart'
     if (dart.library.html) 'package:Buytime/services/file_upload_service_web.dart';
@@ -89,13 +90,14 @@ class ExternalBusinessListRequestService implements EpicClass<AppState> {
       //return new ExternalBusinessListReturned(businessStateList);
     }).expand((element) => [
       ExternalBusinessListReturned(businessStateList),
+      ServiceListSnippetListRequest(businessStateList),
       UpdateStatistics(statisticsState),
     ]);
   }
 }
 
 class ExternalBusinessServiceSnippetListRequestService implements EpicClass<AppState> {
-  List<ServiceSnippet> businessServiceSnippetList;
+  List<ServiceSnippetState> businessServiceSnippetList;
   StatisticsState statisticsState;
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
@@ -111,7 +113,7 @@ class ExternalBusinessServiceSnippetListRequestService implements EpicClass<AppS
       serviceSnippetListFromFirebaseDocs = serviceSnippetListFromFirebase.docs.length;
 
       serviceSnippetListFromFirebase.docs.forEach((element) {
-        ServiceSnippet serviceSnippet = ServiceSnippet.fromJson(element.data());
+        ServiceSnippetState serviceSnippet = ServiceSnippetState.fromJson(element.data());
         businessServiceSnippetList.add(serviceSnippet);
       });
 

@@ -1,4 +1,5 @@
 import 'package:Buytime/reblox/model/category/category_state.dart';
+import 'package:Buytime/reblox/model/category/snippet/category_snippet_state.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:flutter/cupertino.dart';
@@ -8,7 +9,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 // ignore: must_be_immutable
 class CategoryListItemWidget extends StatefulWidget {
 
-  CategoryState categoryItem;
+  CategorySnippetState categoryItem;
   Color color;
   CategoryListItemWidget(this.categoryItem, this.color);
 
@@ -17,13 +18,13 @@ class CategoryListItemWidget extends StatefulWidget {
 }
 class _CategoryListItemWidgetState extends State<CategoryListItemWidget> {
   ///Models
-  CategoryState categoryItem;
+  //CategoryState categoryItem;
   Color color;
 
   @override
   void initState() {
     super.initState();
-    categoryItem = widget.categoryItem;
+    //categoryItem = widget.categoryItem;
     color = widget.color;
   }
 
@@ -60,7 +61,7 @@ class _CategoryListItemWidgetState extends State<CategoryListItemWidget> {
                             child: FittedBox(
                               fit: BoxFit.scaleDown,
                               child: Text(
-                                "100",
+                                widget.categoryItem.serviceNumberInternal != 0 ? '${widget.categoryItem.serviceNumberInternal}' : '${widget.categoryItem.serviceNumberExternal}',
                                 style: TextStyle(
                                     color: BuytimeTheme.TextWhite,
                                     fontWeight: FontWeight.w400,
@@ -78,7 +79,7 @@ class _CategoryListItemWidgetState extends State<CategoryListItemWidget> {
                     child: Container(
                       margin: EdgeInsets.only(left: 5.0),
                       child: Text(
-                        widget.categoryItem.name,
+                        widget.categoryItem.categoryName,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                             color: BuytimeTheme.TextBlack,
@@ -93,7 +94,7 @@ class _CategoryListItemWidgetState extends State<CategoryListItemWidget> {
               )
           ),
           ///Most popular
-          Expanded(
+          /*Expanded(
             flex: 1,
             child: Container(
               margin: EdgeInsets.only(right: 10.0),
@@ -118,7 +119,7 @@ class _CategoryListItemWidgetState extends State<CategoryListItemWidget> {
                 ],
               ),
             ),
-          ),
+          ),*/
         ],
       ),
     );
