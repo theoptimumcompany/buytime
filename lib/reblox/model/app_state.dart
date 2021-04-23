@@ -151,7 +151,6 @@ class AppState {
     this.externalBusinessImportedListState,
     this.externalServiceImportedState,
     this.externalServiceImportedListState,
-    this.templateDataState,
     this.lastError = "",
     this.previousError = ""
   });
@@ -246,7 +245,6 @@ class AppState {
     ExternalBusinessImportedListState externalBusinessImportedListState,
     ExternalServiceImportedState externalServiceImportedState,
     ExternalServiceImportedListState externalServiceImportedListState,
-        TemplateDataState templateDataState,
     String lastError,
     String previousError
       }) {

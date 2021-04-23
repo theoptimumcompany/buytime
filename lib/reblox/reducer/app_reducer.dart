@@ -153,7 +153,6 @@ AppState appReducer(AppState state, dynamic action) {
       emailState: emailState,
       lastError: lastError,
       previousError: previousError,
-      emailState: emailState,
       serviceListSnippetState: serviceListSnippetState,
       serviceListSnippetListState: serviceListSnippetListState,
       externalBusinessImportedState: externalBusinessImportedState,
