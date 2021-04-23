@@ -20,7 +20,6 @@ OrderState _$OrderStateFromJson(Map<String, dynamic> json) {
     taxPercent: (json['taxPercent'] as num)?.toDouble(),
     amount: json['amount'] as int,
     progress: json['progress'] as String,
-    addCardProgress: json['addCardProgress'] as bool,
     navigate: json['navigate'] as bool,
     business: json['business'] == null
         ? null

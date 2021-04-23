@@ -26,7 +26,6 @@ import 'package:Buytime/reblox/model/service/service_list_state.dart';
 import 'package:Buytime/reblox/model/service/service_slot_time_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/model/statistics_state.dart';
-import 'package:Buytime/reblox/model/stripe/stripe_list_state.dart';
 import 'package:Buytime/reblox/model/stripe/stripe_state.dart';
 import 'package:Buytime/reblox/model/user/user_state.dart';
 import 'package:Buytime/reblox/navigation/navigation_reducer.dart';
@@ -51,7 +50,6 @@ import 'package:Buytime/reblox/reducer/service/service_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/service_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/service_slot_time_reducer.dart';
 import 'package:Buytime/reblox/reducer/statistics_reducer.dart';
-import 'package:Buytime/reblox/reducer/stripe_list_payment_reducer.dart';
 import 'package:Buytime/reblox/reducer/stripe_payment_reducer.dart';
 import 'package:Buytime/reblox/reducer/user_reducer.dart';
 import 'package:Buytime/reblox/reducer/booking_reducer.dart';
@@ -64,6 +62,12 @@ import 'category_reducer.dart';
 import 'category_tree_reducer.dart';
 
 class ClickOnBusinessState {}
+class ErrorAction {
+  String _error;
+  ErrorAction(this._error);
+  String get error => _error;
+}
+class ErrorReset {}
 
 AppState appReducer(AppState state, dynamic action) {
   BusinessState businessState = businessReducer(state.business, action);
@@ -77,7 +81,6 @@ AppState appReducer(AppState state, dynamic action) {
   ExternalBusinessListState externalBusinessListState = externalBusinessListReducer(state.externalBusinessList, action);
   BookingListState bookingListState = bookingListReducer(state.bookingList, action);
   StripeState stripeState = stripePaymentReducer(state.stripe, action);
-  StripeListState stripeListState = stripeListPaymentReducer(state.stripeListState, action);
   UserState userState = userReducer(state.user, action);
   CategoryState categoryState = categoryReducer(state.category, action);
   CategoryInviteState categoryInviteState = categoryInviteReducer(state.categoryInvite, action);
@@ -96,6 +99,8 @@ AppState appReducer(AppState state, dynamic action) {
   NotificationState notificationState = notificationReducer(state.notificationState, action);
   NotificationListState notificationListState = notificationListReducer(state.notificationListState, action);
   EmailState emailState = emailReducer(state.emailState, action);
+  String lastError = "";
+  String previousError = "";
 
   AppState newState = AppState.copyWith(
       business: businessState,
@@ -110,7 +115,6 @@ AppState appReducer(AppState state, dynamic action) {
       bookingList: bookingListState,
       user: userState,
       stripe: stripeState,
-      stripeListState: stripeListState,
       category: categoryState,
       categoryInvite: categoryInviteState,
       categoryList: categoryListState,
@@ -128,7 +132,9 @@ AppState appReducer(AppState state, dynamic action) {
       autoCompleteListState: autoCompleteListState,
       notificationState: notificationState,
       notificationListState: notificationListState,
-      emailState: emailState
+      emailState: emailState,
+      lastError: lastError,
+      previousError: previousError
   );
 
   if (action is ClickOnBusinessState) {
@@ -136,6 +142,20 @@ AppState appReducer(AppState state, dynamic action) {
     newState.order = OrderState().toEmpty();
     newState.serviceList = ServiceListState().toEmpty();
     newState.serviceState = ServiceState().toEmpty();
+    //cartCounter = 0;
+  }
+
+  if (action is ErrorAction) {
+    // reset the store before going to the service list
+    newState.lastError = action.error;
+    return newState;
+    //cartCounter = 0;
+  }
+
+  if (action is ErrorReset) {
+    // reset the store before going to the service list
+    newState.lastError = "";
+    return newState;
     //cartCounter = 0;
   }
 

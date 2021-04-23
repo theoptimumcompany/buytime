@@ -8,7 +8,7 @@ part of 'card_list_state.dart';
 
 CardListState _$CardListStateFromJson(Map<String, dynamic> json) {
   return CardListState(
-    cardListState: (json['cardListState'] as List)
+    cardList: (json['cardListState'] as List)
         ?.map((e) =>
             e == null ? null : CardState.fromJson(e as Map<String, dynamic>))
         ?.toList(),
@@ -18,5 +18,5 @@ CardListState _$CardListStateFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$CardListStateToJson(CardListState instance) =>
     <String, dynamic>{
       'cardListState':
-          instance.cardListState?.map((e) => e?.toJson())?.toList(),
+          instance.cardList?.map((e) => e?.toJson())?.toList(),
     };

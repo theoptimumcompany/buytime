@@ -40,22 +40,14 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver {
-  Timer _timerLink;
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    print('state = $state');
-    if (state == AppLifecycleState.paused) {
-      StatisticsState().log('PAUSED', StoreProvider.of<AppState>(context).state.statistics);
-      StatisticsState().writeToStorage(StoreProvider.of<AppState>(context).state.statistics);
-    }
-
-    /*if(state == AppLifecycleState.detached){
-      //debugPrint('detached: Calls: ${StoreProvider.of<AppState>(context).state.statistics.numberOfCalls}, Documents: ${StoreProvider.of<AppState>(context).state.statistics.numberOfDocuments}');
-      //StatisticsState().writeToStorage(StoreProvider.of<AppState>(context).state.statistics);
-    }*/
-  }
-
+  // @override
+  // void didChangeAppLifecycleState(AppLifecycleState state) {
+  //   print('state = $state');
+  //   if (state == AppLifecycleState.paused) {
+  //     StatisticsState().log('PAUSED', StoreProvider.of<AppState>(context).state.statistics);
+  //     StatisticsState().writeToStorage(StoreProvider.of<AppState>(context).state.statistics);
+  //   }
+  // }
   StatisticsState statisticsState;
 
   readFromStorage() async {
@@ -71,12 +63,9 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
 
       prefs.setBool('first_run', false);
     }
-
-    //await FlutterSecureStorage().delete(key: 'ccs');
-    //await FlutterSecureStorage().delete(key: 'autoComplete');
-    statisticsState = await StatisticsState().readFromStorage();
-    StatisticsState().log('INITIALIZE', statisticsState);
-    StoreProvider.of<AppState>(context).dispatch(UpdateStatistics(statisticsState));
+    // statisticsState = await StatisticsState().readFromStorage();
+    // StatisticsState().log('INITIALIZE', statisticsState);
+    // StoreProvider.of<AppState>(context).dispatch(UpdateStatistics(statisticsState));
 
     List<CardState> cards = await CardState().readFromStorage();
     StoreProvider.of<AppState>(context).dispatch(AddCardToList(cards));
@@ -87,18 +76,10 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
     StoreProvider.of<AppState>(context).dispatch(AddAutoCompleteToList(completes));
   }
 
-  var TAG = "MyApp";
-  var _my_log_file_name = "MyLogFile";
-  var toggle = false;
-  static Completer _completer = new Completer<String>();
-
   @override
   void initState() {
     WidgetsBinding.instance.addObserver(this);
     super.initState();
-    logger.d("Init Splash screen");
-    //DynamicLinkService().retrieveDynamicLink(context);
-
     Firebase.initializeApp().then((value) {
       final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
       if (!kIsWeb) {
@@ -114,7 +95,6 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
                 MaterialPageRoute(builder: (context) => UI_U_OrderDetail()),
               );
             });
-
         FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
         FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
           var data = message.data['data'] ?? message;

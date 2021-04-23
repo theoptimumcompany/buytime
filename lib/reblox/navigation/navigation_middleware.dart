@@ -10,6 +10,7 @@ List<Middleware<AppState>> createNavigationMiddleware(var epics) {
     EpicMiddleware<AppState>(epics),
     TypedMiddleware<AppState, NavigateReplaceAction>(_navigateReplace),
     TypedMiddleware<AppState, NavigatePushAction>(_navigate),
+    TypedMiddleware<AppState, NavigatePopAction>(_navigatePop),
   ];
 }
 
@@ -21,13 +22,16 @@ _navigateReplace(Store<AppState> store, action, NextDispatcher next) {
   next(action); //This need to be after name checks
 }
 
+_navigatePop(Store<AppState> store, action, NextDispatcher next) {
+  final routeName = (action as NavigatePopAction).lastRouteName;
+  if (store.state.route.last != routeName) {
+    // navigatorKey.currentState.pop();
+  }
+  next(action); //This need to be after name checks
+}
+
 _navigate(Store<AppState> store, action, NextDispatcher next) {
   final routeName = (action as NavigatePushAction).routeName;
-
-  ///Need when the global key will be updated inr eal time
-  /*if (store.state.route.last != routeName) {
-
-  }*/
   navigatorKey.currentState.pushNamed(routeName);
   next(action); //This need to be after name checks
 }

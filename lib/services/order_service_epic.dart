@@ -4,7 +4,6 @@ import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/statistics_state.dart';
 import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
-import 'package:Buytime/reblox/navigation/navigation_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reblox/reducer/statistics_reducer.dart';
@@ -14,8 +13,6 @@ import 'package:intl/intl.dart';
 import 'package:redux_epics/redux_epics.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:http/http.dart' as http;
-import 'package:Buytime/services/file_upload_service.dart' if (dart.library.html) 'package:Buytime/services/file_upload_service_web.dart';
-// import 'package:stripe_sdk/stripe_sdk.dart';
 
 List<DateTime> getPeriod(DateTime dateTime){
   //String weekdayDate = DateFormat('E d M y').format(dateTime);
@@ -305,7 +302,7 @@ class OrderCreateService implements EpicClass<AppState> {
       orderState.businessId = store.state.business.id_firestore;
       orderState.userId = store.state.user.uid;
       orderState.business.thumbnail = store.state.business.wide;
-      store.state.cardListState.cardListState.forEach((element) {
+      store.state.cardListState.cardList.forEach((element) {
         if(element.selected){
           orderState.cardType = element.stripeState.stripeCard.brand;
           orderState.cardLast4Digit = element.stripeState.stripeCard.last4;
@@ -314,11 +311,9 @@ class OrderCreateService implements EpicClass<AppState> {
       // send document to orders collection
       var addedOrder = await FirebaseFirestore.instance.collection("order/").add(orderState.toJson());
       orderState.orderId = addedOrder.id;
-      //await FirebaseFirestore.instance.collection("order/").doc(addedOrder.id.toString()).update(orderState.toJson()); /// 1 WRITE
-      //++write;
-      //final http.Response response = await http.post('https://europe-west1-buytime-458a1.cloudfunctions.net/StripePIOnOrder?orderId=' + addedOrder.id);
-      var url = Uri.parse('https://europe-west1-buytime-458a1.cloudfunctions.net/StripePIOnOrder');
-      final http.Response response = await http.post(url, body: {'orderId': '${addedOrder.id}'});
+      String addedOrderId = addedOrder.id;
+      var url = Uri.https('europe-west1-buytime-458a1.cloudfunctions.net', '/StripePIOnOrder', {'orderId': '$addedOrderId', 'currency': 'EUR'});
+      final http.Response response = await http.get(url);
       print("ORDER_SERVICE_EPIC - OrderCreateService => Order_service epic - response is done");
       print('ORDER_SERVICE_EPIC - OrderCreateService => RESPONSE: $response');
 
@@ -330,7 +325,6 @@ class OrderCreateService implements EpicClass<AppState> {
           'orderId': addedOrder.id
         });
         state = 'paid';
-        //return SetOrderProgress("paid");
       } else {
         var jsonResponse;
         try{
@@ -418,8 +412,8 @@ class AddingStripePaymentMethodRequest implements EpicClass<AppState> {
     });
     // now http request to create the actual setupIntent
     //response = await http.post('https://europe-west1-buytime-458a1.cloudfunctions.net/createSetupIntent?userId=' + userId);
-      var url = Uri.parse('https://europe-west1-buytime-458a1.cloudfunctions.net/createSetupIntent');
-      response = await http.post(url, body: {'userId': '$userId'});
+      var url = Uri.https('europe-west1-buytime-458a1.cloudfunctions.net', '/createSetupIntent', {'userId': '$userId'});
+      response = await http.get(url);
 
       statisticsState = store.state.statistics;
       /*statisticsState = store.state.statistics;

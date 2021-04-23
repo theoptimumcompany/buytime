@@ -10,6 +10,7 @@ import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
 import 'package:Buytime/reblox/reducer/order_reservable_reducer.dart';
 import 'package:Buytime/reblox/reducer/stripe_list_payment_reducer.dart';
 import 'package:Buytime/reblox/reducer/stripe_payment_reducer.dart';
+import 'package:Buytime/reusable/stripe/show_dialog_to_dismiss.dart';
 import 'package:Buytime/services/stripe_payment_service_epic.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:Buytime/utils/size_config.dart';
@@ -48,8 +49,6 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
   void initState() {
     super.initState();
     _controller = TabController(length: 3, vsync: this);
-
-
     _controller.addListener(() {
       setState(() {
         _selectedIndex = _controller.index;
@@ -69,7 +68,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
         child: StoreConnector<AppState, AppState>(
             onInit: (store) {
               /// check if the stripe customer have been created for this user:
-              store?.dispatch(CheckStripeCustomer());
+              store?.dispatch(CheckStripeCustomer(false));
               debugPrint('UI_U_ConfirmOrder => ON INIT');
             },
             converter: (store) => store.state,
@@ -79,263 +78,311 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
               else
                 orderState = snapshot.order;
               bool selected = false;
-              List<CardState> tmpList = StoreProvider.of<AppState>(context).state.cardListState.cardListState;
-              tmpList.forEach((element) {
-                if(element.selected){
-                  selected = true;
-                }
-              });
+              List<CardState> cardList = StoreProvider.of<AppState>(context).state.cardListState.cardList;
+              if (cardList != null) {
+                cardList.forEach((element) {
+                  if(element.selected){
+                    selected = true;
+                  }
+                });
+              }
 
-              return Scaffold(
-                  appBar: BuytimeAppbar(
-                    background: widget.tourist != null && widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
-                    width: media.width,
-                    children: [
-                      ///Back Button
-                      IconButton(
-                        icon: Icon(Icons.chevron_left, color: BuytimeTheme.TextWhite),
-                        onPressed: () => Future.delayed(Duration.zero, () {
-                          Navigator.of(context).pop();
-                        }),
-                      ),
-                      ///Order Title
-                      Container(
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 0.0),
-                          child: Text(
-                            AppLocalizations.of(context).confirmOrder,
-                            textAlign: TextAlign.start,
-                            style: BuytimeTheme.appbarTitle,
-                          ),
-                        ),
-                      ),
-                      /*ColorFiltered(
-                        colorFilter: ColorFilter.linearToSrgbGamma(),
-                        child: Image.network(
-                          StoreProvider.of<AppState>(context).state.business.logo,
-                          height: media.height * 0.05,
-                        ),
-                      ),*/
-                      SizedBox(
-                        width: 40.0,
-                      )
-                    ],
-                  ),
-                  body: SafeArea(
-                    child: Center(
-                      child: ConstrainedBox(
-                        constraints: BoxConstraints(),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          //mainAxisSize: MainAxisSize.min,
+
+              return Stack(
+                children: [Positioned.fill(
+                  child: Align(
+                    alignment: Alignment.topCenter,
+                    child: Scaffold(
+                        appBar: BuytimeAppbar(
+                          background: widget.tourist != null && widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+                          width: media.width,
                           children: [
-                            ///Cart Details & Confirm Details
-                            Expanded(
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  ///Top Text
-                                  Container(
-                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 4),
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(left: 0.0),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            AppLocalizations.of(context).serviceNameSecondLine,
-                                            textAlign: TextAlign.start,
-                                            style: TextStyle(
-                                              fontFamily: BuytimeTheme.FontFamily,
-                                              color: BuytimeTheme.TextBlack,
-                                              fontSize: 14, /// SizeConfig.safeBlockHorizontal * 4
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  ///Total Price
-                                  Container(
-                                    //color: Colors.black87,
-                                      child: StoreConnector<AppState, AppState>(
-                                          converter: (store) => store.state,
-                                          rebuildOnChange: true,
-                                          builder: (context, snapshot) {
-                                            if(widget.reserve != null && widget.reserve){
-                                              print("UI_U_ConfirmOrder => " + snapshot.orderReservable.itemList.length.toString());
-                                              return OrderTotal(media: media, orderState: OrderState.fromReservableState(snapshot.orderReservable));
-                                            }else{
-                                              print("UI_U_ConfirmOrder => " + snapshot.order.itemList.length.toString());
-                                              return OrderTotal(media: media, orderState: snapshot.order);
-                                            }
-                                          }
-                                      )
-                                  ),
-                                  ///Divider
-                                  Container(
-                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 10, right: SizeConfig.safeBlockHorizontal * 10),
-                                    color: BuytimeTheme.BackgroundLightGrey,
-                                    height: SizeConfig.safeBlockVertical * .2,
-                                  ),
-                                  ///Please Charge ...
-                                  Container(
-                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * .5),
-                                    height: SizeConfig.safeBlockVertical * 8,
-                                    color: Colors.white,
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(left: 0.0),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            AppLocalizations.of(context).pleaseChargeThisToMy,
-                                            textAlign: TextAlign.start,
-                                            style: TextStyle(
-                                              fontFamily: BuytimeTheme.FontFamily,
-                                              color: BuytimeTheme.TextBlack,
-                                              fontSize: 14, /// SizeConfig.safeBlockHorizontal * 4
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  ///Divider
-                                  Container(
-                                    color: BuytimeTheme.BackgroundLightGrey,
-                                    height: SizeConfig.safeBlockVertical * 2,
-                                  ),
-                                  ///Confirm Details
-                                  PreferredSize(
-                                    preferredSize: Size.fromHeight(kToolbarHeight),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color:  widget.tourist != null && widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.black87.withOpacity(.3),
-                                            spreadRadius: 1,
-                                            blurRadius: 1,
-                                            offset: Offset(0, 2), // changes position of shadow
-                                          ),
-                                        ],
-                                      ),
-                                      child: TabBar(
-                                        indicatorWeight: SizeConfig.safeBlockHorizontal * 1,
-                                        indicatorColor: BuytimeTheme.BackgroundWhite,
-                                        labelStyle: TextStyle(
-                                            letterSpacing: 1.25, ///SizeConfig.safeBlockHorizontal * .2
-                                            fontFamily: BuytimeTheme.FontFamily,
-                                            color: BuytimeTheme.TextWhite,
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
-                                        ),
-                                        indicatorPadding: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2, right: SizeConfig.safeBlockHorizontal * 2),
-                                        controller: _controller,
-                                        tabs: [
-                                          ///Room
-                                          Tab(
-                                            text: AppLocalizations.of(context).roomSimple,
-                                          ),
-                                          ///Credit Card
-                                          Tab(
-                                            icon: Platform.isAndroid ?
-                                            Text(AppLocalizations.of(context).googlePay) :
-                                            Icon(FontAwesome5Brands.apple_pay,size: 40.0,)
-                                          ),
-                                          ///Credit Card
-                                          Tab(
-                                            text: AppLocalizations.of(context).creditCardSimple,
-                                          ),
-
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  ///Tab
-                                  (() {
-                                    if (_controller.index == 0) {
-                                      return Room(tourist: widget.tourist);
-                                    } else if (_controller.index == 1) {
-                                      return Platform.isAndroid ? NativeGoogle() : NativeApple();
-                                    } else if (_controller.index == 2) {
-                                      return CreditCards(tourist: widget.tourist != null && widget.tourist );
-                                    }
-                                  }())
-                                ],
-                              ),
+                            ///Back Button
+                            IconButton(
+                              icon: Icon(Icons.chevron_left, color: BuytimeTheme.TextWhite),
+                              onPressed: () => Future.delayed(Duration.zero, () {
+                                Navigator.of(context).pop();
+                              }),
                             ),
-                            ///Confirm button
-                            Align(
-                              alignment: Alignment.bottomCenter,
-                              child: Container(
-                                //height: double.infinity,
-                                //color: Colors.black87,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    ///Confirm button
-                                    Container(
-                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5, bottom: SizeConfig.safeBlockVertical *4),
-                                        width: 158, ///media.width * .4
-                                        height: 44,
-                                        child: MaterialButton(
-                                          elevation: 0,
-                                          hoverElevation: 0,
-                                          focusElevation: 0,
-                                          highlightElevation: 0,
-                                          onPressed: _selectedIndex == 0 ? () {
-                                            debugPrint("UI_U_ConfirmOrder confirmation 0");
-                                            /// TODO room payment logic starts
-                                            Navigator.push(context, MaterialPageRoute(builder: (context) => ConfirmedOrder(_controller.index, widget.reserve, widget.tourist)),);
-                                          } : _selectedIndex == 1 ?
-                                          (){
-                                            debugPrint("UI_U_ConfirmOrder confirmation 1");
-                                            confirmationNative(context, snapshot);
-                                          } : selected && _selectedIndex == 2 ? (){
-                                            debugPrint("UI_U_ConfirmOrder  confirmation 2");
-                                            confirmationCard(context, snapshot);
-                                          } : null,
-                                          textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
-                                          color: widget.tourist != null && widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
-                                          disabledColor: BuytimeTheme.SymbolLightGrey,
-                                          padding: EdgeInsets.all(media.width * 0.03),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: new BorderRadius.circular(5),
-                                          ),
-                                          child: FittedBox(
-                                            fit: BoxFit.scaleDown,
-                                            child: Text(
-                                              !(widget.reserve!= null && widget.reserve)
-                                                  ? AppLocalizations.of(context).confirmUpper
-                                                  : '${AppLocalizations.of(context).completeBooking.toString().toUpperCase()}',
-                                              style: TextStyle(
-                                                letterSpacing: 1.25,
-                                                fontSize: 14,
-                                                fontFamily: BuytimeTheme.FontFamily,
-                                                fontWeight: FontWeight.w500,
-                                                color: BuytimeTheme.TextWhite,
-                                              ),
-                                            ),
-                                          ),
-                                        )
-                                    ),
-                                   ],
+                            ///Order Title
+                            Container(
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 0.0),
+                                child: Text(
+                                  AppLocalizations.of(context).confirmOrder,
+                                  textAlign: TextAlign.start,
+                                  style: BuytimeTheme.appbarTitle,
                                 ),
                               ),
                             ),
-                            !snapshot.stripe.stripeCustomerCreated || snapshot.order.confirmOrderWait ? /// TODO: insert the ripple effect @nipuna
-                            Text('load') : Container()
+                            /*ColorFiltered(
+                              colorFilter: ColorFilter.linearToSrgbGamma(),
+                              child: Image.network(
+                                StoreProvider.of<AppState>(context).state.business.logo,
+                                height: media.height * 0.05,
+                              ),
+                            ),*/
+                            SizedBox(
+                              width: 40.0,
+                            ),
+
                           ],
                         ),
+                        body: SafeArea(
+                          child: Center(
+                            child: ConstrainedBox(
+                              constraints: BoxConstraints(),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                //mainAxisSize: MainAxisSize.min,
+                                children: [
+
+                                  ///Cart Details & Confirm Details
+                                  Expanded(
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        ///Top Text
+                                        Container(
+                                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 4),
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(left: 0.0),
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  AppLocalizations.of(context).serviceNameSecondLine,
+                                                  textAlign: TextAlign.start,
+                                                  style: TextStyle(
+                                                    fontFamily: BuytimeTheme.FontFamily,
+                                                    color: BuytimeTheme.TextBlack,
+                                                    fontSize: 14, /// SizeConfig.safeBlockHorizontal * 4
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        ///Total Price
+                                        Container(
+                                          //color: Colors.black87,
+                                            child: StoreConnector<AppState, AppState>(
+                                                converter: (store) => store.state,
+                                                rebuildOnChange: true,
+                                                builder: (context, snapshot) {
+                                                  if(widget.reserve != null && widget.reserve){
+                                                    print("UI_U_ConfirmOrder => " + snapshot.orderReservable.itemList.length.toString());
+                                                    return OrderTotal(media: media, orderState: OrderState.fromReservableState(snapshot.orderReservable));
+                                                  }else{
+                                                    print("UI_U_ConfirmOrder => " + snapshot.order.itemList.length.toString());
+                                                    return OrderTotal(media: media, orderState: snapshot.order);
+                                                  }
+                                                }
+                                            )
+                                        ),
+                                        ///Divider
+                                        Container(
+                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 10, right: SizeConfig.safeBlockHorizontal * 10),
+                                          color: BuytimeTheme.BackgroundLightGrey,
+                                          height: SizeConfig.safeBlockVertical * .2,
+                                        ),
+                                        ///Please Charge ...
+                                        Container(
+                                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * .5),
+                                          height: SizeConfig.safeBlockVertical * 8,
+                                          color: Colors.white,
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(left: 0.0),
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  AppLocalizations.of(context).pleaseChargeThisToMy,
+                                                  textAlign: TextAlign.start,
+                                                  style: TextStyle(
+                                                    fontFamily: BuytimeTheme.FontFamily,
+                                                    color: BuytimeTheme.TextBlack,
+                                                    fontSize: 14, /// SizeConfig.safeBlockHorizontal * 4
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        ///Divider
+                                        Container(
+                                          color: BuytimeTheme.BackgroundLightGrey,
+                                          height: SizeConfig.safeBlockVertical * 2,
+                                        ),
+                                        ///Confirm Details
+                                        PreferredSize(
+                                          preferredSize: Size.fromHeight(kToolbarHeight),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              color:  widget.tourist != null && widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.black87.withOpacity(.3),
+                                                  spreadRadius: 1,
+                                                  blurRadius: 1,
+                                                  offset: Offset(0, 2), // changes position of shadow
+                                                ),
+                                              ],
+                                            ),
+                                            child: TabBar(
+                                              indicatorWeight: SizeConfig.safeBlockHorizontal * 1,
+                                              indicatorColor: BuytimeTheme.BackgroundWhite,
+                                              labelStyle: TextStyle(
+                                                  letterSpacing: 1.25, ///SizeConfig.safeBlockHorizontal * .2
+                                                  fontFamily: BuytimeTheme.FontFamily,
+                                                  color: BuytimeTheme.TextWhite,
+                                                  fontWeight: FontWeight.w600,
+                                                  fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
+                                              ),
+                                              indicatorPadding: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2, right: SizeConfig.safeBlockHorizontal * 2),
+                                              controller: _controller,
+                                              tabs: [
+                                                ///Room
+                                                Tab(
+                                                  text: AppLocalizations.of(context).roomSimple,
+                                                ),
+                                                ///Credit Card
+                                                Tab(
+                                                  icon: Platform.isAndroid ?
+                                                  Text(AppLocalizations.of(context).googlePay) :
+                                                  Icon(FontAwesome5Brands.apple_pay,size: 40.0,)
+                                                ),
+                                                ///Credit Card
+                                                Tab(
+                                                  text: AppLocalizations.of(context).creditCardSimple,
+                                                ),
+
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        ///Tab
+                                        (() {
+                                          if (_controller.index == 0) {
+                                            return Room(tourist: widget.tourist);
+                                          } else if (_controller.index == 1) {
+                                            return Platform.isAndroid ? NativeGoogle() : NativeApple();
+                                          } else if (_controller.index == 2) {
+                                            return CreditCards(tourist: widget.tourist != null && widget.tourist );
+                                          }
+                                        }())
+                                      ],
+                                    ),
+                                  ),
+                                  ///Confirm button
+                                  Align(
+                                    alignment: Alignment.bottomCenter,
+                                    child: Container(
+                                      //height: double.infinity,
+                                      //color: Colors.black87,
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.end,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          ///Confirm button
+                                          Container(
+                                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5, bottom: SizeConfig.safeBlockVertical *4),
+                                              width: 158, ///media.width * .4
+                                              height: 44,
+                                              child: MaterialButton(
+                                                elevation: 0,
+                                                hoverElevation: 0,
+                                                focusElevation: 0,
+                                                highlightElevation: 0,
+                                                onPressed: _selectedIndex == 0 ? () {
+                                                  debugPrint("UI_U_ConfirmOrder confirmation 0");
+                                                  /// TODO room payment logic starts
+                                                  Navigator.push(context, MaterialPageRoute(builder: (context) => ConfirmedOrder(_controller.index, widget.reserve, widget.tourist)),);
+                                                } : _selectedIndex == 1 ?
+                                                (){
+                                                  debugPrint("UI_U_ConfirmOrder confirmation 1");
+                                                  confirmationNative(context, snapshot);
+                                                } : selected && _selectedIndex == 2 ? (){
+                                                  debugPrint("UI_U_ConfirmOrder  confirmation 2");
+                                                  confirmationCard(context, snapshot);
+                                                } : null,
+                                                textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
+                                                color: widget.tourist != null && widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+                                                disabledColor: BuytimeTheme.SymbolLightGrey,
+                                                padding: EdgeInsets.all(media.width * 0.03),
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius: new BorderRadius.circular(5),
+                                                ),
+                                                child: FittedBox(
+                                                  fit: BoxFit.scaleDown,
+                                                  child: Text(
+                                                    !(widget.reserve!= null && widget.reserve)
+                                                        ? AppLocalizations.of(context).confirmUpper
+                                                        : '${AppLocalizations.of(context).completeBooking.toString().toUpperCase()}',
+                                                    style: TextStyle(
+                                                      letterSpacing: 1.25,
+                                                      fontSize: 14,
+                                                      fontFamily: BuytimeTheme.FontFamily,
+                                                      fontWeight: FontWeight.w500,
+                                                      color: BuytimeTheme.TextWhite,
+                                                    ),
+                                                  ),
+                                                ),
+                                              )
+                                          ),
+                                         ],
+                                      ),
+                                    ),
+                                  ),
+
+                                ],
+                              ),
+                            ),
+                          ),
+                        )
+                    ),
+                  ),
+                ),
+                  !snapshot.stripe.stripeCustomerCreated || snapshot.order.confirmOrderWait || snapshot.order.addCardProgress == "inProgress" ? Positioned.fill(
+                    child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3),
+                          height: SizeConfig.safeBlockVertical * 100,
+                          decoration: BoxDecoration(
+                            color: BuytimeTheme.BackgroundCerulean.withOpacity(.8),
+                          ),
+                          child: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Container(
+                                  width: 50,
+                                  height: 50,
+                                  child: Center(
+                                    child: SpinKitRipple(
+                                      color: Colors.white,
+                                      size: 50,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )
                       ),
                     ),
-                  )
+                  ) : Container(),
+                  snapshot.lastError != null && snapshot.lastError.isNotEmpty ?
+                  ShowErrorDialogToDismiss(
+                    buttonText: AppLocalizations.of(context).ok, 
+                    content: snapshot.lastError, 
+                    title: AppLocalizations.of(context).error,
+                  ) :
+                  Container()
+                ]
               );
             }
         )

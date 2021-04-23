@@ -5,25 +5,25 @@ part 'card_list_state.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class CardListState {
-  List<CardState> cardListState;
+  List<CardState> cardList;
 
   CardListState({
-    @required this.cardListState,
+    @required this.cardList,
   });
 
   CardListState.fromState(CardListState state) {
-    this.cardListState = state.cardListState ;
+    this.cardList = state.cardList ;
   }
 
   companyStateFieldUpdate(List<CardState> cardListState) {
     CardListState(
-        cardListState: cardListState ?? this.cardListState
+        cardList: cardListState ?? this.cardList
     );
   }
 
   CardListState copyWith({cardListState}) {
     return CardListState(
-        cardListState: cardListState ?? this.cardListState
+        cardList: cardListState ?? this.cardList
     );
   }
 
@@ -31,7 +31,7 @@ class CardListState {
   Map<String, dynamic> toJson() => _$CardListStateToJson(this);
 
   CardListState toEmpty() {
-    return CardListState(cardListState: []);
+    return CardListState(cardList: []);
   }
 
 }

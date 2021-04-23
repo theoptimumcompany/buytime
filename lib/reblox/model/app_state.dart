@@ -26,7 +26,6 @@ import 'package:Buytime/reblox/model/service/service_list_state.dart';
 import 'package:Buytime/reblox/model/service/service_slot_time_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/model/statistics_state.dart';
-import 'package:Buytime/reblox/model/stripe/stripe_list_state.dart';
 import 'package:Buytime/reblox/model/stripe/stripe_state.dart';
 import 'package:Buytime/reblox/model/user/user_state.dart';
 import 'package:flutter/foundation.dart';
@@ -65,7 +64,6 @@ class AppState {
   OrderListState orderList;
   OrderReservableListState orderReservableList;
   StripeState stripe;
-  StripeListState stripeListState;
   UserState user;
   CategoryState category;
   CategoryInviteState categoryInvite;
@@ -87,6 +85,8 @@ class AppState {
   EmailState emailState;
   TemplateState templateState;
   TemplateDataState templateDataState;
+  String lastError;
+  String previousError;
 
   AppState({
     @required this.business,
@@ -97,7 +97,6 @@ class AppState {
     @required this.orderList,
     @required this.orderReservableList,
     @required this.stripe,
-    this.stripeListState,
     @required this.businessList,
     @required this.externalBusinessList,
     @required this.bookingList,
@@ -121,7 +120,9 @@ class AppState {
     this.notificationListState,
     this.emailState,
     this.templateState,
-    this.templateDataState
+    this.templateDataState,
+    this.lastError = "",
+    this.previousError = ""
   });
 
   AppState.initialState() {
@@ -131,7 +132,6 @@ class AppState {
     order = OrderState();
     orderReservable = OrderReservableState();
     stripe = StripeState();
-    stripeListState = StripeListState();
     orderList = OrderListState();
     orderReservableList = OrderReservableListState();
     businessList = BusinessListState();
@@ -157,6 +157,9 @@ class AppState {
     emailState = EmailState();
     templateState = TemplateState();
     templateDataState = TemplateDataState();
+    lastError = "";
+    previousError = "";
+
   }
 
   AppState.copyWith({
@@ -168,7 +171,6 @@ class AppState {
       OrderListState orderList,
       OrderReservableListState orderReservableList,
       StripeState stripe,
-        StripeListState stripeListState,
       BusinessListState businessList,
       ExternalBusinessListState externalBusinessList,
         BookingListState bookingList,
@@ -192,7 +194,9 @@ class AppState {
         NotificationListState notificationListState,
         EmailState emailState,
         TemplateState templateState,
-        TemplateDataState templateDataState
+        TemplateDataState templateDataState,
+    String lastError,
+    String previousError
       }) {
     this.business = business;
     this.externalBusiness = externalBusiness;
@@ -202,7 +206,6 @@ class AppState {
     this.orderList = orderList;
     this.orderReservableList = orderReservableList;
     this.stripe = stripe;
-    this.stripeListState = stripeListState;
     this.businessList = businessList;
     this.externalBusinessList = externalBusinessList;
     this.bookingList = bookingList;
@@ -227,6 +230,8 @@ class AppState {
     this.emailState = emailState;
     this.templateState = templateState;
     this.templateDataState = templateDataState;
+    this.lastError = lastError;
+    this.previousError = previousError;
   }
   //
   // AppState.fromJson(Map json) {

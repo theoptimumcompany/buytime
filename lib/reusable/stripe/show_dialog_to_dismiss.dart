@@ -1,13 +1,18 @@
 import 'dart:io';
+import 'package:Buytime/reblox/model/app_state.dart';
+import 'package:Buytime/reblox/reducer/app_reducer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 
-class ShowDialogToDismiss extends StatelessWidget {
+class ShowErrorDialogToDismiss extends StatelessWidget {
   final String content;
   final String title;
   final String buttonText;
-  ShowDialogToDismiss({this.title, this.buttonText, this.content});
+
+  ShowErrorDialogToDismiss({this.title, this.buttonText, this.content});
+
   @override
   Widget build(BuildContext context) {
     if (!Platform.isIOS) {
@@ -24,6 +29,7 @@ class ShowDialogToDismiss extends StatelessWidget {
               buttonText,
             ),
             onPressed: () {
+              StoreProvider.of<AppState>(context).dispatch(ErrorReset());
               Navigator.of(context).pop();
             },
           ),
@@ -41,10 +47,10 @@ class ShowDialogToDismiss extends StatelessWidget {
             CupertinoDialogAction(
               isDefaultAction: true,
               child: new Text(
-                buttonText[0].toUpperCase() +
-                    buttonText.substring(1).toLowerCase(),
+                buttonText[0].toUpperCase() + buttonText.substring(1).toLowerCase(),
               ),
               onPressed: () {
+                StoreProvider.of<AppState>(context).dispatch(ErrorReset());
                 Navigator.of(context).pop();
               },
             )

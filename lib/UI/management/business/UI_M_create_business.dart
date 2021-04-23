@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:Buytime/UI/management/business/UI_M_business_list.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
+import 'package:Buytime/reblox/model/role/role.dart';
 import 'package:Buytime/reblox/model/snippet/generic.dart';
 import 'package:Buytime/reblox/reducer/business_reducer.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
@@ -123,32 +124,6 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
         ),
       ));
     });
-    /*listOfWidget.add(InputChip(
-      selected: false,
-      label: Text(
-        snapshot.business.owner.content,
-        style: TextStyle(
-          fontSize: 13.0,
-          fontWeight: FontWeight.w500,
-        ),
-      ),
-    ));
-
-    snapshot.business.salesman.content != null && snapshot.business.salesman.content != ''
-        ? listOfWidget.add(Padding(
-      padding: const EdgeInsets.only(left: 5.0),
-      child: InputChip(
-        selected: false,
-        label: Text(
-          snapshot.business.salesman.content,
-          style: TextStyle(
-            fontSize: 13.0,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      ),
-    ))
-        : listOfWidget.add(Container());*/
 
     return listOfWidget;
   }
@@ -253,6 +228,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                               inputDecoration: InputDecoration(labelText: AppLocalizations.of(context).companyName),
                                                               globalFieldKey: _formKeyNameField,
                                                               typeOfValidate: "name",
+                                                              validateEmail: true,
                                                               initialFieldValue: snapshot.name,
                                                               onSaveOrChangedCallback: (value) {
                                                                 setState(() {
@@ -267,6 +243,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                               minLength: 3,
                                                               inputDecoration: InputDecoration(labelText: AppLocalizations.of(context).responsibleName),
                                                               globalFieldKey: _formKeyResponsablePersonNameField,
+                                                              validateEmail: true,
                                                               typeOfValidate: "name",
                                                               initialFieldValue: snapshot.responsible_person_name,
                                                               onSaveOrChangedCallback: (value) {
@@ -279,6 +256,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                               minLength: 3,
                                                               inputDecoration: InputDecoration(labelText: AppLocalizations.of(context).responsibleSurname),
                                                               globalFieldKey: _formKeyResponsablePersonSurnameField,
+                                                              validateEmail: true,
                                                               typeOfValidate: "name",
                                                               initialFieldValue: snapshot.responsible_person_surname,
                                                               onSaveOrChangedCallback: (value) {
@@ -291,6 +269,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                               minLength: 3,
                                                               inputDecoration: InputDecoration(labelText: AppLocalizations.of(context).responsibleEmail),
                                                               globalFieldKey: _formKeyResponsablePersonEmailField,
+
                                                               typeOfValidate: "email",
                                                               initialFieldValue: snapshot.responsible_person_email,
                                                               onSaveOrChangedCallback: (value) {
@@ -303,6 +282,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                               minLength: 3,
                                                               inputDecoration: InputDecoration(labelText: AppLocalizations.of(context).businessEmail),
                                                               globalFieldKey: _formKeyEmailField,
+                                                              validateEmail: true,
                                                               typeOfValidate: "email",
                                                               initialFieldValue: snapshot.email,
                                                               onSaveOrChangedCallback: (value) {
@@ -315,6 +295,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                               minLength: 3,
                                                               inputDecoration: InputDecoration(labelText: AppLocalizations.of(context).vatNumber),
                                                               globalFieldKey: _formKeyVatField,
+                                                              validateEmail: true,
                                                               typeOfValidate: "number",
                                                               initialFieldValue: snapshot.VAT,
                                                               onSaveOrChangedCallback: (value) {
@@ -492,6 +473,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                                 minLength: 3,
                                                                 inputDecoration: InputDecoration(labelText: AppLocalizations.of(context).street),
                                                                 globalFieldKey: _formKeyStreetField,
+                                                                validateEmail: true,
                                                                 typeOfValidate: "name",
                                                                 initialFieldValue: snapshot.street,
                                                                 onSaveOrChangedCallback: (value) {
@@ -504,6 +486,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                                 minLength: 1,
                                                                 inputDecoration: InputDecoration(labelText: AppLocalizations.of(context).streetNumber),
                                                                 globalFieldKey: _formKeyStreetNumberField,
+                                                                validateEmail: true,
                                                                 typeOfValidate: "number",
                                                                 initialFieldValue: snapshot.street_number,
                                                                 onSaveOrChangedCallback: (value) {
@@ -516,6 +499,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                                 minLength: 3,
                                                                 inputDecoration: InputDecoration(labelText: AppLocalizations.of(context).zip),
                                                                 globalFieldKey: _formKeyZipField,
+                                                                validateEmail: true,
                                                                 typeOfValidate: "number",
                                                                 initialFieldValue: snapshot.ZIP,
                                                                 onSaveOrChangedCallback: (value) {
@@ -528,6 +512,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                                 minLength: 3,
                                                                 inputDecoration: InputDecoration(labelText: AppLocalizations.of(context).municipality),
                                                                 globalFieldKey: _formKeyMunicipalityField,
+                                                                validateEmail: true,
                                                                 typeOfValidate: "name",
                                                                 initialFieldValue: snapshot.municipality,
                                                                 onSaveOrChangedCallback: (value) {
@@ -537,9 +522,10 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                               OptimumFormField(
                                                                 field: "state",
                                                                 textInputType: TextInputType.text,
-                                                                minLength: 3,
+                                                                minLength: 2,
                                                                 inputDecoration: InputDecoration(labelText: AppLocalizations.of(context).state),
                                                                 globalFieldKey: _formKeyStateField,
+                                                                validateEmail: true,
                                                                 typeOfValidate: "name",
                                                                 initialFieldValue: snapshot.state_province,
                                                                 onSaveOrChangedCallback: (value) {
@@ -552,6 +538,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                                 minLength: 3,
                                                                 inputDecoration: InputDecoration(labelText: AppLocalizations.of(context).nation),
                                                                 globalFieldKey: _formKeyNationField,
+                                                                validateEmail: true,
                                                                 typeOfValidate: "name",
                                                                 initialFieldValue: snapshot.nation,
                                                                 onSaveOrChangedCallback: (value) {
@@ -566,6 +553,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                                   minLength: 3,
                                                                   inputDecoration: InputDecoration(labelText: AppLocalizations.of(context).coordinate),
                                                                   globalFieldKey: _formKeyCoordinateField,
+                                                                  validateEmail: true,
                                                                   typeOfValidate: "name",
                                                                   initialFieldValue: snapshot.coordinate,
                                                                   onSaveOrChangedCallback: (value) {
@@ -587,6 +575,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                               minLength: 3,
                                                               inputDecoration: InputDecoration(labelText: AppLocalizations.of(context).description),
                                                               globalFieldKey: _formKeyDescriptionField,
+                                                              validateEmail: true,
                                                               typeOfValidate: "multiline",
                                                               initialFieldValue: snapshot.description,
                                                               onSaveOrChangedCallback: (value) {
@@ -618,6 +607,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                               maxWidth: 800,
                                                               minHeight: 200,
                                                               minWidth: 600,
+                                                              roleAllowedArray: [Role.admin, Role.salesman, Role.owner],
                                                               cropAspectRatioPreset: CropAspectRatioPreset.square,
                                                               onFilePicked: (fileToUpload) {
                                                                 fileToUpload.remoteFolder = "business/" + businessName + "/logo";
@@ -633,6 +623,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                               maxWidth: 800,
                                                               minHeight: 200,
                                                               minWidth: 600,
+                                                              roleAllowedArray: [Role.admin, Role.salesman, Role.owner],
                                                               cropAspectRatioPreset: CropAspectRatioPreset.ratio16x9,
                                                               onFilePicked: (fileToUpload) {
                                                                 fileToUpload.remoteFolder = "business/" + businessName + "/wide";
@@ -648,6 +639,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                               maxWidth: 800,
                                                               minHeight: 200,
                                                               minWidth: 600,
+                                                              roleAllowedArray: [Role.admin, Role.salesman, Role.owner],
                                                               cropAspectRatioPreset: CropAspectRatioPreset.square,
                                                               onFilePicked: (fileToUpload) {
                                                                 fileToUpload.remoteFolder = "business/" + businessName + "/profile";
@@ -663,6 +655,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                               maxWidth: 800,
                                                               minHeight: 200,
                                                               minWidth: 600,
+                                                              roleAllowedArray: [Role.admin, Role.salesman, Role.owner],
                                                               cropAspectRatioPreset: CropAspectRatioPreset.square,
                                                               onFilePicked: (fileToUpload) {
                                                                 fileToUpload.remoteFolder = "business/" + businessName + "/gallery";
@@ -726,7 +719,14 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                               focusElevation: 0,
                                                               highlightElevation: 0,
                                                               onPressed: () {
-                                                                if (_validateInputs() == false) {
+                                                                if (
+                                                                    _validateInputs() == false ||
+                                                                    StoreProvider.of<AppState>(context).state.business.fileToUploadList == null ||
+                                                                    StoreProvider.of<AppState>(context).state.business.fileToUploadList.length < 4
+                                                                ) {
+                                                                  final snackBar = SnackBar(content: Text(AppLocalizations.of(context).pleaseFillAllFields));
+                                                                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
                                                                   print("buytime_salesman_create: validate problems");
                                                                   return;
                                                                 }
@@ -735,11 +735,6 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                                 });
                                                                 print("salesman board: Upload to DB");
                                                                 StoreProvider.of<AppState>(context).dispatch(CreateBusiness(snapshot));
-//                                    StoreProvider.of<AppState>(context).dispatch(new UpdateBusiness(snapshot));
-                                                                /*Navigator.pushReplacement(
-                                                      context,
-                                                      MaterialPageRoute(builder: (context) => UI_M_BusinessList()),
-                                                    );*/
                                                               },
                                                               child: Text(AppLocalizations.of(context).createBusiness,
                                                                   style: TextStyle(

@@ -7,9 +7,6 @@ import 'package:Buytime/UI/user/login/UI_U_home.dart';
 import 'package:Buytime/UI/user/turist/UI_U_service_explorer.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
-import 'package:Buytime/reblox/model/email/email_state.dart';
-import 'package:Buytime/reblox/model/email/template_data_state.dart';
-import 'package:Buytime/reblox/model/email/template_state.dart';
 import 'package:Buytime/reblox/model/role/role.dart';
 import 'package:Buytime/reblox/reducer/booking_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/booking_reducer.dart';
@@ -18,7 +15,6 @@ import 'package:Buytime/reblox/reducer/business_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_tree_reducer.dart';
-import 'package:Buytime/reblox/reducer/email_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reblox/reducer/pipeline_list_reducer.dart';
@@ -134,8 +130,7 @@ class LandingState extends State<Landing> {
           debugPrint('UI_U_Landing => store on init()');
           cards.add(LandingCardWidget(/*AppLocalizations.of(context).enterBookingCode*/'', AppLocalizations.of(context).startYourJourney, 'assets/img/booking_code.png', null));
           cards.add(LandingCardWidget(/*AppLocalizations.of(context).aboutBuytime*/'', AppLocalizations.of(context).discoverOurNetwork, 'assets/img/beach_girl.png', null));
-          //rippleLoading = false;
-          //secondRippleLoading = false;
+
         },
         builder: (context, snapshot) {
           bookingList.clear();

@@ -3,6 +3,7 @@ import 'package:Buytime/UI/management/business/UI_M_manage_business.dart';
 import 'package:Buytime/UI/management/business/UI_M_business.dart';
 import 'package:Buytime/UI/management/category/UI_M_manage_category.dart';
 import 'package:Buytime/reblox/model/business/business_list_state.dart';
+import 'package:Buytime/reblox/reducer/booking_list_reducer.dart';
 import 'package:Buytime/reusable/enterExitRoute.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
@@ -44,7 +45,10 @@ class UI_M_BusinessListState extends State<UI_M_BusinessList> {
     var mediaHeight = media.height;
     return StoreConnector<AppState, BusinessListState>(
         converter: (store) => store.state.businessList,
-        onInit: (store) => {print("Oninitbusinesslist"), store.dispatch(BusinessListRequest(store.state.user.uid, store.state.user.getRole())), startRequest = true},
+        onInit: (store) => {
+          print("Oninitbusinesslist"),
+          store.dispatch(BusinessListRequest(store.state.user.uid, store.state.user.getRole())), startRequest = true,
+          },
         builder: (context, snapshot) {
           businessListState = snapshot.businessListState;
           if (businessListState.isEmpty && startRequest) {

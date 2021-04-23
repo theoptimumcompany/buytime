@@ -1,7 +1,8 @@
 import 'package:Buytime/UI/user/cart/UI_U_add_card.dart';
-import 'package:Buytime/UI/user/cart/UI_U_ConfirmOrder.dart';
 import 'package:Buytime/UI/user/cart/widget/W_credit_card.dart';
+import 'package:Buytime/reblox/model/card/card_list_state.dart';
 import 'package:Buytime/reblox/model/card/card_state.dart';
+import 'package:Buytime/reblox/reducer/stripe_payment_reducer.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
@@ -12,7 +13,6 @@ import 'package:flutter_redux/flutter_redux.dart';
 
 class CreditCards extends StatefulWidget {
   final String title = 'Cart';
-
   bool tourist;
   bool reserve;
   CreditCards({Key key, this.reserve, this.tourist}) : super(key: key);
@@ -27,7 +27,6 @@ class CreditCardsState extends State<CreditCards> {
   void initState() {
     super.initState();
   }
-
   List<String> tmpList = [];
   List<CardState> creditCards = [];
   @override
@@ -39,17 +38,17 @@ class CreditCardsState extends State<CreditCards> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            /*StoreConnector<AppState, AppState>(
-                onInit: (store) => store?.dispatch(StripeCardListRequest(store?.state?.user?.uid)), // no
-                converter: (store) => store.state,
+            StoreConnector<AppState, CardListState>(
+                converter: (store) => store.state.cardListState,
+                onInit: (store) {
+                  /// check if the stripe customer have been created for this user:
+                  store?.dispatch(CheckStripeCustomer(true));
+                  debugPrint('T_credit_cards => ON INIT');
+                },
                 builder: (context, snapshot) {
-                  StripeCardResponse cardResponse;
-                  cardResponse = snapshot.stripe.stripeCard;
-                  CardState card = CardState().toEmpty();
-                  card.cardResponse = cardResponse;
-                  debugPrint('T_credit_cards => CARD BRAND: ${card.cardResponse.brand}');
+                  creditCards = snapshot.cardList != null ? snapshot.cardList : [];
+                  print("T_credit_cards => CARD COUNT: ${snapshot.cardList?.length}");
                   return Flexible(
-                    //height: SizeConfig.safeBlockVertical * 30,
                     flex: 1,
                     child: CustomScrollView(
                         shrinkWrap: true,
@@ -57,39 +56,10 @@ class CreditCardsState extends State<CreditCards> {
                         slivers: [
                           SliverList(
                             delegate: SliverChildBuilderDelegate((context, index) {
-                              //MenuItemModel menuItem = menuItems.elementAt(index);
-
-                              return CreditCard(card);
-                            },
-                              childCount: card.cardResponse.brand != null  ? 1 : 0,
-                            ),
-                          ),
-                        ]),
-                  );
-                }),*/
-            StoreConnector<AppState, AppState>(
-                converter: (store) => store.state,
-                rebuildOnChange: true,
-                builder: (context, snapshot) {
-                  creditCards = snapshot.cardListState != null ? snapshot.cardListState.cardListState : [];
-
-                  print("T_credit_cards => CARD COUNT: ${snapshot.cardListState.cardListState.length}");
-                  //creditCards.addAll(tmpList);
-                  //store?.dispatch(AddCardToList(tmpList));
-                  return Flexible(
-                    //height: SizeConfig.safeBlockVertical * 30,
-                    flex: 1,
-                    child: CustomScrollView(
-                        shrinkWrap: true,
-                        scrollDirection: Axis.vertical,
-                        slivers: [
-                          SliverList(
-                            delegate: SliverChildBuilderDelegate((context, index) {
-                              //MenuItemModel menuItem = menuItems.elementAt(index);
                               CardState card = creditCards.elementAt(index);
                               return CreditCardListElement(card);
                             },
-                              childCount: creditCards.length,
+                              childCount: creditCards!= null ? creditCards.length : 0,
                             ),
                           ),
                         ]),

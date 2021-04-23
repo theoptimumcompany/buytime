@@ -84,7 +84,7 @@ class ConfirmedOrderState extends State<ConfirmedOrder> with SingleTickerProvide
   @override
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
-    List<CardState> tmpList = StoreProvider.of<AppState>(context).state.cardListState.cardListState;
+    List<CardState> tmpList = StoreProvider.of<AppState>(context).state.cardListState.cardList;
     tmpList.forEach((element) {
       if (element.selected) cardState = element;
     });

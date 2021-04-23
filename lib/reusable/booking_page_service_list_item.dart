@@ -29,7 +29,7 @@ class _BookingListServiceListItemState extends State<BookingListServiceListItem>
             color: Colors.transparent,
             child: InkWell(
               borderRadius: BorderRadius.all(Radius.circular(10)),
-              onTap: () async {
+              onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => ServiceDetails(serviceState: widget.serviceState, tourist: widget.tourist,)),

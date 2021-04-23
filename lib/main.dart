@@ -29,7 +29,6 @@ import 'package:Buytime/reblox/model/order/order_reservable_list_state.dart';
 import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
 import 'package:Buytime/reblox/model/service/service_slot_time_state.dart';
 import 'package:Buytime/reblox/model/statistics_state.dart';
-import 'package:Buytime/reblox/model/stripe/stripe_list_state.dart';
 import 'package:Buytime/services/category_invite_service_epic.dart';
 import 'package:Buytime/services/email_service_epic.dart';
 import 'package:Buytime/services/external_business_service_epic.dart';
@@ -63,7 +62,6 @@ import 'package:Buytime/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:logger/logger.dart';
 import 'package:redux/redux.dart';
 import 'package:redux_epics/redux_epics.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
@@ -120,7 +118,8 @@ void main(){
     CategoryTreeAddService(),
     CategoryTreeDeleteService(),
     StripePaymentAddPaymentMethod(),
-    StripeListPaymentCardListRequest(),
+    StripeCardListRequestService(),
+    StripeCardListRequestAndNavigateService(),
     StripeDetachPaymentMethodRequest(),
     CheckStripeCustomerService(),
     ServiceUpdateService(),
@@ -157,7 +156,6 @@ void main(){
     orderList: OrderListState().toEmpty(),
     orderReservableList: OrderReservableListState().toEmpty(),
     stripe: StripeState().toEmpty(),
-    stripeListState: StripeListState().toEmpty(),
     businessList: BusinessListState().toEmpty(),
     externalBusinessList: ExternalBusinessListState().toEmpty(),
     bookingList: BookingListState().toEmpty(),
@@ -193,27 +191,9 @@ void main(){
   //log();
 }
 
-var logger = Logger(
-  printer: PrettyPrinter(),
-);
 
-var loggerNoStack = Logger(
-  printer: PrettyPrinter(methodCount: 0),
-);
 
-void log() {
-  logger.d("Log message with 2 methods");
 
-  loggerNoStack.i("Info message");
-
-  loggerNoStack.w("Just a warning!");
-
-  logger.e("Error! Something bad happened", "Test Error");
-
-  loggerNoStack.v({"key": 5, "value": "something"});
-
-  //Future.delayed(Duration(seconds: 5), log);
-}
 
 class Buytime extends StatelessWidget {
   final Store<AppState> store;

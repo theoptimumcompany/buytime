@@ -62,8 +62,8 @@ class _CreditCardListElementState extends State<CreditCardListElement> {
                 color: Colors.transparent,
                 child: InkWell(
                     onTap: (){
-                      StoreProvider.of<AppState>(context).dispatch(CreateDisposePaymentMethodIntent(firestoreCardId, StoreProvider.of<AppState>(context).state.user.uid));
                       StoreProvider.of<AppState>(context).dispatch(DeletingStripePaymentMethod());
+                      StoreProvider.of<AppState>(context).dispatch(CreateDisposePaymentMethodIntent(firestoreCardId, StoreProvider.of<AppState>(context).state.user.uid));
                       //StoreProvider.of<AppState>(context).dispatch(AddCardToList(tmpList));
                     },
                     borderRadius: BorderRadius.all(Radius.circular(5.0)),
@@ -147,7 +147,7 @@ class _CreditCardListElementState extends State<CreditCardListElement> {
                                   // creditCards.add(CreditCard());
                                   selected = !selected;
                                 });*/
-                                List<CardState> tmpList = StoreProvider.of<AppState>(context).state.cardListState.cardListState;
+                                List<CardState> tmpList = StoreProvider.of<AppState>(context).state.cardListState.cardList;
                                 tmpList.forEach((element) {
                                   if(element.stripeState.stripeCard.last4 == widget.cardState.stripeState.stripeCard.last4){
                                     element.selected = !element.selected;

@@ -22,7 +22,8 @@ class OrderReservableState {
   double taxPercent = 0.0;
   int amount = 0;
   String progress = "unpaid";
-  bool addCardProgress = false;
+  @JsonKey(ignore: true)
+  String addCardProgress = "notStarted";
   bool navigate = false;
   BusinessSnippet business;
   UserSnippet user;
@@ -47,7 +48,7 @@ class OrderReservableState {
     this.taxPercent,
     this.amount,
     this.progress,
-    this.addCardProgress = false,
+    this.addCardProgress = "notStarted",
     this.navigate = false,
     this.business,
     this.user,
@@ -150,7 +151,7 @@ class OrderReservableState {
       taxPercent: 0.0,
       amount: 0,
       progress: "unpaid",
-      addCardProgress: false,
+      addCardProgress: "notStarted",
       navigate: false,
       businessId: "",
       userId: "",

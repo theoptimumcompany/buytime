@@ -5,6 +5,7 @@ import 'package:Buytime/UI/user/service/UI_U_service_reserve.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/role/role.dart';
+import 'package:Buytime/reblox/navigation/navigation_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reservable_list_reducer.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
@@ -150,10 +151,10 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                           ),
                           tooltip: AppLocalizations.of(context).comeBack,
                           onPressed: () {
-                            //widget.fromConfirm != null ? Navigator.of(context).pop() : Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Landing()),);
-                            Future.delayed(Duration(seconds: 1), () {
+                            Future.delayed(Duration.zero, () {
                               Navigator.of(context).pop();
                             });
+                            // StoreProvider.of(context).dispatch(NavigatePopAction(AppRoutes.serviceDetails));
                           },
                         ),
                       ),

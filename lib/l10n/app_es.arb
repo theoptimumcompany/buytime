@@ -489,6 +489,7 @@
   "send": "Send",
   "writeThe": "Write the name of the service or business you are looking for",
   "justDashboard": "Dashboard",
-  "sendEmail": "An email has been sent"
-
+  "sendEmail": "An email has been sent",
+  "pleaseFillAllFields": "Please fill in all required fields",
+  "required": "this field is required"
 }

@@ -43,6 +43,7 @@ class _UI_U_AddCardState extends State<UI_U_AddCard> {
   // final StripeCard card = StripeCard();
   Map<String, dynamic> cardData;
   bool remeberMe = false;
+  int initialCardsNumber;
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +53,8 @@ class _UI_U_AddCardState extends State<UI_U_AddCard> {
         FocusScope.of(context).unfocus();
       },
       child: StoreConnector<AppState, AppState>(
-          //onInit: (store) {store?.dispatch(StripeCardListRequest(store?.state?.user?.uid));}, // no
+          onInit: (store) {
+          }, // no
           converter: (store) => store.state,
           builder: (context, snapshot) {
             WidgetsBinding.instance.addPostFrameCallback((_) { // no
@@ -75,10 +77,6 @@ class _UI_U_AddCardState extends State<UI_U_AddCard> {
                             IconButton(
                                 icon: Icon(Icons.chevron_left, color: BuytimeTheme.TextWhite),
                                 onPressed: () {
-                                  /*Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (context) => ServiceList()),
-                          );*/
                                   Navigator.of(context).pop();
                                 }
                             ),
@@ -193,7 +191,7 @@ class _UI_U_AddCardState extends State<UI_U_AddCard> {
                                             ),
                                           ],
                                         ),
-                                      ),
+                                      )
                                     ],
                                   )
                               ),
@@ -204,37 +202,16 @@ class _UI_U_AddCardState extends State<UI_U_AddCard> {
                     )
                 ),
                   ///Ripple Effect
-                  (snapshot?.order?.addCardProgress) ?
-                  Positioned.fill(
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: Container(
-                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3),
-                        height: SizeConfig.safeBlockVertical * 100,
-                        decoration: BoxDecoration(
-                          color: BuytimeTheme.BackgroundCerulean.withOpacity(.8),
-                        ),
-                        child: Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Container(
-                                width: 50,
-                                height: 50,
-                                child: Center(
-                                  child: SpinKitRipple(
-                                    color: Colors.white,
-                                    size: 50,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        )
-                    ),
-                  ),
-                ) : Container()
-
+                 () {
+                 if (snapshot?.order?.addCardProgress == "inProgress") {
+                   return RippleAddCard();
+                 } else if (snapshot?.order?.addCardProgress == "done") {
+                   StoreProvider.of<AppState>(context).dispatch(AddingStripePaymentMethodReset());
+                   Navigator.of(context).pop();
+                   return Container();
+                 }
+                 return Container();
+                } ()
               ],
             );
           })
@@ -364,6 +341,45 @@ class _UI_U_AddCardState extends State<UI_U_AddCard> {
 
   final buttonTextStyle = TextStyle(color: BuytimeTheme.TextWhite, fontWeight: FontWeight.w600, fontSize: 16);
 
+}
+
+class RippleAddCard extends StatelessWidget {
+  const RippleAddCard({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned.fill(
+    child: Align(
+      alignment: Alignment.center,
+      child: Container(
+          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3),
+          height: SizeConfig.safeBlockVertical * 100,
+          decoration: BoxDecoration(
+            color: BuytimeTheme.BackgroundCerulean.withOpacity(.8),
+          ),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  width: 50,
+                  height: 50,
+                  child: Center(
+                    child: SpinKitRipple(
+                      color: Colors.white,
+                      size: 50,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          )
+      ),
+    ),
+                );
+  }
 }
 
 

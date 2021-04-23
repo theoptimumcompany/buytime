@@ -10,6 +10,7 @@ typedef OnSaveOrChangedCallback = void Function(String value);
 class OptimumFormField extends StatefulWidget {
   int minLength;
   bool validateEmail = false;
+  bool required = false;
   InputDecoration inputDecoration;
   TextInputType textInputType  = TextInputType.text;
   final GlobalKey<FormState> globalFieldKey;
@@ -24,6 +25,7 @@ class OptimumFormField extends StatefulWidget {
     this.field,
     this.minLength = 2,
     this.validateEmail = false,
+    this.required = false,
     this.inputDecoration,
     this.textInputType,
     this.globalFieldKey,
@@ -64,6 +66,9 @@ class OptimumFormFieldState extends State<OptimumFormField> {
   }
 
   String validate(String value) {
+    if(widget.required && value.isNotEmpty) {
+      return "test" + AppLocalizations.of(context).required;
+    }
     if (value.length < minLength) {
         return AppLocalizations.of(context).nameMustBeMore + minLength.toString() + AppLocalizations.of(context).characters;
     }

@@ -130,6 +130,11 @@ class AddingStripePaymentMethod {
   AddingStripePaymentMethod();
 }
 
+class AddingStripePaymentMethodReset {
+  AddingStripePaymentMethodReset();
+}
+
+
 class DeletingStripePaymentMethod {
   DeletingStripePaymentMethod();
 }
@@ -192,23 +197,27 @@ OrderState orderReducer(OrderState state, action) {
     return orderState;
   }
   if (action is AddingStripePaymentMethod) {
-    orderState.addCardProgress = true;
+    orderState.addCardProgress = "inProgress";
     return orderState;
   }
-  if (action is AddingStripePaymentMethodWithNavigation) {
-    orderState.addCardProgress = true;
+  if (action is AddingStripePaymentMethodReset) {
+    orderState.addCardProgress = "notStarted";
     return orderState;
   }
   if (action is AddedStripePaymentMethod) {
-    orderState.addCardProgress = false;
+    orderState.addCardProgress = "done";
+    return orderState;
+  }
+  if (action is DeletingStripePaymentMethod) {
+    orderState.addCardProgress = "inProgress";
     return orderState;
   }
   if (action is DeletedStripePaymentMethod) {
-    orderState.addCardProgress = false;
+    orderState.addCardProgress = "done";
     return orderState;
   }
   if (action is AddedStripePaymentMethodAndNavigate) {
-    orderState.addCardProgress = false;
+    orderState.addCardProgress = "done";
     orderState.navigate = true;
     return orderState;
   }

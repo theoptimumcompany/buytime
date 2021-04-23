@@ -1,8 +1,6 @@
 import 'package:Buytime/reblox/model/business/snippet/business_snippet_state.dart';
 import 'package:Buytime/reblox/model/order/order_entry.dart';
 import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
-
-import 'package:Buytime/reblox/model/snippet/generic.dart';
 import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
 
 class SetOrderReservable {
@@ -165,7 +163,6 @@ OrderReservableState orderReservableReducer(OrderReservableState state, action) 
   }
   if (action is SetOrderReservableCartCounter) {
     orderReservableState.cartCounter = action.cartCounter;
-    //orderReservableState = action.orderReservableState.copyWith();
     return orderReservableState;
   }
   if (action is SetOrderReservableToEmpty) {
@@ -173,19 +170,19 @@ OrderReservableState orderReservableReducer(OrderReservableState state, action) 
     return orderReservableState;
   }
   if (action is AddingReservableStripePaymentMethod) {
-    orderReservableState.addCardProgress = true;
+    orderReservableState.addCardProgress = "inProgress";
     return orderReservableState;
   }
   if (action is AddingReservableStripePaymentMethodWithNavigation) {
-    orderReservableState.addCardProgress = true;
+    orderReservableState.addCardProgress = "inProgress";
     return orderReservableState;
   }
   if (action is AddedReservableStripePaymentMethod) {
-    orderReservableState.addCardProgress = false;
+    orderReservableState.addCardProgress = "done";
     return orderReservableState;
   }
   if (action is AddedReservableStripePaymentMethodAndNavigate) {
-    orderReservableState.addCardProgress = false;
+    orderReservableState.addCardProgress = "done";
     orderReservableState.navigate = true;
     return orderReservableState;
   }

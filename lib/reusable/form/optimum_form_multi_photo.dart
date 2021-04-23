@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 import 'dart:ui' as ui;
 import 'package:Buytime/reblox/model/app_state.dart';
@@ -31,6 +30,7 @@ class OptimumFormMultiPhoto extends StatefulWidget {
   final int minHeight;
   final String image;
   final CropAspectRatioPreset cropAspectRatioPreset;
+  List<Role> roleAllowedArray = [Role.admin];
 
   OptimumFormMultiPhoto(
       {@required this.text,
@@ -42,7 +42,8 @@ class OptimumFormMultiPhoto extends StatefulWidget {
       @required this.minHeight,
       @required this.minWidth,
       @required this.cropAspectRatioPreset,
-      this.image
+      this.image,
+      this.roleAllowedArray
       });
 
   @override
@@ -141,24 +142,6 @@ class OptimumFormMultiPhotoState extends State<OptimumFormMultiPhoto> {
        croppedFile = await ImageCropper.cropImage(
          aspectRatio: cropAspectRatioPreset == CropAspectRatioPreset.square ? CropAspectRatio(ratioX: 1, ratioY: 1) : CropAspectRatio(ratioX: 16, ratioY: 9),
            sourcePath: pickedFile.path,
-           /*aspectRatioPresets: Platform.isAndroid
-               ? [
-             CropAspectRatioPreset.square,
-             CropAspectRatioPreset.ratio3x2,
-             CropAspectRatioPreset.original,
-             CropAspectRatioPreset.ratio4x3,
-             CropAspectRatioPreset.ratio16x9
-           ]
-               : [
-             //CropAspectRatioPreset.original,
-             CropAspectRatioPreset.square,
-             //CropAspectRatioPreset.ratio3x2,
-             //CropAspectRatioPreset.ratio4x3,
-             //CropAspectRatioPreset.ratio5x3,
-             //CropAspectRatioPreset.ratio5x4,
-             //CropAspectRatioPreset.ratio7x5,
-             CropAspectRatioPreset.ratio16x9
-           ],*/
            androidUiSettings: AndroidUiSettings(
                toolbarTitle: AppLocalizations.of(context).cropYourImage,
                toolbarColor: BuytimeTheme.UserPrimary,
@@ -300,10 +283,7 @@ class OptimumFormMultiPhotoState extends State<OptimumFormMultiPhoto> {
                         ),
                         errorWidget: (context, url, error) => croppedImage == null ? Image(width: SizeConfig.blockSizeHorizontal * 50, image: assetImage) : croppedImage,
                       ) : croppedImage == null ? Image(width: SizeConfig.blockSizeHorizontal * 50, image: assetImage) : croppedImage,
-                      /*image == null ?
-                      Image(width: SizeConfig.blockSizeHorizontal * 50, image: assetImage) :
-                      image,*/
-                      onTap: StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin ? () {
+                      onTap: widget.roleAllowedArray.contains(StoreProvider.of<AppState>(context).state.user.getRole()) ? () {
                         manageImage();
                       } : null,
                     ),
