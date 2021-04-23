@@ -45,6 +45,8 @@ import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/utils/utils.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:emojis/emoji.dart';
+import 'package:emojis/emojis.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -519,7 +521,8 @@ class _BookingPageState extends State<BookingPage> {
                                         Container(
                                           margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 3),
                                           child: Text(
-                                            AppLocalizations.of(context).hi + bookingState.user.first.name,
+                                            //AppLocalizations.of(context).hi + bookingState.user.first.name,
+                                            AppLocalizations.of(context).hi + Emojis.wavingHand,
                                             style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w700, fontSize: 24
 
                                               ///SizeConfig.safeBlockHorizontal * 7

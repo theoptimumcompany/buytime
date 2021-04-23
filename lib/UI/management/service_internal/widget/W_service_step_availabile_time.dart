@@ -152,9 +152,14 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
             StoreProvider.of<AppState>(context).dispatch(SetServiceSlotStartTime(controllerList));
 
             setState(() {
-              startTime[indexController] = format24;
-              setStopTimeOvercome24h(startTime[indexController], indexController);
-              _formSlotTimeKey[indexController].currentState.validate();
+              if (StoreProvider.of<AppState>(context).state.serviceSlot.day == 0){
+                startTime[indexController] = format24;
+                setStopTimeOvercome24h(startTime[indexController], indexController);
+                _formSlotTimeKey[indexController].currentState.validate();
+              }else{
+                stopController[indexController].clear();
+              }
+
               /*if (StoreProvider.of<AppState>(context).state.serviceSlot.day > 0) {
                 setStopTimeOvercome24h(startTime[indexController], indexController);
               } else {
@@ -438,6 +443,9 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
     }
   }
 
+
+  bool error = false;
+
   @override
   Widget build(BuildContext context) {
     if (setStartAndStop) {
@@ -471,7 +479,9 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
                     itemCount: numberOfSlotTimeInterval,
                     itemBuilder: (context, i) {
                       daysOfWeek = [AppLocalizations.of(context).monday, AppLocalizations.of(context).tuesday, AppLocalizations.of(context).wednesday, AppLocalizations.of(context).thursday, AppLocalizations.of(context).friday, AppLocalizations.of(context).saturday, AppLocalizations.of(context).sunday];
-
+                      if(snapshot.serviceSlot.day > 0){
+                        stopController[i].clear();
+                      }
                       if (i > 0) {
                         ///Update keyForm
                         _formSlotTimeKey.add(GlobalKey<FormState>());
@@ -596,7 +606,7 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
                                                               child: Padding(
                                                                 padding: const EdgeInsets.only(right: 5.0),
                                                                 child: Container(
-                                                                  height: 56,
+                                                                  height: 100,
                                                                   child: TextFormField(
                                                                     enabled: false,
                                                                     controller: startController[i],
@@ -644,18 +654,28 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
                                                           children: [
                                                             GestureDetector(
                                                               onTap: () {
-                                                                if (snapshot.serviceSlot.day > 0) {
+                                                                if (snapshot.serviceSlot.day > 0 ) {
                                                                   return;
                                                                 } else if (startController[i].text.isEmpty) {
                                                                   errorStartTime[i] = showErrorStartTime(i);
                                                                   return;
                                                                 }
-                                                                showPickerStopTime(context, i);
-                                                              },
+                                                      showPickerStopTime(context, i);
+                                                              } /*snapshot.serviceSlot.day > 0 ? () {
+                                                                if (snapshot.serviceSlot.day > 0 ?) {
+                                                                  return;
+                                                                } else if () {
+                                                                  errorStartTime[i] = showErrorStartTime(i);
+                                                                  return;
+                                                                }
+                                                      showPickerStopTime(context, i);
+                                                              } : startController[i].text.isEmpty ? (){
+                                                                errorStartTime[i] = showErrorStartTime(i);
+                                                              } : showPickerStopTime(context, i)*/ ,
                                                               child: Padding(
                                                                 padding: const EdgeInsets.only(right: 5.0),
                                                                 child: Container(
-                                                                  height: 56,
+                                                                  height: 100,
                                                                   child: TextFormField(
                                                                     enabled: false,
                                                                     controller: stopController[i],
