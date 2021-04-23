@@ -481,6 +481,11 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
                       daysOfWeek = [AppLocalizations.of(context).monday, AppLocalizations.of(context).tuesday, AppLocalizations.of(context).wednesday, AppLocalizations.of(context).thursday, AppLocalizations.of(context).friday, AppLocalizations.of(context).saturday, AppLocalizations.of(context).sunday];
                       if(snapshot.serviceSlot.day > 0){
                         stopController[i].clear();
+                      }else{
+                        if(startController[i].text.isNotEmpty){
+                          setStopTimeOvercome24h(startTime[i], i);
+                          _formSlotTimeKey[i].currentState.validate();
+                        }
                       }
                       if (i > 0) {
                         ///Update keyForm
