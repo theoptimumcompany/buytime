@@ -131,6 +131,7 @@ class AddExternalServiceListState extends State<AddExternalServiceList> {
         converter: (store) => store.state,
         onInit: (store){
           if(widget.fromMy){
+            store.state.externalBusinessList.externalBusinessListState.clear();
             store.dispatch(ExternalBusinessListRequest('any', store.state.user.getRole()));
             startRequest = true;
           }

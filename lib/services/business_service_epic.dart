@@ -8,6 +8,7 @@ import 'package:Buytime/reblox/navigation/navigation_reducer.dart';
 import 'package:Buytime/reblox/reducer/business_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/business_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/service_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/service_list_snippet_reducer.dart';
 import 'package:Buytime/reblox/reducer/statistics_reducer.dart';
 import 'package:Buytime/services/file_upload_service.dart'
     if (dart.library.html) 'package:Buytime/services/file_upload_service_web.dart';
@@ -165,7 +166,9 @@ class BusinessAndNavigateRequestService implements EpicClass<AppState> {
     }).expand((element) => [
       BusinessRequestResponse(businessState),
       UpdateStatistics(statisticsState),
-      ServiceListAndNavigateRequest(businessState.id_firestore, store.state.user.getRole().toString().split('.').last)
+      //NavigatePushAction(AppRoutes.bookingPage),
+      ServiceListSnippetRequestNavigate(businessState.id_firestore)
+      //ServiceListAndNavigateRequest(businessState.id_firestore, store.state.user.getRole().toString().split('.').last)
     ]);
   }
 }

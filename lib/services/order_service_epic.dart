@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
+import 'package:Buytime/reblox/model/business/external_business_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/statistics_state.dart';
 import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
@@ -295,13 +296,28 @@ class OrderCreateService implements EpicClass<AppState> {
      return actions.whereType<CreateOrder>().asyncMap((event) async {
       OrderState orderState = event.orderState;
       // add needed data to the order state
+      bool isExternal = false;
+      ExternalBusinessState externalBusinessState;
+      store.state.externalBusinessList.externalBusinessListState.forEach((eBL) {
+        if(eBL.id_firestore == event.orderState.itemList.first.id_business){
+          isExternal = true;
+          externalBusinessState = eBL;
+        }
+      });
       int write = 0;
       orderState.user = UserSnippet();
       orderState.user.id = store.state.user.uid;
       orderState.user.name = store.state.user.name;
-      orderState.businessId = store.state.business.id_firestore;
       orderState.userId = store.state.user.uid;
-      orderState.business.thumbnail = store.state.business.wide;
+
+      if(isExternal){
+        orderState.businessId = externalBusinessState.id_firestore;
+        orderState.business.thumbnail = externalBusinessState.wide;
+      }else{
+        orderState.businessId = store.state.business.id_firestore;
+        orderState.business.thumbnail = store.state.business.wide;
+      }
+
       store.state.cardListState.cardList.forEach((element) {
         if(element.selected){
           orderState.cardType = element.stripeState.stripeCard.brand;

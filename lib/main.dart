@@ -39,6 +39,7 @@ import 'package:Buytime/reblox/model/snippet/service_list_snippet_state.dart';
 import 'package:Buytime/reblox/model/statistics_state.dart';
 import 'package:Buytime/services/category_invite_service_epic.dart';
 import 'package:Buytime/services/email_service_epic.dart';
+import 'package:Buytime/services/external_business_imported_service_epic.dart';
 import 'package:Buytime/services/external_business_service_epic.dart';
 import 'package:Buytime/services/external_service_imported_service_epic.dart';
 import 'package:Buytime/services/order_reservable_service_epic.dart';
@@ -157,7 +158,13 @@ void main(){
     ServiceListSnippetListRequestService(),
     ExternalServiceImportedCreateService(),
     ExternalServiceImportedListRequestService(),
-    ServiceListByIdsRequestService()
+    ServiceListByIdsRequestService(),
+    ServiceListByIdsRequestNavigateService(),
+    ServiceListSnippetRequestServiceNavigate(),
+    UserCategoryListByIdsRequestService(),
+    ExternalBusinessListRequestByIdsService(),
+    ExternalBusinessImportedListRequestService(),
+    ExternalBusinessImportedCreateService()
   ]);
   final _initialState = AppState(
     category: CategoryState().toEmpty(),

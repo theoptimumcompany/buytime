@@ -96,6 +96,57 @@ class ExternalBusinessListRequestService implements EpicClass<AppState> {
   }
 }
 
+class ExternalBusinessListRequestByIdsService implements EpicClass<AppState> {
+  List<ExternalBusinessState> businessStateList;
+  StatisticsState statisticsState;
+  @override
+  Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
+    return actions.whereType<ExternalBusinessListByIdsRequest>().asyncMap((event) async {
+      debugPrint("EXTERNAL_BUSINESS_SERVICE_EPIC - ExternalBusinessListRequestByIdsService => BUSINESS IDS LENGTH: ${event.businessIds.length}");
+      businessStateList = [];
+
+      int businessListFromFirebaseDocs = 0;
+
+      for(int i = 0; i < event.businessIds.length; i++){
+        QuerySnapshot businessListFromFirebase = await FirebaseFirestore.instance /// 1 read - ? DOC
+            .collection("business")
+            .where("id_firestore", isEqualTo: event.businessIds[i])
+            .get();
+
+        businessListFromFirebaseDocs += businessListFromFirebase.docs.length;
+
+        businessListFromFirebase.docs.forEach((element) {
+          ExternalBusinessState businessState = ExternalBusinessState.fromJson(element.data());
+          businessState.id_firestore = element.id;
+          businessStateList.add(businessState);
+        });
+      }
+
+
+      statisticsState = store.state.statistics;
+      int reads = statisticsState.businessListRequestServiceRead;
+      int writes = statisticsState.businessListRequestServiceWrite;
+      int documents = statisticsState.businessListRequestServiceDocuments;
+      debugPrint('EXTERNAL_BUSINESS_SERVICE_EPIC - ExternalBusinessListRequestByIdsService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      ++reads;
+      documents = documents + businessListFromFirebaseDocs;
+      debugPrint('EXTERNAL_BUSINESS_SERVICE_EPIC - ExternalBusinessListRequestByIdsService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      statisticsState.businessListRequestServiceRead = reads;
+      statisticsState.businessListRequestServiceWrite = writes;
+      statisticsState.businessListRequestServiceDocuments = documents;
+
+      if(businessStateList.isEmpty)
+        businessStateList.add(ExternalBusinessState());
+      ///Return
+      //return new ExternalBusinessListReturned(businessStateList);
+    }).expand((element) => [
+      ExternalBusinessListReturned(businessStateList),
+      ServiceListSnippetListRequest(businessStateList),
+      UpdateStatistics(statisticsState),
+    ]);
+  }
+}
+
 class ExternalBusinessServiceSnippetListRequestService implements EpicClass<AppState> {
   List<ServiceSnippetState> businessServiceSnippetList;
   StatisticsState statisticsState;

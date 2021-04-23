@@ -1,6 +1,7 @@
 import 'package:Buytime/UI/user/cart/UI_U_ConfirmOrder.dart';
 import 'package:Buytime/reblox/model/order/order_entry.dart';
 import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
+import 'package:Buytime/reblox/model/role/role.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reusable/buytime_icons.dart';
 import 'package:Buytime/utils/size_config.dart';
@@ -266,36 +267,80 @@ class CartState extends State<Cart> {
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    ///Buy button
-                                    Container(
-                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5),
-                                        width: 158,
-                                        /// media.width * .4
-                                        height: 46,
-                                        child: MaterialButton(
-                                          elevation: 0,
-                                          hoverElevation: 0,
-                                          focusElevation: 0,
-                                          highlightElevation: 0,
-                                          onPressed: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(builder: (context) => ConfirmOrder(reserve: false, tourist: widget.tourist)),
-                                            );
-                                          },
-                                          textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
-                                          color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
-                                          //padding: EdgeInsets.all(media.width * 0.03),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: new BorderRadius.circular(5),
-                                          ),
-                                          child: Text(
-                                            AppLocalizations.of(context).buyUpper,
-                                            style: TextStyle(fontSize: 14, fontFamily: BuytimeTheme.FontFamily, fontWeight: FontWeight.w500, color: BuytimeTheme.TextWhite, letterSpacing: 1.25),
-                                          ),
-                                        )),
-                                    ///Continue Shopping
-                                    Container(
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        ///Continue Shopping
+                                        Container(
+                                            width: 158, ///SizeConfig.safeBlockHorizontal * 40
+                                            height: 44,
+                                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, bottom: SizeConfig.safeBlockVertical * 2, right: SizeConfig.safeBlockHorizontal * 2.5),
+                                            decoration: BoxDecoration(
+                                                borderRadius: new BorderRadius.circular(5),
+                                                border: Border.all(
+                                                    color: StoreProvider.of<AppState>(context).state.user.getRole() == Role.user ? (widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary) : BuytimeTheme.SymbolGrey
+                                                )
+                                            ),
+                                            child: MaterialButton(
+                                              elevation: 0,
+                                              hoverElevation: 0,
+                                              focusElevation: 0,
+                                              highlightElevation: 0,
+                                              onPressed: (){
+                                                Navigator.of(context).pop();
+                                              },
+                                              textColor:  widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+                                              disabledTextColor: BuytimeTheme.SymbolGrey,
+                                              color: BuytimeTheme.BackgroundWhite,
+                                              //padding: EdgeInsets.all(15),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: new BorderRadius.circular(5),
+                                              ),
+                                              child: Text(
+                                                '${AppLocalizations.of(context).continueShopping.split(' ').first}\n${AppLocalizations.of(context).continueShopping.split(' ').last}' ,
+                                                style: TextStyle(
+                                                    letterSpacing: 1.25,
+                                                    ///SizeConfig.safeBlockHorizontal * .2
+                                                    fontFamily: BuytimeTheme.FontFamily,
+                                                    color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 14
+                                                  ///SizeConfig.safeBlockHorizontal * 4
+                                                ),
+                                              ),
+                                            )
+                                        ),
+                                        ///Buy button
+                                        Container(
+                                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, bottom: SizeConfig.safeBlockVertical * 2),
+                                            width: 158,
+                                            /// media.width * .4
+                                            height: 46,
+                                            child: MaterialButton(
+                                              elevation: 0,
+                                              hoverElevation: 0,
+                                              focusElevation: 0,
+                                              highlightElevation: 0,
+                                              onPressed: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(builder: (context) => ConfirmOrder(reserve: false, tourist: widget.tourist)),
+                                                );
+                                              },
+                                              textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
+                                              color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+                                              //padding: EdgeInsets.all(media.width * 0.03),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: new BorderRadius.circular(5),
+                                              ),
+                                              child: Text(
+                                                AppLocalizations.of(context).buyUpper,
+                                                style: TextStyle(fontSize: 14, fontFamily: BuytimeTheme.FontFamily, fontWeight: FontWeight.w500, color: BuytimeTheme.TextWhite, letterSpacing: 1.25),
+                                              ),
+                                            )),
+                                      ],
+                                    )
+                                    /*Container(
                                         margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 5, bottom: SizeConfig.safeBlockVertical * 5),
                                         alignment: Alignment.center,
                                         child: Material(
@@ -323,7 +368,7 @@ class CartState extends State<Cart> {
                                                   ),
                                                 ),
                                               )),
-                                        )),
+                                        )),*/
                                   ],
                                 )
                               ),

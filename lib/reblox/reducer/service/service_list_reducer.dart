@@ -20,6 +20,14 @@ class ServiceListRequestByIds {
   List<String> get serviceIds => _serviceIds;
 }
 
+class ServiceListRequestByIdsNavigate {
+  List<String> _serviceIds;
+
+  ServiceListRequestByIdsNavigate(this._serviceIds);
+
+  List<String> get serviceIds => _serviceIds;
+}
+
 class ServiceListAndNavigateRequest {
   String _businessId;
   String _permission;

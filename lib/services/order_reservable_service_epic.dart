@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:math';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
+import 'package:Buytime/reblox/model/business/external_business_state.dart';
 import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/statistics_state.dart';
@@ -162,13 +164,29 @@ class OrderReservableCreateService implements EpicClass<AppState> {
      return actions.whereType<CreateOrderReservable>().asyncMap((event) async {
       OrderReservableState orderReservableState = event.orderReservableState;
       // add needed data to the order state
+      bool isExternal = false;
+      ExternalBusinessState externalBusinessState;
+      store.state.externalBusinessList.externalBusinessListState.forEach((eBL) {
+        if(eBL.id_firestore == event.orderReservableState.itemList.first.id_business){
+          isExternal = true;
+          externalBusinessState = eBL;
+        }
+      });
+
       int write = 0;
       orderReservableState.user = UserSnippet();
       orderReservableState.user.id = store.state.user.uid;
       orderReservableState.user.name = store.state.user.name;
-      orderReservableState.businessId = store.state.business.id_firestore;
       orderReservableState.userId = store.state.user.uid;
-      orderReservableState.business.thumbnail = store.state.business.wide;
+
+      if(isExternal){
+        orderReservableState.businessId = externalBusinessState.id_firestore;
+        orderReservableState.business.thumbnail = externalBusinessState.wide;
+      }else{
+        orderReservableState.businessId = store.state.business.id_firestore;
+        orderReservableState.business.thumbnail = store.state.business.wide;
+      }
+
       store.state.cardListState.cardList.forEach((element) {
         if(element.selected){
           orderReservableState.cardType = element.stripeState.stripeCard.brand;

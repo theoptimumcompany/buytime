@@ -53,7 +53,6 @@ Map<String, dynamic> _$OrderStateToJson(OrderState instance) =>
       'taxPercent': instance.taxPercent,
       'amount': instance.amount,
       'progress': instance.progress,
-      'addCardProgress': instance.addCardProgress,
       'navigate': instance.navigate,
       'business': instance.business?.toJson(),
       'user': instance.user?.toJson(),

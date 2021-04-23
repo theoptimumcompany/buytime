@@ -14,6 +14,12 @@ class ExternalBusinessListRequest {
   Role get role => _role;
 }
 
+class ExternalBusinessListByIdsRequest {
+  List<String> _businessIds;
+  ExternalBusinessListByIdsRequest(this._businessIds);
+  List<String> get businessIds => _businessIds;
+}
+
 class ExternalBusinessServiceSnippetListRequest {
   String _businessId;
   ExternalBusinessServiceSnippetListRequest(this._businessId);

@@ -10,10 +10,12 @@ import 'package:Buytime/UI/user/map/UI_U_map.dart';
 import 'package:Buytime/UI/user/service/UI_U_service_reserve.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
+import 'package:Buytime/reblox/model/business/external_business_imported_state.dart';
 import 'package:Buytime/reblox/model/business/external_business_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/service/external_service_imported_state.dart';
 import 'package:Buytime/reblox/reducer/business_reducer.dart';
+import 'package:Buytime/reblox/reducer/external_business_imported_reducer.dart';
 import 'package:Buytime/reblox/reducer/external_business_reducer.dart';
 import 'package:Buytime/reblox/reducer/external_service_imported_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
@@ -24,6 +26,7 @@ import 'package:Buytime/reusable/buytime_icons.dart';
 import 'package:Buytime/reusable/enterExitRoute.dart';
 import 'package:Buytime/utils/theme/buytime_config.dart';
 import 'package:Buytime/utils/utils.dart';
+import 'package:another_flushbar/flushbar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
@@ -140,11 +143,24 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
           store.dispatch(ExternalBusinessRequest(widget.externalBusinessState.id_firestore));
           store.state.serviceList.serviceListState.clear();
           List<String> serviceIds = [];
-           store.state.externalServiceImportedListState.externalServiceImported.forEach((element) {
-            if(element.externalBusinessId == widget.externalBusinessState.id_firestore){
-              if(!serviceIds.contains(element.externalServiceId))
-                serviceIds.add(element.externalServiceId);
+           store.state.externalServiceImportedListState.externalServiceImported.forEach((eSI) {
+            if(eSI.externalBusinessId == widget.externalBusinessState.id_firestore){
+              if(!serviceIds.contains(eSI.externalServiceId))
+                serviceIds.add(eSI.externalServiceId);
             }
+          });
+          store.state.externalBusinessImportedListState.externalBusinessImported.forEach((eBI) {
+            store.state.serviceListSnippetListState.serviceListSnippetListState.forEach((sLSL) {
+              if(sLSL.businessId == eBI.externalBusinessId && eBI.externalBusinessId == widget.externalBusinessState.id_firestore && sLSL.businessId == widget.externalBusinessState.id_firestore){
+                sLSL.businessSnippet.forEach((bS) {
+                    bS.serviceList.forEach((sL) {
+                      if(!serviceIds.contains(sL.serviceAbsolutePath.split('/').last))
+                        serviceIds.add(sL.serviceAbsolutePath.split('/').last);
+                    });
+                });
+              }
+            });
+
           });
           /*store.state.serviceListSnippetState.businessSnippet.forEach((bS) {
             if(bS.categoryAbsolutePath.split('/').first == widget.externalBusinessState.id_firestore){
@@ -197,7 +213,8 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
           }
         }
 
-        bool equal = false;
+        bool equalService = false;
+        bool equalBusiness = false;
         List<String> tmp = [];
         StoreProvider.of<AppState>(context).state.externalServiceImportedListState.externalServiceImported.forEach((element) {
           if(widget.externalBusinessState.id_firestore == element.externalBusinessId){
@@ -207,10 +224,26 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
           }
         });
 
+        int count = 0;
         snapshot.serviceListSnippetListState.serviceListSnippetListState.forEach((element) {
           if(element.businessId == widget.externalBusinessState.id_firestore){
-            if(element.businessServiceNumberInternal == tmp.length)
-              equal = true;
+            element.businessSnippet.forEach((bS) {
+              bS.serviceList.forEach((sL) {
+                tmp.forEach((s) {
+                  if(s == sL.serviceAbsolutePath.split('/').last)
+                    count++;
+                });
+              });
+            });
+          }
+        });
+
+        if(count == tmp.length)
+          equalService = true;
+
+        StoreProvider.of<AppState>(context).state.externalBusinessImportedListState.externalBusinessImported.forEach((element) {
+          if(element.externalBusinessId == widget.externalBusinessState.id_firestore){
+            equalBusiness = true;
           }
         });
 
@@ -272,8 +305,14 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                     hoverElevation: 0,
                     focusElevation: 0,
                     highlightElevation: 0,
-                    onPressed: !equal ? () {
-
+                    onPressed: !equalService && !equalBusiness ? () {
+                      ExternalBusinessImportedState eBIS = ExternalBusinessImportedState();
+                      eBIS.internalBusinessId = snapshot.business.id_firestore;
+                      eBIS.internalBusinessName = snapshot.business.name;
+                      eBIS.externalBusinessId = widget.externalBusinessState.id_firestore;
+                      eBIS.externalBusinessName = widget.externalBusinessState.name;
+                      eBIS.importTimestamp = DateTime.now();
+                      StoreProvider.of<AppState>(context).dispatch(CreateExternalBusinessImported(eBIS));
                     } : null,
                     textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
                     color:  BuytimeTheme.ActionButton,
@@ -324,7 +363,8 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                         ///Image
                         noActivity ?
                           Container(
-                          margin: EdgeInsets.only(top: 10),
+                          margin: EdgeInsets.only(top: 0),
+                          //color: BuytimeTheme.ManagerPrimary.withOpacity(0.1),
                           height: 275,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -421,7 +461,8 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                         ///Address & Map
                         noActivity ?
                         Container(
-                          margin: EdgeInsets.only(top: 10),
+                          height: 100,
+                          margin: EdgeInsets.only(top: 10, bottom: 10),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -679,15 +720,64 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                             for (int i = 0; i < allServiceList.length; i++) {
                                               if (allServiceList[i].serviceId == service.serviceId) index = i;
                                             }
-                                            return Column(
-                                              children: [
-                                                ExternalServiceItem(service, true, allServiceList, AppLocalizations.of(context).allService, widget.externalBusinessState),
-                                                Container(
-                                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 30),
-                                                  height: SizeConfig.safeBlockVertical * .2,
-                                                  color: BuytimeTheme.DividerGrey,
-                                                )
-                                              ],
+                                            return Dismissible(
+                                              // Each Dismissible must contain a Key. Keys allow Flutter to
+                                              // uniquely identify widgets.
+                                              key: UniqueKey(),
+                                              // Provide a function that tells the app
+                                              // what to do after an item has been swiped away.
+                                              direction: DismissDirection.endToStart,
+                                              onDismissed: (direction) {
+                                                // Remove the item from the data source.
+                                                setState(() {
+                                                  allServiceList.removeAt(index);
+                                                });
+                                                if (direction == DismissDirection.endToStart) {
+
+                                                  debugPrint('UI_U_external_service_list => DX to DELETE');
+                                                  // Show a snackbar. This snackbar could also contain "Undo" actions.
+                                                  Scaffold.of(context).showSnackBar(SnackBar(
+                                                      content: Text(AppLocalizations.of(context).spaceRemoved),
+                                                      action: SnackBarAction(
+                                                          label: AppLocalizations.of(context).undo,
+                                                          onPressed: () {
+                                                            //To undo deletion
+                                                            undoAllDeletion(index, service);
+                                                          })));
+                                                } else {
+                                                  allServiceList.insert(index, service);
+                                                }
+                                              },
+                                              child: Column(
+                                                children: [
+                                                  ExternalServiceItem(service, true, allServiceList, AppLocalizations.of(context).allService, widget.externalBusinessState),
+                                                  Container(
+                                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 30),
+                                                    height: SizeConfig.safeBlockVertical * .2,
+                                                    color: BuytimeTheme.DividerGrey,
+                                                  )
+                                                ],
+                                              ),
+                                              background: Container(
+                                                color: BuytimeTheme.BackgroundWhite,
+                                                //margin: EdgeInsets.symmetric(horizontal: 15),
+                                                alignment: Alignment.centerRight,
+                                              ),
+                                              secondaryBackground: Container(
+                                                color: BuytimeTheme.AccentRed,
+                                                //margin: EdgeInsets.symmetric(horizontal: 15),
+                                                alignment: Alignment.centerRight,
+                                                child: Container(
+                                                  margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 2.5),
+                                                  child: Icon(
+                                                    BuytimeIcons.remove,
+                                                    size: 24,
+
+                                                    ///SizeConfig.safeBlockHorizontal * 7
+                                                    color: BuytimeTheme.SymbolWhite,
+                                                  ),
+                                                ),
+                                              ),
                                             );
                                           }).toList(),
                                         ) : noActivity ?
@@ -780,13 +870,19 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                               if (popularServiceList[i].serviceId == service.serviceId) index = i;
                                             }
                                             DismissDirection tmpDismiss;
-                                            bool equal = false;
+                                            bool equalService = false;
+                                            bool equalBusiness = false;
                                             StoreProvider.of<AppState>(context).state.externalServiceImportedListState.externalServiceImported.forEach((element) {
                                               if(element.externalServiceId == service.serviceId){
-                                                equal = true;
+                                                equalService = true;
                                               }
                                             });
-                                            if(equal){
+                                            StoreProvider.of<AppState>(context).state.externalBusinessImportedListState.externalBusinessImported.forEach((element) {
+                                              if(element.externalBusinessId == service.businessId){
+                                                equalBusiness = true;
+                                              }
+                                            });
+                                            if(equalService || equalBusiness){
                                               tmpDismiss = DismissDirection.none;
                                             }else{
                                               tmpDismiss = DismissDirection.endToStart;
@@ -873,13 +969,19 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                               if (popularServiceList[i].serviceId == service.serviceId) index = i;
                                             }
                                             DismissDirection tmpDismiss;
-                                            bool equal = false;
+                                            bool equalService = false;
+                                            bool equalBusiness = false;
                                             StoreProvider.of<AppState>(context).state.externalServiceImportedListState.externalServiceImported.forEach((element) {
                                               if(element.externalServiceId == service.serviceId){
-                                                equal = true;
+                                                equalService = true;
                                               }
                                             });
-                                            if(equal){
+                                            StoreProvider.of<AppState>(context).state.externalBusinessImportedListState.externalBusinessImported.forEach((element) {
+                                              if(element.externalBusinessId == service.businessId){
+                                                equalBusiness = true;
+                                              }
+                                            });
+                                            if(equalService || equalBusiness){
                                               tmpDismiss = DismissDirection.none;
                                             }else{
                                               tmpDismiss = DismissDirection.endToStart;
@@ -958,7 +1060,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                           }).toList(),
                                         ) : noActivity ?
                                         Container(
-                                          margin: EdgeInsets.only(top: 10),
+                                          margin: EdgeInsets.only(top: 10, bottom: 10),
                                           child: Row(
                                             mainAxisAlignment: MainAxisAlignment.center,
                                             children: [
@@ -1047,13 +1149,19 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                               if (allServiceList[i].serviceId == service.serviceId) index = i;
                                             }
                                             DismissDirection tmpDismiss;
-                                            bool equal = false;
+                                            bool equalService = false;
+                                            bool equalBusiness = false;
                                             StoreProvider.of<AppState>(context).state.externalServiceImportedListState.externalServiceImported.forEach((element) {
                                               if(element.externalServiceId == service.serviceId){
-                                                equal = true;
+                                                equalService = true;
                                               }
                                             });
-                                            if(equal){
+                                            StoreProvider.of<AppState>(context).state.externalBusinessImportedListState.externalBusinessImported.forEach((element) {
+                                              if(element.externalBusinessId == service.businessId){
+                                                equalBusiness = true;
+                                              }
+                                            });
+                                            if(equalService || equalBusiness){
                                               tmpDismiss = DismissDirection.none;
                                             }else{
                                               tmpDismiss = DismissDirection.endToStart;
@@ -1139,13 +1247,19 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                               if (allServiceList[i].serviceId == service.serviceId) index = i;
                                             }
                                             DismissDirection tmpDismiss;
-                                            bool equal = false;
+                                            bool equalService = false;
+                                            bool equalBusiness = false;
                                             StoreProvider.of<AppState>(context).state.externalServiceImportedListState.externalServiceImported.forEach((element) {
                                               if(element.externalServiceId == service.serviceId){
-                                                equal = true;
+                                                equalService = true;
                                               }
                                             });
-                                            if(equal){
+                                            StoreProvider.of<AppState>(context).state.externalBusinessImportedListState.externalBusinessImported.forEach((element) {
+                                              if(element.externalBusinessId == service.businessId){
+                                                equalBusiness = true;
+                                              }
+                                            });
+                                            if(equalService || equalBusiness){
                                               tmpDismiss = DismissDirection.none;
                                             }else{
                                               tmpDismiss = DismissDirection.endToStart;
@@ -1224,7 +1338,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                           }).toList(),
                                         ) : noActivity ?
                                         Container(
-                                          margin: EdgeInsets.only(top: 10),
+                                          margin: EdgeInsets.only(top: 10, bottom: 10),
                                           child: Row(
                                             mainAxisAlignment: MainAxisAlignment.center,
                                             children: [
