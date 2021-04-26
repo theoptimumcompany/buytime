@@ -149,7 +149,7 @@ void main(){
     OrderUpdateService(),
     OrderUpdateByManagerService(),
     OrderReservableUpdateService(),
-    OrderCreateService(),
+    OrderCreateAndPayService(),
     OrderReservableCreateService(),
     AddingReservableStripePaymentMethodRequest(),
     EmailCreateService(),

@@ -45,7 +45,7 @@ class StripePaymentAddPaymentMethod implements EpicClass<AppState> {
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<AddStripePaymentMethod>().asyncMap((event) async {
       /// request the creation of the payment method
-      Map<String, dynamic> stripePaymentMethod = await StripePaymentService.createPaymentMethod(event.stripeCard);
+      Map<String, dynamic> stripePaymentMethod = await StripePaymentService.createPaymentMethodFromCard(event.stripeCard);
       debugPrint("STRIPE_PAYMENT_SERVICE_EPIC - StripePaymentAddPaymentMethod => USER ID: ${event.userId}");
       userId = event.userId;
       if (userId.isNotEmpty) {
@@ -149,13 +149,15 @@ class CheckStripeCustomerService implements EpicClass<AppState> {
 
 class StripeCardListRequestService implements EpicClass<AppState> {
   StatisticsState statisticsState;
-  List<StripeState> stripeStateList = [];
+  List<StripeState> stripeStateList;
   StripeCardResponse stripeCardResponse;
-  List<CardState> cardList = [];
+  List<CardState> cardList;
 
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<StripeCardListRequest>().asyncMap((event) async {
+      stripeStateList = [];
+      cardList = [];
       cardList = await stripeCardListMaker(event, stripeStateList, cardList, stripeCardResponse);
     }).expand((element) {
       var actionArray = [];
@@ -168,13 +170,15 @@ class StripeCardListRequestService implements EpicClass<AppState> {
 
 class StripeCardListRequestAndNavigateService implements EpicClass<AppState> {
   StatisticsState statisticsState;
-  List<StripeState> stripeStateList = [];
+  List<StripeState> stripeStateList;
   StripeCardResponse stripeCardResponse;
-  List<CardState> cardList = [];
+  List<CardState> cardList;
 
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<StripeCardListRequestAndNavigate>().asyncMap((event) async {
+      stripeStateList = [];
+      cardList = [];
       cardList = await stripeCardListMaker(event, stripeStateList, cardList, stripeCardResponse);
     }).expand((element) {
       var actionArray = [];
@@ -197,19 +201,19 @@ class StripeDetachPaymentMethodRequest implements EpicClass<AppState> {
     return actions.whereType<CreateDisposePaymentMethodIntent>().asyncMap((event) async {
       debugPrint("STRIPE_PAYMENT_SERVICE_EPIC - StripeDetachPaymentMethodRequest => USER ID: ${event.userId} FIRESTORE CARD ID: ${event.firestoreCardId}");
       userId = event.userId;
+      firestoreCardId = event.firestoreCardId;
       await FirebaseFirestore.instance.collection("stripeCustomer/" + event.userId + "_test/detach/").doc().set({'firestore_id': event.firestoreCardId});
       debugPrint("STRIPE_PAYMENT_SERVICE_EPIC - StripeDetachPaymentMethodRequest => Detach document created");
       var url = Uri.https('europe-west1-buytime-458a1.cloudfunctions.net', '/detachPaymentMethod', {'userId': '$userId','firestoreCardId': '${event.firestoreCardId.toString()}'});
       response = await http.get(url);
       statisticsComputation();
-      return;
     }).expand((element) {
       var actionArray = [];
       if (response != null && response.body.contains("error")) {
         actionArray.add(ErrorDisposePaymentMethodIntent(response.body));
       } else {
         actionArray.add(CheckStripeCustomer(true));
-        actionArray.add(DeleteStripePaymentMethodLocally(firestoreCardId));
+        // actionArray.add(DeleteStripePaymentMethodLocally(firestoreCardId));
       }
       actionArray.add(DeletedStripePaymentMethod());
       actionArray.add(UpdateStatistics(statisticsState));
@@ -219,36 +223,45 @@ class StripeDetachPaymentMethodRequest implements EpicClass<AppState> {
 }
 
 class StripePaymentService {
-  String text = 'Click the button to start the payment';
   double totalCost = 10.0;
-  double tip = 1.0;
+  double tip = 0.0;
   double tax = 0.0;
   double taxPercent = 0.2;
   int amount = 0;
   bool showSpinner = false;
+  List<StripeRecommended.ApplePayItem> items = [];
+  final String cloudAddress = 'europe-west1-buytime-458a1.cloudfunctions.net';
+  final String cloudFunctionPath = '/StripePIOnOrder';
+  String currency = 'EUR';
+  String country = 'IT';
 
-  /// url for our cloud function payment
-  String url = '';
+  StripePaymentService({
+    this.tip = 0.0,
+    this.tax = 0.0,
+    this.taxPercent = 0.2,
+    this.currency = 'EUR',
+    this.country = 'IT'
+  });
 
-  Future<bool> createPaymentMethodNativeAndPay(OrderState orderState, String businessName) async {
-    bool paymentResult = false;
+  void initializePaymentValues(OrderState orderState, String businessName) {
+    print('initializing instance payment values...');
     totalCost = orderState.total;
-    print('started NATIVE payment...');
     /// why setting the account to null?
     /// StripeRecommended.StripePayment.setStripeAccount(null);
-    ///
-    List<StripeRecommended.ApplePayItem> items = [];
+
+    /// Apple items initialization
     for(int i= 0; i < orderState.itemList.length; i++) {
       items.add(StripeRecommended.ApplePayItem(
         label: orderState.itemList[i].name,
-        amount: orderState.itemList[i].toString().toString(),
+        amount: orderState.itemList[i].toString(),
       ));
     }
-    if (tip != 0.0)
+    if (tip != 0.0) {
       items.add(StripeRecommended.ApplePayItem(
         label: 'Tip',
         amount: tip.toString(),
       ));
+    }
     if (taxPercent != 0.0) {
       tax = ((totalCost * taxPercent) * 100).ceil() / 100;
       items.add(StripeRecommended.ApplePayItem(
@@ -261,106 +274,98 @@ class StripePaymentService {
       amount: (totalCost + tip + tax).toString(),
     ));
     amount = ((totalCost + tip + tax) * 100).toInt();
-    debugPrint('amount in pence/cent which will be charged = $amount');
-    //step 1: add card
-    StripeRecommended.PaymentMethod paymentMethod = StripeRecommended.PaymentMethod();
-    await StripeRecommended.StripePayment.paymentRequestWithNativePay(
-      androidPayOptions: StripeRecommended.AndroidPayPaymentRequest(
-        totalPrice: (totalCost + tax + tip).toStringAsFixed(2),
-        currencyCode: 'EUR',
-      ),
-      applePayOptions: StripeRecommended.ApplePayPaymentOptions(
-        countryCode: 'IT', // TODO: adapt with business country asap
-        currencyCode: 'EUR',
-        items: items,
-      ),
-    ).then((token) async {
-      debugPrint('UI_U_ConfirmOrder => token received:' + token.toString());
-      paymentMethod = await StripeRecommended.StripePayment.createPaymentMethod(
-        StripeRecommended.PaymentMethodRequest(
-          card: StripeRecommended.CreditCard(
-            token: token.tokenId,
-          ),
-        ),
-      );
-      if (paymentMethod != null) {
-        /// save the payment method id in the order sub collection
-        await FirebaseFirestore.instance.collection("order/" + orderState.orderId + "/orderPaymentMethod").doc().set({
-          /// 1 WRITE
-          'paymentMethod': paymentMethod
-        });
-        /// process payment
-        processPaymentAsDirectCharge(orderState.orderId);
-      } else {
-        /// TODO: show error message to the user:
-        /// 'It is not possible to pay with this card. Please try again with a different card',
-      }
-
-      // StoreProvider.of<AppState>(context).dispatch(CreateOrder(snapshot.order));
-    }).catchError((error){
-      /// TODO: Show error to the user
-      debugPrint('UI_U_ConfirmOrder => error in direct payment process with Native Method:' + error.toString());
-    });
-    return paymentResult;
+    debugPrint('amount in cent which will be charged = $amount');
   }
 
-  Future<void> processPaymentAsDirectCharge(String orderId) async {
-    //step 2: request to create PaymentIntent, attempt to confirm the payment & return PaymentIntent
-    var url = Uri.https('europe-west1-buytime-458a1.cloudfunctions.net', '/StripePIOnOrder', {'orderId': '$orderId', 'currency': 'EUR'});
+  Future<StripeRecommended.PaymentMethod> createPaymentMethodNative(OrderState orderState, String businessName) async {
+    StripeRecommended.PaymentMethod paymentMethod;
+    initializePaymentValues(orderState, businessName);
+    print('started NATIVE payment method creation...');
+    /// why setting the account to null????? TODO: discover why
+    /// StripeRecommended.StripePayment.setStripeAccount(null);
+    ///
+    List<StripeRecommended.ApplePayItem> items = [];
+    //step 1: add card
+    var token = await StripeRecommended.StripePayment.paymentRequestWithNativePay(
+      androidPayOptions: StripeRecommended.AndroidPayPaymentRequest(
+        totalPrice: (totalCost + tax + tip).toStringAsFixed(2),
+        currencyCode: currency,
+      ),
+      applePayOptions: StripeRecommended.ApplePayPaymentOptions(
+        countryCode: country,
+        currencyCode: currency,
+        items: items,
+      ),
+    );
+    debugPrint('UI_U_ConfirmOrder => token received:' + token.toString());
+    paymentMethod = await StripeRecommended.StripePayment.createPaymentMethod(
+      StripeRecommended.PaymentMethodRequest(
+        card: StripeRecommended.CreditCard(
+          token: token.tokenId,
+        ),
+      ),
+    );
+    if (paymentMethod != null) {
+      return paymentMethod;
+    } else {
+      debugPrint('UI_U_ConfirmOrder => error in creating Native Method, the response from stripe is null');
+      return null;
+    }
+  }
+
+  Future<String> processPaymentAsDirectCharge(String orderId) async {
+    var url = Uri.https(cloudAddress, cloudFunctionPath, {'orderId': '$orderId', 'currency': currency});
     final http.Response response = await http.get(url);
-    debugPrint('Now i decode');
+    debugPrint('processPaymentAsDirectCharge: Now i decode');
     if (response.body != null && response.body != 'error') {
       final paymentIntentX = jsonDecode(response.body);
-      final status = paymentIntentX['paymentIntent']['status'];
-      final strAccount = paymentIntentX['stripeAccount'];
+      final status = paymentIntentX['status'];
+      final nextAction = paymentIntentX['next_action'];
       //step 3: check if payment was succesfully confirmed
-      if (status == 'succeeded') {
+      if (status == 'succeeded' && nextAction == null) {
         //payment was confirmed by the server without need for futher authentification
         StripeRecommended.StripePayment.completeNativePayRequest();
-        debugPrint('Payment completed. ${paymentIntentX['paymentIntent']['amount'].toString()}p succesfully charged');
+        debugPrint('processPaymentAsDirectCharge:  Payment completed. ${paymentIntentX['paymentIntent']['amount'].toString()} successfully charged');
+        return "success";
         /// stop spinner
       } else {
         //step 4: there is a need to authenticate
-        StripeRecommended.StripePayment.setStripeAccount(strAccount);
-        await StripeRecommended.StripePayment.confirmPaymentIntent(StripeRecommended.PaymentIntent(
-            paymentMethodId: paymentIntentX['paymentIntent']
-            ['payment_method'],
-            clientSecret: paymentIntentX['paymentIntent']['client_secret']))
-            .then(
-              (StripeRecommended.PaymentIntentResult paymentIntentResult) async {
-            //This code will be executed if the authentication is successful
-            //step 5: request the server to confirm the payment with
-            final statusFinal = paymentIntentResult.status;
-            if (statusFinal == 'succeeded') {
-              StripeRecommended.StripePayment.completeNativePayRequest();
-              /// stop spinner
-            } else if (statusFinal == 'processing') {
-              StripeRecommended.StripePayment.cancelNativePayRequest();
-              /// stop spinner
-              /// message to the user: 'The payment is still in \'processing\' state. This is unusual. Please contact us'
-            } else {
-              StripeRecommended.StripePayment.cancelNativePayRequest();
-              /// stop spinner
-              /// message to the user 'There was an error to confirm the payment. Details: $statusFinal'
-            }
-          },
-          //If Authentication fails, a PlatformException will be raised which can be handled here
-        ).catchError((e) {
-          //case B1
+        /// why should I set another stripe account? TODO: discover this.
+        /// StripeRecommended.StripePayment.setStripeAccount(strAccount);
+        StripeRecommended.PaymentIntentResult paymentIntentResult = await StripeRecommended.StripePayment.confirmPaymentIntent(StripeRecommended.PaymentIntent(
+            paymentMethodId: paymentIntentX['payment_method'],
+            clientSecret: paymentIntentX['client_secret']
+        ));
+        //This code will be executed if the authentication is successful
+        //step 5: request the server to confirm the payment with
+        final statusFinal = paymentIntentResult.status;
+        if (statusFinal == 'succeeded') {
+          StripeRecommended.StripePayment.completeNativePayRequest();
+          /// stop spinner
+          debugPrint('processPaymentAsDirectCharge:  Payment success');
+          return "success";
+        } else if (statusFinal == 'processing') {
           StripeRecommended.StripePayment.cancelNativePayRequest();
           /// stop spinner
-          /// message to the user 'There was an error to confirm the payment. Please try again with another card'
-        });
+          debugPrint('processPaymentAsDirectCharge:  processing. this is weird');
+          return "trouble";
+        } else {
+          StripeRecommended.StripePayment.cancelNativePayRequest();
+          /// stop spinner
+          debugPrint('processPaymentAsDirectCharge:  Payment error. canceling.');
+          return "error";
+        }
       }
     } else {
       //case A
       StripeRecommended.StripePayment.cancelNativePayRequest();
       /// stop spinner
-      /// message to the user 'There was an error to confirm the payment. Please try again with another card'
+      debugPrint('processPaymentAsDirectCharge:  Payment error. canceling.');
+      return "error";
     }
   }
 
-  static Future<Map<String, dynamic>> createPaymentMethod(StripeUnofficialUI.StripeCard stripeCard) async {
+  static Future<Map<String, dynamic>> createPaymentMethodFromCard(StripeUnofficialUI.StripeCard stripeCard) async {
     Map<String, dynamic> paymentMethod = await stripeSDK.api.createPaymentMethodFromCard(stripeCard);
     return paymentMethod;
   }

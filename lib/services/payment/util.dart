@@ -13,7 +13,7 @@ List<CardState> stripeStateToCardState( List<StripeState> stripeListState) {
     stripeListState.forEach((element) {
       CardState cardState = CardState().toEmpty();
       cardState.stripeState = element;
-      debugPrint('stripe_payment_service_epic => LAST4: ${element.stripeCard.last4}');
+      debugPrint('util - stripeStateToCardState => LAST4: ${element.stripeCard.last4}');
       map.putIfAbsent(element.stripeCard.last4, () => cardState);
     });
     map.forEach((key, value) {
@@ -24,30 +24,35 @@ List<CardState> stripeStateToCardState( List<StripeState> stripeListState) {
 }
 
 Future <List<CardState>> stripeCardListMaker(dynamic event, List<StripeState> stripeStateList, List<CardState> cardList, StripeCardResponse stripeCardResponse) async {
-  debugPrint("STRIPE_PAYMENT_SERVICE_EPIC - StripePaymentCardListRequest => USER ID: ${event.firebaseUserId}");
+  debugPrint("util - stripeCardListMaker => StripePaymentCardListRequest => USER ID: ${event.firebaseUserId}");
   String userId = event.firebaseUserId;
   QuerySnapshot snapshotCard = await FirebaseFirestore.instance.collection("stripeCustomer/" + userId + "/card/").limit(10).get();
   QuerySnapshot snapshotToken = await FirebaseFirestore.instance.collection("stripeCustomer/" + userId + "/token/").limit(10).get();
   bool snapshotCardAvailable = snapshotCard != null && snapshotCard.docs != null && snapshotCard.docs.isNotEmpty;
   bool snapshotTokenAvailable = snapshotToken != null && snapshotToken.docs != null && snapshotToken.docs.isNotEmpty;
   if (snapshotTokenAvailable && snapshotCardAvailable) {
-    debugPrint('stripe_payment_service_epic => CARD LENGTH: ${snapshotCard.docs.length} TOKEN LENGTH: ${snapshotCard.docs.length}');
+    debugPrint('util - stripeCardListMaker => CARD LENGTH: ${snapshotCard.docs.length} TOKEN LENGTH: ${snapshotCard.docs.length}');
     snapshotCard.docs.forEach((element) {
-      debugPrint('stripe_payment_service_epic => CARD ID: ${element.id}');
+      debugPrint('util - stripeCardListMaker => CARD ID: ${element.id}');
     });
     int counter = 0;
-    snapshotToken.docs.forEach((element) {
-      var tokenData = element.data();
+    snapshotToken.docs.forEach((elementToken) {
+      var tokenData = elementToken.data();
       if (snapshotCard?.docs != null && snapshotCard.docs.length > counter) {
-        var cardFirestoreId = snapshotCard?.docs[counter]?.id;
-        stripeStateList.add(StripeState(
-            stripeCard: StripeCardResponse(
-              firestore_id: cardFirestoreId,
-              last4: tokenData['card']['last4'],
-              expYear: tokenData['card']['exp_year'],
-              expMonth: tokenData['card']['exp_month'],
-              brand: tokenData['card']['brand'],
-            )));
+        snapshotCard.docs.forEach((elementCard) {
+          var cardData = elementCard.data();
+          if ( cardData['payment_method'] == tokenData['id']) {
+            stripeStateList.add(StripeState(
+                stripeCard: StripeCardResponse(
+                  firestore_id: elementCard.id,
+                  last4: tokenData['card']['last4'],
+                  expYear: tokenData['card']['exp_year'],
+                  expMonth: tokenData['card']['exp_month'],
+                  brand: tokenData['card']['brand'],
+                  paymentMethodId: tokenData['id']
+                )));
+          }
+        });
       }
       counter++;
     });
