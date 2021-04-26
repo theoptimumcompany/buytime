@@ -7,6 +7,7 @@ import 'package:Buytime/reblox/model/snippet/service_list_snippet_state.dart';
 import 'package:Buytime/reblox/model/statistics_state.dart';
 import 'package:Buytime/reblox/navigation/navigation_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/external_business_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/service_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/service_reducer.dart';
 import 'package:Buytime/reblox/reducer/service_list_snippet_list_reducer.dart';
@@ -119,14 +120,15 @@ class ServiceListSnippetListRequestService implements EpicClass<AppState> {
 class ServiceListSnippetRequestServiceNavigate implements EpicClass<AppState> {
   StatisticsState statisticsState;
   ServiceListSnippetState serviceListSnippetState = ServiceListSnippetState();
-
+  List<String> serviceIds;
+  List<String> businessIds;
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    debugPrint("SERVICE_SERVICE_EPIC - ServiceListRequestService => ServiceListService CATCHED ACTION");
+    debugPrint("SERVICE_SERVICE_EPIC - ServiceListSnippetRequestServiceNavigate => ServiceListService CATCHED ACTION");
     List<ServiceState> serviceStateList = [];
     return actions.whereType<ServiceListSnippetRequestNavigate>().asyncMap((event) async {
-      debugPrint("SERVICE_SERVICE_EPIC - ServiceListSnippetRequest => ServiceListService Firestore request");
-      debugPrint("SERVICE_SERVICE_EPIC - ServiceListSnippetRequest => Business Id: ${event.businessId}");
+      debugPrint("SERVICE_SERVICE_EPIC - ServiceListSnippetRequestServiceNavigate => ServiceListService Firestore request");
+      debugPrint("SERVICE_SERVICE_EPIC - ServiceListSnippetRequestServiceNavigate => Business Id: ${event.businessId}");
       int docs = 0;
       int read = 0;
       var servicesFirebaseShadow = await FirebaseFirestore.instance.collection("business")
@@ -138,16 +140,28 @@ class ServiceListSnippetRequestServiceNavigate implements EpicClass<AppState> {
       //debugPrint("SERVICE_SERVICE_EPIC - ServiceListSnippetRequest => MAP " + servicesFirebaseShadow.docs.first.data().toString());
       serviceListSnippetState = ServiceListSnippetState.fromJson(servicesFirebaseShadow.docs.first.data());
 
-      debugPrint("SERVICE_SERVICE_EPIC - ServiceListSnippetRequest => Epic ServiceListService return list with " + servicesFirebaseShadow.docs.length.toString());
+      businessIds = [];
+      serviceIds = [];
+      serviceListSnippetState.businessSnippet.forEach((bS) {
+        bS.serviceList.forEach((sL) {
+          if(sL.serviceVisibility == 'Deactivated' || sL.serviceVisibility == 'Active'){
+            serviceIds.add(sL.serviceAbsolutePath.split('/').last);
+            if(!businessIds.contains(sL.serviceAbsolutePath.split('/').first) && sL.serviceAbsolutePath.split('/').first != store.state.business.id_firestore){
+              businessIds.add(sL.serviceAbsolutePath.split('/').first);
+            }
+          }
+        });
+      });
+      debugPrint("SERVICE_SERVICE_EPIC - ServiceListSnippetRequestServiceNavigate => Epic ServiceListService return list with " + servicesFirebaseShadow.docs.length.toString());
 
       statisticsState = store.state.statistics;
       int reads = statisticsState.serviceListRequestServiceRead;
       int writes = statisticsState.serviceListRequestServiceWrite;
       int documents = statisticsState.serviceListRequestServiceDocuments;
-      debugPrint('SERVICE_SERVICE_EPIC - ServiceListSnippetRequest => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('SERVICE_SERVICE_EPIC - ServiceListSnippetRequestServiceNavigate => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       reads = reads + read;
       documents = documents + docs;
-      debugPrint('SERVICE_SERVICE_EPIC - ServiceListSnippetRequest =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('SERVICE_SERVICE_EPIC - ServiceListSnippetRequestServiceNavigate =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       statisticsState.serviceListRequestServiceRead = reads;
       statisticsState.serviceListRequestServiceWrite = writes;
       statisticsState.serviceListRequestServiceDocuments = documents;
@@ -158,7 +172,9 @@ class ServiceListSnippetRequestServiceNavigate implements EpicClass<AppState> {
     }).expand((element) => [
       ServiceListSnippetRequestResponse(serviceListSnippetState),
       UpdateStatistics(statisticsState),
-      NavigatePushAction(AppRoutes.categories),
+      //NavigatePushAction(AppRoutes.categories),
+      ExternalBusinessListByIdsRequest(businessIds),
+      ServiceListRequestByIdsNavigate(serviceIds)
     ]);
   }
 }
@@ -292,6 +308,71 @@ class ServiceListByIdsRequestService implements EpicClass<AppState> {
     }).expand((element) => [
       ServiceListReturned(serviceStateList),
       UpdateStatistics(statisticsState),
+    ]);
+  }
+}
+
+class ServiceListByIdsRequestNavigateService implements EpicClass<AppState> {
+  StatisticsState statisticsState;
+  List<String> categoryIds;
+  @override
+  Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
+    debugPrint("SERVICE_SERVICE_EPIC - ServiceListByIdsRequestNavigateService => ServiceListService CATCHED ACTION");
+    List<ServiceState> serviceStateList = [];
+    return actions.whereType<ServiceListRequestByIdsNavigate>().asyncMap((event) async {
+      debugPrint("SERVICE_SERVICE_EPIC - ServiceListByIdsRequestNavigateService => ServiceListService Firestore request");
+      debugPrint("SERVICE_SERVICE_EPIC - ServiceListByIdsRequestNavigateService => Service Ids Length: ${event.serviceIds.length}");
+      int docs = 0;
+      int read = 0;
+      serviceStateList.clear();
+
+      for(int i = 0; i < event.serviceIds.length; i++){
+        CollectionReference servicesFirebase = FirebaseFirestore.instance.collection("service");
+        Query query = servicesFirebase.where("serviceId", isEqualTo: event.serviceIds[i]);
+
+        /// 1 READ - ? DOC
+        //   query = query.where("id_category", isEqualTo: categoryInviteState.id_category);
+
+        await query.get().then((value) {
+          docs = value.docs.length;
+          value.docs.forEach((element) {
+            ServiceState serviceState = ServiceState.fromJson(element.data());
+
+            serviceStateList.add(serviceState);
+          });
+        });
+
+        ++read;
+      }
+
+      categoryIds = [];
+      store.state.serviceListSnippetState.businessSnippet.forEach((bS) {
+        if(bS.tags.contains('showcase')){
+          categoryIds.add(bS.categoryAbsolutePath.split('/').last);
+        }
+      });
+
+      debugPrint("SERVICE_SERVICE_EPIC - ServiceListByIdsRequestNavigateService => Epic ServiceListService return list with " + serviceStateList.length.toString());
+
+      statisticsState = store.state.statistics;
+      int reads = statisticsState.serviceListRequestServiceRead;
+      int writes = statisticsState.serviceListRequestServiceWrite;
+      int documents = statisticsState.serviceListRequestServiceDocuments;
+      debugPrint('SERVICE_SERVICE_EPIC - ServiceListByIdsRequestNavigateService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      reads = reads + read;
+      documents = documents + docs;
+      debugPrint('SERVICE_SERVICE_EPIC - ServiceListByIdsRequestNavigateService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      statisticsState.serviceListRequestServiceRead = reads;
+      statisticsState.serviceListRequestServiceWrite = writes;
+      statisticsState.serviceListRequestServiceDocuments = documents;
+
+      if(serviceStateList.isEmpty)
+        serviceStateList.add(ServiceState());
+
+    }).expand((element) => [
+      ServiceListReturned(serviceStateList),
+      UpdateStatistics(statisticsState),
+      UserRequestListByIdsCategory(categoryIds)
     ]);
   }
 }

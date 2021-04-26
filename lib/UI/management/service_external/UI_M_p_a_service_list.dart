@@ -63,7 +63,8 @@ class PAServiceListState extends State<PAServiceList> {
         converter: (store) => store.state,
         onInit: (store) => {},
         builder: (context, snapshot) {
-          bool equal = false;
+          bool equalService = false;
+          bool equalBusiness = false;
           List<String> tmp = [];
           StoreProvider.of<AppState>(context).state.externalServiceImportedListState.externalServiceImported.forEach((element) {
             if(widget.externalBusinessState.id_firestore == element.externalBusinessId){
@@ -72,11 +73,28 @@ class PAServiceListState extends State<PAServiceList> {
               }
             }
           });
+          debugPrint('UI_M_p_a_service_list => ${tmp}');
 
+          int count = 0;
           snapshot.serviceListSnippetListState.serviceListSnippetListState.forEach((element) {
             if(element.businessId == widget.externalBusinessState.id_firestore){
-              if(element.businessServiceNumberInternal == tmp.length)
-                equal = true;
+              element.businessSnippet.forEach((bS) {
+                bS.serviceList.forEach((sL) {
+                  tmp.forEach((s) {
+                    if(s == sL.serviceAbsolutePath.split('/').last)
+                      count++;
+                  });
+                });
+              });
+            }
+          });
+
+          if(count != 0 && count == tmp.length)
+            equalService = true;
+
+          StoreProvider.of<AppState>(context).state.externalBusinessImportedListState.externalBusinessImported.forEach((element) {
+            if(element.externalBusinessId == widget.externalBusinessState.id_firestore){
+              equalBusiness = true;
             }
           });
           return WillPopScope(
@@ -120,8 +138,44 @@ class PAServiceListState extends State<PAServiceList> {
                       hoverElevation: 0,
                       focusElevation: 0,
                       highlightElevation: 0,
-                      onPressed: !equal ? () {
-
+                      onPressed: !equalService && !equalBusiness ? () {
+                        List<String> tmp = [];
+                        StoreProvider.of<AppState>(context).state.externalServiceImportedListState.externalServiceImported.forEach((element) {
+                          //debugPrint('here');
+                          widget.serviceState.forEach((sL) {
+                            //debugPrint(' 2');
+                            if(element.externalServiceId != sL.serviceId && element.externalBusinessId == widget.externalBusinessState.id_firestore){
+                              //debugPrint('here 3');
+                              tmp.add(sL.serviceId);
+                            }
+                          });
+                        });
+                        if(tmp.isEmpty){
+                          widget.serviceState.forEach((sL) {
+                            tmp.add(sL.serviceId);
+                          });
+                        }
+                        debugPrint('UI_M_p_a_service_list => ${tmp}');
+                        tmp.forEach((serviceId) {
+                          ExternalServiceImportedState eSIS = ExternalServiceImportedState();
+                          eSIS.internalBusinessId = snapshot.business.id_firestore;
+                          eSIS.internalBusinessName = snapshot.business.name;
+                          eSIS.externalBusinessId = widget.externalBusinessState.id_firestore;
+                          eSIS.externalBusinessName = widget.externalBusinessState.name;
+                          eSIS.externalServiceId = serviceId;
+                          eSIS.importTimestamp = DateTime.now();
+                          snapshot.serviceListSnippetListState.serviceListSnippetListState.forEach((sLSL) {
+                            sLSL.businessSnippet.forEach((bS) {
+                              bS.serviceList.forEach((sL) {
+                                if(sL.serviceAbsolutePath.split('/').last == serviceId){
+                                  debugPrint('UI_M_external_business_details => External category name: ${bS.categoryName}');
+                                  eSIS.externalCategoryName = bS.categoryName;
+                                }
+                              });
+                            });
+                          });
+                          StoreProvider.of<AppState>(context).dispatch(CreateExternalServiceImported(eSIS));
+                        });
                       } : null,
                       textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
                       color:  BuytimeTheme.ActionButton,
@@ -190,13 +244,31 @@ class PAServiceListState extends State<PAServiceList> {
                               SliverList(
                                 delegate: SliverChildBuilderDelegate((context, index){
                                   ServiceState item = serviceList.elementAt(index);
+                                  DismissDirection tmpDismiss;
+                                  bool equalService = false;
+                                  bool equalBusiness = false;
+                                  StoreProvider.of<AppState>(context).state.externalServiceImportedListState.externalServiceImported.forEach((element) {
+                                    if(element.externalServiceId == item.serviceId){
+                                      equalService = true;
+                                    }
+                                  });
+                                  StoreProvider.of<AppState>(context).state.externalBusinessImportedListState.externalBusinessImported.forEach((element) {
+                                    if(element.externalBusinessId == item.businessId){
+                                      equalBusiness = true;
+                                    }
+                                  });
+                                  if(equalService || equalBusiness){
+                                    tmpDismiss = DismissDirection.none;
+                                  }else{
+                                    tmpDismiss = DismissDirection.endToStart;
+                                  }
                                   return Dismissible(
                                     // Each Dismissible must contain a Key. Keys allow Flutter to
                                     // uniquely identify widgets.
                                     key: UniqueKey(),
                                     // Provide a function that tells the app
                                     // what to do after an item has been swiped away.
-                                    direction: DismissDirection.endToStart,
+                                    direction: tmpDismiss,
                                     onDismissed: (direction) {
                                       // Remove the item from the data source.
                                       setState(() {

@@ -10,6 +10,7 @@ import 'package:Buytime/UI/management/service_external/UI_M_external_service_lis
 import 'package:Buytime/reblox/model/category/snippet/category_snippet_state.dart';
 import 'package:Buytime/reblox/model/snippet/service_list_snippet_state.dart';
 import 'package:Buytime/reblox/reducer/booking_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/external_business_imported_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/external_service_imported_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/service_list_snippet_reducer.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
@@ -104,6 +105,7 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
         store.state.serviceListSnippetState = ServiceListSnippetState();
         //store.state.externalServiceImportedListState.externalServiceImported.clear();
         store.dispatch(ExternalServiceImportedListRequest(store.state.business.id_firestore));
+        store.dispatch(ExternalBusinessImportedListRequest(store.state.business.id_firestore));
         print("On Init Business : Request List of Root Categories");
         //store.dispatch(RequestRootListCategory(store.state.business.id_firestore));
         store.dispatch(ServiceListSnippetRequest(store.state.business.id_firestore));
@@ -180,6 +182,7 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                 });
               }
             });
+
             internalCategories.sort((b,a) => a.serviceNumberInternal.compareTo(b.serviceNumberInternal));
             externalCategories.sort((b,a) => a.serviceNumberExternal.compareTo(b.serviceNumberExternal));
             if(internalCategories.length > 4){
@@ -604,7 +607,7 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                                     margin: EdgeInsets.only(bottom: 10.0),
                                     child: Column(
                                       children: tmpExternalCategoriesTable.map((CategorySnippetState categoryItem){
-                                        return CategoryListItemWidget(categoryItem, BuytimeTheme.SymbolLime);
+                                        return CategoryListItemWidget(categoryItem, BuytimeTheme.Indigo);
                                       }).toList(),
                                     )
                                     /*CustomScrollView(shrinkWrap: true, slivers: [

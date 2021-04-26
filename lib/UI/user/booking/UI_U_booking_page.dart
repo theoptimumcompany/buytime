@@ -522,7 +522,7 @@ class _BookingPageState extends State<BookingPage> {
                                           margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 3),
                                           child: Text(
                                             //AppLocalizations.of(context).hi + bookingState.user.first.name,
-                                            AppLocalizations.of(context).hi + Emojis.wavingHand,
+                                            '${AppLocalizations.of(context).hi} ${Emojis.wavingHand}',
                                             style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w700, fontSize: 24
 
                                               ///SizeConfig.safeBlockHorizontal * 7
@@ -658,7 +658,6 @@ class _BookingPageState extends State<BookingPage> {
                                           ),
                                         ),
                                         ///My bookings & View all
-                                        userOrderList.isNotEmpty ?
                                         Column(
                                           mainAxisAlignment: MainAxisAlignment.start,
                                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -711,6 +710,7 @@ class _BookingPageState extends State<BookingPage> {
                                                     ))
                                               ],
                                             ),
+                                            userOrderList.isNotEmpty ?
                                             ///List
                                             Container(
                                               height: 120,
@@ -733,9 +733,9 @@ class _BookingPageState extends State<BookingPage> {
                                                   ),
                                                 ),
                                               ]),
-                                            )
+                                            ): Container(),
                                           ],
-                                        ) : Container(),
+                                        )
                                       ],
                                     ),
                                   ),

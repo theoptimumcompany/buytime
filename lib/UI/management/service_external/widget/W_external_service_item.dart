@@ -10,6 +10,7 @@ import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reusable/enterExitRoute.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
+import 'package:another_flushbar/flushbar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
@@ -60,6 +61,7 @@ class _ExternalServiceItemState extends State<ExternalServiceItem> {
     }else{
       duration = 'depends';
     }
+
     //debugPrint('image: ${widget.serviceState.image1}');
     return Container(
         //margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 4, right: SizeConfig.safeBlockHorizontal * 4),
@@ -183,13 +185,19 @@ class _ExternalServiceItemState extends State<ExternalServiceItem> {
                       ],
                     ),
                     (){
-                      bool equal = false;
+                      bool equalService = false;
+                      bool equalBusiness = false;
                       StoreProvider.of<AppState>(context).state.externalServiceImportedListState.externalServiceImported.forEach((element) {
                         if(element.externalServiceId == widget.serviceState.serviceId){
-                          equal = true;
+                          equalService = true;
                         }
                       });
-                      if(equal){
+                      StoreProvider.of<AppState>(context).state.externalBusinessImportedListState.externalBusinessImported.forEach((element) {
+                        if(element.externalBusinessId == widget.serviceState.businessId){
+                          equalBusiness = true;
+                        }
+                      });
+                      if(equalService || equalBusiness){
                         return Icon(
                           Icons.settings_ethernet,
                           color: BuytimeTheme.ActionButton,

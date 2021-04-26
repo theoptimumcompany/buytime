@@ -200,6 +200,68 @@ class UserCategoryListRequestService implements EpicClass<AppState> {
   }
 }
 
+class UserCategoryListByIdsRequestService implements EpicClass<AppState> {
+  List<CategoryState> categoryStateList;
+  StatisticsState statisticsState;
+  @override
+  Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
+    debugPrint("CATEGORY_SERVICE_EPIC - UserCategoryListByIdsRequestService => CATCHED ACTION");
+    return actions.whereType<UserRequestListByIdsCategory>().asyncMap((event) async {
+
+      int read = 0;
+      int snapshotDocs = 0;
+      categoryStateList = [];
+
+      for(int i = 0; i < event.categoryIds.length; i++){
+        String businesId = '';
+        store.state.serviceListSnippetState.businessSnippet.forEach((bS) {
+          if(bS.categoryAbsolutePath.split('/').last == event.categoryIds[i]){
+            businesId = bS.categoryAbsolutePath.split('/').first;
+          }
+        });
+
+        QuerySnapshot snapshot = await FirebaseFirestore.instance /// 1 READ - ? DOC
+            .collection("business")
+            .doc(businesId)
+            .collection("category")
+            .where("id", isEqualTo: event.categoryIds[i])
+            .get();
+
+        snapshotDocs += snapshot.docs.length;
+
+        debugPrint("CATEGORY_SERVICE_EPIC - UserCategoryListByIdsRequestService => Firestore request");
+        snapshot.docs.forEach((element) {
+          CategoryState categoryState = CategoryState.fromJson(element.data());
+          categoryState.businessId = businesId;
+          categoryState.id = element.id;
+          categoryStateList.add(categoryState);
+        });
+        ++read;
+      }
+
+
+      debugPrint('CATEGORY_SERVICE_EPIC - UserCategoryListByIdsRequestService => CATEGORY LIST LENGTH: ${categoryStateList.length}');
+      debugPrint("CATEGORY_SERVICE_EPIC - UserCategoryListByIdsRequestService => Return list with ${categoryStateList.length}");
+
+      statisticsState = store.state.statistics;
+      int reads = statisticsState.userCategoryListRequestServiceRead;
+      int writes = statisticsState.userCategoryListRequestServiceWrite;
+      int documents = statisticsState.userCategoryListRequestServiceDocuments;
+      debugPrint('CATEGORY_SERVICE_EPIC - UserCategoryListByIdsRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      reads = reads + read;
+      documents = documents + snapshotDocs;
+      debugPrint('CATEGORY_SERVICE_EPIC - UserCategoryListByIdsRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      statisticsState.userCategoryListRequestServiceRead = reads;
+      statisticsState.userCategoryListRequestServiceWrite = writes;
+      statisticsState.userCategoryListRequestServiceDocuments = documents;
+    }).expand((element) => [
+      CategoryListReturned(categoryStateList),
+      UpdateStatistics(statisticsState),
+      NavigatePushAction(AppRoutes.bookingPage),
+    ]);
+  }
+}
+
 class CategoryRootListRequestService implements EpicClass<AppState> {
   StatisticsState statisticsState;
   List<CategoryState> categoryStateList;

@@ -60,7 +60,7 @@ class ExternalServiceListState extends State<ExternalServiceList> {
     return StoreConnector<AppState, AppState>(
         converter: (store) => store.state,
         onInit: (store) {
-          //store.state.serviceListSnippetListState.serviceListSnippetListState.clear();
+          store.state.serviceListSnippetListState.serviceListSnippetListState.clear();
           List<ExternalBusinessState> businessStateList = [];
           store.state.externalServiceImportedListState.externalServiceImported.forEach((element) {
             bool found = false;
@@ -75,6 +75,19 @@ class ExternalServiceListState extends State<ExternalServiceList> {
             }
           });
 
+          store.state.externalBusinessImportedListState.externalBusinessImported.forEach((element) {
+            bool found = false;
+            businessStateList.forEach((bSL) {
+              if(bSL.id_firestore == element.externalBusinessId)
+                found = true;
+            });
+            if(!found){
+              businessStateList.add(ExternalBusinessState(
+                  id_firestore: element.externalBusinessId
+              ));
+            }
+          });
+          debugPrint('UI_M_external_service_list => EXTERNAL BUSINESS: ${businessStateList.length}');
           store.dispatch(ServiceListSnippetListRequest(businessStateList));
           startRequest = true;
         },
@@ -82,6 +95,8 @@ class ExternalServiceListState extends State<ExternalServiceList> {
           externalServiceCount.clear();
           externalBusinessList.clear();
           debugPrint('UI_M_external_service_list => IMPORTED SERVICE LENGTH: ${snapshot.externalServiceImportedListState.externalServiceImported.length}');
+          debugPrint('UI_M_external_service_list => IMPORTED BUSINESS LENGTH: ${snapshot.externalBusinessImportedListState.externalBusinessImported.length}');
+          //debugPrint('UI_M_external_service_list => IMPORTED BUSINESS ID: ${snapshot.externalBusinessImportedListState.externalBusinessImported.first.externalBusinessId}');
           debugPrint('UI_M_external_service_list => IMPORTED SNIPPET LENGTH: ${snapshot.serviceListSnippetListState.serviceListSnippetListState.length}');
           if(snapshot.serviceListSnippetListState.serviceListSnippetListState.isEmpty && startRequest){
             debugPrint('UI_M_external_service_list => Requesting');

@@ -78,10 +78,16 @@ class _ExternalServiceDetailsState extends State<ExternalServiceDetails> with Si
       onInit: (store){
       },
       builder: (context, snapshot) {
-        bool equal = false;
+        bool equalService = false;
+        bool equalBusiness = false;
         StoreProvider.of<AppState>(context).state.externalServiceImportedListState.externalServiceImported.forEach((element) {
           if(element.externalServiceId == widget.serviceState.serviceId){
-            equal = true;
+            equalService = true;
+          }
+        });
+        StoreProvider.of<AppState>(context).state.externalBusinessImportedListState.externalBusinessImported.forEach((element) {
+          if(element.externalBusinessId == widget.serviceState.businessId){
+            equalBusiness = true;
           }
         });
         return  GestureDetector(
@@ -539,7 +545,7 @@ class _ExternalServiceDetailsState extends State<ExternalServiceDetails> with Si
                             hoverElevation: 0,
                             focusElevation: 0,
                             highlightElevation: 0,
-                            onPressed: !equal ? () {
+                            onPressed: !equalService && !equalBusiness ? () {
                               ExternalServiceImportedState eSIS = ExternalServiceImportedState();
                               eSIS.internalBusinessId = snapshot.business.id_firestore;
                               eSIS.internalBusinessName = snapshot.business.name;

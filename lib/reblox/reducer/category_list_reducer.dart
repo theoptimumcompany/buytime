@@ -18,6 +18,12 @@ class UserRequestListCategory {
   String get businessId => _businessId;
 }
 
+class UserRequestListByIdsCategory {
+  List<String> _categoryIds;
+  UserRequestListByIdsCategory(this._categoryIds);
+  List<String> get categoryIds => _categoryIds;
+}
+
 class RequestRootListCategory {
   String _businessId;
   RequestRootListCategory(this._businessId);

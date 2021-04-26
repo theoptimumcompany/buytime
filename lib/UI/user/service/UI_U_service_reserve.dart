@@ -4,6 +4,7 @@ import 'package:Buytime/UI/management/service_internal/class/service_slot_classe
 import 'package:Buytime/UI/user/cart/UI_U_cart.dart';
 import 'package:Buytime/UI/user/cart/UI_U_cart_reservable.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
+import 'package:Buytime/reblox/model/business/external_business_state.dart';
 import 'package:Buytime/reblox/model/business/snippet/business_snippet_state.dart';
 import 'package:Buytime/reblox/model/order/order_entry.dart';
 import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
@@ -190,6 +191,9 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
     });
   }
 
+  bool isExternal = false;
+  ExternalBusinessState externalBusinessState;
+
   @override
   Widget build(BuildContext context) {
     // the media containing information on width and height
@@ -233,6 +237,13 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                   price = ' ${element.price.toStringAsFixed(0)} / $tmpMin${AppLocalizations.of(context).spaceMinSpace}';
               }
             }
+          }
+        });
+
+        store.state.externalBusinessList.externalBusinessListState.forEach((eBL) {
+          if(eBL.id_firestore == widget.serviceState.businessId){
+            isExternal = true;
+            externalBusinessState = eBL;
           }
         });
       },
@@ -791,8 +802,13 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                   duration = '$tmpMin ${AppLocalizations.of(context).min}';
                                                               }
                                                               order.serviceId = widget.serviceState.serviceId;
-                                                              order.business.name = snapshot.business.name;
-                                                              order.business.id = snapshot.business.id_firestore;
+                                                              if(isExternal){
+                                                                order.business.name = externalBusinessState.name;
+                                                                order.business.id = externalBusinessState.id_firestore;
+                                                              }else{
+                                                                order.business.name = snapshot.business.name;
+                                                                order.business.id = snapshot.business.id_firestore;
+                                                              }
                                                               order.user.name = snapshot.user.name;
                                                               order.user.id = snapshot.user.uid;
                                                               order.addReserveItem(widget.serviceState, snapshot.business.ownerId, serviceSlot[1].startTime[serviceSlot[0]], duration , dates[index], serviceSlot[1].price);

@@ -55,7 +55,6 @@ Map<String, dynamic> _$OrderReservableStateToJson(
       'taxPercent': instance.taxPercent,
       'amount': instance.amount,
       'progress': instance.progress,
-      'addCardProgress': instance.addCardProgress,
       'navigate': instance.navigate,
       'business': instance.business?.toJson(),
       'user': instance.user?.toJson(),

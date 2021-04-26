@@ -1,8 +1,12 @@
 import 'dart:async';
+import 'dart:math';
 import 'package:Buytime/UI/user/cart/UI_U_cart.dart';
 import 'package:Buytime/UI/user/cart/UI_U_ConfirmOrder.dart';
+import 'package:Buytime/UI/user/map/UI_U_map.dart';
 import 'package:Buytime/UI/user/service/UI_U_service_reserve.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
+import 'package:Buytime/reblox/model/business/business_state.dart';
+import 'package:Buytime/reblox/model/business/external_business_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/role/role.dart';
 import 'package:Buytime/reblox/navigation/navigation_reducer.dart';
@@ -66,6 +70,9 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
     }
     return result;
   }
+  
+  bool isExternal = false;
+  ExternalBusinessState externalBusinessState;
 
   @override
   Widget build(BuildContext context) {
@@ -120,6 +127,13 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
               ? AppLocalizations.of(context).currencySpace + serviceState.price.toString() + AppLocalizations.of(context).slashOneUnit
               : AppLocalizations.of(context).currencyNoPrice + AppLocalizations.of(context).hour;
         }
+        
+        store.state.externalBusinessList.externalBusinessListState.forEach((eBL) { 
+          if(eBL.id_firestore == widget.serviceState.businessId){
+            isExternal = true;
+            externalBusinessState = eBL;
+          }
+        });
 
       },
       builder: (context, snapshot) {
@@ -342,14 +356,15 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                 errorWidget: (context, url, error) => Icon(Icons.error),
                               )
                             ),
-                            ///Service Name
+                            ///Service Name & The rest
                             Column(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 ///Service Name Text
                                 Container(
-                                  margin: EdgeInsets.only(top:  SizeConfig.safeBlockVertical * 2.5),
+                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top:  SizeConfig.safeBlockVertical * 2.5),
                                   child: Text(
                                     serviceState.name ?? AppLocalizations.of(context).serviceName,
                                     style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w700, fontSize: 18
@@ -371,7 +386,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                 ),*/
                                 ///Amount
                                 Container(
-                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
+                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
                                   child: Text(
                                     price,
                                     style: TextStyle(
@@ -382,6 +397,89 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                     ),
                                   ),
                                 ),
+                                isExternal ?
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    ///Address value
+                                    Container(
+                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
+                                      child: FittedBox(
+                                        fit: BoxFit.scaleDown,
+                                        child: Text(
+                                          externalBusinessState.street + ', ' + externalBusinessState.street_number + ', ' + externalBusinessState.ZIP + ', ' + externalBusinessState.state_province,
+                                          style: TextStyle(
+                                              letterSpacing: 0.15,
+                                              fontFamily: BuytimeTheme.FontFamily,
+                                              color: BuytimeTheme.TextBlack,
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 16 ///SizeConfig.safeBlockHorizontal * 4
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    ///Directions
+                                    Container(
+                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 0.5),
+                                      child: Row(
+                                        children: [
+                                          Icon(
+                                            Icons.directions_walk,
+                                            size: 14,
+                                            color: BuytimeTheme.SymbolGrey,
+                                          ),
+                                          ///Min
+                                          Container(
+                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 1.5, right: SizeConfig.safeBlockHorizontal * 1, top: SizeConfig.safeBlockVertical * 0),
+                                            child: FittedBox(
+                                              fit: BoxFit.scaleDown,
+                                              child: Text(
+                                                '? ' + AppLocalizations.of(context).min,
+                                                style: TextStyle(
+                                                    letterSpacing: 0.25,
+                                                    fontFamily: BuytimeTheme.FontFamily,
+                                                    color: BuytimeTheme.TextMedium,
+                                                    fontWeight: FontWeight.w500,
+                                                    fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          ///Directions
+                                          Container(
+                                              margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 2.5),
+                                              alignment: Alignment.center,
+                                              child: Material(
+                                                color: Colors.transparent,
+                                                child: InkWell(
+                                                    onTap: () {
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(builder: (context) => BuytimeMap(user: true, title: widget.serviceState.name, businessState: BusinessState.fromExternalState(externalBusinessState),)),
+                                                      );
+                                                    },
+                                                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                                    child: Container(
+                                                      padding: EdgeInsets.all(5.0),
+                                                      child: Text(
+                                                        AppLocalizations.of(context).directions,
+                                                        style: TextStyle(
+                                                            letterSpacing: SizeConfig.safeBlockHorizontal * .2,
+                                                            fontFamily: BuytimeTheme.FontFamily,
+                                                            color: BuytimeTheme.UserPrimary,
+                                                            fontWeight: FontWeight.w400,
+                                                            fontSize: 14
+
+                                                          ///SizeConfig.safeBlockHorizontal * 4
+                                                        ),
+                                                      ),
+                                                    )),
+                                              ))
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ) : Container(),
                                 ///Description
                                 Flexible(
                                   child: Container(
@@ -428,7 +526,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                           Container(
                               width: 158, ///SizeConfig.safeBlockHorizontal * 40
                               height: 44,
-                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, bottom: SizeConfig.safeBlockVertical * 2, right: SizeConfig.safeBlockHorizontal * 5),
+                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, bottom: SizeConfig.safeBlockVertical * 2, right: SizeConfig.safeBlockHorizontal * 2.5),
                               decoration: BoxDecoration(
                                   borderRadius: new BorderRadius.circular(5),
                                   border: Border.all(
@@ -441,8 +539,13 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                 focusElevation: 0,
                                 highlightElevation: 0,
                                 onPressed: StoreProvider.of<AppState>(context).state.user.getRole() == Role.user ? () {
-                                  order.business.name = snapshot.business.name;
-                                  order.business.id = snapshot.business.id_firestore;
+                                  if(isExternal){
+                                    order.business.name = externalBusinessState.name;
+                                    order.business.id = externalBusinessState.id_firestore;
+                                  }else{
+                                    order.business.name = snapshot.business.name;
+                                    order.business.id = snapshot.business.id_firestore;
+                                  }
                                   order.user.name = snapshot.user.name;
                                   order.user.id = snapshot.user.uid;
                                   order.addItem(widget.serviceState, snapshot.business.ownerId);
@@ -479,8 +582,13 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                 focusElevation: 0,
                                 highlightElevation: 0,
                                 onPressed: StoreProvider.of<AppState>(context).state.user.getRole() == Role.user ? () {
-                                  order.business.name = snapshot.business.name;
-                                  order.business.id = snapshot.business.id_firestore;
+                                  if(isExternal){
+                                    order.business.name = externalBusinessState.name;
+                                    order.business.id = externalBusinessState.id_firestore;
+                                  }else{
+                                    order.business.name = snapshot.business.name;
+                                    order.business.id = snapshot.business.id_firestore;
+                                  }
                                   order.user.name = snapshot.user.name;
                                   order.user.id = snapshot.user.uid;
                                   order.addItem(widget.serviceState, snapshot.business.ownerId);
