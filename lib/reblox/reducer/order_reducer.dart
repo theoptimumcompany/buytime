@@ -46,15 +46,41 @@ class CreateOrder {
   CreateOrder(this._orderState);
   OrderState get orderState => _orderState;
 }
-class CreateOrderAndPay {
+class CreateOrderCardAndPay {
+  OrderState _orderState;
+  String _last4;
+  String _brand;
+  String _country;
+  String _selectedCardPaymentMethodId;
+  PaymentType _paymentType;
+  CreateOrderCardAndPay(this._orderState, this._last4, this._brand, this._country, this._selectedCardPaymentMethodId, this._paymentType);
+  OrderState get orderState => _orderState;
+  PaymentType get paymentType => _paymentType;
+  String get last4 => _last4;
+  String get brand => _brand;
+  String get country => _country;
+  String get selectedCardPaymentMethodId => _selectedCardPaymentMethodId;
+}
+class CreateOrderNativeAndPay {
   OrderState _orderState;
   StripeRecommended.PaymentMethod _paymentMethod;
   PaymentType _paymentType;
-  CreateOrderAndPay(this._orderState, this._paymentMethod, this._paymentType);
+  CreateOrderNativeAndPay(this._orderState, this._paymentMethod, this._paymentType);
   OrderState get orderState => _orderState;
   PaymentType get paymentType => _paymentType;
   StripeRecommended.PaymentMethod get paymentMethod => _paymentMethod;
 }
+
+class CreateOrderRoomAndPay {
+  OrderState _orderState;
+  String _roomNumber;
+  PaymentType _paymentType;
+  CreateOrderRoomAndPay(this._orderState, this._roomNumber, this._paymentType);
+  OrderState get orderState => _orderState;
+  PaymentType get paymentType => _paymentType;
+  String get roomNumber => _roomNumber;
+}
+
 class CreatedOrder {}
 class CreatingOrder {}
 class DeleteOrder {

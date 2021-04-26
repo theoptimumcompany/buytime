@@ -49,7 +49,8 @@ Future <List<CardState>> stripeCardListMaker(dynamic event, List<StripeState> st
                   expYear: tokenData['card']['exp_year'],
                   expMonth: tokenData['card']['exp_month'],
                   brand: tokenData['card']['brand'],
-                  paymentMethodId: tokenData['id']
+                  paymentMethodId: tokenData['id'],
+                  country: cardData['country']
                 )));
           }
         });

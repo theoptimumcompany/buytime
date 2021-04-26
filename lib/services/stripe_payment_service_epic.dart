@@ -325,7 +325,7 @@ class StripePaymentService {
       if (status == 'succeeded' && nextAction == null) {
         //payment was confirmed by the server without need for futher authentification
         StripeRecommended.StripePayment.completeNativePayRequest();
-        debugPrint('processPaymentAsDirectCharge:  Payment completed. ${paymentIntentX['paymentIntent']['amount'].toString()} successfully charged');
+        debugPrint('processPaymentAsDirectCharge:  Payment completed. ${paymentIntentX['amount'].toString()} successfully charged');
         return "success";
         /// stop spinner
       } else {

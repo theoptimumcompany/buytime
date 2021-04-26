@@ -16,6 +16,7 @@ enum OrderStatus {
   progress,
   unpaid,
   paid,
+  toBePaidAtCheckout,
   canceled,
   frozen,
   creating

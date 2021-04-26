@@ -19,6 +19,8 @@ import 'package:redux_epics/redux_epics.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:http/http.dart' as http;
 
+import 'order/util.dart';
+
 List<DateTime> getPeriod(DateTime dateTime){
   //String weekdayDate = DateFormat('E d M y').format(dateTime);
   String weekday = DateFormat('E').format(dateTime);
@@ -226,13 +228,13 @@ class OrderUpdateService implements EpicClass<AppState> {
 
 /// an order always have to be created with a payment method attached in its subcollection
 /// TODO: research if there is a way to make this two operations in an atomic way
-class OrderCreateAndPayService implements EpicClass<AppState> {
+class OrderCreateNativeAndPayService implements EpicClass<AppState> {
   StatisticsState statisticsState;
   String state = '';
   String paymentResult = '';
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-     return actions.whereType<CreateOrderAndPay>().asyncMap((event) async {
+     return actions.whereType<CreateOrderNativeAndPay>().asyncMap((event) async {
       /// add needed data to the order state
       OrderState orderState = configureOrder(event.orderState, store);
       if(event.paymentMethod != null) {
@@ -243,9 +245,10 @@ class OrderCreateAndPayService implements EpicClass<AppState> {
         /// add the payment method to the order sub collection on firebase
         var addedPaymentMethod = await FirebaseFirestore.instance.collection("order/" + orderState.orderId + "/orderPaymentMethod").add({
           'paymentMethodId' : event.paymentMethod.id,
-          'last4': event.paymentMethod.card.last4,
-          'brand': event.paymentMethod.card.brand,
-          'type':  Utils.enumToString(event.paymentType)
+          'last4': event.paymentMethod.card.last4 ?? '',
+          'brand': event.paymentMethod.card.brand ?? '',
+          'type':  Utils.enumToString(event.paymentType),
+          'country': event.paymentMethod.card.country  ?? 'US'
         });
         StripePaymentService stripePaymentService = StripePaymentService();
         paymentResult = await stripePaymentService.processPaymentAsDirectCharge(orderState.orderId);
@@ -263,42 +266,80 @@ class OrderCreateAndPayService implements EpicClass<AppState> {
        return actionArray;
      });
   }
+}
+/// an order always have to be created with a payment method attached in its subcollection
+/// TODO: research if there is a way to make this two operations in an atomic way
+class OrderCreateCardAndPayService implements EpicClass<AppState> {
+  StatisticsState statisticsState;
+  String state = '';
+  String paymentResult = '';
+  @override
+  Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
+     return actions.whereType<CreateOrderCardAndPay>().asyncMap((event) async {
+      /// add needed data to the order state
+      OrderState orderState = configureOrder(event.orderState, store);
+      if(event.selectedCardPaymentMethodId != null) {
+        /// send document to orders collection
+        var addedOrder = await FirebaseFirestore.instance.collection("order/").add(orderState.toJson());
+        /// update the order id locally
+        orderState.orderId = addedOrder.id;
+        /// add the payment method to the order sub collection on firebase
+        var addedPaymentMethod = await FirebaseFirestore.instance.collection("order/" + orderState.orderId + "/orderPaymentMethod").add({
+          'paymentMethodId' : event.selectedCardPaymentMethodId,
+          'last4': event.last4 ?? '',
+          'brand': event.brand ?? '',
+          'type':  Utils.enumToString(event.paymentType),
+          'country': event.country ?? 'US'
+        });
+        StripePaymentService stripePaymentService = StripePaymentService();
+        paymentResult = await stripePaymentService.processPaymentAsDirectCharge(orderState.orderId);
+      }
+      statisticsComputation();
+     }).expand((element) {
+       var actionArray = [];
+       actionArray.add(CreatedOrder());
+       actionArray.add(UpdateStatistics(statisticsState));
+       if (paymentResult == "success") {
+         actionArray.add(SetOrderProgress(Utils.enumToString(OrderStatus.paid)));
+       } else {
+         actionArray.add(SetOrderProgress(Utils.enumToString(OrderStatus.canceled)));
+       }
+       return actionArray;
+     });
+  }
+}
 
-  /// constructs the order based on the information in the store
-  OrderState configureOrder(OrderState orderStateFromEvent, EpicStore<AppState> store) {
-    OrderState orderState = orderStateFromEvent;
-     return actions.whereType<CreateOrder>().asyncMap((event) async {
-      OrderState orderState = event.orderState;
-      // add needed data to the order state
-      bool isExternal = false;
-      ExternalBusinessState externalBusinessState;
-      store.state.externalBusinessList.externalBusinessListState.forEach((eBL) {
-        if(eBL.id_firestore == event.orderState.itemList.first.id_business){
-          isExternal = true;
-          externalBusinessState = eBL;
-        }
+/// an order always have to be created with a payment method attached in its subcollection
+/// TODO: research if there is a way to make this two operations in an atomic way
+class OrderCreateRoomAndPayService implements EpicClass<AppState> {
+  StatisticsState statisticsState;
+  String state = '';
+  String paymentResult = '';
+  @override
+  Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
+     return actions.whereType<CreateOrderRoomAndPay>().asyncMap((event) async {
+      /// add needed data to the order state
+      OrderState orderState = configureOrder(event.orderState, store);
+      /// send document to orders collection
+      var addedOrder = await FirebaseFirestore.instance.collection("order/").add(orderState.toJson());
+      /// update the order id locally
+      orderState.orderId = addedOrder.id;
+      /// add the payment method to the order sub collection on firebase
+      var addedPaymentMethod = await FirebaseFirestore.instance.collection("order/" + orderState.orderId + "/orderPaymentMethod").add({
+        'paymentMethodId' : '',
+        'last4': '',
+        'brand': '',
+        'type':  Utils.enumToString(event.paymentType),
+        'country': ''
       });
-      int write = 0;
-    orderState.user = UserSnippet();
-    orderState.user.id = store.state.user.uid;
-    orderState.user.name = store.state.user.name;
-      orderState.userId = store.state.user.uid;
-
-      if(isExternal){
-        orderState.businessId = externalBusinessState.id_firestore;
-        orderState.business.thumbnail = externalBusinessState.wide;
-      }else{
-    orderState.businessId = store.state.business.id_firestore;
-    orderState.business.thumbnail = store.state.business.wide;
-      }
-
-    store.state.cardListState.cardList.forEach((element) {
-      if(element.selected){
-        orderState.cardType = element.stripeState.stripeCard.brand;
-        orderState.cardLast4Digit = element.stripeState.stripeCard.last4;
-      }
-    });
-    return orderState;
+      statisticsComputation();
+     }).expand((element) {
+       var actionArray = [];
+       actionArray.add(CreatedOrder());
+       actionArray.add(UpdateStatistics(statisticsState));
+       actionArray.add(SetOrderProgress(Utils.enumToString(OrderStatus.toBePaidAtCheckout)));
+       return actionArray;
+     });
   }
 }
 

@@ -10,8 +10,9 @@ class StripeCardResponse {
   String secretToken;
   String brand;
   String paymentMethodId;
+  String country;
 
-  StripeCardResponse({this.firestore_id, this.last4, this.expYear, this.expMonth, this.secretToken, this.brand, this.paymentMethodId});
+  StripeCardResponse({this.firestore_id, this.last4, this.expYear, this.expMonth, this.secretToken, this.brand, this.paymentMethodId, this.country});
 
   factory StripeCardResponse.fromJson(Map<String, dynamic> json) => _$StripeCardResponseFromJson(json);
   Map<String, dynamic> toJson() => _$StripeCardResponseToJson(this);
