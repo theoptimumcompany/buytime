@@ -122,3 +122,77 @@ class ExternalBusinessImportedCreateService implements EpicClass<AppState> {
     ]);
   }
 }
+
+class ExternalBusinessImportedCanceledService implements EpicClass<AppState> {
+  StatisticsState statisticsState;
+  ExternalBusinessImportedListState externalBusinessImportedListState;
+  @override
+  Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
+
+    return actions.whereType<CancelExternalBusinessImported>().asyncMap((event) async {
+      //ServiceState serviceState = event.serviceState;
+      debugPrint("EXTERNAL_BUSINESS_IMPORTED_LIST_SERVICE_EPIC - ExternalBusinessImportedCanceledService => Business ID: ${event.externalBusinessImportedState.internalBusinessId} ");
+
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('business')
+          .doc(event.externalBusinessImportedState.internalBusinessId)
+          .collection('external_business_imported')
+          .get();
+
+      DocumentReference documentReference;
+
+      if(querySnapshot.docs.isEmpty){
+        documentReference = FirebaseFirestore.instance.collection('business')
+            .doc(event.externalBusinessImportedState.internalBusinessId)
+            .collection('external_business_imported').doc();
+        externalBusinessImportedListState = ExternalBusinessImportedListState(externalBusinessImported: []);
+        List<ExternalBusinessImportedState> eBILS = [];
+        eBILS.add(event.externalBusinessImportedState);
+        externalBusinessImportedListState.externalBusinessImported = eBILS;
+
+        await documentReference.set(externalBusinessImportedListState.toJson()).then((value) {
+          debugPrint("EXTERNAL_BUSINESS_IMPORTED_LIST_SERVICE_EPIC - ExternalBusinessImportedCanceledService => CREATED! ");
+        }).catchError((error) {
+          debugPrint('EXTERNAL_BUSINESS_IMPORTED_LIST_SERVICE_EPIC - ExternalBusinessImportedCanceledService => ERROR: $error');
+          externalBusinessImportedListState.externalBusinessImported.removeLast();
+        });
+      }else{
+        documentReference = querySnapshot.docs.first.reference;
+        externalBusinessImportedListState = ExternalBusinessImportedListState.fromJson(querySnapshot.docs.first.data());
+
+        externalBusinessImportedListState.externalBusinessImported.forEach((element) {
+          if(element.externalBusinessId == event.externalBusinessImportedState.externalBusinessId && element.imported == true)
+            element.imported = false;
+        });
+
+        externalBusinessImportedListState.externalBusinessImported.add(event.externalBusinessImportedState);
+
+        await documentReference.set(externalBusinessImportedListState.toJson()).then((value) {
+          debugPrint("EXTERNAL_BUSINESS_IMPORTED_LIST_SERVICE_EPIC - ExternalBusinessImportedCanceledService => CREATED! ");
+        }).catchError((error) {
+          debugPrint('EXTERNAL_BUSINESS_IMPORTED_LIST_SERVICE_EPIC - ExternalBusinessImportedCanceledService => ERROR: $error');
+          externalBusinessImportedListState.externalBusinessImported.removeLast();
+        });
+      }
+
+      //await Future.delayed(Duration(seconds: 3));
+      /*statisticsState = store.state.statistics;
+      int reads = statisticsState.serviceCreateServiceRead;
+      int writes = statisticsState.serviceCreateServiceWrite;
+      int documents = statisticsState.serviceCreateServiceDocuments;
+      debugPrint('EXTERNAL_SERVICE_IMPORTED_LIST_SERVICE_EPIC - ServiceCreateService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      ++reads;
+      ++documents;
+      debugPrint('EXTERNAL_SERVICE_IMPORTED_LIST_SERVICE_EPIC - ServiceCreateService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      statisticsState.serviceCreateServiceRead = reads;
+      statisticsState.serviceCreateServiceWrite = writes;
+      statisticsState.serviceCreateServiceDocuments = documents;*/
+    }).expand((element) => [
+      //CreatedExternalServiceImported(externalServiceImportedListState),
+      ServiceListSnippetRequest(store.state.business.id_firestore),
+      ExternalBusinessImportedListRequestResponse(externalBusinessImportedListState.externalBusinessImported),
+      UpdateStatistics(statisticsState),
+    ]);
+  }
+
+
+}

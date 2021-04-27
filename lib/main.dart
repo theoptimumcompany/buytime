@@ -42,6 +42,7 @@ import 'package:Buytime/services/email_service_epic.dart';
 import 'package:Buytime/services/external_business_imported_service_epic.dart';
 import 'package:Buytime/services/external_business_service_epic.dart';
 import 'package:Buytime/services/external_service_imported_service_epic.dart';
+import 'package:Buytime/services/notification_service_epic.dart';
 import 'package:Buytime/services/order_reservable_service_epic.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/UI/user/login/UI_U_home.dart';
@@ -164,7 +165,11 @@ void main(){
     UserCategoryListByIdsRequestService(),
     ExternalBusinessListRequestByIdsService(),
     ExternalBusinessImportedListRequestService(),
-    ExternalBusinessImportedCreateService()
+    ExternalBusinessImportedCreateService(),
+    ExternalServiceImportedCanceledService(),
+    ExternalBusinessImportedCanceledService(),
+    NotificationRequestService(),
+    NotificationCreateService()
   ]);
   final _initialState = AppState(
     category: CategoryState().toEmpty(),
@@ -278,6 +283,7 @@ class Buytime extends StatelessWidget {
           GlobalCupertinoLocalizations.delegate
         ],
         supportedLocales: [
+          //const Locale('ca', ''),
           const Locale('en', ''),
           const Locale('it', ''),
           const Locale('es', ''),

@@ -8,17 +8,12 @@ part of 'notification_state.dart';
 
 NotificationState _$NotificationStateFromJson(Map<String, dynamic> json) {
   return NotificationState(
-    businessId: json['businessId'] as String,
-    orderId: json['orderId'] as String,
-    serviceId: json['serviceId'] as String,
-    serviceName: json['serviceName'] as String,
-    serviceState: json['serviceState'] as String,
-    manager: json['manager'] == null
+    recipientId: json['recipientId'] as String,
+    title: json['title'] as String,
+    message: json['message'] as String,
+    ids: json['ids'] == null
         ? null
-        : UserSnippet.fromJson(json['manager'] as Map<String, dynamic>),
-    user: json['user'] == null
-        ? null
-        : UserSnippet.fromJson(json['user'] as Map<String, dynamic>),
+        : IdState.fromJson(json['ids'] as Map<String, dynamic>),
     notifyDate: json['notifyDate'] == null
         ? null
         : DateTime.parse(json['notifyDate'] as String),
@@ -27,12 +22,9 @@ NotificationState _$NotificationStateFromJson(Map<String, dynamic> json) {
 
 Map<String, dynamic> _$NotificationStateToJson(NotificationState instance) =>
     <String, dynamic>{
-      'businessId': instance.businessId,
-      'orderId': instance.orderId,
-      'serviceId': instance.serviceId,
-      'serviceName': instance.serviceName,
-      'serviceState': instance.serviceState,
-      'manager': instance.manager?.toJson(),
-      'user': instance.user?.toJson(),
+      'recipientId': instance.recipientId,
+      'title': instance.title,
+      'message': instance.message,
+      'ids': instance.ids?.toJson(),
       'notifyDate': instance.notifyDate?.toIso8601String(),
     };

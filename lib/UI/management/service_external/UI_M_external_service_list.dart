@@ -3,8 +3,12 @@ import 'package:Buytime/UI/management/service_external/UI_M_add_external_service
 import 'package:Buytime/UI/management/service_external/widget/W_external_business_list_item.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
+import 'package:Buytime/reblox/model/business/external_business_imported_state.dart';
 import 'package:Buytime/reblox/model/business/external_business_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
+import 'package:Buytime/reblox/model/snippet/service_list_snippet_state.dart';
+import 'package:Buytime/reblox/reducer/external_business_imported_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/external_business_imported_reducer.dart';
 import 'package:Buytime/reblox/reducer/external_service_imported_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/service_list_snippet_list_reducer.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
@@ -62,30 +66,26 @@ class ExternalServiceListState extends State<ExternalServiceList> {
         onInit: (store) {
           store.state.serviceListSnippetListState.serviceListSnippetListState.clear();
           List<ExternalBusinessState> businessStateList = [];
+          List<String> businessIds = [];
+
           store.state.externalServiceImportedListState.externalServiceImported.forEach((element) {
-            bool found = false;
-            businessStateList.forEach((bSL) {
-              if(bSL.id_firestore == element.externalBusinessId)
-                found = true;
-            });
-            if(!found){
-              businessStateList.add(ExternalBusinessState(
-                  id_firestore: element.externalBusinessId
-              ));
+            if(element.imported == true){
+              if(!businessIds.contains(element.externalBusinessId))
+                businessIds.add(element.externalBusinessId);
+            }
+
+          });
+          store.state.externalBusinessImportedListState.externalBusinessImported.forEach((element) {
+            if(element.imported == true){
+              if(!businessIds.contains(element.externalBusinessId))
+                businessIds.add(element.externalBusinessId);
             }
           });
 
-          store.state.externalBusinessImportedListState.externalBusinessImported.forEach((element) {
-            bool found = false;
-            businessStateList.forEach((bSL) {
-              if(bSL.id_firestore == element.externalBusinessId)
-                found = true;
-            });
-            if(!found){
-              businessStateList.add(ExternalBusinessState(
-                  id_firestore: element.externalBusinessId
-              ));
-            }
+          businessIds.forEach((element) {
+            businessStateList.add(ExternalBusinessState(
+                id_firestore: element
+            ));
           });
           debugPrint('UI_M_external_service_list => EXTERNAL BUSINESS: ${businessStateList.length}');
           store.dispatch(ServiceListSnippetListRequest(businessStateList));
@@ -202,6 +202,8 @@ class ExternalServiceListState extends State<ExternalServiceList> {
                               ///Add new
                               InkWell(
                                 onTap: () {
+                                  StoreProvider.of<AppState>(context).dispatch(ExternalServiceImportedListRequest(StoreProvider.of<AppState>(context).state.business.id_firestore));
+                                  StoreProvider.of<AppState>(context).dispatch(ExternalBusinessImportedListRequest(StoreProvider.of<AppState>(context).state.business.id_firestore));
                                   Navigator.push(context, EnterExitRoute(enterPage: AddExternalServiceList(true), exitPage: ExternalServiceList(), from: true));
                                 },
                                 borderRadius: BorderRadius.all(Radius.circular(5.0)),
@@ -239,14 +241,30 @@ class ExternalServiceListState extends State<ExternalServiceList> {
 
                                         debugPrint('UI_U_external_service_list => DX to DELETE');
                                         // Show a snackbar. This snackbar could also contain "Undo" actions.
-                                        Scaffold.of(context).showSnackBar(SnackBar(
+                                        ExternalBusinessImportedState eBIS = ExternalBusinessImportedState();
+                                        eBIS.internalBusinessId = snapshot.business.id_firestore;
+                                        eBIS.internalBusinessName = snapshot.business.name;
+                                        eBIS.externalBusinessId = item.id_firestore;
+                                        eBIS.externalBusinessName = item.name;
+                                        eBIS.importTimestamp = DateTime.now();
+                                        eBIS.imported = false;
+                                        StoreProvider.of<AppState>(context).dispatch(CancelExternalBusinessImported(eBIS));
+                                        List<ServiceListSnippetState> tmpList = [];
+                                        snapshot.serviceListSnippetListState.serviceListSnippetListState.forEach((element) {
+                                          if(element.businessId != item.id_firestore)
+                                            tmpList.add(element);
+                                        });
+
+                                        snapshot.serviceListSnippetListState.serviceListSnippetListState = tmpList;
+
+                                        /*Scaffold.of(context).showSnackBar(SnackBar(
                                             content: Text(AppLocalizations.of(context).spaceRemoved),
                                             action: SnackBarAction(
                                                 label: AppLocalizations.of(context).undo,
                                                 onPressed: () {
                                                   //To undo deletion
                                                   undoDeletion(index, item);
-                                                })));
+                                                })));*/
                                       } else {
                                         externalBusinessList.insert(index, item);
                                       }

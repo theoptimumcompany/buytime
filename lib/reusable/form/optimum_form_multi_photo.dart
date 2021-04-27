@@ -30,7 +30,7 @@ class OptimumFormMultiPhoto extends StatefulWidget {
   final int minHeight;
   final String image;
   final CropAspectRatioPreset cropAspectRatioPreset;
-  List<Role> roleAllowedArray = [Role.admin];
+  List<Role> roleAllowedArray = [Role.admin, Role.salesman, Role.owner];
 
   OptimumFormMultiPhoto(
       {@required this.text,
@@ -57,7 +57,8 @@ class OptimumFormMultiPhoto extends StatefulWidget {
       minWidth: minWidth,
       minHeight: minHeight,
       cropAspectRatioPreset: cropAspectRatioPreset,
-      image: image
+      image: image,
+    roleAllowedArray: roleAllowedArray
   );
 }
 
@@ -72,6 +73,7 @@ class OptimumFormMultiPhotoState extends State<OptimumFormMultiPhoto> {
   final int minHeight;
   final CropAspectRatioPreset cropAspectRatioPreset;
   final OnFilePickedCallback onFilePicked;
+  List<Role> roleAllowedArray = [Role.admin, Role.salesman, Role.owner];
   var size;
   String image;
   AssetImage assetImage = AssetImage('assets/img/image_placeholder.png');
@@ -84,7 +86,7 @@ class OptimumFormMultiPhotoState extends State<OptimumFormMultiPhoto> {
   bool underReqSize = false;
 
   OptimumFormMultiPhotoState(
-      {this.text, this.onFilePicked, this.remotePath, this.maxPhoto, this.maxWidth, this.minWidth, this.maxHeight, this.minHeight, this.cropAspectRatioPreset,  this.image});
+      {this.text, this.onFilePicked, this.remotePath, this.maxPhoto, this.maxWidth, this.minWidth, this.maxHeight, this.minHeight, this.cropAspectRatioPreset,  this.image, this.roleAllowedArray});
 
   Future<PickedFile> getImage() async {
     var status = await Permission.camera.status;
@@ -283,7 +285,7 @@ class OptimumFormMultiPhotoState extends State<OptimumFormMultiPhoto> {
                         ),
                         errorWidget: (context, url, error) => croppedImage == null ? Image(width: SizeConfig.blockSizeHorizontal * 50, image: assetImage) : croppedImage,
                       ) : croppedImage == null ? Image(width: SizeConfig.blockSizeHorizontal * 50, image: assetImage) : croppedImage,
-                      onTap: widget.roleAllowedArray.contains(StoreProvider.of<AppState>(context).state.user.getRole()) ? () {
+                      onTap: [Role.admin, Role.salesman, Role.owner].contains(StoreProvider.of<AppState>(context).state.user.getRole()) ? () {
                         manageImage();
                       } : null,
                     ),

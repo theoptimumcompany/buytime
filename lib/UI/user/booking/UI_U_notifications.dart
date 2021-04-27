@@ -44,14 +44,14 @@ class _NotificationsState extends State<Notifications> {
 
   List<NotificationState> notifications = [];
 
-  NotificationState tmpNotification1 = NotificationState(serviceName: 'Test I', serviceState: 'canceled');
-  NotificationState tmpNotification2 = NotificationState(serviceName: 'Test II', serviceState: 'accepted');
+  //NotificationState tmpNotification1 = NotificationState(serviceName: 'Test I', serviceState: 'canceled');
+  //NotificationState tmpNotification2 = NotificationState(serviceName: 'Test II', serviceState: 'accepted');
 
   @override
   void initState() {
     super.initState();
-    notifications.add(tmpNotification1);
-    notifications.add(tmpNotification2);
+    //notifications.add(tmpNotification1);
+    //notifications.add(tmpNotification2);
   }
 
   String _selected = '';
@@ -228,7 +228,7 @@ class _NotificationsState extends State<Notifications> {
                                                     //MenuItemModel menuItem = menuItems.elementAt(index);
                                                       NotificationState notification = notifications.elementAt(index);
                                                     //debugPrint('booking_month_list: bookings booking status: ${booking.user.first.surname} ${booking.status}');
-                                                    return UserNotificationListItem(notification);
+                                                    return UserNotificationListItem(OrderState().toEmpty());
                                                   },
                                                   childCount: notifications.length,
                                                 ),

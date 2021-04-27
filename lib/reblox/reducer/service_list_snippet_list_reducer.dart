@@ -11,19 +11,19 @@ import 'package:flutter/material.dart';
 
 
 class ServiceListSnippetListRequest {
-  List<ExternalBusinessState> _businessesId;
+  List<dynamic> _businessesId;
 
   ServiceListSnippetListRequest(this._businessesId);
 
-  List<ExternalBusinessState> get businessesId => _businessesId;
+  List<dynamic> get businessesId => _businessesId;
 }
 
 class ServiceListSnippetListRequestNavigate {
-  List<ExternalBusinessState> _businessesId;
+  List<dynamic> _businessesId;
 
   ServiceListSnippetListRequestNavigate(this._businessesId);
 
-  List<ExternalBusinessState> get businessesId => _businessesId;
+  List<dynamic> get businessesId => _businessesId;
 }
 
 class ServiceListSnippetListRequestResponse {

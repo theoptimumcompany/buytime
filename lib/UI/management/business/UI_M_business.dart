@@ -324,7 +324,7 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                                                   ),
                                                 ),
 
-                                                networkServices != 0 ? Column(
+                                                networkServices >= 0 ? Column(
                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
                                                     ///Employees count

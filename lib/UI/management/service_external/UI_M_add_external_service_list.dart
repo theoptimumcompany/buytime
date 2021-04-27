@@ -11,7 +11,9 @@ import 'package:Buytime/reblox/model/email/template_data_state.dart';
 import 'package:Buytime/reblox/model/email/template_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/reducer/email_reducer.dart';
+import 'package:Buytime/reblox/reducer/external_business_imported_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/external_business_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/external_service_imported_list_reducer.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
 import 'package:Buytime/reusable/buytime_icons.dart';
 import 'package:Buytime/reusable/enterExitRoute.dart';
@@ -133,6 +135,8 @@ class AddExternalServiceListState extends State<AddExternalServiceList> {
           if(widget.fromMy){
             store.state.externalBusinessList.externalBusinessListState.clear();
             store.dispatch(ExternalBusinessListRequest('any', store.state.user.getRole()));
+            store.dispatch(ExternalServiceImportedListRequest(store.state.business.id_firestore));
+            store.dispatch(ExternalBusinessImportedListRequest(store.state.business.id_firestore));
             startRequest = true;
           }
         },
@@ -170,6 +174,8 @@ class AddExternalServiceListState extends State<AddExternalServiceList> {
                       icon: Icon(Icons.keyboard_arrow_left, color: Colors.white),
                       onPressed: () {
                         //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_Business()))
+                        StoreProvider.of<AppState>(context).dispatch(ExternalServiceImportedListRequest(StoreProvider.of<AppState>(context).state.business.id_firestore));
+                        StoreProvider.of<AppState>(context).dispatch(ExternalBusinessImportedListRequest(StoreProvider.of<AppState>(context).state.business.id_firestore));
                         Navigator.pushReplacement(context, EnterExitRoute(enterPage: ExternalServiceList(), exitPage: AddExternalServiceList(false), from: false));
                         //Navigator.of(context).pop();
                       },

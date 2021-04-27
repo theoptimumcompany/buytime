@@ -81,7 +81,7 @@ class PAServiceListState extends State<PAServiceList> {
               element.businessSnippet.forEach((bS) {
                 bS.serviceList.forEach((sL) {
                   tmp.forEach((s) {
-                    if(s == sL.serviceAbsolutePath.split('/').last)
+                    //if(s == sL.serviceAbsolutePath.split('/').last)
                       count++;
                   });
                 });
@@ -164,6 +164,7 @@ class PAServiceListState extends State<PAServiceList> {
                           eSIS.externalBusinessName = widget.externalBusinessState.name;
                           eSIS.externalServiceId = serviceId;
                           eSIS.importTimestamp = DateTime.now();
+                          eSIS.imported = true;
                           snapshot.serviceListSnippetListState.serviceListSnippetListState.forEach((sLSL) {
                             sLSL.businessSnippet.forEach((bS) {
                               bS.serviceList.forEach((sL) {
@@ -197,7 +198,7 @@ class PAServiceListState extends State<PAServiceList> {
                             ),
                           ),
                           Text(
-                            AppLocalizations.of(context).addToYourNetwork.toUpperCase(),
+                            !equalService && !equalBusiness ? AppLocalizations.of(context).addToYourNetwork.toUpperCase() : AppLocalizations.of(context).alreadyInYourNetwork.toUpperCase(),
                             style: TextStyle(
                               letterSpacing: 1.25,
                               fontSize: 14,

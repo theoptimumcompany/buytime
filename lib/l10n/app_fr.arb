@@ -495,5 +495,8 @@
   "externalServiceAdded": "Service added to your network",
   "sendEmail": "An email has been sent",
   "pleaseFillAllFields": "Please fill in all required fields",
-  "required": "this field is required"
+  "required": "this field is required",
+
+  "noServices": "No network services",
+  "alreadyInYourNetwork": "Already in your network"
 }

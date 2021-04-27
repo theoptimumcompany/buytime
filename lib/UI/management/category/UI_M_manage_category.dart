@@ -632,7 +632,7 @@ class ManageCategoryState extends State<ManageCategory> with SingleTickerProvide
           branches.clear();
           nodeBranches.clear();
           if(snapshot.categoryTree.categoryNodeList == null && startRequest){
-            noActivity = true;
+            //noActivity = true;
           }else{
             if(snapshot.categoryTree.categoryNodeList != null){
               firebaseTree = snapshot.categoryTree.categoryNodeList;
@@ -676,7 +676,7 @@ class ManageCategoryState extends State<ManageCategory> with SingleTickerProvide
 
                   ///Title
                   Utils.barTitle(AppLocalizations.of(context).categories),
-                  StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin ?
+                  StoreProvider.of<AppState>(context).state.user.getRole() == Role.owner ?
                     IconButton(
                     icon: const Icon(
                       Icons.add,
@@ -704,56 +704,55 @@ class ManageCategoryState extends State<ManageCategory> with SingleTickerProvide
                 ],
               ),
               body: SafeArea(
-                child: Center(
-                  child: Container(
-                    //color: Colors.black54,
-                    child: nodeBranches.isNotEmpty ?
-                    Container(
-                      margin: EdgeInsets.only(top: 10.0),
-                      child: TreeView(
-                        //shrinkWrap: false,
-                        controller: _treeViewController,
-                        theme: TreeViewTheme(
-                          expanderTheme: ExpanderThemeData(
-                            type: ExpanderType.chevron,
-                            modifier: ExpanderModifier.circleOutlined,
-                            position: ExpanderPosition.end,
-                            color: BuytimeTheme.ManagerPrimary,
-                            size: 24,
-                          ),
-                          labelStyle: TextStyle(
-                            fontSize: 16,
-                            letterSpacing: 0.3,
-                            fontWeight: FontWeight.w600,
-                            color: BuytimeTheme.TextWhite,
-                          ),
-                          parentLabelStyle: TextStyle(
-                            fontSize: 16,
-                            letterSpacing: 0.1,
-                            fontWeight: FontWeight.w600,
-                            color: BuytimeTheme.TextWhite,
-                          ),
-                          iconTheme: IconThemeData(
-                            size: 24,
-                            color: BuytimeTheme.SymbolWhite,
-                          ),
-                          colorScheme: ColorScheme.light(),
+                child: Container(
+                  //color: Colors.black54,
+                  child: nodeBranches.isNotEmpty ?
+                  Container(
+                    margin: EdgeInsets.only(top: 10.0),
+                    child: TreeView(
+                      //shrinkWrap: false,
+                      controller: _treeViewController,
+                      theme: TreeViewTheme(
+                        expanderTheme: ExpanderThemeData(
+                          type: ExpanderType.chevron,
+                          modifier: ExpanderModifier.circleOutlined,
+                          position: ExpanderPosition.end,
+                          color: BuytimeTheme.ManagerPrimary,
+                          size: 24,
                         ),
-                        allowParentSelect: true,
-                        onExpansionChanged: (key, expanded) =>
-                            _expandNode(key, expanded),
-                        onNodeTap: (key) {
-                          _treeViewController =
-                              _treeViewController.copyWith(selectedKey: key);
-                          StoreProvider.of<AppState>(context).dispatch(CategoryRequest(key));
-                          Future.delayed(const Duration(milliseconds: 500), () {
-                            //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_EditCategory()),);
-                            Navigator.push(context, EnterExitRoute(enterPage: UI_M_EditCategory(), exitPage: ManageCategory(), from: true));
-                          });
-                        },
+                        labelStyle: TextStyle(
+                          fontSize: 16,
+                          letterSpacing: 0.3,
+                          fontWeight: FontWeight.w600,
+                          color: BuytimeTheme.TextWhite,
+                        ),
+                        parentLabelStyle: TextStyle(
+                          fontSize: 16,
+                          letterSpacing: 0.1,
+                          fontWeight: FontWeight.w600,
+                          color: BuytimeTheme.TextWhite,
+                        ),
+                        iconTheme: IconThemeData(
+                          size: 24,
+                          color: BuytimeTheme.SymbolWhite,
+                        ),
+                        colorScheme: ColorScheme.light(),
                       ),
-                    )
-                    /*CustomScrollView(shrinkWrap: true, slivers: [
+                      allowParentSelect: true,
+                      onExpansionChanged: (key, expanded) =>
+                          _expandNode(key, expanded),
+                      onNodeTap: (key) {
+                        _treeViewController =
+                            _treeViewController.copyWith(selectedKey: key);
+                        StoreProvider.of<AppState>(context).dispatch(CategoryRequest(key));
+                        Future.delayed(const Duration(milliseconds: 500), () {
+                          //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_EditCategory()),);
+                          Navigator.push(context, EnterExitRoute(enterPage: UI_M_EditCategory(), exitPage: ManageCategory(), from: true));
+                        });
+                      },
+                    ),
+                  )
+                  /*CustomScrollView(shrinkWrap: true, slivers: [
                         SliverList(
                           delegate: SliverChildBuilderDelegate(
                                 (context, index) {
@@ -765,27 +764,26 @@ class ManageCategoryState extends State<ManageCategory> with SingleTickerProvide
                           ),
                         ),
                       ]) */: noActivity ?
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        CircularProgressIndicator()
-                      ],
-                    ) :
-                    ///No List
-                    Container(
-                      height: SizeConfig.safeBlockVertical * 8,
-                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * .5),
-                      decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
-                      child: Center(
-                          child: Container(
-                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 4),
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              AppLocalizations.of(context).noCategoriesForBusiness,
-                              style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextGrey, fontWeight: FontWeight.w500, fontSize: 16),
-                            ),
-                          )),
-                    ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CircularProgressIndicator()
+                    ],
+                  ) :
+                  ///No List
+                  Container(
+                    height: SizeConfig.safeBlockVertical * 8,
+                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2.5),
+                    decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
+                    child: Center(
+                        child: Container(
+                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 4),
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            AppLocalizations.of(context).noCategoriesForBusiness,
+                            style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextGrey, fontWeight: FontWeight.w500, fontSize: 16),
+                          ),
+                        )),
                   ),
                 ),
               )

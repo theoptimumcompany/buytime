@@ -11,11 +11,26 @@ class CreateExternalServiceImported {
 
   ExternalServiceImportedState get externalServiceImportedState => _externalServiceImportedState;
 }
+class CancelExternalServiceImported {
+  ExternalServiceImportedState _externalServiceImportedState;
+
+  CancelExternalServiceImported(this._externalServiceImportedState);
+
+  ExternalServiceImportedState get externalServiceImportedState => _externalServiceImportedState;
+}
 
 class CreatedExternalServiceImported {
   ExternalServiceImportedState _externalServiceImportedState;
 
   CreatedExternalServiceImported(this._externalServiceImportedState);
+
+  ExternalServiceImportedState get externalServiceImportedState => _externalServiceImportedState;
+}
+
+class CanceledExternalServiceImported {
+  ExternalServiceImportedState _externalServiceImportedState;
+
+  CanceledExternalServiceImported(this._externalServiceImportedState);
 
   ExternalServiceImportedState get externalServiceImportedState => _externalServiceImportedState;
 }
@@ -55,6 +70,11 @@ ExternalServiceImportedState externalServiceImportedReducer(ExternalServiceImpor
   }
 
   if (action is CreatedExternalServiceImported) {
+    externalServiceImportedState = action.externalServiceImportedState.copyWith();
+    debugPrint('external_service_imported_state_reducer: ${externalServiceImportedState.internalBusinessId}');
+    return externalServiceImportedState;
+  }
+  if (action is CanceledExternalServiceImported) {
     externalServiceImportedState = action.externalServiceImportedState.copyWith();
     debugPrint('external_service_imported_state_reducer: ${externalServiceImportedState.internalBusinessId}');
     return externalServiceImportedState;

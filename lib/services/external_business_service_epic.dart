@@ -34,6 +34,7 @@ class ExternalBusinessListRequestService implements EpicClass<AppState> {
         businessListFromFirebase = await FirebaseFirestore.instance /// 1 read - ? DOC
             .collection("business")
             .where("draft", isEqualTo: false)
+            .where("id_firestore", isNotEqualTo: store.state.business.id_firestore)
             .limit(20)
             .get();
       } else {
@@ -41,23 +42,27 @@ class ExternalBusinessListRequestService implements EpicClass<AppState> {
           businessListFromFirebase = await FirebaseFirestore.instance /// 1 READ - ? DOC
               .collection("business")
               .where("hasAccess", arrayContains: store.state.user.email)
+              .where("id_firestore", isNotEqualTo: store.state.business.id_firestore)
               .limit(20)
               .get();
         } else if (event.role == Role.owner) {
           businessListFromFirebase = await FirebaseFirestore.instance /// 1 READ - ? DOC
               .collection("business")
               .where("ownerId", isEqualTo: store.state.user.uid)
+              .where("id_firestore", isNotEqualTo: store.state.business.id_firestore)
               .limit(20)
               .get();
         } else if (event.role == Role.salesman) {
           businessListFromFirebase = await FirebaseFirestore.instance /// 1 READ - ? DOC
               .collection("business")
               .where("salesmanId", isEqualTo: store.state.user.uid)
+              .where("id_firestore", isNotEqualTo: store.state.business.id_firestore)
               .limit(20)
               .get();
         } else if (event.role == Role.admin) {
           businessListFromFirebase = await FirebaseFirestore.instance /// 1 READ - ? DOC
               .collection("business")
+              .where("id_firestore", isNotEqualTo: store.state.business.id_firestore)
               .limit(20)
               .get();
         }

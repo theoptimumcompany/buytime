@@ -153,11 +153,8 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
               labelStyle: TextStyle(color: selectedCategoryList.any((element) => element.id == item.id) ? BuytimeTheme.TextBlack : BuytimeTheme.TextWhite),
               onSelected: (selected) {
                 setState(() {
-                  if (selectedCategoryList.any((element) => element.id == item.id)) {
-                    selectedCategoryList.removeWhere((element) => element.id == item.id);
-                  } else {
-                    selectedCategoryList.add(item);
-                  }
+                  selectedCategoryList.clear();
+                  selectedCategoryList.add(item);
                   validateChosenCategories();
                 });
 

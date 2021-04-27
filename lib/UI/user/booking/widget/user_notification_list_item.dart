@@ -14,8 +14,8 @@ import 'package:Buytime/UI/user/service/UI_U_service_details.dart';
 
 class UserNotificationListItem extends StatefulWidget {
 
-  NotificationState notificationState;
-  UserNotificationListItem(this.notificationState);
+  OrderState orderState;
+  UserNotificationListItem(this.orderState);
 
   @override
   _UserNotificationListItemState createState() => _UserNotificationListItemState();
@@ -53,7 +53,7 @@ class _UserNotificationListItemState extends State<UserNotificationListItem> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               ///Service Image
-                              widget.notificationState.serviceState == 'canceled' ?
+                              widget.orderState.progress == 'canceled' ?
                               Icon(
                                   BuytimeIcons.remove
                               ) : Icon(
@@ -72,7 +72,7 @@ class _UserNotificationListItemState extends State<UserNotificationListItem> {
                                       child: FittedBox(
                                         fit: BoxFit.scaleDown,
                                         child: Text(
-                                          widget.notificationState.serviceName + ' ' + widget.notificationState.serviceState,
+                                          widget.orderState.itemList.first.name + ' ' + widget.orderState.progress,
                                           style: TextStyle(
                                               letterSpacing: 1.5,
                                               fontFamily: BuytimeTheme.FontFamily,
@@ -128,7 +128,7 @@ class _UserNotificationListItemState extends State<UserNotificationListItem> {
                         ],
                       ),
                     ),
-                    widget.notificationState.serviceState == 'canceled' ?
+                    widget.orderState.progress == 'canceled' ?
                     Container(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,

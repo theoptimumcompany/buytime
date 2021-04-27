@@ -81,12 +81,12 @@ class _ExternalServiceDetailsState extends State<ExternalServiceDetails> with Si
         bool equalService = false;
         bool equalBusiness = false;
         StoreProvider.of<AppState>(context).state.externalServiceImportedListState.externalServiceImported.forEach((element) {
-          if(element.externalServiceId == widget.serviceState.serviceId){
+          if(element.externalServiceId == widget.serviceState.serviceId && element.imported == true){
             equalService = true;
           }
         });
         StoreProvider.of<AppState>(context).state.externalBusinessImportedListState.externalBusinessImported.forEach((element) {
-          if(element.externalBusinessId == widget.serviceState.businessId){
+          if(element.externalBusinessId == widget.serviceState.businessId && element.imported == true){
             equalBusiness = true;
           }
         });
@@ -553,6 +553,7 @@ class _ExternalServiceDetailsState extends State<ExternalServiceDetails> with Si
                               eSIS.externalBusinessName = widget.externalBusinessState.name;
                               eSIS.externalServiceId = widget.serviceState.serviceId;
                               eSIS.importTimestamp = DateTime.now();
+                              eSIS.imported = true;
                               snapshot.serviceListSnippetListState.serviceListSnippetListState.forEach((sLSL) {
                                 sLSL.businessSnippet.forEach((bS) {
                                   bS.serviceList.forEach((sL) {
@@ -611,7 +612,7 @@ class _ExternalServiceDetailsState extends State<ExternalServiceDetails> with Si
                                   ),
                                 ),
                                 Text(
-                                  AppLocalizations.of(context).addToYourNetwork.toUpperCase(),
+                                  !equalService && !equalBusiness ? AppLocalizations.of(context).addToYourNetwork.toUpperCase() : AppLocalizations.of(context).alreadyInYourNetwork.toUpperCase(),
                                   style: TextStyle(
                                     letterSpacing: 1.25,
                                     fontSize: 14,

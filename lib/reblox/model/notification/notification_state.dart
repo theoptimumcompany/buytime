@@ -1,72 +1,55 @@
 import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
+import 'package:Buytime/reblox/model/notification/id_state.dart';
 import 'package:json_annotation/json_annotation.dart';
 part 'notification_state.g.dart';
 
 
 @JsonSerializable(explicitToJson: true)
 class NotificationState {
-  String businessId;
-  String orderId;
-  String serviceId;
-  String serviceName;
-  String serviceState;
-  UserSnippet manager;
-  UserSnippet user;
+  String recipientId;
+  String title;
+  String message;
+  IdState ids;
   DateTime notifyDate;
 
   NotificationState({
-    this.businessId,
-    this.orderId,
-    this.serviceId,
-    this.serviceName,
-    this.serviceState,
-    this.manager,
-    this.user,
+    this.recipientId,
+    this.title,
+    this.message,
+    this.ids,
     this.notifyDate,
   });
 
   NotificationState toEmpty() {
     return NotificationState(
-        businessId: '',
-        orderId: '',
-        serviceId: '',
-        serviceName: '',
-        serviceState: '',
-        manager: UserSnippet().toEmpty(),
-        user: UserSnippet().toEmpty(),
+        recipientId: '',
+        title: '',
+        message: '',
+        ids: IdState().toEmpty(),
         notifyDate: DateTime.now().toUtc()
     );
   }
 
   NotificationState.fromState(NotificationState state) {
-    this.businessId = state.businessId;
-    this.orderId = state.orderId;
-    this.serviceId = state.serviceId;
-    this.serviceName = state.serviceName;
-    this.serviceState = state.serviceState;
-    this.manager = state.manager;
-    this.user = state.user;
+    this.recipientId = state.recipientId;
+    this.title = state.title;
+    this.message = state.message;
+    this.ids = state.ids;
     this.notifyDate = state.notifyDate;
   }
 
   NotificationState copyWith({
-    String businessId,
-    String orderId,
-    String serviceId,
-    String serviceName,
-    String serviceState,
-    UserSnippet manager,
-    UserSnippet user,
+    String recipientId,
+    String title,
+    String message,
+    IdState ids,
     DateTime notifyDate,
   }) {
     return NotificationState(
-      businessId: businessId ?? this.businessId,
-      orderId: orderId ?? this.orderId,
-      serviceId: serviceId ?? this.serviceId,
-      serviceName: serviceName ?? this.serviceName,
-      serviceState: serviceState ?? this.serviceState,
-      manager: manager ?? this.manager,
-      user: user ?? this.user,
+      recipientId: recipientId ?? this.recipientId,
+      title: title ?? this.title,
+      message: message ?? this.message,
+      ids: ids ?? this.ids,
       notifyDate: notifyDate ?? this.notifyDate,
     );
   }

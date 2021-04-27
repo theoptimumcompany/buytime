@@ -148,11 +148,8 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
               return null;
             } else {
               setState(() {
-                if (selectedCategoryList.any((element) => element.id == item.id)) {
-                  selectedCategoryList.removeWhere((element) => element.id == item.id);
-                } else {
-                  selectedCategoryList.add(item);
-                }
+                selectedCategoryList.clear();
+                selectedCategoryList.add(item);
                 validateChosenCategories();
               });
 

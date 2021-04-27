@@ -230,7 +230,7 @@
   "categoryImage": "Category Image",
   "viewCheckedOutBookings": "View Checked-out bookings",
   "customTag": "Custom Tag",
-  "serviceList": "",
+  "serviceList": "Service list",
   "addA": "Add a",
   "manualServiceConfirmation": "The service requires a manual confirmation by the staff",
   "reservableAutomaticServiceConfirmation": "The reservable service no requires a manual confirmation by the staff",
@@ -495,5 +495,8 @@
   "externalServiceAdded": "Service added to your network",
   "sendEmail": "An email has been sent",
   "pleaseFillAllFields": "Please fill in all required fields",
-  "required": "this field is required"
+  "required": "this field is required",
+
+  "noServices": "No network services",
+  "alreadyInYourNetwork": "Already in your network"
 }

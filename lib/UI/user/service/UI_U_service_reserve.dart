@@ -125,6 +125,10 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                bool isIn = false;
               bool isReserved = false;
               tmpSlots.add([]);
+              Map<DateTime, List<int>> limted = Map();
+              reserved.forEach((element) {
+                debugPrint('UI_U_ServiceReserve => RESERVED: ${element.date} | ${element.itemList.first.time}');
+              });
               reserved.forEach((r) {
                 r.itemList.forEach((item) {
                   //debugPrint('UI_U_ServiceReserve => LOOKING DATE: ${item.date}');
@@ -426,7 +430,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                       child: FittedBox(
                         fit: BoxFit.scaleDown,
                         child: Text(
-                          AppLocalizations.of(context).reserveSpace + widget.serviceState.name,
+                          AppLocalizations.of(context).reserveSpace + ' ' +  widget.serviceState.name,
                           textAlign: TextAlign.start,
                           style: BuytimeTheme.appbarTitle,
                           overflow: TextOverflow.ellipsis,

@@ -14,9 +14,13 @@ import 'package:Buytime/reblox/model/business/external_business_imported_state.d
 import 'package:Buytime/reblox/model/business/external_business_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/service/external_service_imported_state.dart';
+import 'package:Buytime/reblox/model/service/snippet/service_snippet_state.dart';
+import 'package:Buytime/reblox/model/snippet/service_list_snippet_state.dart';
 import 'package:Buytime/reblox/reducer/business_reducer.dart';
+import 'package:Buytime/reblox/reducer/external_business_imported_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/external_business_imported_reducer.dart';
 import 'package:Buytime/reblox/reducer/external_business_reducer.dart';
+import 'package:Buytime/reblox/reducer/external_service_imported_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/external_service_imported_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reservable_list_reducer.dart';
@@ -115,6 +119,48 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
     return url;
   }
 
+  void createExternalService(BusinessState businessState, String serviceId, List<ServiceListSnippetState> serviceSnippetList){
+    ExternalServiceImportedState eSIS = ExternalServiceImportedState();
+    eSIS.internalBusinessId = businessState.id_firestore;
+    eSIS.internalBusinessName = businessState.name;
+    eSIS.externalBusinessId = widget.externalBusinessState.id_firestore;
+    eSIS.externalBusinessName = widget.externalBusinessState.name;
+    eSIS.externalServiceId = serviceId;
+    eSIS.importTimestamp = DateTime.now();
+    eSIS.imported = true;
+    serviceSnippetList.forEach((sLSL) {
+      sLSL.businessSnippet.forEach((bS) {
+        bS.serviceList.forEach((sL) {
+          if(sL.serviceAbsolutePath.split('/').last == serviceId){
+            eSIS.externalCategoryName = bS.categoryName;
+          }
+        });
+      });
+    });
+    StoreProvider.of<AppState>(context).dispatch(CreateExternalServiceImported(eSIS));
+  }
+
+  void cancelExternalService(BusinessState businessState, String serviceId, List<ServiceListSnippetState> serviceSnippetList){
+    ExternalServiceImportedState eSIS = ExternalServiceImportedState();
+    eSIS.internalBusinessId = businessState.id_firestore;
+    eSIS.internalBusinessName = businessState.name;
+    eSIS.externalBusinessId = widget.externalBusinessState.id_firestore;
+    eSIS.externalBusinessName = widget.externalBusinessState.name;
+    eSIS.externalServiceId = serviceId;
+    eSIS.importTimestamp = DateTime.now();
+    eSIS.imported = false;
+    serviceSnippetList.forEach((sLSL) {
+      sLSL.businessSnippet.forEach((bS) {
+        bS.serviceList.forEach((sL) {
+          if(sL.serviceAbsolutePath.split('/').last == serviceId){
+            eSIS.externalCategoryName = bS.categoryName;
+          }
+        });
+      });
+    });
+    StoreProvider.of<AppState>(context).dispatch(CancelExternalServiceImported(eSIS));
+  }
+
   @override
   Widget build(BuildContext context) {
     // the media containing information on width and height
@@ -125,10 +171,11 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
     return StoreConnector<AppState, AppState>(
       converter: (store) => store.state,
       onInit: (store){
+        store.state.serviceList.serviceListState.clear();
         if(!widget.fromMyList){
           debugPrint('UI_U_external_business_details => Business coordinate: ${widget.externalBusinessState.coordinate}');
           debugPrint('UI_U_external_business_details => Business id: ${widget.externalBusinessState.id_firestore}');
-          store.state.serviceList.serviceListState.clear();
+          //store.state.serviceList.serviceListState.clear();
           store.dispatch(ServiceListRequest(widget.externalBusinessState.id_firestore, 'user'));
           if(widget.externalBusinessState.coordinate.isNotEmpty){
             List<String> latLng = widget.externalBusinessState.coordinate.split(', ');
@@ -141,17 +188,17 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
           store.state.externalBusiness = ExternalBusinessState().toEmpty();
           debugPrint('UI:M_external_business_details => Request Business for: ${widget.externalBusinessState.id_firestore}');
           store.dispatch(ExternalBusinessRequest(widget.externalBusinessState.id_firestore));
-          store.state.serviceList.serviceListState.clear();
+          //store.state.serviceList.serviceListState.clear();
           List<String> serviceIds = [];
            store.state.externalServiceImportedListState.externalServiceImported.forEach((eSI) {
-            if(eSI.externalBusinessId == widget.externalBusinessState.id_firestore){
+            if(eSI.externalBusinessId == widget.externalBusinessState.id_firestore && eSI.imported == true){
               if(!serviceIds.contains(eSI.externalServiceId))
                 serviceIds.add(eSI.externalServiceId);
             }
           });
           store.state.externalBusinessImportedListState.externalBusinessImported.forEach((eBI) {
             store.state.serviceListSnippetListState.serviceListSnippetListState.forEach((sLSL) {
-              if(sLSL.businessId == eBI.externalBusinessId && eBI.externalBusinessId == widget.externalBusinessState.id_firestore && sLSL.businessId == widget.externalBusinessState.id_firestore){
+              if(sLSL.businessId == eBI.externalBusinessId && eBI.externalBusinessId == widget.externalBusinessState.id_firestore && sLSL.businessId == widget.externalBusinessState.id_firestore && eBI.imported == true){
                 sLSL.businessSnippet.forEach((bS) {
                     bS.serviceList.forEach((sL) {
                       if(!serviceIds.contains(sL.serviceAbsolutePath.split('/').last))
@@ -169,6 +216,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
               });
             }
           });*/
+          debugPrint('UI_M_external_business_details => SERVICE IDS: ${serviceIds}');
           store.dispatch(ServiceListRequestByIds(serviceIds));
         }
         startRequest = true;
@@ -217,7 +265,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
         bool equalBusiness = false;
         List<String> tmp = [];
         StoreProvider.of<AppState>(context).state.externalServiceImportedListState.externalServiceImported.forEach((element) {
-          if(widget.externalBusinessState.id_firestore == element.externalBusinessId){
+          if(widget.externalBusinessState.id_firestore == element.externalBusinessId && element.imported == true){
             if(!tmp.contains(element.externalServiceId)){
               tmp.add(element.externalServiceId);
             }
@@ -229,20 +277,17 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
           if(element.businessId == widget.externalBusinessState.id_firestore){
             element.businessSnippet.forEach((bS) {
               bS.serviceList.forEach((sL) {
-                tmp.forEach((s) {
-                  if(s == sL.serviceAbsolutePath.split('/').last)
-                    count++;
-                });
+                count++;
               });
             });
           }
         });
-
-        if(count == tmp.length)
+        debugPrint('Count: $count | tmp: ${tmp.length}');
+        if(count != 0 && count == tmp.length)
           equalService = true;
 
         StoreProvider.of<AppState>(context).state.externalBusinessImportedListState.externalBusinessImported.forEach((element) {
-          if(element.externalBusinessId == widget.externalBusinessState.id_firestore){
+          if(element.externalBusinessId == widget.externalBusinessState.id_firestore && element.imported == true){
             equalBusiness = true;
           }
         });
@@ -277,8 +322,12 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                           tooltip: AppLocalizations.of(context).comeBack,
                           onPressed: () {
                             if(widget.fromMyList && !widget.fromMyBusiness){
+                              StoreProvider.of<AppState>(context).dispatch(ExternalServiceImportedListRequest(StoreProvider.of<AppState>(context).state.business.id_firestore));
+                              StoreProvider.of<AppState>(context).dispatch(ExternalBusinessImportedListRequest(StoreProvider.of<AppState>(context).state.business.id_firestore));
                               Navigator.pushReplacement(context, EnterExitRoute(enterPage: ExternalServiceList(), exitPage: AddExternalServiceList(false), from: false));
                             }else if(!widget.fromMyList && widget.fromMyBusiness){
+                              StoreProvider.of<AppState>(context).dispatch(ExternalServiceImportedListRequest(StoreProvider.of<AppState>(context).state.business.id_firestore));
+                              StoreProvider.of<AppState>(context).dispatch(ExternalBusinessImportedListRequest(StoreProvider.of<AppState>(context).state.business.id_firestore));
                               Navigator.pushReplacement(context, EnterExitRoute(enterPage: ExternalBusinessDetails(widget.externalBusinessState, true, false), exitPage: AddExternalServiceList(false), from: false));
                             }else
                               Navigator.of(context).pop();
@@ -312,6 +361,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                       eBIS.externalBusinessId = widget.externalBusinessState.id_firestore;
                       eBIS.externalBusinessName = widget.externalBusinessState.name;
                       eBIS.importTimestamp = DateTime.now();
+                      eBIS.imported = true;
                       StoreProvider.of<AppState>(context).dispatch(CreateExternalBusinessImported(eBIS));
                     } : null,
                     textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
@@ -334,7 +384,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                           ),
                         ),
                         Text(
-                          AppLocalizations.of(context).addToYourNetwork.toUpperCase(),
+                          !equalService && !equalBusiness ? AppLocalizations.of(context).addToYourNetwork.toUpperCase() : AppLocalizations.of(context).alreadyInYourNetwork.toUpperCase(),
                           style: TextStyle(
                             letterSpacing: 1.25,
                             fontSize: 14,
@@ -698,6 +748,8 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                                 ///View business
                                                 InkWell(
                                                   onTap: () {
+                                                    StoreProvider.of<AppState>(context).dispatch(ExternalServiceImportedListRequest(StoreProvider.of<AppState>(context).state.business.id_firestore));
+                                                    StoreProvider.of<AppState>(context).dispatch(ExternalBusinessImportedListRequest(StoreProvider.of<AppState>(context).state.business.id_firestore));
                                                     Navigator.push(context, EnterExitRoute(enterPage: ExternalBusinessDetails(widget.externalBusinessState, false, true), exitPage: ExternalBusinessDetails(widget.externalBusinessState, false, true), from: true));
                                                   },
                                                   borderRadius: BorderRadius.all(Radius.circular(5.0)),
@@ -731,19 +783,21 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                                 // Remove the item from the data source.
                                                 setState(() {
                                                   allServiceList.removeAt(index);
+                                                  snapshot.serviceList.serviceListState.removeAt(index);
                                                 });
                                                 if (direction == DismissDirection.endToStart) {
 
                                                   debugPrint('UI_U_external_service_list => DX to DELETE');
                                                   // Show a snackbar. This snackbar could also contain "Undo" actions.
-                                                  Scaffold.of(context).showSnackBar(SnackBar(
+                                                  cancelExternalService(snapshot.business, service.serviceId, snapshot.serviceListSnippetListState.serviceListSnippetListState);
+                                                  /*Scaffold.of(context).showSnackBar(SnackBar(
                                                       content: Text(AppLocalizations.of(context).spaceRemoved),
                                                       action: SnackBarAction(
                                                           label: AppLocalizations.of(context).undo,
                                                           onPressed: () {
                                                             //To undo deletion
                                                             undoAllDeletion(index, service);
-                                                          })));
+                                                          })));*/
                                                 } else {
                                                   allServiceList.insert(index, service);
                                                 }
@@ -873,12 +927,12 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                             bool equalService = false;
                                             bool equalBusiness = false;
                                             StoreProvider.of<AppState>(context).state.externalServiceImportedListState.externalServiceImported.forEach((element) {
-                                              if(element.externalServiceId == service.serviceId){
+                                              if(element.externalServiceId == service.serviceId && element.imported == true){
                                                 equalService = true;
                                               }
                                             });
                                             StoreProvider.of<AppState>(context).state.externalBusinessImportedListState.externalBusinessImported.forEach((element) {
-                                              if(element.externalBusinessId == service.businessId){
+                                              if(element.externalBusinessId == service.businessId && element.imported == true){
                                                 equalBusiness = true;
                                               }
                                             });
@@ -902,24 +956,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                                       popularServiceList.removeAt(index);
                                                     });
                                                     debugPrint('UI_U_external_business_details => SX to BOOK');
-                                                    ExternalServiceImportedState eSIS = ExternalServiceImportedState();
-                                                    eSIS.internalBusinessId = snapshot.business.id_firestore;
-                                                    eSIS.internalBusinessName = snapshot.business.name;
-                                                    eSIS.externalBusinessId = widget.externalBusinessState.id_firestore;
-                                                    eSIS.externalBusinessName = widget.externalBusinessState.name;
-                                                    eSIS.externalServiceId = service.serviceId;
-                                                    eSIS.importTimestamp = DateTime.now();
-                                                    snapshot.serviceListSnippetListState.serviceListSnippetListState.forEach((sLSL) {
-                                                      sLSL.businessSnippet.forEach((bS) {
-                                                          bS.serviceList.forEach((sL) {
-                                                            if(sL.serviceAbsolutePath.split('/').last == service.serviceId){
-                                                              debugPrint('UI_M_external_business_details => External category name: ${bS.categoryName}');
-                                                              eSIS.externalCategoryName = bS.categoryName;
-                                                            }
-                                                          });
-                                                        });
-                                                    });
-                                                    StoreProvider.of<AppState>(context).dispatch(CreateExternalServiceImported(eSIS));
+                                                    createExternalService(snapshot.business, service.serviceId, snapshot.serviceListSnippetListState.serviceListSnippetListState);
                                                     undoPopularDeletion(index, service);
                                                   },
                                                   child: Column(
@@ -972,12 +1009,12 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                             bool equalService = false;
                                             bool equalBusiness = false;
                                             StoreProvider.of<AppState>(context).state.externalServiceImportedListState.externalServiceImported.forEach((element) {
-                                              if(element.externalServiceId == service.serviceId){
+                                              if(element.externalServiceId == service.serviceId && element.imported == true){
                                                 equalService = true;
                                               }
                                             });
                                             StoreProvider.of<AppState>(context).state.externalBusinessImportedListState.externalBusinessImported.forEach((element) {
-                                              if(element.externalBusinessId == service.businessId){
+                                              if(element.externalBusinessId == service.businessId && element.imported == true){
                                                 equalBusiness = true;
                                               }
                                             });
@@ -1001,23 +1038,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                                       popularServiceList.removeAt(index);
                                                     });
                                                     debugPrint('UI_U_external_business_details => SX to BOOK');
-                                                    ExternalServiceImportedState eSIS = ExternalServiceImportedState();
-                                                    eSIS.internalBusinessId = snapshot.business.id_firestore;
-                                                    eSIS.internalBusinessName = snapshot.business.name;
-                                                    eSIS.externalBusinessId = widget.externalBusinessState.id_firestore;
-                                                    eSIS.externalBusinessName = widget.externalBusinessState.name;
-                                                    eSIS.externalServiceId = service.serviceId;
-                                                    eSIS.importTimestamp = DateTime.now();
-                                                    snapshot.serviceListSnippetListState.serviceListSnippetListState.forEach((sLSL) {
-                                                      sLSL.businessSnippet.forEach((bS) {
-                                                        bS.serviceList.forEach((sL) {
-                                                          if(sL.serviceAbsolutePath.split('/').last == service.serviceId){
-                                                            eSIS.externalCategoryName = bS.categoryName;
-                                                          }
-                                                        });
-                                                      });
-                                                    });
-                                                    StoreProvider.of<AppState>(context).dispatch(CreateExternalServiceImported(eSIS));
+                                                    createExternalService(snapshot.business, service.serviceId, snapshot.serviceListSnippetListState.serviceListSnippetListState);
                                                     undoPopularDeletion(index, service);
                                                   },
                                                   child: Column(
@@ -1152,12 +1173,12 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                             bool equalService = false;
                                             bool equalBusiness = false;
                                             StoreProvider.of<AppState>(context).state.externalServiceImportedListState.externalServiceImported.forEach((element) {
-                                              if(element.externalServiceId == service.serviceId){
+                                              if(element.externalServiceId == service.serviceId && element.imported == true){
                                                 equalService = true;
                                               }
                                             });
                                             StoreProvider.of<AppState>(context).state.externalBusinessImportedListState.externalBusinessImported.forEach((element) {
-                                              if(element.externalBusinessId == service.businessId){
+                                              if(element.externalBusinessId == service.businessId && element.imported == true){
                                                 equalBusiness = true;
                                               }
                                             });
@@ -1181,23 +1202,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                                       allServiceList.removeAt(index);
                                                     });
                                                     debugPrint('UI_U_SearchPage => SX to BOOK');
-                                                    ExternalServiceImportedState eSIS = ExternalServiceImportedState();
-                                                    eSIS.internalBusinessId = snapshot.business.id_firestore;
-                                                    eSIS.internalBusinessName = snapshot.business.name;
-                                                    eSIS.externalBusinessId = widget.externalBusinessState.id_firestore;
-                                                    eSIS.externalBusinessName = widget.externalBusinessState.name;
-                                                    eSIS.externalServiceId = service.serviceId;
-                                                    eSIS.importTimestamp = DateTime.now();
-                                                    snapshot.serviceListSnippetListState.serviceListSnippetListState.forEach((sLSL) {
-                                                      sLSL.businessSnippet.forEach((bS) {
-                                                        bS.serviceList.forEach((sL) {
-                                                          if(sL.serviceAbsolutePath.split('/').last == service.serviceId){
-                                                            eSIS.externalCategoryName = bS.categoryName;
-                                                          }
-                                                        });
-                                                      });
-                                                    });
-                                                    StoreProvider.of<AppState>(context).dispatch(CreateExternalServiceImported(eSIS));
+                                                    createExternalService(snapshot.business, service.serviceId, snapshot.serviceListSnippetListState.serviceListSnippetListState);
                                                     undoAllDeletion(index, service);
                                                   },
                                                   child: Column(
@@ -1250,12 +1255,12 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                             bool equalService = false;
                                             bool equalBusiness = false;
                                             StoreProvider.of<AppState>(context).state.externalServiceImportedListState.externalServiceImported.forEach((element) {
-                                              if(element.externalServiceId == service.serviceId){
+                                              if(element.externalServiceId == service.serviceId && element.imported == true){
                                                 equalService = true;
                                               }
                                             });
                                             StoreProvider.of<AppState>(context).state.externalBusinessImportedListState.externalBusinessImported.forEach((element) {
-                                              if(element.externalBusinessId == service.businessId){
+                                              if(element.externalBusinessId == service.businessId && element.imported == true){
                                                 equalBusiness = true;
                                               }
                                             });
@@ -1279,23 +1284,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                                       allServiceList.removeAt(index);
                                                     });
                                                     debugPrint('UI_U_SearchPage => SX to BOOK');
-                                                    ExternalServiceImportedState eSIS = ExternalServiceImportedState();
-                                                    eSIS.internalBusinessId = snapshot.business.id_firestore;
-                                                    eSIS.internalBusinessName = snapshot.business.name;
-                                                    eSIS.externalBusinessId = widget.externalBusinessState.id_firestore;
-                                                    eSIS.externalBusinessName = widget.externalBusinessState.name;
-                                                    eSIS.externalServiceId = service.serviceId;
-                                                    eSIS.importTimestamp = DateTime.now();
-                                                    snapshot.serviceListSnippetListState.serviceListSnippetListState.forEach((sLSL) {
-                                                      sLSL.businessSnippet.forEach((bS) {
-                                                        bS.serviceList.forEach((sL) {
-                                                          if(sL.serviceAbsolutePath.split('/').last == service.serviceId){
-                                                            eSIS.externalCategoryName = bS.categoryName;
-                                                          }
-                                                        });
-                                                      });
-                                                    });
-                                                    StoreProvider.of<AppState>(context).dispatch(CreateExternalServiceImported(eSIS));
+                                                    createExternalService(snapshot.business, service.serviceId, snapshot.serviceListSnippetListState.serviceListSnippetListState);
                                                     undoAllDeletion(index, service);
                                                   },
                                                   child: Column(

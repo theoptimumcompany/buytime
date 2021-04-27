@@ -14,6 +14,8 @@ class ExternalBusinessImportedState {
   String internalBusinessName;
   @JsonKey(fromJson: Utils.getDate, toJson: Utils.setDate)
   DateTime importTimestamp;
+  @JsonKey(defaultValue: false)
+  bool imported;
 
   ExternalBusinessImportedState({
     this.externalBusinessId,
@@ -21,6 +23,7 @@ class ExternalBusinessImportedState {
     this.internalBusinessId,
     this.internalBusinessName,
     this.importTimestamp,
+    this.imported,
   });
 
   ExternalBusinessImportedState toEmpty() {
@@ -30,6 +33,7 @@ class ExternalBusinessImportedState {
       internalBusinessId: "",
       internalBusinessName: "",
       importTimestamp: new DateTime.now(),
+      imported: false,
     );
   }
 
@@ -41,6 +45,7 @@ class ExternalBusinessImportedState {
     this.internalBusinessId = state.internalBusinessId;
     this.internalBusinessName = state.internalBusinessName;
     this.importTimestamp = state.importTimestamp;
+    this.imported = state.imported;
   }
 
   ExternalBusinessImportedState copyWith({
@@ -49,6 +54,7 @@ class ExternalBusinessImportedState {
     String internalBusinessId,
     String internalBusinessName,
     DateTime importTimestamp,
+    bool imported,
   }) {
     return ExternalBusinessImportedState(
       externalBusinessId: externalBusinessId ?? this.externalBusinessId,
@@ -56,6 +62,7 @@ class ExternalBusinessImportedState {
       internalBusinessId: internalBusinessId ?? this.internalBusinessId,
       internalBusinessName: internalBusinessName ?? this.internalBusinessName,
       importTimestamp: importTimestamp ?? this.importTimestamp,
+      imported: imported ?? this.imported,
     );
   }
 

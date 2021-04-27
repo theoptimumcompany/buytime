@@ -4,6 +4,7 @@ import 'package:Buytime/UI/management/business/UI_M_business.dart';
 import 'package:Buytime/UI/management/category/UI_M_manage_category.dart';
 import 'package:Buytime/reblox/model/business/business_list_state.dart';
 import 'package:Buytime/reblox/reducer/booking_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/service_list_snippet_list_reducer.dart';
 import 'package:Buytime/reusable/enterExitRoute.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
@@ -33,24 +34,30 @@ class UI_M_BusinessListState extends State<UI_M_BusinessList> {
 
   bool startRequest = false;
   bool noActivity = false;
-
+  bool generated = false;
   @override
   void initState() {
     super.initState();
   }
 
+  List<int> networkServicesList = [];
+
+
   @override
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
     var mediaHeight = media.height;
-    return StoreConnector<AppState, BusinessListState>(
-        converter: (store) => store.state.businessList,
-        onInit: (store) => {
-          print("Oninitbusinesslist"),
-          store.dispatch(BusinessListRequest(store.state.user.uid, store.state.user.getRole())), startRequest = true,
+    return StoreConnector<AppState, AppState>(
+        converter: (store) => store.state,
+        onInit: (store){
+          print("Oninitbusinesslist");
+          store.state.serviceListSnippetListState.serviceListSnippetListState.clear();
+          store.state.businessList.businessListState.clear();
+          store.dispatch(BusinessListRequest(store.state.user.uid, store.state.user.getRole()));
+          startRequest = true;
           },
         builder: (context, snapshot) {
-          businessListState = snapshot.businessListState;
+          businessListState = snapshot.businessList.businessListState;
           if (businessListState.isEmpty && startRequest) {
             noActivity = true;
             startRequest = false;
@@ -58,8 +65,37 @@ class UI_M_BusinessListState extends State<UI_M_BusinessList> {
             if(businessListState.isNotEmpty && businessListState.first.name == null){
               businessListState.removeLast();
             }
+
+            if(!generated){
+              generated = true;
+              debugPrint('UI_M_business_list => REQUEST SNIPPET');
+              StoreProvider.of<AppState>(context).dispatch(ServiceListSnippetListRequest(businessListState));
+            }
+            if(snapshot.serviceListSnippetListState.serviceListSnippetListState.isNotEmpty){
+              debugPrint('UI_M_business_list => BUSINESS SNIPPETS: ${snapshot.serviceListSnippetListState.serviceListSnippetListState.length}');
+              if(snapshot.serviceListSnippetListState.serviceListSnippetListState.first.businessId == null){
+                startRequest = false;
+                snapshot.serviceListSnippetListState.serviceListSnippetListState.removeLast();
+              }
+
+                for(int i = 0; i < businessListState.length; i++){
+                  networkServicesList.add(0);
+                  if(snapshot.serviceListSnippetListState.serviceListSnippetListState.isNotEmpty && snapshot.serviceListSnippetListState.serviceListSnippetListState.first.businessId != null) {
+                    snapshot.serviceListSnippetListState.serviceListSnippetListState.forEach((element) {
+                      if(businessListState[i].id_firestore == element.businessId){
+                        int networkServices = 0;
+                        networkServices = element.businessServiceNumberInternal + element.businessServiceNumberExternal;
+                        networkServicesList.last = networkServices;
+                      }
+                    });
+                  }
+
+                }
+                if(networkServicesList.length == businessListState.length)
+                  noActivity = false;
+              }
+
             //startRequest = false;
-            noActivity = false;
           }
           return WillPopScope(
             onWillPop: () async => false,
@@ -111,7 +147,7 @@ class UI_M_BusinessListState extends State<UI_M_BusinessList> {
                 body: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    businessListState != null && businessListState.length > 0?
+                    businessListState != null && businessListState.length > 0 && networkServicesList.isNotEmpty?
                     Expanded(
                       child: Padding(
                           padding: const EdgeInsets.only(top: 10.0),
@@ -124,6 +160,7 @@ class UI_M_BusinessListState extends State<UI_M_BusinessList> {
                                   padding: const EdgeInsets.only(top: 1.0),
                                   child: new OptimumBusinessCardMediumManager(
                                     businessState: businessListState[index],
+                                    networkServices: networkServicesList[index] ?? 0,
                                     onBusinessCardTap: (BusinessState businessState) {
                                       StoreProvider.of<AppState>(context).dispatch(SetBusiness(businessListState[index]));
                                       //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_Business()),);

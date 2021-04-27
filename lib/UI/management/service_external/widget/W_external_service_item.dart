@@ -188,12 +188,12 @@ class _ExternalServiceItemState extends State<ExternalServiceItem> {
                       bool equalService = false;
                       bool equalBusiness = false;
                       StoreProvider.of<AppState>(context).state.externalServiceImportedListState.externalServiceImported.forEach((element) {
-                        if(element.externalServiceId == widget.serviceState.serviceId){
+                        if(element.externalServiceId == widget.serviceState.serviceId && element.imported == true){
                           equalService = true;
                         }
                       });
                       StoreProvider.of<AppState>(context).state.externalBusinessImportedListState.externalBusinessImported.forEach((element) {
-                        if(element.externalBusinessId == widget.serviceState.businessId){
+                        if(element.externalBusinessId == widget.serviceState.businessId && element.imported == true){
                           equalBusiness = true;
                         }
                       });

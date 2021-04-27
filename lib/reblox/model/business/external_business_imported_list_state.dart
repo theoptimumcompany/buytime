@@ -17,7 +17,7 @@ class ExternalBusinessImportedListState {
     this.externalBusinessImported = state.externalBusinessImported ;
   }
 
-  companyStateFieldUpdate(List<ExternalBusinessState> externalBusinessImported) {
+  companyStateFieldUpdate(List<ExternalBusinessImportedState> externalBusinessImported) {
     ExternalBusinessImportedListState(
         externalBusinessImported: externalBusinessImported ?? this.externalBusinessImported
     );

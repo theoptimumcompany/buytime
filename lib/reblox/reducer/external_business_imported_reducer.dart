@@ -11,10 +11,26 @@ class CreateExternalBusinessImported {
   ExternalBusinessImportedState get externalBusinessImportedState => _externalBusinessImportedState;
 }
 
+class CancelExternalBusinessImported {
+  ExternalBusinessImportedState _externalBusinessImportedState;
+
+  CancelExternalBusinessImported(this._externalBusinessImportedState);
+
+  ExternalBusinessImportedState get externalBusinessImportedState => _externalBusinessImportedState;
+}
+
 class CreatedExternalBusinessImported {
   ExternalBusinessImportedState _externalBusinessImportedState;
 
   CreatedExternalBusinessImported(this._externalBusinessImportedState);
+
+  ExternalBusinessImportedState get externalBusinessImportedState => _externalBusinessImportedState;
+}
+
+class CanceledExternalBusinessImported {
+  ExternalBusinessImportedState _externalBusinessImportedState;
+
+  CanceledExternalBusinessImported(this._externalBusinessImportedState);
 
   ExternalBusinessImportedState get externalBusinessImportedState => _externalBusinessImportedState;
 }
@@ -53,6 +69,11 @@ ExternalBusinessImportedState externalBusinessImportedReducer(ExternalBusinessIm
   }
 
   if (action is CreatedExternalBusinessImported) {
+    externalBusinessImportedState = action.externalBusinessImportedState.copyWith();
+    debugPrint('external_service_imported_state_reducer: ${externalBusinessImportedState.internalBusinessId}');
+    return externalBusinessImportedState;
+  }
+  if (action is CanceledExternalBusinessImported) {
     externalBusinessImportedState = action.externalBusinessImportedState.copyWith();
     debugPrint('external_service_imported_state_reducer: ${externalBusinessImportedState.internalBusinessId}');
     return externalBusinessImportedState;

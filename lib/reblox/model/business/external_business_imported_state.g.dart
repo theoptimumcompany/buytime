@@ -14,6 +14,7 @@ ExternalBusinessImportedState _$ExternalBusinessImportedStateFromJson(
     internalBusinessId: json['internalBusinessId'] as String,
     internalBusinessName: json['internalBusinessName'] as String,
     importTimestamp: Utils.getDate(json['importTimestamp'] as Timestamp),
+    imported: json['imported'] as bool ?? false,
   );
 }
 
@@ -25,4 +26,5 @@ Map<String, dynamic> _$ExternalBusinessImportedStateToJson(
       'internalBusinessId': instance.internalBusinessId,
       'internalBusinessName': instance.internalBusinessName,
       'importTimestamp': Utils.setDate(instance.importTimestamp),
+      'imported': instance.imported,
     };

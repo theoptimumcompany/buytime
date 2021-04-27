@@ -1,14 +1,17 @@
+import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 
 typedef OptimumBusinessCardMediumManagerCallback = void Function(BusinessState);
 
 class OptimumBusinessCardMediumManager extends StatefulWidget {
   OptimumBusinessCardMediumManagerCallback onBusinessCardTap;
   String imageUrl;
+  int networkServices;
   Image image;
   BusinessState businessState;
   Widget rowWidget1;
@@ -20,6 +23,7 @@ class OptimumBusinessCardMediumManager extends StatefulWidget {
       {this.image,
         @required this.imageUrl,
         @required this.businessState,
+        this.networkServices,
         this.onBusinessCardTap,
         this.rowWidget1,
         this.rowWidget2,
@@ -27,6 +31,7 @@ class OptimumBusinessCardMediumManager extends StatefulWidget {
         @required this.mediaSize}) {
     this.image = image;
     this.imageUrl = imageUrl;
+    this.networkServices = networkServices;
     this.businessState = businessState;
     this.onBusinessCardTap = onBusinessCardTap;
     this.rowWidget1 = rowWidget1;
@@ -40,6 +45,7 @@ class OptimumBusinessCardMediumManager extends StatefulWidget {
       _OptimumBusinessCardMediumManagerState(
           image: image,
           imageUrl: imageUrl,
+          networkServices: networkServices,
           businessState: businessState,
           businessCardTap: onBusinessCardTap,
           rowWidget1: rowWidget1,
@@ -51,6 +57,7 @@ class OptimumBusinessCardMediumManager extends StatefulWidget {
 class _OptimumBusinessCardMediumManagerState extends State<OptimumBusinessCardMediumManager> {
   OptimumBusinessCardMediumManagerCallback businessCardTap;
   String imageUrl;
+  int networkServices;
   Image image;
   BusinessState businessState;
   Widget rowWidget1;
@@ -61,6 +68,7 @@ class _OptimumBusinessCardMediumManagerState extends State<OptimumBusinessCardMe
   _OptimumBusinessCardMediumManagerState(
       {this.image,
         this.imageUrl,
+        this.networkServices,
         this.businessState,
         this.businessCardTap,
         this.rowWidget1,
@@ -116,8 +124,17 @@ class _OptimumBusinessCardMediumManagerState extends State<OptimumBusinessCardMe
                         //borderRadius: BorderRadius.all(Radius.circular(SizeConfig.blockSizeHorizontal * 5)), ///12.5%
                           image: DecorationImage(image: imageProvider, fit: BoxFit.cover)),
                     ),
-                    placeholder: (context, url) => CircularProgressIndicator(
-                      //valueColor: new AlwaysStoppedAnimation<Color>(BuytimeTheme.ManagerPrimary),
+                    placeholder: (context, url) => Container(
+                        height: 100,
+                        width: 100,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CircularProgressIndicator(
+                            //valueColor: new AlwaysStoppedAnimation<Color>(BuytimeTheme.ManagerPrimary),
+                          )
+                        ],
+                      )
                     ),
                     errorWidget: (context, url, error) => Icon(Icons.error),
                   )
@@ -165,7 +182,7 @@ class _OptimumBusinessCardMediumManagerState extends State<OptimumBusinessCardMe
                                       ),
                                     ),
                                     Text(
-                                      AppLocalizations.of(context).employees,
+                                      widget.businessState.hasAccess.length > 1 ? '${widget.businessState.hasAccess.length} ${AppLocalizations.of(context).justEmployees}': '${widget.businessState.hasAccess.length} ${AppLocalizations.of(context).justEmployee}',
                                       overflow: TextOverflow.ellipsis,
                                       textAlign: TextAlign.start,
                                       style: TextStyle(
@@ -178,7 +195,7 @@ class _OptimumBusinessCardMediumManagerState extends State<OptimumBusinessCardMe
                                     Padding(
                                       padding: const EdgeInsets.only(top: 3.0),
                                       child: Text(
-                                        AppLocalizations.of(context).services5,
+                                        networkServices == 0 ? AppLocalizations.of(context).noServices : networkServices > 1 ? '$networkServices ${AppLocalizations.of(context).networkServices}' : '$networkServices ${AppLocalizations.of(context).networkService}',
                                         overflow: TextOverflow.ellipsis,
                                         textAlign: TextAlign.start,
                                         style: TextStyle(
@@ -188,7 +205,7 @@ class _OptimumBusinessCardMediumManagerState extends State<OptimumBusinessCardMe
                                           fontWeight: FontWeight.w400,
                                         ),
                                       ),
-                                    ),
+                                    )
                                   ],
                                 ),
                               ),

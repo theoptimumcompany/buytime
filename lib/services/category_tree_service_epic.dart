@@ -92,6 +92,7 @@ class CategoryTreeRequestService implements EpicClass<AppState> {
         });
       } else {
         categoryNode = CategoryTree().toEmpty();
+        categoryNode.categoryNodeList = [];
       }
       debugPrint("CATEGORY_TREE_SERVICE_EPIC - CategoryTreeRequestService => Category tree Number of Categories: " + categoryNode.numberOfCategories.toString());
 
