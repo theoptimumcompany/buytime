@@ -142,11 +142,6 @@ class _CreditCardListElementState extends State<CreditCardListElement> {
                           color: Colors.transparent,
                           child: InkWell(
                               onTap: (){
-                                /*setState(() {
-                                  //tmpList.add('scemo');
-                                  // creditCards.add(CreditCard());
-                                  selected = !selected;
-                                });*/
                                 List<CardState> tmpList = StoreProvider.of<AppState>(context).state.cardListState.cardList;
                                 tmpList.forEach((element) {
                                   if(element.stripeState.stripeCard.last4 == widget.cardState.stripeState.stripeCard.last4){

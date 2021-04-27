@@ -4,16 +4,22 @@ import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/model/business/external_business_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/statistics_state.dart';
+import 'package:Buytime/reblox/model/stripe/stripe_state.dart';
 import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
 import 'package:Buytime/reblox/reducer/order_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reblox/reducer/statistics_reducer.dart';
+import 'package:Buytime/services/statistic/util.dart';
+import 'package:Buytime/services/stripe_payment_service_epic.dart';
+import 'package:Buytime/utils/utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:redux_epics/redux_epics.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:http/http.dart' as http;
+
+import 'order/util.dart';
 
 List<DateTime> getPeriod(DateTime dateTime){
   //String weekdayDate = DateFormat('E d M y').format(dateTime);
@@ -75,7 +81,6 @@ class OrderListRequestService implements EpicClass<AppState> {
         for(int i = 0; i < businessList.length; i++){
           debugPrint("ORDER_SERVICE_EPIC - OrderListRequestService =>  BUSINESS ID: ${businessList[i].id_firestore}");
           QuerySnapshot ordersFirebase = await FirebaseFirestore.instance.collection("order") /// 1 READ - ? DOC
-              //.where("progress", isEqualTo: "paid")
               .where("businessId", isEqualTo: businessList[i].id_firestore)
               .where("date", isGreaterThanOrEqualTo: currentTime)
               .where("date", isLessThanOrEqualTo: period[1])
@@ -85,20 +90,6 @@ class OrderListRequestService implements EpicClass<AppState> {
 
           ordersFirebaseDocs += ordersFirebase.docs.length;
           debugPrint("ORDER_SERVICE_EPIC - OrderListRequestService => OrderListService Firestore request");
-          /*ordersFirebase.docs.forEach((element) {
-          if(event.userId != "any"){
-            OrderState orderState = OrderState.fromJson(element.data());
-            if(orderState.progress == "paid" && orderState.user.id == store.state.stripe.u){
-              orderStateList.add(orderState);
-            }
-          }
-          else{
-            OrderState orderState = OrderState.fromJson(element.data());
-            if(orderState.progress == "paid" && orderState.user.id == store.state.business.ownerId && orderState.businessId == store.state.business.id_firestore){
-              orderStateList.add(orderState);
-            }
-          }
-        });*/
           ordersFirebase.docs.forEach((element) {
             OrderState orderState = OrderState.fromJson(element.data());
             orderStateList.add(orderState);
@@ -108,19 +99,7 @@ class OrderListRequestService implements EpicClass<AppState> {
 
         if(orderStateList.isEmpty)
           orderStateList.add(OrderState());
-
-        statisticsState = store.state.statistics;
-        int reads = statisticsState.orderListRequestServiceRead;
-        int writes = statisticsState.orderListRequestServiceWrite;
-        int documents = statisticsState.orderListRequestServiceDocuments;
-        debugPrint('ORDER_SERVICE_EPIC - OrderListRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
-        reads = reads + read;
-        documents = documents + ordersFirebaseDocs;
-        debugPrint('ORDER_SERVICE_EPIC - OrderListRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
-        statisticsState.orderListRequestServiceRead = reads;
-        statisticsState.orderListRequestServiceWrite = writes;
-        statisticsState.orderListRequestServiceDocuments = documents;
-
+        statisticsComputation();
         ///Return
         //return new OrderListReturned(orderStateList);
      }).expand((element) => [
@@ -162,37 +141,12 @@ class UserOrderListRequestService implements EpicClass<AppState> {
 
       ordersFirebaseDocs += ordersFirebase.docs.length;
       debugPrint("ORDER_SERVICE_EPIC - UserOrderListRequestService => OrderListService Firestore request");
-      /*ordersFirebase.docs.forEach((element) {
-          if(event.userId != "any"){
-            OrderState orderState = OrderState.fromJson(element.data());
-            if(orderState.progress == "paid" && orderState.user.id == store.state.stripe.u){
-              orderStateList.add(orderState);
-            }
-          }
-          else{
-            OrderState orderState = OrderState.fromJson(element.data());
-            if(orderState.progress == "paid" && orderState.user.id == store.state.business.ownerId && orderState.businessId == store.state.business.id_firestore){
-              orderStateList.add(orderState);
-            }
-          }
-        });*/
       ordersFirebase.docs.forEach((element) {
         OrderState orderState = OrderState.fromJson(element.data());
         orderStateList.add(orderState);
       });
       debugPrint("ORDER_SERVICE_EPIC - UserOrderListRequestService => OrderListService return list with " + orderStateList.length.toString());
-
-      statisticsState = store.state.statistics;
-      int reads = statisticsState.orderListRequestServiceRead;
-      int writes = statisticsState.orderListRequestServiceWrite;
-      int documents = statisticsState.orderListRequestServiceDocuments;
-      debugPrint('ORDER_SERVICE_EPIC - UserOrderListRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
-      reads = reads + read;
-      documents = documents + ordersFirebaseDocs;
-      debugPrint('ORDER_SERVICE_EPIC - UserOrderListRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
-      statisticsState.orderListRequestServiceRead = reads;
-      statisticsState.orderListRequestServiceWrite = writes;
-      statisticsState.orderListRequestServiceDocuments = documents;
+      statisticsComputation();
 
       ///Return
       //return new OrderListReturned(orderStateList);
@@ -210,23 +164,9 @@ class OrderRequestService implements EpicClass<AppState> {
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<OrderRequest>().asyncMap((event) async{
       debugPrint("ORDER_SERVICE_EPIC - OrderRequestService => OrderRequest requests document id:" + event.orderStateId);
-     DocumentSnapshot snapshot= await FirebaseFirestore.instance /// 1 READ - 1 DOC
-         .collection("order").doc(event.orderStateId).get();
-
+     DocumentSnapshot snapshot= await FirebaseFirestore.instance.collection("order").doc(event.orderStateId).get();
      orderState = OrderState.fromJson(snapshot.data());
-
-     statisticsState = store.state.statistics;
-     int reads = statisticsState.orderRequestServiceRead;
-     int writes = statisticsState.orderRequestServiceWrite;
-     int documents = statisticsState.orderRequestServiceDocuments;
-     debugPrint('ORDER_SERVICE_EPIC - OrderRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
-     ++reads;
-     ++documents;
-     debugPrint('ORDER_SERVICE_EPIC - OrderRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
-     statisticsState.orderRequestServiceRead = reads;
-     statisticsState.orderRequestServiceWrite = writes;
-     statisticsState.orderRequestServiceDocuments = documents;
-
+     statisticsComputation();
     }).expand((element) => [
       OrderRequestResponse(orderState),
       UpdateStatistics(statisticsState),
@@ -286,172 +226,120 @@ class OrderUpdateService implements EpicClass<AppState> {
   }
 }
 
-class OrderCreateService implements EpicClass<AppState> {
-  String stripeTestKey = "pk_test_51HS20eHr13hxRBpCZl1V0CKFQ7XzJbku7UipKLLIcuNGh3rp4QVsEDCThtV0l2AQ3jMtLsDN2zdC0fQ4JAK6yCOp003FIf3Wjz";
-  String stripeKey = "pk_live_51HS20eHr13hxRBpCLHzfi0SXeqw8Efu911cWdYEE96BAV0zSOesvE83OiqqzRucKIxgCcKHUvTCJGY6cXRtkDVCm003CmGXYzy";
+/// an order always have to be created with a payment method attached in its subcollection
+/// TODO: research if there is a way to make this two operations in an atomic way
+class OrderCreateNativeAndPayService implements EpicClass<AppState> {
   StatisticsState statisticsState;
   String state = '';
+  String paymentResult = '';
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-     return actions.whereType<CreateOrder>().asyncMap((event) async {
-      OrderState orderState = event.orderState;
-      // add needed data to the order state
-      bool isExternal = false;
-      ExternalBusinessState externalBusinessState;
-      store.state.externalBusinessList.externalBusinessListState.forEach((eBL) {
-        if(eBL.id_firestore == event.orderState.itemList.first.id_business){
-          isExternal = true;
-          externalBusinessState = eBL;
-        }
-      });
-      int write = 0;
-      orderState.user = UserSnippet();
-      orderState.user.id = store.state.user.uid;
-      orderState.user.name = store.state.user.name;
-      orderState.userId = store.state.user.uid;
-
-      if(isExternal){
-        orderState.businessId = externalBusinessState.id_firestore;
-        orderState.business.thumbnail = externalBusinessState.wide;
-      }else{
-        orderState.businessId = store.state.business.id_firestore;
-        orderState.business.thumbnail = store.state.business.wide;
-      }
-
-      store.state.cardListState.cardList.forEach((element) {
-        if(element.selected){
-          orderState.cardType = element.stripeState.stripeCard.brand;
-          orderState.cardLast4Digit = element.stripeState.stripeCard.last4;
-        }
-      });
-      // send document to orders collection
-      var addedOrder = await FirebaseFirestore.instance.collection("order/").add(orderState.toJson());
-      orderState.orderId = addedOrder.id;
-      String addedOrderId = addedOrder.id;
-      var url = Uri.https('europe-west1-buytime-458a1.cloudfunctions.net', '/StripePIOnOrder', {'orderId': '$addedOrderId', 'currency': 'EUR'});
-      final http.Response response = await http.get(url);
-      print("ORDER_SERVICE_EPIC - OrderCreateService => Order_service epic - response is done");
-      print('ORDER_SERVICE_EPIC - OrderCreateService => RESPONSE: $response');
-
-      if (response != null && response.body == "Error: could not handle the request\n") {
-        // verify why this happens.
-        var updatedOrder = await FirebaseFirestore.instance /// 1 WRITE
-            .collection("order/").doc(addedOrder.id.toString()).update({
-          'progress': "paid",
-          'orderId': addedOrder.id
+     return actions.whereType<CreateOrderNativeAndPay>().asyncMap((event) async {
+      /// add needed data to the order state
+      OrderState orderState = configureOrder(event.orderState, store);
+      if(event.paymentMethod != null) {
+        /// send document to orders collection
+        var addedOrder = await FirebaseFirestore.instance.collection("order/").add(orderState.toJson());
+        /// update the order id locally
+        orderState.orderId = addedOrder.id;
+        /// add the payment method to the order sub collection on firebase
+        var addedPaymentMethod = await FirebaseFirestore.instance.collection("order/" + orderState.orderId + "/orderPaymentMethod").add({
+          'paymentMethodId' : event.paymentMethod.id,
+          'last4': event.paymentMethod.card.last4 ?? '',
+          'brand': event.paymentMethod.card.brand ?? '',
+          'type':  Utils.enumToString(event.paymentType),
+          'country': event.paymentMethod.card.country  ?? 'US'
         });
-        state = 'paid';
-      } else {
-        var jsonResponse;
-        try{
-          jsonResponse = jsonDecode(response.body);
-        }catch(e){
-          debugPrint('order_service_epic => ERROR: $e');
-          state = 'failed';
-        }
-        /*var jsonResponse;
-        if(response.body == 'error'){
-          state = 'failed';
-        }else{
-          var jsonResponse = jsonDecode(response.body);
-        }*/
-        //jsonResponse = jsonDecode(response.body);
-        if(jsonResponse!= null && response.body != "error") {
-          print('ORDER_SERVICE_EPIC - OrderCreateService => JSON RESPONSE: $jsonResponse');
-          // if an action is required, send the user to the confirmation link
-          if (jsonResponse != null && jsonResponse["next_action_url"] != null ) {
-            // final Stripe stripe = Stripe(
-            //   stripeTestKey, // our publishable key
-            //   stripeAccount: jsonResponse["stripeAccount"], // the connected account
-            //   returnUrlForSca: "stripesdk://3ds.stripesdk.io", //Return URL for SCA
-            // );
-            var clientSecret = jsonResponse["client_secret"];
-            // var paymentIntentRes = await confirmPayment3DSecure(clientSecret, jsonResponse["payment_method_id"], stripe);
-            // if (paymentIntentRes["status"] == "succeeded") {
-            //   ++write;
-            //   var updatedOrder = await FirebaseFirestore.instance.collection("order/").doc(addedOrder.id.toString()).update({ /// 1 WRITE
-            //     'progress': "paid",
-            //     'orderId': addedOrder.id
-            //   });
-            //   state = 'paid';
-            //   //return SetOrderProgress("paid");
-            // } else {
-            //   state = 'failed';
-            //   //return SetOrderProgress("failed");
-            // }
-          } else {
-            ++write;
-            var updatedOrder = await FirebaseFirestore.instance.collection("order/").doc(addedOrder.id.toString()).update({ /// 1 WRITE
-              'progress': "paid",
-              'orderId': addedOrder.id
-            });
-            state = 'paid';
-            //return SetOrderProgress("paid");
-          }
-        }
-        else {
-          state = 'failed';
-          //return SetOrderProgress("failed");
-        }
+        StripePaymentService stripePaymentService = StripePaymentService();
+        paymentResult = await stripePaymentService.processPaymentAsDirectCharge(orderState.orderId);
       }
-
-      statisticsState = store.state.statistics;
-      int reads = statisticsState.orderCreateServiceRead;
-      int writes = statisticsState.orderCreateServiceWrite;
-      int documents = statisticsState.orderCreateServiceDocuments;
-      debugPrint('ORDER_SERVICE_EPIC - OrderCreateService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
-      writes = writes + write;
-      debugPrint('ORDER_SERVICE_EPIC - OrderCreateService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
-      statisticsState.orderCreateServiceRead = reads;
-      statisticsState.orderCreateServiceWrite = writes;
-      statisticsState.orderCreateServiceDocuments = documents;
-
-     }).expand((element) => [
-       SetOrderProgress(state),
-       UpdateStatistics(statisticsState),
-     ]);
+      statisticsComputation();
+     }).expand((element) {
+       var actionArray = [];
+       actionArray.add(CreatedOrder());
+       actionArray.add(UpdateStatistics(statisticsState));
+       if (paymentResult == "success") {
+         actionArray.add(SetOrderProgress(Utils.enumToString(OrderStatus.paid)));
+       } else {
+         actionArray.add(SetOrderProgress(Utils.enumToString(OrderStatus.canceled)));
+       }
+       return actionArray;
+     });
+  }
+}
+/// an order always have to be created with a payment method attached in its subcollection
+/// TODO: research if there is a way to make this two operations in an atomic way
+class OrderCreateCardAndPayService implements EpicClass<AppState> {
+  StatisticsState statisticsState;
+  String state = '';
+  String paymentResult = '';
+  @override
+  Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
+     return actions.whereType<CreateOrderCardAndPay>().asyncMap((event) async {
+      /// add needed data to the order state
+      OrderState orderState = configureOrder(event.orderState, store);
+      if(event.selectedCardPaymentMethodId != null) {
+        /// send document to orders collection
+        var addedOrder = await FirebaseFirestore.instance.collection("order/").add(orderState.toJson());
+        /// update the order id locally
+        orderState.orderId = addedOrder.id;
+        /// add the payment method to the order sub collection on firebase
+        var addedPaymentMethod = await FirebaseFirestore.instance.collection("order/" + orderState.orderId + "/orderPaymentMethod").add({
+          'paymentMethodId' : event.selectedCardPaymentMethodId,
+          'last4': event.last4 ?? '',
+          'brand': event.brand ?? '',
+          'type':  Utils.enumToString(event.paymentType),
+          'country': event.country ?? 'US'
+        });
+        StripePaymentService stripePaymentService = StripePaymentService();
+        paymentResult = await stripePaymentService.processPaymentAsDirectCharge(orderState.orderId);
+      }
+      statisticsComputation();
+     }).expand((element) {
+       var actionArray = [];
+       actionArray.add(CreatedOrder());
+       actionArray.add(UpdateStatistics(statisticsState));
+       if (paymentResult == "success") {
+         actionArray.add(SetOrderProgress(Utils.enumToString(OrderStatus.paid)));
+       } else {
+         actionArray.add(SetOrderProgress(Utils.enumToString(OrderStatus.canceled)));
+       }
+       return actionArray;
+     });
   }
 }
 
-class AddingStripePaymentMethodRequest implements EpicClass<AppState> {
+/// an order always have to be created with a payment method attached in its subcollection
+/// TODO: research if there is a way to make this two operations in an atomic way
+class OrderCreateRoomAndPayService implements EpicClass<AppState> {
   StatisticsState statisticsState;
   String state = '';
-  http.Response response;
-
+  String paymentResult = '';
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    return actions.whereType<AddingStripePaymentMethodWithNavigation>().asyncMap((event) async {
-      String userId = event.userId;
-      var stripeCustomerSetupIntentCreationReference = await FirebaseFirestore.instance.collection("stripeCustomer/" + userId + "_test/setupIntent").doc() ///TODO Remember _test
-        .set({ ///1 WRITE
-      'status': "create request"
-    });
-    // now http request to create the actual setupIntent
-    //response = await http.post('https://europe-west1-buytime-458a1.cloudfunctions.net/createSetupIntent?userId=' + userId);
-      var url = Uri.https('europe-west1-buytime-458a1.cloudfunctions.net', '/createSetupIntent', {'userId': '$userId'});
-      response = await http.get(url);
-
-      statisticsState = store.state.statistics;
-      /*statisticsState = store.state.statistics;
-      int reads = statisticsState.orderCreateServiceRead;
-      int writes = statisticsState.orderCreateServiceWrite;
-      int documents = statisticsState.orderCreateServiceDocuments;
-      debugPrint('ORDER_SERVICE_EPIC - OrderCreateService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
-      ++writes;
-      debugPrint('ORDER_SERVICE_EPIC - OrderCreateService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
-      statisticsState.orderCreateServiceRead = reads;
-      statisticsState.orderCreateServiceWrite = writes;
-      statisticsState.orderCreateServiceDocuments = documents;*/
-
-      debugPrint('order_service_epic: RESPONSE: ${response.statusCode}');
-
-    }).expand((element) => [
-      //SetOrderProgress(state),,
-      response.statusCode == 200 ? AddedStripePaymentMethodAndNavigate() : AddedStripePaymentMethod(),
-      UpdateStatistics(statisticsState),
-      //response.statusCode == 200 ? NavigatePopAction() : AddedStripePaymentMethod(),
-
-    ]);
+     return actions.whereType<CreateOrderRoomAndPay>().asyncMap((event) async {
+      /// add needed data to the order state
+      OrderState orderState = configureOrder(event.orderState, store);
+      /// send document to orders collection
+      var addedOrder = await FirebaseFirestore.instance.collection("order/").add(orderState.toJson());
+      /// update the order id locally
+      orderState.orderId = addedOrder.id;
+      /// add the payment method to the order sub collection on firebase
+      var addedPaymentMethod = await FirebaseFirestore.instance.collection("order/" + orderState.orderId + "/orderPaymentMethod").add({
+        'paymentMethodId' : '',
+        'last4': '',
+        'brand': '',
+        'type':  Utils.enumToString(event.paymentType),
+        'country': ''
+      });
+      statisticsComputation();
+     }).expand((element) {
+       var actionArray = [];
+       actionArray.add(CreatedOrder());
+       actionArray.add(UpdateStatistics(statisticsState));
+       actionArray.add(SetOrderProgress(Utils.enumToString(OrderStatus.toBePaidAtCheckout)));
+       return actionArray;
+     });
   }
 }
 

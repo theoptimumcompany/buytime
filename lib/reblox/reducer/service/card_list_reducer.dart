@@ -10,9 +10,9 @@ class AddCardToList{
 }
 
 class DeleteStripePaymentMethodLocally{
-  String _paymentMethodId;
-  DeleteStripePaymentMethodLocally(this._paymentMethodId);
-  String get paymentMethodId => _paymentMethodId;
+  String _firestoreCardId;
+  DeleteStripePaymentMethodLocally(this._firestoreCardId);
+  String get firestoreCardId => _firestoreCardId;
 }
 
 CardListState cardListReducer(CardListState state, action) {
@@ -21,22 +21,27 @@ CardListState cardListReducer(CardListState state, action) {
   if (action is AddCardToList) {
     cardListState.cardList = action.cardList;
     if (cardListState != null && cardListState.cardList != null) {
-      debugPrint('card_list_reducer: LENGTH: ${cardListState.cardList.length}');
+      cardListState.cardList.forEach((element) {
+        debugPrint('card_list_reducer: added locally: ${element.stripeState.stripeCard.firestore_id}');
+      });
     }
     return cardListState;
   }
   if (action is DeleteStripePaymentMethodLocally) {
+    CardListState cardListStateTemp;
     if (cardListState.cardList != null) {
       for (int i = 0; i < cardListState.cardList.length; i++) {
-        if (cardListState.cardList[i].cardId == action.paymentMethodId){
+        if (cardListState.cardList[i].stripeState.stripeCard.firestore_id == action.firestoreCardId){
           cardListState.cardList.removeAt(i);
-          debugPrint('card_list_reducer: removed locally: ${action.paymentMethodId}');
+          debugPrint('card_list_reducer: removed locally: ${action.firestoreCardId}');
         }
       }
     }
     if (cardListState != null && cardListState.cardList != null) {
+      cardListStateTemp = cardListState;
     }
-    return cardListState;
+    cardListState.toEmpty();
+    return cardListStateTemp;
   }
 
   return state;

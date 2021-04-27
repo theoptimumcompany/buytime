@@ -1,11 +1,9 @@
-import 'package:Buytime/UI/management/category/UI_M_manage_category.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/category/category_state.dart';
 import 'package:Buytime/reblox/model/category/tree/category_tree_state.dart';
 import 'package:Buytime/reblox/reducer/category_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_tree_reducer.dart';
 import 'package:Buytime/reblox/model/snippet/parent.dart';
-import 'package:Buytime/reusable/enterExitRoute.dart';
 import 'package:Buytime/reusable/form/optimum_form_multi_photo.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';

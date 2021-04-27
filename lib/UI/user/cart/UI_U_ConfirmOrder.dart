@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:Buytime/UI/user/cart/UI_U_ConfirmedOrder.dart';
 import 'package:Buytime/UI/user/cart/tab/T_native_apple.dart';
 import 'package:Buytime/UI/user/cart/tab/T_native_google.dart';
@@ -7,11 +6,12 @@ import 'package:Buytime/UI/user/cart/tab/T_credit_cards.dart';
 import 'package:Buytime/UI/user/cart/tab/T_room.dart';
 import 'package:Buytime/reblox/model/card/card_state.dart';
 import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
+import 'package:Buytime/reblox/model/stripe/stripe_state.dart';
 import 'package:Buytime/reblox/reducer/order_reservable_reducer.dart';
-import 'package:Buytime/reblox/reducer/stripe_list_payment_reducer.dart';
 import 'package:Buytime/reblox/reducer/stripe_payment_reducer.dart';
 import 'package:Buytime/reusable/stripe/show_dialog_to_dismiss.dart';
 import 'package:Buytime/services/stripe_payment_service_epic.dart';
+import 'package:Buytime/utils/utils.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
@@ -25,7 +25,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:stripe_payment/stripe_payment.dart';
+import 'package:stripe_payment/stripe_payment.dart' as StripeRecommended;
+
 
 class ConfirmOrder extends StatefulWidget{
   final String title = 'confirmOrder';
@@ -71,6 +72,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
               store?.dispatch(CheckStripeCustomer(false));
               debugPrint('UI_U_ConfirmOrder => ON INIT');
             },
+            distinct: true,
             converter: (store) => store.state,
             builder: (context, snapshot) {
               if(widget.reserve != null && widget.reserve)
@@ -78,10 +80,18 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
               else
                 orderState = snapshot.order;
               bool selected = false;
+              String last4 = '';
+              String brand = '';
+              String country = '';
+              String selectedCardPaymentMethodId = '';
               List<CardState> cardList = StoreProvider.of<AppState>(context).state.cardListState.cardList;
               if (cardList != null) {
                 cardList.forEach((element) {
                   if(element.selected){
+                    last4 = element.stripeState.stripeCard.last4;
+                    brand = element.stripeState.stripeCard.brand;
+                    country = element.stripeState.stripeCard.country;
+                    selectedCardPaymentMethodId = element.stripeState.stripeCard.paymentMethodId;
                     selected = true;
                   }
                 });
@@ -168,19 +178,15 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                         ///Total Price
                                         Container(
                                           //color: Colors.black87,
-                                            child: StoreConnector<AppState, AppState>(
-                                                converter: (store) => store.state,
-                                                rebuildOnChange: true,
-                                                builder: (context, snapshot) {
-                                                  if(widget.reserve != null && widget.reserve){
-                                                    print("UI_U_ConfirmOrder => " + snapshot.orderReservable.itemList.length.toString());
-                                                    return OrderTotal(media: media, orderState: OrderState.fromReservableState(snapshot.orderReservable));
-                                                  }else{
-                                                    print("UI_U_ConfirmOrder => " + snapshot.order.itemList.length.toString());
-                                                    return OrderTotal(media: media, orderState: snapshot.order);
-                                                  }
-                                                }
-                                            )
+                                            child: () {
+                                              if(widget.reserve != null && widget.reserve){
+                                                print("UI_U_ConfirmOrder => " + snapshot.orderReservable.itemList.length.toString());
+                                                return OrderTotal(media: media, orderState: OrderState.fromReservableState(snapshot.orderReservable));
+                                              }else{
+                                                print("UI_U_ConfirmOrder => " + snapshot.order.itemList.length.toString());
+                                                return OrderTotal(media: media, orderState: snapshot.order);
+                                              }
+                                            }()
                                         ),
                                         ///Divider
                                         Container(
@@ -307,7 +313,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                                   confirmationNative(context, snapshot);
                                                 } : selected && _selectedIndex == 2 ? (){
                                                   debugPrint("UI_U_ConfirmOrder  confirmation 2");
-                                                  confirmationCard(context, snapshot);
+                                                  confirmationCard(context, snapshot, last4, brand, country, selectedCardPaymentMethodId);
                                                 } : null,
                                                 textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
                                                 color: widget.tourist != null && widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
@@ -337,7 +343,6 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                       ),
                                     ),
                                   ),
-
                                 ],
                               ),
                             ),
@@ -346,35 +351,8 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                     ),
                   ),
                 ),
-                  !snapshot.stripe.stripeCustomerCreated || snapshot.order.confirmOrderWait || snapshot.order.addCardProgress == "inProgress" ? Positioned.fill(
-                    child: Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Container(
-                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3),
-                          height: SizeConfig.safeBlockVertical * 100,
-                          decoration: BoxDecoration(
-                            color: BuytimeTheme.BackgroundCerulean.withOpacity(.8),
-                          ),
-                          child: Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                Container(
-                                  width: 50,
-                                  height: 50,
-                                  child: Center(
-                                    child: SpinKitRipple(
-                                      color: Colors.white,
-                                      size: 50,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          )
-                      ),
-                    ),
-                  ) : Container(),
+                  !snapshot.stripe.stripeCustomerCreated || snapshot.order.addCardProgress == Utils.enumToString(AddCardStatus.inProgress) ?
+                  spinnerConfirmOrder() : Container(),
                   snapshot.lastError != null && snapshot.lastError.isNotEmpty ?
                   ShowErrorDialogToDismiss(
                     buttonText: AppLocalizations.of(context).ok, 
@@ -389,7 +367,39 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
     );
   }
 
-  void confirmationCard(BuildContext context, AppState snapshot) {
+  Positioned spinnerConfirmOrder() {
+    return Positioned.fill(
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Container(
+                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3),
+                        height: SizeConfig.safeBlockVertical * 100,
+                        decoration: BoxDecoration(
+                          color: BuytimeTheme.BackgroundCerulean.withOpacity(.8),
+                        ),
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Container(
+                                width: 50,
+                                height: 50,
+                                child: Center(
+                                  child: SpinKitRipple(
+                                    color: Colors.white,
+                                    size: 50,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                    ),
+                  ),
+                );
+  }
+
+  void confirmationCard(BuildContext context, AppState snapshot, String last4, String brand, String country, String selectedCardPaymentMethodId) {
     if(widget.reserve != null && widget.reserve){
       /// Reservable payment process starts
       debugPrint('UI_U_ConfirmOrder => start reservable payment process with Credit Card');
@@ -415,7 +425,6 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
             cartCounter: snapshot.orderReservable.cartCounter,
             serviceId: snapshot.orderReservable.serviceId,
         );
-    
         debugPrint('UI_U_ConfirmOrder => Date: ${reservable.date}');
         StoreProvider.of<AppState>(context).dispatch(CreateOrderReservable(reservable));
       }
@@ -423,53 +432,38 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
     } else {
       /// Direct Card Payment
       debugPrint('UI_U_ConfirmOrder => start direct payment process with Credit Card');
-      StoreProvider.of<AppState>(context).dispatch(SetOrderProgress("in_progress"));
-      StoreProvider.of<AppState>(context).dispatch(CreateOrder(snapshot.order));
-      //.catchError(err); // TODO: reactivate
+      StoreProvider.of<AppState>(context).dispatch(SetOrderProgress(Utils.enumToString(OrderStatus.progress)));
+      StoreProvider.of<AppState>(context).dispatch(CreateOrderCardAndPay(snapshot.order, last4, brand, country,selectedCardPaymentMethodId, PaymentType.card));
     }
     Navigator.push(context, MaterialPageRoute(builder: (context) => ConfirmedOrder(_controller.index, widget.reserve, widget.tourist)),);
   }
-  Future<void> confirmationNative(BuildContext context, AppState snapshot) async {
 
+  Future<void> confirmationNative(BuildContext context, AppState snapshot) async {
     if(widget.reserve != null && widget.reserve){
       /// Reservable payment process starts with Native Method
       debugPrint('UI_U_ConfirmOrder => start reservable payment process with Native Method');
 
       if (snapshot.order.isOrderAutoConfirmable()) {
         /// POSSIBLE CHANGE IN FLOW IF IN RANGE OF 7 DAYS TO PAYMENT
-        ///
-        /// start payment for reservable item
-
 
       } else {
         /// POSSIBLE CHANGE IN FLOW IF IN RANGE OF 7 DAYS TO PAYMENT
 
-        /// we create the order on firebase as "in review" or whatever state is before "in progress"???
-        ///
-        /// we show to the user a message telling them that their order is being reviewed for them
-        ///
-        /// we go back to the booking page
-        /// (the payment process will start when the order is confirmed)
       }
-
 
       } else {
       /// Direct Payment process starts with Native Method
       debugPrint('UI_U_ConfirmOrder => start direct payment process with Native Method');
       if (snapshot.order.isOrderAutoConfirmable()) {
         /// if the items are all autoconfirmed we can launch the paymentflow and create the order when the payment is successful
-        bool result = await StripePaymentService().createPaymentMethodNativeAndPay(snapshot.order, snapshot.business.name);
-        // TODO: check if the payment was successful
-
-        /// if the payment is ok we create the order on firebase as "in progress"???
-        ///
-        /// if the payment is not ok we show the error message to the user
-
-        StoreProvider.of<AppState>(context).dispatch(SetOrderProgress("in_progress"));
-        StoreProvider.of<AppState>(context).dispatch(CreateOrder(snapshot.order));
-
-
-
+        /// 1: create the payment method
+        StripePaymentService stripePaymentService = StripePaymentService();
+        StripeRecommended.PaymentMethod paymentMethod = await stripePaymentService.createPaymentMethodNative(snapshot.order, snapshot.business.name);
+        /// 2: add the payment method to the order state
+        StoreProvider.of<AppState>(context).dispatch(SetOrderPaymentMethod(paymentMethod)); // even if set could not arrive in time for the other action
+        /// 3: now we can create the order on the database and its sub collection
+        StoreProvider.of<AppState>(context).dispatch(CreatingOrder());
+        StoreProvider.of<AppState>(context).dispatch(CreateOrderNativeAndPay(snapshot.order, paymentMethod, PaymentType.native));
       } else {
         /// we create the order on firebase as "in review" or whatever state is before "in progress"???
         ///
@@ -478,12 +472,45 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
         /// we go back to the booking page
         /// (the payment process will start when the order is confirmed)
       }
-
-
-
     }
+    // Navigator.push(context, MaterialPageRoute(builder: (context) => ConfirmedOrder(_controller.index, widget.reserve, widget.tourist)),);
+  }
+  Future<void> confirmationRoom(BuildContext context, AppState snapshot) async {
+    if(widget.reserve != null && widget.reserve){
+      /// Reservable payment process starts with Native Method
+      debugPrint('UI_U_ConfirmOrder => start reservable payment process with Native Method');
+      if (snapshot.order.isOrderAutoConfirmable()) {
+        /// POSSIBLE CHANGE IN FLOW IF IN RANGE OF 7 DAYS TO PAYMENT
 
+      } else {
+        /// POSSIBLE CHANGE IN FLOW IF IN RANGE OF 7 DAYS TO PAYMENT
 
+      }
+
+      } else {
+      /// Direct Payment process starts with Native Method
+      debugPrint('UI_U_ConfirmOrder => start direct payment process with Native Method');
+      if (snapshot.order.isOrderAutoConfirmable()) {
+        /// if the items are all autoconfirmed we can launch the paymentflow and create the order when the payment is successful
+        /// 1: search for the room number in the booking
+        String roomNumber = '1'; /// IMPORTANT for the moment we just approve and add all order ids to the booking state sub collection "room orders"
+        /// TODO: get the actual room number when the UX is defined?
+        if(roomNumber.isNotEmpty) {
+          /// 2A: now we can create the order on the database and its sub collection
+          StoreProvider.of<AppState>(context).dispatch(CreatingOrder());
+          StoreProvider.of<AppState>(context).dispatch(CreateOrderRoomAndPay(snapshot.order, roomNumber, PaymentType.room));
+        } else {
+          /// 2B: we display a message to the user: "you have to ask the concierge to add your room number to be able to use this payment method"
+        }
+      } else {
+        /// we create the order on firebase as "in review" or whatever state is before "in progress"???
+        ///
+        /// we show to the user a message telling them that their order is being reviewed for them
+        ///
+        /// we go back to the booking page
+        /// (the payment process will start when the order is confirmed)
+      }
+    }
     // Navigator.push(context, MaterialPageRoute(builder: (context) => ConfirmedOrder(_controller.index, widget.reserve, widget.tourist)),);
   }
 }

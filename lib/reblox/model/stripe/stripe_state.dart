@@ -2,6 +2,12 @@ import 'package:Buytime/reblox/model/stripe/stripe_card_response.dart';
 import 'package:json_annotation/json_annotation.dart';
 part 'stripe_state.g.dart';
 
+enum PaymentType {
+  card,
+  native,
+  room
+}
+
 @JsonSerializable(explicitToJson: true)
 class StripeState {
   List<Map<String, dynamic>> paymentMethodList;

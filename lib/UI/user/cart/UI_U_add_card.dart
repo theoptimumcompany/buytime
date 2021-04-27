@@ -1,12 +1,11 @@
 import 'dart:convert';
+import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
-import 'package:Buytime/reblox/reducer/service/card_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/stripe_payment_reducer.dart';
-import 'package:Buytime/reusable/stripe/show_dialog_to_dismiss.dart';
+import 'package:Buytime/utils/utils.dart';
 import 'package:credit_card_input_form/constants/constanst.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
-import 'package:Buytime/services/stripe_payment_service_epic.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:credit_card_input_form/credit_card_input_form.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
@@ -17,7 +16,6 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:stripe_sdk/stripe_sdk_ui.dart' as StripeUnofficialUI;
-import 'package:stripe_sdk/stripe_sdk.dart' as StripeUnofficial;
 
 
 // TODO separate service and UI
@@ -53,8 +51,6 @@ class _UI_U_AddCardState extends State<UI_U_AddCard> {
         FocusScope.of(context).unfocus();
       },
       child: StoreConnector<AppState, AppState>(
-          onInit: (store) {
-          }, // no
           converter: (store) => store.state,
           builder: (context, snapshot) {
             WidgetsBinding.instance.addPostFrameCallback((_) { // no
@@ -203,9 +199,9 @@ class _UI_U_AddCardState extends State<UI_U_AddCard> {
                 ),
                   ///Ripple Effect
                  () {
-                 if (snapshot?.order?.addCardProgress == "inProgress") {
+                 if (snapshot?.order?.addCardProgress == Utils.enumToString(AddCardStatus.inProgress)) {
                    return RippleAddCard();
-                 } else if (snapshot?.order?.addCardProgress == "done") {
+                 } else if (snapshot?.order?.addCardProgress == Utils.enumToString(AddCardStatus.done)) {
                    StoreProvider.of<AppState>(context).dispatch(AddingStripePaymentMethodReset());
                    Navigator.of(context).pop();
                    return Container();

@@ -1,4 +1,4 @@
-import 'package:Buytime/reblox/model/business/snippet/business_snippet_state.dart';
+import 'package:stripe_payment/stripe_payment.dart' as StripeRecommended;
 import 'package:Buytime/reblox/model/business/snippet/order_business_snippet_state.dart';
 import 'package:Buytime/reblox/model/order/order_entry.dart';
 import 'package:Buytime/reblox/model/order/selected_entry.dart';
@@ -38,6 +38,8 @@ class OrderReservableState {
   String cardLast4Digit;
   @JsonKey(ignore: true)
   bool confirmOrderWait = false;
+  @JsonKey(ignore: true)
+  StripeRecommended.PaymentMethod paymentMethod;
 
   OrderReservableState({
     @required this.itemList,
@@ -62,6 +64,7 @@ class OrderReservableState {
     this.cardType,
     this.cardLast4Digit,
     this.confirmOrderWait,
+    this.paymentMethod,
   });
 
 
@@ -89,6 +92,7 @@ class OrderReservableState {
     this.cardType = state.cardType;
     this.cardLast4Digit = state.cardLast4Digit;
     this.confirmOrderWait = state.confirmOrderWait;
+    this.paymentMethod = state.paymentMethod;
   }
 
   OrderReservableState copyWith({
@@ -113,7 +117,8 @@ class OrderReservableState {
     String serviceId,
     String cardType,
     String cardLast4Digit,
-    bool confirmOrderWait
+    bool confirmOrderWait,
+    StripeRecommended.PaymentMethod paymentMethodRequest
   }) {
     return OrderReservableState(
       itemList: itemList ?? this.itemList,
@@ -138,6 +143,7 @@ class OrderReservableState {
       cardType: cardType ?? this.cardType,
       cardLast4Digit: cardLast4Digit ?? this.cardLast4Digit,
       confirmOrderWait: confirmOrderWait ?? this.confirmOrderWait,
+      paymentMethod: paymentMethod ?? this.paymentMethod,
     );
   }
 
@@ -164,7 +170,8 @@ class OrderReservableState {
       serviceId: '',
         cardType: '',
         cardLast4Digit: '',
-        confirmOrderWait: false
+        confirmOrderWait: false,
+        paymentMethod: null
     );
   }
 

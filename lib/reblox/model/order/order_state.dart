@@ -1,17 +1,31 @@
-import 'package:Buytime/reblox/model/business/snippet/business_snippet_state.dart';
 import 'package:Buytime/reblox/model/business/snippet/order_business_snippet_state.dart';
 import 'package:Buytime/reblox/model/order/order_entry.dart';
 import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
 import 'package:Buytime/reblox/model/order/selected_entry.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
-import 'package:Buytime/utils/theme/buytime_theme.dart';
+import 'package:stripe_payment/stripe_payment.dart' as StripeRecommended;
 import 'package:Buytime/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 part 'order_state.g.dart';
+
+enum OrderStatus {
+  progress,
+  unpaid,
+  paid,
+  toBePaidAtCheckout,
+  canceled,
+  frozen,
+  creating
+}
+enum AddCardStatus {
+  notStarted,
+  done,
+  inProgress,
+}
 
 @JsonSerializable(explicitToJson: true)
 class OrderState {
@@ -24,9 +38,9 @@ class OrderState {
   double tax = 0.0;
   double taxPercent = 0.0;
   int amount = 0;
-  String progress = "unpaid";
+  String progress = Utils.enumToString(OrderStatus.unpaid);
   @JsonKey(ignore: true)
-  String addCardProgress = "notStarted";
+  String addCardProgress = Utils.enumToString(AddCardStatus.notStarted);
   bool navigate = false;
   OrderBusinessSnippetState business;
   UserSnippet user;
@@ -38,7 +52,7 @@ class OrderState {
   String cardType;
   String cardLast4Digit;
   @JsonKey(ignore: true)
-  bool confirmOrderWait = false;
+  StripeRecommended.PaymentMethod paymentMethod;
 
   OrderState({
     @required this.itemList,
@@ -50,7 +64,7 @@ class OrderState {
     this.taxPercent,
     this.amount,
     this.progress,
-    this.addCardProgress = "notStarted",
+    this.addCardProgress,
     this.navigate = false,
     this.business,
     this.user,
@@ -61,7 +75,7 @@ class OrderState {
     this.cartCounter,
     this.cardType,
     this.cardLast4Digit,
-    this.confirmOrderWait = false,
+    this.paymentMethod,
   });
 
 
@@ -87,7 +101,7 @@ class OrderState {
     this.cartCounter = state.cartCounter;
     this.cardType = state.cardType;
     this.cardLast4Digit = state.cardLast4Digit;
-    this.confirmOrderWait = state.confirmOrderWait;
+    this.paymentMethod = state.paymentMethod;
   }
 
   OrderState.fromReservableState(OrderReservableState state) {
@@ -111,7 +125,7 @@ class OrderState {
     this.cartCounter = state.cartCounter;
     this.cardType = state.cardType;
     this.cardLast4Digit = state.cardLast4Digit;
-    this.confirmOrderWait = state.confirmOrderWait;
+    this.paymentMethod = state.paymentMethod;
   }
 
   OrderState copyWith({
@@ -135,7 +149,8 @@ class OrderState {
     int cartCounter,
     String cardType,
     String cardLast4Digit,
-    bool confirmOrderWait
+    bool confirmOrderWait,
+    StripeRecommended.PaymentMethod paymentMethod
   }) {
     return OrderState(
       itemList: itemList ?? this.itemList,
@@ -158,7 +173,7 @@ class OrderState {
       cartCounter: cartCounter ?? this.cartCounter,
       cardType: cardType ?? this.cardType,
       cardLast4Digit: cardLast4Digit ?? this.cardLast4Digit,
-      confirmOrderWait: confirmOrderWait ?? this.confirmOrderWait,
+      paymentMethod: paymentMethod ?? this.paymentMethod,
     );
   }
 
@@ -172,8 +187,8 @@ class OrderState {
       tax: 0.0,
       taxPercent: 0.0,
       amount: 0,
-      progress: "unpaid",
-      addCardProgress: "notStarted",
+      progress: Utils.enumToString(OrderStatus.unpaid),
+      addCardProgress: Utils.enumToString(AddCardStatus.notStarted),
       navigate: false,
       businessId: "",
       userId: "",
@@ -184,7 +199,7 @@ class OrderState {
         cartCounter: 0,
         cardType: '',
       cardLast4Digit: '',
-      confirmOrderWait: false,
+      paymentMethod: null,
     );
   }
 

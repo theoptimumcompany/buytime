@@ -1,7 +1,7 @@
 import 'package:Buytime/UI/user/cart/UI_U_add_card.dart';
 import 'package:Buytime/UI/user/cart/widget/W_credit_card.dart';
 import 'package:Buytime/reblox/model/card/card_list_state.dart';
-import 'package:Buytime/reblox/model/card/card_state.dart';
+import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reblox/reducer/stripe_payment_reducer.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
@@ -11,27 +11,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
-class CreditCards extends StatefulWidget {
+class CreditCards extends StatelessWidget {
   final String title = 'Cart';
   bool tourist;
   bool reserve;
   CreditCards({Key key, this.reserve, this.tourist}) : super(key: key);
+  List<Widget> cardWidgetList = [];
 
-  @override
-  State<StatefulWidget> createState() => CreditCardsState();
-}
-
-
-class CreditCardsState extends State<CreditCards> {
-  @override
-  void initState() {
-    super.initState();
-  }
-  List<String> tmpList = [];
-  List<CardState> creditCards = [];
   @override
   Widget build(BuildContext context) {
-    var media = MediaQuery.of(context).size;
     return Flexible(
       child: Container(
         color: BuytimeTheme.BackgroundWhite,
@@ -40,29 +28,25 @@ class CreditCardsState extends State<CreditCards> {
           children: [
             StoreConnector<AppState, CardListState>(
                 converter: (store) => store.state.cardListState,
+                distinct: true,
+                rebuildOnChange: true,
                 onInit: (store) {
                   /// check if the stripe customer have been created for this user:
                   store?.dispatch(CheckStripeCustomer(true));
+                  store?.dispatch(AddingStripePaymentMethodReset());
+                  initializeCardList(store.state.cardListState);
                   debugPrint('T_credit_cards => ON INIT');
                 },
+                onWillChange: (oldStore, newStore){
+                  initializeCardList(newStore);
+                },
                 builder: (context, snapshot) {
-                  creditCards = snapshot.cardList != null ? snapshot.cardList : [];
-                  print("T_credit_cards => CARD COUNT: ${snapshot.cardList?.length}");
+                  initializeCardList(snapshot);
                   return Flexible(
                     flex: 1,
-                    child: CustomScrollView(
-                        shrinkWrap: true,
-                        scrollDirection: Axis.vertical,
-                        slivers: [
-                          SliverList(
-                            delegate: SliverChildBuilderDelegate((context, index) {
-                              CardState card = creditCards.elementAt(index);
-                              return CreditCardListElement(card);
-                            },
-                              childCount: creditCards!= null ? creditCards.length : 0,
-                            ),
-                          ),
-                        ]),
+                    child: ListView(
+                      children: cardWidgetList,
+                    )
                   );
                 }
             ),
@@ -87,7 +71,7 @@ class CreditCardsState extends State<CreditCards> {
                               style: TextStyle(
                                   letterSpacing: 1.25,
                                   fontFamily: BuytimeTheme.FontFamily,
-                                  color:  widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+                                  color:  tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
                                   fontWeight: FontWeight.w600,
                                   fontSize: 16
                               ),
@@ -102,5 +86,14 @@ class CreditCardsState extends State<CreditCards> {
         ),
       ),
     );
+  }
+
+  void initializeCardList(CardListState newStore) {
+    if (newStore.cardList != null) {
+      for(int i = 0; i < newStore.cardList.length; i++) {
+        cardWidgetList.add(CreditCardListElement(newStore.cardList[i]));
+        print("T_credit_cards => N:${newStore.cardList?.length} - ADD CARD FirebaseId: ${newStore.cardList[i].stripeState.stripeCard.firestore_id}");
+      }
+    }
   }
 }

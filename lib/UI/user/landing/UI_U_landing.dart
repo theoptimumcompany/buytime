@@ -126,6 +126,7 @@ class LandingState extends State<Landing> {
 
     return StoreConnector<AppState, AppState>(
         converter: (store) => store.state,
+        distinct: true,
         onInit: (store){
           debugPrint('UI_U_Landing => store on init()');
           cards.add(LandingCardWidget(/*AppLocalizations.of(context).enterBookingCode*/'', AppLocalizations.of(context).startYourJourney, 'assets/img/booking_code.png', null));

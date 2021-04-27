@@ -1,11 +1,6 @@
-import 'package:Buytime/UI/management/business/UI_M_business.dart';
-import 'package:Buytime/UI/management/service_internal/UI_M_service_list.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/category/category_state.dart';
 import 'package:Buytime/reblox/model/snippet/service_list_snippet_state.dart';
-import 'package:Buytime/reblox/reducer/booking_list_reducer.dart';
-import 'package:Buytime/reusable/enterExitRoute.dart';
-import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
