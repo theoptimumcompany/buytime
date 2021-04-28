@@ -498,5 +498,6 @@
   "required": "este campo es necesario",
 
   "noServices": "No network services",
+  "orderConfirming": "We are taking the money",
   "alreadyInYourNetwork": "Already in your network"
 }

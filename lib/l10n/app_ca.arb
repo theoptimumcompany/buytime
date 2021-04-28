@@ -481,5 +481,10 @@
   "copiedToClipboard": "Copiat en el portapapers",
   "myBookings": "Les meves reserves",
   "yourBookingWill": "La seva reserva anterior amb nosaltres apareixerà aquí.\n\nT'agradaria saber més sobre la xarxa Buytime?",
-  "viewBookings": "Veure reserves"
+  "viewBookings": "Veure reserves",
+
+  "noServices": "No network services",
+  "orderConfirming": "We are taking the money",
+  "alreadyInYourNetwork": "Already in your network"
+
 }
