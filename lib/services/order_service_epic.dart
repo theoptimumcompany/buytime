@@ -248,7 +248,8 @@ class OrderCreateNativeAndPayService implements EpicClass<AppState> {
           'last4': event.paymentMethod.card.last4 ?? '',
           'brand': event.paymentMethod.card.brand ?? '',
           'type':  Utils.enumToString(event.paymentType),
-          'country': event.paymentMethod.card.country  ?? 'US'
+          'country': event.paymentMethod.card.country  ?? 'US',
+          'booking_id': store.state.booking.booking_id
         });
         StripePaymentService stripePaymentService = StripePaymentService();
         paymentResult = await stripePaymentService.processPaymentAsDirectCharge(orderState.orderId);
@@ -278,7 +279,7 @@ class OrderCreateCardAndPayService implements EpicClass<AppState> {
      return actions.whereType<CreateOrderCardAndPay>().asyncMap((event) async {
       /// add needed data to the order state
       OrderState orderState = configureOrder(event.orderState, store);
-      if(event.selectedCardPaymentMethodId != null) {
+      if(event.selectedCardPaymentMethodId != null && store.state.booking != null && store.state.booking.booking_id != null) {
         /// send document to orders collection
         var addedOrder = await FirebaseFirestore.instance.collection("order/").add(orderState.toJson());
         /// update the order id locally
@@ -289,7 +290,8 @@ class OrderCreateCardAndPayService implements EpicClass<AppState> {
           'last4': event.last4 ?? '',
           'brand': event.brand ?? '',
           'type':  Utils.enumToString(event.paymentType),
-          'country': event.country ?? 'US'
+          'country': event.country ?? 'US',
+          'booking_id': store.state.booking.booking_id
         });
         StripePaymentService stripePaymentService = StripePaymentService();
         paymentResult = await stripePaymentService.processPaymentAsDirectCharge(orderState.orderId);
@@ -320,6 +322,7 @@ class OrderCreateRoomAndPayService implements EpicClass<AppState> {
      return actions.whereType<CreateOrderRoomAndPay>().asyncMap((event) async {
       /// add needed data to the order state
       OrderState orderState = configureOrder(event.orderState, store);
+      orderState.cardType = Utils.enumToString(PaymentType.room);
       /// send document to orders collection
       var addedOrder = await FirebaseFirestore.instance.collection("order/").add(orderState.toJson());
       /// update the order id locally
@@ -330,7 +333,8 @@ class OrderCreateRoomAndPayService implements EpicClass<AppState> {
         'last4': '',
         'brand': '',
         'type':  Utils.enumToString(event.paymentType),
-        'country': ''
+        'country': '',
+        'bookingId': store.state.booking.booking_id
       });
       statisticsComputation();
      }).expand((element) {

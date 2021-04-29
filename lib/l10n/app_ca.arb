@@ -502,4 +502,9 @@
   "serviceNotVisible": "The Service is Not Visible",
   "serviceNotAvailable": "The Service is not available at the moment",
   "addressOptional": "Address (Optional)"
+  "viewBookings": "Veure reserves",
+  "noServices": "No network services",
+  "orderConfirming": "We are taking the money",
+  "alreadyInYourNetwork": "Already in your network"
+
 }

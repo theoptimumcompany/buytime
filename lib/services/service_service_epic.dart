@@ -138,7 +138,9 @@ class ServiceListSnippetRequestServiceNavigate implements EpicClass<AppState> {
       read++;
       docs++;
       //debugPrint("SERVICE_SERVICE_EPIC - ServiceListSnippetRequest => MAP " + servicesFirebaseShadow.docs.first.data().toString());
-      serviceListSnippetState = ServiceListSnippetState.fromJson(servicesFirebaseShadow.docs.first.data());
+      if (servicesFirebaseShadow.docs != null && servicesFirebaseShadow.docs.isNotEmpty) {
+        serviceListSnippetState = ServiceListSnippetState.fromJson(servicesFirebaseShadow.docs?.first?.data());
+      }
 
       businessIds = [];
       serviceIds = [];
