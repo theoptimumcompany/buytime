@@ -67,36 +67,32 @@ class PAServiceListState extends State<PAServiceList> {
           bool equalBusiness = false;
           List<String> tmp = [];
           StoreProvider.of<AppState>(context).state.externalServiceImportedListState.externalServiceImported.forEach((element) {
-            if(widget.externalBusinessState.id_firestore == element.externalBusinessId){
+            if(widget.externalBusinessState.id_firestore == element.externalBusinessId && element.imported == true){
               if(!tmp.contains(element.externalServiceId)){
                 tmp.add(element.externalServiceId);
               }
             }
           });
-          debugPrint('UI_M_p_a_service_list => ${tmp}');
 
           int count = 0;
-          snapshot.serviceListSnippetListState.serviceListSnippetListState.forEach((element) {
-            if(element.businessId == widget.externalBusinessState.id_firestore){
-              element.businessSnippet.forEach((bS) {
-                bS.serviceList.forEach((sL) {
-                  tmp.forEach((s) {
-                    //if(s == sL.serviceAbsolutePath.split('/').last)
-                      count++;
-                  });
-                });
-              });
-            }
+          snapshot.serviceList.serviceListState.forEach((sLS) {
+            if(sLS.visibility != 'Invisible')
+              count++;
           });
-
+          debugPrint('Count: $count | tmp: ${tmp.length}');
           if(count != 0 && count == tmp.length)
             equalService = true;
 
           StoreProvider.of<AppState>(context).state.externalBusinessImportedListState.externalBusinessImported.forEach((element) {
-            if(element.externalBusinessId == widget.externalBusinessState.id_firestore){
+            if(element.externalBusinessId == widget.externalBusinessState.id_firestore && element.imported == true){
               equalBusiness = true;
             }
           });
+
+          if(count != 0 && tmp.length != 0 && count != tmp.length && equalBusiness){
+            equalService = false;
+            equalBusiness = false;
+          }
           return WillPopScope(
               onWillPop: () async {
                 ///Block iOS Back Swipe

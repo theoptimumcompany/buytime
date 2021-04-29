@@ -30,7 +30,8 @@ class OptimumFormMultiPhoto extends StatefulWidget {
   final int minHeight;
   final String image;
   final CropAspectRatioPreset cropAspectRatioPreset;
-  List<Role> roleAllowedArray = [Role.admin, Role.salesman, Role.owner];
+  //List<Role> roleAllowedArray = [Role.admin, Role.salesman, Role.owner];
+  List<Role> roleAllowedArray;
 
   OptimumFormMultiPhoto(
       {@required this.text,
@@ -73,7 +74,8 @@ class OptimumFormMultiPhotoState extends State<OptimumFormMultiPhoto> {
   final int minHeight;
   final CropAspectRatioPreset cropAspectRatioPreset;
   final OnFilePickedCallback onFilePicked;
-  List<Role> roleAllowedArray = [Role.admin, Role.salesman, Role.owner];
+  //List<Role> roleAllowedArray = [Role.admin, Role.salesman, Role.owner];
+  List<Role> roleAllowedArray;
   var size;
   String image;
   AssetImage assetImage = AssetImage('assets/img/image_placeholder.png');
@@ -285,7 +287,7 @@ class OptimumFormMultiPhotoState extends State<OptimumFormMultiPhoto> {
                         ),
                         errorWidget: (context, url, error) => croppedImage == null ? Image(width: SizeConfig.blockSizeHorizontal * 50, image: assetImage) : croppedImage,
                       ) : croppedImage == null ? Image(width: SizeConfig.blockSizeHorizontal * 50, image: assetImage) : croppedImage,
-                      onTap: [Role.admin, Role.salesman, Role.owner].contains(StoreProvider.of<AppState>(context).state.user.getRole()) ? () {
+                      onTap: roleAllowedArray.contains(StoreProvider.of<AppState>(context).state.user.getRole()) ? () {
                         manageImage();
                       } : null,
                     ),

@@ -14,6 +14,8 @@ StripeCardResponse _$StripeCardResponseFromJson(Map<String, dynamic> json) {
     expMonth: json['expMonth'] as int,
     secretToken: json['secretToken'] as String,
     brand: json['brand'] as String,
+    paymentMethodId: json['paymentMethodId'] as String,
+    country: json['country'] as String,
   );
 }
 
@@ -25,4 +27,6 @@ Map<String, dynamic> _$StripeCardResponseToJson(StripeCardResponse instance) =>
       'expYear': instance.expYear,
       'secretToken': instance.secretToken,
       'brand': instance.brand,
+      'paymentMethodId': instance.paymentMethodId,
+      'country': instance.country,
     };

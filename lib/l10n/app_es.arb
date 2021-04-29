@@ -498,5 +498,8 @@
   "required": "este campo es necesario",
 
   "noServices": "No network services",
-  "alreadyInYourNetwork": "Already in your network"
+  "alreadyInYourNetwork": "Already in your network",
+  "serviceNotVisible": "The Service is Not Visible",
+  "serviceNotAvailable": "The Service is not available at the moment",
+  "addressOptional": "Address (Optional)"
 }

@@ -482,10 +482,10 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
                       if(snapshot.serviceSlot.day > 0){
                         stopController[i].clear();
                       }else{
-                        if(startController[i].text.isNotEmpty){
+                        /*if(startController[i].text.isNotEmpty){
                           setStopTimeOvercome24h(startTime[i], i);
-                          _formSlotTimeKey[i].currentState.validate();
-                        }
+                          //_formSlotTimeKey[i].currentState.validate();
+                        }*/
                       }
                       if (i > 0) {
                         ///Update keyForm

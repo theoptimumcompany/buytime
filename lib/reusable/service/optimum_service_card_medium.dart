@@ -130,13 +130,13 @@ class _OptimumServiceCardMediumState extends State<OptimumServiceCardMedium> {
                                 children: [
                                   widget.greyScale
                                       ? Text(
-                                          AppLocalizations.of(context).euroSpace + widget.serviceState.price.toString(),
+                                          '${AppLocalizations.of(context).euroSpace} ' + widget.serviceState.price.toString(),
                                           overflow: TextOverflow.ellipsis,
                                           style:
                                               TextStyle(fontWeight: FontWeight.w700, fontSize: mediaSize.height * 0.021, color: Colors.grey.withOpacity(0.6), decoration: TextDecoration.lineThrough),
                                         )
                                       : Text(
-                                          AppLocalizations.of(context).euroSpace + widget.serviceState.price.toString(),
+                                      '${AppLocalizations.of(context).euroSpace} ' + widget.serviceState.price.toString(),
                                           overflow: TextOverflow.ellipsis,
                                           style: TextStyle(
                                             fontWeight: FontWeight.w700,

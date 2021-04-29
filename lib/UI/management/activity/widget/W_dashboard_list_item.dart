@@ -97,7 +97,7 @@ class _DashboardListItemState extends State<DashboardListItem> {
                         Container(
                           child: Text(
                               widget.orderState.selected == null || widget.orderState.selected.isEmpty ?
-                              '${AppLocalizations.of(context).currency}${widget.orderState.total.toStringAsFixed(2)}' :
+                              '${AppLocalizations.of(context).currency} ${widget.orderState.total.toStringAsFixed(2)}' :
                               '${widget.orderEntry.name} - € ${widget.orderEntry.price.toStringAsFixed(2)}',
                             style: TextStyle(
                                 fontFamily: BuytimeTheme.FontFamily,

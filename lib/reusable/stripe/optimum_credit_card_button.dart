@@ -81,7 +81,7 @@ class _OptimumCreditCardButtonState extends State<OptimumCreditCardButton> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  capitalizedBrand + AppLocalizations.of(context).ending + stripeCardResponse.last4,
+                                  capitalizedBrand + ' ${AppLocalizations.of(context).ending} ' + stripeCardResponse.last4,
                                   textAlign: TextAlign.left,
                                   style: TextStyle(
                                     fontSize: 25.0,

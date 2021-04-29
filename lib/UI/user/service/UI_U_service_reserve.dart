@@ -624,7 +624,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                   child: FittedBox(
                                     fit: BoxFit.scaleDown,
                                     child: Text(
-                                      AppLocalizations.of(context).currency + slots[0][0][1].price.toStringAsFixed(2) ,
+                                      '${AppLocalizations.of(context).currency} ' + slots[0][0][1].price.toStringAsFixed(2) ,
                                       style: TextStyle(
                                         //letterSpacing: 1.25,
                                           fontFamily: BuytimeTheme.FontFamily,

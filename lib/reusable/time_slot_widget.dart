@@ -109,7 +109,7 @@ class _TimeSlotWidgetState extends State<TimeSlotWidget> {
                  child: FittedBox(
                    fit: BoxFit.scaleDown,
                    child: Text(
-                     AppLocalizations.of(context).currency + widget.serviceSlot.price.toStringAsFixed(2),
+                     '${AppLocalizations.of(context).currency} ' + widget.serviceSlot.price.toStringAsFixed(2),
                      style: TextStyle(
                        //letterSpacing: 1.25,
                          fontFamily: BuytimeTheme.FontFamily,

@@ -182,6 +182,13 @@ class SetServiceDescription {
 
   String get description => _description;
 }
+class SetServiceAddress {
+  String _address;
+
+  SetServiceAddress(this._address);
+
+  String get address => _address;
+}
 
 class SetServiceVisibility {
   String _visibility;
@@ -275,6 +282,10 @@ ServiceState serviceReducer(ServiceState state, action) {
   }
   if (action is SetServiceDescription) {
     serviceState.description = action.description;
+    return serviceState;
+  }
+  if (action is SetServiceAddress) {
+    serviceState.address = action.address;
     return serviceState;
   }
   if (action is SetServiceVisibility) {

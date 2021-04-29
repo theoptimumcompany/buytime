@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:Buytime/UI/management/business/UI_M_business.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
+import 'package:Buytime/reblox/model/role/role.dart';
 import 'package:Buytime/reblox/model/snippet/generic.dart';
 import 'package:Buytime/reblox/reducer/business_reducer.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
@@ -594,6 +595,7 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
                                                               minHeight: 200,
                                                               minWidth: 500,
                                                               cropAspectRatioPreset: CropAspectRatioPreset.square,
+                                                              roleAllowedArray: [Role.admin, Role.salesman, Role.owner],
                                                               image: snapshot.logo == null || snapshot.logo.isEmpty ?
                                                               null :
                                                               snapshot.logo,
@@ -613,6 +615,7 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
                                                               minHeight: 200,
                                                               minWidth: 600,
                                                               cropAspectRatioPreset: CropAspectRatioPreset.ratio16x9,
+                                                              roleAllowedArray: [Role.admin, Role.salesman, Role.owner],
                                                               image: snapshot.wide == null || snapshot.wide.isEmpty ? null :
                                                               snapshot.wide,
                                                               //Image.network(snapshot.wide, width: media.width * 0.3),
@@ -631,6 +634,7 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
                                                               minHeight: 200,
                                                               minWidth: 600,
                                                               cropAspectRatioPreset: CropAspectRatioPreset.square,
+                                                              roleAllowedArray: [Role.admin, Role.salesman, Role.owner],
                                                               image: snapshot.profile == null || snapshot.profile.isEmpty ? null :
                                                               snapshot.profile,
                                                               //Image.network(snapshot.profile, width: media.width * 0.3),
@@ -649,6 +653,7 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
                                                               minHeight: 200,
                                                               minWidth: 600,
                                                               cropAspectRatioPreset: CropAspectRatioPreset.square,
+                                                              roleAllowedArray: [Role.admin, Role.salesman, Role.owner],
                                                               image: snapshot.gallery == null || snapshot.gallery.length == 0 || snapshot.gallery.isEmpty ? null :
                                                               snapshot.gallery[0],
                                                               //Image.network(snapshot.gallery[0], width: media.width * 0.3),

@@ -801,7 +801,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                                 ),
                               ),
                               Text(
-                                '${AppLocalizations.of(context).euroSpace}${widget.orderState.total.toStringAsFixed(2)}',
+                                '${AppLocalizations.of(context).euroSpace} ${widget.orderState.total.toStringAsFixed(2)}',
                                 style: TextStyle(
                                     letterSpacing: 0.15,
                                     fontFamily: BuytimeTheme.FontFamily,
@@ -818,7 +818,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                           child: FittedBox(
                             fit: BoxFit.scaleDown,
                             child: Text(
-                              '${AppLocalizations.of(context).euroSpace}${widget.orderState.total.toStringAsFixed(2)}',
+                              '${AppLocalizations.of(context).euroSpace} ${widget.orderState.total.toStringAsFixed(2)}',
                               style: TextStyle(
                                   letterSpacing: 0.15,
                                   fontFamily: BuytimeTheme.FontFamily,

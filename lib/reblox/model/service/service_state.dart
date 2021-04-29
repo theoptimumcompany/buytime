@@ -31,6 +31,7 @@ class ServiceState {
   bool serviceCreated = false;
   @JsonKey(defaultValue: false)
   bool serviceEdited = false;
+  String address;
 
   ///Out Database
   @JsonKey(ignore: true)
@@ -57,6 +58,7 @@ class ServiceState {
     this.spinnerVisibility,
     this.serviceCreated,
     this.serviceEdited,
+    this.address,
   });
 
   ServiceState toEmpty() {
@@ -81,6 +83,7 @@ class ServiceState {
       spinnerVisibility: false,
       serviceCreated: false,
       serviceEdited: false,
+      address: '',
     );
   }
 
@@ -105,6 +108,7 @@ class ServiceState {
     this.spinnerVisibility = service.spinnerVisibility;
     this.serviceCreated = service.serviceCreated;
     this.serviceEdited = service.serviceEdited;
+    this.address = service.address;
   }
 
   ServiceState copyWith({
@@ -128,6 +132,7 @@ class ServiceState {
     bool spinnerVisibility,
     bool serviceCreated,
     bool serviceEdited,
+    String address,
   }) {
     return ServiceState(
       serviceId: serviceId ?? this.serviceId,
@@ -150,6 +155,7 @@ class ServiceState {
       spinnerVisibility: spinnerVisibility ?? this.spinnerVisibility,
       serviceCreated: serviceCreated ?? this.serviceCreated,
       serviceEdited: serviceEdited ?? this.serviceEdited,
+      address: address ?? this.address,
     );
   }
 

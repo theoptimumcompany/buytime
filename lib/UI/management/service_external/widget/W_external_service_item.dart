@@ -114,71 +114,106 @@ class _ExternalServiceItemState extends State<ExternalServiceItem> {
                         Container(
                           margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1),
                           child:  Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              ///Service Name
-                              FittedBox(
-                                fit: BoxFit.scaleDown,
-                                child: Container(
-                                  width: SizeConfig.safeBlockHorizontal * 50,
-                                  child: Text(
-                                    widget.serviceState.name ?? '..............',
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                    style: TextStyle(
-                                        letterSpacing: 0.15,
-                                        fontFamily: BuytimeTheme.FontFamily,
-                                        color: BuytimeTheme.TextBlack,
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 16 /// SizeConfig.safeBlockHorizontal * 4
-                                    ),
-                                  ),
-                                ),
+                              ///Name & Duration & Price
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      ///Service Name
+                                      FittedBox(
+                                        fit: BoxFit.scaleDown,
+                                        child: Container(
+                                          width: SizeConfig.safeBlockHorizontal * 50,
+                                          child: Text(
+                                            widget.serviceState.name ?? '..............',
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
+                                            style: TextStyle(
+                                                letterSpacing: 0.15,
+                                                fontFamily: BuytimeTheme.FontFamily,
+                                                color: BuytimeTheme.TextBlack,
+                                                fontWeight: FontWeight.w400,
+                                                fontSize: 16 /// SizeConfig.safeBlockHorizontal * 4
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      widget.serviceState.serviceSlot.isNotEmpty ?
+                                      ///Duration
+                                      FittedBox(
+                                        fit: BoxFit.fitHeight,
+                                        child: Container(
+                                          width: 180, ///SizeConfig.safeBlockHorizontal * 50
+                                          height: 20, ///SizeConfig.safeBlockVertical * 10
+                                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * .25),
+                                          child: Text(
+                                            duration,
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 2,
+                                            style: TextStyle(
+                                                letterSpacing: 0.25,
+                                                fontFamily: BuytimeTheme.FontFamily,
+                                                color: BuytimeTheme.TextGrey,
+                                                fontWeight: FontWeight.w400,
+                                                fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
+                                            ),
+                                          ),
+                                        ),
+                                      ) : Container(),
+                                      ///Price
+                                      FittedBox(
+                                        fit: BoxFit.fitHeight,
+                                        child: Container(
+                                          width: 180, ///SizeConfig.safeBlockHorizontal * 50
+                                          height: 20, ///SizeConfig.safeBlockVertical * 10
+                                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * .25),
+                                          child: Text(
+                                            '${widget.serviceState.price.toStringAsFixed(0)} ${AppLocalizations.of(context).euroSpace}',
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 2,
+                                            style: TextStyle(
+                                                letterSpacing: 0.25,
+                                                fontFamily: BuytimeTheme.FontFamily,
+                                                color: BuytimeTheme.TextGrey,
+                                                fontWeight: FontWeight.w400,
+                                                fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                ],
                               ),
-                              widget.serviceState.serviceSlot.isNotEmpty ?
-                              ///Duration
+                              widget.serviceState.visibility == 'Invisible' || widget.serviceState.visibility == 'Deactivated' ?
+                              ///Message
                               FittedBox(
                                 fit: BoxFit.fitHeight,
                                 child: Container(
                                   width: 180, ///SizeConfig.safeBlockHorizontal * 50
-                                  height: 20, ///SizeConfig.safeBlockVertical * 10
-                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * .25),
+                                  height: 15, ///SizeConfig.safeBlockVertical * 10
+                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * .25, bottom: SizeConfig.safeBlockVertical * .25),
                                   child: Text(
-                                    duration,
+                                    widget.serviceState.visibility == 'Deactivated' ? '${AppLocalizations.of(context).serviceNotAvailable}' : '${AppLocalizations.of(context).serviceNotVisible}',
                                     overflow: TextOverflow.ellipsis,
-                                    maxLines: 2,
+                                    maxLines: 1,
                                     style: TextStyle(
                                         letterSpacing: 0.25,
                                         fontFamily: BuytimeTheme.FontFamily,
-                                        color: BuytimeTheme.TextGrey,
+                                        color: BuytimeTheme.AccentRed,
                                         fontWeight: FontWeight.w400,
-                                        fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
+                                        fontSize: 12 ///SizeConfig.safeBlockHorizontal * 4
                                     ),
                                   ),
                                 ),
                               ) : Container(),
-                              ///Price
-                              FittedBox(
-                                fit: BoxFit.fitHeight,
-                                child: Container(
-                                  width: 180, ///SizeConfig.safeBlockHorizontal * 50
-                                  height: 20, ///SizeConfig.safeBlockVertical * 10
-                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * .25),
-                                  child: Text(
-                                   '${widget.serviceState.price.toStringAsFixed(0)} ${AppLocalizations.of(context).euroSpace}',
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 2,
-                                    style: TextStyle(
-                                        letterSpacing: 0.25,
-                                        fontFamily: BuytimeTheme.FontFamily,
-                                        color: BuytimeTheme.TextGrey,
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
-                                    ),
-                                  ),
-                                ),
-                              ),
                             ],
                           ),
                         ),
@@ -189,14 +224,42 @@ class _ExternalServiceItemState extends State<ExternalServiceItem> {
                       bool equalBusiness = false;
                       StoreProvider.of<AppState>(context).state.externalServiceImportedListState.externalServiceImported.forEach((element) {
                         if(element.externalServiceId == widget.serviceState.serviceId && element.imported == true){
+                          debugPrint('${ widget.serviceState.name} | service true');
                           equalService = true;
                         }
                       });
                       StoreProvider.of<AppState>(context).state.externalBusinessImportedListState.externalBusinessImported.forEach((element) {
                         if(element.externalBusinessId == widget.serviceState.businessId && element.imported == true){
+                          debugPrint('${ widget.serviceState.name} | business true');
                           equalBusiness = true;
                         }
                       });
+                      if(equalBusiness){
+                        debugPrint('${ widget.serviceState.name} | if | business true');
+                        StoreProvider.of<AppState>(context).state.externalServiceImportedListState.externalServiceImported.forEach((element) {
+                          if(element.externalServiceId == widget.serviceState.serviceId && element.imported == true){
+                            debugPrint('${ widget.serviceState.name} | if | business true | service true');
+                            equalService = true;
+                          }
+                          if(element.externalServiceId == widget.serviceState.serviceId && element.imported == false){
+                            debugPrint('${ widget.serviceState.name} | if | business true | service false');
+                            equalService = false;
+                            equalBusiness = false;
+                          }
+                        });
+                        bool found = false;
+                        StoreProvider.of<AppState>(context).state.externalServiceImportedListState.externalServiceImported.forEach((element) {
+                          if(element.externalServiceId == widget.serviceState.serviceId && element.imported == true){
+                            found = true;
+                          }
+                        });
+
+                        if(!found && StoreProvider.of<AppState>(context).state.externalServiceImportedListState.externalServiceImported.length != 0){
+                          equalService = false;
+                          equalBusiness = false;
+                        }
+                      }
+                      debugPrint('${ widget.serviceState.name} | Business : $equalBusiness | Service: $equalService');
                       if(equalService || equalBusiness){
                         return Icon(
                           Icons.settings_ethernet,

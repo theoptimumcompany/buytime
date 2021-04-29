@@ -469,7 +469,7 @@ class _ActivityManagementItemDetailsState extends State<ActivityManagementItemDe
                                         alignment: Alignment.center,
                                         //margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 20),
                                         child: Text(
-                                          '${AppLocalizations.of(context).euroSpace}${widget.orderEntry.price.toStringAsFixed(2)}',
+                                          '${AppLocalizations.of(context).euroSpace} ${widget.orderEntry.price.toStringAsFixed(2)}',
                                           style: TextStyle(
                                               fontFamily: BuytimeTheme.FontFamily,
                                               fontWeight: FontWeight.w600,

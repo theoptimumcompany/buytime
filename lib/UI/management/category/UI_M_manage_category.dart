@@ -624,6 +624,7 @@ class ManageCategoryState extends State<ManageCategory> with SingleTickerProvide
         onInit: (store){
           //store.dispatch(CategoryTreeRequest());
           store.state.categoryList.categoryListState.clear();
+          //store.state.categoryTree.categoryNodeList.clear();
           store.dispatch(CategoryTreeCreateIfNotExists(store.state.business.id_firestore, context));
           startRequest = true;
         },
@@ -676,7 +677,7 @@ class ManageCategoryState extends State<ManageCategory> with SingleTickerProvide
 
                   ///Title
                   Utils.barTitle(AppLocalizations.of(context).categories),
-                  StoreProvider.of<AppState>(context).state.user.getRole() == Role.owner ?
+                  StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin ?
                     IconButton(
                     icon: const Icon(
                       Icons.add,

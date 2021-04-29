@@ -111,8 +111,8 @@ class _ActivityManagementState extends State<ActivityManagement> {
               alignment: Alignment.centerLeft,
               padding: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
               child: Text(
-                i == 0 ? '${AppLocalizations.of(context).today}${DateFormat('MMM dd').format(list[i][0][0].date).toUpperCase()}' :
-                  i == 1 ? '${AppLocalizations.of(context).tomorrow}${DateFormat('MMM dd').format(list[i][0][0].date).toUpperCase()}' :
+                i == 0 ? '${AppLocalizations.of(context).today} ${DateFormat('MMM dd').format(list[i][0][0].date).toUpperCase()}' :
+                  i == 1 ? '${AppLocalizations.of(context).tomorrow} ${DateFormat('MMM dd').format(list[i][0][0].date).toUpperCase()}' :
                   '${DateFormat('MMM dd').format(list[i][0][0].date).toUpperCase()}',
                  style: TextStyle(
                     letterSpacing: 1.25,

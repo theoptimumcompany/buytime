@@ -33,6 +33,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
   String _serviceName = "";
   double _servicePrice = 0.0;
   String _serviceDescription = "";
+  String _serviceAddress = "";
   final ImagePicker imagePicker = ImagePicker();
   List<Parent> selectedCategoryList = [];
   List<Parent> categoryList = [];
@@ -43,6 +44,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
   bool defaultCategory = true;
 
   TextEditingController priceController = TextEditingController();
+  TextEditingController addressController = TextEditingController();
 
   bool validateAndSave() {
     final FormState form = _keyCreateServiceForm.currentState;
@@ -284,6 +286,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                     ),
                                   ),
                                 ),*/
+                                  ///Name
                                   Center(
                                     child: Container(
                                       width: media.width * 0.9,
@@ -311,6 +314,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                       ),
                                     ),
                                   ),
+                                  ///Description
                                   Center(
                                     child: Container(
                                       width: media.width * 0.9,
@@ -339,15 +343,16 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                       ),
                                     ),
                                   ),
+                                  ///Price
                                   Padding(
-                                    padding: const EdgeInsets.only(bottom: 15.0),
+                                    padding: const EdgeInsets.only(bottom: 5.0),
                                     child: Center(
                                       child: Container(
                                         width: media.width * 0.9,
                                         margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
                                         //decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
                                         child: Padding(
-                                          padding: const EdgeInsets.only(top: 0.0, bottom: 5.0, left: 10.0, right: 10.0),
+                                          padding: const EdgeInsets.only(top: 0.0, bottom: 0.0, left: 10.0, right: 10.0),
                                           child: TextFormField(
                                             //initialValue: _servicePrice.toString(),
                                             controller: priceController,
@@ -424,6 +429,38 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                       ),
                                     ),
                                   ),
+                                  ///Address
+                                  Center(
+                                    child: Container(
+                                      width: media.width * 0.9,
+                                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
+                                      //decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(top: 0.0, bottom: 15.0, left: 10.0, right: 10.0),
+                                        child: TextFormField(
+                                          keyboardType: TextInputType.multiline,
+                                          maxLines: null,
+                                          initialValue: _serviceAddress,
+                                          onChanged: (value) {
+                                            _serviceAddress = value;
+                                            _serviceAddress = value;
+                                            StoreProvider.of<AppState>(context).dispatch(SetServiceAddress(_serviceAddress));
+                                          },
+                                          onSaved: (value) {
+                                            _serviceAddress = value;
+                                          },
+                                          decoration: InputDecoration(
+                                            labelText: AppLocalizations.of(context).addressOptional,
+                                            //hintText: AppLocalizations.of(context).addressOptional,
+                                            enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                            focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                            errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  ///Categories
                                   Padding(
                                     padding: const EdgeInsets.only(left: 20.0, top: 0.0),
                                     child: Container(

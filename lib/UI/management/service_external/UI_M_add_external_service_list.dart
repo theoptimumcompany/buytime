@@ -35,7 +35,8 @@ class AddExternalServiceList extends StatefulWidget {
 
 class AddExternalServiceListState extends State<AddExternalServiceList> {
 
-  List<ExternalBusinessState> externalServiceList = [];
+  List<ExternalBusinessState> externalBuinessList = [];
+  List<ServiceState> externalServiceList = [];
   TextEditingController _searchController = TextEditingController();
   TextEditingController _errorController = TextEditingController();
   String sortBy = '';
@@ -59,19 +60,19 @@ class AddExternalServiceListState extends State<AddExternalServiceList> {
   */
     setState(() {
       //orderState.addReserveItem(item., snapshot.business.ownerId, widget.serviceState.serviceSlot.first.startTime[i], widget.serviceState.serviceSlot.first.minDuration.toString(), dates[index]);
-      externalServiceList.insert(index, item);
+      externalBuinessList.insert(index, item);
       //orderState.total += item.price * item.number;
     });
   }
 
   void search(List<ExternalBusinessState> list) {
     setState(() {
-      externalServiceList.clear();
+      externalBuinessList.clear();
       List<ExternalBusinessState> serviceState = list;
       if (_searchController.text.isNotEmpty) {
         serviceState.forEach((element) {
           if (element.name.toLowerCase().contains(_searchController.text.toLowerCase())) {
-            externalServiceList.add(element);
+            externalBuinessList.add(element);
           }
         });
       }
@@ -106,19 +107,19 @@ class AddExternalServiceListState extends State<AddExternalServiceList> {
 
 
   void sortfun(String coordinates) async {
-    for (int c = 0; c < (externalServiceList.length - 1); c++) {
-      debugPrint('UI_M_add_external_service_list => B1 Name: ${externalServiceList[c].name} - ${calculateDistance(ExternalBusinessState(coordinate: coordinates), externalServiceList[c])}'
-          ' | ${calculateDistance(ExternalBusinessState(coordinate: coordinates), externalServiceList[c+1])}  B2 Name: ${externalServiceList[c+1].name} ');
-      if (calculateDistance(ExternalBusinessState(coordinate: coordinates), externalServiceList[c]) >
-          calculateDistance(ExternalBusinessState(coordinate: coordinates), externalServiceList[c + 1])) /* For descending order use < */
+    for (int c = 0; c < (externalBuinessList.length - 1); c++) {
+      debugPrint('UI_M_add_external_service_list => B1 Name: ${externalBuinessList[c].name} - ${calculateDistance(ExternalBusinessState(coordinate: coordinates), externalBuinessList[c])}'
+          ' | ${calculateDistance(ExternalBusinessState(coordinate: coordinates), externalBuinessList[c+1])}  B2 Name: ${externalBuinessList[c+1].name} ');
+      if (calculateDistance(ExternalBusinessState(coordinate: coordinates), externalBuinessList[c]) >
+          calculateDistance(ExternalBusinessState(coordinate: coordinates), externalBuinessList[c + 1])) /* For descending order use < */
       {
-        var swap = externalServiceList[c];
-        externalServiceList[c] = externalServiceList[c + 1];
-        externalServiceList[c + 1] = swap;
+        var swap = externalBuinessList[c];
+        externalBuinessList[c] = externalBuinessList[c + 1];
+        externalBuinessList[c + 1] = swap;
       }
     }
 
-    externalServiceList.forEach((element) {
+    externalBuinessList.forEach((element) {
       debugPrint('UI_M_add_external_service_list => B Name: ${element.name} - ${calculateDistance(ExternalBusinessState(coordinate: coordinates), element)}');
     });
   }
@@ -134,6 +135,7 @@ class AddExternalServiceListState extends State<AddExternalServiceList> {
         onInit: (store){
           if(widget.fromMy){
             store.state.externalBusinessList.externalBusinessListState.clear();
+            store.state.serviceListSnippetListState.serviceListSnippetListState.clear();
             store.dispatch(ExternalBusinessListRequest('any', store.state.user.getRole()));
             store.dispatch(ExternalServiceImportedListRequest(store.state.business.id_firestore));
             store.dispatch(ExternalBusinessImportedListRequest(store.state.business.id_firestore));
@@ -142,16 +144,46 @@ class AddExternalServiceListState extends State<AddExternalServiceList> {
         },
         builder: (context, snapshot) {
           if (_searchController.text.isEmpty && sortBy.isEmpty) {
-            externalServiceList.clear();
-            externalServiceList.addAll(snapshot.externalBusinessList.externalBusinessListState);
+            externalBuinessList.clear();
+            externalBuinessList.addAll(snapshot.externalBusinessList.externalBusinessListState);
           }
-          debugPrint('UI_M_add_external_service_list => EXTERNAL BUSINESS LIST: ${externalServiceList.length}');
+          debugPrint('UI_M_add_external_service_list => EXTERNAL BUSINESS LIST: ${externalBuinessList.length}');
           debugPrint('UI_M_add_external_service_list => EXTERNAL SNIPPET LIST: ${snapshot.serviceListSnippetListState.serviceListSnippetListState.length}');
           if(snapshot.externalBusinessList.externalBusinessListState.isEmpty && startRequest){
             noActivity = true;
           }else{
             if(snapshot.externalBusinessList.externalBusinessListState.isNotEmpty && snapshot.externalBusinessList.externalBusinessListState.first.id_firestore == null)
               snapshot.externalBusinessList.externalBusinessListState.removeLast();
+
+            if(snapshot.serviceListSnippetListState.serviceListSnippetListState.isNotEmpty){
+              if(snapshot.serviceListSnippetListState.serviceListSnippetListState.first.businessId == null){
+                startRequest = false;
+                snapshot.serviceListSnippetListState.serviceListSnippetListState.removeLast();
+              }else{
+                if(snapshot.serviceListSnippetState.businessId != null){
+                  List<String> serviceIds = [];
+                  snapshot.serviceListSnippetListState.serviceListSnippetListState.forEach((sLSLS) {
+                    sLSLS.businessSnippet.forEach((bS) {
+                      bS.serviceList.forEach((sL) {
+                        if(!serviceIds.contains(sL.serviceAbsolutePath.split('/').last)){
+                          serviceIds.add(sL.serviceAbsolutePath.split('/').last);
+                          externalServiceList.add(
+                              ServiceState(
+                                  serviceId: sL.serviceAbsolutePath.split('/').last,
+                                  businessId: sLSLS.businessId,
+                                  image1: sL.serviceImage,
+                                  visibility: sL.serviceVisibility
+                              )
+                          );
+                        }
+                      });
+                    });
+
+                  });
+                }
+              }
+            }
+            debugPrint('UI_M_add_external_service_list => ');
             noActivity = false;
             startRequest = false;
           }
@@ -350,7 +382,7 @@ class AddExternalServiceListState extends State<AddExternalServiceList> {
                                         });
                                         List<ExternalBusinessState> tmpEList = [];
                                         tmpEList.addAll(snapshot.externalBusinessList.externalBusinessListState);*/
-                                        externalServiceList.sort((a,b) => calculateDistance(tmpE, a).compareTo(calculateDistance(tmpE, b)));
+                                        externalBuinessList.sort((a,b) => calculateDistance(tmpE, a).compareTo(calculateDistance(tmpE, b)));
                                         //externalServiceList.clear();
                                         //externalServiceList.addAll(tmpEList);
                                         //externalServiceList.sort((a,b) => calculateDistance(tmpE, a).compareTo(calculateDistance(tmpE, b)));
@@ -367,14 +399,14 @@ class AddExternalServiceListState extends State<AddExternalServiceList> {
                         ),
                       ),
                       ///External Searched list
-                      externalServiceList.isNotEmpty ?
+                      externalBuinessList.isNotEmpty ?
                       Expanded(
                         child: CustomScrollView(
                           shrinkWrap: true,
                           slivers: [
                             SliverList(
                               delegate: SliverChildBuilderDelegate((context, index){
-                                ExternalBusinessState item = externalServiceList.elementAt(index);
+                                ExternalBusinessState item = externalBuinessList.elementAt(index);
                                 return Dismissible(
                                   // Each Dismissible must contain a Key. Keys allow Flutter to
                                   // uniquely identify widgets.
@@ -385,7 +417,7 @@ class AddExternalServiceListState extends State<AddExternalServiceList> {
                                   onDismissed: (direction) {
                                     // Remove the item from the data source.
                                     setState(() {
-                                      externalServiceList.removeAt(index);
+                                      externalBuinessList.removeAt(index);
                                     });
                                     if (direction == DismissDirection.endToStart) {
 
@@ -400,7 +432,7 @@ class AddExternalServiceListState extends State<AddExternalServiceList> {
                                                 undoDeletion(index, item);
                                               })));
                                     } else {
-                                      externalServiceList.insert(index, item);
+                                      externalBuinessList.insert(index, item);
                                     }
                                   },
                                   child: Column(
@@ -435,7 +467,7 @@ class AddExternalServiceListState extends State<AddExternalServiceList> {
                                   ),
                                 );
                               },
-                                childCount: externalServiceList.length,
+                                childCount: externalBuinessList.length,
                               ),
                             ),
                           ],
@@ -640,7 +672,7 @@ class AddExternalServiceListState extends State<AddExternalServiceList> {
                             )
                           ],
                         ),
-                      ) : externalServiceList.isEmpty
+                      ) : externalBuinessList.isEmpty
                           ? noActivity ?
                       Expanded(
                         child: Column(

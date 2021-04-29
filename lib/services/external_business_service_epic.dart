@@ -35,7 +35,7 @@ class ExternalBusinessListRequestService implements EpicClass<AppState> {
             .collection("business")
             .where("draft", isEqualTo: false)
             .where("id_firestore", isNotEqualTo: store.state.business.id_firestore)
-            .limit(20)
+            .limit(30)
             .get();
       } else {
         if (event.role == Role.manager || event.role == Role.worker) {

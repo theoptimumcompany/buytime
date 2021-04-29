@@ -33,6 +33,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
   String _serviceName = "";
   double _servicePrice = 0.0;
   String _serviceDescription = "";
+  String _serviceAddress = "";
   final ImagePicker imagePicker = ImagePicker();
   List<Parent> selectedCategoryList = [];
   List<Parent> categoryList = [];
@@ -43,6 +44,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
   bool submit = false;
   TextEditingController _tagServiceController = TextEditingController();
   TextEditingController priceController = TextEditingController();
+  TextEditingController addressController = TextEditingController();
 
   @override
   void initState() {
@@ -221,6 +223,12 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
               format = _servicePrice.toString().split(".");
               priceController.text = format[0].toString() + "." + (int.parse(format[1]) < 10 ? format[1].toString() + "0" : format[1].toString());
             }
+            if(snapshot.serviceState.price != null && priceController.text.isEmpty){
+              _servicePrice = StoreProvider.of<AppState>(context).state.serviceState.price;
+              List<String> format = [];
+              format = _servicePrice.toString().split(".");
+              priceController.text = format[0].toString() + "." + (int.parse(format[1]) < 10 ? format[1].toString() + "0" : format[1].toString());
+            }
             return GestureDetector(
               onTap: (){
                 FocusScopeNode currentFocus = FocusScope.of(context);
@@ -247,7 +255,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                           //Navigator.pushReplacement(context, EnterExitRoute(enterPage: UI_M_ServiceList(), exitPage: UI_EditService(), from: false));
                                         })),
                                 Flexible(
-                                  child: Utils.barTitle(AppLocalizations.of(context).editSpace + StoreProvider.of<AppState>(context).state.serviceState.name),
+                                  child: Utils.barTitle('${AppLocalizations.of(context).editSpace} '  + StoreProvider.of<AppState>(context).state.serviceState.name),
                                 ),
                                 Container(
                                   child: IconButton(
@@ -275,6 +283,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                       key: _keyEditServiceForm,
                                       child: Column(
                                         children: <Widget>[
+                                          ///Image
                                           Padding(
                                             padding: const EdgeInsets.only(bottom: 25.0),
                                             child: Container(
@@ -329,6 +338,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                               ),
                                             ),
                                           ),
+                                          ///Name
                                           Center(
                                             child: Container(
                                               width: media.width * 0.9,
@@ -360,13 +370,14 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                               ),
                                             ),
                                           ),
+                                          ///Description
                                           Center(
                                             child: Container(
                                               width: media.width * 0.9,
                                               margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
                                               //decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
                                               child: Padding(
-                                                padding: const EdgeInsets.only(top: 0.0, bottom: 10.0, left: 10.0, right: 10.0),
+                                                padding: const EdgeInsets.only(top: 0.0, bottom: 5.0, left: 10.0, right: 10.0),
                                                 child: TextFormField(
                                                   keyboardType: TextInputType.multiline,
                                                   maxLines: null,
@@ -388,6 +399,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                               ),
                                             ),
                                           ),
+                                          ///Prtice
                                           snapshot.serviceState.switchSlots
                                               ? Container()
                                               : Padding(
@@ -475,6 +487,38 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                               ),
                                             ),
                                           ),
+                                          ///Address
+                                          Center(
+                                            child: Container(
+                                              width: media.width * 0.9,
+                                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
+                                              //decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(top: 0.0, bottom: 15.0, left: 10.0, right: 10.0),
+                                                child: TextFormField(
+                                                  keyboardType: TextInputType.multiline,
+                                                  maxLines: null,
+                                                  initialValue: snapshot.serviceState.address,
+                                                  onChanged: (value) {
+                                                    _serviceAddress = value;
+                                                    _serviceAddress = value;
+                                                    StoreProvider.of<AppState>(context).dispatch(SetServiceAddress(_serviceAddress));
+                                                  },
+                                                  onSaved: (value) {
+                                                    _serviceAddress = value;
+                                                  },
+                                                  decoration: InputDecoration(
+                                                    labelText: AppLocalizations.of(context).addressOptional,
+                                                    //hintText: AppLocalizations.of(context).addressOptional,
+                                                    enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                    focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                    errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          ///Categproes
                                           Padding(
                                             padding: const EdgeInsets.only(left: 20.0, top: 10.0),
                                             child: Container(
@@ -502,7 +546,6 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                               ),
                                             ),
                                           ),
-
                                           ///Error message Empty CategoryList
                                           errorCategoryListEmpty
                                               ? Padding(
@@ -874,7 +917,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                                         children: [
                                                                           Text(
-                                                                            AppLocalizations.of(context).timeAvailabilitySpace + (index + 1).toString(),
+                                                                            '${AppLocalizations.of(context).timeAvailabilitySpace} ' + (index + 1).toString(),
                                                                             style: TextStyle(
                                                                               fontSize:16,
                                                                               color: BuytimeTheme.TextBlack,
@@ -903,8 +946,8 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                                             children: [
                                                                               Text(
                                                                                 snapshot.serviceState.serviceSlot[index].price.toString().split('.')[1] == '0' ?
-                                                                                snapshot.serviceState.serviceSlot[index].price.toString().split('.')[0] + AppLocalizations.of(context).spaceEuro :
-                                                                                       snapshot.serviceState.serviceSlot[index].price.toStringAsFixed(2) + AppLocalizations.of(context).spaceEuro,
+                                                                                snapshot.serviceState.serviceSlot[index].price.toString().split('.')[0] + ' ${AppLocalizations.of(context).spaceEuro}' :
+                                                                                       snapshot.serviceState.serviceSlot[index].price.toStringAsFixed(2) + ' ${AppLocalizations.of(context).spaceEuro}',
                                                                                 style: TextStyle(
                                                                                   fontSize: 14,
                                                                                   color: BuytimeTheme.TextBlack,
@@ -983,7 +1026,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                           //Navigator.pushReplacement(context, EnterExitRoute(enterPage: UI_M_ServiceList(), exitPage: UI_EditService(), from: false));
                                         })),
                                 Flexible(
-                                  child: Utils.barTitle(AppLocalizations.of(context).editSpace + widget.serviceName),
+                                  child: Utils.barTitle('${AppLocalizations.of(context).editSpace}' + widget.serviceName),
                                 ),
                                 Container(
                                   child: IconButton(

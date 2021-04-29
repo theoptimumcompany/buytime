@@ -238,7 +238,7 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
                               ):
                               Container(
                                 child: Text(
-                                  '${orderEntry.number} x ${AppLocalizations.of(context).currency}${orderEntry.price.toStringAsFixed(2)}',
+                                  '${orderEntry.number} x ${AppLocalizations.of(context).currency} ${orderEntry.price.toStringAsFixed(2)}',
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                       fontFamily: BuytimeTheme.FontFamily,
@@ -323,7 +323,7 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
                                ),
                                ///Price
                                Text(
-                                 '${AppLocalizations.of(context).euroSpace}${orderEntry.price.toStringAsFixed(2)}',
+                                 '${AppLocalizations.of(context).euroSpace} ${orderEntry.price.toStringAsFixed(2)}',
                                  overflow: TextOverflow.ellipsis,
                                  style: TextStyle(
                                      fontFamily: BuytimeTheme.FontFamily,
@@ -454,9 +454,9 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
 
   String price() {
     if (orderEntry.number == 1) {
-      return AppLocalizations.of(context).currency + orderEntry.price.toStringAsFixed(2);
+      return '${AppLocalizations.of(context).currency} ' + orderEntry.price.toStringAsFixed(2);
     }
     //return "€ " + orderEntry.price.toStringAsFixed(2) + " x " +  orderEntry.number.toString() + " = € " + (orderEntry.price * orderEntry.number).toStringAsFixed(2);
-    return AppLocalizations.of(context).currency + (orderEntry.price * orderEntry.number).toStringAsFixed(2);
+    return '${AppLocalizations.of(context).currency} ' + (orderEntry.price * orderEntry.number).toStringAsFixed(2);
   }
 }

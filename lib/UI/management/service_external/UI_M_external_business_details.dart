@@ -161,6 +161,54 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
     StoreProvider.of<AppState>(context).dispatch(CancelExternalServiceImported(eSIS));
   }
 
+  DismissDirection getDismiss(List<ExternalServiceImportedState> externalServices, List<ExternalBusinessImportedState> externalBusiness, ServiceState service){
+    DismissDirection tmpDismiss;
+    bool equalService = false;
+    bool equalBusiness = false;
+    externalServices.forEach((element) {
+      if(element.externalServiceId == service.serviceId && element.imported == true){
+        equalService = true;
+      }
+    });
+    externalBusiness.forEach((element) {
+      if(element.externalBusinessId == service.businessId && element.imported == true){
+        equalBusiness = true;
+      }
+    });
+    if(equalBusiness){
+      debugPrint('${ service.name} | if | business true');
+      externalServices.forEach((element) {
+        if(element.externalServiceId == service.serviceId && element.imported == true){
+          debugPrint('${ service.name} | if | business true | service true');
+          equalService = true;
+        }
+        if(element.externalServiceId == service.serviceId && element.imported == false){
+          debugPrint('${ service.name} | if | business true | service false');
+          equalService = false;
+          equalBusiness = false;
+        }
+      });
+      bool found = false;
+      externalServices.forEach((element) {
+        if(element.externalServiceId == service.serviceId && element.imported == true){
+          found = true;
+        }
+      });
+
+      if(!found && externalServices.length != 0){
+        equalService = false;
+        equalBusiness = false;
+      }
+    }
+    if(equalService || equalBusiness){
+      tmpDismiss = DismissDirection.none;
+    }else{
+      tmpDismiss = DismissDirection.endToStart;
+    }
+
+    return tmpDismiss;
+  }
+
   @override
   Widget build(BuildContext context) {
     // the media containing information on width and height
@@ -201,8 +249,11 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
               if(sLSL.businessId == eBI.externalBusinessId && eBI.externalBusinessId == widget.externalBusinessState.id_firestore && sLSL.businessId == widget.externalBusinessState.id_firestore && eBI.imported == true){
                 sLSL.businessSnippet.forEach((bS) {
                     bS.serviceList.forEach((sL) {
-                      if(!serviceIds.contains(sL.serviceAbsolutePath.split('/').last))
-                        serviceIds.add(sL.serviceAbsolutePath.split('/').last);
+                      serviceIds.forEach((element) {
+                        if(sL.serviceAbsolutePath.split('/').last == element)
+                          if(!serviceIds.contains(sL.serviceAbsolutePath.split('/').last))
+                            serviceIds.add(sL.serviceAbsolutePath.split('/').last);
+                      });
                     });
                 });
               }
@@ -273,14 +324,19 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
         });
 
         int count = 0;
-        snapshot.serviceListSnippetListState.serviceListSnippetListState.forEach((element) {
+        /*snapshot.serviceListSnippetListState.serviceListSnippetListState.forEach((element) {
           if(element.businessId == widget.externalBusinessState.id_firestore){
             element.businessSnippet.forEach((bS) {
               bS.serviceList.forEach((sL) {
-                count++;
+                //if(sL.serviceVisibility != 'Invisible')
+                  count++;
               });
             });
           }
+        });*/
+        snapshot.serviceList.serviceListState.forEach((sLS) {
+          if(sLS.visibility != 'Invisible')
+            count++;
         });
         debugPrint('Count: $count | tmp: ${tmp.length}');
         if(count != 0 && count == tmp.length)
@@ -291,6 +347,11 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
             equalBusiness = true;
           }
         });
+
+        if(count != 0 && tmp.length != 0 && count != tmp.length && equalBusiness){
+          equalService = false;
+          equalBusiness = false;
+        }
 
         return  GestureDetector(
           onTap: (){
@@ -924,23 +985,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                               if (popularServiceList[i].serviceId == service.serviceId) index = i;
                                             }
                                             DismissDirection tmpDismiss;
-                                            bool equalService = false;
-                                            bool equalBusiness = false;
-                                            StoreProvider.of<AppState>(context).state.externalServiceImportedListState.externalServiceImported.forEach((element) {
-                                              if(element.externalServiceId == service.serviceId && element.imported == true){
-                                                equalService = true;
-                                              }
-                                            });
-                                            StoreProvider.of<AppState>(context).state.externalBusinessImportedListState.externalBusinessImported.forEach((element) {
-                                              if(element.externalBusinessId == service.businessId && element.imported == true){
-                                                equalBusiness = true;
-                                              }
-                                            });
-                                            if(equalService || equalBusiness){
-                                              tmpDismiss = DismissDirection.none;
-                                            }else{
-                                              tmpDismiss = DismissDirection.endToStart;
-                                            }
+                                            tmpDismiss = getDismiss(StoreProvider.of<AppState>(context).state.externalServiceImportedListState.externalServiceImported, StoreProvider.of<AppState>(context).state.externalBusinessImportedListState.externalBusinessImported, service);
                                             return Column(
                                               children: [
                                                 Dismissible(
@@ -1006,23 +1051,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                               if (popularServiceList[i].serviceId == service.serviceId) index = i;
                                             }
                                             DismissDirection tmpDismiss;
-                                            bool equalService = false;
-                                            bool equalBusiness = false;
-                                            StoreProvider.of<AppState>(context).state.externalServiceImportedListState.externalServiceImported.forEach((element) {
-                                              if(element.externalServiceId == service.serviceId && element.imported == true){
-                                                equalService = true;
-                                              }
-                                            });
-                                            StoreProvider.of<AppState>(context).state.externalBusinessImportedListState.externalBusinessImported.forEach((element) {
-                                              if(element.externalBusinessId == service.businessId && element.imported == true){
-                                                equalBusiness = true;
-                                              }
-                                            });
-                                            if(equalService || equalBusiness){
-                                              tmpDismiss = DismissDirection.none;
-                                            }else{
-                                              tmpDismiss = DismissDirection.endToStart;
-                                            }
+                                            tmpDismiss = getDismiss(StoreProvider.of<AppState>(context).state.externalServiceImportedListState.externalServiceImported, StoreProvider.of<AppState>(context).state.externalBusinessImportedListState.externalBusinessImported, service);
                                             return Column(
                                               children: [
                                                 Dismissible(
@@ -1170,23 +1199,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                               if (allServiceList[i].serviceId == service.serviceId) index = i;
                                             }
                                             DismissDirection tmpDismiss;
-                                            bool equalService = false;
-                                            bool equalBusiness = false;
-                                            StoreProvider.of<AppState>(context).state.externalServiceImportedListState.externalServiceImported.forEach((element) {
-                                              if(element.externalServiceId == service.serviceId && element.imported == true){
-                                                equalService = true;
-                                              }
-                                            });
-                                            StoreProvider.of<AppState>(context).state.externalBusinessImportedListState.externalBusinessImported.forEach((element) {
-                                              if(element.externalBusinessId == service.businessId && element.imported == true){
-                                                equalBusiness = true;
-                                              }
-                                            });
-                                            if(equalService || equalBusiness){
-                                              tmpDismiss = DismissDirection.none;
-                                            }else{
-                                              tmpDismiss = DismissDirection.endToStart;
-                                            }
+                                            tmpDismiss = getDismiss(StoreProvider.of<AppState>(context).state.externalServiceImportedListState.externalServiceImported, StoreProvider.of<AppState>(context).state.externalBusinessImportedListState.externalBusinessImported, service);
                                             return Column(
                                               children: [
                                                 Dismissible(
@@ -1252,23 +1265,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                               if (allServiceList[i].serviceId == service.serviceId) index = i;
                                             }
                                             DismissDirection tmpDismiss;
-                                            bool equalService = false;
-                                            bool equalBusiness = false;
-                                            StoreProvider.of<AppState>(context).state.externalServiceImportedListState.externalServiceImported.forEach((element) {
-                                              if(element.externalServiceId == service.serviceId && element.imported == true){
-                                                equalService = true;
-                                              }
-                                            });
-                                            StoreProvider.of<AppState>(context).state.externalBusinessImportedListState.externalBusinessImported.forEach((element) {
-                                              if(element.externalBusinessId == service.businessId && element.imported == true){
-                                                equalBusiness = true;
-                                              }
-                                            });
-                                            if(equalService || equalBusiness){
-                                              tmpDismiss = DismissDirection.none;
-                                            }else{
-                                              tmpDismiss = DismissDirection.endToStart;
-                                            }
+                                            tmpDismiss = getDismiss(StoreProvider.of<AppState>(context).state.externalServiceImportedListState.externalServiceImported, StoreProvider.of<AppState>(context).state.externalBusinessImportedListState.externalBusinessImported, service);
                                             return Column(
                                               children: [
                                                 Dismissible(

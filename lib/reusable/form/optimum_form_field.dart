@@ -69,10 +69,10 @@ class OptimumFormFieldState extends State<OptimumFormField> {
 
   String validate(String value) {
     if(widget.required && value.isNotEmpty) {
-      return "test" + AppLocalizations.of(context).required;
+      return "test " + AppLocalizations.of(context).required;
     }
     if (value.length < minLength) {
-        return AppLocalizations.of(context).nameMustBeMore + minLength.toString() + AppLocalizations.of(context).characters;
+        return '${AppLocalizations.of(context).nameMustBeMore} '+ minLength.toString() + ' ${AppLocalizations.of(context).characters}';
     }
     if (widget.typeOfValidate == "email") {
       Pattern pattern =

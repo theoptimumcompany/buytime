@@ -117,14 +117,14 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                   if(tmpMin > 90)
                     price = AppLocalizations.of(context).startingFromCurrency + ' ${element.price.toStringAsFixed(0)} / ${element.hour} h ${element.minute} ${AppLocalizations.of(context).spaceMinSpace}';
                   else
-                    price = AppLocalizations.of(context).startingFromCurrency + ' ${element.price.toStringAsFixed(0)} / $tmpMin${AppLocalizations.of(context).spaceMinSpace}';
+                    price = AppLocalizations.of(context).startingFromCurrency + ' ${element.price.toStringAsFixed(0)} / $tmpMin ${AppLocalizations.of(context).spaceMinSpace}';
                 }
               }
             }
           });
         }else{
           price =  serviceState.price != null
-              ? AppLocalizations.of(context).currencySpace + serviceState.price.toString() + AppLocalizations.of(context).slashOneUnit
+              ? '${AppLocalizations.of(context).currencySpace} ' + serviceState.price.toString() + AppLocalizations.of(context).slashOneUnit
               : AppLocalizations.of(context).currencyNoPrice + AppLocalizations.of(context).hour;
         }
         

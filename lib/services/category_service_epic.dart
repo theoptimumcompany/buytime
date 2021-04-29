@@ -1,5 +1,6 @@
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/category/category_state.dart';
+import 'package:Buytime/reblox/model/category/snippet/category_snippet_state.dart';
 import 'package:Buytime/reblox/model/file/optimum_file_to_upload.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/model/statistics_state.dart';
@@ -697,6 +698,9 @@ class CategoryUpdateService implements EpicClass<AppState> {
             else
               element.categoryAbsolutePath = categoryState.businessId + '/' + categoryState.id;
             debugPrint('CATEGORY_SERVICE_EPIC - CategoryUpdateService => NEW PATH: ${element.categoryAbsolutePath}');
+            element.categoryImage = categoryState.categoryImage;
+            element.categoryName = categoryState.name;
+            element.tags = [categoryState.customTag];
           }
         });
       });
@@ -765,6 +769,17 @@ class CategoryCreateService implements EpicClass<AppState> {
       await docReference.set(categoryState.toJson()).then((value) async {
         /// 1 WRITE
         debugPrint("CATEGORY_SERVICE_EPIC - CategoryCreateService => CategoryService has created new category " + docReference.id);
+        store.state.serviceListSnippetState.businessSnippet.add(
+          CategorySnippetState(
+            categoryAbsolutePath: store.state.business.id_firestore + '/' + categoryState.id,
+            categoryName: categoryState.name,
+            categoryImage: categoryState.categoryImage,
+            serviceNumberExternal: 0,
+            serviceNumberInternal: 0,
+            serviceList: [],
+            tags: [categoryState.customTag]
+          )
+        );
       }).catchError((error) {
         debugPrint('CATEGORY_SERVICE_EPIC - CategoryCreateService => ERROR: $error');
       }).then((value) {

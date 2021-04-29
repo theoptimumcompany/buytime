@@ -674,7 +674,7 @@ class ServiceCreateService implements EpicClass<AppState> {
           ServiceListSnippetRequestResponse(store.state.serviceListSnippetState),
           SetCreatedService(true),
           UpdateStatistics(statisticsState),
-          NavigateReplaceAction(AppRoutes.managerServiceList),
+          NavigatePushAction(AppRoutes.managerServiceList),
         ]);
   }
 }
@@ -717,16 +717,58 @@ class ServiceUpdateService implements EpicClass<AppState> {
       }
 
       store.state.serviceListSnippetState.businessSnippet.forEach((element) {
-        serviceState.categoryId.forEach((service){
-            
-        });
-        element.serviceList.forEach((element2) {
+        /*element.serviceList.forEach((element2) {
           String tmpPath = element.categoryAbsolutePath + '/' + serviceState.serviceId;
           //debugPrint('SERVICE_SERVICE_EPIC - ServiceUpdateService => P1: ${element2.serviceAbsolutePath} | P2: $tmpPath');
           if(element2.serviceAbsolutePath == tmpPath) {
             element2.serviceName = serviceState.name;
           }
+        });*/
+        ServiceSnippetState tmp = ServiceSnippetState().toEmpty();
+        element.serviceList.forEach((element2) {
+          String tmpPath = element.categoryAbsolutePath + '/' + serviceState.serviceId;
+          //debugPrint('SERVICE_SERVICE_EPIC - ServiceUpdateService => P1: ${element2.serviceAbsolutePath} | P2: $tmpPath');
+          if(element2.serviceAbsolutePath == tmpPath) {
+            debugPrint('SERVICE_SERVICE_EPIC - ServiceUpdateService => P1: ${element2.serviceAbsolutePath} | P2: $tmpPath');
+            //element2.serviceName = serviceState.name;
+            tmp = element2;
+          }
         });
+        if(element.categoryAbsolutePath.split('/').last == serviceState.categoryId.first){
+          bool found = false;
+          element.serviceList.forEach((sL) {
+            if(sL.serviceAbsolutePath.split('/').last == serviceState.serviceId){
+                found = true;
+            }
+          });
+
+          if(!found){
+            String tmpPath = serviceState.categoryId.first + '/' + serviceState.serviceId;
+            tmp.serviceName = serviceState.name;
+            tmp.serviceVisibility = serviceState.visibility;
+            tmp.serviceImage = serviceState.image1;
+            tmp.servicePrice = serviceState.price;
+            tmp.serviceAbsolutePath = tmpPath;
+            element.serviceList.add(tmp);
+          }
+
+        }
+        if(element.categoryAbsolutePath.split('/').last != serviceState.categoryId.first){
+          bool found = false;
+          int ympCount = 0;
+          for(int i = 0; i < element.serviceList.length; i++){
+            if(element.serviceList[i].serviceAbsolutePath.split('/').last == serviceState.serviceId){
+              found = true;
+              ympCount = i;
+            }
+          }
+
+          if(found){
+            element.serviceList.removeAt(ympCount);
+          }
+
+        }
+
         //element.serviceList.add(tmp);
       });
     }).expand((element) => [

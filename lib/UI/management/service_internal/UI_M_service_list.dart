@@ -351,7 +351,7 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                                                     children: [
                                                       Container(
                                                           child: Text(
-                                                            AppLocalizations.of(context).addA + categories[i].categoryName,
+                                                            AppLocalizations.of(context).addA + ' ' + categories[i].categoryName,
                                                             textAlign: TextAlign.start,
                                                             style: TextStyle(
                                                                 fontSize: 16,

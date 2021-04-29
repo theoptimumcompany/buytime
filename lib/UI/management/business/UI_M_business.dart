@@ -319,7 +319,7 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                                                 ///Welcome message 'Hi ...'
                                                 Container(
                                                   child: Text(
-                                                    '${AppLocalizations.of(context).hi}' + StoreProvider.of<AppState>(context).state.user.name,
+                                                    '${AppLocalizations.of(context).hi} ' + StoreProvider.of<AppState>(context).state.user.name,
                                                     style: TextStyle(fontWeight: FontWeight.w700, fontFamily: BuytimeTheme.FontFamily, fontSize: 24, color: BuytimeTheme.TextBlack),
                                                   ),
                                                 ),
@@ -640,7 +640,7 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                                         CircularProgressIndicator()
                                       ],
                                     ),
-                                  ) :
+                                  )  :
                                   Container(
                                     decoration: BoxDecoration(color: Colors.blueGrey.withOpacity(0.1)),
                                     child: Container(

@@ -57,7 +57,7 @@ class BusinessHeaderState extends State<BusinessHeader> {
                               ///Welcome message 'Hi ...'
                               Container(
                                 child: Text(
-                                  '${AppLocalizations.of(context).hi}' + StoreProvider.of<AppState>(context).state.user.name,
+                                  '${AppLocalizations.of(context).hi} ' + StoreProvider.of<AppState>(context).state.user.name,
                                   style: TextStyle(fontWeight: FontWeight.w700, fontFamily: BuytimeTheme.FontFamily, fontSize: 24, color: BuytimeTheme.TextBlack),
                                 ),
                               ),

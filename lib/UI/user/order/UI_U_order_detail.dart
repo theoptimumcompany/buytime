@@ -127,14 +127,14 @@ class UI_U_OrderDetailState extends State<UI_U_OrderDetail> {
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
                                               Text(
-                                                AppLocalizations.of(context).total + confirmedOrder.total.toStringAsFixed(2),
+                                                '${AppLocalizations.of(context).total} ${confirmedOrder.total.toStringAsFixed(2)}',
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.w700,
                                                   fontSize: media.height * 0.026,
                                                 ),
                                               ),
                                               Text(
-                                                AppLocalizations.of(context).tax + (confirmedOrder.total != null ? (confirmedOrder.total * 0.25).toStringAsFixed(2) : "0"),
+                                                '${AppLocalizations.of(context).tax} ' + (confirmedOrder.total != null ? (confirmedOrder.total * 0.25).toStringAsFixed(2) : "0"),
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.w400,
                                                   fontSize: media.height * 0.020,
@@ -152,7 +152,7 @@ class UI_U_OrderDetailState extends State<UI_U_OrderDetail> {
                     child: Padding(
                       padding: const EdgeInsets.only(top: 30.0, left: 10.0),
                       child: Text(
-                        AppLocalizations.of(context).thanksOrder + confirmedOrder.business?.name + "!",
+                        '${AppLocalizations.of(context).thanksOrder} ' + confirmedOrder.business?.name + "!",
                         textAlign: TextAlign.start,
                         style: TextStyle(
                           fontSize: media.height * 0.035,

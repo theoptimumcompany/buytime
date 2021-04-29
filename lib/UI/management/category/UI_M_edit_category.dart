@@ -557,6 +557,7 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
     ));
   }
 
+  bool hasService = false;
   @override
   Widget build(BuildContext context) {
     var media = MediaQuery
@@ -565,6 +566,14 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
     return StoreConnector<AppState, AppState>(
         converter: (store) => store.state,
         builder: (context, snapshot) {
+          if(snapshot.serviceListSnippetState.businessSnippet != null){
+            snapshot.serviceListSnippetState.businessSnippet.forEach((element) {
+              if(element.categoryAbsolutePath.split('/').last == snapshot.category.id){
+                if(element.serviceNumberInternal != 0)
+                  hasService = true;
+              }
+            });
+          }
           buildDropDownMenuItemsParent(_dropdownParentCategory);
 
           managerList = snapshot.category.manager;
@@ -628,7 +637,7 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                                 ],
                               ),
                               ///Title
-                              Utils.barTitle(AppLocalizations.of(context).editSpace + snapshot.category.name),
+                              Utils.barTitle(AppLocalizations.of(context).editSpace + ' ' + snapshot.category.name),
                               Padding(
                                 padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
                                 child: IconButton(
@@ -701,6 +710,7 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                                           ? null
                                           : snapshot.category.categoryImage,
                                       //Image.network(snapshot.category.categoryImage, width: media.width * 0.3),
+                                      roleAllowedArray: [Role.admin],
                                       onFilePicked: (fileToUpload) {
                                         fileToUpload.remoteFolder = "business/" + businessName + "/category";
                                         StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInCategory(fileToUpload, fileToUpload.state, 0));
@@ -809,7 +819,7 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                                                       enabled: StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin ? true : false,
                                                       labelText: AppLocalizations.of(context).parentCategory,
                                                       enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white))),
-                                                  onChanged: StoreProvider.of<AppState>(context).state.user.getRole() == Role.owner ? (value) {
+                                                  onChanged: StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin ? (value) {
                                                     setState(() {
                                                       selectedParentCategory = value;
                                                       checkNumberLevelToMove(snapshot.categoryTree.categoryNodeList, snapshot.category.id);
@@ -1065,7 +1075,7 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                                                 !hasChild
                                                     ? GestureDetector(
                                                   behavior: HitTestBehavior.opaque,
-                                                  onTap: StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin ? () {
+                                                  onTap: StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin && !hasService ? () {
                                                     print("CategoryEdit ::: Elimino nodo categoria dall'albero");
                                                     StoreProvider.of<AppState>(context).dispatch(DeleteCategoryTree(snapshot.category.id));
                                                     print("CategoryEdit ::: Elimino categoria " + snapshot.category.id);
@@ -1083,7 +1093,7 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                                                         child: Icon(
                                                           Icons.delete,
                                                           size: 25,
-                                                          color: StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin ? BuytimeTheme.AccentRed : BuytimeTheme.SymbolGrey,
+                                                          color: StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin && !hasService ? BuytimeTheme.AccentRed : BuytimeTheme.SymbolGrey,
                                                         ),
                                                       ),
                                                       Container(
@@ -1093,7 +1103,7 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                                                             AppLocalizations.of(context).deleteCategory,
                                                             textAlign: TextAlign.start,
                                                             style: TextStyle(
-                                                              color: StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin ? BuytimeTheme.AccentRed : BuytimeTheme.TextGrey,
+                                                              color: StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin && !hasService ? BuytimeTheme.AccentRed : BuytimeTheme.TextGrey,
                                                               fontSize: 18,
                                                               fontWeight: FontWeight.w500,
                                                             ),

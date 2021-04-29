@@ -116,6 +116,6 @@ class _OptimumOrderHistoryItemCardMediumState extends State<OptimumOrderHistoryI
   }
 
   String price() {
-    return AppLocalizations.of(context).currency + order.total.toStringAsFixed(2);
+    return '${AppLocalizations.of(context).currency} ' + order.total.toStringAsFixed(2);
   }
 }

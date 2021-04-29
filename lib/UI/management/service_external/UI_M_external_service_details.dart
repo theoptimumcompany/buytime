@@ -90,6 +90,31 @@ class _ExternalServiceDetailsState extends State<ExternalServiceDetails> with Si
             equalBusiness = true;
           }
         });
+        if(equalBusiness){
+          debugPrint('${ widget.serviceState.name} | if | business true');
+          StoreProvider.of<AppState>(context).state.externalServiceImportedListState.externalServiceImported.forEach((element) {
+            if(element.externalServiceId == widget.serviceState.serviceId && element.imported == true){
+              debugPrint('${ widget.serviceState.name} | if | business true | service true');
+              equalService = true;
+            }
+            if(element.externalServiceId == widget.serviceState.serviceId && element.imported == false){
+              debugPrint('${ widget.serviceState.name} | if | business true | service false');
+              equalService = false;
+              equalBusiness = false;
+            }
+          });
+          bool found = false;
+          StoreProvider.of<AppState>(context).state.externalServiceImportedListState.externalServiceImported.forEach((element) {
+            if(element.externalServiceId == widget.serviceState.serviceId && element.imported == true){
+              found = true;
+            }
+          });
+
+          if(!found && StoreProvider.of<AppState>(context).state.externalServiceImportedListState.externalServiceImported.length != 0){
+            equalService = false;
+            equalBusiness = false;
+          }
+        }
         return  GestureDetector(
           onTap: (){
             FocusScopeNode currentFocus = FocusScope.of(context);
