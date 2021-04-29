@@ -64,6 +64,11 @@ class _FilterGeneralState extends State<FilterGeneral> {
           if (element.name.toLowerCase().contains(_searchController.text.toLowerCase())) {
             tmpServiceList.add(element);
           }
+          if(element.tag != null && element.tag.isNotEmpty && element.tag.contains(_searchController.text.toLowerCase())) {
+            if(!tmpServiceList.contains(element)){
+              tmpServiceList.add(element);
+            }
+          }
         });
       }
     });

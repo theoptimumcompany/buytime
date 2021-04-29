@@ -79,7 +79,7 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
           if (element.name.toLowerCase().contains(_searchController.text.toLowerCase())) {
             categoryList.add(element);
           }
-          if (element.customTag != null && element.customTag.isNotEmpty && element.customTag.toLowerCase().contains(_searchController.text.toLowerCase())) {
+          if(element.customTag != null && element.customTag.isNotEmpty && element.customTag.toLowerCase().contains(_searchController.text.toLowerCase())) {
             if(!categoryList.contains(element)){
               categoryList.add(element);
             }

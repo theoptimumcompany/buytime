@@ -501,7 +501,7 @@
   "alreadyInYourNetwork": "Already in your network",
   "serviceNotVisible": "The Service is Not Visible",
   "serviceNotAvailable": "The Service is not available at the moment",
-  "addressOptional": "Address (Optional)"
+  "addressOptional": "Address (Optional)",
   "orderConfirming": "We are taking the money",
   "alreadyInYourNetwork": "Already in your network"
 }
