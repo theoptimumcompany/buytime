@@ -155,6 +155,7 @@ void main(){
     OrderCreateCardAndPayService(),
     OrderCreateRoomAndPayService(),
     OrderReservableCreateService(),
+    OrderCreatePendingService(),
     AddingReservableStripePaymentMethodRequest(),
     EmailCreateService(),
     ServiceListSnippetRequestService(),

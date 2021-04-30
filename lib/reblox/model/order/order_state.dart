@@ -15,10 +15,13 @@ part 'order_state.g.dart';
 enum OrderStatus {
   progress,
   unpaid,
+  accepted,
   paid,
+  pending,
   toBePaidAtCheckout,
   canceled,
   frozen,
+  declined,
   creating
 }
 enum AddCardStatus {

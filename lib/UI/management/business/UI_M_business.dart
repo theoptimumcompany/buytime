@@ -1,34 +1,25 @@
-import 'dart:math';
 
 import 'package:Buytime/UI/management/business/UI_M_edit_business.dart';
-import 'package:Buytime/UI/management/business/widget/W_business_header.dart';
-import 'package:Buytime/UI/management/business/widget/W_external_services_showcase.dart';
-import 'package:Buytime/UI/management/business/widget/W_internal_services_showcase.dart';
 import 'package:Buytime/UI/management/business/widget/W_invite_user.dart';
 import 'package:Buytime/UI/management/category/widget/W_category_list_item.dart';
 import 'package:Buytime/UI/management/service_external/UI_M_external_service_list.dart';
 import 'package:Buytime/reblox/model/category/snippet/category_snippet_state.dart';
 import 'package:Buytime/reblox/model/snippet/service_list_snippet_state.dart';
-import 'package:Buytime/reblox/reducer/booking_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/external_business_imported_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/external_service_imported_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/service_list_snippet_reducer.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
-import 'package:Buytime/UI/management/category/UI_M_manage_category.dart';
 import 'package:Buytime/UI/management/service_internal/UI_M_service_list.dart';
 import 'package:Buytime/UI/model/manager_model.dart';
 import 'package:Buytime/UI/model/service_model.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/model/category/category_state.dart';
-import 'package:Buytime/reblox/reducer/category_list_reducer.dart';
-import 'package:Buytime/reblox/reducer/category_tree_reducer.dart';
 import 'package:Buytime/reusable/enterExitRoute.dart';
 import 'package:Buytime/reusable/menu/UI_M_business_list_drawer.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/utils/utils.dart';
-import 'package:add_2_calendar/add_2_calendar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 //import 'package:device_calendar/device_calendar.dart';
@@ -36,7 +27,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'UI_M_manage_business.dart';
 
 class UI_M_Business extends StatefulWidget {
   static String route = '/business';
@@ -140,7 +130,7 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
             tmpCategories.forEach((element) {
                 if(element.categoryAbsolutePath.split('/').length == 2 && element.categoryAbsolutePath.split('/').first == snapshot.business.id_firestore)
                   internalCategories.add(element);
-                if(element.categoryAbsolutePath.split('/').length == 2 && element.categoryAbsolutePath.split('/').first != snapshot.business.id_firestore)
+                if(element.categoryAbsolutePath.split('/').first != snapshot.business.id_firestore)
                   externalCategories.add(element);
               });
             //print("UI_M_Business => AFTER | Categories length: ${categories.length}");

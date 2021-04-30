@@ -110,12 +110,12 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
   }
 
   String getShopLocationImage(String coordinates){
+    List<double> coordinatesDouble = convertCoordinateString(coordinates);
     String url;
     if(Platform.isIOS)
-      url = 'https://maps.googleapis.com/maps/api/staticmap?center=$lat,$lng&zoom=18&size=640x640&scale=2&markers=color:red|$lat,$lng&key=${BuytimeConfig.AndroidApiKey}';
+      url = 'https://maps.googleapis.com/maps/api/staticmap?center=${coordinatesDouble[0]},${coordinatesDouble[1]}&zoom=18&size=640x640&scale=2&markers=color:red|${coordinatesDouble[0]},${coordinatesDouble[1]}&key=${BuytimeConfig.AndroidApiKey}';
     else
-      url = 'https://maps.googleapis.com/maps/api/staticmap?center=$lat,$lng&zoom=18&size=640x640&scale=2&markers=color:red|$lat,$lng&key=${BuytimeConfig.AndroidApiKey}';
-
+      url = 'https://maps.googleapis.com/maps/api/staticmap?center=${coordinatesDouble[0]},${coordinatesDouble[1]}&zoom=18&size=640x640&scale=2&markers=color:red|${coordinatesDouble[0]},${coordinatesDouble[1]}&key=${BuytimeConfig.AndroidApiKey}';
     return url;
   }
 
@@ -226,11 +226,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
           //store.state.serviceList.serviceListState.clear();
           store.dispatch(ServiceListRequest(widget.externalBusinessState.id_firestore, 'user'));
           if(widget.externalBusinessState.coordinate.isNotEmpty){
-            List<String> latLng = widget.externalBusinessState.coordinate.split(', ');
-            if(latLng.length == 2){
-              lat = double.parse(latLng[0]);
-              lng = double.parse(latLng[1]);
-            }
+            convertCoordinateString(widget.externalBusinessState.coordinate);
           }
         }else{
           store.state.externalBusiness = ExternalBusinessState().toEmpty();
@@ -738,7 +734,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                   height: 169,
                                   //margin: EdgeInsets.only(left:10.0, right: 10.0),
                                   child: CachedNetworkImage(
-                                    imageUrl:  getShopLocationImage(snapshot.business.coordinate),
+                                    imageUrl:  getShopLocationImage(widget.externalBusinessState.coordinate),
                                     imageBuilder: (context, imageProvider) => Container(
                                       decoration: BoxDecoration(
                                           color: BuytimeTheme.BackgroundWhite,
@@ -1364,5 +1360,14 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
         );
       },
     );
+  }
+
+  List<double> convertCoordinateString(String coordinates) {
+    List<String> latLng = coordinates.split(', ');
+    if(latLng.length == 2){
+      lat = double.parse(latLng[0]);
+      lng = double.parse(latLng[1]);
+    }
+    return [lat, lng];
   }
 }

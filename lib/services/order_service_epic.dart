@@ -17,8 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:redux_epics/redux_epics.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:http/http.dart' as http;
-
+import 'package:uuid/uuid.dart';
 import 'order/util.dart';
 
 List<DateTime> getPeriod(DateTime dateTime){
@@ -179,17 +178,8 @@ class OrderUpdateByManagerService implements EpicClass<AppState> {
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<UpdateOrderByManager>().asyncMap((event) async{
-    //   if (event.serviceState.fileToUploadList != null) {
-    //     uploadFiles(event.serviceState.fileToUploadList, event.serviceState).then((ServiceState updatedServiceState) {
-    //       return updateService(updatedServiceState);
-    //     });
-    //   }
-    //   return updateService(event.serviceState);
-
       print("ORDER_SERVICE_EPIC - OrderUpdateService => ORDER ID: ${event.orderState.orderId}");
-
       orderState = event.orderState;
-
       await FirebaseFirestore.instance /// 1 WRITE
           .collection("order")
           .doc(event.orderState.orderId)
@@ -238,6 +228,7 @@ class OrderCreateNativeAndPayService implements EpicClass<AppState> {
       /// add needed data to the order state
       OrderState orderState = configureOrder(event.orderState, store);
       if(event.paymentMethod != null) {
+
         /// send document to orders collection
         var addedOrder = await FirebaseFirestore.instance.collection("order/").add(orderState.toJson());
         /// update the order id locally
@@ -344,6 +335,50 @@ class OrderCreateRoomAndPayService implements EpicClass<AppState> {
        actionArray.add(SetOrderProgress(Utils.enumToString(OrderStatus.toBePaidAtCheckout)));
        return actionArray;
      });
+  }
+}
+
+/// an order always have to be created with a payment method attached in its subcollection
+/// TODO: research if there is a way to make this two operations in an atomic way
+class OrderCreatePendingService implements EpicClass<AppState> {
+  StatisticsState statisticsState;
+  String state = '';
+  String paymentResult = '';
+  @override
+  Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
+    return actions.whereType<CreateOrderPending>().asyncMap((event) async {
+      debugPrint('CreateOrderPending start');
+      /// add needed data to the order state
+      OrderState orderState = configureOrder(event.orderState, store);
+      orderState.cardType = Utils.enumToString(PaymentType.room);
+      orderState.progress = Utils.enumToString(OrderStatus.pending);
+      /// send document to orders collection
+      var uuid = Uuid();
+      /// This is a time based id, meaning that even if 2 users are going to generate a document at the same moment in time
+      /// there are really low chances that the rest of the id is also colliding.
+      String timeBasedId = uuid.v1();
+
+      orderState.orderId = timeBasedId;
+
+      var addedOrder = await FirebaseFirestore.instance.collection("order").doc(timeBasedId).set(orderState.toJson());
+      /// add the payment method to the order sub collection on firebase
+      var addedPaymentMethod = await FirebaseFirestore.instance.collection("order/" + orderState.orderId + "/orderPaymentMethod").add({
+        'paymentMethodId' : '',
+        'last4': '',
+        'brand': '',
+        'type':  Utils.enumToString(event.paymentType),
+        'country': '',
+        'bookingId': store.state.booking.booking_id
+      });
+      statisticsComputation();
+      debugPrint('CreateOrderPending done');
+    }).expand((element) {
+      var actionArray = [];
+      actionArray.add(CreatedOrder());
+      actionArray.add(UpdateStatistics(statisticsState));
+      actionArray.add(SetOrderProgress(Utils.enumToString(OrderStatus.pending)));
+      return actionArray;
+    });
   }
 }
 

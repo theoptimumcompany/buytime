@@ -81,6 +81,16 @@ class CreateOrderRoomAndPay {
   String get roomNumber => _roomNumber;
 }
 
+class CreateOrderPending {
+  OrderState _orderState;
+  String _roomNumber;
+  PaymentType _paymentType;
+  CreateOrderPending(this._orderState, this._roomNumber, this._paymentType);
+  OrderState get orderState => _orderState;
+  PaymentType get paymentType => _paymentType;
+  String get roomNumber => _roomNumber;
+}
+
 class CreatedOrder {}
 class CreatingOrder {}
 class DeleteOrder {

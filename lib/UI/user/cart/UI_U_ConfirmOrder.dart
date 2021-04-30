@@ -45,17 +45,12 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
 
   OrderState orderState;
   OrderReservableState orderReservableState;
-  VideoPlayerController _videoControllerCanceled;
-  VideoPlayerController _videoControllerConfirmed;
-  VideoPlayerController _videoControllerCreating;
+
 
   @override
   void initState() {
     super.initState();
-    VideoPlayerOptions videoPlayerOptions = VideoPlayerOptions(mixWithOthers: true);
-    _videoControllerCreating = VideoPlayerController.asset("assets/video/moneyCat.mp4", videoPlayerOptions: videoPlayerOptions);
-    _videoControllerCanceled = VideoPlayerController.asset("assets/video/canceled.mp4", videoPlayerOptions: videoPlayerOptions);
-    _videoControllerConfirmed = VideoPlayerController.asset("assets/video/success.mp4", videoPlayerOptions: videoPlayerOptions);
+
     _controller = TabController(length: 3, vsync: this);
     _controller.addListener(() {
       setState(() {
@@ -169,7 +164,6 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                               reservable: widget.reserve,
                                               tourist:widget.tourist,
                                               videoAsset: "assets/video/success.mp4",
-                                              videoController: _videoControllerConfirmed,
                                             );
                                           } else if (snapshot.order.progress == Utils.enumToString(OrderStatus.canceled)) {
                                             /// return canceled
@@ -183,7 +177,6 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                               reservable: widget.reserve,
                                               tourist:widget.tourist,
                                               videoAsset: "assets/video/canceled.mp4",
-                                              videoController: _videoControllerCanceled,
 
                                             );
                                           } else if (snapshot.order.progress == Utils.enumToString(OrderStatus.creating)){
@@ -198,7 +191,6 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                              reservable: widget.reserve,
                                              tourist:widget.tourist,
                                              videoAsset: "assets/video/moneyCat.mp4",
-                                              videoController: _videoControllerCreating,
                                             );
                                           } else {
                                             /// normal case
@@ -664,8 +656,17 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
           /// 2B: we display a message to the user: "you have to ask the concierge to add your room number to be able to use this payment method"
         }
       } else {
-        /// we create the order on firebase as "in review" or whatever state is before "in progress"???
-        ///
+        /// we create the order on firebase as "pending"
+        /// IMPORTANT for the moment we just approve and add all order ids to the booking state sub collection "room orders"
+        /// TODO: get the actual room number when the UX is defined?
+        String roomNumber = '1';
+        if (roomNumber.isNotEmpty) {
+          /// 2A: now we can create the order on the database and its sub collection
+          StoreProvider.of<AppState>(context).dispatch(CreatingOrder());
+          StoreProvider.of<AppState>(context).dispatch(CreateOrderPending(snapshot.order, roomNumber, PaymentType.room));
+        } else {
+          /// 2B: we display a message to the user: "you have to ask the concierge to add your room number to be able to use this payment method"
+        }
         /// we show to the user a message telling them that their order is being reviewed for them
         ///
         /// we go back to the booking page

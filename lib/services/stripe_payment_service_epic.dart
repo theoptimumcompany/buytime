@@ -271,9 +271,9 @@ class StripePaymentService {
     }
     items.add(StripeRecommended.ApplePayItem(
       label: businessName,
-      amount: (totalCost + tip + tax).toString(),
+      amount: (totalCost + tip ).toString(),
     ));
-    amount = ((totalCost + tip + tax) * 100).toInt();
+    amount = ((totalCost + tip ) * 100).toInt();
     debugPrint('amount in cent which will be charged = $amount');
   }
 
@@ -288,7 +288,7 @@ class StripePaymentService {
     //step 1: add card
     var token = await StripeRecommended.StripePayment.paymentRequestWithNativePay(
       androidPayOptions: StripeRecommended.AndroidPayPaymentRequest(
-        totalPrice: (totalCost + tax + tip).toStringAsFixed(2),
+        totalPrice: (totalCost + tip).toStringAsFixed(2),
         currencyCode: currency,
       ),
       applePayOptions: StripeRecommended.ApplePayPaymentOptions(

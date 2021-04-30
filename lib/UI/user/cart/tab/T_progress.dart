@@ -19,8 +19,7 @@ class Progress extends StatefulWidget {
     @required this.orderState,
     @required this.reservable,
     @required this.tourist,
-    videoController,
-  }) : _videorController = videoController, super(key: key);
+  }) : super(key: key);
 
   final CardState cardState;
   final String cardOrBooking;
@@ -31,17 +30,17 @@ class Progress extends StatefulWidget {
   final bool tourist;
   final OrderReservableState orderReservableState;
   final OrderState orderState;
-  final VideoPlayerController _videorController;
 
   @override
   _ProgressState createState() => _ProgressState();
 }
 
 class _ProgressState extends State<Progress> {
-
-
+  VideoPlayerController _videoController;
+  VideoPlayerOptions videoPlayerOptions = VideoPlayerOptions(mixWithOthers: true);
 
   void initVideoController(VideoPlayerController videoPlayerController) {
+
     videoPlayerController.play();
     // videoPlayerController.seekTo(Duration(seconds: 3));
     videoPlayerController.setLooping(true);
@@ -50,21 +49,25 @@ class _ProgressState extends State<Progress> {
 
   @override
   void initState() {
-    widget._videorController..initialize().then((_) {
-      initVideoController(widget._videorController);
-      setState(() {});
+    _videoController = VideoPlayerController.asset(widget.videoAsset, videoPlayerOptions: videoPlayerOptions);
+    _videoController..initialize().then((_) {
+      initVideoController(_videoController);
+      setState(() {
+        _videoController = _videoController;
+      });
     });
     super.initState();
   }
 
   @override
   void dispose() {
-    widget._videorController.dispose();
+    _videoController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+
     return Column(
       children: [
         Container(
@@ -143,7 +146,7 @@ class _ProgressState extends State<Progress> {
           width: SizeConfig.safeBlockVertical * 20,
           height: SizeConfig.safeBlockVertical * 20,
           child: Center(
-              child: widget._videorController != null &&  widget._videorController.value.isInitialized
+              child: (_videoController != null &&  _videoController.value.isInitialized)
                   ? SizedBox.expand(
                 child: FittedBox(
                   // If your background video doesn't look right, try changing the BoxFit property.
@@ -153,10 +156,10 @@ class _ProgressState extends State<Progress> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(20)),
                       ),
-                      width: widget._videorController.value.size?.width ?? 0,
-                      height: widget._videorController.value.size?.height ?? 0,
+                      width: _videoController.value.size?.width ?? 0,
+                      height: _videoController.value.size?.height ?? 0,
                       child: VideoPlayer(
-                        widget._videorController,
+                        _videoController,
                       ),
                     )
                 ),

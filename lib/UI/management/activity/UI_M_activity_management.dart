@@ -24,6 +24,7 @@ import 'package:Buytime/reusable/menu/UI_M_business_list_drawer.dart';
 import 'package:Buytime/reusable/sliverAppBarDelegate.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
+import 'package:Buytime/utils/utils.dart';
 import 'package:add_2_calendar/add_2_calendar.dart';
 //import 'package:device_calendar/device_calendar.dart';
 import 'package:flutter/material.dart';
@@ -139,104 +140,7 @@ class _ActivityManagementState extends State<ActivityManagement> {
                   ///Order Info
                   DashboardListItem(order, entry),
                   ///Actions
-                  Container(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        ///Accept
-                        order.progress == 'canceled' || order.progress == 'declined' ?
-                        Container(
-                            margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 1.5, bottom: SizeConfig.safeBlockVertical * .5, top: SizeConfig.safeBlockVertical * .25),
-                            alignment: Alignment.center,
-                            child: Material(
-                              color: Colors.transparent,
-                              child: InkWell(
-                                  onTap: () {
-                                    order.progress = 'pending';
-                                    StoreProvider.of<AppState>(context).dispatch(UpdateOrderByManager(order));
-                                  },
-                                  borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                                  child: Container(
-                                    padding: EdgeInsets.all(5.0),
-                                    child: Text(
-                                      AppLocalizations.of(context).reOpen.toUpperCase(),
-                                      style:  TextStyle(
-                                          letterSpacing: 1.25,
-                                          fontFamily: BuytimeTheme.FontFamily,
-                                          color: BuytimeTheme.TextMalibu,
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 14
-                                        ///SizeConfig.safeBlockHorizontal * 4
-                                      ),
-                                    ),
-                                  )),
-                            )) :
-                        order.progress != 'paid' ?
-                        Container(
-                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 1.5, bottom: SizeConfig.safeBlockVertical * .5, top: SizeConfig.safeBlockVertical * .25),
-                            alignment: Alignment.center,
-                            child: Material(
-                              color: Colors.transparent,
-                              child: InkWell(
-                                  onTap: () {
-                                    order.progress = 'paid';
-                                    StoreProvider.of<AppState>(context).dispatch(UpdateOrderByManager(order));
-                                  },
-                                  borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                                  child: Container(
-                                    padding: EdgeInsets.all(5.0),
-                                    child: Text(
-                                      AppLocalizations.of(context).accept.toUpperCase(),
-                                      style:  TextStyle(
-                                          letterSpacing: 1.25,
-                                          fontFamily: BuytimeTheme.FontFamily,
-                                          color: BuytimeTheme.TextMalibu,
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 14
-                                        ///SizeConfig.safeBlockHorizontal * 4
-                                      ),
-                                    ),
-                                  )),
-                            )) :
-                        Container(),
-                        ///Decline
-                        order.progress != 'canceled' && order.progress != 'declined' ?
-                        Container(
-                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 1.5, right: SizeConfig.safeBlockHorizontal * 1.5, bottom: SizeConfig.safeBlockVertical * .5, top: SizeConfig.safeBlockVertical * .25),
-                            alignment: Alignment.center,
-                            child: Material(
-                              color: Colors.transparent,
-                              child: InkWell(
-                                  onTap: () {
-                                    if(order.progress == 'paid'){
-                                      //StoreProvider.of<AppState>(context).dispatch(SetOrderProgress('canceled'));
-                                      onCancel(order);
-                                    }else{
-                                      //StoreProvider.of<AppState>(context).dispatch(SetOrderProgress('declined'));
-                                      order.progress = 'declined';
-                                      StoreProvider.of<AppState>(context).dispatch(UpdateOrderByManager(order));
-                                    }
-                                  },
-                                  borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                                  child: Container(
-                                    padding: EdgeInsets.all(5.0),
-                                    child: Text(
-                                      order.progress == 'paid' ? AppLocalizations.of(context).cancel.toUpperCase() : AppLocalizations.of(context).decline.toUpperCase(),
-                                      style: TextStyle(
-                                          letterSpacing: 1.25,
-                                          fontFamily: BuytimeTheme.FontFamily,
-                                          color: BuytimeTheme.TextMalibu,
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 14
-                                        ///SizeConfig.safeBlockHorizontal * 4
-                                      ),
-                                    ),
-                                  )),
-                            )) :
-                            Container()
-                      ],
-                    ),
-                  ),
+                  buildActivityButtons(order, context),
                   ///Divider
                   Container(
                     //margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 30),
@@ -250,6 +154,133 @@ class _ActivityManagementState extends State<ActivityManagement> {
         ));
 
     return widgetList;
+  }
+
+  Container buildActivityButtons(OrderState order, BuildContext context) {
+    return Container(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      ///Re-Open: the order was declined in a first moment but now, before it is canceled, the worker/manager wants to evaluate again.
+                      order.progress == Utils.enumToString(OrderStatus.declined) ?
+                      Container(
+                          margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 1.5, bottom: SizeConfig.safeBlockVertical * .5, top: SizeConfig.safeBlockVertical * .25),
+                          alignment: Alignment.center,
+                          child: Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                                onTap: () {
+                                  order.progress = Utils.enumToString(OrderStatus.pending);
+                                  StoreProvider.of<AppState>(context).dispatch(UpdateOrderByManager(order));
+                                },
+                                borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                child: Container(
+                                  padding: EdgeInsets.all(5.0),
+                                  child: Text(
+                                    AppLocalizations.of(context).reOpen.toUpperCase(),
+                                    style:  TextStyle(
+                                        letterSpacing: 1.25,
+                                        fontFamily: BuytimeTheme.FontFamily,
+                                        color: BuytimeTheme.TextMalibu,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14
+                                      ///SizeConfig.safeBlockHorizontal * 4
+                                    ),
+                                  ),
+                                )),
+                          )) : Container(),
+                      /// Accept: the worker/manager thinks that he can provide the order, so he accepts it.
+                      /// A notification to the customer is sent, but the rest of the process depends on the payment method and the order type.
+                      order.progress == Utils.enumToString(OrderStatus.pending)?
+                      Container(
+                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 1.5, bottom: SizeConfig.safeBlockVertical * .5, top: SizeConfig.safeBlockVertical * .25),
+                          alignment: Alignment.center,
+                          child: Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                                onTap: () {
+                                  order.progress = Utils.enumToString(OrderStatus.accepted);
+                                  StoreProvider.of<AppState>(context).dispatch(UpdateOrderByManager(order));
+                                },
+                                borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                child: Container(
+                                  padding: EdgeInsets.all(5.0),
+                                  child: Text(
+                                    AppLocalizations.of(context).accept.toUpperCase(),
+                                    style:  TextStyle(
+                                        letterSpacing: 1.25,
+                                        fontFamily: BuytimeTheme.FontFamily,
+                                        color: BuytimeTheme.TextMalibu,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14
+                                      ///SizeConfig.safeBlockHorizontal * 4
+                                    ),
+                                  ),
+                                )),
+                          )) :
+                      Container(),
+                      /// Decline
+                      order.progress == Utils.enumToString(OrderStatus.pending)?
+                      Container(
+                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 1.5, bottom: SizeConfig.safeBlockVertical * .5, top: SizeConfig.safeBlockVertical * .25),
+                          alignment: Alignment.center,
+                          child: Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                                onTap: () {
+                                  order.progress = Utils.enumToString(OrderStatus.declined);
+                                  StoreProvider.of<AppState>(context).dispatch(UpdateOrderByManager(order));
+                                },
+                                borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                child: Container(
+                                  padding: EdgeInsets.all(5.0),
+                                  child: Text(
+                                    AppLocalizations.of(context).decline.toUpperCase(),
+                                    style:  TextStyle(
+                                        letterSpacing: 1.25,
+                                        fontFamily: BuytimeTheme.FontFamily,
+                                        color: BuytimeTheme.TextMalibu,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14
+                                      ///SizeConfig.safeBlockHorizontal * 4
+                                    ),
+                                  ),
+                                )),
+                          )) :
+                      Container(),
+                      ///Cancel the order, in this case it has been paid but for some reason it cannot be provided. The user has to be refunded.
+                      ///a canceled order cannot be reopened
+                      order.progress ==  Utils.enumToString(OrderStatus.paid) || order.progress ==  Utils.enumToString(OrderStatus.toBePaidAtCheckout) ?
+                      Container(
+                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 1.5, right: SizeConfig.safeBlockHorizontal * 1.5, bottom: SizeConfig.safeBlockVertical * .5, top: SizeConfig.safeBlockVertical * .25),
+                          alignment: Alignment.center,
+                          child: Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                                onTap: () {
+                                  order.progress = Utils.enumToString(OrderStatus.canceled);
+                                  StoreProvider.of<AppState>(context).dispatch(UpdateOrderByManager(order));
+                                },
+                                borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                child: Container(
+                                  padding: EdgeInsets.all(5.0),
+                                  child: Text(
+                                    AppLocalizations.of(context).cancel.toUpperCase(),
+                                    style: TextStyle(
+                                        letterSpacing: 1.25,
+                                        fontFamily: BuytimeTheme.FontFamily,
+                                        color: BuytimeTheme.TextMalibu,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14
+                                      ///SizeConfig.safeBlockHorizontal * 4
+                                    ),
+                                  ),
+                                )),
+                          )) :
+                          Container()
+                    ],
+                  ),
+                );
   }
 
 
@@ -304,10 +335,10 @@ class _ActivityManagementState extends State<ActivityManagement> {
           DateTime orderTime = element.date;
           orderTime = new DateTime(orderTime.year, orderTime.month, orderTime.day, 0, 0, 0, 0, 0);
 
-          if(element.progress == 'canceled' || element.progress == 'declined'){
+          if(element.progress == Utils.enumToString(OrderStatus.canceled) || element.progress == Utils.enumToString(OrderStatus.declined)){
             listUp(element, currentTime, orderTime, canceledList);
             //pendingList.add(element);
-          }else if(element.progress == 'pending' || element.progress == 'unpaid'){
+          }else if(element.progress == Utils.enumToString(OrderStatus.pending) || element.progress == Utils.enumToString(OrderStatus.unpaid)){
             listUp(element, currentTime, orderTime, pendingList);
             //acceptedList.add(element);
           }else{
@@ -515,105 +546,7 @@ class _ActivityManagementState extends State<ActivityManagement> {
                                 ///Order Info
                                 DashboardListItem(order, entry),
                                 ///Actions
-                                Container(
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      ///Accept
-                                      ///Accept
-                                      order.progress == 'canceled' || order.progress == 'declined' ?
-                                      Container(
-                                          margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 1.5, bottom: SizeConfig.safeBlockVertical * .5, top: SizeConfig.safeBlockVertical * .25),
-                                          alignment: Alignment.center,
-                                          child: Material(
-                                            color: Colors.transparent,
-                                            child: InkWell(
-                                                onTap: () {
-                                                  order.progress = 'pending';
-                                                  StoreProvider.of<AppState>(context).dispatch(UpdateOrderByManager(order));
-                                                },
-                                                borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                                                child: Container(
-                                                  padding: EdgeInsets.all(5.0),
-                                                  child: Text(
-                                                    AppLocalizations.of(context).reOpen.toUpperCase(),
-                                                    style:  TextStyle(
-                                                        letterSpacing: 1.25,
-                                                        fontFamily: BuytimeTheme.FontFamily,
-                                                        color: BuytimeTheme.TextMalibu,
-                                                        fontWeight: FontWeight.w600,
-                                                        fontSize: 14
-                                                      ///SizeConfig.safeBlockHorizontal * 4
-                                                    ),
-                                                  ),
-                                                )),
-                                          )) :
-                                      order.progress != 'paid' ?
-                                      Container(
-                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 1.5, bottom: SizeConfig.safeBlockVertical * .5, top: SizeConfig.safeBlockVertical * .25),
-                                          alignment: Alignment.center,
-                                          child: Material(
-                                            color: Colors.transparent,
-                                            child: InkWell(
-                                                onTap: () {
-                                                  order.progress = 'paid';
-                                                  StoreProvider.of<AppState>(context).dispatch(UpdateOrderByManager(order));
-                                                },
-                                                borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                                                child: Container(
-                                                  padding: EdgeInsets.all(5.0),
-                                                  child: Text(
-                                                    AppLocalizations.of(context).accept.toUpperCase(),
-                                                    style:  TextStyle(
-                                                        letterSpacing: 1.25,
-                                                        fontFamily: BuytimeTheme.FontFamily,
-                                                        color: BuytimeTheme.TextMalibu,
-                                                        fontWeight: FontWeight.w600,
-                                                        fontSize: 14
-                                                      ///SizeConfig.safeBlockHorizontal * 4
-                                                    ),
-                                                  ),
-                                                )),
-                                          )) :
-                                      Container(),
-                                      ///Decline
-                                      order.progress != 'canceled' && order.progress != 'declined' ?
-                                      Container(
-                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 1.5, right: SizeConfig.safeBlockHorizontal * 1.5, bottom: SizeConfig.safeBlockVertical * .5, top: SizeConfig.safeBlockVertical * .25),
-                                          alignment: Alignment.center,
-                                          child: Material(
-                                            color: Colors.transparent,
-                                            child: InkWell(
-                                                onTap: () {
-                                                  if(order.progress == 'paid'){
-                                                    //StoreProvider.of<AppState>(context).dispatch(SetOrderProgress('canceled'));
-                                                    onCancel(order);
-                                                  }else{
-                                                    //StoreProvider.of<AppState>(context).dispatch(SetOrderProgress('declined'));
-                                                    order.progress = 'declined';
-                                                    StoreProvider.of<AppState>(context).dispatch(UpdateOrderByManager(order));
-                                                  }
-                                                },
-                                                borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                                                child: Container(
-                                                  padding: EdgeInsets.all(5.0),
-                                                  child: Text(
-                                                    order.progress == 'paid' ? AppLocalizations.of(context).cancel.toUpperCase() : AppLocalizations.of(context).decline.toUpperCase(),
-                                                    style: TextStyle(
-                                                        letterSpacing: 1.25,
-                                                        fontFamily: BuytimeTheme.FontFamily,
-                                                        color: BuytimeTheme.TextMalibu,
-                                                        fontWeight: FontWeight.w600,
-                                                        fontSize: 14
-                                                      ///SizeConfig.safeBlockHorizontal * 4
-                                                    ),
-                                                  ),
-                                                )),
-                                          )) :
-                                      Container()
-                                    ],
-                                  ),
-                                ),
+                                buildActivityButtons(order, context),
                                 ///Divider
                                 Container(
                                   //margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 30),
