@@ -1,11 +1,8 @@
-import 'dart:convert';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
-import 'package:Buytime/reblox/model/business/external_business_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/statistics_state.dart';
 import 'package:Buytime/reblox/model/stripe/stripe_state.dart';
-import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
 import 'package:Buytime/reblox/reducer/order_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reblox/reducer/statistics_reducer.dart';
@@ -175,16 +172,35 @@ class OrderRequestService implements EpicClass<AppState> {
 
 class OrderUpdateByManagerService implements EpicClass<AppState> {
   OrderState orderState;
+  List<OrderState> orderStateList;
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<UpdateOrderByManager>().asyncMap((event) async{
       print("ORDER_SERVICE_EPIC - OrderUpdateService => ORDER ID: ${event.orderState.orderId}");
       orderState = event.orderState;
+      orderState.progress = Utils.enumToString(event.orderStatus);
+      orderStateList = store.state.orderList.orderListState;
+      /// awaited promise
       await FirebaseFirestore.instance /// 1 WRITE
           .collection("order")
           .doc(event.orderState.orderId)
-          .update(event.orderState.toJson());
+          .update(event.orderState.toJson())
+      .then((value) {
+        /// rebuild the local orderListState exchanging the updated content
+
+        for (int i = 0; i < orderStateList.length; i++) {
+          if (orderStateList[i] != null && orderStateList[i].orderId == event.orderState.orderId) {
+            orderStateList[i] = event.orderState;
+          }
+        }
+      }).catchError( (error) {
+        /// TODO send error
+
+      });
+
+
      }).expand((element) => [
+       OrderListReturned(orderStateList),
        UpdatedOrder(orderState)
     ]);
   }
@@ -228,11 +244,12 @@ class OrderCreateNativeAndPayService implements EpicClass<AppState> {
       /// add needed data to the order state
       OrderState orderState = configureOrder(event.orderState, store);
       if(event.paymentMethod != null) {
-
+        /// This is a time based id, meaning that even if 2 users are going to generate a document at the same moment in time
+        /// there are really low chances that the rest of the id is also colliding.
+        String timeBasedId = Uuid().v1();
+        orderState.orderId = timeBasedId;
         /// send document to orders collection
-        var addedOrder = await FirebaseFirestore.instance.collection("order/").add(orderState.toJson());
-        /// update the order id locally
-        orderState.orderId = addedOrder.id;
+        var addedOrder = await FirebaseFirestore.instance.collection("order").doc(timeBasedId).set(orderState.toJson());
         /// add the payment method to the order sub collection on firebase
         var addedPaymentMethod = await FirebaseFirestore.instance.collection("order/" + orderState.orderId + "/orderPaymentMethod").add({
           'paymentMethodId' : event.paymentMethod.id,
@@ -271,10 +288,12 @@ class OrderCreateCardAndPayService implements EpicClass<AppState> {
       /// add needed data to the order state
       OrderState orderState = configureOrder(event.orderState, store);
       if(event.selectedCardPaymentMethodId != null && store.state.booking != null && store.state.booking.booking_id != null) {
+        /// This is a time based id, meaning that even if 2 users are going to generate a document at the same moment in time
+        /// there are really low chances that the rest of the id is also colliding.
+        String timeBasedId = Uuid().v1();
+        orderState.orderId = timeBasedId;
         /// send document to orders collection
-        var addedOrder = await FirebaseFirestore.instance.collection("order/").add(orderState.toJson());
-        /// update the order id locally
-        orderState.orderId = addedOrder.id;
+        var addedOrder = await FirebaseFirestore.instance.collection("order").doc(timeBasedId).set(orderState.toJson());
         /// add the payment method to the order sub collection on firebase
         var addedPaymentMethod = await FirebaseFirestore.instance.collection("order/" + orderState.orderId + "/orderPaymentMethod").add({
           'paymentMethodId' : event.selectedCardPaymentMethodId,
@@ -314,10 +333,12 @@ class OrderCreateRoomAndPayService implements EpicClass<AppState> {
       /// add needed data to the order state
       OrderState orderState = configureOrder(event.orderState, store);
       orderState.cardType = Utils.enumToString(PaymentType.room);
+      /// This is a time based id, meaning that even if 2 users are going to generate a document at the same moment in time
+      /// there are really low chances that the rest of the id is also colliding.
+      String timeBasedId = Uuid().v1();
+      orderState.orderId = timeBasedId;
       /// send document to orders collection
-      var addedOrder = await FirebaseFirestore.instance.collection("order/").add(orderState.toJson());
-      /// update the order id locally
-      orderState.orderId = addedOrder.id;
+      var addedOrder = await FirebaseFirestore.instance.collection("order").doc(timeBasedId).set(orderState.toJson());
       /// add the payment method to the order sub collection on firebase
       var addedPaymentMethod = await FirebaseFirestore.instance.collection("order/" + orderState.orderId + "/orderPaymentMethod").add({
         'paymentMethodId' : '',
@@ -353,13 +374,10 @@ class OrderCreatePendingService implements EpicClass<AppState> {
       orderState.cardType = Utils.enumToString(PaymentType.room);
       orderState.progress = Utils.enumToString(OrderStatus.pending);
       /// send document to orders collection
-      var uuid = Uuid();
       /// This is a time based id, meaning that even if 2 users are going to generate a document at the same moment in time
       /// there are really low chances that the rest of the id is also colliding.
-      String timeBasedId = uuid.v1();
-
+      String timeBasedId = Uuid().v1();
       orderState.orderId = timeBasedId;
-
       var addedOrder = await FirebaseFirestore.instance.collection("order").doc(timeBasedId).set(orderState.toJson());
       /// add the payment method to the order sub collection on firebase
       var addedPaymentMethod = await FirebaseFirestore.instance.collection("order/" + orderState.orderId + "/orderPaymentMethod").add({

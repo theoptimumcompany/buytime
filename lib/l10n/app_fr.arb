@@ -503,5 +503,16 @@
   "serviceNotAvailable": "The Service is not available at the moment",
   "addressOptional": "Address (Optional)",
   "orderConfirming": "We are taking the money",
+  "progress": "progress",
+  "unpaid": "not paid",
+  "paid": "paid",
+  "toBePaidAtCheckout": "to be paid at checkout",
+  "frozen": "frozen",
+  "creating": "creating",
+  "info": "Info",
+  "networkRequestStillInProgress": "network request is still ongoing, wait or refresh this page",
+  "atTheMomentWeOnlySupportOneCreditCard": "Only one credit card at the time is supported, if you want to add another card, you have to remove the old one.",
+  "selectACardToPay": "Select the card to be able to confirm it as a payment method.",
+  "orderPending": "The Staff is reviewing your order, you will get a notification when an update is available.",
   "alreadyInYourNetwork": "Already in your network"
 }

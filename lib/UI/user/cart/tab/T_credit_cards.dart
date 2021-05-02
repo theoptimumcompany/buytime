@@ -54,31 +54,91 @@ class CreditCards extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Container(
-                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5, right: SizeConfig.safeBlockHorizontal * 5),
-                    alignment: Alignment.center,
-                    child: Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                          onTap: () async {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => UI_U_AddCard()));
-                          },
-                          borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                          child: Container(
-                            padding: EdgeInsets.all(5.0),
-                            child: Text(
-                              AppLocalizations.of(context).addCard,
+                StoreConnector<AppState, CardListState>(
+                    converter: (store) => store.state.cardListState,
+                    distinct: true,
+                    rebuildOnChange: true,
+                    builder: (context, snapshot) {
+                    return
+                      snapshot.cardList.length == 0 ?
+                      Container(
+                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5, right: SizeConfig.safeBlockHorizontal * 5),
+                        alignment: Alignment.center,
+                        child: Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                              onTap: () async {
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => UI_U_AddCard()));
+                              },
+                              borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                              child: Container(
+                                padding: EdgeInsets.all(5.0),
+                                child: Text(
+                                  AppLocalizations.of(context).addCard,
+                                  style: TextStyle(
+                                      letterSpacing: 1.25,
+                                      fontFamily: BuytimeTheme.FontFamily,
+                                      color:  tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 16
+                                  ),
+                                ),
+                              )
+                          ),
+                        )
+                    ) :
+                    Expanded(
+                      child: Column(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.all(10.0),
+                            child: Text(AppLocalizations.of(context).info,
+                              softWrap: true,
+                              overflow: TextOverflow.clip,
+                              textAlign: TextAlign.start,
                               style: TextStyle(
-                                  letterSpacing: 1.25,
+                                // letterSpacing: 1.25,
                                   fontFamily: BuytimeTheme.FontFamily,
-                                  color:  tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
-                                  fontWeight: FontWeight.w600,
+                                  color:  BuytimeTheme.TextGrey,
+                                  fontWeight: FontWeight.w500,
                                   fontSize: 16
                               ),
                             ),
+                          ),
+                          Container(
+                            padding: EdgeInsets.symmetric(vertical: 1.0, horizontal: 10.0),
+                            child: Text(AppLocalizations.of(context).atTheMomentWeOnlySupportOneCreditCard,
+                              softWrap: true,
+                              overflow: TextOverflow.clip,
+                              style: TextStyle(
+                                  // letterSpacing: 1.25,
+                                fontStyle: FontStyle.italic,
+                                  fontFamily: BuytimeTheme.FontFamily,
+                                  color:  BuytimeTheme.TextGrey,
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 14
+                              ),
+                            ),
+                          ),
+                          Container(
+                            padding: EdgeInsets.symmetric(vertical: 1.0, horizontal: 10.0),
+                            child: Text(AppLocalizations.of(context).selectACardToPay,
+                              softWrap: true,
+                              overflow: TextOverflow.clip,
+                              style: TextStyle(
+                                // letterSpacing: 1.25,
+                                  fontStyle: FontStyle.italic,
+                                  fontFamily: BuytimeTheme.FontFamily,
+                                  color:  BuytimeTheme.TextGrey,
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 14
+                              ),
+                            ),
                           )
+                        ],
                       ),
-                    )
+                    );
+                  }
                 )
               ],
             ),

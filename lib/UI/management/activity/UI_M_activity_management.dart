@@ -132,6 +132,9 @@ class _ActivityManagementState extends State<ActivityManagement> {
             debugPrint('UI_M_activity_management => LIST SIZE: ${list[i].length}');
             OrderState order = list[i].elementAt(index)[0];
             OrderEntry entry = list[i].elementAt(index)[1];
+            /// when the manager clicks on the button we  block all the buttons (for this order) until the response rebuilds the list
+            /// or the entry?
+            bool managerHasChosenAction = false;
             return Container(
               alignment: Alignment.center,
               //color: Colors.lightBlue[100 * (index % 9)],
@@ -140,7 +143,7 @@ class _ActivityManagementState extends State<ActivityManagement> {
                   ///Order Info
                   DashboardListItem(order, entry),
                   ///Actions
-                  buildActivityButtons(order, context),
+                  buildActivityButtons(order, context, managerHasChosenAction),
                   ///Divider
                   Container(
                     //margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 30),
@@ -156,7 +159,7 @@ class _ActivityManagementState extends State<ActivityManagement> {
     return widgetList;
   }
 
-  Container buildActivityButtons(OrderState order, BuildContext context) {
+  Container buildActivityButtons(OrderState order, BuildContext context, bool managerHasChosenAction) {
     return Container(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
@@ -170,8 +173,13 @@ class _ActivityManagementState extends State<ActivityManagement> {
                             color: Colors.transparent,
                             child: InkWell(
                                 onTap: () {
-                                  order.progress = Utils.enumToString(OrderStatus.pending);
-                                  StoreProvider.of<AppState>(context).dispatch(UpdateOrderByManager(order));
+                                  if (!managerHasChosenAction) {
+                                    // order.progress = Utils.enumToString(OrderStatus.pending);
+                                    StoreProvider.of<AppState>(context).dispatch(UpdateOrderByManager(order, OrderStatus.pending));
+                                    managerHasChosenAction = true;
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content:  Text(AppLocalizations.of(context).networkRequestStillInProgress)));
+                                  }
                                 },
                                 borderRadius: BorderRadius.all(Radius.circular(5.0)),
                                 child: Container(
@@ -199,8 +207,13 @@ class _ActivityManagementState extends State<ActivityManagement> {
                             color: Colors.transparent,
                             child: InkWell(
                                 onTap: () {
-                                  order.progress = Utils.enumToString(OrderStatus.accepted);
-                                  StoreProvider.of<AppState>(context).dispatch(UpdateOrderByManager(order));
+                                  if (!managerHasChosenAction) {
+                                    // order.progress = Utils.enumToString(OrderStatus.accepted);
+                                    StoreProvider.of<AppState>(context).dispatch(UpdateOrderByManager(order, OrderStatus.accepted));
+                                    managerHasChosenAction = true;
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content:  Text(AppLocalizations.of(context).networkRequestStillInProgress)));
+                                  }
                                 },
                                 borderRadius: BorderRadius.all(Radius.circular(5.0)),
                                 child: Container(
@@ -228,8 +241,13 @@ class _ActivityManagementState extends State<ActivityManagement> {
                             color: Colors.transparent,
                             child: InkWell(
                                 onTap: () {
-                                  order.progress = Utils.enumToString(OrderStatus.declined);
-                                  StoreProvider.of<AppState>(context).dispatch(UpdateOrderByManager(order));
+                                  // order.progress = Utils.enumToString(OrderStatus.declined);
+                                  if (!managerHasChosenAction) {
+                                    StoreProvider.of<AppState>(context).dispatch(UpdateOrderByManager(order, OrderStatus.declined));
+                                    managerHasChosenAction = true;
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content:  Text(AppLocalizations.of(context).networkRequestStillInProgress)));
+                                  }
                                 },
                                 borderRadius: BorderRadius.all(Radius.circular(5.0)),
                                 child: Container(
@@ -258,8 +276,13 @@ class _ActivityManagementState extends State<ActivityManagement> {
                             color: Colors.transparent,
                             child: InkWell(
                                 onTap: () {
-                                  order.progress = Utils.enumToString(OrderStatus.canceled);
-                                  StoreProvider.of<AppState>(context).dispatch(UpdateOrderByManager(order));
+                                  if (!managerHasChosenAction) {
+                                    // order.progress = Utils.enumToString(OrderStatus.canceled);
+                                    StoreProvider.of<AppState>(context).dispatch(UpdateOrderByManager(order, OrderStatus.canceled));
+                                    managerHasChosenAction = true;
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content:  Text(AppLocalizations.of(context).networkRequestStillInProgress)));
+                                  }
                                 },
                                 borderRadius: BorderRadius.all(Radius.circular(5.0)),
                                 child: Container(
@@ -541,12 +564,13 @@ class _ActivityManagementState extends State<ActivityManagement> {
                             //MenuItemModel menuItem = menuItems.elementAt(index);
                             OrderState order = orderList.elementAt(index)[0];
                             OrderEntry entry = orderList.elementAt(index)[1];
+                            bool managerHasChosenAction = false;
                             return Column(
                               children: [
                                 ///Order Info
                                 DashboardListItem(order, entry),
                                 ///Actions
-                                buildActivityButtons(order, context),
+                                buildActivityButtons(order, context, managerHasChosenAction),
                                 ///Divider
                                 Container(
                                   //margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 30),

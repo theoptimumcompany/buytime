@@ -4,6 +4,7 @@ import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
+import 'package:Buytime/utils/utils.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -224,8 +225,8 @@ class _CancelPopState extends State<CancelPop> {
                                   color: Colors.transparent,
                                   child: InkWell(
                                       onTap: () {
-                                        widget.order.progress = 'canceled';
-                                        StoreProvider.of<AppState>(context).dispatch(UpdateOrderByManager(widget.order));
+                                        widget.order.progress = Utils.enumToString(OrderStatus.canceled);
+                                        StoreProvider.of<AppState>(context).dispatch(UpdateOrderByManager(widget.order, OrderStatus.canceled));
                                         Navigator.of(context).pop();
                                       },
                                       borderRadius: BorderRadius.all(Radius.circular(5.0)),

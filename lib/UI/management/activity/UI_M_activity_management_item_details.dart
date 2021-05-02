@@ -23,6 +23,7 @@ import 'package:Buytime/reusable/order/optimum_order_item_card_medium.dart';
 import 'package:Buytime/reusable/order/order_total.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
+import 'package:Buytime/utils/utils.dart';
 import 'package:add_2_calendar/add_2_calendar.dart';
 //import 'package:device_calendar/device_calendar.dart';
 import 'package:flutter/material.dart';
@@ -88,7 +89,7 @@ class _ActivityManagementItemDetailsState extends State<ActivityManagementItemDe
         //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ServiceList()),);
         Navigator.of(context).pop();
       }
-      StoreProvider.of<AppState>(context).dispatch(UpdateOrderByManager(snapshot));
+      StoreProvider.of<AppState>(context).dispatch(UpdateOrderByManager(snapshot, OrderStatus.pending));
     });
   }
 
@@ -101,7 +102,7 @@ class _ActivityManagementItemDetailsState extends State<ActivityManagementItemDe
       snapshot.itemList.remove(entry);
       if (snapshot.itemList.length == 0) Navigator.of(context).pop();
 
-      StoreProvider.of<AppState>(context).dispatch(UpdateOrderByManager(snapshot));
+      StoreProvider.of<AppState>(context).dispatch(UpdateOrderByManager(snapshot, OrderStatus.pending));
     });
   }
 
@@ -514,7 +515,7 @@ class _ActivityManagementItemDetailsState extends State<ActivityManagementItemDe
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      widget.orderState.progress != 'canceled' && widget.orderState.progress != 'declined' ?
+                      widget.orderState.progress != Utils.enumToString(OrderStatus.canceled) && widget.orderState.progress != Utils.enumToString(OrderStatus.declined) ?
                       ///Decline
                       Container(
                           width: 158, ///SizeConfig.safeBlockHorizontal * 40
@@ -530,13 +531,13 @@ class _ActivityManagementItemDetailsState extends State<ActivityManagementItemDe
                             focusElevation: 0,
                             highlightElevation: 0,
                             onPressed: () {
-                              if(widget.orderState.progress == 'paid'){
-                                //StoreProvider.of<AppState>(context).dispatch(SetOrderProgress('canceled'));
+                              if(widget.orderState.progress == Utils.enumToString(OrderStatus.paid)){
+                                //StoreProvider.of<AppState>(context).dispatch(SetOrderProgress(Utils.enumToString(OrderStatus.canceled)));
                                 onCancel(widget.orderState);
                               }else{
-                                //StoreProvider.of<AppState>(context).dispatch(SetOrderProgress('declined'));
-                                widget.orderState.progress = 'declined';
-                                StoreProvider.of<AppState>(context).dispatch(UpdateOrderByManager(widget.orderState));
+                                //StoreProvider.of<AppState>(context).dispatch(SetOrderProgress(Utils.enumToString(OrderStatus.declined)));
+                                widget.orderState.progress = Utils.enumToString(OrderStatus.pending);
+                                StoreProvider.of<AppState>(context).dispatch(UpdateOrderByManager(widget.orderState, OrderStatus.pending));
                               }
                             },
                             textColor: BuytimeTheme.TextWhite,
@@ -546,7 +547,7 @@ class _ActivityManagementItemDetailsState extends State<ActivityManagementItemDe
                               borderRadius: new BorderRadius.circular(5),
                             ),
                             child: Text(
-                                widget.orderState.progress == 'paid' ? AppLocalizations.of(context).cancel.toUpperCase() : AppLocalizations.of(context).decline.toUpperCase(),
+                                widget.orderState.progress == Utils.enumToString(OrderStatus.paid) ? AppLocalizations.of(context).cancel.toUpperCase() : AppLocalizations.of(context).decline.toUpperCase(),
                               style: TextStyle(
                                   fontSize: 14,
                                   fontFamily: BuytimeTheme.FontFamily,
@@ -557,7 +558,7 @@ class _ActivityManagementItemDetailsState extends State<ActivityManagementItemDe
                           )
                       ) : Container(),
                       ///Accept
-                      widget.orderState.progress == 'canceled' || widget.orderState.progress == 'declined' ?
+                      widget.orderState.progress == Utils.enumToString(OrderStatus.canceled) || widget.orderState.progress == Utils.enumToString(OrderStatus.declined) ?
                       Container(
                           width: 158, ///SizeConfig.safeBlockHorizontal * 40
                           height: 44,
@@ -568,8 +569,8 @@ class _ActivityManagementItemDetailsState extends State<ActivityManagementItemDe
                             focusElevation: 0,
                             highlightElevation: 0,
                             onPressed: () {
-                              widget.orderState.progress = 'pending';
-                              StoreProvider.of<AppState>(context).dispatch(UpdateOrderByManager(widget.orderState));
+                              widget.orderState.progress = Utils.enumToString(OrderStatus.pending);
+                              StoreProvider.of<AppState>(context).dispatch(UpdateOrderByManager(widget.orderState, OrderStatus.pending));
                             },
                             textColor: BuytimeTheme.TextWhite,
                             color: BuytimeTheme.ManagerPrimary,
@@ -588,7 +589,7 @@ class _ActivityManagementItemDetailsState extends State<ActivityManagementItemDe
                             ),
                           )
                       ) :
-                      widget.orderState.progress != 'paid' ?
+                      widget.orderState.progress != Utils.enumToString(OrderStatus.paid) ?
                       Container(
                           width: 158, ///SizeConfig.safeBlockHorizontal * 40
                           height: 44,
@@ -599,8 +600,8 @@ class _ActivityManagementItemDetailsState extends State<ActivityManagementItemDe
                             focusElevation: 0,
                             highlightElevation: 0,
                             onPressed: () {
-                              widget.orderState.progress = 'paid';
-                              StoreProvider.of<AppState>(context).dispatch(UpdateOrderByManager(widget.orderState));
+                              widget.orderState.progress = Utils.enumToString(OrderStatus.accepted);
+                              StoreProvider.of<AppState>(context).dispatch(UpdateOrderByManager(widget.orderState, OrderStatus.accepted));
                             },
                             textColor: BuytimeTheme.TextWhite,
                             color: BuytimeTheme.ManagerPrimary,

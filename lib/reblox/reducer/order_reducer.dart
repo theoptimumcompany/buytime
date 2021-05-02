@@ -33,8 +33,10 @@ class UpdateOrder {
 }
 class UpdateOrderByManager{
   OrderState _orderState;
-  UpdateOrderByManager(this._orderState);
+  OrderStatus _orderStatus;
+  UpdateOrderByManager(this._orderState, this._orderStatus);
   OrderState get orderState => _orderState;
+  OrderStatus get orderStatus => _orderStatus;
 }
 class UpdatedOrder {
   OrderState _orderState;
@@ -93,6 +95,7 @@ class CreateOrderPending {
 
 class CreatedOrder {}
 class CreatingOrder {}
+class ResetOrderIfPaidOrCanceled {}
 class DeleteOrder {
   String _orderId;
   DeleteOrder(this._orderId);
@@ -227,12 +230,19 @@ OrderState orderReducer(OrderState state, action) {
     return orderState;
   }
   if (action is AddingStripePaymentMethodReset) {
-    orderState.addCardProgress = Utils.enumToString(AddCardStatus.done);
+    orderState.addCardProgress = Utils.enumToString(AddCardStatus.notStarted);
     return orderState;
   }
   if (action is AddedStripePaymentMethod) {
     orderState.addCardProgress = Utils.enumToString(AddCardStatus.done);
     return orderState;
+  }
+  if (action is ResetOrderIfPaidOrCanceled) {
+    if (orderState.progress == Utils.enumToString(OrderStatus.paid) 
+        || orderState.progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout)
+        || orderState.progress == Utils.enumToString(OrderStatus.canceled)
+    )
+    return orderState.toEmpty();
   }
   if (action is DeletingStripePaymentMethod) {
     orderState.addCardProgress = Utils.enumToString(AddCardStatus.inProgress);

@@ -14,6 +14,7 @@ class OrderEntry {
   String id;
   String id_business;
   String id_owner;
+  String id_category;
   ///Reserve
   String time;
   String minutes;
@@ -31,6 +32,7 @@ class OrderEntry {
     this.id,
     this.id_business,
     this.id_owner,
+    this.id_category,
     this.time,
     this.minutes,
     this.date,

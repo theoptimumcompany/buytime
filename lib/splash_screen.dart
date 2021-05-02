@@ -96,6 +96,21 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
               );
             });
         FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+        /// Triggers to manage the messages when the app is in foreground (otherwise the notification is not displayed in android)
+        FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+          RemoteNotification notification = message.notification;
+          AndroidNotification android = message.notification?.android;
+
+          // If `onMessage` is triggered with a notification, construct our own
+          // local notification to show to users using the created channel.
+          if (notification != null && android != null) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => UI_U_OrderDetail()), /// TODO: @nipuna, redirect the user to the right UI (notification list?)
+            );
+          }
+        });
         FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
           var data = message.data['data'] ?? message;
           String orderId = data['orderId'];

@@ -151,5 +151,9 @@
 	<false/>
 	<key>io.flutter.embedded_views_preview</key>
 	<true/>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>Can I use Bluetooth?</string>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>Can I always use Bluetooth?</string>
 </dict>
 </plist>

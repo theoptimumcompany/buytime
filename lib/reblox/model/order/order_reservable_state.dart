@@ -193,6 +193,7 @@ class OrderReservableState {
           id: itemToAdd.serviceId,
           id_business: itemToAdd.businessId,
           id_owner: idOwner,
+          id_category: itemToAdd.categoryId != null ? itemToAdd.categoryId[0] : '',
           switchAutoConfirm: itemToAdd.switchAutoConfirm));
     }
     this.total += itemToAdd.price;
@@ -214,6 +215,7 @@ class OrderReservableState {
         thumbnail: itemToAdd.image1,
         id: itemToAdd.serviceId,
         id_business: itemToAdd.businessId,
+        id_category: itemToAdd.categoryId != null ? itemToAdd.categoryId[0] : '',
         id_owner: idOwner,
       time: time,
       minutes: minutes,

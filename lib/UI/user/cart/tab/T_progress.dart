@@ -14,7 +14,7 @@ class Progress extends StatefulWidget {
     @required this.orderReservableState,
     @required this.cardOrBooking,
     @required this.fromValue,
-    @required this.videoAsset,
+    // @required this.videoAsset,
     @required this.textToDisplay,
     @required this.orderState,
     @required this.reservable,
@@ -25,7 +25,7 @@ class Progress extends StatefulWidget {
   final String cardOrBooking;
   final String fromValue;
   final String textToDisplay;
-  final String videoAsset;
+  // final String videoAsset;
   final bool reservable;
   final bool tourist;
   final OrderReservableState orderReservableState;
@@ -49,19 +49,19 @@ class _ProgressState extends State<Progress> {
 
   @override
   void initState() {
-    _videoController = VideoPlayerController.asset(widget.videoAsset, videoPlayerOptions: videoPlayerOptions);
-    _videoController..initialize().then((_) {
-      initVideoController(_videoController);
-      setState(() {
-        _videoController = _videoController;
-      });
-    });
+    // _videoController = VideoPlayerController.asset(widget.videoAsset, videoPlayerOptions: videoPlayerOptions);
+    // _videoController..initialize().then((_) {
+    //   initVideoController(_videoController);
+    //   setState(() {
+    //     _videoController = _videoController;
+    //   });
+    // });
     super.initState();
   }
 
   @override
   void dispose() {
-    _videoController.dispose();
+    // _videoController.dispose();
     super.dispose();
   }
 
@@ -142,30 +142,30 @@ class _ProgressState extends State<Progress> {
           ],
         ),
         ///Animation
-        Container(
-          width: SizeConfig.safeBlockVertical * 20,
-          height: SizeConfig.safeBlockVertical * 20,
-          child: Center(
-              child: (_videoController != null &&  _videoController.value.isInitialized)
-                  ? SizedBox.expand(
-                child: FittedBox(
-                  // If your background video doesn't look right, try changing the BoxFit property.
-                  // BoxFit.fill created the look I was going for.
-                    fit: BoxFit.cover,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(20)),
-                      ),
-                      width: _videoController.value.size?.width ?? 0,
-                      height: _videoController.value.size?.height ?? 0,
-                      child: VideoPlayer(
-                        _videoController,
-                      ),
-                    )
-                ),
-              ) : Container()
-          ),
-        ),
+        // Container(
+        //   width: SizeConfig.safeBlockVertical * 20,
+        //   height: SizeConfig.safeBlockVertical * 20,
+        //   child: Center(
+        //       child: (_videoController != null &&  _videoController.value.isInitialized)
+        //           ? SizedBox.expand(
+        //         child: FittedBox(
+        //           // If your background video doesn't look right, try changing the BoxFit property.
+        //           // BoxFit.fill created the look I was going for.
+        //             fit: BoxFit.cover,
+        //             child: Container(
+        //               decoration: BoxDecoration(
+        //                 borderRadius: BorderRadius.all(Radius.circular(20)),
+        //               ),
+        //               width: _videoController.value.size?.width ?? 0,
+        //               height: _videoController.value.size?.height ?? 0,
+        //               child: VideoPlayer(
+        //                 _videoController,
+        //               ),
+        //             )
+        //         ),
+        //       ) : Container()
+        //   ),
+        // ),
       ],
     );
   }

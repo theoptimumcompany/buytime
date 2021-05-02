@@ -223,6 +223,7 @@ class OrderState {
           thumbnail: itemToAdd.image1,
           id: itemToAdd.serviceId,
           id_business: itemToAdd.businessId,
+          id_category: itemToAdd.categoryId != null ? itemToAdd.categoryId[0] : '',
           id_owner: idOwner,
           switchAutoConfirm: itemToAdd.switchAutoConfirm
       ));
@@ -246,6 +247,7 @@ class OrderState {
         thumbnail: itemToAdd.image1,
         id: itemToAdd.serviceId,
         id_business: itemToAdd.businessId,
+        id_category: itemToAdd.categoryId != null ? itemToAdd.categoryId[0] : '',
         id_owner: idOwner,
       time: time,
       minutes: minutes,

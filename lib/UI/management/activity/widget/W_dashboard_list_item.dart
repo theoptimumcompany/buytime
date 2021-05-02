@@ -6,6 +6,7 @@ import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reusable/buytime_icons.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
+import 'package:Buytime/utils/utils.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -56,8 +57,12 @@ class _DashboardListItemState extends State<DashboardListItem> {
                   Container(
                     margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
                     child: Icon(
-                      widget.orderState.progress == 'canceled' || widget.orderState.progress == 'declined' ? BuytimeIcons.remove : widget.orderState.progress == 'paid' ? BuytimeIcons.pending_clock : BuytimeIcons.accepted_clock,
-                      color: widget.orderState.progress == 'canceled' || widget.orderState.progress == 'declined' ? BuytimeTheme.AccentRed : BuytimeTheme.SymbolBlack,
+                      widget.orderState.progress == Utils.enumToString(OrderStatus.canceled) || widget.orderState.progress == Utils.enumToString(OrderStatus.declined)  ? BuytimeIcons.pending_clock : BuytimeIcons.accepted_clock,
+                      color:
+                      widget.orderState.progress == Utils.enumToString(OrderStatus.canceled) || widget.orderState.progress == Utils.enumToString(OrderStatus.declined) ?
+                      BuytimeTheme.AccentRed :
+                      widget.orderState.progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout) ?
+                      BuytimeTheme.Secondary : BuytimeTheme.SymbolBlack,
                       size: 22,
                     ),
                   )
@@ -118,13 +123,26 @@ class _DashboardListItemState extends State<DashboardListItem> {
                       children: [
                         Container(
                           child: Text(
-                            widget.orderState.progress == 'paid' ?
+                            widget.orderState.progress == Utils.enumToString(OrderStatus.progress) ?
+                            '${AppLocalizations.of(context).progress}' :
+                            widget.orderState.progress == Utils.enumToString(OrderStatus.unpaid) ?
+                            '${AppLocalizations.of(context).unpaid}' :
+                            widget.orderState.progress == Utils.enumToString(OrderStatus.accepted) ?
                             '${AppLocalizations.of(context).accepted}' :
-                            widget.orderState.progress == 'canceled' ?
+                            widget.orderState.progress == Utils.enumToString(OrderStatus.paid) ?
+                            '${AppLocalizations.of(context).paid}' :
+                            widget.orderState.progress == Utils.enumToString(OrderStatus.pending) ?
+                            '${AppLocalizations.of(context).pending}' :
+                            widget.orderState.progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout) ?
+                            '${AppLocalizations.of(context).toBePaidAtCheckout}' :
+                            widget.orderState.progress == Utils.enumToString(OrderStatus.canceled) ?
                             '${AppLocalizations.of(context).canceled}' :
-                            widget.orderState.progress == 'declined' ?
+                            widget.orderState.progress == Utils.enumToString(OrderStatus.frozen) ?
+                            '${AppLocalizations.of(context).frozen}' :
+                            widget.orderState.progress == Utils.enumToString(OrderStatus.declined) ?
                             '${AppLocalizations.of(context).declined}' :
-                            '${AppLocalizations.of(context).pending}',
+                            widget.orderState.progress == Utils.enumToString(OrderStatus.creating) ?
+                            '${AppLocalizations.of(context).creating}' : '???',
                             style: TextStyle(
                                 fontFamily: BuytimeTheme.FontFamily,
                                 fontSize: 12,

@@ -60,7 +60,11 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
     });
   }
 
-
+  @override
+  void dispose() {
+      StoreProvider.of<AppState>(context).dispatch(ResetOrderIfPaidOrCanceled());
+      super.dispose();
+    }
 
   @override
   Widget build(BuildContext context) {
@@ -152,7 +156,8 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                         ///Tab
                                         (() {
                                           if (snapshot.order.progress == Utils.enumToString(OrderStatus.paid) ||
-                                              snapshot.order.progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout)) {
+                                              snapshot.order.progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout)
+                                          ) {
                                             /// return confirmed
                                             return Progress(
                                               cardState: snapshot.cardState,
@@ -163,7 +168,21 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                               orderState: orderState,
                                               reservable: widget.reserve,
                                               tourist:widget.tourist,
-                                              videoAsset: "assets/video/success.mp4",
+                                              // videoAsset: "assets/video/success.mp4",
+                                            );
+                                          } else if (snapshot.order.progress == Utils.enumToString(OrderStatus.pending)) {
+                                            /// return canceled
+                                            return Progress(
+                                              cardState: snapshot.cardState,
+                                              orderReservableState: snapshot.orderReservable,
+                                              cardOrBooking: orderState.cardType != null && orderState.cardType.isNotEmpty ? orderState.cardType : AppLocalizations.of(context).bookingCode + ':',
+                                              fromValue: orderState.cardLast4Digit != null && orderState.cardLast4Digit.isNotEmpty ? orderState.cardLast4Digit : snapshot.booking.booking_code,
+                                              textToDisplay: AppLocalizations.of(context).orderPending,
+                                              orderState: orderState,
+                                              reservable: widget.reserve,
+                                              tourist:widget.tourist,
+                                              // videoAsset: "assets/video/canceled.mp4",
+
                                             );
                                           } else if (snapshot.order.progress == Utils.enumToString(OrderStatus.canceled)) {
                                             /// return canceled
@@ -176,7 +195,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                               orderState: orderState,
                                               reservable: widget.reserve,
                                               tourist:widget.tourist,
-                                              videoAsset: "assets/video/canceled.mp4",
+                                              // videoAsset: "assets/video/canceled.mp4",
 
                                             );
                                           } else if (snapshot.order.progress == Utils.enumToString(OrderStatus.creating)){
@@ -190,7 +209,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                              orderState: orderState,
                                              reservable: widget.reserve,
                                              tourist:widget.tourist,
-                                             videoAsset: "assets/video/moneyCat.mp4",
+                                             // videoAsset: "assets/video/moneyCat.mp4",
                                             );
                                           } else {
                                             /// normal case
@@ -209,11 +228,12 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                   Center(
                                     child: (() {
                                       if (snapshot.order.progress == Utils.enumToString(OrderStatus.paid) ||
-                                          snapshot.order.progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout)) {
+                                          snapshot.order.progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout) ||
+                                          snapshot.order.progress == Utils.enumToString(OrderStatus.pending) ||
+                                          snapshot.order.progress == Utils.enumToString(OrderStatus.canceled)
+                                      ) {
                                         return buildBackButton(context, media);
-                                      } else if (snapshot.order.progress == Utils.enumToString(OrderStatus.canceled)) {
-                                        return buildBackButton(context, media);
-                                      } else if (snapshot.order.progress == Utils.enumToString(OrderStatus.creating)){
+                                      }  else if (snapshot.order.progress == Utils.enumToString(OrderStatus.creating)){
                                         /// return nothing
                                       } else {
                                         return buildConfirmButton(context, snapshot, selected, last4, brand, country, selectedCardPaymentMethodId, media);
@@ -582,8 +602,14 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
     } else {
       /// Direct Card Payment
       debugPrint('UI_U_ConfirmOrder => start direct payment process with Credit Card');
-      StoreProvider.of<AppState>(context).dispatch(CreatingOrder());
-      StoreProvider.of<AppState>(context).dispatch(CreateOrderCardAndPay(snapshot.order, last4, brand, country, selectedCardPaymentMethodId, PaymentType.card));
+      if (snapshot.order.isOrderAutoConfirmable()) {
+        StoreProvider.of<AppState>(context).dispatch(CreatingOrder());
+        StoreProvider.of<AppState>(context).dispatch(CreateOrderCardAndPay(snapshot.order, last4, brand, country, selectedCardPaymentMethodId, PaymentType.card));
+      } else {
+        StoreProvider.of<AppState>(context).dispatch(CreatingOrder());
+        StoreProvider.of<AppState>(context).dispatch(CreateOrderPending(snapshot.order, '', PaymentType.native));
+      }
+
     }
 
   }
@@ -622,6 +648,8 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
         ///
         /// we go back to the booking page
         /// (the payment process will start when the order is confirmed)
+        StoreProvider.of<AppState>(context).dispatch(CreatingOrder());
+        StoreProvider.of<AppState>(context).dispatch(CreateOrderPending(snapshot.order, '', PaymentType.native));
       }
     }
 
