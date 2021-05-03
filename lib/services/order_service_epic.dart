@@ -63,28 +63,21 @@ class OrderListRequestService implements EpicClass<AppState> {
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     debugPrint("ORDER_SERVICE_EPIC - OrderListRequestService =>  CATCHED ACTION");
      return actions.whereType<OrderListRequest>().asyncMap((event) async {
-       //debugPrint("ORDER_SERVICE_EPIC - OrderListRequestService =>  USER ID: ${store.state.user.uid}");
-       //debugPrint("ORDER_SERVICE_EPIC - OrderListRequestService =>  BUSINESS ID: ${store.state.business.id_firestore}");
-        String userId = store.state.business.id_firestore;
+       debugPrint("ORDER_SERVICE_EPIC - OrderListRequestService =>  USER ID: ${store.state.user.uid}");
+       debugPrint("ORDER_SERVICE_EPIC - OrderListRequestService =>  BUSINESS ID: ${store.state.business.id_firestore}");
         List<BusinessState> businessList = store.state.businessList.businessListState;
         DateTime currentTime = DateTime.now();
         currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0).toUtc();
-        debugPrint('ORDER_SERVICE_EPIC => current Time: $currentTime');
-        List<DateTime> period = getPeriod(currentTime);
+        DateTime sevenDaysFromNow = new DateTime(currentTime.year, currentTime.month, currentTime.day + 7, 0, 0, 0, 0, 0).toUtc();
+       debugPrint('ORDER_SERVICE_EPIC => current Time: $currentTime, in 7 days: $sevenDaysFromNow');
         orderStateList = [];
-        int ordersFirebaseDocs = 0;
-        int read = 0;
         for(int i = 0; i < businessList.length; i++){
           debugPrint("ORDER_SERVICE_EPIC - OrderListRequestService =>  BUSINESS ID: ${businessList[i].id_firestore}");
           QuerySnapshot ordersFirebase = await FirebaseFirestore.instance.collection("order") /// 1 READ - ? DOC
               .where("businessId", isEqualTo: businessList[i].id_firestore)
               .where("date", isGreaterThanOrEqualTo: currentTime)
-              .where("date", isLessThanOrEqualTo: period[1])
+              .where("date", isLessThanOrEqualTo: sevenDaysFromNow)
               .get();
-
-          read++;
-
-          ordersFirebaseDocs += ordersFirebase.docs.length;
           debugPrint("ORDER_SERVICE_EPIC - OrderListRequestService => OrderListService Firestore request");
           ordersFirebase.docs.forEach((element) {
             OrderState orderState = OrderState.fromJson(element.data());
@@ -92,7 +85,6 @@ class OrderListRequestService implements EpicClass<AppState> {
           });
         }
         debugPrint("ORDER_SERVICE_EPIC - OrderListRequestService => OrderListService return list with " + orderStateList.length.toString());
-
         if(orderStateList.isEmpty)
           orderStateList.add(OrderState());
         statisticsComputation();
@@ -118,24 +110,15 @@ class UserOrderListRequestService implements EpicClass<AppState> {
       DateTime currentTime = DateTime.now();
       //currentTime = new DateTime(currentTime.year, currentTime.month - 1, currentTime.day, 0, 0, 0, 0, 0).toUtc();
       debugPrint('order_service_epic => current Time: $currentTime');
-      List<DateTime> period = getPeriod(currentTime);
       orderStateList = [];
-      int ordersFirebaseDocs = 0;
-      int read = 0;
       currentTime = currentTime.subtract(Duration(days: 15));
       //debugPrint("ORDER_SERVICE_EPIC - UserOrderListRequestService =>  BUSINESS ID: ${businessList[i].id_firestore}");
       QuerySnapshot ordersFirebase = await FirebaseFirestore.instance.collection("order") /// 1 READ - ? DOC
-          //.where("progress", isEqualTo: "paid")
-          //.where("progress", whereIn: ['paid',"pending"])
           .where("businessId", isEqualTo: store.state.business.id_firestore)
           .where("userId", isEqualTo: store.state.user.uid)
           .where("date", isGreaterThanOrEqualTo: currentTime)
           .limit(50)
           .get();
-
-      read++;
-
-      ordersFirebaseDocs += ordersFirebase.docs.length;
       debugPrint("ORDER_SERVICE_EPIC - UserOrderListRequestService => OrderListService Firestore request");
       ordersFirebase.docs.forEach((element) {
         OrderState orderState = OrderState.fromJson(element.data());
@@ -143,7 +126,6 @@ class UserOrderListRequestService implements EpicClass<AppState> {
       });
       debugPrint("ORDER_SERVICE_EPIC - UserOrderListRequestService => OrderListService return list with " + orderStateList.length.toString());
       statisticsComputation();
-
       ///Return
       //return new OrderListReturned(orderStateList);
     }).expand((element) => [
@@ -361,13 +343,95 @@ class OrderCreateRoomAndPayService implements EpicClass<AppState> {
 
 /// an order always have to be created with a payment method attached in its subcollection
 /// TODO: research if there is a way to make this two operations in an atomic way
-class OrderCreatePendingService implements EpicClass<AppState> {
+class OrderCreateNativePendingService implements EpicClass<AppState> {
   StatisticsState statisticsState;
   String state = '';
   String paymentResult = '';
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    return actions.whereType<CreateOrderPending>().asyncMap((event) async {
+    return actions.whereType<CreateOrderNativePending>().asyncMap((event) async {
+      debugPrint('CreateOrderPending start');
+      /// add needed data to the order state
+      OrderState orderState = configureOrder(event.orderState, store);
+      orderState.cardType = Utils.enumToString(PaymentType.room);
+      orderState.progress = Utils.enumToString(OrderStatus.pending);
+      /// send document to orders collection
+      /// This is a time based id, meaning that even if 2 users are going to generate a document at the same moment in time
+      /// there are really low chances that the rest of the id is also colliding.
+      String timeBasedId = Uuid().v1();
+      orderState.orderId = timeBasedId;
+      var addedOrder = await FirebaseFirestore.instance.collection("order").doc(timeBasedId).set(orderState.toJson());
+      /// add the payment method to the order sub collection on firebase
+      var addedPaymentMethod = await FirebaseFirestore.instance.collection("order/" + orderState.orderId + "/orderPaymentMethod").add({
+        'paymentMethodId' : event.paymentMethod.id,
+        'last4': event.paymentMethod.card.last4 ?? '',
+        'brand': event.paymentMethod.card.brand ?? '',
+        'type':  Utils.enumToString(event.paymentType),
+        'country': event.paymentMethod.card.country  ?? 'US',
+        'booking_id': store.state.booking.booking_id
+      });
+      statisticsComputation();
+      debugPrint('CreateOrderPending done');
+    }).expand((element) {
+      var actionArray = [];
+      actionArray.add(CreatedOrder());
+      actionArray.add(UpdateStatistics(statisticsState));
+      actionArray.add(SetOrderProgress(Utils.enumToString(OrderStatus.pending)));
+      return actionArray;
+    });
+  }
+}
+
+/// an order always have to be created with a payment method attached in its subcollection
+/// TODO: research if there is a way to make this two operations in an atomic way
+class OrderCreateCardPendingService implements EpicClass<AppState> {
+  StatisticsState statisticsState;
+  String state = '';
+  String paymentResult = '';
+  @override
+  Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
+    return actions.whereType<CreateOrderCardPending>().asyncMap((event) async {
+      debugPrint('CreateOrderPending start');
+      /// add needed data to the order state
+      OrderState orderState = configureOrder(event.orderState, store);
+      orderState.cardType = Utils.enumToString(PaymentType.card);
+      orderState.progress = Utils.enumToString(OrderStatus.pending);
+      /// send document to orders collection
+      /// This is a time based id, meaning that even if 2 users are going to generate a document at the same moment in time
+      /// there are really low chances that the rest of the id is also colliding.
+      String timeBasedId = Uuid().v1();
+      orderState.orderId = timeBasedId;
+      var addedOrder = await FirebaseFirestore.instance.collection("order").doc(timeBasedId).set(orderState.toJson());
+      /// add the payment method to the order sub collection on firebase
+      var addedPaymentMethod = await FirebaseFirestore.instance.collection("order/" + orderState.orderId + "/orderPaymentMethod").add({
+        'paymentMethodId' : event.selectedCardPaymentMethodId,
+        'last4': event.last4 ?? '',
+        'brand': event.brand ?? '',
+        'type':  Utils.enumToString(event.paymentType),
+        'country': event.country ?? 'US',
+        'booking_id': store.state.booking.booking_id
+      });
+      statisticsComputation();
+      debugPrint('CreateOrderPending done');
+    }).expand((element) {
+      var actionArray = [];
+      actionArray.add(CreatedOrder());
+      actionArray.add(UpdateStatistics(statisticsState));
+      actionArray.add(SetOrderProgress(Utils.enumToString(OrderStatus.pending)));
+      return actionArray;
+    });
+  }
+}
+
+/// an order always have to be created with a payment method attached in its subcollection
+/// TODO: research if there is a way to make this two operations in an atomic way
+class OrderCreateRoomPendingService implements EpicClass<AppState> {
+  StatisticsState statisticsState;
+  String state = '';
+  String paymentResult = '';
+  @override
+  Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
+    return actions.whereType<CreateOrderRoomPending>().asyncMap((event) async {
       debugPrint('CreateOrderPending start');
       /// add needed data to the order state
       OrderState orderState = configureOrder(event.orderState, store);

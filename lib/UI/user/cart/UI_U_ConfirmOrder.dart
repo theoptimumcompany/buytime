@@ -602,12 +602,11 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
     } else {
       /// Direct Card Payment
       debugPrint('UI_U_ConfirmOrder => start direct payment process with Credit Card');
+      StoreProvider.of<AppState>(context).dispatch(CreatingOrder());
       if (snapshot.order.isOrderAutoConfirmable()) {
-        StoreProvider.of<AppState>(context).dispatch(CreatingOrder());
         StoreProvider.of<AppState>(context).dispatch(CreateOrderCardAndPay(snapshot.order, last4, brand, country, selectedCardPaymentMethodId, PaymentType.card));
       } else {
-        StoreProvider.of<AppState>(context).dispatch(CreatingOrder());
-        StoreProvider.of<AppState>(context).dispatch(CreateOrderPending(snapshot.order, '', PaymentType.native));
+        StoreProvider.of<AppState>(context).dispatch(CreateOrderCardPending(snapshot.order, last4, brand, country, selectedCardPaymentMethodId, PaymentType.card));
       }
 
     }
@@ -629,27 +628,17 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
     } else {
       /// Direct Native Payment
       debugPrint('UI_U_ConfirmOrder => start direct payment process with Native Method');
+      /// 1: create the payment method
+      StripePaymentService stripePaymentService = StripePaymentService();
+      StripeRecommended.PaymentMethod paymentMethod = await stripePaymentService.createPaymentMethodNative(snapshot.order, snapshot.business.name);
+      /// 2: add the payment method to the order state
+      StoreProvider.of<AppState>(context).dispatch(SetOrderPaymentMethod(paymentMethod));
+      StoreProvider.of<AppState>(context).dispatch(CreatingOrder());
+      /// 3: now we can create the order on the database and its sub collection
       if (snapshot.order.isOrderAutoConfirmable()) {
-        /// if the items are all autoconfirmed we can launch the paymentflow and create the order when the payment is successful
-        /// 1: create the payment method
-        StripePaymentService stripePaymentService = StripePaymentService();
-        StripeRecommended.PaymentMethod paymentMethod = await stripePaymentService.createPaymentMethodNative(snapshot.order, snapshot.business.name);
-
-        /// 2: add the payment method to the order state
-        StoreProvider.of<AppState>(context)
-            .dispatch(SetOrderPaymentMethod(paymentMethod)); // even if set could not arrive in time for the other action
-        /// 3: now we can create the order on the database and its sub collection
-        StoreProvider.of<AppState>(context).dispatch(CreatingOrder());
         StoreProvider.of<AppState>(context).dispatch(CreateOrderNativeAndPay(snapshot.order, paymentMethod, PaymentType.native));
       } else {
-        /// we create the order on firebase as "in review" or whatever state is before "in progress"???
-        ///
-        /// we show to the user a message telling them that their order is being reviewed for them
-        ///
-        /// we go back to the booking page
-        /// (the payment process will start when the order is confirmed)
-        StoreProvider.of<AppState>(context).dispatch(CreatingOrder());
-        StoreProvider.of<AppState>(context).dispatch(CreateOrderPending(snapshot.order, '', PaymentType.native));
+        StoreProvider.of<AppState>(context).dispatch(CreateOrderNativePending(snapshot.order, paymentMethod, PaymentType.native));
       }
     }
 
@@ -673,7 +662,6 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
         /// if the items are all autoconfirmed we can launch the paymentflow and create the order when the payment is successful
         /// 1: search for the room number in the booking
         String roomNumber = '1';
-
         /// IMPORTANT for the moment we just approve and add all order ids to the booking state sub collection "room orders"
         /// TODO: get the actual room number when the UX is defined?
         if (roomNumber.isNotEmpty) {
@@ -691,14 +679,10 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
         if (roomNumber.isNotEmpty) {
           /// 2A: now we can create the order on the database and its sub collection
           StoreProvider.of<AppState>(context).dispatch(CreatingOrder());
-          StoreProvider.of<AppState>(context).dispatch(CreateOrderPending(snapshot.order, roomNumber, PaymentType.room));
+          StoreProvider.of<AppState>(context).dispatch(CreateOrderRoomPending(snapshot.order, roomNumber, PaymentType.room));
         } else {
           /// 2B: we display a message to the user: "you have to ask the concierge to add your room number to be able to use this payment method"
         }
-        /// we show to the user a message telling them that their order is being reviewed for them
-        ///
-        /// we go back to the booking page
-        /// (the payment process will start when the order is confirmed)
       }
     }
     // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ConfirmingOrder(_controller.index, widget.reserve, widget.tourist)));

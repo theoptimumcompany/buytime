@@ -83,11 +83,35 @@ class CreateOrderRoomAndPay {
   String get roomNumber => _roomNumber;
 }
 
-class CreateOrderPending {
+class CreateOrderCardPending {
+  OrderState _orderState;
+  String _last4;
+  String _brand;
+  String _country;
+  String _selectedCardPaymentMethodId;
+  PaymentType _paymentType;
+  CreateOrderCardPending(this._orderState, this._last4, this._brand, this._country, this._selectedCardPaymentMethodId, this._paymentType);
+  OrderState get orderState => _orderState;
+  PaymentType get paymentType => _paymentType;
+  String get last4 => _last4;
+  String get brand => _brand;
+  String get country => _country;
+  String get selectedCardPaymentMethodId => _selectedCardPaymentMethodId;
+}
+class CreateOrderNativePending {
+  OrderState _orderState;
+  StripeRecommended.PaymentMethod _paymentMethod;
+  PaymentType _paymentType;
+  CreateOrderNativePending(this._orderState, this._paymentMethod, this._paymentType);
+  OrderState get orderState => _orderState;
+  PaymentType get paymentType => _paymentType;
+  StripeRecommended.PaymentMethod get paymentMethod => _paymentMethod;
+}
+class CreateOrderRoomPending {
   OrderState _orderState;
   String _roomNumber;
   PaymentType _paymentType;
-  CreateOrderPending(this._orderState, this._roomNumber, this._paymentType);
+  CreateOrderRoomPending(this._orderState, this._roomNumber, this._paymentType);
   OrderState get orderState => _orderState;
   PaymentType get paymentType => _paymentType;
   String get roomNumber => _roomNumber;
