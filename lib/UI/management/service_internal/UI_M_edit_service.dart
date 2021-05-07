@@ -10,6 +10,7 @@ import 'package:Buytime/reblox/reducer/service/service_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/service_slot_time_reducer.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
 import 'package:Buytime/reusable/enterExitRoute.dart';
+import 'package:Buytime/utils/animations/translate_animation.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/utils/utils.dart';
@@ -40,6 +41,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
   var size;
   bool errorCategoryListEmpty = false;
   bool rippleLoading = false;
+  bool rippleTranslate = false;
   bool errorSwitchSlots = false;
   bool submit = false;
 
@@ -212,6 +214,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
             store.state.serviceState = ServiceState();
             store.dispatch(CategoryTreeRequest());
             store.dispatch(ServiceRequestByID(widget.serviceId));
+            _serviceAddress = store.state.business.street + ', ' + store.state.business.street_number + ', ' + store.state.business.ZIP + ', ' + store.state.business.state_province;
             startRequest = true;
           },
           //onDidChange: (store) => validateReservableService(),
@@ -236,12 +239,12 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                 languageCode.add(element.languageCode);
               });
 
-              if(snapshot.serviceState.name.isNotEmpty){
+              if(snapshot.serviceState.name.isNotEmpty && nameController.text.isEmpty){
                 debugPrint('UI_M_create_service => Service Name: ${snapshot.serviceState.name}');
                 //nameController.clear();
                 nameController.text = Utils.retriveField(myLocale.languageCode, snapshot.serviceState.name);
               }
-              if(snapshot.serviceState.description.isNotEmpty){
+              if(snapshot.serviceState.description.isNotEmpty && descriptionController.text.isEmpty){
                 debugPrint('UI_M_create_service => Service Description: ${snapshot.serviceState.description}');
                 //descriptionController.clear();
                 descriptionController.text = Utils.retriveField(myLocale.languageCode, snapshot.serviceState.description);
@@ -253,11 +256,10 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
               format = _servicePrice.toString().split(".");
               priceController.text = format[0].toString() + "." + (int.parse(format[1]) < 10 ? format[1].toString() + "0" : format[1].toString());
             }
-            if(snapshot.serviceState.price != null && priceController.text.isEmpty){
-              _servicePrice = StoreProvider.of<AppState>(context).state.serviceState.price;
-              List<String> format = [];
-              format = _servicePrice.toString().split(".");
-              priceController.text = format[0].toString() + "." + (int.parse(format[1]) < 10 ? format[1].toString() + "0" : format[1].toString());
+            if(snapshot.serviceState.address != null && addressController.text.isEmpty){
+              //_serviceAddress = StoreProvider.of<AppState>(context).state.serviceState.address;
+
+              addressController.text = _serviceAddress;
             }
 
             return GestureDetector(
@@ -395,7 +397,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                     }
                                                   },*/
                                                           onEditingComplete: (){
-                                                            StoreProvider.of<AppState>(context).dispatch(SetServiceName(Utils.saveField(myLocale.languageCode, nameController.text, snapshot.serviceState.name)));
+                                                            //StoreProvider.of<AppState>(context).dispatch(SetServiceName(Utils.saveField(myLocale.languageCode, nameController.text, snapshot.serviceState.name)));
                                                             currentFocus.unfocus();
                                                           },
                                                           decoration: InputDecoration(
@@ -412,13 +414,22 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                     color: BuytimeTheme.ManagerPrimary,
                                                   ),
                                                   onPressed: (){
+                                                    setState(() {
+                                                      rippleTranslate = true;
+                                                    });
                                                     currentFocus.unfocus();
-                                                    StoreProvider.of<AppState>(context).dispatch(SetServiceName(Utils.saveField(myLocale.languageCode, nameController.text, snapshot.serviceState.name)));
+                                                    //StoreProvider.of<AppState>(context).dispatch(SetServiceName(Utils.saveField(myLocale.languageCode, nameController.text, snapshot.serviceState.name)));
                                                     String newField = Utils.saveField(myLocale.languageCode, nameController.text, snapshot.serviceState.name);
                                                     Utils.multiLingualTranslate(
                                                         context, flagsCharCode, languageCode,
                                                         AppLocalizations.of(context).name, newField,
-                                                        currentFocus);
+                                                        currentFocus, (value){
+                                                          if(!value){
+                                                            setState(() {
+                                                              rippleTranslate = false;
+                                                            });
+                                                          }
+                                                    });
                                                   },
                                                 )
                                               ],
@@ -465,13 +476,22 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                     color: BuytimeTheme.ManagerPrimary,
                                                   ),
                                                   onPressed: (){
+                                                    setState(() {
+                                                      rippleTranslate = true;
+                                                    });
                                                     currentFocus.unfocus();
                                                     StoreProvider.of<AppState>(context).dispatch(SetServiceDescription(Utils.saveField(myLocale.languageCode, descriptionController.text, snapshot.serviceState.description)));
                                                     String newField = Utils.saveField(myLocale.languageCode, descriptionController.text, snapshot.serviceState.description);
                                                     Utils.multiLingualTranslate(
                                                         context, flagsCharCode, languageCode,
                                                         AppLocalizations.of(context).description, newField,
-                                                        currentFocus);
+                                                        currentFocus, (value){
+                                                      if(!value){
+                                                        setState(() {
+                                                          rippleTranslate = false;
+                                                        });
+                                                      }
+                                                    });
                                                   },
                                                 )
                                               ],
@@ -481,7 +501,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                           snapshot.serviceState.switchSlots
                                               ? Container()
                                               : Padding(
-                                            padding: const EdgeInsets.only(bottom: 15.0),
+                                            padding: const EdgeInsets.only(bottom: 10.0),
                                             child: Center(
                                               child: Container(
                                                 width: media.width * 0.9,
@@ -569,14 +589,14 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                           Center(
                                             child: Container(
                                               width: media.width * 0.9,
-                                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
+                                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0),
                                               //decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
                                               child: Padding(
                                                 padding: const EdgeInsets.only(top: 0.0, bottom: 15.0, left: 10.0, right: 10.0),
                                                 child: TextFormField(
                                                   keyboardType: TextInputType.multiline,
                                                   maxLines: null,
-                                                  initialValue: snapshot.serviceState.address,
+                                                  initialValue: _serviceAddress,
                                                   onChanged: (value) {
                                                     _serviceAddress = value;
                                                     _serviceAddress = value;
@@ -584,6 +604,9 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                   },
                                                   onSaved: (value) {
                                                     _serviceAddress = value;
+                                                  },
+                                                  onTap: (){
+                                                    //Utils.googleSearch(context);
                                                   },
                                                   decoration: InputDecoration(
                                                     labelText: AppLocalizations.of(context).addressOptional,
@@ -1128,6 +1151,35 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                               ),
                             )))) ,
                 ///Ripple Effect
+                rippleTranslate ?
+                Positioned.fill(
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Container(
+                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3),
+                        height: double.infinity,
+                        decoration: BoxDecoration(
+                          color: BuytimeTheme.BackgroundWhite.withOpacity(.8),
+                        ),
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Container(
+                                width: SizeConfig.safeBlockVertical * 20,
+                                height: SizeConfig.safeBlockVertical * 20,
+                                child: Center(
+                                  child: SpinKitRipple(
+                                    color: BuytimeTheme.ManagerPrimary,
+                                    size: SizeConfig.safeBlockVertical * 18,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        )),
+                  ),
+                ):
                 rippleLoading
                     ? Positioned.fill(
                   child: Align(
@@ -1143,12 +1195,12 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
                               Container(
-                                width: 50,
-                                height: 50,
+                                width: SizeConfig.safeBlockVertical * 20,
+                                height: SizeConfig.safeBlockVertical * 20,
                                 child: Center(
                                   child: SpinKitRipple(
                                     color: Colors.white,
-                                    size: 50,
+                                    size: SizeConfig.safeBlockVertical * 18,
                                   ),
                                 ),
                               ),

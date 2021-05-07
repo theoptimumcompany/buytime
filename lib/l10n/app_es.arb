@@ -519,5 +519,6 @@
   "addNewArea": "Add new area",
   "whereDoYouWantToRecive": " Where do you want to receive it?",
   "location": " Location",
-  "businessPipeline": "Business pipeline"
+  "businessPipeline": "Business pipeline",
+  "translatedIn": "Translated in:"
 }

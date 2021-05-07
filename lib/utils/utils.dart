@@ -12,9 +12,11 @@ import 'package:emojis/emoji.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:google_place/google_place.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart'as http;
 
+typedef OnTranslatingCallback = void Function(bool translated);
 class Utils {
 
   ///Image sizes
@@ -150,12 +152,31 @@ class Utils {
     return tmp;
   }
 
-  static void multiLingualTranslate(BuildContext context, List<String> flags, List<String> language, String field, String stateField, FocusScopeNode node) async{
+  static Future<List<TextEditingController>> googleTranslate(List<String> language, Locale myLocale, List<TextEditingController> controllers, List<String> flags, int myIndex) async{
+    for(int i = 0; i < language.length; i++) {
+      if(controllers[i].text.isEmpty){
+        if(language[i] != myLocale.languageCode){
+          debugPrint('LanguageCode: ${language[i]} | Flag: ${flags[i]}');
+          var url = Uri.https('translation.googleapis.com', '/language/translate/v2', {'source': '${myLocale.languageCode}','target': '${language[i]}', 'key': '${BuytimeConfig.AndroidApiKey}', 'q': '${controllers[myIndex].text}'});
+          final http.Response response = await http.get(url);
+          //debugPrint('Response code: ${response.statusCode} | Response Body: ${response.body}');
+          if(response.statusCode == 200){
+            var langResponseMap = jsonDecode(response.body);
+            debugPrint('${language[i]} DONE | Decode: $langResponseMap');
+            debugPrint('${language[i]} ${langResponseMap['data']['translations'][0]['translatedText']}');
+            controllers[i].text = langResponseMap['data']['translations'][0]['translatedText'];
+          }
+        }
+      }
+    }
+
+    return controllers;
+  }
+
+  static void multiLingualTranslate(BuildContext context, List<String> flags, List<String> language, String field, String stateField, FocusScopeNode node, OnTranslatingCallback translatingCallback) async{
 
     Locale myLocale = Localizations.localeOf(context);
     debugPrint('UI_M_create_service => My locale: ${myLocale.languageCode}');
-
-
 
     //FocusScopeNode node = FocusScope.of(context);
     String myLocaleCharCode = '';
@@ -180,29 +201,47 @@ class Utils {
         }
       });
     }
+    bool isName = false;
+    bool fieldIsEqual = true;
+    bool translating = true;
 
-    for(int i = 0; i < language.length; i++) {
-      if(controllers[i].text.isEmpty){
-        if(language[i] != myLocale.languageCode){
-          debugPrint('LanguageCode: ${language[i]} | Flag: ${flags[i]}');
-          var url = Uri.https('translation.googleapis.com', '/language/translate/v2', {'target': '${language[i]}', 'key': '${BuytimeConfig.AndroidApiKey}', 'q': '${controllers[myIndex].text}'});
-          final http.Response response = await http.get(url);
-          //debugPrint('Response code: ${response.statusCode} | Response Body: ${response.body}');
-          if(response.statusCode == 200){
-            var langResponseMap = jsonDecode(response.body);
-            debugPrint('${language[i]} DONE | Decode: $langResponseMap');
-            debugPrint('${language[i]} ${langResponseMap['data']['translations'][0]['translatedText']}');
-            controllers[i].text = langResponseMap['data']['translations'][0]['translatedText'];
-          }
-        }
-      }
+    if(field == 'Name')
+      isName = true;
+
+    if(isName){
+      debugPrint('Field of the Name');
+      if(retriveField(myLocale.languageCode, stateField) != retriveField(myLocale.languageCode, StoreProvider.of<AppState>(context).state.serviceState.name))
+        fieldIsEqual = false;
+    }else{
+      debugPrint('Field of the Description');
+      if(retriveField(myLocale.languageCode, stateField) != retriveField(myLocale.languageCode, StoreProvider.of<AppState>(context).state.serviceState.description))
+        fieldIsEqual = false;
     }
 
+    if(!fieldIsEqual){
+      debugPrint('Fields are not equal');
+      for(int i = 0; i < controllers.length; i++){
+        if(i != myIndex)
+          controllers[i].clear();
+      }
+    }else{
+      debugPrint('Fields are equal');
+    }
+
+    controllers = await googleTranslate(language, myLocale, controllers, flags, myIndex);
+
+    bool allTranslated = true;
     controllers.forEach((element) {
       debugPrint('FIELDS: ${element.text}');
+      if(element.text.isEmpty)
+        allTranslated = false;
     });
+
+    if(allTranslated)
+      translating = false;
     debugPrint('controllers length: ${controllers.length}');
 
+    translatingCallback(translating);
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -225,23 +264,24 @@ class Utils {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 ///Current language
-                Container(
+                /*Container(
                   margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 6, top: SizeConfig.safeBlockVertical * 2, bottom: SizeConfig.safeBlockVertical * .5),
                   alignment: Alignment.topLeft,
                   child: Text(
                     'Current language:',
                     style: TextStyle(
                         fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: BuytimeTheme.FontFamily,
-                      color: BuytimeTheme.ManagerPrimary
+                        fontWeight: FontWeight.bold,
+                        fontFamily: BuytimeTheme.FontFamily,
+                        color: BuytimeTheme.ManagerPrimary
                     ),
                   ),
-                ),
+                ),*/
                 ///Current
                 Container(
-                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 6, right: SizeConfig.safeBlockHorizontal * 6, top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1),
+                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 6, right: SizeConfig.safeBlockHorizontal * 6, top: SizeConfig.safeBlockVertical * 5, bottom: SizeConfig.safeBlockVertical * 1),
                   child: TextFormField(
+                    enabled: false,
                     //initialValue: _serviceName,
                       controller: controllers.elementAt(myIndex),
                       validator: (value) => value.isEmpty ? AppLocalizations.of(context).serviceNameBlank : null,
@@ -254,9 +294,21 @@ class Utils {
                                       StoreProvider.of<AppState>(context).dispatch(SetServiceName(value));
                                     }*/
                       },
+                      onEditingComplete: ()async{
+                        for(int i = 0; i < controllers.length; i++){
+                          if(i != myIndex)
+                            controllers[i].clear();
+                        }
+                        controllers = await googleTranslate(language, myLocale, controllers, flags, myIndex);
+                      },
+                      style: TextStyle(
+                        color: BuytimeTheme.TextGrey,
+                        fontFamily: BuytimeTheme.FontFamily
+                      ),
                       decoration: InputDecoration(
-                          labelText: field,
+                          //labelText: field,
                           enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                          border: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
                           focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
                           errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(8.0))),
                           suffixIcon: Container(
@@ -270,17 +322,17 @@ class Utils {
                           )
                       )),
                 ),
-                ///Translate in
+                ///Translated in:
                 Container(
-                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 6, top: SizeConfig.safeBlockVertical * 2, bottom: SizeConfig.safeBlockVertical * .5),
+                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 6, top: SizeConfig.safeBlockVertical * 2, bottom: SizeConfig.safeBlockVertical * 1),
                   alignment: Alignment.topLeft,
                   child: Text(
-                    'Translate in:',
+                    AppLocalizations.of(context).translatedIn,
                     style: TextStyle(
                         fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w500,
                         fontFamily: BuytimeTheme.FontFamily,
-                        color: BuytimeTheme.ManagerPrimary
+                        color: BuytimeTheme.TextBlack
                     ),
                   ),
                 ),
@@ -290,9 +342,9 @@ class Utils {
                     child: CustomScrollView(shrinkWrap: true, slivers: [
                       SliverList(
                         delegate: SliverChildBuilderDelegate((context, index) {
-                                String flag = flags.elementAt(index);
-                                if(myLocaleCharCode != flag)
-                                  return Container(
+                          String flag = flags.elementAt(index);
+                          if(myLocaleCharCode != flag)
+                            return Container(
                               margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 6, right: SizeConfig.safeBlockHorizontal * 6, top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1),
                               child: TextFormField(
                                 //initialValue: _serviceName,
@@ -323,9 +375,9 @@ class Utils {
                                       )
                                   )),
                             );
-                                else
-                                  return Container();
-                          },
+                          else
+                            return Container();
+                        },
                           childCount: flags.length,
                         ),
                       ),
@@ -335,13 +387,13 @@ class Utils {
                 ///Save button
                 Container(
                   margin: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2),
-                  width: 102,
-                  height: 36,
+                  width: 198,
+                  height: 44,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(5)),
-                    border: Border.all(
-                      color: BuytimeTheme.SymbolLightGrey
-                    )
+                      borderRadius: BorderRadius.all(Radius.circular(5)),
+                      border: Border.all(
+                          color: BuytimeTheme.SymbolLightGrey
+                      )
                   ),
                   child: MaterialButton(
                     elevation: 0,
@@ -367,8 +419,8 @@ class Utils {
                       //nextPage();
                       Navigator.of(context).pop();
                     },
-                    textColor: BuytimeTheme.UserPrimary,
-                    color: BuytimeTheme.BackgroundWhite,
+                    textColor: BuytimeTheme.TextWhite,
+                    color: BuytimeTheme.ManagerPrimary,
                     //disabledColor: AppTheme.BackgroundGrey,
                     //padding: EdgeInsets.all(media.width * 0.03),
                     shape: RoundedRectangleBorder(
@@ -377,14 +429,14 @@ class Utils {
                     child: FittedBox(
                       fit: BoxFit.scaleDown,
                       child: Text(
-                        '${AppLocalizations.of(context).saveUpper}',
+                        '${AppLocalizations.of(context).accept.toUpperCase()}',
                         style: TextStyle(
-                          letterSpacing: 1.25,
-                          fontSize: 16,
-                          ///16 | SizeConfig.safeBlockHorizontal * 4.5
-                          fontFamily: BuytimeTheme.FontFamily,
-                          fontWeight: FontWeight.w600,
-                          color: BuytimeTheme.ManagerPrimary
+                            letterSpacing: 1.25,
+                            fontSize: 16,
+                            ///16 | SizeConfig.safeBlockHorizontal * 4.5
+                            fontFamily: BuytimeTheme.FontFamily,
+                            fontWeight: FontWeight.w600,
+                            color: BuytimeTheme.TextWhite
                         ),
                       ),
                     ),
@@ -394,10 +446,108 @@ class Utils {
             ),
           ),
         );
+
       },
     );
   }
 
+  static void googleSearch(BuildContext context){
+    GooglePlace googlePlace = GooglePlace(BuytimeConfig.AndroidApiKey);
+    List<AutocompletePrediction> predictions = [];
+
+    void autoCompleteSearch(String value) async {
+      var result = await googlePlace.autocomplete.get(value);
+      if (result != null && result.predictions != null) {
+        predictions = result.predictions;
+      }
+    }
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topRight: Radius.circular(10),
+              topLeft: Radius.circular(10)
+          )
+      ),
+      builder: (BuildContext context) {
+        return SafeArea(
+          child: Container(
+            margin: EdgeInsets.only(right: 20, left: 20, top: 20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                TextField(
+                  decoration: InputDecoration(
+                    labelText: AppLocalizations.of(context).address,
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: BuytimeTheme.ManagerPrimary,
+                        width: 1.0,
+                      ),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: BuytimeTheme.SymbolLightGrey,
+                        width: 1.0,
+                      ),
+                    ),
+                  ),
+                  onChanged: (value) {
+                    if (value.isNotEmpty) {
+                      autoCompleteSearch(value);
+                    } else {
+                      if (predictions.length > 0) {
+                        predictions = [];
+                      }
+                    }
+                  },
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Flexible(
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: predictions.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        leading: CircleAvatar(
+                          child: Icon(
+                            Icons.pin_drop,
+                            color: Colors.white,
+                          ),
+                        ),
+                        title: Text(predictions[index].description),
+                        onTap: () {
+                          debugPrint(predictions[index].placeId);
+                          /*Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DetailsPage(
+                                placeId: predictions[index].placeId,
+                                googlePlace: googlePlace,
+                              ),
+                            ),
+                          );*/
+                        },
+                      );
+                    },
+                  ),
+                ),
+                /*Container(
+                  margin: EdgeInsets.only(top: 10, bottom: 10),
+                  child: Image.asset("assets/powered_by_google.png"),
+                ),*/
+              ],
+            ),
+          ),
+        );
+
+      },
+    );
+  }
 }
 
 class ShapesPainter extends CustomPainter {

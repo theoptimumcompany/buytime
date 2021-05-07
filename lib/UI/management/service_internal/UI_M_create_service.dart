@@ -8,6 +8,7 @@ import 'package:Buytime/reblox/reducer/category_tree_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/service_reducer.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
 import 'package:Buytime/reusable/enterExitRoute.dart';
+import 'package:Buytime/utils/animations/translate_animation.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/utils/utils.dart';
@@ -41,6 +42,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
   List<Parent> categoryList = [];
   var size;
   bool rippleLoading = false;
+  bool rippleTranslate = false;
   bool errorCategoryListEmpty = false;
   TextEditingController _tagServiceController = TextEditingController();
   bool defaultCategory = true;
@@ -208,12 +210,12 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                 languageCode.add(element.languageCode);
               });
 
-              if(snapshot.serviceState.name.isNotEmpty){
+              if(snapshot.serviceState.name.isNotEmpty && nameController.text.isEmpty){
                 debugPrint('UI_M_create_service => Service Name: ${snapshot.serviceState.name}');
                 //nameController.clear();
                 nameController.text = Utils.retriveField(myLocale.languageCode, snapshot.serviceState.name);
               }
-              if(snapshot.serviceState.description.isNotEmpty){
+              if(snapshot.serviceState.description.isNotEmpty && descriptionController.text.isEmpty){
                 debugPrint('UI_M_create_service => Service Description: ${snapshot.serviceState.description}');
                 //descriptionController.clear();
                 descriptionController.text = Utils.retriveField(myLocale.languageCode, snapshot.serviceState.description);
@@ -353,7 +355,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                                     }
                                                   },*/
                                                   onEditingComplete: (){
-                                                    StoreProvider.of<AppState>(context).dispatch(SetServiceName(Utils.saveField(myLocale.languageCode, nameController.text, snapshot.serviceState.name)));
+                                                    //StoreProvider.of<AppState>(context).dispatch(SetServiceName(Utils.saveField(myLocale.languageCode, nameController.text, snapshot.serviceState.name)));
                                                     currentFocus.unfocus();
                                                   },
                                                   decoration: InputDecoration(
@@ -370,13 +372,22 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                             color: BuytimeTheme.ManagerPrimary,
                                           ),
                                           onPressed: (){
+                                            setState(() {
+                                              rippleTranslate = true;
+                                            });
                                             currentFocus.unfocus();
-                                            StoreProvider.of<AppState>(context).dispatch(SetServiceName(Utils.saveField(myLocale.languageCode, nameController.text, snapshot.serviceState.name)));
+                                            //StoreProvider.of<AppState>(context).dispatch(SetServiceName(Utils.saveField(myLocale.languageCode, nameController.text, snapshot.serviceState.name)));
                                             String newField = Utils.saveField(myLocale.languageCode, nameController.text, snapshot.serviceState.name);
                                             Utils.multiLingualTranslate(
                                                 context, flagsCharCode, languageCode,
                                                 AppLocalizations.of(context).name, newField,
-                                                currentFocus);
+                                                currentFocus, (value){
+                                              if(!value){
+                                                setState(() {
+                                                  rippleTranslate = false;
+                                                });
+                                              }
+                                            });
                                           },
                                         )
                                       ],
@@ -425,13 +436,22 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                             color: BuytimeTheme.ManagerPrimary,
                                           ),
                                           onPressed: (){
+                                            setState(() {
+                                              rippleTranslate = true;
+                                            });
                                             currentFocus.unfocus();
                                             StoreProvider.of<AppState>(context).dispatch(SetServiceDescription(Utils.saveField(myLocale.languageCode, descriptionController.text, snapshot.serviceState.description)));
                                             String newField = Utils.saveField(myLocale.languageCode, descriptionController.text, snapshot.serviceState.description);
                                             Utils.multiLingualTranslate(
                                                 context, flagsCharCode, languageCode,
                                                 AppLocalizations.of(context).description, newField,
-                                                currentFocus);
+                                                currentFocus, (value){
+                                              if(!value){
+                                                setState(() {
+                                                  rippleTranslate = false;
+                                                });
+                                              }
+                                            });
                                           },
                                         )
                                       ],
@@ -720,8 +740,37 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                 ),
 
                 ///Ripple Effect
-                rippleLoading
-                    ? Positioned.fill(
+                rippleTranslate ?
+                Positioned.fill(
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Container(
+                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3),
+                        height: double.infinity,
+                        decoration: BoxDecoration(
+                          color: BuytimeTheme.BackgroundWhite.withOpacity(.8),
+                        ),
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Container(
+                                width: SizeConfig.safeBlockVertical * 20,
+                                height: SizeConfig.safeBlockVertical * 20,
+                                child: Center(
+                                  child: SpinKitRipple(
+                                    color: BuytimeTheme.ManagerPrimary,
+                                    size: SizeConfig.safeBlockVertical * 18,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        )),
+                  ),
+                ):
+                rippleLoading ?
+                Positioned.fill(
                   child: Align(
                     alignment: Alignment.center,
                     child: Container(
@@ -735,12 +784,12 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
                               Container(
-                                width: 50,
-                                height: 50,
+                                width: SizeConfig.safeBlockVertical * 20,
+                                height: SizeConfig.safeBlockVertical * 20,
                                 child: Center(
                                   child: SpinKitRipple(
                                     color: Colors.white,
-                                    size: 50,
+                                    size: SizeConfig.safeBlockVertical * 18,
                                   ),
                                 ),
                               ),
@@ -748,8 +797,8 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                           ),
                         )),
                   ),
-                )
-                    : Container(),
+                ) :
+                Container(),
               ]),
             );
           }),

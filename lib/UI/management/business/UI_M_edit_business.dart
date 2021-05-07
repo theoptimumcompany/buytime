@@ -1020,12 +1020,12 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Container(
-                          width: 50,
-                          height: 50,
+                          width: SizeConfig.safeBlockVertical * 20,
+                          height: SizeConfig.safeBlockVertical * 20,
                           child: Center(
                             child: SpinKitRipple(
                               color: Colors.white,
-                              size: 50,
+                              size: SizeConfig.safeBlockVertical * 18,
                             ),
                           ),
                         ),
