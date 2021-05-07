@@ -859,6 +859,7 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                                               padding: const EdgeInsets.only(top: 10.0, left: 20.0, right: 20.0),
                                               child: Column(
                                                 mainAxisSize: MainAxisSize.min,
+                                                crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
                                                   Row(
                                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -887,7 +888,7 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                                                   ),
                                                   Container(
                                                     width: double.infinity,
-                                                    child: Row(
+                                                    child: Wrap(
                                                       children: listOfManagerChips(snapshot),
                                                     ),
                                                   ),
@@ -895,8 +896,39 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                                                   Flexible(
                                                     child: Container(
                                                       // height: media.height * 0.15,
-                                                      child: ListView.builder(
-                                                        shrinkWrap: true,
+                                                      child: Wrap(
+                                                        spacing: 5,
+                                                        children: managerList.map((e) => InputChip(
+                                                          selected: false,
+                                                          label: Text(
+                                                            e.mail,
+                                                            style: TextStyle(
+                                                              fontSize: 13.0,
+                                                              fontWeight: FontWeight.w500,
+                                                            ),
+                                                          ),
+                                                          //avatar: FlutterLogo(),
+                                                          onPressed: () {
+                                                            print('Manager is pressed');
+
+                                                            ///Vedere che fare quando si pigia il chip
+                                                            setState(() {
+                                                              //_selected = !_selected;
+                                                            });
+                                                          },
+                                                          onDeleted: () {
+                                                            Manager managerToDelete = Manager(id: "", name: "", surname: "", mail:e.mail);
+                                                            print("Mail di invito Manager da eliminare : " + e.mail);
+                                                            CategoryInviteState categoryInviteState = CategoryInviteState().toEmpty();
+                                                            categoryInviteState.role = "Manager";
+                                                            categoryInviteState.id_category = snapshot.category.id;
+                                                            categoryInviteState.mail = e.mail;
+                                                            StoreProvider.of<AppState>(context).dispatch(DeleteCategoryInvite(categoryInviteState));
+                                                            StoreProvider.of<AppState>(context).dispatch(new DeleteCategoryManager(managerToDelete));
+                                                            print('Manager is deleted');
+                                                          },
+                                                        )).toList(),
+                                                        /*shrinkWrap: true,
                                                         itemCount: managerList.length,
                                                         physics: ClampingScrollPhysics(),
                                                         itemBuilder: (context, i) {
@@ -934,7 +966,7 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                                                               ),
                                                             ],
                                                           );
-                                                        },
+                                                        },*/
                                                       ),
                                                     ),
                                                   ) : Container()
@@ -959,6 +991,7 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                                                 padding: const EdgeInsets.only(left: 10.0, top: 10.0),
                                                 child: Column(
                                                   mainAxisSize: MainAxisSize.min,
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
                                                     ///Icon & Manager text
                                                     Row(
@@ -990,8 +1023,38 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                                                     Flexible(
                                                       child: Container(
                                                         //height: media.height * 0.15,
-                                                        child: ListView.builder(
-                                                          shrinkWrap: true,
+                                                        child: Wrap(
+                                                          spacing: 5,
+                                                          children: workerList.map((e) => InputChip(
+                                                            selected: false,
+                                                            label: Text(
+                                                              e.mail,
+                                                              style: TextStyle(
+                                                                fontSize: 13.0,
+                                                                fontWeight: FontWeight.w500,
+                                                              ),
+                                                            ),
+                                                            onPressed: () {
+                                                              print('Worker is pressed');
+
+                                                              ///Vedere che fare quando si pigia il chip
+                                                              setState(() {
+                                                                //_selected = !_selected;
+                                                              });
+                                                            },
+                                                            onDeleted: () {
+                                                              Worker workerToDelete = Worker(id: "", name: "", surname: "", mail: e.mail);
+                                                              print("Mail di invito Worker da eliminare : " + e.mail);
+                                                              CategoryInviteState categoryInviteState = CategoryInviteState().toEmpty();
+                                                              categoryInviteState.role = "Worker";
+                                                              categoryInviteState.id_category = snapshot.category.id;
+                                                              categoryInviteState.mail = e.mail;
+                                                              StoreProvider.of<AppState>(context).dispatch(DeleteCategoryInvite(categoryInviteState));
+                                                              StoreProvider.of<AppState>(context).dispatch(new DeleteCategoryWorker(workerToDelete));
+                                                              print('Worker is deleted');
+                                                            },
+                                                          )).toList(),
+                                                          /*shrinkWrap: true,
                                                           itemCount: workerList.length,
                                                           itemBuilder: (context, i) {
                                                             return Row(
@@ -1027,7 +1090,7 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                                                                 ),
                                                               ],
                                                             );
-                                                          },
+                                                          },*/
                                                         ),
                                                       ),
                                                     ) :
