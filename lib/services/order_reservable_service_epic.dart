@@ -12,12 +12,18 @@ import 'package:Buytime/reblox/reducer/order_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reservable_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reservable_reducer.dart';
 import 'package:Buytime/reblox/reducer/statistics_reducer.dart';
+import 'package:Buytime/services/statistic/util.dart';
+import 'package:Buytime/services/stripe_payment_service_epic.dart';
+import 'package:Buytime/utils/utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:redux_epics/redux_epics.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:http/http.dart' as http;
 import 'package:Buytime/services/file_upload_service.dart' if (dart.library.html) 'package:Buytime/services/file_upload_service_web.dart';
+import 'package:uuid/uuid.dart';
+
+import 'order/util.dart';
 // import 'package:stripe_sdk/stripe_sdk.dart';
 
 class OrderReservableListRequestService implements EpicClass<AppState> {
@@ -326,17 +332,58 @@ class AddingReservableStripePaymentMethodRequest implements EpicClass<AppState> 
   }
 }
 
-// Future<Map<String, dynamic>> confirmPayment3DSecure(String clientSecret, String paymentMethodId, Stripe stripe) async{
-//   Map<String, dynamic> paymentIntentRes_3dSecure;
-//   try{
-//     await stripe.confirmPayment(clientSecret, paymentMethodId: paymentMethodId);
-//     paymentIntentRes_3dSecure = await stripe.api.retrievePaymentIntent(clientSecret);
-//   }catch(e){
-//     print("ERROR_ConfirmPayment3DSecure: $e");
-//   }
-//   return paymentIntentRes_3dSecure;
-// }
+/// an order always have to be created with a payment method attached in its subcollection
+/// TODO: research if there is a way to make this two operations in an atomic way
+/// IMPORTANT: This function will create a separate order on the database for EACH time slot in the list.
+/// this is the way to go at the moment.
+class CreateOrderReservableCardAndPayService implements EpicClass<AppState> {
+  StatisticsState statisticsState;
+  String state = '';
+  String paymentResult = '';
+  @override
+  Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
+    return actions.whereType<CreateOrderReservableCardAndPay>().asyncMap((event) async {
+      for (int i = 0; i < event.orderReservableState.itemList.length; i++) {
+        OrderReservableState reservable = orderReservableInititialization(event, i);
+        debugPrint('UI_U_ConfirmOrder => Date: ${reservable.date}');
+        /// add needed data to the order state
+        OrderReservableState orderReservableState = configureOrderReservable(event.orderReservableState, store);
+        if(event.selectedCardPaymentMethodId != null && store.state.booking != null && store.state.booking.booking_id != null) {
+          /// This is a time based id, meaning that even if 2 users are going to generate a document at the same moment in time
+          /// there are really low chances that the rest of the id is also colliding.
+          String timeBasedId = Uuid().v1();
+          orderReservableState.orderId = timeBasedId;
+          /// send document to orders collection
+          var addedOrder = await FirebaseFirestore.instance.collection("order").doc(timeBasedId).set(orderReservableState.toJson());
+          /// add the payment method to the order sub collection on firebase
+          var addedPaymentMethod = await FirebaseFirestore.instance.collection("order/" + orderReservableState.orderId + "/orderPaymentMethod").add({
+            'paymentMethodId' : event.selectedCardPaymentMethodId,
+            'last4': event.last4 ?? '',
+            'brand': event.brand ?? '',
+            'type':  Utils.enumToString(event.paymentType),
+            'country': event.country ?? 'US',
+            'booking_id': store.state.booking.booking_id
+          });
+          StripePaymentService stripePaymentService = StripePaymentService();
+          paymentResult = await stripePaymentService.processPaymentAsDirectCharge(orderReservableState.orderId);
+        }
+      }
+      statisticsComputation();
+    }).expand((element) {
+      var actionArray = [];
+      actionArray.add(CreatedOrderReservable());
+      actionArray.add(UpdateStatistics(statisticsState));
+      if (paymentResult == "success") {
+        actionArray.add(SetOrderReservableProgress(Utils.enumToString(OrderStatus.paid)));
+      } else {
+        actionArray.add(SetOrderReservableProgress(Utils.enumToString(OrderStatus.canceled)));
+      }
+      return actionArray;
+    });
+  }
 
+
+}
 class OrderReservableDeleteService implements EpicClass<AppState> {
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {

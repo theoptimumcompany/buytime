@@ -29,6 +29,7 @@ class OrderReservableState {
   OrderBusinessSnippetState business;
   UserSnippet user;
   String businessId;
+  String businessIdForGiveback;
   String userId;
   String orderId;
   List<SelectedEntry> selected;
@@ -56,6 +57,7 @@ class OrderReservableState {
     this.business,
     this.user,
     this.businessId,
+    this.businessIdForGiveback,
     this.userId,
     this.orderId,
     this.selected,
@@ -83,6 +85,7 @@ class OrderReservableState {
     this.navigate = state.navigate;
     this.business = state.business;
     this.businessId = state.businessId;
+    this.businessIdForGiveback = state.businessIdForGiveback;
     this.userId = state.userId;
     this.orderId = state.orderId;
     this.user = state.user;
@@ -108,6 +111,7 @@ class OrderReservableState {
     String addCardProgress,
     String navigate,
     String businessId,
+    String businessIdForGiveback,
     String userId,
     String orderId,
     OrderBusinessSnippetState business,
@@ -133,6 +137,7 @@ class OrderReservableState {
       addCardProgress: addCardProgress ?? this.addCardProgress,
       navigate: navigate ?? this.navigate,
       businessId: businessId ?? this.businessId,
+      businessIdForGiveback: businessIdForGiveback ?? this.businessIdForGiveback,
       userId: userId ?? this.userId,
       orderId: orderId ?? this.orderId,
       business: business ?? this.business,
@@ -161,6 +166,7 @@ class OrderReservableState {
       addCardProgress: "notStarted",
       navigate: false,
       businessId: "",
+      businessIdForGiveback: "",
       userId: "",
         orderId: "",
       business: OrderBusinessSnippetState().toEmpty(),

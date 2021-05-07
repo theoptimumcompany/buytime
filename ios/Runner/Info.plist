@@ -107,6 +107,10 @@
 	</dict>
 	<key>NSAppleMusicUsageDescription</key>
 	<string>Play using while you are hiking</string>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>Can I always use Bluetooth?</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>Can I use Bluetooth?</string>
 	<key>NSCalendarsUsageDescription</key>
 	<string>Can i use calendar?</string>
 	<key>NSCameraUsageDescription</key>
@@ -151,9 +155,5 @@
 	<false/>
 	<key>io.flutter.embedded_views_preview</key>
 	<true/>
-	<key>NSBluetoothPeripheralUsageDescription</key>
-	<string>Can I use Bluetooth?</string>
-	<key>NSBluetoothAlwaysUsageDescription</key>
-	<string>Can I always use Bluetooth?</string>
 </dict>
 </plist>

@@ -1,12 +1,14 @@
 import 'dart:math';
 
+import 'package:Buytime/reblox/enum/order_time_intervals.dart';
+import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+
 
 class Utils {
 
@@ -90,6 +92,31 @@ class Utils {
       await launch(googleUrl);
     } else {
       throw 'Could not open the map.';
+    }
+  }
+
+  static OrderTimeInterval getTimeInterval(OrderReservableState orderReservableState) {
+    OrderTimeInterval orderTimeIntervalResult;
+    DateTime closestTimeSlot;
+    /// find the service time slot closest to today
+    for (int i = 0; i < orderReservableState.itemList.length; i++) {
+      DateTime timeSlotToCheck = orderReservableState.itemList[i].date; // || timeSlotToCheck.difference(closestTimeSlot)
+      if (closestTimeSlot == null) {
+        closestTimeSlot = timeSlotToCheck;
+      } else if (timeSlotToCheck.difference(closestTimeSlot).isNegative){
+        closestTimeSlot = timeSlotToCheck;
+      }
+    }
+    /// check in which time interval the order has to be processed
+    Duration nowToServiceDuration = DateTime.now().difference(closestTimeSlot);
+    if (!nowToServiceDuration.isNegative) {
+      /// TODO: error the service performance should be already happened
+    } else if (nowToServiceDuration.inHours <= 48) { // TODO: make hardcoded variables readable from the configuration (we have to create a collection "configurationPublic"
+      return OrderTimeInterval.directPayment;
+    } else if (nowToServiceDuration.inHours >= 48 && nowToServiceDuration.inDays <= 7) {
+      return OrderTimeInterval.holdAndReminder;
+    } else if (nowToServiceDuration.inDays > 7) {
+      return OrderTimeInterval.reminder;
     }
   }
 

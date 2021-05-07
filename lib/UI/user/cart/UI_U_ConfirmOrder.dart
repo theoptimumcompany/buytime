@@ -4,6 +4,7 @@ import 'package:Buytime/UI/user/cart/tab/T_native_google.dart';
 import 'package:Buytime/UI/user/cart/tab/T_credit_cards.dart';
 import 'package:Buytime/UI/user/cart/tab/T_room.dart';
 import 'package:Buytime/UI/user/cart/tab/T_progress.dart';
+import 'package:Buytime/reblox/enum/order_time_intervals.dart';
 import 'package:Buytime/reblox/model/card/card_state.dart';
 import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
 import 'package:Buytime/reblox/model/stripe/stripe_state.dart';
@@ -572,33 +573,25 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
   void confirmationCard(BuildContext context, AppState snapshot, String last4, String brand, String country, String selectedCardPaymentMethodId) {
     if (widget.reserve != null && widget.reserve) {
       /// Reservable payment process starts
-      debugPrint('UI_U_ConfirmOrder => start reservable payment process with Credit Card');
-      StoreProvider.of<AppState>(context).dispatch(SetOrderReservableProgress("in_progress"));
-      for (int i = 0; i < snapshot.orderReservable.itemList.length; i++) {
-        OrderReservableState reservable = OrderReservableState(
-          position: snapshot.orderReservable.position,
-          date: snapshot.orderReservable.itemList[i].date,
-          itemList: [snapshot.orderReservable.itemList[i]],
-          total: snapshot.orderReservable.itemList[i].price,
-          tip: snapshot.orderReservable.tip,
-          tax: snapshot.orderReservable.tax,
-          taxPercent: snapshot.orderReservable.taxPercent,
-          amount: 1,
-          progress: snapshot.orderReservable.progress,
-          addCardProgress: snapshot.orderReservable.addCardProgress,
-          navigate: snapshot.orderReservable.navigate,
-          businessId: snapshot.orderReservable.businessId,
-          userId: snapshot.orderReservable.userId,
-          business: snapshot.orderReservable.business,
-          user: snapshot.orderReservable.user,
-          selected: [snapshot.orderReservable.selected[i]],
-          cartCounter: snapshot.orderReservable.cartCounter,
-          serviceId: snapshot.orderReservable.serviceId,
-        );
-        debugPrint('UI_U_ConfirmOrder => Date: ${reservable.date}');
-        StoreProvider.of<AppState>(context).dispatch(CreateOrderReservable(reservable));
+      debugPrint('UI_U_ConfirmOrder => order is reservable' + snapshot.orderReservable.isOrderAutoConfirmable().toString());
+      if (snapshot.orderReservable.isOrderAutoConfirmable()) {
+        if(Utils.getTimeInterval(orderReservableState) == OrderTimeInterval.directPayment) {
+          StoreProvider.of<AppState>(context).dispatch(CreateOrderReservableCardAndPay(snapshot.order, last4, brand, country, selectedCardPaymentMethodId, PaymentType.card));
+        } else if (Utils.getTimeInterval(orderReservableState) == OrderTimeInterval.holdAndReminder) {
+          StoreProvider.of<AppState>(context).dispatch(CreateOrderReservableCardAndHold(snapshot.order, last4, brand, country, selectedCardPaymentMethodId, PaymentType.card));
+        } else if (Utils.getTimeInterval(orderReservableState) == OrderTimeInterval.reminder) {
+          StoreProvider.of<AppState>(context).dispatch(CreateOrderReservableCardAndReminder(snapshot.order, last4, brand, country, selectedCardPaymentMethodId, PaymentType.card));
+        }
+      } else {
+        if(Utils.getTimeInterval(orderReservableState) == OrderTimeInterval.directPayment) {
+          StoreProvider.of<AppState>(context).dispatch(CreateOrderReservablePendingWithPaymentMethod(snapshot.order, last4, brand, country, selectedCardPaymentMethodId, PaymentType.card));
+        } else if (Utils.getTimeInterval(orderReservableState) == OrderTimeInterval.holdAndReminder) {
+          StoreProvider.of<AppState>(context).dispatch(CreateOrderReservablePendingWithPaymentMethod(snapshot.order, last4, brand, country, selectedCardPaymentMethodId, PaymentType.card));
+        } else if (Utils.getTimeInterval(orderReservableState) == OrderTimeInterval.reminder) {
+          StoreProvider.of<AppState>(context).dispatch(CreateOrderReservablePending(snapshot.order, last4, brand, country, selectedCardPaymentMethodId, PaymentType.card));
+        }
       }
-      //StoreProvider.of<AppState>(context).dispatch(CreateOrderReservable(snapshot.orderReservable));
+
     } else {
       /// Direct Card Payment
       debugPrint('UI_U_ConfirmOrder => start direct payment process with Credit Card');
