@@ -264,7 +264,19 @@ class _BookingPageState extends State<BookingPage> {
           rowLess2.clear();
           // no
           //grid(store.state.categoryList.categoryListState);
-          List<CategoryState> l = snapshot.categoryList.categoryListState;
+          categoryListState = snapshot.categoryList;
+          categoryListState.categoryListState.forEach((element) {
+            debugPrint('UI_U_booking_page => ALL CATEGORIES: ${element.name}');
+          });
+          categoryListState.categoryListState.forEach((element) {
+            if(element.customTag == 'showcase')
+              categoryList.add(element);
+          });
+          categoryList.shuffle();
+          categoryList.forEach((element) {
+            debugPrint('UI_U_booking_page => SHOWCASE CATEGORIES: ${element.name}');
+          });
+          List<CategoryState> l = categoryList;
 
           WidgetsBinding.instance.addPostFrameCallback((_) {
             if (l.isNotEmpty) grid(l);
@@ -273,8 +285,8 @@ class _BookingPageState extends State<BookingPage> {
           businessState = snapshot.business;
           serviceListState = snapshot.serviceList;
           serviceList = serviceListState.serviceListState.length >= 5 ? serviceListState.serviceListState.sublist(0,5) : serviceListState.serviceListState;
-          categoryListState = snapshot.categoryList;
-          categoryList = categoryListState.categoryListState;
+
+
 
           String startMonth = DateFormat('MM').format(bookingState.start_date);
           String endMonth = DateFormat('MM').format(bookingState.end_date);
@@ -533,7 +545,7 @@ class _BookingPageState extends State<BookingPage> {
                                         Container(
                                           margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                           child: Text(
-                                            AppLocalizations.of(context).yourHolidayInSpace + businessState.municipality,
+                                            AppLocalizations.of(context).yourHolidayInSpace + ' ' + businessState.municipality,
                                             style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextMedium, fontWeight: FontWeight.w400, fontSize: 16
 
                                               ///SizeConfig.safeBlockHorizontal * 4

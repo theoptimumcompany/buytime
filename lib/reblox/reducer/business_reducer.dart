@@ -221,6 +221,14 @@ class SetBusinessDraft {
   bool get draft => _draft;
 }
 
+class SetHub {
+  bool _hub;
+
+  SetHub(this._hub);
+
+  bool get hub => _hub;
+}
+
 class SetBusinessCoordinate {
   String _coordinate;
 
@@ -386,6 +394,10 @@ BusinessState businessReducer(BusinessState state, action) {
   }
   if (action is SetBusinessDraft) {
     businessState.draft = action.draft;
+    return businessState;
+  }
+  if (action is SetHub) {
+    businessState.hub = action.hub;
     return businessState;
   }
   if (action is BusinessRequestResponse) {

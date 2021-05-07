@@ -306,8 +306,6 @@ class _ActivityManagementState extends State<ActivityManagement> {
                 );
   }
 
-
-
   void onCancel(OrderState order){
     showDialog(
         context: context,

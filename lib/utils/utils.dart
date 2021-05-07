@@ -1,12 +1,19 @@
+import 'dart:convert';
 import 'dart:math';
 
+import 'package:Buytime/reblox/model/app_state.dart';
+import 'package:Buytime/reblox/reducer/service/service_reducer.dart';
 import 'package:Buytime/utils/size_config.dart';
+import 'package:Buytime/utils/theme/buytime_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:emojis/emoji.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:http/http.dart'as http;
 
 class Utils {
 
@@ -93,6 +100,303 @@ class Utils {
     }
   }
 
+  static String retriveField(String myLocale, String field){
+    List<String> tmpField = field.split('|');
+    String tmp = '';
+    if(field.contains('|')){
+      tmpField.forEach((element) {
+        if(element.endsWith('~\$~$myLocale')){
+          //debugPrint('retriveField => Found element: $element');
+          tmp = element.split('~\$~').first;
+        }
+      });
+      if(tmp.isEmpty)
+        tmp = field.split('~\$~').first;
+    }else{
+       if(field.contains('~\$~')){
+         tmp = field.split('~\$~').first;
+       }else{
+         tmp = field;
+       }
+    }
+    //debugPrint('retriveField => Found value: $tmp');
+    return tmp;
+  }
+  static String saveField(String myLocale, String newField, String oldField){
+    debugPrint('saveField => old field: $oldField');
+    debugPrint('saveField => new field: $newField');
+    List<String> tmpField = oldField.split('|');
+    String tmp = '';
+    if(oldField.contains('|')){
+      debugPrint('saveField => old field not empty');
+      if(tmpField.isNotEmpty){
+        debugPrint('saveField => more languages');
+        tmpField.forEach((element) {
+          if(element.endsWith('~\$~$myLocale')){
+            tmp += '$newField~\$~$myLocale|';
+          }else
+            tmp += '${element.split('~\$~').first}~\$~${element.split('~\$~').last}|';
+        });
+      }else{
+        debugPrint('saveField => one language');
+        tmp += '$newField~\$~$myLocale|';
+      }
+    }else{
+      debugPrint('saveField => old field empty');
+      tmp += '$newField~\$~$myLocale|';
+    }
+    tmp = tmp.substring(0, tmp.length - 1);
+    debugPrint('saveField => updated Field value: $tmp');
+    return tmp;
+  }
+
+  static void multiLingualTranslate(BuildContext context, List<String> flags, List<String> language, String field, String stateField, FocusScopeNode node) async{
+
+    Locale myLocale = Localizations.localeOf(context);
+    debugPrint('UI_M_create_service => My locale: ${myLocale.languageCode}');
+
+
+
+    //FocusScopeNode node = FocusScope.of(context);
+    String myLocaleCharCode = '';
+    if(myLocale.languageCode == 'en')
+      myLocaleCharCode = 'gb'.toUpperCase().replaceAllMapped(RegExp(r'[A-Z]'), (match) => String.fromCharCode(match.group(0).codeUnitAt(0) + 127397));
+    else
+      myLocaleCharCode = myLocale.languageCode.toUpperCase().replaceAllMapped(RegExp(r'[A-Z]'), (match) => String.fromCharCode(match.group(0).codeUnitAt(0) + 127397));
+
+    List<TextEditingController> controllers = List.generate(flags.length, (index) => TextEditingController());
+    int myIndex = 0;
+    List<String> stateFiledList = stateField.split('|');
+    debugPrint('UI_M_create_service => State field list: $stateFiledList');
+    //nameController.text = Utils.retriveFiled(myLocale.languageCode, snapshot.serviceState.name);
+    for(int i = 0; i < flags.length; i++){
+      if(myLocaleCharCode == flags[i])
+        myIndex = i;
+      stateFiledList.forEach((element) {
+        if(element.endsWith('~\$~${language[i]}')){
+          String retrive = retriveField(language[i], stateField);
+          debugPrint('Retrived value => $retrive');
+          controllers[i].text = retrive;
+        }
+      });
+    }
+
+    for(int i = 0; i < language.length; i++) {
+      if(controllers[i].text.isEmpty){
+        if(language[i] != myLocale.languageCode){
+          debugPrint('LanguageCode: ${language[i]} | Flag: ${flags[i]}');
+          var url = Uri.https('translation.googleapis.com', '/language/translate/v2', {'target': '${language[i]}', 'key': '${BuytimeConfig.AndroidApiKey}', 'q': '${controllers[myIndex].text}'});
+          final http.Response response = await http.get(url);
+          //debugPrint('Response code: ${response.statusCode} | Response Body: ${response.body}');
+          if(response.statusCode == 200){
+            var langResponseMap = jsonDecode(response.body);
+            debugPrint('${language[i]} DONE | Decode: $langResponseMap');
+            debugPrint('${language[i]} ${langResponseMap['data']['translations'][0]['translatedText']}');
+            controllers[i].text = langResponseMap['data']['translations'][0]['translatedText'];
+          }
+        }
+      }
+    }
+
+    controllers.forEach((element) {
+      debugPrint('FIELDS: ${element.text}');
+    });
+    debugPrint('controllers length: ${controllers.length}');
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topRight: Radius.circular(10),
+              topLeft: Radius.circular(10)
+          )
+      ),
+      builder: (BuildContext context) {
+        return SafeArea(
+          child: Container(
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(10),
+                    topLeft: Radius.circular(10)
+                )
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                ///Current language
+                Container(
+                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 6, top: SizeConfig.safeBlockVertical * 2, bottom: SizeConfig.safeBlockVertical * .5),
+                  alignment: Alignment.topLeft,
+                  child: Text(
+                    'Current language:',
+                    style: TextStyle(
+                        fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: BuytimeTheme.FontFamily,
+                      color: BuytimeTheme.ManagerPrimary
+                    ),
+                  ),
+                ),
+                ///Current
+                Container(
+                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 6, right: SizeConfig.safeBlockHorizontal * 6, top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1),
+                  child: TextFormField(
+                    //initialValue: _serviceName,
+                      controller: controllers.elementAt(myIndex),
+                      validator: (value) => value.isEmpty ? AppLocalizations.of(context).serviceNameBlank : null,
+                      onChanged: (value) {
+                        //StoreProvider.of<AppState>(context).dispatch(SetServiceName(value));
+                      },
+                      onSaved: (value) {
+                        /*if (validateAndSave()) {
+                                      //_serviceName = value;
+                                      StoreProvider.of<AppState>(context).dispatch(SetServiceName(value));
+                                    }*/
+                      },
+                      decoration: InputDecoration(
+                          labelText: field,
+                          enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                          focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                          errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                          suffixIcon: Container(
+                            padding: EdgeInsets.only(top: 8),
+                            child: Text(
+                              '${Emoji.byChar(myLocaleCharCode)}',
+                              style: TextStyle(
+                                  fontSize: 24
+                              ),
+                            ),
+                          )
+                      )),
+                ),
+                ///Translate in
+                Container(
+                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 6, top: SizeConfig.safeBlockVertical * 2, bottom: SizeConfig.safeBlockVertical * .5),
+                  alignment: Alignment.topLeft,
+                  child: Text(
+                    'Translate in:',
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: BuytimeTheme.FontFamily,
+                        color: BuytimeTheme.ManagerPrimary
+                    ),
+                  ),
+                ),
+                Flexible(
+                  child: Container(
+                    margin: EdgeInsets.only(bottom: 10),
+                    child: CustomScrollView(shrinkWrap: true, slivers: [
+                      SliverList(
+                        delegate: SliverChildBuilderDelegate((context, index) {
+                                String flag = flags.elementAt(index);
+                                if(myLocaleCharCode != flag)
+                                  return Container(
+                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 6, right: SizeConfig.safeBlockHorizontal * 6, top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1),
+                              child: TextFormField(
+                                //initialValue: _serviceName,
+                                  controller: controllers.elementAt(index),
+                                  validator: (value) => value.isEmpty ? AppLocalizations.of(context).serviceNameBlank : null,
+                                  onChanged: (value) {
+                                    //StoreProvider.of<AppState>(context).dispatch(SetServiceName(value));
+                                  },
+                                  onSaved: (value) {
+                                    /*if (validateAndSave()) {
+                                      //_serviceName = value;
+                                      StoreProvider.of<AppState>(context).dispatch(SetServiceName(value));
+                                    }*/
+                                  },
+                                  decoration: InputDecoration(
+                                      labelText: field,
+                                      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                      focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                      errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                      suffixIcon: Container(
+                                        padding: EdgeInsets.only(top: 8),
+                                        child: Text(
+                                          '${Emoji.byChar(flag)}',
+                                          style: TextStyle(
+                                              fontSize: 24
+                                          ),
+                                        ),
+                                      )
+                                  )),
+                            );
+                                else
+                                  return Container();
+                          },
+                          childCount: flags.length,
+                        ),
+                      ),
+                    ]),
+                  ),
+                ),
+                ///Save button
+                Container(
+                  margin: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2),
+                  width: 102,
+                  height: 36,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                    border: Border.all(
+                      color: BuytimeTheme.SymbolLightGrey
+                    )
+                  ),
+                  child: MaterialButton(
+                    elevation: 0,
+                    hoverElevation: 0,
+                    focusElevation: 0,
+                    highlightElevation: 0,
+                    onPressed:(){
+                      node.unfocus();
+                      String serviceField = '';
+                      for(int i = 0; i < controllers.length; i++) {
+                        if (controllers[i].text.isNotEmpty) {
+                          serviceField += controllers[i].text + '~\$~' + language[i].toString() + '|';
+                        }
+                      }
+                      if(serviceField.isNotEmpty){
+                        serviceField = serviceField.substring(0, serviceField.length - 1);
+                      }
+                      debugPrint('MultiLingualTranslate => $serviceField');
+                      if(field == 'Name')
+                        StoreProvider.of<AppState>(context).dispatch(SetServiceName(serviceField));
+                      else
+                        StoreProvider.of<AppState>(context).dispatch(SetServiceDescription(serviceField));
+                      //nextPage();
+                      Navigator.of(context).pop();
+                    },
+                    textColor: BuytimeTheme.UserPrimary,
+                    color: BuytimeTheme.BackgroundWhite,
+                    //disabledColor: AppTheme.BackgroundGrey,
+                    //padding: EdgeInsets.all(media.width * 0.03),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: new BorderRadius.circular(5),
+                    ),
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        '${AppLocalizations.of(context).saveUpper}',
+                        style: TextStyle(
+                          letterSpacing: 1.25,
+                          fontSize: 16,
+                          ///16 | SizeConfig.safeBlockHorizontal * 4.5
+                          fontFamily: BuytimeTheme.FontFamily,
+                          fontWeight: FontWeight.w600,
+                          color: BuytimeTheme.ManagerPrimary
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 
 }
 

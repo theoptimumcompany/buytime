@@ -51,6 +51,7 @@ class _BookingCreationState extends State<BookingCreation> {
   @override
   void initState() {
     super.initState();
+    _numberOfGuestsController.text = '1';
   }
 
   ///Drawer Key
@@ -110,91 +111,96 @@ class _BookingCreationState extends State<BookingCreation> {
 
     ///Init sizeConfig
     SizeConfig().init(context);
-
+    final node = FocusScope.of(context);
     return StoreConnector<AppState, AppState>(
       converter: (store) => store.state,
       builder: (context, snapshot) {
         BusinessState businessState = snapshot.business;
         return WillPopScope(
           onWillPop: () async => false,
-          child: Scaffold(
-            drawerEnableOpenDragGesture: false,
-            key: _drawerKey,
-            ///Appbar
-            appBar: AppBar(
-              backgroundColor: BuytimeTheme.ManagerPrimary,
-              title: Container(
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 0.0),
-                  child: Text(
-                    //AppLocalizations.of(context).inviteGuest,
-                    AppLocalizations.of(context).createInvite,
-                    textAlign: TextAlign.start,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: media.height * 0.025,
-                      fontWeight: FontWeight.w400,
+          child: GestureDetector(
+            onTap: (){
+              node.unfocus();
+            },
+            child: Scaffold(
+              drawerEnableOpenDragGesture: false,
+              key: _drawerKey,
+              ///Appbar
+              appBar: AppBar(
+                backgroundColor: BuytimeTheme.ManagerPrimary,
+                title: Container(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 0.0),
+                    child: Text(
+                      //AppLocalizations.of(context).inviteGuest,
+                      AppLocalizations.of(context).createInvite,
+                      textAlign: TextAlign.start,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: media.height * 0.025,
+                        fontWeight: FontWeight.w400,
+                      ),
                     ),
                   ),
                 ),
-              ),
-              leading: IconButton(
-                icon: Icon(
-                  Icons.keyboard_arrow_left,
-                  color: Colors.white,
+                leading: IconButton(
+                  icon: Icon(
+                    Icons.keyboard_arrow_left,
+                    color: Colors.white,
+                  ),
+                  onPressed: () async{
+                    Navigator.of(context).pop();
+                  },
                 ),
-                onPressed: () async{
-                  Navigator.of(context).pop();
-                },
               ),
-            ),
-            //drawer: UI_M_BusinessListDrawer(),
-            body: SafeArea(
-              child: Center(
-                child: SingleChildScrollView(
-                  child: ConstrainedBox(
-                      constraints: BoxConstraints(),
-                      child: Container(
-                        height: (SizeConfig.safeBlockVertical * 100) - 60,
-                        child: Stack(
-                          children: [
-                            ///Booking Code
-                            Positioned.fill(
-                              child: Align(
-                                alignment: Alignment.topCenter,
-                                child: Form(
-                                  key: _formKey,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      ///Title
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        children: [
-                                          Container(
-                                            margin: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 5, top: SizeConfig.blockSizeVertical * 3),
-                                            child: Text(
-                                              AppLocalizations.of(context).enterGuestDetails,
-                                              style: TextStyle(
-                                                  fontFamily: BuytimeTheme.FontFamily,
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 10,
-                                                  letterSpacing: 1.5
-                                              ),
-                                              textAlign: TextAlign.left,
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                      ///Booking Code & Email & Name & Surname & Check In & Check Out & Number Of Guests
-                                      Container(
-                                        height: SizeConfig.safeBlockVertical * 70,
-                                        child: Column(
+              //drawer: UI_M_BusinessListDrawer(),
+              body: SafeArea(
+                child: Center(
+                  child: SingleChildScrollView(
+                    child: ConstrainedBox(
+                        constraints: BoxConstraints(),
+                        child: Container(
+                          height: (SizeConfig.safeBlockVertical * 100) - 60,
+                          child: Stack(
+                            children: [
+                              ///Booking Code
+                              Positioned.fill(
+                                child: Align(
+                                  alignment: Alignment.topCenter,
+                                  child: Form(
+                                    key: _formKey,
+                                    //autovalidateMode: AutovalidateMode.onUserInteraction,
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        ///Title
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.start,
                                           children: [
-                                            ///Booking code
-                                            /*Container(
+                                            Container(
+                                              margin: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 5, top: SizeConfig.blockSizeVertical * 3),
+                                              child: Text(
+                                                AppLocalizations.of(context).enterGuestDetails,
+                                                style: TextStyle(
+                                                    fontFamily: BuytimeTheme.FontFamily,
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 10,
+                                                    letterSpacing: 1.5
+                                                ),
+                                                textAlign: TextAlign.left,
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                        ///Booking Code & Email & Name & Surname & Check In & Check Out & Number Of Guests
+                                        Container(
+                                          height: SizeConfig.safeBlockVertical * 70,
+                                          child: Column(
+                                            children: [
+                                              ///Booking code
+                                              /*Container(
                                               margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 4, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
                                               child:  Row(
                                                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -235,415 +241,460 @@ class _BookingCreationState extends State<BookingCreation> {
                                                 ],
                                               ),
                                             ),*/
-                                            ///Email address
-                                            Expanded(
-                                              child: Container(
-                                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
-                                                  child: TextFormField(
-                                                    controller: _emailToInviteController,
-                                                    textAlign: TextAlign.start,
-                                                    keyboardType: TextInputType.emailAddress,
-                                                    autofillHints: [AutofillHints.email],
-                                                    decoration: InputDecoration(
-                                                      filled: true,
-                                                      fillColor: BuytimeTheme.DividerGrey,
-                                                      enabledBorder: OutlineInputBorder(
-                                                          borderSide: BorderSide(color: Color(0xffe0e0e0)),
-                                                          borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                              ///Email address
+                                              Expanded(
+                                                child: Container(
+                                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
+                                                    child: TextFormField(
+                                                      controller: _emailToInviteController,
+                                                      textAlign: TextAlign.start,
+                                                      keyboardType: TextInputType.emailAddress,
+                                                      textInputAction: TextInputAction.next,
+                                                      autofillHints: [AutofillHints.email],
+                                                      decoration: InputDecoration(
+                                                        filled: true,
+                                                        fillColor: BuytimeTheme.DividerGrey,
+                                                        enabledBorder: OutlineInputBorder(
+                                                            borderSide: BorderSide(color: Color(0xffe0e0e0)),
+                                                            borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                                        ),
+                                                        focusedBorder: OutlineInputBorder(
+                                                            borderSide: BorderSide(color: Color(0xff666666)),
+                                                            borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                                        ),
+                                                        errorBorder: OutlineInputBorder(
+                                                            borderSide: BorderSide(color: BuytimeTheme.AccentRed),
+                                                            borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                                        ),
+                                                        labelText: AppLocalizations.of(context).emailToInvite,
+                                                        //hintText: "email *",
+                                                        //hintStyle: TextStyle(color: Color(0xff666666)),
+                                                        labelStyle: TextStyle(
+                                                          fontFamily: BuytimeTheme.FontFamily,
+                                                          color: Color(0xff666666),
+                                                          fontWeight: FontWeight.w400,
+                                                        ),
+                                                        errorStyle: TextStyle(
+                                                          fontFamily: BuytimeTheme.FontFamily,
+                                                          color: BuytimeTheme.AccentRed,
+                                                          fontWeight: FontWeight.w400,
+                                                        ),
                                                       ),
-                                                      focusedBorder: OutlineInputBorder(
-                                                          borderSide: BorderSide(color: Color(0xff666666)),
-                                                          borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                                      style: TextStyle(
+                                                          fontFamily: BuytimeTheme.FontFamily,
+                                                          color: BuytimeTheme.TextMedium,
+                                                          fontWeight: FontWeight.w600,
+                                                          fontSize: 16
                                                       ),
-                                                      labelText: AppLocalizations.of(context).emailToInvite,
-                                                      //hintText: "email *",
-                                                      //hintStyle: TextStyle(color: Color(0xff666666)),
-                                                      labelStyle: TextStyle(
-                                                        fontFamily: BuytimeTheme.FontFamily,
-                                                        color: Color(0xff666666),
-                                                        fontWeight: FontWeight.w400,
-                                                      ),
-                                                      errorStyle: TextStyle(
-                                                        fontFamily: BuytimeTheme.FontFamily,
-                                                        color: BuytimeTheme.AccentRed,
-                                                        fontWeight: FontWeight.w400,
-                                                      ),
-                                                    ),
-                                                    style: TextStyle(
-                                                      fontFamily: BuytimeTheme.FontFamily,
-                                                      color: BuytimeTheme.TextMedium,
-                                                      fontWeight: FontWeight.w600,
-                                                      fontSize: 16
-                                                    ),
-                                                    validator: (String value) {
-                                                      if (value.isEmpty && !EmailValidator.validate(value)) {
-                                                        return AppLocalizations.of(context).pleaseEnterAValidEmail;
-                                                      }
-                                                      return null;
-                                                    },
-                                                  )
+                                                      validator: (String value) {
+                                                        if (value.isEmpty || !EmailValidator.validate(value)) {
+                                                          debugPrint('UI_M_booking_creation => Email Is Empty');
+                                                          return AppLocalizations.of(context).pleaseEnterAValidEmail;
+                                                        }
+                                                        return null;
+                                                      },
+                                                      onEditingComplete: (){
+                                                        node.nextFocus();
+                                                        //_formKey.currentState.reset();
+                                                        //_formKey.
+                                                      },
+                                                    )
+                                                ),
                                               ),
-                                            ),
-                                            ///Name
-                                            Expanded(
-                                              child: Container(
-                                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
-                                                  child: TextFormField(
-                                                    controller: _nameController,
-                                                    textAlign: TextAlign.start,
-                                                    decoration: InputDecoration(
-                                                      filled: true,
-                                                      fillColor: BuytimeTheme.DividerGrey,
-                                                      enabledBorder: OutlineInputBorder(
-                                                          borderSide: BorderSide(color: Color(0xffe0e0e0)),
-                                                          borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                              ///Name
+                                              Expanded(
+                                                child: Container(
+                                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
+                                                    child: TextFormField(
+                                                      controller: _nameController,
+                                                      textAlign: TextAlign.start,
+                                                      textInputAction: TextInputAction.next,
+                                                      decoration: InputDecoration(
+                                                        filled: true,
+                                                        fillColor: BuytimeTheme.DividerGrey,
+                                                        enabledBorder: OutlineInputBorder(
+                                                            borderSide: BorderSide(color: Color(0xffe0e0e0)),
+                                                            borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                                        ),
+                                                        focusedBorder: OutlineInputBorder(
+                                                            borderSide: BorderSide(color: Color(0xff666666)),
+                                                            borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                                        ),
+                                                        errorBorder: OutlineInputBorder(
+                                                            borderSide: BorderSide(color: BuytimeTheme.AccentRed),
+                                                            borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                                        ),
+                                                        labelText: AppLocalizations.of(context).name,
+                                                        //hintText: "email *",
+                                                        //hintStyle: TextStyle(color: Color(0xff666666)),
+                                                        labelStyle: TextStyle(
+                                                          fontFamily: BuytimeTheme.FontFamily,
+                                                          color: Color(0xff666666),
+                                                          fontWeight: FontWeight.w400,
+                                                        ),
                                                       ),
-                                                      focusedBorder: OutlineInputBorder(
-                                                          borderSide: BorderSide(color: Color(0xff666666)),
-                                                          borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                                      style: TextStyle(
+                                                          fontFamily: BuytimeTheme.FontFamily,
+                                                          color: BuytimeTheme.TextMedium,
+                                                          fontWeight: FontWeight.w600,
+                                                          fontSize: 16
                                                       ),
-                                                      labelText: AppLocalizations.of(context).name,
-                                                      //hintText: "email *",
-                                                      //hintStyle: TextStyle(color: Color(0xff666666)),
-                                                      labelStyle: TextStyle(
-                                                        fontFamily: BuytimeTheme.FontFamily,
-                                                        color: Color(0xff666666),
-                                                        fontWeight: FontWeight.w400,
-                                                      ),
-                                                    ),
-                                                    style: TextStyle(
-                                                      fontFamily: BuytimeTheme.FontFamily,
-                                                        color: BuytimeTheme.TextMedium,
-                                                        fontWeight: FontWeight.w600,
-                                                        fontSize: 16
-                                                    ),
-                                                    validator: (String value) {
-                                                      if (value.isEmpty) {
-                                                        return AppLocalizations.of(context).pleaseEnterAValidName;
-                                                      }
-                                                      return null;
-                                                    },
-                                                  )
+                                                      validator: (String value) {
+                                                        if (value.isEmpty) {
+                                                          debugPrint('UI_M_booking_creation => Name Is Empty');
+                                                          return AppLocalizations.of(context).pleaseEnterAValidName;
+                                                        }
+                                                        return null;
+                                                      },
+                                                    )
+                                                ),
                                               ),
-                                            ),
-                                            ///Surname
-                                            Expanded(
-                                              child: Container(
-                                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
-                                                  child: TextFormField(
-                                                    controller: _surnameController,
-                                                    textAlign: TextAlign.start,
-                                                    decoration: InputDecoration(
-                                                      filled: true,
-                                                      fillColor: BuytimeTheme.DividerGrey,
-                                                      enabledBorder: OutlineInputBorder(
-                                                          borderSide: BorderSide(color: Color(0xffe0e0e0)),
-                                                          borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                              ///Surname
+                                              Expanded(
+                                                child: Container(
+                                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
+                                                    child: TextFormField(
+                                                      controller: _surnameController,
+                                                      textAlign: TextAlign.start,
+                                                      textInputAction: TextInputAction.done,
+                                                      decoration: InputDecoration(
+                                                        filled: true,
+                                                        fillColor: BuytimeTheme.DividerGrey,
+                                                        enabledBorder: OutlineInputBorder(
+                                                            borderSide: BorderSide(color: Color(0xffe0e0e0)),
+                                                            borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                                        ),
+                                                        focusedBorder: OutlineInputBorder(
+                                                            borderSide: BorderSide(color: Color(0xff666666)),
+                                                            borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                                        ),
+                                                        errorBorder: OutlineInputBorder(
+                                                            borderSide: BorderSide(color: BuytimeTheme.AccentRed),
+                                                            borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                                        ),
+                                                        labelText: AppLocalizations.of(context).surname,
+                                                        //hintText: "email *",
+                                                        //hintStyle: TextStyle(color: Color(0xff666666)),
+                                                        labelStyle: TextStyle(
+                                                          fontFamily: BuytimeTheme.FontFamily,
+                                                          color: Color(0xff666666),
+                                                          fontWeight: FontWeight.w400,
+                                                        ),
                                                       ),
-                                                      focusedBorder: OutlineInputBorder(
-                                                          borderSide: BorderSide(color: Color(0xff666666)),
-                                                          borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                                      style: TextStyle(
+                                                          fontFamily: BuytimeTheme.FontFamily,
+                                                          color: BuytimeTheme.TextMedium,
+                                                          fontWeight: FontWeight.w600,
+                                                          fontSize: 16
                                                       ),
-                                                      labelText: AppLocalizations.of(context).surname,
-                                                      //hintText: "email *",
-                                                      //hintStyle: TextStyle(color: Color(0xff666666)),
-                                                      labelStyle: TextStyle(
-                                                        fontFamily: BuytimeTheme.FontFamily,
-                                                        color: Color(0xff666666),
-                                                        fontWeight: FontWeight.w400,
-                                                      ),
-                                                    ),
-                                                    style: TextStyle(
-                                                      fontFamily: BuytimeTheme.FontFamily,
-                                                        color: BuytimeTheme.TextMedium,
-                                                        fontWeight: FontWeight.w600,
-                                                        fontSize: 16
-                                                    ),
-                                                    validator: (String value) {
-                                                      if (value.isEmpty) {
-                                                        return AppLocalizations.of(context).pleaseEnterAValidSurname;
-                                                      }
-                                                      return null;
-                                                    },
-                                                  )
+                                                      validator: (String value) {
+                                                        if (value.isEmpty) {
+                                                          debugPrint('UI_M_booking_creation => Surname Is Empty');
+                                                          return AppLocalizations.of(context).pleaseEnterAValidSurname;
+                                                        }
+                                                        return null;
+                                                      },
+                                                    )
+                                                ),
                                               ),
-                                            ),
-                                            ///Check In & Check Out
-                                            Expanded(
-                                              child: Container(
-                                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
-                                                  child: Row(
-                                                    mainAxisAlignment: MainAxisAlignment.start,
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    children: [
-                                                      ///Check In
-                                                      Expanded(
-                                                          child:  GestureDetector(
-                                                            onTap: ()async{
-                                                              await _selectDate(context, checkIn, checkOut);
-                                                            },
-                                                            child: TextFormField(
-                                                              enabled: false,
-                                                              controller: _checkInController,
-                                                              textAlign: TextAlign.start,
-                                                              keyboardType: TextInputType.datetime,
-                                                              decoration: InputDecoration(
-                                                                  filled: true,
-                                                                  fillColor: BuytimeTheme.DividerGrey,
-                                                                  enabledBorder: OutlineInputBorder(
-                                                                      borderSide: BorderSide(color: Color(0xffe0e0e0)),
-                                                                      borderRadius: BorderRadius.all(Radius.circular(10.0))
-                                                                  ),
-                                                                  focusedBorder: OutlineInputBorder(
-                                                                      borderSide: BorderSide(color: Color(0xff666666)),
-                                                                      borderRadius: BorderRadius.all(Radius.circular(10.0))
-                                                                  ),
-                                                                  labelText: AppLocalizations.of(context).checkIn,
-                                                                  //hintText: "email *",
-                                                                  //hintStyle: TextStyle(color: Color(0xff666666)),
-                                                                  labelStyle: TextStyle(
-                                                                    fontFamily: BuytimeTheme.FontFamily,
-                                                                    color: Color(0xff666666),
-                                                                    fontWeight: FontWeight.w400,
-                                                                  ),
-                                                                  suffixIcon: Icon(
-                                                                      Icons.calendar_today
-                                                                  )
-                                                              ),
-                                                              style: TextStyle(
-                                                                fontFamily: BuytimeTheme.FontFamily,
-                                                                  color: BuytimeTheme.TextMedium,
-                                                                  fontWeight: FontWeight.w600,
-                                                                  fontSize: 16
-                                                              ),
-                                                              validator: (String value) {
-                                                                if (value.isEmpty) {
-                                                                  return AppLocalizations.of(context).pleaseEnterAValidDateInterval;
-                                                                }
-                                                                return null;
+                                              ///Check In & Check Out
+                                              Expanded(
+                                                child: Container(
+                                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
+                                                    child: Row(
+                                                      mainAxisAlignment: MainAxisAlignment.start,
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        ///Check In
+                                                        Expanded(
+                                                            child:  GestureDetector(
+                                                              onTap: ()async{
+                                                                await _selectDate(context, checkIn, checkOut);
                                                               },
-                                                            ),
-                                                          )),
-                                                      Container(
-                                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 1, right: SizeConfig.blockSizeHorizontal * 1),
+                                                              child: TextFormField(
+                                                                //enabled: false,
+                                                                readOnly: true,
+                                                                controller: _checkInController,
+                                                                textAlign: TextAlign.start,
+                                                                keyboardType: TextInputType.datetime,
+                                                                decoration: InputDecoration(
+                                                                    filled: true,
+                                                                    fillColor: BuytimeTheme.DividerGrey,
+                                                                    enabledBorder: OutlineInputBorder(
+                                                                        borderSide: BorderSide(color: Color(0xffe0e0e0)),
+                                                                        borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                                                    ),
+                                                                    focusedBorder: OutlineInputBorder(
+                                                                        borderSide: BorderSide(color: Color(0xff666666)),
+                                                                        borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                                                    ),
+                                                                    errorBorder: OutlineInputBorder(
+                                                                        borderSide: BorderSide(color: BuytimeTheme.AccentRed),
+                                                                        borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                                                    ),
+                                                                    labelText: AppLocalizations.of(context).checkIn,
+                                                                    //hintText: "email *",
+                                                                    //hintStyle: TextStyle(color: Color(0xff666666)),
+                                                                    labelStyle: TextStyle(
+                                                                      fontFamily: BuytimeTheme.FontFamily,
+                                                                      color: Color(0xff666666),
+                                                                      fontWeight: FontWeight.w400,
+                                                                    ),
+                                                                    suffixIcon: Icon(
+                                                                        Icons.calendar_today
+                                                                    )
+                                                                ),
+                                                                style: TextStyle(
+                                                                    fontFamily: BuytimeTheme.FontFamily,
+                                                                    color: BuytimeTheme.TextMedium,
+                                                                    fontWeight: FontWeight.w600,
+                                                                    fontSize: 16
+                                                                ),
+                                                                onTap: ()async{
+                                                                  node.unfocus();
+                                                                  await _selectDate(context, checkIn, checkOut);
+                                                                },
+                                                                validator: (String value) {
+                                                                  if (value.isEmpty) {
+                                                                    debugPrint('UI_M_booking_creation => Check In Is Empty');
+                                                                    return AppLocalizations.of(context).pleaseEnterAValidDateInterval;
+                                                                  }
+                                                                  return null;
+                                                                },
+                                                              ),
+                                                            )),
+                                                        Container(
+                                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 1, right: SizeConfig.blockSizeHorizontal * 1),
 
-                                                      ),
-                                                      ///Check Out
-                                                      Expanded(
-                                                          child: GestureDetector(
-                                                            onTap: () async{
-                                                              await _selectDate(context, checkIn, checkOut);
-                                                            },
-                                                            child: TextFormField(
-                                                              enabled: false,
-                                                              controller: _checkOutController,
-                                                              textAlign: TextAlign.start,
-                                                              keyboardType: TextInputType.datetime,
-                                                              decoration: InputDecoration(
-                                                                  filled: true,
-                                                                  fillColor: BuytimeTheme.DividerGrey,
-                                                                  enabledBorder: OutlineInputBorder(
-                                                                      borderSide: BorderSide(color: Color(0xffe0e0e0)),
-                                                                      borderRadius: BorderRadius.all(Radius.circular(10.0))
-                                                                  ),
-                                                                  focusedBorder: OutlineInputBorder(
-                                                                      borderSide: BorderSide(color: Color(0xff666666)),
-                                                                      borderRadius: BorderRadius.all(Radius.circular(10.0))
-                                                                  ),
-                                                                  labelText: AppLocalizations.of(context).checkOut,
-                                                                  //hintText: "email *",
-                                                                  //hintStyle: TextStyle(color: Color(0xff666666)),
-                                                                  labelStyle: TextStyle(
-                                                                    fontFamily: BuytimeTheme.FontFamily,
-                                                                    color: Color(0xff666666),
-                                                                    fontWeight: FontWeight.w400,
-                                                                  ),
-                                                                  suffixIcon: Icon(
-                                                                      Icons.calendar_today
-                                                                  )
-                                                              ),
-                                                              style: TextStyle(
-                                                                fontFamily: BuytimeTheme.FontFamily,
-                                                                  color: BuytimeTheme.TextMedium,
-                                                                  fontWeight: FontWeight.w600,
-                                                                  fontSize: 16
-                                                              ),
-                                                              validator: (String value) {
-                                                                debugPrint('${checkIn.compareTo(checkOut)}');
-                                                                if (value.isEmpty || checkIn.compareTo(checkOut) > 0) {
-                                                                  return AppLocalizations.of(context).pleaseEnterAValidDateInterval;
-                                                                }
-                                                                return null;
+                                                        ),
+                                                        ///Check Out
+                                                        Expanded(
+                                                            child: GestureDetector(
+                                                              onTap: () async{
+                                                                await _selectDate(context, checkIn, checkOut);
                                                               },
-                                                            ),
-                                                          )
-                                                      )
-                                                    ],
-                                                  )
+                                                              child: TextFormField(
+                                                                //enabled: false,
+                                                                readOnly: true,
+                                                                controller: _checkOutController,
+                                                                textAlign: TextAlign.start,
+                                                                keyboardType: TextInputType.datetime,
+                                                                decoration: InputDecoration(
+                                                                    filled: true,
+                                                                    fillColor: BuytimeTheme.DividerGrey,
+                                                                    enabledBorder: OutlineInputBorder(
+                                                                        borderSide: BorderSide(color: Color(0xffe0e0e0)),
+                                                                        borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                                                    ),
+                                                                    focusedBorder: OutlineInputBorder(
+                                                                        borderSide: BorderSide(color: Color(0xff666666)),
+                                                                        borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                                                    ),
+                                                                    errorBorder: OutlineInputBorder(
+                                                                        borderSide: BorderSide(color: BuytimeTheme.AccentRed),
+                                                                        borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                                                    ),
+                                                                    labelText: AppLocalizations.of(context).checkOut,
+                                                                    //hintText: "email *",
+                                                                    //hintStyle: TextStyle(color: Color(0xff666666)),
+                                                                    labelStyle: TextStyle(
+                                                                      fontFamily: BuytimeTheme.FontFamily,
+                                                                      color: Color(0xff666666),
+                                                                      fontWeight: FontWeight.w400,
+                                                                    ),
+                                                                    suffixIcon: Icon(
+                                                                        Icons.calendar_today
+                                                                    )
+                                                                ),
+                                                                style: TextStyle(
+                                                                    fontFamily: BuytimeTheme.FontFamily,
+                                                                    color: BuytimeTheme.TextMedium,
+                                                                    fontWeight: FontWeight.w600,
+                                                                    fontSize: 16
+                                                                ),
+                                                                onTap: ()async{
+                                                                  node.unfocus();
+                                                                  await _selectDate(context, checkIn, checkOut);
+                                                                },
+                                                                validator: (String value) {
+                                                                  debugPrint('${checkIn.compareTo(checkOut)}');
+                                                                  if (value.isEmpty || checkIn.compareTo(checkOut) > 0) {
+                                                                    debugPrint('UI_M_booking_creation => Check Out Is Empty');
+                                                                    return AppLocalizations.of(context).pleaseEnterAValidDateInterval;
+                                                                  }
+                                                                  return null;
+                                                                },
+                                                              ),
+                                                            )
+                                                        )
+                                                      ],
+                                                    )
+                                                ),
                                               ),
-                                            ),
-                                            ///Number of guests
-                                            Expanded(
-                                              child: Container(
-                                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
-                                                  child: TextFormField(
-                                                    controller: _numberOfGuestsController,
-                                                    textAlign: TextAlign.start,
-                                                    decoration: InputDecoration(
-                                                      filled: true,
-                                                      fillColor: BuytimeTheme.DividerGrey,
-                                                      enabledBorder: OutlineInputBorder(
-                                                          borderSide: BorderSide(color: Color(0xffe0e0e0)),
-                                                          borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                              ///Number of guests
+                                              Expanded(
+                                                child: Container(
+                                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
+                                                    child: TextFormField(
+                                                      controller: _numberOfGuestsController,
+                                                      textAlign: TextAlign.start,
+                                                      textInputAction: TextInputAction.done,
+                                                      decoration: InputDecoration(
+                                                        filled: true,
+                                                        fillColor: BuytimeTheme.DividerGrey,
+                                                        enabledBorder: OutlineInputBorder(
+                                                            borderSide: BorderSide(color: Color(0xffe0e0e0)),
+                                                            borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                                        ),
+                                                        focusedBorder: OutlineInputBorder(
+                                                            borderSide: BorderSide(color: Color(0xff666666)),
+                                                            borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                                        ),
+                                                        errorBorder: OutlineInputBorder(
+                                                            borderSide: BorderSide(color: Colors.redAccent),
+                                                            borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                                        ),
+                                                        labelText: AppLocalizations.of(context).numberOfGuest,
+                                                        //hintText: "email *",
+                                                        //hintStyle: TextStyle(color: Color(0xff666666)),
+                                                        labelStyle: TextStyle(
+                                                          fontFamily: BuytimeTheme.FontFamily,
+                                                          color: Color(0xff666666),
+                                                          fontWeight: FontWeight.w400,
+                                                        ),
                                                       ),
-                                                      focusedBorder: OutlineInputBorder(
-                                                          borderSide: BorderSide(color: Color(0xff666666)),
-                                                          borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                                      style: TextStyle(
+                                                          fontFamily: BuytimeTheme.FontFamily,
+                                                          color: BuytimeTheme.TextMedium,
+                                                          fontWeight: FontWeight.w600,
+                                                          fontSize: 16
                                                       ),
-                                                      errorBorder: OutlineInputBorder(
-                                                          borderSide: BorderSide(color: Colors.redAccent),
-                                                          borderRadius: BorderRadius.all(Radius.circular(10.0))
-                                                      ),
-                                                      labelText: AppLocalizations.of(context).numberOfGuest,
-                                                      //hintText: "email *",
-                                                      //hintStyle: TextStyle(color: Color(0xff666666)),
-                                                      labelStyle: TextStyle(
-                                                        fontFamily: BuytimeTheme.FontFamily,
-                                                        color: Color(0xff666666),
-                                                        fontWeight: FontWeight.w400,
-                                                      ),
-                                                    ),
-                                                    style: TextStyle(
-                                                      fontFamily: BuytimeTheme.FontFamily,
-                                                        color: BuytimeTheme.TextMedium,
-                                                        fontWeight: FontWeight.w600,
-                                                        fontSize: 16
-                                                    ),
-                                                  )
-                                              ),
-                                            )
-                                          ],
+                                                    )
+                                                ),
+                                              )
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                      ///Create Invite
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Container(
-                                              width: 180, ///media.width * .5
-                                              height: 44,
-                                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 4),
-                                              child: MaterialButton(
-                                                elevation: 0,
-                                                hoverElevation: 0,
-                                                focusElevation: 0,
-                                                highlightElevation: 0,
-                                                onPressed: () {
-                                                  if (_formKey.currentState.validate()) {
+                                        ///Create Invite
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Container(
+                                                width: 180, ///media.width * .5
+                                                height: 44,
+                                                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 4),
+                                                child: MaterialButton(
+                                                  elevation: 0,
+                                                  hoverElevation: 0,
+                                                  focusElevation: 0,
+                                                  highlightElevation: 0,
+                                                  onPressed: () {
+                                                    if (_formKey.currentState.validate()) {
 
-                                                    setState(() {
-                                                      bookingRequest = 'send';
-                                                    });
+                                                      setState(() {
+                                                        bookingRequest = 'send';
+                                                      });
 
-                                                    bookingState.business_id = businessState.id_firestore;
-                                                    bookingState.business_name = businessState.name;
-                                                    bookingState.guest_number_booked_for = _numberOfGuestsController.text.isNotEmpty ? int.parse(_numberOfGuestsController.text) : 1;
+                                                      bookingState.business_id = businessState.id_firestore;
+                                                      bookingState.business_name = businessState.name;
+                                                      bookingState.guest_number_booked_for = _numberOfGuestsController.text.isNotEmpty ? int.parse(_numberOfGuestsController.text) : 1;
 
-                                                    UserSnippet currentUser = UserSnippet(
-                                                        name: _nameController.text,
-                                                        surname: _surnameController.text,
-                                                        email: _emailToInviteController.text
-                                                    );
+                                                      UserSnippet currentUser = UserSnippet(
+                                                          name: _nameController.text,
+                                                          surname: _surnameController.text,
+                                                          email: _emailToInviteController.text
+                                                      );
 
-                                                    bookingState.user.add(currentUser);
+                                                      bookingState.user.add(currentUser);
 
-                                                    bookingState.wide = businessState.wide;
+                                                      bookingState.wide = businessState.wide;
 
-                                                    bookingState.start_date = checkIn;
-                                                    bookingState.end_date = checkOut;
+                                                      bookingState.start_date = checkIn;
+                                                      bookingState.end_date = checkOut;
 
-                                                    debugPrint('UI_M_BookingCreation => Start date: ${bookingState.start_date}');
-                                                    debugPrint('UI_M_BookingCreation => End date: ${bookingState.end_date}');
+                                                      debugPrint('UI_M_BookingCreation => Start date: ${bookingState.start_date}');
+                                                      debugPrint('UI_M_BookingCreation => End date: ${bookingState.end_date}');
 
-                                                    bookingState.status = Utils.enumToString(BookingStatus.created);
+                                                      bookingState.status = Utils.enumToString(BookingStatus.created);
 
-                                                    bookingState.userEmail.add(_emailToInviteController.text);
+                                                      bookingState.userEmail.add(_emailToInviteController.text);
 
-                                                    StoreProvider.of<AppState>(context).dispatch(CreateBookingRequest(bookingState));
+                                                      StoreProvider.of<AppState>(context).dispatch(CreateBookingRequest(bookingState));
 
 
-                                                    Timer(
-                                                      Duration(seconds: 1), () {
+                                                      Timer(
+                                                          Duration(seconds: 1), () {
                                                         setState(() {
                                                           bookingRequest = '';
                                                         });
                                                       }
-                                                    );
-                                                    //Navigator.push(context, MaterialPageRoute(builder: (context) => BookingDetails(bookingState: bookingState)));
+                                                      );
+                                                      //Navigator.push(context, MaterialPageRoute(builder: (context) => BookingDetails(bookingState: bookingState)));
 
-                                                  }
-                                                },
-                                                textColor: BuytimeTheme.TextDark,
-                                                color: BuytimeTheme.Secondary,
-                                                padding: EdgeInsets.all(media.width * 0.03),
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius: new BorderRadius.circular(5),
-                                                ),
-                                                child: Row(
-                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                  children: [
-                                                    Text(
-                                                      AppLocalizations.of(context).createInviteUpper,
-                                                      style: TextStyle(
-                                                          fontSize: 14,
-                                                          fontFamily: BuytimeTheme.FontFamily,
-                                                          fontWeight: FontWeight.w600,
-                                                          color: BuytimeTheme.TextDark,
-                                                          letterSpacing: 1.25
-                                                      ),
-                                                    )],
-                                                ),
-                                              )
-                                          )
-                                        ],
-                                      )
-                                    ],
+                                                    }
+                                                  },
+                                                  textColor: BuytimeTheme.TextDark,
+                                                  color: BuytimeTheme.Secondary,
+                                                  padding: EdgeInsets.all(media.width * 0.03),
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius: new BorderRadius.circular(5),
+                                                  ),
+                                                  child: Row(
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    children: [
+                                                      Text(
+                                                        AppLocalizations.of(context).createInviteUpper,
+                                                        style: TextStyle(
+                                                            fontSize: 14,
+                                                            fontFamily: BuytimeTheme.FontFamily,
+                                                            fontWeight: FontWeight.w600,
+                                                            color: BuytimeTheme.TextDark,
+                                                            letterSpacing: 1.25
+                                                        ),
+                                                      )],
+                                                  ),
+                                                )
+                                            )
+                                          ],
+                                        )
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                            ///Ripple Effect
-                            bookingRequest.isNotEmpty ? Positioned.fill(
-                              child: Align(
-                                alignment: Alignment.center,
-                                child: Container(
-                                    height: SizeConfig.safeBlockVertical * 100,
-                                    decoration: BoxDecoration(
-                                      color: BuytimeTheme.BackgroundCerulean.withOpacity(.8),
-                                    ),
-                                    child: Center(
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: <Widget>[
-                                          Container(
-                                            width: 50,
-                                            height: 50,
-                                            child: Center(
-                                              child: SpinKitRipple(
-                                                color: Colors.white,
-                                                size: 50,
+                              ///Ripple Effect
+                              bookingRequest.isNotEmpty ? Positioned.fill(
+                                child: Align(
+                                  alignment: Alignment.center,
+                                  child: Container(
+                                      height: SizeConfig.safeBlockVertical * 100,
+                                      decoration: BoxDecoration(
+                                        color: BuytimeTheme.BackgroundCerulean.withOpacity(.8),
+                                      ),
+                                      child: Center(
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: <Widget>[
+                                            Container(
+                                              width: 50,
+                                              height: 50,
+                                              child: Center(
+                                                child: SpinKitRipple(
+                                                  color: Colors.white,
+                                                  size: 50,
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                    )
+                                          ],
+                                        ),
+                                      )
+                                  ),
                                 ),
-                              ),
-                            ) : Container()
-                          ],
-                        ),
-                      )
+                              ) : Container()
+                            ],
+                          ),
+                        )
+                    ),
                   ),
                 ),
               ),

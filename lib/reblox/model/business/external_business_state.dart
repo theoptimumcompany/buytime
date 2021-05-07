@@ -36,6 +36,9 @@ class ExternalBusinessState {
   @JsonKey(ignore: true)
   List<OptimumFileToUpload> fileToUploadList;
   List<String> tag;
+  List<String> area;
+  @JsonKey(defaultValue: false)
+  bool hub;
 
   ExternalBusinessState({
     @required this.name,
@@ -67,6 +70,8 @@ class ExternalBusinessState {
     this.ownerId,
     this.fileToUploadList,
     this.tag,
+    this.area,
+    this.hub,
   });
 
   ExternalBusinessState toEmpty() {
@@ -100,6 +105,8 @@ class ExternalBusinessState {
       ownerId: "",
       fileToUploadList: null,
       tag: [],
+      area: [],
+      hub: false,
     );
   }
 
@@ -133,6 +140,8 @@ class ExternalBusinessState {
     this.draft = state.draft;
     this.fileToUploadList = state.fileToUploadList;
     this.tag = state.tag;
+    this.area = state.area;
+    this.hub = state.hub;
   }
 
   ExternalBusinessState copyWith({
@@ -164,7 +173,9 @@ class ExternalBusinessState {
     String ownerId,
     bool draft,
     List<OptimumFileToUpload> fileToUploadList,
-    List<String> tag
+    List<String> tag,
+    List<String> area,
+    bool hub
   }) {
     return ExternalBusinessState(
       name: name ?? this.name,
@@ -196,6 +207,8 @@ class ExternalBusinessState {
       draft: draft ?? this.draft,
       fileToUploadList: fileToUploadList ?? this.fileToUploadList,
       tag: tag ?? this.tag,
+      area: area ?? this.area,
+      hub: hub ?? this.hub,
     );
   }
 

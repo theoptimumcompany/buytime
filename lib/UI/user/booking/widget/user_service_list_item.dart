@@ -3,6 +3,7 @@ import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
+import 'package:Buytime/utils/utils.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
@@ -141,7 +142,7 @@ class _UserServiceListItemState extends State<UserServiceListItem> {
                               margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 0, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1),
                               width: SizeConfig.safeBlockHorizontal * 50,
                               child: Text(
-                                widget.orderState.itemList[0].name ?? '',
+                                widget.orderState.itemList[0].name != null ? Utils.retriveField(Localizations.localeOf(context).languageCode, widget.orderState.itemList[0].name) : '',
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 1,
                                 style: TextStyle(

@@ -349,9 +349,10 @@ class ServiceListByIdsRequestNavigateService implements EpicClass<AppState> {
 
       categoryIds = [];
       store.state.serviceListSnippetState.businessSnippet.forEach((bS) {
-        if(bS.tags.contains('showcase')){
+        /*if(bS.tags.contains('showcase')){
           categoryIds.add(bS.categoryAbsolutePath.split('/').last);
-        }
+        }*/
+        categoryIds.add(bS.categoryAbsolutePath.split('/').last);
       });
 
       debugPrint("SERVICE_SERVICE_EPIC - ServiceListByIdsRequestNavigateService => Epic ServiceListService return list with " + serviceStateList.length.toString());

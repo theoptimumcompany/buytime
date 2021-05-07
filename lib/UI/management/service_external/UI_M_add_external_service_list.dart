@@ -84,14 +84,14 @@ class AddExternalServiceListState extends State<AddExternalServiceList> {
     double lat2 = 0.0;
     double lon2 = 0.0;
     if(first.coordinate.isNotEmpty){
-      List<String> latLng1 = first.coordinate.split(', ');
+      List<String> latLng1 = first.coordinate.replaceAll(' ', '').split(',');
       if(latLng1.length == 2){
         lat1 = double.parse(latLng1[0]);
         lon1 = double.parse(latLng1[1]);
       }
     }
     if(second.coordinate.isNotEmpty){
-      List<String> latLng2 = second.coordinate.split(', ');
+      List<String> latLng2 = second.coordinate.replaceAll(' ', '').split(',');
       if(latLng2.length == 2){
         lat2 = double.parse(latLng2[0]);
         lon2 = double.parse(latLng2[1]);
@@ -383,6 +383,9 @@ class AddExternalServiceListState extends State<AddExternalServiceList> {
                                         List<ExternalBusinessState> tmpEList = [];
                                         tmpEList.addAll(snapshot.externalBusinessList.externalBusinessListState);*/
                                         externalBuinessList.sort((a,b) => calculateDistance(tmpE, a).compareTo(calculateDistance(tmpE, b)));
+                                        externalBuinessList.forEach((element) {
+                                          debugPrint('UI_M_add_external_service_list => B Name: ${element.name} - ${calculateDistance(tmpE, element)}');
+                                        });
                                         //externalServiceList.clear();
                                         //externalServiceList.addAll(tmpEList);
                                         //externalServiceList.sort((a,b) => calculateDistance(tmpE, a).compareTo(calculateDistance(tmpE, b)));

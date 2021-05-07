@@ -39,6 +39,7 @@ OrderState _$OrderStateFromJson(Map<String, dynamic> json) {
     cartCounter: json['cartCounter'] as int,
     cardType: json['cardType'] as String,
     cardLast4Digit: json['cardLast4Digit'] as String,
+    location: json['location'] as String,
   );
 }
 
@@ -63,4 +64,5 @@ Map<String, dynamic> _$OrderStateToJson(OrderState instance) =>
       'cartCounter': instance.cartCounter,
       'cardType': instance.cardType,
       'cardLast4Digit': instance.cardLast4Digit,
+      'location': instance.location,
     };

@@ -302,7 +302,8 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                                               fontSize: 18,
 
                                               ///widget.mediaSize.height * 0.019
-                                              color: BuytimeTheme.ManagerPrimary.withOpacity(0.8),
+                                              //color: BuytimeTheme.ManagerPrimary.withOpacity(0.8),
+                                              color: BuytimeTheme.TextBlack,
                                               fontFamily: BuytimeTheme.FontFamily,
                                               fontWeight: FontWeight.w600,
                                             ),
@@ -314,7 +315,8 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                                   ///Divider under category name
                                   Divider(
                                     indent: 20.0,
-                                    color: BuytimeTheme.ManagerPrimary.withOpacity(0.8),
+                                    //color: BuytimeTheme.ManagerPrimary.withOpacity(0.8),
+                                    color: BuytimeTheme.SymbolLightGrey,
                                     thickness: 0.5,
                                   ),
                                   ///Static add service to category
@@ -343,7 +345,11 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                                                   height: 56,
                                                   decoration: BoxDecoration(
                                                     border: Border(
-                                                      bottom: BorderSide(width: 1.0, color: BuytimeTheme.ManagerPrimary.withOpacity(0.25)),
+                                                      bottom: BorderSide(
+                                                          width: .5,
+                                                          //color: BuytimeTheme.ManagerPrimary.withOpacity(0.25)
+                                                          color: BuytimeTheme.SymbolLightGrey
+                                                      ),
                                                     ),
                                                   ),
                                                   child: Row(
@@ -356,7 +362,8 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                                                             style: TextStyle(
                                                                 fontSize: 16,
                                                                 ///widget.mediaSize.height * 0.019
-                                                                color: BuytimeTheme.ManagerPrimary.withOpacity(0.5),
+                                                                //color: BuytimeTheme.ManagerPrimary.withOpacity(0.5),
+                                                                color: BuytimeTheme.ManagerPrimary,
                                                                 fontFamily: BuytimeTheme.FontFamily,
                                                                 fontWeight: FontWeight.w600,
                                                                 letterSpacing: 0.15),
@@ -480,7 +487,7 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                                                                   Flexible(
                                                                     child: Container(
                                                                         child: Text(
-                                                                          listOfServiceEachRoot[i][index].serviceName,
+                                                                          Utils.retriveField(Localizations.localeOf(context).languageCode, listOfServiceEachRoot[i][index].serviceName),
                                                                           textAlign: TextAlign.start,
                                                                           overflow: TextOverflow.ellipsis,
                                                                           style: TextStyle(

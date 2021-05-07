@@ -91,7 +91,7 @@ class _BuytimeMapState extends State<BuytimeMap> with SingleTickerProviderStateM
     _containerAnimationController.forward();
 
     if(widget.businessState.coordinate.isNotEmpty){
-      List<String> latLng = widget.businessState.coordinate.split(', ');
+      List<String> latLng = widget.businessState.coordinate.replaceAll(' ', '').split(',');
       if(latLng.length == 2){
         lat = double.parse(latLng[0]);
         lng = double.parse(latLng[1]);

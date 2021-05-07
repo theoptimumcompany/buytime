@@ -8,6 +8,7 @@ import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/utils/globals.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
+import 'package:Buytime/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:intl/intl.dart';
@@ -179,7 +180,7 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
                               Padding(
                                 padding: EdgeInsets.only(bottom: show ? 0 : 5),
                                 child: Text(
-                                  orderEntry.name,
+                                  Utils.retriveField(Localizations.localeOf(context).languageCode, orderEntry.name),
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                     fontFamily: BuytimeTheme.FontFamily,

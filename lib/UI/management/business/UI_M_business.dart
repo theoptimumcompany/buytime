@@ -99,11 +99,14 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
         print("On Init Business : Request List of Root Categories");
         //store.dispatch(RequestRootListCategory(store.state.business.id_firestore));
         store.dispatch(ServiceListSnippetRequest(store.state.business.id_firestore));
-        store.state.business.business_type.forEach((element) {
+        /*store.state.business.business_type.forEach((element) {
           print("UI_M_Business => Business Type: ${element.name}");
           if (element.name == 'Hotel') hotel = true;
-        });
+        });*/
+        if(store.state.business.hub != null && store.state.business.hub)
+          hotel = true;
 
+        //hotel = false;
         startRequest = true;
       },
       builder: (context, snapshot) {
@@ -175,14 +178,18 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
 
             internalCategories.sort((b,a) => a.serviceNumberInternal.compareTo(b.serviceNumberInternal));
             externalCategories.sort((b,a) => a.serviceNumberExternal.compareTo(b.serviceNumberExternal));
-            if(internalCategories.length > 4){
-              tmpInternalCategoriesTable.addAll(internalCategories.sublist(0,4));
-              CategorySnippetState categoryItem = CategorySnippetState().toEmpty();
-              categoryItem.categoryName = AppLocalizations.of(context).others;
-              for(int i = 4; i < internalCategories.length; i++){
-                categoryItem.serviceNumberInternal += internalCategories[i].serviceNumberInternal;
+            if(hotel){
+              if(internalCategories.length > 4){
+                tmpInternalCategoriesTable.addAll(internalCategories.sublist(0,4));
+                CategorySnippetState categoryItem = CategorySnippetState().toEmpty();
+                categoryItem.categoryName = AppLocalizations.of(context).others;
+                for(int i = 4; i < internalCategories.length; i++){
+                  categoryItem.serviceNumberInternal += internalCategories[i].serviceNumberInternal;
+                }
+                tmpInternalCategoriesTable.add(categoryItem);
+              }else{
+                tmpInternalCategoriesTable.addAll(internalCategories);
               }
-              tmpInternalCategoriesTable.add(categoryItem);
             }else{
               tmpInternalCategoriesTable.addAll(internalCategories);
             }
@@ -524,7 +531,8 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                             ],
                           ),
                           ///ExternalServiceShowcase(categoryRootList: categoryRootList),
-                          Column(
+                          hotel ?
+                            Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               ///External Services
@@ -646,7 +654,8 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                                   )
                               ),
                             ],
-                          ),
+                          ) :
+                          Container(),
 
                         ],
                       ),

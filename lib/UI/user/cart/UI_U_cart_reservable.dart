@@ -368,10 +368,10 @@ class CartReservableState extends State<CartReservable> {
                                               /*StoreProvider.of<AppState>(context).dispatch(SetOrderProgress("in_progress"));
                                               StoreProvider.of<AppState>(context).dispatch(CreateOrder(snapshot.order));*/
 
-                                              StoreProvider.of<AppState>(context).dispatch(SetOrderReservable(OrderReservableState().toEmpty()));
+                                              //StoreProvider.of<AppState>(context).dispatch(SetOrderReservable(OrderReservableState().toEmpty()));
                                               //StoreProvider.of<AppState>(context).dispatch(SetOrder(OrderState().toEmpty()));
                                               //StoreProvider.of<AppState>(context).dispatch(UserOrderListRequest());
-                                              Navigator.of(context).popUntil(ModalRoute.withName('/bookingPage'));
+                                              //Navigator.of(context).popUntil(ModalRoute.withName('/bookingPage'));
                                             }
                                           },
                                           textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),

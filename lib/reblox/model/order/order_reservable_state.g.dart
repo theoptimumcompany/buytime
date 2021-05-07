@@ -40,6 +40,7 @@ OrderReservableState _$OrderReservableStateFromJson(Map<String, dynamic> json) {
     serviceId: json['serviceId'] as String,
     cardType: json['cardType'] as String,
     cardLast4Digit: json['cardLast4Digit'] as String,
+    location: json['location'] as String,
   );
 }
 
@@ -66,4 +67,5 @@ Map<String, dynamic> _$OrderReservableStateToJson(
       'serviceId': instance.serviceId,
       'cardType': instance.cardType,
       'cardLast4Digit': instance.cardLast4Digit,
+      'location': instance.location,
     };

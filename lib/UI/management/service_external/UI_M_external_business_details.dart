@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:math';
 import 'package:Buytime/UI/management/service_external/UI_M_add_external_service_list.dart';
 import 'package:Buytime/UI/management/service_external/UI_M_external_service_list.dart';
 import 'package:Buytime/UI/management/service_external/UI_M_p_a_service_list.dart';
@@ -109,14 +110,23 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
     });
   }
 
-  String getShopLocationImage(String coordinates){
-    List<double> coordinatesDouble = convertCoordinateString(coordinates);
+  String getShopLocationImage(String coordinates, String address){
     String url;
-    if(Platform.isIOS)
-      url = 'https://maps.googleapis.com/maps/api/staticmap?center=${coordinatesDouble[0]},${coordinatesDouble[1]}&zoom=18&size=640x640&scale=2&markers=color:red|${coordinatesDouble[0]},${coordinatesDouble[1]}&key=${BuytimeConfig.AndroidApiKey}';
-    else
-      url = 'https://maps.googleapis.com/maps/api/staticmap?center=${coordinatesDouble[0]},${coordinatesDouble[1]}&zoom=18&size=640x640&scale=2&markers=color:red|${coordinatesDouble[0]},${coordinatesDouble[1]}&key=${BuytimeConfig.AndroidApiKey}';
-    return url;
+    List<double> coordinatesDouble = convertCoordinateString(coordinates);
+    if(coordinatesDouble.isNotEmpty){
+
+      if(Platform.isIOS)
+        url = 'https://maps.googleapis.com/maps/api/staticmap?center=${coordinatesDouble[0]},${coordinatesDouble[1]}&zoom=18&size=640x640&scale=2&markers=color:red|${coordinatesDouble[0]},${coordinatesDouble[1]}&key=${BuytimeConfig.AndroidApiKey}';
+      else
+        url = 'https://maps.googleapis.com/maps/api/staticmap?center=${coordinatesDouble[0]},${coordinatesDouble[1]}&zoom=18&size=640x640&scale=2&markers=color:red|${coordinatesDouble[0]},${coordinatesDouble[1]}&key=${BuytimeConfig.AndroidApiKey}';
+      return url;
+    }else{
+      if(Platform.isIOS)
+        url = 'https://maps.googleapis.com/maps/api/staticmap?center=$coordinates&zoom=18&size=640x640&scale=2&markers=color:red|$coordinates&key=${BuytimeConfig.AndroidApiKey}';
+      else
+        url = 'https://maps.googleapis.com/maps/api/staticmap?center=$coordinates&zoom=18&size=640x640&scale=2&markers=color:red|$coordinates&key=${BuytimeConfig.AndroidApiKey}';
+      return url;
+    }
   }
 
   void createExternalService(BusinessState businessState, String serviceId, List<ServiceListSnippetState> serviceSnippetList){
@@ -209,6 +219,41 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
     return tmpDismiss;
   }
 
+  String address = '';
+  double distance;
+
+  double calculateDistance(BusinessState businessState){
+    double lat1 = 0.0;
+    double lon1 = 0.0;
+    double lat2 = 0.0;
+    double lon2 = 0.0;
+    if(businessState.coordinate.isNotEmpty){
+      List<String> latLng1 = businessState.coordinate.replaceAll('(', '').replaceAll(')', '').replaceAll(' ', '').split(',');
+      debugPrint('W_add_external_business_list_item => $businessState.name} | Cordinates 1: $latLng1');
+      if(latLng1.length == 2){
+        lat1 = double.parse(latLng1[0]);
+        lon1 = double.parse(latLng1[1]);
+      }
+    }
+    if(widget.externalBusinessState.coordinate.isNotEmpty){
+      List<String> latLng2 = widget.externalBusinessState.coordinate.replaceAll('(', '').replaceAll(')', '').replaceAll(' ', '').split(',');
+      debugPrint('W_add_external_business_list_item => ${widget.externalBusinessState.name} | Cordinates 2: $latLng2');
+      if(latLng2.length == 2){
+        lat2 = double.parse(latLng2[0]);
+        lon2 = double.parse(latLng2[1]);
+      }
+    }
+    var p = 0.017453292519943295;
+    var c = cos;
+    var a = 0.5 - c((lat2 - lat1) * p)/2 +
+        c(lat1 * p) * c(lat2 * p) *
+            (1 - c((lon2 - lon1) * p))/2;
+    double tmp = (12742 * asin(sqrt(a)));
+    debugPrint('W_add_external_business_list_item => Distance: $tmp');
+
+    return  tmp;
+  }
+
   @override
   Widget build(BuildContext context) {
     // the media containing information on width and height
@@ -228,7 +273,8 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
           if(widget.externalBusinessState.coordinate.isNotEmpty){
             convertCoordinateString(widget.externalBusinessState.coordinate);
           }
-        }else{
+        }
+        else{
           store.state.externalBusiness = ExternalBusinessState().toEmpty();
           debugPrint('UI:M_external_business_details => Request Business for: ${widget.externalBusinessState.id_firestore}');
           store.dispatch(ExternalBusinessRequest(widget.externalBusinessState.id_firestore));
@@ -269,6 +315,10 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
         startRequest = true;
       },
       builder: (context, snapshot) {
+        distance = calculateDistance(snapshot.business);
+        address = widget.externalBusinessState.email != null ?
+        widget.externalBusinessState.street + ', ' + widget.externalBusinessState.street_number + ', ' + widget.externalBusinessState.ZIP + ', ' + widget.externalBusinessState.state_province :
+        '...';
         popularServiceList.clear();
         allServiceList.clear();
         List<ServiceState> tmpServiceList = snapshot.serviceList.serviceListState;
@@ -608,9 +658,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                     child: FittedBox(
                                       fit: BoxFit.scaleDown,
                                       child: Text(
-                                        widget.externalBusinessState.email != null ?
-                                        widget.externalBusinessState.street + ', ' + widget.externalBusinessState.street_number + ', ' + widget.externalBusinessState.ZIP + ', ' + widget.externalBusinessState.state_province :
-                                        'Test',
+                                        address,
                                         style: TextStyle(
                                             letterSpacing: 0.15,
                                             fontFamily: BuytimeTheme.FontFamily,
@@ -661,17 +709,17 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                     child: Row(
                                       children: [
                                         Icon(
-                                          Icons.directions_walk,
+                                          Icons.location_pin,
                                           size: 14,
                                           color: BuytimeTheme.SymbolGrey,
                                         ),
                                         ///Min
                                         Container(
-                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 1.5, right: SizeConfig.safeBlockHorizontal * 1, top: SizeConfig.safeBlockVertical * 0),
+                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * .5, right: SizeConfig.safeBlockHorizontal * 1, top: SizeConfig.safeBlockVertical * 0),
                                           child: FittedBox(
                                             fit: BoxFit.scaleDown,
                                             child: Text(
-                                              '? ' + AppLocalizations.of(context).min,
+                                              distance.toString().split('.').first.startsWith('0') ? distance.toString().split('.').last.substring(0,3) + ' m' : distance.toStringAsFixed(1) + ' Km',
                                               style: TextStyle(
                                                   letterSpacing: 0.25,
                                                   fontFamily: BuytimeTheme.FontFamily,
@@ -734,7 +782,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                   height: 169,
                                   //margin: EdgeInsets.only(left:10.0, right: 10.0),
                                   child: CachedNetworkImage(
-                                    imageUrl:  getShopLocationImage(widget.externalBusinessState.coordinate),
+                                    imageUrl:  getShopLocationImage(widget.externalBusinessState.coordinate, address),
                                     imageBuilder: (context, imageProvider) => Container(
                                       decoration: BoxDecoration(
                                           color: BuytimeTheme.BackgroundWhite,
@@ -1363,7 +1411,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
   }
 
   List<double> convertCoordinateString(String coordinates) {
-    List<String> latLng = coordinates.split(', ');
+    List<String> latLng = coordinates.replaceAll(' ', '').split(',');
     if(latLng.length == 2){
       lat = double.parse(latLng[0]);
       lng = double.parse(latLng[1]);

@@ -495,7 +495,7 @@
   "externalServiceAdded": "Servicio añadido a tu red",
   "sendEmail": "Se ha enviado una email",
   "pleaseFillAllFields": "Por favor, rellena todos los campos necesarios",
-  "required": "este campo es necesario",
+  "required": "Este campo es necesario",
 
   "noServices": "No network services",
   "alreadyInYourNetwork": "Already in your network",
@@ -514,5 +514,10 @@
   "atTheMomentWeOnlySupportOneCreditCard": "Only one credit card at the time is supported, if you want to add another card, you have to remove the old one.",
   "selectACardToPay": "Select the card to be able to confirm it as a payment method.",
   "orderPending": "The Staff is reviewing your order, you will get a notification when an update is available.",
-  "alreadyInYourNetwork": "Already in your network"
+  "alreadyInYourNetwork": "Already in your network",
+  "serviceArea": "Service Area",
+  "addNewArea": "Add new area",
+  "whereDoYouWantToRecive": " Where do you want to receive it?",
+  "location": " Location",
+  "businessPipeline": "Business pipeline"
 }
