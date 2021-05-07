@@ -2,6 +2,7 @@ import 'package:Buytime/UI/user/cart/UI_U_ConfirmOrder.dart';
 import 'package:Buytime/reblox/model/order/order_entry.dart';
 import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
+import 'package:Buytime/reblox/reducer/order_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reservable_reducer.dart';
 import 'package:Buytime/reusable/buytime_icons.dart';
 import 'package:Buytime/utils/size_config.dart';
@@ -9,6 +10,7 @@ import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
 import 'package:Buytime/reusable/order/optimum_order_item_card_medium.dart';
 import 'package:Buytime/reusable/order/order_total.dart';
@@ -361,13 +363,13 @@ class CartReservableState extends State<CartReservable> {
                                               context,
                                               MaterialPageRoute(builder: (context) => ConfirmOrder(reserve: true, tourist: widget.tourist,)),
                                             );
-                                            // if(widget.serviceState.switchAutoConfirm){
-                                            //
-                                            // }else{
-                                            //   /// go to the confirm order window
-                                            //   Navigator.of(context).popUntil(ModalRoute.withName('/bookingPage'));
-                                            //
-                                            // }
+                                              /*StoreProvider.of<AppState>(context).dispatch(SetOrderProgress("in_progress"));
+                                              StoreProvider.of<AppState>(context).dispatch(CreateOrder(snapshot.order));*/
+
+                                              //StoreProvider.of<AppState>(context).dispatch(SetOrderReservable(OrderReservableState().toEmpty()));
+                                              //StoreProvider.of<AppState>(context).dispatch(SetOrder(OrderState().toEmpty()));
+                                              //StoreProvider.of<AppState>(context).dispatch(UserOrderListRequest());
+                                              //Navigator.of(context).popUntil(ModalRoute.withName('/bookingPage'));
                                           },
                                           textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
                                           color:  widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,

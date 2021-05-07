@@ -1,6 +1,7 @@
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
+import 'package:Buytime/utils/utils.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
@@ -94,7 +95,7 @@ class _BookingListServiceListItemState extends State<BookingListServiceListItem>
                             child: Container(
                               width: SizeConfig.safeBlockHorizontal * 50,
                               child: Text(
-                                widget.serviceState.name ?? '',
+                                widget.serviceState.name != null ? Utils.retriveField(Localizations.localeOf(context).languageCode, widget.serviceState.name) :  '',
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 1,
                                 style: TextStyle(
@@ -115,7 +116,7 @@ class _BookingListServiceListItemState extends State<BookingListServiceListItem>
                               height: 40, ///SizeConfig.safeBlockVertical * 10
                               margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
                               child: Text(
-                                widget.serviceState.description ?? '',
+                                widget.serviceState.description != null ? Utils.retriveField(Localizations.localeOf(context).languageCode, widget.serviceState.description) :  '',
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 2,
                                 style: TextStyle(

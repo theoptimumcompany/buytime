@@ -104,11 +104,12 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
   final GlobalKey<FormState> _formKeyStateField = GlobalKey<FormState>();
   final GlobalKey<FormState> _formKeyNationField = GlobalKey<FormState>();
   final GlobalKey<FormState> _formKeyCoordinateField = GlobalKey<FormState>();
-  final GlobalKey<FormState> _formKeyDescriptionField = GlobalKey<FormState>();
+  //final GlobalKey<FormState> _formKeyDescriptionField = GlobalKey<FormState>();
 
   bool isSelected = false;
 
   TextEditingController _tagController = TextEditingController();
+  TextEditingController _areaController = TextEditingController();
 
   List<Widget> listOfTagChips(List<String> tags) {
     List<Widget> listOfWidget = new List();
@@ -205,28 +206,54 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                 builder: (context, snapshot) {
                                                   String businessName = snapshot.name != null ? snapshot.name : "";
                                                   tag = snapshot.tag;
+                                                  if(snapshot.area.isEmpty)
+                                                    snapshot.area = ['Reception'];
                                                   return Column(
                                                     children: [
                                                       Padding(
                                                         padding: const EdgeInsets.all(8.0),
-                                                        child: Text(AppLocalizations.of(context).required + " *"),
+                                                        child: Text(
+                                                        "* = " + AppLocalizations.of(context).required,
+                                                          style: TextStyle(
+                                                            fontSize: 18,
+                                                              fontWeight: FontWeight.w600,
+                                                            fontFamily: BuytimeTheme.FontFamily,
+                                                            color: BuytimeTheme.AccentRed
+                                                          ),
+                                                        ),
                                                       ),
                                                       Stepper(
                                                         steps: [
                                                           Step(
-                                                            title: Text(AppLocalizations.of(context).definition),
+                                                            title: Text(
+                                                                AppLocalizations.of(context).definition,
+                                                              style: TextStyle(
+                                                                  fontFamily: BuytimeTheme.FontFamily,
+                                                                  fontWeight: FontWeight.w600
+                                                              ),
+                                                            ),
                                                             isActive: currentStep == 0 ? true : false,
                                                             state: currentStep == 0 ? StepState.editing : StepState.indexed,
                                                             content: Column(
                                                               children: <Widget>[
+                                                                ///Publish
                                                                 Row(
                                                                   children: [
-                                                                    Text(AppLocalizations.of(context).published),
-                                                                    Switch(value: !snapshot.draft, onChanged: (value) {
+                                                                    Text(
+                                                                        AppLocalizations.of(context).published,
+                                                                      style: TextStyle(
+                                                                          fontFamily: BuytimeTheme.FontFamily,
+                                                                          fontWeight: FontWeight.w600
+                                                                      ),
+                                                                    ),
+                                                                    Switch(
+                                                                        activeColor: BuytimeTheme.ManagerPrimary,
+                                                                        value: !snapshot.draft, onChanged: (value) {
                                                                       StoreProvider.of<AppState>(context).dispatch(SetBusinessDraft(!value));
                                                                     })
                                                                   ],
                                                                 ),
+                                                                ///Business Name
                                                                 OptimumFormField(
                                                                   field: "businessName",
                                                                   textInputType: TextInputType.text,
@@ -243,6 +270,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                                     StoreProvider.of<AppState>(context).dispatch(SetBusinessName(value));
                                                                   },
                                                                 ),
+                                                                ///Responsible Name
                                                                 OptimumFormField(
                                                                   field: "responsible_person_name",
                                                                   textInputType: TextInputType.text,
@@ -256,6 +284,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                                     StoreProvider.of<AppState>(context).dispatch(SetBusinessResponsiblePersonName(value));
                                                                   },
                                                                 ),
+                                                                ///Responsible Surname
                                                                 OptimumFormField(
                                                                   field: "responsible_person_surname",
                                                                   textInputType: TextInputType.text,
@@ -269,6 +298,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                                     StoreProvider.of<AppState>(context).dispatch(SetBusinessResponsiblePersonSurname(value));
                                                                   },
                                                                 ),
+                                                                ///Responsible Email
                                                                 OptimumFormField(
                                                                   field: "responsible_person_email",
                                                                   textInputType: TextInputType.text,
@@ -282,6 +312,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                                     StoreProvider.of<AppState>(context).dispatch(SetBusinessResponsiblePersonEmail(value));
                                                                   },
                                                                 ),
+                                                                ///Email
                                                                 OptimumFormField(
                                                                   field: "mail",
                                                                   textInputType: TextInputType.text,
@@ -295,6 +326,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                                     StoreProvider.of<AppState>(context).dispatch(SetBusinessEmail(value));
                                                                   },
                                                                 ),
+                                                                ///Vat
                                                                 OptimumFormField(
                                                                   field: "vat",
                                                                   textInputType: TextInputType.number,
@@ -312,105 +344,103 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                                 Container(
                                                                   // height: media.height * 0.266,
                                                                   width: double.infinity,
+                                                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
                                                                   decoration: BoxDecoration(
                                                                   ),
                                                                   child: Padding(
-                                                                    padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+                                                                    padding: const EdgeInsets.only(top: 0.0, bottom: 10.0),
                                                                     child: Column(
                                                                       children: [
+                                                                        ///Tag text
                                                                         Row(
-                                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                                           children: [
-                                                                            ///Tag text
-                                                                            Row(
-                                                                              children: [
-                                                                                Container(
-                                                                                  child: Padding(
-                                                                                    padding: const EdgeInsets.only(left: 5.0),
-                                                                                    child: Text(
-                                                                                      '${AppLocalizations.of(context).tag}',
-                                                                                      textAlign: TextAlign.start,
-                                                                                      style: TextStyle(
-                                                                                        color: BuytimeTheme.TextGrey,
-                                                                                        fontSize: media.height * 0.023,
-                                                                                        fontWeight: FontWeight.w500,
-                                                                                      ),
-                                                                                    ),
+                                                                            Container(
+                                                                              child: Padding(
+                                                                                padding: const EdgeInsets.only(left: 5.0, bottom: 10),
+                                                                                child: Text(
+                                                                                  AppLocalizations.of(context).businessPipeline,
+                                                                                  textAlign: TextAlign.start,
+                                                                                  style: TextStyle(
+                                                                                    color: BuytimeTheme.TextBlack,
+                                                                                    fontSize: 14,
+                                                                                    fontWeight: FontWeight.w600,
                                                                                   ),
                                                                                 ),
-                                                                              ],
+                                                                              ),
                                                                             ),
-                                                                            ///Add Tag field & Add Tag Button
-                                                                            Row(
-                                                                              children: [
-                                                                                ///Add Tag field
-                                                                                Container(
-                                                                                  //margin: EdgeInsets.only(top: 10.0),
-                                                                                  height: SizeConfig.safeBlockHorizontal * 10,
-                                                                                  width: SizeConfig.safeBlockHorizontal * 30,
-                                                                                  child: TextFormField(
-                                                                                    controller: _tagController,
-                                                                                    textAlign: TextAlign.start,
-                                                                                    decoration: InputDecoration(
-                                                                                      enabledBorder: OutlineInputBorder(
-                                                                                          borderSide: BorderSide(color: Color(0xffe0e0e0)),
-                                                                                          borderRadius: BorderRadius.all(Radius.circular(10.0))
-                                                                                      ),
-                                                                                      focusedBorder: OutlineInputBorder(
-                                                                                          borderSide: BorderSide(color: Color(0xff666666)),
-                                                                                          borderRadius: BorderRadius.all(Radius.circular(10.0))
-                                                                                      ),
-                                                                                      errorBorder: OutlineInputBorder(
-                                                                                          borderSide: BorderSide(color: Colors.redAccent),
-                                                                                          borderRadius: BorderRadius.all(Radius.circular(10.0))
-                                                                                      ),
-                                                                                      labelText: '${AppLocalizations.of(context).addNewTag}',
-                                                                                      //hintText: "email *",
-                                                                                      //hintStyle: TextStyle(color: Color(0xff666666)),
-                                                                                      labelStyle: TextStyle(
-                                                                                        fontFamily: BuytimeTheme.FontFamily,
-                                                                                        color: Color(0xff666666),
-                                                                                        fontWeight: FontWeight.w400,
-                                                                                      ),
-                                                                                    ),
-                                                                                    style: TextStyle(
+                                                                          ],
+                                                                        ),
+                                                                        ///Add Tag field & Add Tag Button
+                                                                        Row(
+                                                                          children: [
+                                                                            ///Add Tag field
+                                                                            Container(
+                                                                              //margin: EdgeInsets.only(top: 10.0),
+                                                                              height: SizeConfig.safeBlockHorizontal * 10,
+                                                                              width: SizeConfig.safeBlockHorizontal * 30,
+                                                                              child: TextFormField(
+                                                                                controller: _tagController,
+                                                                                textAlign: TextAlign.start,
+                                                                                decoration: InputDecoration(
+                                                                                  enabledBorder: OutlineInputBorder(
+                                                                                      borderSide: BorderSide(color: Color(0xffe0e0e0)),
+                                                                                      borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                                                                  ),
+                                                                                  focusedBorder: OutlineInputBorder(
+                                                                                      borderSide: BorderSide(color: Color(0xff666666)),
+                                                                                      borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                                                                  ),
+                                                                                  errorBorder: OutlineInputBorder(
+                                                                                      borderSide: BorderSide(color: Colors.redAccent),
+                                                                                      borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                                                                  ),
+                                                                                  labelText: AppLocalizations.of(context).addNewTag,
+                                                                                  //hintText: "email *",
+                                                                                  //hintStyle: TextStyle(color: Color(0xff666666)),
+                                                                                  labelStyle: TextStyle(
                                                                                       fontFamily: BuytimeTheme.FontFamily,
                                                                                       color: Color(0xff666666),
-                                                                                      fontWeight: FontWeight.w800,
-                                                                                    ),
+                                                                                      fontWeight: FontWeight.w400,
+                                                                                      fontSize: 16
                                                                                   ),
                                                                                 ),
-                                                                                ///Add tag button
-                                                                                Container(
-                                                                                  child: IconButton(
-                                                                                    icon: Icon(
-                                                                                      Icons.add_circle_rounded,
-                                                                                      size: 24,
-                                                                                      color: BuytimeTheme.TextGrey,
-                                                                                    ),
-                                                                                    onPressed: (){
-                                                                                      setState(() {
-                                                                                        if(_tagController.text.isNotEmpty) {
-                                                                                          snapshot.tag.add(_tagController.text);
-                                                                                          _tagController.clear();
-                                                                                        }
-                                                                                      });
+                                                                                style: TextStyle(
+                                                                                  fontFamily: BuytimeTheme.FontFamily,
+                                                                                  color: Color(0xff666666),
+                                                                                  fontWeight: FontWeight.w800,
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                            ///Add tag button
+                                                                            Container(
+                                                                              child: IconButton(
+                                                                                icon: Icon(
+                                                                                  Icons.add_circle_rounded,
+                                                                                  size: 24,
+                                                                                  color: BuytimeTheme.TextGrey,
+                                                                                ),
+                                                                                onPressed: (){
+                                                                                  setState(() {
+                                                                                    if(_tagController.text.isNotEmpty) {
+                                                                                      snapshot.tag.add(_tagController.text);
+                                                                                      _tagController.clear();
+                                                                                    }
+                                                                                  });
 
-                                                                                    },
-                                                                                  ),
-                                                                                ),
-                                                                              ],
+                                                                                },
+                                                                              ),
                                                                             ),
                                                                           ],
                                                                         ),
                                                                         /*Container(
-                                    width: double.infinity,
-                                    child: Row(
-                                      children: listOfTagChips(tag),
-                                    ),
-                                  ),*/
-                                                                        (snapshot.tag.length > 0 && snapshot.tag != null)
+                                                                  width: double.infinity,
+                                                                  child: Row(
+                                                                    children: listOfTagChips(tag),
+                                                                  ),
+                                                                ),*/
+                                                                        (snapshot.tag != null && snapshot.tag.length > 0)
                                                                             ? Container(
+                                                                          margin: EdgeInsets.only(top: 10),
                                                                           height: media.height * 0.05,
                                                                           child: ListView.builder(
                                                                             scrollDirection: Axis.horizontal,
@@ -421,6 +451,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                                                   Container(
                                                                                     margin: EdgeInsets.only(left: 5.0),
                                                                                     child: InputChip(
+                                                                                      backgroundColor: BuytimeTheme.BackgroundLightGrey,
                                                                                       selected: false,
                                                                                       label: Text(
                                                                                         snapshot.tag[i],
@@ -468,11 +499,18 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                             ),
                                                           ),
                                                           Step(
-                                                              title: Text(AppLocalizations.of(context).address),
+                                                              title: Text(
+                                                                  AppLocalizations.of(context).address,
+                                                                style: TextStyle(
+                                                                    fontFamily: BuytimeTheme.FontFamily,
+                                                                    fontWeight: FontWeight.w600
+                                                                ),
+                                                              ),
                                                               isActive: currentStep == 1 ? true : false,
                                                               state: currentStep == 1 ? StepState.editing : StepState.indexed,
                                                               content: Column(
                                                                 children: <Widget>[
+                                                                  ///Street
                                                                   OptimumFormField(
                                                                     field: "street",
                                                                     textInputType: TextInputType.text,
@@ -486,6 +524,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                                       StoreProvider.of<AppState>(context).dispatch(SetBusinessStreet(value));
                                                                     },
                                                                   ),
+                                                                  ///Street numnber
                                                                   OptimumFormField(
                                                                     field: "streetNumber",
                                                                     textInputType: TextInputType.number,
@@ -499,6 +538,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                                       StoreProvider.of<AppState>(context).dispatch(SetBusinessStreetNumber(value));
                                                                     },
                                                                   ),
+                                                                  ///Zip
                                                                   OptimumFormField(
                                                                     field: "zip",
                                                                     textInputType: TextInputType.number,
@@ -512,6 +552,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                                       StoreProvider.of<AppState>(context).dispatch(SetBusinessZIP(value));
                                                                     },
                                                                   ),
+                                                                  ///Municipality
                                                                   OptimumFormField(
                                                                     field: "municipality",
                                                                     textInputType: TextInputType.text,
@@ -525,6 +566,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                                       StoreProvider.of<AppState>(context).dispatch(SetBusinessMunicipality(value));
                                                                     },
                                                                   ),
+                                                                  ///State
                                                                   OptimumFormField(
                                                                     field: "state",
                                                                     textInputType: TextInputType.text,
@@ -538,6 +580,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                                       StoreProvider.of<AppState>(context).dispatch(SetBusinessStateProvince(value));
                                                                     },
                                                                   ),
+                                                                  ///Nation
                                                                   OptimumFormField(
                                                                     field: "nation",
                                                                     textInputType: TextInputType.text,
@@ -551,6 +594,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                                       StoreProvider.of<AppState>(context).dispatch(SetBusinessNation(value));
                                                                     },
                                                                   ),
+                                                                  ///Coordinate
                                                                   Container(
                                                                     margin: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2),
                                                                     child: OptimumFormField(
@@ -570,12 +614,19 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                                 ],
                                                               )),
                                                           Step(
-                                                            title: Text(AppLocalizations.of(context).companyInformation),
+                                                            title: Text(
+                                                                AppLocalizations.of(context).companyInformation,
+                                                              style: TextStyle(
+                                                                  fontFamily: BuytimeTheme.FontFamily,
+                                                                  fontWeight: FontWeight.w600
+                                                              ),
+                                                            ),
                                                             isActive: currentStep == 2 ? true : false,
                                                             state: currentStep == 2 ? StepState.editing : StepState.indexed,
                                                             content: Column(
                                                               children: <Widget>[
-                                                                OptimumFormField(
+                                                                ///Description
+                                                                /*OptimumFormField(
                                                                   field: "description",
                                                                   textInputType: TextInputType.text,
                                                                   minLength: 3,
@@ -587,24 +638,192 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                                   onSaveOrChangedCallback: (value) {
                                                                     StoreProvider.of<AppState>(context).dispatch(SetBusinessDescription(value));
                                                                   },
-                                                                ),
-                                                                //Type Of Business
-                                                                Padding(
-                                                                  padding: const EdgeInsets.only(top: 10.0),
-                                                                  child: Column(
-                                                                    children: <Widget>[
-                                                                      Text(AppLocalizations.of(context).typeOfBusiness + " *") ,
-                                                                      OptimumChip(
-                                                                        chipList: reportList,
-                                                                        selectedChoices: snapshot.business_type,
-                                                                        optimumChipListToDispatch: (List<GenericState> selectedChoices) {
-                                                                          StoreProvider.of<AppState>(context).dispatch(SetBusinessType(selectedChoices));
-                                                                        },
+                                                                ),*/
+                                                                ///Type Of Business
+                                                                /*Padding(
+                                                              padding: const EdgeInsets.only(top: 10.0),
+                                                              child: Column(
+                                                                children: <Widget>[
+                                                                  Text(AppLocalizations.of(context).typeOfBusiness),
+                                                                  OptimumChip(
+                                                                    chipList: reportList,
+                                                                    selectedChoices: snapshot.business_type,
+                                                                    optimumChipListToDispatch: (List<GenericState> selectedChoices) {
+                                                                      StoreProvider.of<AppState>(context).dispatch(SetBusinessType(selectedChoices));
+                                                                    },
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),*/
+                                                                Row(
+                                                                  children: [
+                                                                    Text(
+                                                                      'HUB',
+                                                                      style: TextStyle(
+                                                                          fontFamily: BuytimeTheme.FontFamily,
+                                                                          fontWeight: FontWeight.w600,
+                                                                          color: BuytimeTheme.TextGrey,
+                                                                          fontSize: 16
                                                                       ),
-                                                                    ],
+                                                                    ),
+                                                                    Switch(
+                                                                        activeColor: BuytimeTheme.ManagerPrimary,
+                                                                        value: snapshot.hub, onChanged: (value) {
+                                                                      debugPrint('UI_M-create_business => HUB: $value');
+                                                                      StoreProvider.of<AppState>(context).dispatch(SetHub(value));
+                                                                      //snapshot.hub = value;
+                                                                    }),
+                                                                  ],
+                                                                ),
+                                                                ///Business Area
+                                                                Container(
+                                                                  // height: media.height * 0.266,
+                                                                  width: double.infinity,
+                                                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
+                                                                  decoration: BoxDecoration(
+                                                                  ),
+                                                                  child: Padding(
+                                                                    padding: const EdgeInsets.only(top: 0.0, bottom: 10.0),
+                                                                    child: Column(
+                                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                                      children: [
+                                                                        ///Area text
+                                                                        Row(
+                                                                          children: [
+                                                                            Container(
+                                                                              child: Padding(
+                                                                                padding: const EdgeInsets.only(left: 0.0, bottom: 20),
+                                                                                child: Text(
+                                                                                  AppLocalizations.of(context).serviceArea,
+                                                                                  textAlign: TextAlign.start,
+                                                                                  style: TextStyle(
+                                                                                    color: BuytimeTheme.TextBlack,
+                                                                                    fontSize: 14,
+                                                                                    fontWeight: FontWeight.w600,
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                        ///Add Area field & Add Area Button
+                                                                        Row(
+                                                                          children: [
+                                                                            ///Add Tag field
+                                                                            Container(
+                                                                              //margin: EdgeInsets.only(top: 10.0),
+                                                                              height: SizeConfig.safeBlockHorizontal * 10,
+                                                                              width: SizeConfig.safeBlockHorizontal * 60,
+                                                                              child: TextFormField(
+                                                                                controller: _areaController,
+                                                                                textAlign: TextAlign.start,
+                                                                                decoration: InputDecoration(
+                                                                                  enabledBorder: OutlineInputBorder(
+                                                                                      borderSide: BorderSide(color: Color(0xffe0e0e0)),
+                                                                                      borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                                                                  ),
+                                                                                  focusedBorder: OutlineInputBorder(
+                                                                                      borderSide: BorderSide(color: Color(0xff666666)),
+                                                                                      borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                                                                  ),
+                                                                                  errorBorder: OutlineInputBorder(
+                                                                                      borderSide: BorderSide(color: Colors.redAccent),
+                                                                                      borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                                                                  ),
+                                                                                  labelText: AppLocalizations.of(context).addNewArea,
+                                                                                  //hintText: "email *",
+                                                                                  //hintStyle: TextStyle(color: Color(0xff666666)),
+                                                                                  labelStyle: TextStyle(
+                                                                                      fontFamily: BuytimeTheme.FontFamily,
+                                                                                      color: Color(0xff666666),
+                                                                                      fontWeight: FontWeight.w400,
+                                                                                      fontSize: 16
+                                                                                  ),
+                                                                                ),
+                                                                                style: TextStyle(
+                                                                                  fontFamily: BuytimeTheme.FontFamily,
+                                                                                  color: Color(0xff666666),
+                                                                                  fontWeight: FontWeight.w800,
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                            ///Add Area button
+                                                                            Container(
+                                                                              child: IconButton(
+                                                                                icon: Icon(
+                                                                                  Icons.add_circle_rounded,
+                                                                                  size: 24,
+                                                                                  color: BuytimeTheme.TextGrey,
+                                                                                ),
+                                                                                onPressed: (){
+                                                                                  setState(() {
+                                                                                    if(_areaController.text.isNotEmpty) {
+                                                                                      if(snapshot.area == null)
+                                                                                        snapshot.area = [];
+
+                                                                                      snapshot.area.add(_areaController.text);
+                                                                                      _areaController.clear();
+                                                                                    }
+                                                                                  });
+
+                                                                                },
+                                                                              ),
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                        /*Container(
+                                                                  width: double.infinity,
+                                                                  child: Row(
+                                                                    children: listOfTagChips(tag),
+                                                                  ),
+                                                                ),*/
+                                                                        (snapshot.area != null && snapshot.area.length > 0)
+                                                                            ? Wrap(
+                                                                          spacing: 0,
+                                                                          children: snapshot.area.map((e) => Container(
+                                                                            margin: EdgeInsets.only(right: 5.0),
+                                                                            child: InputChip(
+                                                                              backgroundColor: BuytimeTheme.BackgroundLightGrey,
+                                                                              selected: false,
+                                                                              label: Text(
+                                                                                e,
+                                                                                style: TextStyle(
+                                                                                  fontSize: 13.0,
+                                                                                  fontWeight: FontWeight.w500,
+                                                                                ),
+                                                                              ),
+                                                                              //avatar: FlutterLogo(),
+                                                                              onPressed: () {
+                                                                                print('Manager is pressed');
+
+                                                                                ///Vedere che fare quando si pigia il chip
+                                                                                setState(() {
+                                                                                  //_selected = !_selected;
+                                                                                });
+                                                                              },
+                                                                              onDeleted: e == 'Reception' && snapshot.area.length == 1 ? null : () {
+                                                                                setState(() {
+                                                                                  snapshot.area.remove(e);
+                                                                                });
+                                                                                /* Manager managerToDelete = Manager(id: "", name: "", surname: "", mail: managerList[i].mail);
+                                                print("Mail di invito Manager da eliminare : " + managerList[i].mail);
+                                                CategoryInviteState categoryInviteState = CategoryInviteState().toEmpty();
+                                                categoryInviteState.role = "Manager";
+                                                categoryInviteState.id_category = snapshot.category.id;
+                                                categoryInviteState.mail = managerList[i].mail;
+                                                StoreProvider.of<AppState>(context).dispatch(DeleteCategoryInvite(categoryInviteState));
+                                                StoreProvider.of<AppState>(context).dispatch(new DeleteCategoryManager(managerToDelete));
+                                                print('Manager is deleted');*/
+                                                                              },
+                                                                            ),
+                                                                          )).toList(),
+                                                                        )
+                                                                            : Container()
+                                                                      ],
+                                                                    ),
                                                                   ),
                                                                 ),
-                                                                //Business Logo
+                                                                ///Business Logo
                                                                 OptimumFormMultiPhoto(
                                                                   text: AppLocalizations.of(context).logo + " *",
                                                                   remotePath: "business/" + businessName + "/logo",
@@ -620,7 +839,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                                     StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInBusiness(fileToUpload, fileToUpload.state, 0));
                                                                   },
                                                                 ),
-                                                                //Business Wide
+                                                                ///Business Wide
                                                                 OptimumFormMultiPhoto(
                                                                   text: AppLocalizations.of(context).wide + " *",
                                                                   remotePath: "business/" + businessName + "/wide",
@@ -636,7 +855,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                                     StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInBusiness(fileToUpload, fileToUpload.state, 1));
                                                                   },
                                                                 ),
-                                                                //Photo Profile
+                                                                ///Photo Profile
                                                                 OptimumFormMultiPhoto(
                                                                   text: AppLocalizations.of(context).profile + " *",
                                                                   remotePath: "business/" + businessName + "/profile",
@@ -652,7 +871,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                                     StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInBusiness(fileToUpload, fileToUpload.state, 2));
                                                                   },
                                                                 ),
-                                                                //Business Gallery
+                                                                ///Business Gallery
                                                                 OptimumFormMultiPhoto(
                                                                   text: AppLocalizations.of(context).gallery + " *",
                                                                   remotePath: "business/" + businessName + "/gallery",
@@ -683,70 +902,93 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                           builder: (context, snapshot) {
                                                             return Row(
                                                               mainAxisSize: MainAxisSize.max,
-                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                              mainAxisAlignment: MainAxisAlignment.center,
                                                               children: <Widget>[
-                                                                currentStep == 0
-                                                                    ? Container()
-                                                                    : MaterialButton(
-                                                                  color: BuytimeTheme.ManagerPrimary,
-                                                                  elevation: 0,
-                                                                  hoverElevation: 0,
-                                                                  focusElevation: 0,
-                                                                  highlightElevation: 0,
-                                                                  onPressed: onStepCancel,
-                                                                  child: Text(
-                                                                    AppLocalizations.of(context).back,
-                                                                    style: TextStyle(
-                                                                        fontFamily: BuytimeTheme.FontFamily,
-                                                                        color: BuytimeTheme.TextWhite
-                                                                    ),),
-                                                                ),
+                                                                /*currentStep == 0
+                                                                ? Container()
+                                                                : MaterialButton(
+                                                              color: BuytimeTheme.ManagerPrimary,
+                                                              elevation: 0,
+                                                              hoverElevation: 0,
+                                                              focusElevation: 0,
+                                                              highlightElevation: 0,
+                                                              onPressed: onStepCancel,
+                                                              child: Text(AppLocalizations.of(context).back,
+                                                                  style: TextStyle(
+                                                                      fontFamily: BuytimeTheme.FontFamily,
+                                                                      color: BuytimeTheme.TextWhite
+                                                                  )),
+                                                            ),*/
                                                                 currentStep != 2
-                                                                    ? MaterialButton(
-                                                                  color: BuytimeTheme.ManagerPrimary,
-                                                                  elevation: 0,
-                                                                  hoverElevation: 0,
-                                                                  focusElevation: 0,
-                                                                  highlightElevation: 0,
-                                                                  onPressed: () {
-                                                                    print("salesman board: Upload to DB");
-                                                                    onStepContinue();
-                                                                  },
-                                                                  child: Text(AppLocalizations.of(context).next,
-                                                                      style: TextStyle(
-                                                                          fontFamily: BuytimeTheme.FontFamily,
-                                                                          color: BuytimeTheme.TextWhite
-                                                                      )),
+                                                                    ? Container(
+                                                                  height: 44,
+                                                                  width: 208,
+                                                                  margin: EdgeInsets.only(top: 10),
+                                                                  decoration: BoxDecoration(
+                                                                      borderRadius: BorderRadius.all(Radius.circular(5))
+                                                                  ),
+                                                                  child:  MaterialButton(
+                                                                    color: BuytimeTheme.ManagerPrimary,
+                                                                    elevation: 0,
+                                                                    hoverElevation: 0,
+                                                                    focusElevation: 0,
+                                                                    highlightElevation: 0,
+                                                                    onPressed: () {
+                                                                      print("salesman board: Upload to DB");
+                                                                      onStepContinue();
+                                                                    },
+                                                                    padding: EdgeInsets.all(0),
+                                                                    shape: RoundedRectangleBorder(
+                                                                      borderRadius: new BorderRadius.circular(5),
+                                                                    ),
+                                                                    child: Text(AppLocalizations.of(context).next,
+                                                                        style: TextStyle(
+                                                                            fontFamily: BuytimeTheme.FontFamily,
+                                                                            color: BuytimeTheme.TextWhite,
+                                                                            fontSize: 18
+                                                                        )),
+                                                                  ),
                                                                 )
-                                                                    : MaterialButton(
-                                                                  color: BuytimeTheme.ManagerPrimary,
-                                                                  elevation: 0,
-                                                                  hoverElevation: 0,
-                                                                  focusElevation: 0,
-                                                                  highlightElevation: 0,
-                                                                  onPressed: () {
-                                                                    if (
-                                                                        _validateInputs() == false ||
-                                                                        StoreProvider.of<AppState>(context).state.business.fileToUploadList == null ||
-                                                                        StoreProvider.of<AppState>(context).state.business.fileToUploadList.length < 4
-                                                                    ) {
-                                                                      final snackBar = SnackBar(content: Text(AppLocalizations.of(context).pleaseFillAllFields));
-                                                                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                                    : Container(
+                                                                  height: 44,
+                                                                  width: 208,
+                                                                  margin: EdgeInsets.only(top: 10),
+                                                                  decoration: BoxDecoration(
+                                                                      borderRadius: BorderRadius.all(Radius.circular(5))
+                                                                  ),
+                                                                  child: MaterialButton(
+                                                                    color: BuytimeTheme.ManagerPrimary,
+                                                                    elevation: 0,
+                                                                    hoverElevation: 0,
+                                                                    focusElevation: 0,
+                                                                    highlightElevation: 0,
+                                                                    shape: RoundedRectangleBorder(
+                                                                      borderRadius: new BorderRadius.circular(5),
+                                                                    ),
+                                                                    onPressed: () {
+                                                                      if (_validateInputs() == false ||
+                                                                          StoreProvider.of<AppState>(context).state.business.fileToUploadList == null ||
+                                                                          StoreProvider.of<AppState>(context).state.business.fileToUploadList.length < 4
+                                                                      ) {
+                                                                        final snackBar = SnackBar(content: Text(AppLocalizations.of(context).pleaseFillAllFields));
+                                                                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
-                                                                      print("buytime_salesman_create: validate problems");
-                                                                      return;
-                                                                    }
-                                                                    setState(() {
-                                                                      bookingRequest = 'send';
-                                                                    });
-                                                                    print("salesman board: Upload to DB");
-                                                                    StoreProvider.of<AppState>(context).dispatch(CreateBusiness(snapshot));
-                                                                  },
-                                                                  child: Text(AppLocalizations.of(context).createBusiness,
-                                                                      style: TextStyle(
-                                                                          fontFamily: BuytimeTheme.FontFamily,
-                                                                          color: BuytimeTheme.TextWhite
-                                                                      )),
+                                                                        print("buytime_salesman_create: validate problems");
+                                                                        return;
+                                                                      }
+                                                                      setState(() {
+                                                                        bookingRequest = 'send';
+                                                                      });
+                                                                      print("salesman board: Upload to DB");
+                                                                      StoreProvider.of<AppState>(context).dispatch(CreateBusiness(snapshot));
+                                                                    },
+                                                                    child: Text(AppLocalizations.of(context).createBusiness,
+                                                                        style: TextStyle(
+                                                                            fontFamily: BuytimeTheme.FontFamily,
+                                                                            color: BuytimeTheme.TextWhite,
+                                                                            fontSize: 18
+                                                                        )),
+                                                                  ),
                                                                 ),
                                                               ],
                                                             );
@@ -784,12 +1026,12 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Container(
-                          width: 50,
-                          height: 50,
+                          width: SizeConfig.safeBlockVertical * 20,
+                          height: SizeConfig.safeBlockVertical * 20,
                           child: Center(
                             child: SpinKitRipple(
                               color: Colors.white,
-                              size: 50,
+                              size: SizeConfig.safeBlockVertical * 18,
                             ),
                           ),
                         ),

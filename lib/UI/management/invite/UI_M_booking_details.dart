@@ -526,81 +526,79 @@ class _BookingDetailsState extends State<BookingDetails> {
                                   ],
                                 ),
                               ),
-                              view
-                                  ? Flexible(
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Container(
-                                              width: 180,
-                                              ///media.width * .5
-                                              height: 44,
-                                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 2.5),
-                                              alignment: Alignment.bottomCenter,
-                                              child: MaterialButton(
-                                                elevation: 0,
-                                                hoverElevation: 0,
-                                                focusElevation: 0,
-                                                highlightElevation: 0,
-                                                onPressed: () async {
-                                                  Clipboard.setData(ClipboardData(text: link));
-                                                  Flushbar(
-                                                    padding: EdgeInsets.all(SizeConfig.safeBlockVertical * 2),
-                                                    margin: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2, left: SizeConfig.blockSizeHorizontal * 20, right: SizeConfig.blockSizeHorizontal * 20), ///2% - 20% - 20%
-                                                    borderRadius: BorderRadius.all(Radius.circular(8)),
-                                                    backgroundColor: BuytimeTheme.SymbolGrey,
-                                                    boxShadows: [
-                                                      BoxShadow(
-                                                        color: Colors.black45,
-                                                        offset: Offset(3, 3),
-                                                        blurRadius: 3,
-                                                      ),
-                                                    ],
-                                                    // All of the previous Flushbars could be dismissed by swiping down
-                                                    // now we want to swipe to the sides
-                                                    //dismissDirection: FlushbarDismissDirection.HORIZONTAL,
-                                                    // The default curve is Curves.easeOut
-                                                    duration:  Duration(seconds: 2),
-                                                    forwardAnimationCurve: Curves.fastLinearToSlowEaseIn,
-                                                    messageText: Text(
-                                                      AppLocalizations.of(context).copiedToClipboard,
-                                                      style: TextStyle(
-                                                          color: BuytimeTheme.TextWhite,
-                                                          fontWeight: FontWeight.bold
-                                                      ),
-                                                      textAlign: TextAlign.center,
-                                                    ),
-                                                  )..show(context);
-                                                },
-                                                textColor: BuytimeTheme.TextDark,
-                                                color: BuytimeTheme.Secondary,
-                                                padding: EdgeInsets.all(media.width * 0.02),
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius: new BorderRadius.circular(5),
+                              Flexible(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                        width: 180,
+                                        ///media.width * .5
+                                        height: 44,
+                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 2.5),
+                                        alignment: Alignment.bottomCenter,
+                                        child: MaterialButton(
+                                          elevation: 0,
+                                          hoverElevation: 0,
+                                          focusElevation: 0,
+                                          highlightElevation: 0,
+                                          onPressed: () async {
+                                            Clipboard.setData(ClipboardData(text: link));
+                                            Flushbar(
+                                              padding: EdgeInsets.all(SizeConfig.safeBlockVertical * 2),
+                                              margin: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2, left: SizeConfig.blockSizeHorizontal * 20, right: SizeConfig.blockSizeHorizontal * 20), ///2% - 20% - 20%
+                                              borderRadius: BorderRadius.all(Radius.circular(8)),
+                                              backgroundColor: BuytimeTheme.SymbolGrey,
+                                              boxShadows: [
+                                                BoxShadow(
+                                                  color: Colors.black45,
+                                                  offset: Offset(3, 3),
+                                                  blurRadius: 3,
                                                 ),
-                                                child: Row(
-                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                                  children: [
-                                                    Container(
-                                                      margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 2.5),
-                                                      child: Icon(
-                                                        MaterialDesignIcons.insert_link,
-                                                        color: BuytimeTheme.SymbolBlack,
-                                                        size: 24,
-                                                      ),
-                                                    ),
-                                                    Text(
-                                                      AppLocalizations.of(context).copyLink,
-                                                      style: TextStyle(fontSize: 14, fontFamily: BuytimeTheme.FontFamily, fontWeight: FontWeight.w600, color: BuytimeTheme.TextDark, letterSpacing: 1.25),
-                                                    )
-                                                  ],
+                                              ],
+                                              // All of the previous Flushbars could be dismissed by swiping down
+                                              // now we want to swipe to the sides
+                                              //dismissDirection: FlushbarDismissDirection.HORIZONTAL,
+                                              // The default curve is Curves.easeOut
+                                              duration:  Duration(seconds: 2),
+                                              forwardAnimationCurve: Curves.fastLinearToSlowEaseIn,
+                                              messageText: Text(
+                                                AppLocalizations.of(context).copiedToClipboard,
+                                                style: TextStyle(
+                                                    color: BuytimeTheme.TextWhite,
+                                                    fontWeight: FontWeight.bold
                                                 ),
-                                              ))
-                                        ],
-                                      ),
-                                    )
-                                  : Container()
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            )..show(context);
+                                          },
+                                          textColor: BuytimeTheme.TextDark,
+                                          color: BuytimeTheme.Secondary,
+                                          padding: EdgeInsets.all(media.width * 0.02),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: new BorderRadius.circular(5),
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            children: [
+                                              Container(
+                                                margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 2.5),
+                                                child: Icon(
+                                                  MaterialDesignIcons.insert_link,
+                                                  color: BuytimeTheme.SymbolBlack,
+                                                  size: 24,
+                                                ),
+                                              ),
+                                              Text(
+                                                AppLocalizations.of(context).copyLink,
+                                                style: TextStyle(fontSize: 14, fontFamily: BuytimeTheme.FontFamily, fontWeight: FontWeight.w600, color: BuytimeTheme.TextDark, letterSpacing: 1.25),
+                                              )
+                                            ],
+                                          ),
+                                        ))
+                                  ],
+                                ),
+                              )
                             ],
                           ),
                         ),

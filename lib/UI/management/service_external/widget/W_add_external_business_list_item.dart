@@ -36,16 +36,16 @@ class _AddExternalBusinessListItemState extends State<AddExternalBusinessListIte
     double lat2 = 0.0;
     double lon2 = 0.0;
    if(widget.businessState.coordinate.isNotEmpty){
-     List<String> latLng1 = widget.businessState.coordinate.replaceAll('(', '').replaceAll(')', '').split(', ');
-     //debugPrint('W_add_external_business_list_item => Cordinates 1: $latLng1');
+     List<String> latLng1 = widget.businessState.coordinate.replaceAll('(', '').replaceAll(')', '').replaceAll(' ', '').split(',');
+     debugPrint('W_add_external_business_list_item => ${widget.businessState.name} | Cordinates 1: $latLng1');
      if(latLng1.length == 2){
        lat1 = double.parse(latLng1[0]);
        lon1 = double.parse(latLng1[1]);
      }
    }
     if(widget.externalBusinessState.coordinate.isNotEmpty){
-      List<String> latLng2 = widget.externalBusinessState.coordinate.replaceAll('(', '').replaceAll(')', '').split(', ');
-      //debugPrint('W_add_external_business_list_item => Cordinates 2: $latLng2');
+      List<String> latLng2 = widget.externalBusinessState.coordinate.replaceAll('(', '').replaceAll(')', '').replaceAll(' ', '').split(',');
+      debugPrint('W_add_external_business_list_item => ${widget.externalBusinessState.name} | Cordinates 2: $latLng2');
       if(latLng2.length == 2){
         lat2 = double.parse(latLng2[0]);
         lon2 = double.parse(latLng2[1]);
@@ -56,13 +56,16 @@ class _AddExternalBusinessListItemState extends State<AddExternalBusinessListIte
     var a = 0.5 - c((lat2 - lat1) * p)/2 +
         c(lat1 * p) * c(lat2 * p) *
             (1 - c((lon2 - lon1) * p))/2;
-    return (12742 * asin(sqrt(a))) / 1000;
+    double tmp = (12742 * asin(sqrt(a)));
+    debugPrint('W_add_external_business_list_item => Distance: $tmp');
+
+    return  tmp;
   }
 
   @override
   Widget build(BuildContext context) {
 
-    //debugPrint('image: ${widget.serviceState.image1}');
+    debugPrint('coordinates: ${calculateDistance()}');
     return Container(
         //margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 4, right: SizeConfig.safeBlockHorizontal * 4),
         margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 0),
@@ -143,7 +146,7 @@ class _AddExternalBusinessListItemState extends State<AddExternalBusinessListIte
                                   height: 40, ///SizeConfig.safeBlockVertical * 10
                                   margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
                                   child: Text(
-                                    calculateDistance().toStringAsFixed(1) + ' Km',
+                                      calculateDistance().toString().split('.').first.startsWith('0') ? calculateDistance().toString().split('.').last.substring(0,3) + ' m' : calculateDistance().toStringAsFixed(1) + ' Km',
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 2,
                                     style: TextStyle(

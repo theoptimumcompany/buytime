@@ -216,6 +216,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
         categoryListState = store.state.categoryList;
         categoryList.addAll(categoryListState.categoryListState);
         categoryList.remove(widget.categoryState);
+        categoryList.shuffle();
       },
       builder: (context, snapshot) {
         List<ServiceState> s = [];

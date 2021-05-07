@@ -8,9 +8,12 @@ import 'package:Buytime/reblox/reducer/category_tree_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/service_reducer.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
 import 'package:Buytime/reusable/enterExitRoute.dart';
+import 'package:Buytime/utils/animations/translate_animation.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/utils/utils.dart';
+import 'package:emojis/emoji.dart';
+import 'package:emojis/emojis.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -39,10 +42,13 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
   List<Parent> categoryList = [];
   var size;
   bool rippleLoading = false;
+  bool rippleTranslate = false;
   bool errorCategoryListEmpty = false;
   TextEditingController _tagServiceController = TextEditingController();
   bool defaultCategory = true;
 
+  TextEditingController nameController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
   TextEditingController priceController = TextEditingController();
   TextEditingController addressController = TextEditingController();
 
@@ -165,9 +171,13 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
     return choices;
   }
 
+  String serviceName = '';
+  String serviceDescription = '';
+
   @override
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
+    FocusScopeNode currentFocus = FocusScope.of(context);
     return WillPopScope(
       onWillPop: () async {
         ///Block iOS Back Swipe
@@ -178,15 +188,46 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
       },
       child: StoreConnector<AppState, AppState>(
           converter: (store) => store.state,
-          onInit: (store) => store.dispatch(CategoryTreeRequest()),
+          onInit: (store) {
+            store.dispatch(CategoryTreeRequest());
+            _serviceAddress = store.state.business.street + ', ' + store.state.business.street_number + ', ' + store.state.business.ZIP + ', ' + store.state.business.state_province;
+          },
           builder: (context, snapshot) {
+            List<String> flagsCharCode = [];
+            List<String> languageCode = [];
+            Locale myLocale = Localizations.localeOf(context);
+            if(snapshot.serviceState.serviceId != null){
+
+              AppLocalizations.supportedLocales.forEach((element) {
+                //debugPrint('UI_M_create_service => Locale: ${element}');
+                String flag = '';
+                if(element.languageCode == 'en')
+                  flag = 'gb'.toUpperCase().replaceAllMapped(RegExp(r'[A-Z]'), (match) => String.fromCharCode(match.group(0).codeUnitAt(0) + 127397));
+                else
+                  flag = element.languageCode.toUpperCase().replaceAllMapped(RegExp(r'[A-Z]'), (match) => String.fromCharCode(match.group(0).codeUnitAt(0) + 127397));
+                //debugPrint('UI_M_create_service => Locale charCode: $flag');
+                flagsCharCode.add(flag);
+                languageCode.add(element.languageCode);
+              });
+
+              if(snapshot.serviceState.name.isNotEmpty && nameController.text.isEmpty){
+                debugPrint('UI_M_create_service => Service Name: ${snapshot.serviceState.name}');
+                //nameController.clear();
+                nameController.text = Utils.retriveField(myLocale.languageCode, snapshot.serviceState.name);
+              }
+              if(snapshot.serviceState.description.isNotEmpty && descriptionController.text.isEmpty){
+                debugPrint('UI_M_create_service => Service Description: ${snapshot.serviceState.description}');
+                //descriptionController.clear();
+                descriptionController.text = Utils.retriveField(myLocale.languageCode, snapshot.serviceState.description);
+              }
+            }
+
+
             ///Popolo le categorie
             setCategoryList();
             addDefaultCategory();
             return GestureDetector(
               onTap: (){
-                FocusScopeNode currentFocus = FocusScope.of(context);
-
                 if (!currentFocus.hasPrimaryFocus) {
                   currentFocus.unfocus();
                 }
@@ -196,6 +237,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                   child: Align(
                     alignment: Alignment.topCenter,
                     child: Scaffold(
+                      //resizeToAvoidBottomInset: false,
                         appBar: BuytimeAppbar(
                           width: media.width,
                           children: [
@@ -214,6 +256,10 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                               child: IconButton(
                                   icon: Icon(Icons.check, color: Colors.white),
                                   onPressed: () {
+                                    if(nameController.text.isNotEmpty)
+                                      StoreProvider.of<AppState>(context).dispatch(SetServiceName(Utils.saveField(myLocale.languageCode, nameController.text, snapshot.serviceState.name)));
+                                    if(descriptionController.text.isNotEmpty)
+                                      StoreProvider.of<AppState>(context).dispatch(SetServiceDescription(Utils.saveField(myLocale.languageCode, descriptionController.text, snapshot.serviceState.description)));
                                     if (validateChosenCategories() && validateAndSave() && validatePrice(priceController.text)) {
                                       setState(() {
                                         rippleLoading = true;
@@ -287,60 +333,128 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                   ),
                                 ),*/
                                   ///Name
-                                  Center(
-                                    child: Container(
-                                      width: media.width * 0.9,
-                                      // decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(top: 40.0, bottom: 5.0, left: 10.0, right: 10.0),
-                                        child: TextFormField(
-                                          //initialValue: _serviceName,
-                                            validator: (value) => value.isEmpty ? AppLocalizations.of(context).serviceNameBlank : null,
-                                            onChanged: (value) {
-                                              StoreProvider.of<AppState>(context).dispatch(SetServiceName(value));
-                                            },
-                                            onSaved: (value) {
-                                              if (validateAndSave()) {
-                                                //_serviceName = value;
-                                                StoreProvider.of<AppState>(context).dispatch(SetServiceName(value));
+                                  Container(
+                                    margin: EdgeInsets.only(top: 40.0, bottom: 5.0, left: 32.0, right: 28.0),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Flexible(
+                                          child: Container(
+                                              //width: SizeConfig.safeBlockHorizontal * 60,
+                                              // decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
+                                              child: TextFormField(
+                                                  controller: nameController,
+                                                  validator: (value) => value.isEmpty ? AppLocalizations.of(context).serviceNameBlank : null,
+                                                  /*onChanged: (value) {
+                                                    StoreProvider.of<AppState>(context).dispatch(SetServiceName(value + '-' + myLocale.languageCode));
+                                                  },
+                                                  onSaved: (value) {
+                                                    if (validateAndSave()) {
+                                                      //_serviceName = value;
+                                                      StoreProvider.of<AppState>(context).dispatch(SetServiceName(value + '-' + myLocale.languageCode));
+                                                    }
+                                                  },*/
+                                                  onEditingComplete: (){
+                                                    //StoreProvider.of<AppState>(context).dispatch(SetServiceName(Utils.saveField(myLocale.languageCode, nameController.text, snapshot.serviceState.name)));
+                                                    currentFocus.unfocus();
+                                                  },
+                                                  decoration: InputDecoration(
+                                                    labelText: AppLocalizations.of(context).name,
+                                                    enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                    focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                    errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                  ))
+                                          ),
+                                        ),
+                                        IconButton(
+                                          icon: Icon(
+                                            Icons.g_translate,
+                                            color: BuytimeTheme.ManagerPrimary,
+                                          ),
+                                          onPressed: (){
+                                            setState(() {
+                                              rippleTranslate = true;
+                                            });
+                                            currentFocus.unfocus();
+                                            //StoreProvider.of<AppState>(context).dispatch(SetServiceName(Utils.saveField(myLocale.languageCode, nameController.text, snapshot.serviceState.name)));
+                                            String newField = Utils.saveField(myLocale.languageCode, nameController.text, snapshot.serviceState.name);
+                                            Utils.multiLingualTranslate(
+                                                context, flagsCharCode, languageCode,
+                                                AppLocalizations.of(context).name, newField,
+                                                currentFocus, (value){
+                                              if(!value){
+                                                setState(() {
+                                                  rippleTranslate = false;
+                                                });
                                               }
-                                            },
-                                            decoration: InputDecoration(
-                                              labelText: AppLocalizations.of(context).name,
-                                              enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                              focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                              errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                            )),
-                                      ),
+                                            });
+                                          },
+                                        )
+                                      ],
                                     ),
                                   ),
                                   ///Description
-                                  Center(
-                                    child: Container(
-                                      width: media.width * 0.9,
-                                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
-                                      //decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(top: 0.0, bottom: 5.0, left: 10.0, right: 10.0),
-                                        child: TextFormField(
-                                          keyboardType: TextInputType.multiline,
-                                          maxLines: null,
-                                          initialValue: _serviceDescription,
-                                          onChanged: (value) {
-                                            _serviceDescription = value;
-                                            StoreProvider.of<AppState>(context).dispatch(SetServiceDescription(_serviceDescription));
-                                          },
-                                          onSaved: (value) {
-                                            _serviceDescription = value;
-                                          },
-                                          decoration: InputDecoration(
-                                            labelText: AppLocalizations.of(context).description,
-                                            enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                            focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                            errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                  Container(
+                                    margin: EdgeInsets.only(top: 10.0, bottom: 5.0, left: 32.0, right: 28.0),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Flexible(
+                                          child: Container(
+                                            //width: SizeConfig.safeBlockHorizontal * 60,
+                                            // decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
+                                              child: TextFormField(
+                                                  keyboardType: TextInputType.multiline,
+                                                  maxLines: null,
+                                                  controller: descriptionController,
+                                                  validator: (value) => value.isEmpty ? AppLocalizations.of(context).serviceNameBlank : null,
+                                                  /*onChanged: (value) {
+                                                    StoreProvider.of<AppState>(context).dispatch(SetServiceDescription(value + '-' + myLocale.languageCode));
+                                                  },
+                                                  onSaved: (value) {
+                                                    if (validateAndSave()) {
+                                                      //_serviceName = value;
+                                                      StoreProvider.of<AppState>(context).dispatch(SetServiceDescription(value + '-' + myLocale.languageCode));
+                                                    }
+                                                  },*/
+                                                  onEditingComplete: (){
+                                                    StoreProvider.of<AppState>(context).dispatch(SetServiceDescription(Utils.saveField(myLocale.languageCode, descriptionController.text, snapshot.serviceState.description)));
+                                                    currentFocus.unfocus();
+                                                  },
+                                                  decoration: InputDecoration(
+                                                    labelText: AppLocalizations.of(context).description,
+                                                    enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                    focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                    errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+
+                                                  ))
                                           ),
                                         ),
-                                      ),
+                                        IconButton(
+                                          icon: Icon(
+                                            Icons.g_translate,
+                                            color: BuytimeTheme.ManagerPrimary,
+                                          ),
+                                          onPressed: (){
+                                            setState(() {
+                                              rippleTranslate = true;
+                                            });
+                                            currentFocus.unfocus();
+                                            StoreProvider.of<AppState>(context).dispatch(SetServiceDescription(Utils.saveField(myLocale.languageCode, descriptionController.text, snapshot.serviceState.description)));
+                                            String newField = Utils.saveField(myLocale.languageCode, descriptionController.text, snapshot.serviceState.description);
+                                            Utils.multiLingualTranslate(
+                                                context, flagsCharCode, languageCode,
+                                                AppLocalizations.of(context).description, newField,
+                                                currentFocus, (value){
+                                              if(!value){
+                                                setState(() {
+                                                  rippleTranslate = false;
+                                                });
+                                              }
+                                            });
+                                          },
+                                        )
+                                      ],
                                     ),
                                   ),
                                   ///Price
@@ -626,8 +740,37 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                 ),
 
                 ///Ripple Effect
-                rippleLoading
-                    ? Positioned.fill(
+                rippleTranslate ?
+                Positioned.fill(
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Container(
+                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3),
+                        height: double.infinity,
+                        decoration: BoxDecoration(
+                          color: BuytimeTheme.BackgroundWhite.withOpacity(.8),
+                        ),
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Container(
+                                width: SizeConfig.safeBlockVertical * 20,
+                                height: SizeConfig.safeBlockVertical * 20,
+                                child: Center(
+                                  child: SpinKitRipple(
+                                    color: BuytimeTheme.ManagerPrimary,
+                                    size: SizeConfig.safeBlockVertical * 18,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        )),
+                  ),
+                ):
+                rippleLoading ?
+                Positioned.fill(
                   child: Align(
                     alignment: Alignment.center,
                     child: Container(
@@ -641,12 +784,12 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
                               Container(
-                                width: 50,
-                                height: 50,
+                                width: SizeConfig.safeBlockVertical * 20,
+                                height: SizeConfig.safeBlockVertical * 20,
                                 child: Center(
                                   child: SpinKitRipple(
                                     color: Colors.white,
-                                    size: 50,
+                                    size: SizeConfig.safeBlockVertical * 18,
                                   ),
                                 ),
                               ),
@@ -654,8 +797,8 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                           ),
                         )),
                   ),
-                )
-                    : Container(),
+                ) :
+                Container(),
               ]),
             );
           }),

@@ -14,6 +14,7 @@ import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reservable_list_reducer.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
 import 'package:Buytime/reusable/buytime_icons.dart';
+import 'package:Buytime/utils/utils.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -187,7 +188,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                       child: FittedBox(
                         fit: BoxFit.scaleDown,
                         child: Text(
-                          widget.serviceState.name,
+                          Utils.retriveField(Localizations.localeOf(context).languageCode, widget.serviceState.name),
                           textAlign: TextAlign.start,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
@@ -366,7 +367,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                 Container(
                                   margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top:  SizeConfig.safeBlockVertical * 2.5),
                                   child: Text(
-                                    serviceState.name ?? AppLocalizations.of(context).serviceName,
+                                    serviceState.name != null ? Utils.retriveField(Localizations.localeOf(context).languageCode, serviceState.name) : AppLocalizations.of(context).serviceName,
                                     style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w700, fontSize: 18
 
                                       ///SizeConfig.safeBlockHorizontal * 4
@@ -501,7 +502,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                         Container(
                                           margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 2),
                                           child: Text(
-                                            serviceState.description.isNotEmpty ? serviceState.description : AppLocalizations.of(context).loreIpsum,
+                                            serviceState.description.isNotEmpty ? Utils.retriveField(Localizations.localeOf(context).languageCode, widget.serviceState.description) : AppLocalizations.of(context).loreIpsum,
                                             style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w400, fontSize: 16
 
                                               ///SizeConfig.safeBlockHorizontal * 4
@@ -597,9 +598,13 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                   StoreProvider.of<AppState>(context).dispatch(SetOrder(order));
                                   //StoreProvider.of<AppState>(context).dispatch(SetOrder(order));
 
-                                  Navigator.push(
+                                 /* Navigator.push(
                                     context,
                                     MaterialPageRoute(builder: (context) => ConfirmOrder(reserve: false, tourist: widget.tourist,)),
+                                  );*/
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => Cart(tourist: widget.tourist,)),
                                   );
                                 } : null,
                                 textColor: BuytimeTheme.TextWhite,

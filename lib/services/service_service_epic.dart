@@ -349,9 +349,10 @@ class ServiceListByIdsRequestNavigateService implements EpicClass<AppState> {
 
       categoryIds = [];
       store.state.serviceListSnippetState.businessSnippet.forEach((bS) {
-        if(bS.tags.contains('showcase')){
+        /*if(bS.tags.contains('showcase')){
           categoryIds.add(bS.categoryAbsolutePath.split('/').last);
-        }
+        }*/
+        categoryIds.add(bS.categoryAbsolutePath.split('/').last);
       });
 
       debugPrint("SERVICE_SERVICE_EPIC - ServiceListByIdsRequestNavigateService => Epic ServiceListService return list with " + serviceStateList.length.toString());
@@ -733,7 +734,13 @@ class ServiceUpdateService implements EpicClass<AppState> {
           if(element2.serviceAbsolutePath == tmpPath) {
             debugPrint('SERVICE_SERVICE_EPIC - ServiceUpdateService => P1: ${element2.serviceAbsolutePath} | P2: $tmpPath');
             //element2.serviceName = serviceState.name;
-            tmp = element2;
+            //String tmpPath2 = serviceState.categoryId.first + '/' + serviceState.serviceId;
+            element2.serviceName = serviceState.name;
+            element2.serviceVisibility = serviceState.visibility;
+            element2.serviceImage = serviceState.image1;
+            element2.servicePrice = serviceState.price;
+            element2.serviceAbsolutePath = tmpPath;
+            //element2 = tmp;
           }
         });
         if(element.categoryAbsolutePath.split('/').last == serviceState.categoryId.first){

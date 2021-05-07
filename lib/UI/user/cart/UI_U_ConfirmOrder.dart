@@ -454,7 +454,6 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                                 return OrderTotal(media: media, orderState: snapshot.order);
                                               }
                                             }()),
-
                                             ///Divider
                                             Container(
                                               margin: EdgeInsets.only(
@@ -462,6 +461,64 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                               color: BuytimeTheme.BackgroundLightGrey,
                                               height: SizeConfig.safeBlockVertical * .2,
                                             ),
+
+                                            ///Location
+                                            widget.reserve != null && !widget.reserve  ?
+                                              Container(
+                                              margin: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical *2, top: SizeConfig.safeBlockVertical * 2),
+                                                width: media.width,
+                                                child: Row(
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  children: [
+                                                    ///Location text
+                                                    Expanded(
+                                                      flex: 1,
+                                                      child: Container(
+                                                        alignment: Alignment.center,
+                                                        child: Text(
+                                                          AppLocalizations.of(context).location,
+                                                          style: TextStyle(
+                                                              fontFamily: BuytimeTheme.FontFamily,
+                                                              fontWeight: FontWeight.w500,
+                                                              fontSize: 16, ///SizeConfig.safeBlockHorizontal * 4
+                                                              color: BuytimeTheme.TextMedium,
+                                                              letterSpacing: 0.25
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    ///Total Value
+                                                    Expanded(
+                                                        flex: 1,
+                                                        child: Container(
+                                                          alignment: Alignment.center,
+                                                          //margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 20),
+                                                          child: Text(
+                                                            snapshot.order.location,
+                                                            style: TextStyle(
+                                                                fontFamily: BuytimeTheme.FontFamily,
+                                                                fontWeight: FontWeight.w600,
+                                                                fontSize: 18, ///SizeConfig.safeBlockHorizontal * 7,
+                                                                color: BuytimeTheme.TextBlack
+                                                            ),
+                                                          ),
+                                                        )
+                                                    ),
+                                                    ///Tax
+                                                    Expanded(
+                                                      flex: 1,
+                                                      child: Container(),
+                                                    ),
+                                                  ],
+                                                )) : Container(),
+                                            ///Divider
+                                            widget.reserve != null && !widget.reserve  ?
+                                              Container(
+                                              margin: EdgeInsets.only(
+                                                  left: SizeConfig.safeBlockHorizontal * 10, right: SizeConfig.safeBlockHorizontal * 10),
+                                              color: BuytimeTheme.BackgroundLightGrey,
+                                              height: SizeConfig.safeBlockVertical * .2,
+                                            ) : Container(),
 
                                             ///Please Charge ...
                                             Container(
@@ -554,12 +611,12 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Container(
-                    width: 50,
-                    height: 50,
+                    width: SizeConfig.safeBlockVertical * 20,
+                    height: SizeConfig.safeBlockVertical * 20,
                     child: Center(
                       child: SpinKitRipple(
                         color: Colors.white,
-                        size: 50,
+                        size: SizeConfig.safeBlockVertical * 18,
                       ),
                     ),
                   ),

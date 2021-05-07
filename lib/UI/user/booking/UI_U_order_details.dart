@@ -117,7 +117,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
     return StoreConnector<AppState, AppState>(
       converter: (store) => store.state,
       onInit: (store){
-        List<String> latLng = store.state.business.coordinate.split(', ');
+        List<String> latLng = store.state.business.coordinate.replaceAll(' ', '').split(',');
         lat = double.parse(latLng[0]);
         lng = double.parse(latLng[1]);
       },

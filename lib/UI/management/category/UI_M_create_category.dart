@@ -1,6 +1,7 @@
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/category/category_state.dart';
 import 'package:Buytime/reblox/model/category/tree/category_tree_state.dart';
+import 'package:Buytime/reblox/model/role/role.dart';
 import 'package:Buytime/reblox/reducer/category_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_tree_reducer.dart';
 import 'package:Buytime/reblox/model/snippet/parent.dart';
@@ -282,6 +283,7 @@ class UI_M_CreateCategoryState extends State<UI_M_CreateCategory> {
                                         maxWidth: 800,
                                         minHeight: 200,
                                         minWidth: 600,
+                                        roleAllowedArray: [Role.admin],
                                         cropAspectRatioPreset: CropAspectRatioPreset.square,
                                         onFilePicked: (fileToUpload) {
                                           if(fileToUpload != null){
@@ -431,12 +433,12 @@ class UI_M_CreateCategoryState extends State<UI_M_CreateCategory> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
                               Container(
-                                width: 50,
-                                height: 50,
+                                width: SizeConfig.safeBlockVertical * 20,
+                                height: SizeConfig.safeBlockVertical * 20,
                                 child: Center(
                                   child: SpinKitRipple(
                                     color: Colors.white,
-                                    size: 50,
+                                    size: SizeConfig.safeBlockVertical * 18,
                                   ),
                                 ),
                               ),

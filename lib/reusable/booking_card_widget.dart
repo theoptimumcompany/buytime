@@ -2,6 +2,7 @@ import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/reducer/booking_reducer.dart';
 import 'package:Buytime/reblox/reducer/business_reducer.dart';
+import 'package:Buytime/reusable/form/optimum_form_multi_photo.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -12,10 +13,12 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:intl/intl.dart';
 import 'package:share/share.dart';
 
+typedef OnBookingCallback = void Function(bool clicked);
 class BookingCardWidget extends StatefulWidget {
 
   BookingState bookingState;
-  BookingCardWidget(this.bookingState);
+  OnBookingCallback call;
+  BookingCardWidget({this.bookingState, this.call});
 
   @override
   _BookingCardWidgetState createState() => _BookingCardWidgetState();
@@ -127,6 +130,7 @@ class _BookingCardWidgetState extends State<BookingCardWidget> {
             child: InkWell(
               splashColor: Colors.black.withOpacity(.3),
               onTap: !closed ? (){
+                widget.call(true);
                 StoreProvider.of<AppState>(context).dispatch(BookingRequestResponse(widget.bookingState));
                 StoreProvider.of<AppState>(context).dispatch(BusinessServiceListAndNavigateRequest(widget.bookingState.business_id));
               } : null,

@@ -57,6 +57,7 @@ class OrderState {
   String cardLast4Digit;
   @JsonKey(ignore: true)
   StripeRecommended.PaymentMethod paymentMethod;
+  String location;
 
   OrderState({
     @required this.itemList,
@@ -81,6 +82,7 @@ class OrderState {
     this.cardType,
     this.cardLast4Digit,
     this.paymentMethod,
+    this.location,
   });
 
 
@@ -108,6 +110,7 @@ class OrderState {
     this.cardType = state.cardType;
     this.cardLast4Digit = state.cardLast4Digit;
     this.paymentMethod = state.paymentMethod;
+    this.location = state.location;
   }
 
   OrderState.fromReservableState(OrderReservableState state) {
@@ -133,6 +136,7 @@ class OrderState {
     this.cardType = state.cardType;
     this.cardLast4Digit = state.cardLast4Digit;
     this.paymentMethod = state.paymentMethod;
+    this.location = state.location;
   }
 
   OrderState copyWith({
@@ -158,7 +162,8 @@ class OrderState {
     String cardType,
     String cardLast4Digit,
     bool confirmOrderWait,
-    StripeRecommended.PaymentMethod paymentMethod
+    StripeRecommended.PaymentMethod paymentMethod,
+    String location
   }) {
     return OrderState(
       itemList: itemList ?? this.itemList,
@@ -183,6 +188,7 @@ class OrderState {
       cardType: cardType ?? this.cardType,
       cardLast4Digit: cardLast4Digit ?? this.cardLast4Digit,
       paymentMethod: paymentMethod ?? this.paymentMethod,
+      location: location ?? this.location,
     );
   }
 
@@ -210,6 +216,7 @@ class OrderState {
         cardType: '',
       cardLast4Digit: '',
       paymentMethod: null,
+      location: '',
     );
   }
 

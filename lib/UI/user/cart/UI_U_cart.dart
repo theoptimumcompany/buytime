@@ -28,6 +28,7 @@ class Cart extends StatefulWidget {
 
 class CartState extends State<Cart> {
   OrderState orderState;
+  final TextEditingController _locationController = TextEditingController();
 
   @override
   void initState() {
@@ -97,9 +98,12 @@ class CartState extends State<Cart> {
             converter: (store) => store.state,
             onInit: (store) {
               tmp = store.state.serviceState;
+              _locationController.text = store.state.business.area.first;
+              store.state.order.location = store.state.business.area.first;
             },
             builder: (context, snapshot) {
-                orderState = snapshot.order;
+              orderState = snapshot.order;
+
               return Scaffold(
                   resizeToAvoidBottomInset: false,
                   appBar: BuytimeAppbar(
@@ -251,6 +255,94 @@ class CartState extends State<Cart> {
                                               color: BuytimeTheme.DividerGrey,
                                               height: SizeConfig.safeBlockVertical * 2,
                                             ),
+
+                                            ///Location TExt
+                                            Container(
+                                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
+                                              child: Text(
+                                                AppLocalizations.of(context).whereDoYouWantToRecive,
+                                                style: TextStyle(
+                                                    fontFamily: BuytimeTheme.FontFamily,
+                                                    fontWeight: FontWeight.w600,
+                                                  fontSize: 14
+                                                ),
+                                              ),
+                                            ),
+                                            ///Location
+                                            Container(
+                                                width: 335.0,
+                                                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
+                                                decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                    color: BuytimeTheme.SymbolLightGrey
+                                                  ),
+                                                  borderRadius: BorderRadius.all(Radius.circular(5))
+                                                ),
+                                                child: DropdownButtonHideUnderline(
+                                                  child: ButtonTheme(
+                                                    alignedDropdown: true,
+                                                    child: DropdownButton(
+                                                      hint: Container(
+                                                        child: Padding(
+                                                          padding: const EdgeInsets.only(left: 10.0),
+                                                          child: Text(
+                                                            _locationController.text,
+                                                            textAlign: TextAlign.start,
+                                                            style: TextStyle(
+                                                              fontSize: 16,
+                                                              color: BuytimeTheme.TextMedium,
+                                                              fontWeight: FontWeight.w400,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      //value: _locationController.text,
+                                                      items: StoreProvider.of<AppState>(context).state.business.area.map(
+                                                            (val) {
+                                                          return DropdownMenuItem<String>(
+                                                            value: val,
+                                                            child: Row(
+                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                              children: [
+                                                                Container(
+                                                                  child: Padding(
+                                                                    padding: const EdgeInsets.only(left: 10.0),
+                                                                    child: Text(
+                                                                      val,
+                                                                      textAlign: TextAlign.start,
+                                                                      style: TextStyle(
+                                                                        fontSize: 16,
+                                                                        color: BuytimeTheme.TextMedium,
+                                                                        fontWeight: FontWeight.w400,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                Radio(
+                                                                  value: val,
+                                                                  groupValue: _locationController.text == val ? val : _locationController.text,
+                                                                  onChanged: (value){
+                                                                      setState(() {
+                                                                        _locationController.text = value;
+                                                                      });
+                                                                  },
+                                                                )
+                                                              ],
+                                                            ),
+                                                          );
+                                                        },
+                                                      ).toList(),
+                                                      onChanged: (value){
+                                                        setState(() {
+                                                          _locationController.text = value;
+                                                          orderState.location = value;
+                                                          StoreProvider.of<AppState>(context).dispatch(UpdateOrder(orderState));
+                                                        });
+                                                      },
+                                                      style: Theme.of(context).textTheme.title,
+                                                    ),
+                                                  ),
+                                                )),
                                           ],
                                         );
                                       }),

@@ -29,6 +29,7 @@ import 'package:Buytime/reusable/material_design_icons.dart';
 import 'package:Buytime/reusable/menu/UI_M_business_list_drawer.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
+import 'package:Buytime/utils/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -138,6 +139,7 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
   bool startRequest = false;
   bool noActivity = false;
 
+  bool searching = false;
 
   @override
   Widget build(BuildContext context) {
@@ -369,6 +371,11 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                                 searchPopular(snapshot.serviceList.serviceListState);
                                 searchRecommended(snapshot.serviceList.serviceListState);
                               },
+                              onTap: (){
+                                setState(() {
+                                  searching = !searching;
+                                });
+                              },
                             ),
                           ),
                           ///Discover
@@ -516,7 +523,7 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                                                   child: FittedBox(
                                                     fit: BoxFit.scaleDown,
                                                     child: Text(
-                                                      service.name,
+                                                      Utils.retriveField(Localizations.localeOf(context).languageCode, service.name),
                                                       style: TextStyle(
                                                           fontFamily: BuytimeTheme.FontFamily,
                                                           color: BuytimeTheme.TextWhite,
@@ -661,7 +668,7 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                                                   child: FittedBox(
                                                     fit: BoxFit.scaleDown,
                                                     child: Text(
-                                                      service.name,
+                                                      Utils.retriveField(Localizations.localeOf(context).languageCode, service.name),
                                                       style: TextStyle(
                                                           fontFamily: BuytimeTheme.FontFamily,
                                                           color: BuytimeTheme.TextBlack,

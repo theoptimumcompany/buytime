@@ -228,8 +228,10 @@ class OptimumFormMultiPhotoState extends State<OptimumFormMultiPhoto> {
     return Padding(
       padding: EdgeInsets.all(16.0),
       child: Column(
+        //crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Column(
+            //crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
