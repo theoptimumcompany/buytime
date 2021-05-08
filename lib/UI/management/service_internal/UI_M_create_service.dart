@@ -116,7 +116,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
           parentRootId: list[i]['categoryRootId'],
         ),
       );
-      if (StoreProvider.of<AppState>(context).state.serviceState.categoryId.contains(list[i]['nodeId'])) {
+      if (StoreProvider.of<AppState>(context).state.serviceState.categoryId != null && StoreProvider.of<AppState>(context).state.serviceState.categoryId.contains(list[i]['nodeId'])) {
         selectedCategoryList.add(
           Parent(
             name: list[i]['nodeName'],
@@ -256,8 +256,9 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                               child: IconButton(
                                   icon: Icon(Icons.check, color: Colors.white),
                                   onPressed: () {
-                                    if(nameController.text.isNotEmpty)
+                                    if(nameController.text.isNotEmpty){
                                       StoreProvider.of<AppState>(context).dispatch(SetServiceName(Utils.saveField(myLocale.languageCode, nameController.text, snapshot.serviceState.name)));
+                                    }
                                     if(descriptionController.text.isNotEmpty)
                                       StoreProvider.of<AppState>(context).dispatch(SetServiceDescription(Utils.saveField(myLocale.languageCode, descriptionController.text, snapshot.serviceState.description)));
                                     if (validateChosenCategories() && validateAndSave() && validatePrice(priceController.text)) {
