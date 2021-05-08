@@ -304,7 +304,12 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                           setState(() {
                                             rippleLoading = true;
                                           });
-                                          StoreProvider.of<AppState>(context).dispatch(UpdateService(snapshot.serviceState));
+                                          ServiceState tmpService = ServiceState.fromState(snapshot.serviceState);
+                                          tmpService.name = Utils.saveField(myLocale.languageCode, nameController.text, snapshot.serviceState.name);
+                                          tmpService.description = Utils.saveField(myLocale.languageCode, descriptionController.text, snapshot.serviceState.description);
+                                          debugPrint('UI_M_edit_service => Service Name: ${tmpService.name}');
+                                          debugPrint('UI_M_edit_service => Service Description: ${tmpService.description}');
+                                          StoreProvider.of<AppState>(context).dispatch(UpdateService(tmpService));
                                         }
                                       }),
                                 ),

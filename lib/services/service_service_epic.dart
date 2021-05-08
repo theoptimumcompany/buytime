@@ -648,6 +648,8 @@ class ServiceCreateService implements EpicClass<AppState> {
 
       store.state.serviceListSnippetState.businessSnippet.forEach((element) {
         if(serviceState.categoryId.contains(element.categoryAbsolutePath.split('/').last)){
+          debugPrint('SERVICE_SERVICE_EPIC - SERVICE NAME => ${serviceState.name}');
+          debugPrint('SERVICE_SERVICE_EPIC - SERVICE DESCRIPTION =>  ${serviceState.description}');
           ServiceSnippetState tmp = ServiceSnippetState(
             serviceName: serviceState.name,
             serviceAbsolutePath: element.categoryAbsolutePath + '/' + serviceState.serviceId,
@@ -819,6 +821,7 @@ class ServiceDeleteService implements EpicClass<AppState> {
       serviceList.removeWhere((element) => element.serviceId == serviceId);
 
       statisticsState = StatisticsState().toEmpty();
+
 
       /// 1 DELETE
     }).expand((element) => [UpdateStatistics(statisticsState)]);
