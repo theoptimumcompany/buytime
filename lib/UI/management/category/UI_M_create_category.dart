@@ -283,7 +283,7 @@ class UI_M_CreateCategoryState extends State<UI_M_CreateCategory> {
                                         maxWidth: 800,
                                         minHeight: 200,
                                         minWidth: 600,
-                                        roleAllowedArray: [Role.admin, Role.salesman],
+                                        roleAllowedArray: [Role.admin],
                                         cropAspectRatioPreset: CropAspectRatioPreset.square,
                                         onFilePicked: (fileToUpload) {
                                           if(fileToUpload != null){

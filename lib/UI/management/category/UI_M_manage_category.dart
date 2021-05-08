@@ -677,7 +677,7 @@ class ManageCategoryState extends State<ManageCategory> with SingleTickerProvide
 
                   ///Title
                   Utils.barTitle(AppLocalizations.of(context).categories),
-                  StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin || StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman ?
+                  StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin ?
                     IconButton(
                     icon: const Icon(
                       Icons.add,
