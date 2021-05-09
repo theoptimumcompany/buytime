@@ -451,6 +451,8 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                     //width: SizeConfig.safeBlockHorizontal * 60,
                                                     // decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
                                                       child: TextFormField(
+                                                          keyboardType: TextInputType.multiline,
+                                                          maxLines: null,
                                                           controller: descriptionController,
                                                           validator: (value) => value.isEmpty ? AppLocalizations.of(context).serviceNameBlank : null,
                                                           /*onChanged: (value) {
