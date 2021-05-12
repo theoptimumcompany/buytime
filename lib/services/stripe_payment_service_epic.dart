@@ -231,7 +231,8 @@ class StripePaymentService {
   bool showSpinner = false;
   List<StripeRecommended.ApplePayItem> items = [];
   final String cloudAddress = 'europe-west1-buytime-458a1.cloudfunctions.net';
-  final String cloudFunctionPath = '/StripePIOnOrder';
+  final String cloudFunctionPathPay = '/StripePIOnOrder';
+  final String cloudFunctionPathHold = '/StripePIOnOrderHold';
   String currency = 'EUR';
   String country = 'IT';
 
@@ -314,7 +315,7 @@ class StripePaymentService {
   }
 
   Future<String> processPaymentAsDirectCharge(String orderId) async {
-    var url = Uri.https(cloudAddress, cloudFunctionPath, {'orderId': '$orderId', 'currency': currency});
+    var url = Uri.https(cloudAddress, cloudFunctionPathPay, {'orderId': '$orderId', 'currency': currency});
     final http.Response response = await http.get(url);
     debugPrint('processPaymentAsDirectCharge: Now i decode');
     if (response.body != null && response.body != 'error') {
@@ -332,6 +333,57 @@ class StripePaymentService {
         //step 4: there is a need to authenticate
         /// why should I set another stripe account? TODO: discover this.
         /// StripeRecommended.StripePayment.setStripeAccount(strAccount);
+        StripeRecommended.PaymentIntentResult paymentIntentResult = await StripeRecommended.StripePayment.confirmPaymentIntent(StripeRecommended.PaymentIntent(
+            paymentMethodId: paymentIntentX['payment_method'],
+            clientSecret: paymentIntentX['client_secret']
+        ));
+        //This code will be executed if the authentication is successful
+        //step 5: request the server to confirm the payment with
+        final statusFinal = paymentIntentResult.status;
+        if (statusFinal == 'succeeded') {
+          StripeRecommended.StripePayment.completeNativePayRequest();
+          /// stop spinner
+          debugPrint('processPaymentAsDirectCharge:  Payment success');
+          return "success";
+        } else if (statusFinal == 'processing') {
+          StripeRecommended.StripePayment.cancelNativePayRequest();
+          /// stop spinner
+          debugPrint('processPaymentAsDirectCharge:  processing. this is weird');
+          return "trouble";
+        } else {
+          StripeRecommended.StripePayment.cancelNativePayRequest();
+          /// stop spinner
+          debugPrint('processPaymentAsDirectCharge:  Payment error. canceling.');
+          return "error";
+        }
+      }
+    } else {
+      //case A
+      StripeRecommended.StripePayment.cancelNativePayRequest();
+      /// stop spinner
+      debugPrint('processPaymentAsDirectCharge:  Payment error. canceling.');
+      return "error";
+    }
+  }
+
+  Future<String> processHoldCharge(String orderId) async {
+    var url = Uri.https(cloudAddress, cloudFunctionPathHold, {'orderId': '$orderId', 'currency': currency});
+    final http.Response response = await http.get(url);
+    debugPrint('processPaymentAsDirectCharge: Now i decode');
+    if (response.body != null && response.body != 'error') {
+      final paymentIntentX = jsonDecode(response.body);
+      final status = paymentIntentX['status'];
+      final nextAction = paymentIntentX['next_action'];
+      //step 3: check if payment was succesfully confirmed
+      if (status == 'succeeded' && nextAction == null) {
+        //payment was confirmed by the server without need for futher authentification
+        // StripeRecommended.StripePayment.completeNativePayRequest();
+        debugPrint('processPaymentAsDirectCharge:  Payment completed. ${paymentIntentX['amount'].toString()} successfully charged');
+        return "success";
+        /// stop spinner
+      } else {
+        //step 4: there is a need to authenticate
+        /// TODO: discover if this works also for HOLDS
         StripeRecommended.PaymentIntentResult paymentIntentResult = await StripeRecommended.StripePayment.confirmPaymentIntent(StripeRecommended.PaymentIntent(
             paymentMethodId: paymentIntentX['payment_method'],
             clientSecret: paymentIntentX['client_secret']

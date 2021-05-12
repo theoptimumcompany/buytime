@@ -1,4 +1,5 @@
 import 'package:Buytime/UI/user/cart/UI_U_ConfirmOrder.dart';
+import 'package:Buytime/reblox/enum/order_time_intervals.dart';
 import 'package:Buytime/reblox/model/order/order_entry.dart';
 import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
@@ -9,6 +10,7 @@ import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
+import 'package:Buytime/utils/utils.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
@@ -358,18 +360,12 @@ class CartReservableState extends State<CartReservable> {
                                           focusElevation: 0,
                                           highlightElevation: 0,
                                           onPressed: () {
-                                            /// i assume that the service is already
+                                            /// if we are before the 7 days we just create a reminder
                                             Navigator.push(
                                               context,
                                               MaterialPageRoute(builder: (context) => ConfirmOrder(reserve: true, tourist: widget.tourist,)),
                                             );
-                                              /*StoreProvider.of<AppState>(context).dispatch(SetOrderProgress("in_progress"));
-                                              StoreProvider.of<AppState>(context).dispatch(CreateOrder(snapshot.order));*/
 
-                                              //StoreProvider.of<AppState>(context).dispatch(SetOrderReservable(OrderReservableState().toEmpty()));
-                                              //StoreProvider.of<AppState>(context).dispatch(SetOrder(OrderState().toEmpty()));
-                                              //StoreProvider.of<AppState>(context).dispatch(UserOrderListRequest());
-                                              //Navigator.of(context).popUntil(ModalRoute.withName('/bookingPage'));
                                           },
                                           textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
                                           color:  widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,

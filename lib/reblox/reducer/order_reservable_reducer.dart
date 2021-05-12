@@ -21,7 +21,66 @@ class CreateOrderReservableCardAndPay {
   String get country => _country;
   String get selectedCardPaymentMethodId => _selectedCardPaymentMethodId;
 }
-
+class CreateOrderReservableCardAndHold {
+  OrderReservableState _orderReservableState;
+  String _last4;
+  String _brand;
+  String _country;
+  String _selectedCardPaymentMethodId;
+  PaymentType _paymentType;
+  CreateOrderReservableCardAndHold(this._orderReservableState, this._last4, this._brand, this._country, this._selectedCardPaymentMethodId, this._paymentType);
+  OrderReservableState get orderReservableState => _orderReservableState;
+  PaymentType get paymentType => _paymentType;
+  String get last4 => _last4;
+  String get brand => _brand;
+  String get country => _country;
+  String get selectedCardPaymentMethodId => _selectedCardPaymentMethodId;
+}
+class CreateOrderReservableCardAndReminder {
+  OrderReservableState _orderReservableState;
+  String _last4;
+  String _brand;
+  String _country;
+  String _selectedCardPaymentMethodId;
+  PaymentType _paymentType;
+  CreateOrderReservableCardAndReminder(this._orderReservableState, this._last4, this._brand, this._country, this._selectedCardPaymentMethodId, this._paymentType);
+  OrderReservableState get orderReservableState => _orderReservableState;
+  PaymentType get paymentType => _paymentType;
+  String get last4 => _last4;
+  String get brand => _brand;
+  String get country => _country;
+  String get selectedCardPaymentMethodId => _selectedCardPaymentMethodId;
+}
+class CreateOrderReservablePendingWithPaymentMethod {
+  OrderReservableState _orderReservableState;
+  String _last4;
+  String _brand;
+  String _country;
+  String _selectedCardPaymentMethodId;
+  PaymentType _paymentType;
+  CreateOrderReservablePendingWithPaymentMethod(this._orderReservableState, this._last4, this._brand, this._country, this._selectedCardPaymentMethodId, this._paymentType);
+  OrderReservableState get orderReservableState => _orderReservableState;
+  PaymentType get paymentType => _paymentType;
+  String get last4 => _last4;
+  String get brand => _brand;
+  String get country => _country;
+  String get selectedCardPaymentMethodId => _selectedCardPaymentMethodId;
+}
+class CreateOrderReservablePending {
+  OrderReservableState _orderReservableState;
+  String _last4;
+  String _brand;
+  String _country;
+  String _selectedCardPaymentMethodId;
+  PaymentType _paymentType;
+  CreateOrderReservablePending(this._orderReservableState, this._last4, this._brand, this._country, this._selectedCardPaymentMethodId, this._paymentType);
+  OrderReservableState get orderReservableState => _orderReservableState;
+  PaymentType get paymentType => _paymentType;
+  String get last4 => _last4;
+  String get brand => _brand;
+  String get country => _country;
+  String get selectedCardPaymentMethodId => _selectedCardPaymentMethodId;
+}
 
 
 class SetOrderReservable {

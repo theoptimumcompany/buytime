@@ -8,8 +8,8 @@ import 'package:Buytime/reblox/reducer/service/service_reducer.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:emojis/emoji.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -153,15 +153,20 @@ class Utils {
     return tmp;
   }
 
-  static Future<List<TextEditingController>> googleTranslate(List<String> language, Locale myLocale, List<TextEditingController> controllers, List<String> flags, int myIndex) async{
-    for(int i = 0; i < language.length; i++) {
-      if(controllers[i].text.isEmpty){
-        if(language[i] != myLocale.languageCode){
+  static Future<List<TextEditingController>> googleTranslate(List<String> language, Locale myLocale, List<TextEditingController> controllers, List<String> flags, int myIndex) async {
+    for (int i = 0; i < language.length; i++) {
+      if (controllers[i].text.isEmpty) {
+        if (language[i] != myLocale.languageCode) {
           debugPrint('LanguageCode: ${language[i]} | Flag: ${flags[i]}');
-          var url = Uri.https('translation.googleapis.com', '/language/translate/v2', {'source': '${myLocale.languageCode}','target': '${language[i]}', 'key': '${BuytimeConfig.AndroidApiKey}', 'q': '${controllers[myIndex].text}'});
+          var url = Uri.https('translation.googleapis.com', '/language/translate/v2', {
+            'source': '${myLocale.languageCode}',
+            'target': '${language[i]}',
+            'key': '${BuytimeConfig.AndroidApiKey}',
+            'q': '${controllers[myIndex].text}'
+          });
           final http.Response response = await http.get(url);
           //debugPrint('Response code: ${response.statusCode} | Response Body: ${response.body}');
-          if(response.statusCode == 200){
+          if (response.statusCode == 200) {
             var langResponseMap = jsonDecode(response.body);
             debugPrint('${language[i]} DONE | Decode: $langResponseMap');
             debugPrint('${language[i]} ${langResponseMap['data']['translations'][0]['translatedText']}');
@@ -170,6 +175,11 @@ class Utils {
         }
       }
     }
+
+
+
+    return controllers;
+  }
   static OrderTimeInterval getTimeInterval(OrderReservableState orderReservableState) {
     OrderTimeInterval orderTimeIntervalResult;
     DateTime closestTimeSlot;
@@ -183,8 +193,8 @@ class Utils {
       }
     }
     /// check in which time interval the order has to be processed
-    Duration nowToServiceDuration = DateTime.now().difference(closestTimeSlot);
-    if (!nowToServiceDuration.isNegative) {
+    Duration nowToServiceDuration = closestTimeSlot.difference(DateTime.now());
+    if (nowToServiceDuration.isNegative) {
       /// TODO: error the service performance should be already happened
     } else if (nowToServiceDuration.inHours <= 48) { // TODO: make hardcoded variables readable from the configuration (we have to create a collection "configurationPublic"
       return OrderTimeInterval.directPayment;
@@ -193,10 +203,6 @@ class Utils {
     } else if (nowToServiceDuration.inDays > 7) {
       return OrderTimeInterval.reminder;
     }
-  }
-
-
-    return controllers;
   }
 
   static void multiLingualTranslate(BuildContext context, List<String> flags, List<String> language, String field, String stateField, FocusScopeNode node, OnTranslatingCallback translatingCallback) async{

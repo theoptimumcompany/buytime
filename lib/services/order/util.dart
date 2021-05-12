@@ -76,7 +76,7 @@ OrderReservableState configureOrderReservable(OrderReservableState orderStateFro
   return orderState;
 }
 
-OrderReservableState orderReservableInititialization(CreateOrderReservableCardAndPay event, int i) {
+OrderReservableState orderReservableInitialization(dynamic event, int i) {
   return OrderReservableState(
     position: event.orderReservableState.position,
     date: event.orderReservableState.itemList[i].date,

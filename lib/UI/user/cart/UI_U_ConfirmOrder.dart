@@ -156,8 +156,8 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
 
                                         ///Tab
                                         (() {
-                                          if (snapshot.order.progress == Utils.enumToString(OrderStatus.paid) ||
-                                              snapshot.order.progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout)
+                                          if (snapshot.order.progress == Utils.enumToString(OrderStatus.paid) || snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.paid) ||
+                                              snapshot.order.progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout) || snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout)
                                           ) {
                                             /// return confirmed
                                             return Progress(
@@ -171,7 +171,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                               tourist:widget.tourist,
                                               // videoAsset: "assets/video/success.mp4",
                                             );
-                                          } else if (snapshot.order.progress == Utils.enumToString(OrderStatus.pending)) {
+                                          } else if (snapshot.order.progress == Utils.enumToString(OrderStatus.pending) || snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.canceled)) {
                                             /// return canceled
                                             return Progress(
                                               cardState: snapshot.cardState,
@@ -185,7 +185,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                               // videoAsset: "assets/video/canceled.mp4",
 
                                             );
-                                          } else if (snapshot.order.progress == Utils.enumToString(OrderStatus.canceled)) {
+                                          } else if (snapshot.order.progress == Utils.enumToString(OrderStatus.canceled) || snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.canceled)) {
                                             /// return canceled
                                             return Progress(
                                               cardState: snapshot.cardState,
@@ -199,7 +199,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                               // videoAsset: "assets/video/canceled.mp4",
 
                                             );
-                                          } else if (snapshot.order.progress == Utils.enumToString(OrderStatus.creating)){
+                                          } else if (snapshot.order.progress == Utils.enumToString(OrderStatus.creating) || snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.creating)){
                                             /// return creating
                                             return Progress(
                                              cardState: snapshot.cardState,
@@ -228,13 +228,13 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                   ),
                                   Center(
                                     child: (() {
-                                      if (snapshot.order.progress == Utils.enumToString(OrderStatus.paid) ||
-                                          snapshot.order.progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout) ||
-                                          snapshot.order.progress == Utils.enumToString(OrderStatus.pending) ||
-                                          snapshot.order.progress == Utils.enumToString(OrderStatus.canceled)
+                                      if (snapshot.order.progress == Utils.enumToString(OrderStatus.paid) || snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.paid) ||
+                                          snapshot.order.progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout) || snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout) ||
+                                          snapshot.order.progress == Utils.enumToString(OrderStatus.pending) || snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.pending) ||
+                                          snapshot.order.progress == Utils.enumToString(OrderStatus.canceled) || snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.canceled)
                                       ) {
                                         return buildBackButton(context, media);
-                                      }  else if (snapshot.order.progress == Utils.enumToString(OrderStatus.creating)){
+                                      }  else if (snapshot.order.progress == Utils.enumToString(OrderStatus.creating) || snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.creating)){
                                         /// return nothing
                                       } else {
                                         return buildConfirmButton(context, snapshot, selected, last4, brand, country, selectedCardPaymentMethodId, media);
@@ -633,22 +633,15 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
       debugPrint('UI_U_ConfirmOrder => order is reservable' + snapshot.orderReservable.isOrderAutoConfirmable().toString());
       if (snapshot.orderReservable.isOrderAutoConfirmable()) {
         if(Utils.getTimeInterval(orderReservableState) == OrderTimeInterval.directPayment) {
-          StoreProvider.of<AppState>(context).dispatch(CreateOrderReservableCardAndPay(snapshot.order, last4, brand, country, selectedCardPaymentMethodId, PaymentType.card));
+          StoreProvider.of<AppState>(context).dispatch(CreateOrderReservableCardAndPay(snapshot.orderReservable, last4, brand, country, selectedCardPaymentMethodId, PaymentType.card));
         } else if (Utils.getTimeInterval(orderReservableState) == OrderTimeInterval.holdAndReminder) {
-          StoreProvider.of<AppState>(context).dispatch(CreateOrderReservableCardAndHold(snapshot.order, last4, brand, country, selectedCardPaymentMethodId, PaymentType.card));
+          StoreProvider.of<AppState>(context).dispatch(CreateOrderReservableCardAndHold(snapshot.orderReservable, last4, brand, country, selectedCardPaymentMethodId, PaymentType.card));
         } else if (Utils.getTimeInterval(orderReservableState) == OrderTimeInterval.reminder) {
-          StoreProvider.of<AppState>(context).dispatch(CreateOrderReservableCardAndReminder(snapshot.order, last4, brand, country, selectedCardPaymentMethodId, PaymentType.card));
+          StoreProvider.of<AppState>(context).dispatch(CreateOrderReservableCardAndReminder(snapshot.orderReservable, last4, brand, country, selectedCardPaymentMethodId, PaymentType.card));
         }
       } else {
-        if(Utils.getTimeInterval(orderReservableState) == OrderTimeInterval.directPayment) {
-          StoreProvider.of<AppState>(context).dispatch(CreateOrderReservablePendingWithPaymentMethod(snapshot.order, last4, brand, country, selectedCardPaymentMethodId, PaymentType.card));
-        } else if (Utils.getTimeInterval(orderReservableState) == OrderTimeInterval.holdAndReminder) {
-          StoreProvider.of<AppState>(context).dispatch(CreateOrderReservablePendingWithPaymentMethod(snapshot.order, last4, brand, country, selectedCardPaymentMethodId, PaymentType.card));
-        } else if (Utils.getTimeInterval(orderReservableState) == OrderTimeInterval.reminder) {
-          StoreProvider.of<AppState>(context).dispatch(CreateOrderReservablePending(snapshot.order, last4, brand, country, selectedCardPaymentMethodId, PaymentType.card));
-        }
+          StoreProvider.of<AppState>(context).dispatch(CreateOrderReservablePendingWithPaymentMethod(snapshot.orderReservable, last4, brand, country, selectedCardPaymentMethodId, PaymentType.card));
       }
-
     } else {
       /// Direct Card Payment
       debugPrint('UI_U_ConfirmOrder => start direct payment process with Credit Card');

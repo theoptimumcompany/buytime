@@ -116,7 +116,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
           parentRootId: list[i]['categoryRootId'],
         ),
       );
-      if (StoreProvider.of<AppState>(context).state.serviceState.categoryId.contains(list[i]['nodeId'])) {
+      if (StoreProvider.of<AppState>(context).state.serviceState.categoryId != null && StoreProvider.of<AppState>(context).state.serviceState.categoryId.contains(list[i]['nodeId'])) {
         selectedCategoryList.add(
           Parent(
             name: list[i]['nodeName'],

@@ -22,6 +22,7 @@ enum OrderStatus {
   canceled,
   frozen,
   declined,
+  holding,
   creating
 }
 enum AddCardStatus {
