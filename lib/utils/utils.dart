@@ -148,6 +148,7 @@ class Utils {
       debugPrint('saveField => old field empty');
       tmp += '$newField~\$~$myLocale|';
     }
+    debugPrint('saveField => updated Field value: $tmp');
     tmp = tmp.substring(0, tmp.length - 1);
     debugPrint('saveField => updated Field value: $tmp');
     return tmp;

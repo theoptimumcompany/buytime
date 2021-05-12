@@ -206,7 +206,7 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
                                                 builder: (context, snapshot) {
                                                   String businessName = snapshot.name != null ? snapshot.name : "";
                                                   print("BusinessName : " + businessName);
-                                                  if(snapshot.area.isEmpty)
+                                                  if(snapshot.area != null && snapshot.area.isEmpty)
                                                     snapshot.area = ['Reception'];
                                                   return Stepper(
                                                     steps: [

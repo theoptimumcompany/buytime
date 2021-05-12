@@ -304,7 +304,12 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                           setState(() {
                                             rippleLoading = true;
                                           });
-                                          StoreProvider.of<AppState>(context).dispatch(UpdateService(snapshot.serviceState));
+                                          ServiceState tmpService = ServiceState.fromState(snapshot.serviceState);
+                                          tmpService.name = Utils.saveField(myLocale.languageCode, nameController.text, snapshot.serviceState.name);
+                                          tmpService.description = Utils.saveField(myLocale.languageCode, descriptionController.text, snapshot.serviceState.description);
+                                          debugPrint('UI_M_edit_service => Service Name: ${tmpService.name}');
+                                          debugPrint('UI_M_edit_service => Service Description: ${tmpService.description}');
+                                          StoreProvider.of<AppState>(context).dispatch(UpdateService(tmpService));
                                         }
                                       }),
                                 ),
@@ -446,6 +451,8 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                     //width: SizeConfig.safeBlockHorizontal * 60,
                                                     // decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
                                                       child: TextFormField(
+                                                          keyboardType: TextInputType.multiline,
+                                                          maxLines: null,
                                                           controller: descriptionController,
                                                           validator: (value) => value.isEmpty ? AppLocalizations.of(context).serviceNameBlank : null,
                                                           /*onChanged: (value) {

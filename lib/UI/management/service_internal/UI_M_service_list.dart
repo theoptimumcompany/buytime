@@ -424,16 +424,61 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                                                       ///Deleting Service
                                                       print("Delete Service " + index.toString());
                                                       StoreProvider.of<AppState>(context).dispatch(DeleteService(id(listOfServiceEachRoot[i][index].serviceAbsolutePath)));
+                                                      ServiceSnippetState tmp ;
                                                       snapshot.serviceListSnippetState.businessSnippet.forEach((element) {
                                                         if(element.categoryName == categories[i].categoryName){
+                                                          element.serviceList.forEach((sL) {
+                                                            print("BEFORE : ${sL.serviceName}");
+                                                            if(id(sL.serviceAbsolutePath) == id(listOfServiceEachRoot[i][index].serviceAbsolutePath))
+                                                              tmp = sL;
+                                                          });
                                                           element.serviceNumberInternal--;
-                                                          element.serviceList.removeAt(index);
+                                                          element.serviceList.remove(tmp);
                                                         }
                                                       });
-                                                      //StoreProvider.of<AppState>(context).dispatch(ServiceListSnippetRequestResponse(snapshot.serviceListSnippetState));
-                                                      //listOfServiceEachRoot[i].removeAt(index);
-                                                      categories = snapshot.serviceListSnippetState.businessSnippet;
+                                                      snapshot.serviceListSnippetState.businessSnippet.forEach((element) {
+                                                        if(element.categoryName == categories[i].categoryName){
+                                                          element.serviceList.forEach((sL) {
+                                                            print("AFTER : ${sL.serviceName}");
+                                                          });
+                                                        }
+                                                      });
+                                                      ServiceListSnippetState tmpSLSS = ServiceListSnippetState.fromState(snapshot.serviceListSnippetState);
+                                                      categories.clear();
+                                                      List<CategorySnippetState> tmpCategories = tmpSLSS.businessSnippet;
+                                                      tmpCategories.forEach((element) {
+                                                        if(element.categoryAbsolutePath.split('/').length == 2 && element.categoryAbsolutePath.split('/').first == snapshot.business.id_firestore)
+                                                          categories.add(element);
+                                                      });
+                                                      print("UI_M_service_list => AFTER | Categories length: ${categories.length}");
+                                                      tmpCategories.forEach((allC) {
+                                                        //print("UI_M_Business => Category: ${allC.categoryName} | Category services: ${allC.serviceList.length}");
+                                                        if(allC.categoryAbsolutePath.split('/').first == snapshot.business.id_firestore){
+                                                          categories.forEach((c) {
+                                                            //print("UI_M_Business => Category: ${c.categoryName} | Category services: ${c.serviceList.length}");
+                                                            if(allC.categoryAbsolutePath != c.categoryAbsolutePath && allC.categoryAbsolutePath.split('/').contains(c.categoryAbsolutePath.split('/').last)){
+                                                              print("UI_M_service_list => Main category: ${c.categoryName}");
+                                                              print("UI_M_service_list => Sub category: ${allC.categoryName}");
+                                                              print("UI_M_service_list => Sub category service list length: ${allC.serviceList.length}");
+                                                              print("UI_M_service_list => BEFORE | Main category service list length: ${c.serviceList.length}");
+                                                              allC.serviceList.forEach((s) {
+                                                                if(!c.serviceList.contains(s))
+                                                                  c.serviceList.add(s);
+                                                              });
+                                                              print("UI_M_service_list => AFTER | Main category service list length: ${c.serviceList.length}");
+                                                              c.serviceNumberInternal = c.serviceList.length;
+                                                            }
+                                                          });
+                                                        }
+
+                                                      });
+                                                      //categories = snapshot.serviceListSnippetState.businessSnippet;
+                                                      categories.sort((a,b) => a.categoryName.compareTo(b.categoryName));
                                                       setServiceLists(categories);
+                                                      //listOfServiceEachRoot[i].removeAt(index);
+                                                      /*categories = snapshot.serviceListSnippetState.businessSnippet;
+                                                      categories.sort((a,b) => a.categoryName.compareTo(b.categoryName));
+                                                      setServiceLists(categories);*/
                                                     });
                                                   },
                                                   child: Container(

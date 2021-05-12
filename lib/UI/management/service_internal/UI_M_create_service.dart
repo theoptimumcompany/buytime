@@ -2,6 +2,7 @@ import 'package:Buytime/UI/management/service_internal/UI_M_service_list.dart';
 import 'package:Buytime/UI/management/service_internal/widget/W_service_photo.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/category/tree/category_tree_state.dart';
+import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/model/snippet/parent.dart';
 import 'package:Buytime/reblox/model/snippet/service_list_snippet_state.dart';
 import 'package:Buytime/reblox/reducer/category_tree_reducer.dart';
@@ -264,7 +265,12 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                       setState(() {
                                         rippleLoading = true;
                                       });
-                                      StoreProvider.of<AppState>(context).dispatch(CreateService(snapshot.serviceState));
+                                      ServiceState tmpService = ServiceState.fromState(snapshot.serviceState);
+                                      tmpService.name = Utils.saveField(myLocale.languageCode, nameController.text, snapshot.serviceState.name);
+                                      tmpService.description = Utils.saveField(myLocale.languageCode, descriptionController.text, snapshot.serviceState.description);
+                                      debugPrint('UI_M_create_service => Service Name: ${tmpService.name}');
+                                      debugPrint('UI_M_create_service => Service Description: ${tmpService.description}');
+                                      StoreProvider.of<AppState>(context).dispatch(CreateService(tmpService));
                                     }
                                   }),
                             ),
@@ -345,15 +351,15 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                               child: TextFormField(
                                                   controller: nameController,
                                                   validator: (value) => value.isEmpty ? AppLocalizations.of(context).serviceNameBlank : null,
-                                                  /*onChanged: (value) {
-                                                    StoreProvider.of<AppState>(context).dispatch(SetServiceName(value + '-' + myLocale.languageCode));
+                                                  onChanged: (value) {
+                                                    //StoreProvider.of<AppState>(context).dispatch(SetServiceName(Utils.saveField(myLocale.languageCode, nameController.text, snapshot.serviceState.name)));
                                                   },
                                                   onSaved: (value) {
                                                     if (validateAndSave()) {
                                                       //_serviceName = value;
-                                                      StoreProvider.of<AppState>(context).dispatch(SetServiceName(value + '-' + myLocale.languageCode));
+                                                      //StoreProvider.of<AppState>(context).dispatch(SetServiceName(Utils.saveField(myLocale.languageCode, nameController.text, snapshot.serviceState.name)));
                                                     }
-                                                  },*/
+                                                  },
                                                   onEditingComplete: (){
                                                     //StoreProvider.of<AppState>(context).dispatch(SetServiceName(Utils.saveField(myLocale.languageCode, nameController.text, snapshot.serviceState.name)));
                                                     currentFocus.unfocus();
@@ -692,7 +698,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                                       ),
                                                     ],
                                                   ),
-                                                  (snapshot.serviceState.tag.length > 0 && snapshot.serviceState.tag != null)
+                                                  (snapshot.serviceState.tag != null && snapshot.serviceState.tag.length > 0)
                                                       ? Align(
                                                     alignment: Alignment.topLeft,
                                                     child: Wrap(
