@@ -39,6 +39,7 @@ import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
 import 'package:Buytime/reblox/model/service/external_service_imported_list_state.dart';
 import 'package:Buytime/reblox/model/service/external_service_imported_state.dart';
 import 'package:Buytime/reblox/model/service/service_slot_time_state.dart';
+import 'package:Buytime/reblox/model/slot/slot_list_snippet_state.dart';
 import 'package:Buytime/reblox/model/snippet/service_list_snippet_list_state.dart';
 import 'package:Buytime/reblox/model/snippet/service_list_snippet_state.dart';
 import 'package:Buytime/reblox/model/statistics_state.dart';
@@ -49,6 +50,7 @@ import 'package:Buytime/services/external_business_service_epic.dart';
 import 'package:Buytime/services/external_service_imported_service_epic.dart';
 import 'package:Buytime/services/notification_service_epic.dart';
 import 'package:Buytime/services/order_reservable_service_epic.dart';
+import 'package:Buytime/services/slot_service_epic.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/UI/user/login/UI_U_home.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
@@ -188,7 +190,8 @@ void main(){
     ExternalBusinessImportedCanceledService(),
     NotificationRequestService(),
     NotificationListRequestService(),
-    NotificationUpdateRequestService()
+    NotificationUpdateRequestService(),
+    SlotListSnippetRequestService()
   ]);
   final _initialState = AppState(
     category: CategoryState().toEmpty(),
@@ -229,7 +232,8 @@ void main(){
       externalServiceImportedState: ExternalServiceImportedState().toEmpty(),
     externalServiceImportedListState: ExternalServiceImportedListState().toEmpty(),
     businessSnippetState: BusinessSnippetState().toEmpty(),
-    orderBusinessSnippetState: OrderBusinessSnippetState().toEmpty()
+    orderBusinessSnippetState: OrderBusinessSnippetState().toEmpty(),
+    slotSnippetListState: SlotListSnippetState().toEmpty()
   );
   final store = new Store<AppState>(
     appReducer,

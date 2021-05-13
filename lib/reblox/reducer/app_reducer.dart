@@ -29,6 +29,7 @@ import 'package:Buytime/reblox/model/service/external_service_imported_state.dar
 import 'package:Buytime/reblox/model/service/service_list_state.dart';
 import 'package:Buytime/reblox/model/service/service_slot_time_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
+import 'package:Buytime/reblox/model/slot/slot_list_snippet_state.dart';
 import 'package:Buytime/reblox/model/snippet/service_list_snippet_list_state.dart';
 import 'package:Buytime/reblox/model/snippet/service_list_snippet_state.dart';
 import 'package:Buytime/reblox/model/statistics_state.dart';
@@ -59,6 +60,7 @@ import 'package:Buytime/reblox/reducer/service/service_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/service_slot_time_reducer.dart';
 import 'package:Buytime/reblox/reducer/service_list_snippet_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/service_list_snippet_reducer.dart';
+import 'package:Buytime/reblox/reducer/slot_list_snippet_reducer.dart';
 import 'package:Buytime/reblox/reducer/statistics_reducer.dart';
 import 'package:Buytime/reblox/reducer/stripe_payment_reducer.dart';
 import 'package:Buytime/reblox/reducer/user_reducer.dart';
@@ -119,6 +121,7 @@ AppState appReducer(AppState state, dynamic action) {
   ExternalBusinessImportedListState externalBusinessImportedListState = externalBusinessImportedListReducer(state.externalBusinessImportedListState, action);
   ExternalServiceImportedState externalServiceImportedState = externalServiceImportedReducer(state.externalServiceImportedState, action);
   ExternalServiceImportedListState externalServiceImportedListState = externalServiceImportedListReducer(state.externalServiceImportedListState, action);
+  SlotListSnippetState slotSnippetListState = slotListSnippetReducer(state.slotSnippetListState, action);
 
   AppState newState = AppState.copyWith(
       //route: navigationReducer(state.route, action),
@@ -159,7 +162,8 @@ AppState appReducer(AppState state, dynamic action) {
       externalBusinessImportedState: externalBusinessImportedState,
       externalBusinessImportedListState: externalBusinessImportedListState,
     externalServiceImportedState: externalServiceImportedState,
-    externalServiceImportedListState: externalServiceImportedListState
+    externalServiceImportedListState: externalServiceImportedListState,
+      slotSnippetListState: slotSnippetListState
   );
 
   if (action is ClickOnBusinessState) {

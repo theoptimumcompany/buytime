@@ -8,7 +8,7 @@ part of 'interval_list_state.dart';
 
 IntervalListState _$IntervalListStateFromJson(Map<String, dynamic> json) {
   return IntervalListState(
-    intervalListState: (json['intervalListState'] as List)
+    slot: (json['slot'] as List)
         ?.map((e) => e == null
             ? null
             : SquareSlotState.fromJson(e as Map<String, dynamic>))
@@ -18,6 +18,5 @@ IntervalListState _$IntervalListStateFromJson(Map<String, dynamic> json) {
 
 Map<String, dynamic> _$IntervalListStateToJson(IntervalListState instance) =>
     <String, dynamic>{
-      'intervalListState':
-          instance.intervalListState?.map((e) => e?.toJson())?.toList(),
+      'slot': instance.slot?.map((e) => e?.toJson())?.toList(),
     };

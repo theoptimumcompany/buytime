@@ -8,6 +8,7 @@ import 'package:Buytime/reblox/model/snippet/parent.dart';
 import 'package:Buytime/reblox/reducer/category_tree_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/service_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/service_slot_time_reducer.dart';
+import 'package:Buytime/reblox/reducer/slot_list_snippet_reducer.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
 import 'package:Buytime/reusable/enterExitRoute.dart';
 import 'package:Buytime/utils/animations/translate_animation.dart';
@@ -215,6 +216,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
           converter: (store) => store.state,
           onInit: (store){
             store.state.serviceState = ServiceState();
+            store.dispatch(SlotListSnippetRequest(widget.serviceId));
             store.dispatch(CategoryTreeRequest());
             store.dispatch(ServiceRequestByID(widget.serviceId));
             if(store.state.business.businessAddress != null && store.state.business.businessAddress.isNotEmpty)

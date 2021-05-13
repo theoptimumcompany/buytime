@@ -1,9 +1,12 @@
 import 'package:Buytime/UI/management/service_internal/class/service_slot_classes.dart';
+import 'package:Buytime/utils/utils.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:json_annotation/json_annotation.dart';
 part 'interval_slot_state.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class SquareSlotState {
+  @JsonKey(fromJson: Utils.getDate, toJson: Utils.setDate)
   DateTime date;
   String startTime;
   String stopTime;
@@ -72,6 +75,6 @@ class SquareSlotState {
   }
 
 
-  factory SquareSlotState.fromJson(Map<String, dynamic> json) => _$IntervalSlotStateFromJson(json);
-  Map<String, dynamic> toJson() => _$IntervalSlotStateToJson(this);
+  factory SquareSlotState.fromJson(Map<String, dynamic> json) => _$SquareSlotStateFromJson(json);
+  Map<String, dynamic> toJson() => _$SquareSlotStateToJson(this);
 }

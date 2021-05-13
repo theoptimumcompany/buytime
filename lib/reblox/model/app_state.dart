@@ -33,6 +33,7 @@ import 'package:Buytime/reblox/model/service/service_list_state.dart';
 import 'package:Buytime/reblox/model/service/service_slot_time_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/model/service/snippet/service_snippet_state.dart';
+import 'package:Buytime/reblox/model/slot/slot_list_snippet_state.dart';
 import 'package:Buytime/reblox/model/snippet/service_list_snippet_list_state.dart';
 import 'package:Buytime/reblox/model/snippet/service_list_snippet_state.dart';
 import 'package:Buytime/reblox/model/statistics_state.dart';
@@ -107,6 +108,7 @@ class AppState {
   ExternalBusinessImportedListState externalBusinessImportedListState;
   ExternalServiceImportedState externalServiceImportedState;
   ExternalServiceImportedListState externalServiceImportedListState;
+  SlotListSnippetState slotSnippetListState;
 
   AppState({
     @required this.business,
@@ -151,6 +153,7 @@ class AppState {
     this.externalBusinessImportedListState,
     this.externalServiceImportedState,
     this.externalServiceImportedListState,
+    this.slotSnippetListState,
     this.lastError = "",
     this.previousError = ""
   });
@@ -197,6 +200,7 @@ class AppState {
     externalBusinessImportedListState = ExternalBusinessImportedListState();
     externalServiceImportedState = ExternalServiceImportedState();
     externalServiceImportedListState = ExternalServiceImportedListState();
+    slotSnippetListState = SlotListSnippetState();
     lastError = "";
     previousError = "";
 
@@ -245,6 +249,7 @@ class AppState {
     ExternalBusinessImportedListState externalBusinessImportedListState,
     ExternalServiceImportedState externalServiceImportedState,
     ExternalServiceImportedListState externalServiceImportedListState,
+    SlotListSnippetState slotSnippetListState,
     String lastError,
     String previousError
       }) {
@@ -290,6 +295,7 @@ class AppState {
     this.externalBusinessImportedListState = externalBusinessImportedListState;
     this.externalServiceImportedState = externalServiceImportedState;
     this.externalServiceImportedListState = externalServiceImportedListState;
+    this.slotSnippetListState = slotSnippetListState;
     this.lastError = lastError;
     this.previousError = previousError;
   }

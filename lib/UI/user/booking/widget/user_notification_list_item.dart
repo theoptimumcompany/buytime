@@ -89,7 +89,7 @@ class _UserNotificationListItemState extends State<UserNotificationListItem> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           ///Service Image
-                          widget.notificationState.title.split(' ').last.toLowerCase() == 'canceled' ?
+                          widget.notificationState.title.split(' ').last.toLowerCase() == 'canceled' || widget.notificationState.title.split(' ').last.toLowerCase() == 'declined' ?
                           Expanded(
                               flex: 1,
                               child: Icon(

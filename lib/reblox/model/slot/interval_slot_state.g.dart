@@ -6,9 +6,9 @@ part of 'interval_slot_state.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-SquareSlotState _$IntervalSlotStateFromJson(Map<String, dynamic> json) {
+SquareSlotState _$SquareSlotStateFromJson(Map<String, dynamic> json) {
   return SquareSlotState(
-    date: json['date'] == null ? null : DateTime.parse(json['date'] as String),
+    date: Utils.getDate(json['date'] as Timestamp),
     startTime: json['startTime'] as String,
     stopTime: json['stopTime'] as String,
     price: (json['price'] as num)?.toDouble(),
@@ -19,9 +19,9 @@ SquareSlotState _$IntervalSlotStateFromJson(Map<String, dynamic> json) {
   );
 }
 
-Map<String, dynamic> _$IntervalSlotStateToJson(SquareSlotState instance) =>
+Map<String, dynamic> _$SquareSlotStateToJson(SquareSlotState instance) =>
     <String, dynamic>{
-      'date': instance.date?.toIso8601String(),
+      'date': Utils.setDate(instance.date),
       'startTime': instance.startTime,
       'stopTime': instance.stopTime,
       'price': instance.price,
