@@ -43,6 +43,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class Landing extends StatefulWidget {
+  static String route = '/landing';
   @override
   State<StatefulWidget> createState() => LandingState();
 }
@@ -505,10 +506,8 @@ class LandingState extends State<Landing> {
                                                 StoreProvider.of<AppState>(context).dispatch(SetUserStateToEmpty());
                                                 //Torno al Login
                                                 drawerSelection = DrawerSelection.BusinessList;
-                                                Navigator.pushReplacement(
-                                                  context,
-                                                  MaterialPageRoute(builder: (context) => Home()),
-                                                );
+                                                //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()),);
+                                                Navigator.of(context).pushReplacementNamed(Home.route);
                                               });
                                             },
                                             child: CustomBottomButtonWidget(

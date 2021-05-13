@@ -309,16 +309,12 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
         //StoreProvider.of<AppState>(context).dispatch(new UserBookingRequest(user.email));
         Navigator.push(context, MaterialPageRoute(builder: (context) => Landing()));
       } else {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => Home()),
-        );
+        //Navigator.push(context, MaterialPageRoute(builder: (context) => Home()),);
+        Navigator.of(context).pushNamed(Home.route);
       }
     } else {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => Home()),
-      );
+      //Navigator.push(context, MaterialPageRoute(builder: (context) => Home()),);
+      Navigator.of(context).pushNamed(Home.route);
     }
   }
 

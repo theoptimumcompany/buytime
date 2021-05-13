@@ -381,7 +381,7 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
                                                                         child: Padding(
                                                                           padding: const EdgeInsets.only(left: 5.0, bottom: 10),
                                                                           child: Text(
-                                                                            AppLocalizations.of(context).businessPipeline,
+                                                                            AppLocalizations.of(context).businessType,
                                                                             textAlign: TextAlign.start,
                                                                             style: TextStyle(
                                                                               color: BuytimeTheme.TextBlack,

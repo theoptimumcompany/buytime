@@ -43,8 +43,9 @@ import 'category/tree/category_tree_state.dart';
 
 class AppRoutes {
   static const home = "/home";
+  static const registration = "/registration";
   static const login = "/login";
-  static const registration = "/history";
+  static const landing = "/landing";
   static const orderDetail = "/orderDetail";
   static const bookingDetails = "/bookingDetails";
   static const categories = "/categories";
@@ -52,7 +53,6 @@ class AppRoutes {
   static const business = "/business";
   static const confirmBooking = "/confirmBooking";
   static const bookingPage = "/bookingPage";
-  static const landing = "/landing";
   static const managerServiceList = "/managerServiceList";
   static const myBookings = "/myBookings";
   static const confirmOrder = "/confirmOrder";

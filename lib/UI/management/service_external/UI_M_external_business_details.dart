@@ -226,7 +226,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
     double lon1 = 0.0;
     double lat2 = 0.0;
     double lon2 = 0.0;
-    if(businessState.coordinate.isNotEmpty){
+    if(businessState.coordinate != null && businessState.coordinate.isNotEmpty){
       List<String> latLng1 = businessState.coordinate.replaceAll('(', '').replaceAll(')', '').replaceAll(' ', '').split(',');
       debugPrint('W_add_external_business_list_item => $businessState.name} | Cordinates 1: $latLng1');
       if(latLng1.length == 2){
@@ -234,7 +234,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
         lon1 = double.parse(latLng1[1]);
       }
     }
-    if(widget.externalBusinessState.coordinate.isNotEmpty){
+    if(widget.externalBusinessState.coordinate != null && widget.externalBusinessState.coordinate.isNotEmpty){
       List<String> latLng2 = widget.externalBusinessState.coordinate.replaceAll('(', '').replaceAll(')', '').replaceAll(' ', '').split(',');
       debugPrint('W_add_external_business_list_item => ${widget.externalBusinessState.name} | Cordinates 2: $latLng2');
       if(latLng2.length == 2){
@@ -269,7 +269,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
           debugPrint('UI_U_external_business_details => Business id: ${widget.externalBusinessState.id_firestore}');
           //store.state.serviceList.serviceListState.clear();
           store.dispatch(ServiceListRequest(widget.externalBusinessState.id_firestore, 'user'));
-          if(widget.externalBusinessState.coordinate.isNotEmpty){
+          if(widget.externalBusinessState.coordinate != null && widget.externalBusinessState.coordinate.isNotEmpty){
             convertCoordinateString(widget.externalBusinessState.coordinate);
           }
         }

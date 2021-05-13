@@ -44,6 +44,7 @@ String sha256ofString(String input) {
 }
 
 class Registration extends StatefulWidget {
+  static String route = '/registration';
   @override
   State<StatefulWidget> createState() => RegistrationState();
 }
@@ -772,10 +773,8 @@ class RegistrationState extends State<Registration> {
       setState(() {
         _success = true;
         _userEmail = user.email;
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => Landing()),
-        );
+        //Navigator.push(context, MaterialPageRoute(builder: (context) => Landing()));
+        Navigator.of(context).pushNamed(Landing.route);
       });
     } else {
       setState(() {

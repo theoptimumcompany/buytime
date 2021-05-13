@@ -278,10 +278,8 @@ class _UI_M_BusinessListDrawerState extends State<UI_M_BusinessListDrawer> {
                             StoreProvider.of<AppState>(context).dispatch(SetUserStateToEmpty());
                             //Torno al Login
                             drawerSelection = DrawerSelection.BusinessList;
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(builder: (context) => Home()),
-                            );
+                            //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()),);
+                            Navigator.of(context).pushReplacementNamed(Home.route);
                           });
                         },
                         title: Text(AppLocalizations.of(context).logout,

@@ -287,6 +287,7 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                                       highlightElevation: 0,
                                       onPressed: () {
                                         Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => Landing()), (Route<dynamic> route) => false);
+                                        //Navigator.of(context).pushNamedAndRemoveUntil(Landing.route, (Route<dynamic> route) => false);
                                       },
                                       textColor: BuytimeTheme.ButtonMalibu,
                                       color: BuytimeTheme.BackgroundWhite,
