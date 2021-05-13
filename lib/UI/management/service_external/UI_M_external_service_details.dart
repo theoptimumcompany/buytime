@@ -107,7 +107,7 @@ class _ExternalServiceDetailsState extends State<ExternalServiceDetails> with Si
     double lon1 = 0.0;
     double lat2 = 0.0;
     double lon2 = 0.0;
-    if(businessState.coordinate.isNotEmpty){
+    if(businessState.coordinate != null && businessState.coordinate.isNotEmpty){
       List<String> latLng1 = businessState.coordinate.replaceAll('(', '').replaceAll(')', '').replaceAll(' ', '').split(',');
       debugPrint('W_add_external_business_list_item => $businessState.name} | Cordinates 1: $latLng1');
       if(latLng1.length == 2){
@@ -122,7 +122,7 @@ class _ExternalServiceDetailsState extends State<ExternalServiceDetails> with Si
         lat2 = double.parse(latLng2[0]);
         lon2 = double.parse(latLng2[1]);
       }
-    }else if(widget.externalBusinessState.coordinate.isNotEmpty){
+    }else if(widget.externalBusinessState.coordinate != null && widget.externalBusinessState.coordinate.isNotEmpty){
       List<String> latLng2 = widget.externalBusinessState.coordinate.replaceAll('(', '').replaceAll(')', '').replaceAll(' ', '').split(',');
       debugPrint('W_add_external_business_list_item => ${widget.externalBusinessState.name} | Cordinates 2: $latLng2');
       if(latLng2.length == 2){

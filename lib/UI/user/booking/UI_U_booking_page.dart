@@ -314,7 +314,7 @@ class _BookingPageState extends State<BookingPage> {
             hasNotifications = false;
             notifications.forEach((element) {
               //debugPrint('UI_U_booking_page => ${element.timestamp}');
-              debugPrint('UI_U_booking_page => ${element.notificationId} | ${element.opened}');
+              //debugPrint('UI_U_booking_page => ${element.notificationId} | ${element.opened}');
               if(element.opened != null && !element.opened){
                 //debugPrint('UI_U_booking_page => ${element.notificationId} | ${element.data.state.orderId}');
                 hasNotifications = true;
@@ -361,7 +361,8 @@ class _BookingPageState extends State<BookingPage> {
                                   Future.delayed(Duration.zero, () {
 
                                     //Navigator.of(context).pop();
-                                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Landing()));
+                                    //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Landing()));
+                                    Navigator.of(context).pushReplacementNamed(Landing.route);
                                   });
 
                                   //StoreProvider.of<AppState>(context).dispatch(NavigatePopAction());

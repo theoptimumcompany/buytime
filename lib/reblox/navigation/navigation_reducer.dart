@@ -71,10 +71,9 @@ class NavigatePopUntilAction {
 }
 
 class NavigatePopAction {
-  final String lastRouteName;
-  NavigatePopAction(this.lastRouteName);
+
   @override
   String toString() {
-    return 'NavigatePopAction{lastRouteName: $lastRouteName}';
+    return 'NavigatePopAction';
   }
 }

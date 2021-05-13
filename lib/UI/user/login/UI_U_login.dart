@@ -33,7 +33,7 @@ import '../../../reblox/model/app_state.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class Login extends StatefulWidget {
-  final String title = 'Login';
+  static String route = '/login';
 
   @override
   State<StatefulWidget> createState() => LoginState();

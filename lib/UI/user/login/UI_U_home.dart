@@ -478,10 +478,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                 focusElevation: 0,
                                 highlightElevation: 0,
                                 onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => Registration()),
-                                  );
+                                  //Navigator.push(context, MaterialPageRoute(builder: (context) => Registration()),);
+                                  Navigator.of(context).pushNamed(Registration.route);
                                 },
                                 textColor: BuytimeTheme.TextWhite,
                                 color: BuytimeTheme.ButtonMalibu,
@@ -536,10 +534,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                     );
                                   },*/
                                 onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => Login()),
-                                  );
+                                  //Navigator.push(context, MaterialPageRoute(builder: (context) => Login()),;
+                                  Navigator.of(context).pushNamed(Login.route);
                                 },
                                 textColor: BuytimeTheme.UserPrimary.withOpacity(0.3),
                                 color: Colors.white,

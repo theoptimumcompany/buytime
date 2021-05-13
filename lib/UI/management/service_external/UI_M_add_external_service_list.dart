@@ -83,14 +83,14 @@ class AddExternalServiceListState extends State<AddExternalServiceList> {
     double lon1 = 0.0;
     double lat2 = 0.0;
     double lon2 = 0.0;
-    if(first.coordinate.isNotEmpty){
+    if(first.coordinate != null && first.coordinate.isNotEmpty){
       List<String> latLng1 = first.coordinate.replaceAll(' ', '').split(',');
       if(latLng1.length == 2){
         lat1 = double.parse(latLng1[0]);
         lon1 = double.parse(latLng1[1]);
       }
     }
-    if(second.coordinate.isNotEmpty){
+    if(second.coordinate != null && second.coordinate.isNotEmpty){
       List<String> latLng2 = second.coordinate.replaceAll(' ', '').split(',');
       if(latLng2.length == 2){
         lat2 = double.parse(latLng2[0]);

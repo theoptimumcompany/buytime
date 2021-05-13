@@ -525,5 +525,6 @@
   "businessAddress": "Business address",
   "addressDetails": "Address Details",
   "imageRequired": "This Image is required",
-  "myReservation": "My Reservations"
+  "myReservation": "My Reservations",
+  "businessType": "Business Type"
 }

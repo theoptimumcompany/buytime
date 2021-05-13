@@ -245,9 +245,6 @@ void main(){
 }
 
 
-
-
-
 class Buytime extends StatelessWidget {
   final Store<AppState> store;
 
@@ -257,10 +254,16 @@ class Buytime extends StatelessWidget {
     switch (settings.name) {
       case AppRoutes.home:
         return MainRoute(Home(), settings: settings);
+      case AppRoutes.registration:
+        return SlideInEnterRoute(Registration(), settings: settings);
+      case AppRoutes.login:
+        return SlideInEnterRoute(Login(), settings: settings);
+      case AppRoutes.landing:
+        return FabRoute(Landing(), settings: settings);
       case AppRoutes.bookingDetails:
         return FabRoute(BookingDetails(), settings: settings);
       case AppRoutes.categories:
-        return SlideRoute(ManageCategory(), settings: settings);
+        return SlideInExitRoute(ManageCategory(), settings: settings);
       case AppRoutes.businessList:
         return FabRoute(UI_M_BusinessList(), settings: settings);
       case AppRoutes.business:
@@ -269,10 +272,8 @@ class Buytime extends StatelessWidget {
         return FabRoute(ConfirmBooking(), settings: settings);
       case AppRoutes.bookingPage:
         return FabRoute(BookingPage(), settings: settings);
-      case AppRoutes.landing:
-        return FabRoute(Landing(), settings: settings);
       case AppRoutes.managerServiceList:
-        return SlideRoute(UI_M_ServiceList(), settings: settings);
+        return SlideInExitRoute(UI_M_ServiceList(), settings: settings);
       case AppRoutes.myBookings:
         return FabRoute(MyBookings(), settings: settings);
       case AppRoutes.confirmOrder:
@@ -367,8 +368,8 @@ class FabRoute<T> extends MaterialPageRoute<T> {
   }
 }
 
-class SlideRoute<T> extends MaterialPageRoute<T> {
-  SlideRoute(Widget widget, {RouteSettings settings})
+class SlideInExitRoute<T> extends MaterialPageRoute<T> {
+  SlideInExitRoute(Widget widget, {RouteSettings settings})
       : super(builder: (_) => RouteAwareWidget(child: widget), settings: settings);
 
   @override
@@ -377,6 +378,22 @@ class SlideRoute<T> extends MaterialPageRoute<T> {
     return SlideTransition(
       position: Tween(
           begin: Offset(-1.0, 0.0),
+          end: Offset(0.0, 0.0))
+          .animate(animation),
+      child: child,
+    );
+  }
+}
+class SlideInEnterRoute<T> extends MaterialPageRoute<T> {
+  SlideInEnterRoute(Widget widget, {RouteSettings settings})
+      : super(builder: (_) => RouteAwareWidget(child: widget), settings: settings);
+
+  @override
+  Widget buildTransitions(
+      BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
+    return SlideTransition(
+      position: Tween(
+          begin: Offset(1.0, 0.0),
           end: Offset(0.0, 0.0))
           .animate(animation),
       child: child,
