@@ -22,6 +22,7 @@ enum OrderStatus {
   canceled,
   frozen,
   declined,
+  holding,
   creating
 }
 enum AddCardStatus {
@@ -48,6 +49,7 @@ class OrderState {
   OrderBusinessSnippetState business;
   UserSnippet user;
   String businessId;
+  String businessIdForGiveback;
   String userId;
   String orderId;
   List<SelectedEntry> selected;
@@ -73,6 +75,7 @@ class OrderState {
     this.business,
     this.user,
     this.businessId,
+    this.businessIdForGiveback,
     this.userId,
     this.orderId,
     this.selected,
@@ -99,6 +102,7 @@ class OrderState {
     this.navigate = state.navigate;
     this.business = state.business;
     this.businessId = state.businessId;
+    this.businessIdForGiveback = state.businessIdForGiveback;
     this.userId = state.userId;
     this.orderId = state.orderId;
     this.user = state.user;
@@ -124,6 +128,7 @@ class OrderState {
     this.navigate = state.navigate;
     this.business = state.business;
     this.businessId = state.businessId;
+    this.businessIdForGiveback = state.businessIdForGiveback;
     this.userId = state.userId;
     this.orderId = state.orderId;
     this.user = state.user;
@@ -148,6 +153,7 @@ class OrderState {
     String addCardProgress,
     String navigate,
     String businessId,
+    String businessIdForGiveback,
     String userId,
     String orderId,
     OrderBusinessSnippetState business,
@@ -173,6 +179,7 @@ class OrderState {
       addCardProgress: addCardProgress ?? this.addCardProgress,
       navigate: navigate ?? this.navigate,
       businessId: businessId ?? this.businessId,
+      businessIdForGiveback: businessIdForGiveback ?? this.businessIdForGiveback,
       userId: userId ?? this.userId,
       orderId: orderId ?? this.orderId,
       business: business ?? this.business,
@@ -200,6 +207,7 @@ class OrderState {
       addCardProgress: Utils.enumToString(AddCardStatus.notStarted),
       navigate: false,
       businessId: "",
+      businessIdForGiveback: "",
       userId: "",
         orderId: "",
       business: OrderBusinessSnippetState().toEmpty(),

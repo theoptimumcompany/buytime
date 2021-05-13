@@ -2,7 +2,86 @@ import 'package:Buytime/reblox/model/business/snippet/business_snippet_state.dar
 import 'package:Buytime/reblox/model/business/snippet/order_business_snippet_state.dart';
 import 'package:Buytime/reblox/model/order/order_entry.dart';
 import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
+import 'package:Buytime/reblox/model/stripe/stripe_state.dart';
 import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
+
+
+class CreateOrderReservableCardAndPay {
+  OrderReservableState _orderReservableState;
+  String _last4;
+  String _brand;
+  String _country;
+  String _selectedCardPaymentMethodId;
+  PaymentType _paymentType;
+  CreateOrderReservableCardAndPay(this._orderReservableState, this._last4, this._brand, this._country, this._selectedCardPaymentMethodId, this._paymentType);
+  OrderReservableState get orderReservableState => _orderReservableState;
+  PaymentType get paymentType => _paymentType;
+  String get last4 => _last4;
+  String get brand => _brand;
+  String get country => _country;
+  String get selectedCardPaymentMethodId => _selectedCardPaymentMethodId;
+}
+class CreateOrderReservableCardAndHold {
+  OrderReservableState _orderReservableState;
+  String _last4;
+  String _brand;
+  String _country;
+  String _selectedCardPaymentMethodId;
+  PaymentType _paymentType;
+  CreateOrderReservableCardAndHold(this._orderReservableState, this._last4, this._brand, this._country, this._selectedCardPaymentMethodId, this._paymentType);
+  OrderReservableState get orderReservableState => _orderReservableState;
+  PaymentType get paymentType => _paymentType;
+  String get last4 => _last4;
+  String get brand => _brand;
+  String get country => _country;
+  String get selectedCardPaymentMethodId => _selectedCardPaymentMethodId;
+}
+class CreateOrderReservableCardAndReminder {
+  OrderReservableState _orderReservableState;
+  String _last4;
+  String _brand;
+  String _country;
+  String _selectedCardPaymentMethodId;
+  PaymentType _paymentType;
+  CreateOrderReservableCardAndReminder(this._orderReservableState, this._last4, this._brand, this._country, this._selectedCardPaymentMethodId, this._paymentType);
+  OrderReservableState get orderReservableState => _orderReservableState;
+  PaymentType get paymentType => _paymentType;
+  String get last4 => _last4;
+  String get brand => _brand;
+  String get country => _country;
+  String get selectedCardPaymentMethodId => _selectedCardPaymentMethodId;
+}
+class CreateOrderReservablePendingWithPaymentMethod {
+  OrderReservableState _orderReservableState;
+  String _last4;
+  String _brand;
+  String _country;
+  String _selectedCardPaymentMethodId;
+  PaymentType _paymentType;
+  CreateOrderReservablePendingWithPaymentMethod(this._orderReservableState, this._last4, this._brand, this._country, this._selectedCardPaymentMethodId, this._paymentType);
+  OrderReservableState get orderReservableState => _orderReservableState;
+  PaymentType get paymentType => _paymentType;
+  String get last4 => _last4;
+  String get brand => _brand;
+  String get country => _country;
+  String get selectedCardPaymentMethodId => _selectedCardPaymentMethodId;
+}
+class CreateOrderReservablePending {
+  OrderReservableState _orderReservableState;
+  String _last4;
+  String _brand;
+  String _country;
+  String _selectedCardPaymentMethodId;
+  PaymentType _paymentType;
+  CreateOrderReservablePending(this._orderReservableState, this._last4, this._brand, this._country, this._selectedCardPaymentMethodId, this._paymentType);
+  OrderReservableState get orderReservableState => _orderReservableState;
+  PaymentType get paymentType => _paymentType;
+  String get last4 => _last4;
+  String get brand => _brand;
+  String get country => _country;
+  String get selectedCardPaymentMethodId => _selectedCardPaymentMethodId;
+}
+
 
 class SetOrderReservable {
   OrderReservableState _orderReservableState;
@@ -47,11 +126,7 @@ class CreateOrderReservable {
   OrderReservableState get orderReservableState => _orderReservableState;
 }
 
-class CreatedOrderReservable {
-  OrderReservableState _orderReservableState;
-  CreatedOrderReservable(this._orderReservableState);
-  OrderReservableState get orderReservableState => _orderReservableState;
-}
+class CreatedOrderReservable {}
 
 class DeleteOrderReservable {
   String _orderReservableId;

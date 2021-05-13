@@ -64,7 +64,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     ).animate(new CurvedAnimation(parent: _animationController, curve: new Interval(0.6, 1.0, curve: Curves.ease)));
 
     super.initState();
-    backgroundVideoList.add('waves.mp4');
+    // backgroundVideoList.add('waves.mp4');
     backgroundVideoList.add('waves_2.mp4');
     backgroundVideoList.add('sea_trees.mp4');
     // backgroundVideoList.add('castle.mp4');
