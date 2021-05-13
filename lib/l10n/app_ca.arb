@@ -521,5 +521,9 @@
   "whereDoYouWantToRecive": " Where do you want to receive it?",
   "location": " Location",
   "businessPipeline": "Business pipeline",
-  "translatedIn": "Translated in:"
+  "translatedIn": "Translated in:",
+  "businessAddress": "Business address",
+  "addressDetails": "Address Details",
+  "imageRequired": "This Image is required",
+  "myReservation": "My Reservations"
 }

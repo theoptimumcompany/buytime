@@ -33,7 +33,10 @@ ServiceState _$ServiceStateFromJson(Map<String, dynamic> json) {
     spinnerVisibility: json['spinnerVisibility'] as bool ?? false,
     serviceCreated: json['serviceCreated'] as bool ?? false,
     serviceEdited: json['serviceEdited'] as bool ?? false,
-    address: json['address'] as String,
+    serviceBusinessAddress: json['serviceBusinessAddress'] as String,
+    serviceBusinessCoordinates: json['serviceBusinessCoordinates'] as String,
+    serviceAddress: json['serviceAddress'] as String,
+    serviceCoordinates: json['serviceCoordinates'] as String,
   );
 }
 
@@ -58,5 +61,8 @@ Map<String, dynamic> _$ServiceStateToJson(ServiceState instance) =>
       'spinnerVisibility': instance.spinnerVisibility,
       'serviceCreated': instance.serviceCreated,
       'serviceEdited': instance.serviceEdited,
-      'address': instance.address,
+      'serviceBusinessAddress': instance.serviceBusinessAddress,
+      'serviceBusinessCoordinates': instance.serviceBusinessCoordinates,
+      'serviceAddress': instance.serviceAddress,
+      'serviceCoordinates': instance.serviceCoordinates,
     };

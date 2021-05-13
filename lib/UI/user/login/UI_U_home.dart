@@ -16,9 +16,9 @@ import 'package:path_provider/path_provider.dart';
 import 'package:video_player/video_player.dart';
 
 class Home extends StatefulWidget {
-  final Widget child;
-
-  Home({@required this.child});
+  //final Widget child;
+  static String route = '/home';
+  //Home();
 
   @override
   createState() => _HomeState();

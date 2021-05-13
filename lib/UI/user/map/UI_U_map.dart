@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 import 'package:Buytime/reblox/model/business/business_state.dart';
+import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/utils/utils.dart';
@@ -26,7 +27,8 @@ class BuytimeMap extends StatefulWidget {
   bool user;
   String title;
   BusinessState businessState;
-  BuytimeMap({@required this.user, this.title, this.businessState});
+  ServiceState serviceState;
+  BuytimeMap({@required this.user, this.title, this.businessState, this.serviceState});
 
   @override
   createState() => _BuytimeMapState();
@@ -90,12 +92,26 @@ class _BuytimeMapState extends State<BuytimeMap> with SingleTickerProviderStateM
 
     _containerAnimationController.forward();
 
-    if(widget.businessState.coordinate.isNotEmpty){
+    if(widget.serviceState.serviceCoordinates != null && widget.serviceState.serviceCoordinates.isNotEmpty){
+      List<String> latLng = widget.serviceState.serviceCoordinates.replaceAll(' ', '').split(',');
+      if(latLng.length == 2){
+        lat = double.parse(latLng[0]);
+        lng = double.parse(latLng[1]);
+      }
+      if(widget.serviceState.serviceAddress != null && widget.serviceState.serviceAddress.isNotEmpty)
+        address = widget.serviceState.serviceAddress;
+      else
+        address = widget.serviceState.serviceBusinessAddress;
+    }else if(widget.businessState.coordinate != null && widget.businessState.coordinate.isNotEmpty){
       List<String> latLng = widget.businessState.coordinate.replaceAll(' ', '').split(',');
       if(latLng.length == 2){
         lat = double.parse(latLng[0]);
         lng = double.parse(latLng[1]);
       }
+      if(widget.businessState.businessAddress != null && widget.businessState.businessAddress.isNotEmpty)
+        address = widget.businessState.businessAddress;
+      else
+        address = widget.businessState.street + ', ' + widget.businessState.street_number + ', ' + widget.businessState.ZIP + ', ' + widget.businessState.state_province;
     }
     _center = LatLng(lat, lng);
     markers.add(Marker(
@@ -112,7 +128,8 @@ class _BuytimeMapState extends State<BuytimeMap> with SingleTickerProviderStateM
       _mapStyle = string;
     });
 
-    address = widget.businessState.street + ', ' + widget.businessState.street_number + ', ' + widget.businessState.ZIP + ', ' + widget.businessState.state_province;
+    debugPrint('Location Address: $address');
+    debugPrint('Location Coordinates: $lat, $lng');
   }
 
   @override

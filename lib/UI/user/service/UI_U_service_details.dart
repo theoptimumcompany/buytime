@@ -456,7 +456,10 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                                     onTap: () {
                                                       Navigator.push(
                                                         context,
-                                                        MaterialPageRoute(builder: (context) => BuytimeMap(user: true, title: widget.serviceState.name, businessState: BusinessState.fromExternalState(externalBusinessState),)),
+                                                        MaterialPageRoute(builder: (context) => BuytimeMap(user: true, title: widget.serviceState.name,
+                                                          businessState: BusinessState.fromExternalState(externalBusinessState),
+                                                          serviceState: widget.serviceState,
+                                                        )),
                                                       );
                                                     },
                                                     borderRadius: BorderRadius.all(Radius.circular(5.0)),

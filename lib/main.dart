@@ -4,11 +4,15 @@ import 'package:Buytime/UI/management/category/UI_M_manage_category.dart';
 import 'package:Buytime/UI/management/invite/UI_M_booking_details.dart';
 import 'package:Buytime/UI/management/invite/UI_M_booking_list.dart';
 import 'package:Buytime/UI/management/service_internal/UI_M_service_list.dart';
+import 'package:Buytime/UI/user/UI_U_tabs.dart';
 import 'package:Buytime/UI/user/booking/UI_U_booking_page.dart';
 import 'package:Buytime/UI/user/booking/UI_U_confirm_booking.dart';
 import 'package:Buytime/UI/user/booking/UI_U_my_bookings.dart';
 import 'package:Buytime/UI/user/cart/UI_U_ConfirmOrder.dart';
 import 'package:Buytime/UI/user/landing/UI_U_landing.dart';
+import 'package:Buytime/UI/user/login/UI_U_login.dart';
+import 'package:Buytime/UI/user/login/UI_U_registration.dart';
+import 'package:Buytime/UI/user/order/UI_U_order_detail.dart';
 import 'package:Buytime/UI/user/service/UI_U_service_details.dart';
 import 'package:Buytime/UI/user/turist/UI_U_service_explorer.dart';
 import 'package:Buytime/reblox/model/autoComplete/auto_complete_list_state.dart';
@@ -174,7 +178,9 @@ void main(){
     ExternalServiceImportedCanceledService(),
     ExternalBusinessImportedCanceledService(),
     NotificationRequestService(),
-    NotificationCreateService()
+    NotificationListRequestService(),
+    NotificationUpdateRequestService()
+   // NotificationCreateService()
   ]);
   final _initialState = AppState(
     category: CategoryState().toEmpty(),
@@ -270,6 +276,8 @@ class Buytime extends StatelessWidget {
         return FabRoute(ServiceDetails(), settings: settings);
       case AppRoutes.serviceExplorer:
         return FabRoute(ServiceExplorer(), settings: settings);
+      default:
+        return MainRoute(Home(), settings: settings);
     }
   }
 
@@ -306,15 +314,16 @@ class Buytime extends StatelessWidget {
           dark: true,
           child: SplashScreen(),
         )*/,
-        /*routes: <String, WidgetBuilder>{
+        routes: <String, WidgetBuilder>{
           // Set routes for using the Navigator.
-          '/home': (BuildContext context) => Home(),
+          /*'/home': (BuildContext context) => Home(),
           '/login': (BuildContext context) => Login(),
           '/registration': (BuildContext context) => Registration(),
           '/orderDetail': (BuildContext context) => UI_U_OrderDetail(),
           '/tabs': (BuildContext context) => UI_U_Tabs(),
-          '/bookingDetails': (BuildContext context) => BookingDetails(),
-        },*/
+          '/bookingDetails': (BuildContext context) => BookingDetails(),*/
+        },
+        //onGenerateRoute: ,
       ),
     );
   }

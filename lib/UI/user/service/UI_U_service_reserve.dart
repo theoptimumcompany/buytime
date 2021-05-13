@@ -19,6 +19,7 @@ import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
 import 'package:Buytime/reusable/sliverAppBarDelegate.dart';
 import 'package:Buytime/reusable/time_slot_widget.dart';
 import 'package:Buytime/utils/globals.dart';
+import 'package:Buytime/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
@@ -109,6 +110,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
     }
   }
 
+  ///TODO Tourist method
   List<DateTime> getDaysInBeteween(DateTime startDate, DateTime endDate, DateTime userStartDate, DateTime userEndDate, ServiceSlot slot, List<OrderReservableState> reserved) {
     tmpSlots.clear();
     List<DateTime> days = [];
@@ -430,7 +432,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                       child: FittedBox(
                         fit: BoxFit.scaleDown,
                         child: Text(
-                          AppLocalizations.of(context).reserveSpace + ' ' +  widget.serviceState.name,
+                          AppLocalizations.of(context).reserveSpace + ' ' +  Utils.retriveField(Localizations.localeOf(context).languageCode, widget.serviceState.name),
                           textAlign: TextAlign.start,
                           style: BuytimeTheme.appbarTitle,
                           overflow: TextOverflow.ellipsis,
@@ -460,7 +462,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                           Container(
                             margin: EdgeInsets.only(top:  SizeConfig.safeBlockVertical * 4),
                             child: Text(
-                              serviceState.name ?? AppLocalizations.of(context).serviceName,
+                              Utils.retriveField(Localizations.localeOf(context).languageCode, widget.serviceState.name)  ?? AppLocalizations.of(context).serviceName,
                               style: TextStyle(
                                   letterSpacing: 0.25,
                                   fontFamily: BuytimeTheme.FontFamily,

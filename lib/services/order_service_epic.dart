@@ -111,7 +111,7 @@ class UserOrderListRequestService implements EpicClass<AppState> {
       //currentTime = new DateTime(currentTime.year, currentTime.month - 1, currentTime.day, 0, 0, 0, 0, 0).toUtc();
       debugPrint('order_service_epic => current Time: $currentTime');
       orderStateList = [];
-      currentTime = currentTime.subtract(Duration(days: 15));
+      currentTime = currentTime.subtract(Duration(days: 5));
       //debugPrint("ORDER_SERVICE_EPIC - UserOrderListRequestService =>  BUSINESS ID: ${businessList[i].id_firestore}");
       QuerySnapshot ordersFirebase = await FirebaseFirestore.instance.collection("order") /// 1 READ - ? DOC
           .where("businessId", isEqualTo: store.state.business.id_firestore)

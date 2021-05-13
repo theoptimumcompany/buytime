@@ -45,6 +45,7 @@ BusinessState _$BusinessStateFromJson(Map<String, dynamic> json) {
     tag: (json['tag'] as List)?.map((e) => e as String)?.toList(),
     area: (json['area'] as List)?.map((e) => e as String)?.toList(),
     hub: json['hub'] as bool ?? false,
+    businessAddress: json['businessAddress'] as String,
   );
 }
 
@@ -81,4 +82,5 @@ Map<String, dynamic> _$BusinessStateToJson(BusinessState instance) =>
       'tag': instance.tag,
       'area': instance.area,
       'hub': instance.hub,
+      'businessAddress': instance.businessAddress,
     };

@@ -180,7 +180,7 @@ class _TreeNodeState extends State<TreeNode>
         child: Container(
           padding: EdgeInsets.only(top: 15, bottom: 15,),
           decoration: BoxDecoration(
-              color: BuytimeTheme.ManagerPrimary.withOpacity(0.3),
+              color: BuytimeTheme.BackgroundBlack.withOpacity(0.4),
               borderRadius: BorderRadius.all(Radius.circular(5))
           ),
           child: Column(
@@ -266,7 +266,7 @@ class _TreeNodeState extends State<TreeNode>
       child: Container(
         padding: EdgeInsets.only(top: 15, bottom: 15,),
         decoration: BoxDecoration(
-            color: BuytimeTheme.ManagerPrimary.withOpacity(0.3),
+            color: BuytimeTheme.BackgroundBlack.withOpacity(0.4),
             borderRadius: BorderRadius.all(Radius.circular(5))
         ),
         child: Column(

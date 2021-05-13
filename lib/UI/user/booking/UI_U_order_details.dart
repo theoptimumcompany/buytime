@@ -51,7 +51,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
     super.initState();
 
     //debugPrint('${widget.imageUrl}');
-    if(widget.orderState.cardType != null)
+    if(widget.orderState.cardType != null && widget.orderState.cardType.isNotEmpty)
       card = widget.orderState.cardType.toLowerCase().substring(0,1) == 'v' ? 'v' : 'mc';
     else
       card = 'e';
@@ -172,7 +172,9 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                       child: FittedBox(
                         fit: BoxFit.scaleDown,
                         child: Text(
-                          widget.orderState.itemList.length > 1 ? widget.orderState.business.name : widget.orderState.itemList.first.name,
+                          widget.orderState.itemList.length > 1 ?
+                          Utils.retriveField(Localizations.localeOf(context).languageCode, widget.orderState.business.name)
+                           : Utils.retriveField(Localizations.localeOf(context).languageCode,  widget.orderState.itemList.first.name),
                           textAlign: TextAlign.start,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
@@ -323,7 +325,8 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                                           child: FittedBox(
                                             fit: BoxFit.scaleDown,
                                             child: Text(
-                                              widget.orderState.itemList.length > 1 ? AppLocalizations.of(context).multipleOrders : widget.orderState.itemList[0].name,
+                                              widget.orderState.itemList.length > 1 ? AppLocalizations.of(context).multipleOrders :
+                                              Utils.retriveField(Localizations.localeOf(context).languageCode, widget.orderState.itemList[0].name),
                                               style: TextStyle(
                                                   fontFamily: BuytimeTheme.FontFamily,
                                                   color: BuytimeTheme.TextWhite,
@@ -467,7 +470,11 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                                                   onTap: () {
                                                     Navigator.push(
                                                       context,
-                                                      MaterialPageRoute(builder: (context) => BuytimeMap(user: true, title: widget.orderState.itemList.length > 1 ? widget.orderState.business.name : widget.orderState.itemList.first.name, businessState: snapshot.business,)),
+                                                      MaterialPageRoute(builder: (context) => BuytimeMap(user: true,
+                                                        title: widget.orderState.itemList.length > 1 ? widget.orderState.business.name : widget.orderState.itemList.first.name,
+                                                        businessState: snapshot.business,
+                                                          serviceState: ServiceState().toEmpty()) ///TODO service address
+                                                      ),
                                                     );
                                                   },
                                                   borderRadius: BorderRadius.all(Radius.circular(5.0)),
@@ -501,7 +508,10 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                                   String address = widget.orderState.itemList.length > 1 ? widget.orderState.business.name : widget.orderState.itemList.first.name;
                                   //Utils.openMap(lat, lng);
                                   //Navigator.push(context, MaterialPageRoute(builder: (context) => BuytimeMap(user: true, title: widget.orderState.itemList.length > 1 ? widget.orderState.business.name : widget.orderState.itemList.first.name, businessState: snapshot.business,)),);
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => BuytimeMap(user: true, title: address, businessState: snapshot.business,)),);
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => BuytimeMap(user: true, title: address,
+                                    businessState: snapshot.business,
+                                      serviceState: ServiceState().toEmpty() ///TODO service address
+                                  )));
                                   //Navigator.push(context, MaterialPageRoute(builder: (context) => AnimatedScreen()));
                                 },
                                 child: Container(
@@ -670,7 +680,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                               ),
                               ///Card Name
                               Text(
-                                widget.orderState.cardType != null ?
+                                widget.orderState.cardType != null && widget.orderState.cardType.isNotEmpty?
                                   widget.orderState.cardType.substring(0,1).toUpperCase() + widget.orderState.cardType.substring(1, widget.orderState.cardType.length) + '  ' :
                                   'Sample  ',
                                 style: TextStyle(

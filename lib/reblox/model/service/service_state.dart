@@ -31,7 +31,10 @@ class ServiceState {
   bool serviceCreated = false;
   @JsonKey(defaultValue: false)
   bool serviceEdited = false;
-  String address;
+  String serviceBusinessAddress;
+  String serviceBusinessCoordinates;
+  String serviceAddress;
+  String serviceCoordinates;
 
   ///Out Database
   @JsonKey(ignore: true)
@@ -58,7 +61,10 @@ class ServiceState {
     this.spinnerVisibility,
     this.serviceCreated,
     this.serviceEdited,
-    this.address,
+    this.serviceBusinessAddress,
+    this.serviceBusinessCoordinates,
+    this.serviceAddress,
+    this.serviceCoordinates,
   });
 
   ServiceState toEmpty() {
@@ -83,7 +89,10 @@ class ServiceState {
       spinnerVisibility: false,
       serviceCreated: false,
       serviceEdited: false,
-      address: '',
+      serviceBusinessAddress: '',
+      serviceBusinessCoordinates: '',
+      serviceAddress: '',
+      serviceCoordinates: '',
     );
   }
 
@@ -108,7 +117,10 @@ class ServiceState {
     this.spinnerVisibility = service.spinnerVisibility;
     this.serviceCreated = service.serviceCreated;
     this.serviceEdited = service.serviceEdited;
-    this.address = service.address;
+    this.serviceBusinessAddress = service.serviceBusinessAddress;
+    this.serviceBusinessCoordinates = service.serviceBusinessCoordinates;
+    this.serviceAddress = service.serviceAddress;
+    this.serviceCoordinates = service.serviceCoordinates;
   }
 
   ServiceState copyWith({
@@ -132,7 +144,10 @@ class ServiceState {
     bool spinnerVisibility,
     bool serviceCreated,
     bool serviceEdited,
-    String address,
+    String serviceBusinessAddress,
+    String serviceBusinessCoordinates,
+    String serviceAddress,
+    String serviceCoordinates,
   }) {
     return ServiceState(
       serviceId: serviceId ?? this.serviceId,
@@ -155,7 +170,10 @@ class ServiceState {
       spinnerVisibility: spinnerVisibility ?? this.spinnerVisibility,
       serviceCreated: serviceCreated ?? this.serviceCreated,
       serviceEdited: serviceEdited ?? this.serviceEdited,
-      address: address ?? this.address,
+      serviceBusinessAddress: serviceBusinessAddress ?? this.serviceBusinessAddress,
+      serviceBusinessCoordinates: serviceBusinessCoordinates ?? this.serviceBusinessCoordinates,
+      serviceAddress: serviceAddress ?? this.serviceAddress,
+      serviceCoordinates: serviceCoordinates ?? this.serviceCoordinates,
     );
   }
 

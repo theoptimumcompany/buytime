@@ -31,7 +31,7 @@ class _DiscoverCardWidgetState extends State<DiscoverCardWidget> {
     return  CachedNetworkImage(
       imageUrl: widget.categoryState.categoryImage != null && widget.categoryState.categoryImage.isNotEmpty ? widget.categoryState.categoryImage:  'https://firebasestorage.googleapis.com/v0/b/buytime-458a1.appspot.com/o/general%2Fimage_placeholder_200x200_1000x1000.png?alt=media&token=082a1896-32d8-4750-b7cc-141f00bc060c',
       imageBuilder: (context, imageProvider) => Container(
-        margin: EdgeInsets.all(SizeConfig.safeBlockVertical*.25),
+        margin: EdgeInsets.all(SizeConfig.safeBlockVertical*.0),
         //width: double.infinity,
         //height: double.infinity,
         width: widget.width, ///SizeConfig.safeBlockVertical * widget.width
@@ -55,42 +55,25 @@ class _DiscoverCardWidgetState extends State<DiscoverCardWidget> {
             },
             borderRadius: BorderRadius.all(Radius.circular(5)),
             child: Container(
-              width: SizeConfig.safeBlockVertical * widget.width,
-              height: SizeConfig.safeBlockVertical * widget.heigth,
+              width: widget.width,
+              height: widget.heigth,
+              alignment: Alignment.bottomLeft,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(5)),
-                  //color: Colors.black.withOpacity(.2)
+                  color: Colors.black.withOpacity(.4)
               ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    width: widget.width,
-                    height: widget.heigth/3,
-                    alignment: Alignment.centerLeft,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(5),
-                        bottomRight: Radius.circular(5)),
-                        color: Colors.black.withOpacity(.2)
-                    ),
-                    //margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, bottom: SizeConfig.safeBlockVertical * 2),
-                    child: Container(
-                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5),
-                      child: Text(
-                        widget.categoryState.name,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                            fontFamily: BuytimeTheme.FontFamily,
-                            color: BuytimeTheme.TextWhite,
-                            fontWeight: FontWeight.w400,
-                            fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
-                        ),
-                      ),
-                    ),
+              child: Container(
+                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2, right: SizeConfig.safeBlockHorizontal * 1, bottom: SizeConfig.safeBlockVertical * 1),
+                child: Text(
+                  widget.categoryState.name,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                      fontFamily: BuytimeTheme.FontFamily,
+                      color: BuytimeTheme.TextWhite,
+                      fontWeight: FontWeight.w400,
+                      fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
                   ),
-                ],
+                ),
               ),
             ),
           ),

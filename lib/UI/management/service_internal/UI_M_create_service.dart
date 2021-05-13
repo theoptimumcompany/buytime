@@ -38,6 +38,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
   double _servicePrice = 0.0;
   String _serviceDescription = "";
   String _serviceAddress = "";
+  String _serviceCoordinates = "";
   final ImagePicker imagePicker = ImagePicker();
   List<Parent> selectedCategoryList = [];
   List<Parent> categoryList = [];
@@ -191,7 +192,12 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
           converter: (store) => store.state,
           onInit: (store) {
             store.dispatch(CategoryTreeRequest());
-            _serviceAddress = store.state.business.street + ', ' + store.state.business.street_number + ', ' + store.state.business.ZIP + ', ' + store.state.business.state_province;
+            if(store.state.business.businessAddress != null && store.state.business.businessAddress.isNotEmpty)
+              _serviceAddress = store.state.business.businessAddress;
+            else
+              _serviceAddress = store.state.business.street + ', ' + store.state.business.street_number + ', ' + store.state.business.ZIP + ', ' + store.state.business.state_province;
+            _serviceCoordinates = store.state.business.coordinate;
+            addressController.text = _serviceAddress;
           },
           builder: (context, snapshot) {
             List<String> flagsCharCode = [];
@@ -268,8 +274,10 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                       ServiceState tmpService = ServiceState.fromState(snapshot.serviceState);
                                       tmpService.name = Utils.saveField(myLocale.languageCode, nameController.text, snapshot.serviceState.name);
                                       tmpService.description = Utils.saveField(myLocale.languageCode, descriptionController.text, snapshot.serviceState.description);
+                                      tmpService.serviceAddress = addressController.text;
                                       debugPrint('UI_M_create_service => Service Name: ${tmpService.name}');
                                       debugPrint('UI_M_create_service => Service Description: ${tmpService.description}');
+                                      debugPrint('UI_M_create_service => Service Address: ${tmpService.serviceBusinessAddress}');
                                       StoreProvider.of<AppState>(context).dispatch(CreateService(tmpService));
                                     }
                                   }),
@@ -550,34 +558,63 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                     ),
                                   ),
                                   ///Address
-                                  Center(
-                                    child: Container(
-                                      width: media.width * 0.9,
-                                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
-                                      //decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(top: 0.0, bottom: 15.0, left: 10.0, right: 10.0),
-                                        child: TextFormField(
-                                          keyboardType: TextInputType.multiline,
-                                          maxLines: null,
-                                          initialValue: _serviceAddress,
-                                          onChanged: (value) {
-                                            _serviceAddress = value;
-                                            _serviceAddress = value;
-                                            StoreProvider.of<AppState>(context).dispatch(SetServiceAddress(_serviceAddress));
-                                          },
-                                          onSaved: (value) {
-                                            _serviceAddress = value;
-                                          },
-                                          decoration: InputDecoration(
-                                            labelText: AppLocalizations.of(context).addressOptional,
-                                            //hintText: AppLocalizations.of(context).addressOptional,
-                                            enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                            focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                            errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                  Container(
+                                    margin: EdgeInsets.only(top: 10.0, bottom: 5.0, left: 32.0, right: 28.0),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Flexible(
+                                          child: Container(
+                                              width: media.width * 0.9,
+                                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0),
+                                              //decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
+                                              child: TextFormField(
+                                                enabled: false,
+                                                keyboardType: TextInputType.multiline,
+                                                maxLines: null,
+                                                controller: addressController,
+                                                //initialValue: _serviceAddress,
+                                                onChanged: (value) {
+                                                  _serviceAddress = value;
+                                                  _serviceAddress = value;
+                                                  StoreProvider.of<AppState>(context).dispatch(SetServiceAddress(_serviceAddress));
+                                                },
+                                                onSaved: (value) {
+                                                  _serviceAddress = value;
+                                                },
+                                                style: TextStyle(
+                                                    fontFamily: BuytimeTheme.FontFamily,
+                                                    color: BuytimeTheme.TextGrey
+                                                ),
+                                                decoration: InputDecoration(
+                                                  labelText: AppLocalizations.of(context).addressOptional,
+                                                  //hintText: AppLocalizations.of(context).addressOptional,
+                                                  enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                  border: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                  focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                  errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                ),
+                                              )
                                           ),
                                         ),
-                                      ),
+                                        IconButton(
+                                          icon: Icon(
+                                            Icons.add_location_alt,
+                                            color: BuytimeTheme.ManagerPrimary,
+                                          ),
+                                          onPressed: (){
+                                            Utils.googleSearch(
+                                                context,
+                                                    (place){
+                                                  //_serviceAddress = store.state.business.street + ', ' + store.state.business.street_number + ', ' + store.state.business.ZIP + ', ' + store.state.business.state_province;
+                                                      addressController.text = place[0];
+                                                      StoreProvider.of<AppState>(context).dispatch(SetServiceAddress(addressController.text));
+                                                      StoreProvider.of<AppState>(context).dispatch(SetServiceCoordinates('${place[1]}, ${place[2]}'));
+                                                }
+                                            );
+                                          },
+                                        )
+                                      ],
                                     ),
                                   ),
                                   ///Categories

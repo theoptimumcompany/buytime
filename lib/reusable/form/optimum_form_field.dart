@@ -21,6 +21,7 @@ class OptimumFormField extends StatefulWidget {
   int indexBusiness;
   OnSaveOrChangedCallback onSaveOrChangedCallback;
   String initialFieldValue;
+  TextEditingController controller;
   String label;
 
   OptimumFormField({
@@ -34,21 +35,22 @@ class OptimumFormField extends StatefulWidget {
     this.typeOfValidate,
     this.indexBusiness,
     this.onSaveOrChangedCallback,
-    this.initialFieldValue
+    this.initialFieldValue,
+    this.controller
   });
 
   @override
-  State<StatefulWidget> createState() => OptimumFormFieldState(onSaveOrChangedCallback: onSaveOrChangedCallback, initialFieldValue: initialFieldValue, minLength: minLength);
+  State<StatefulWidget> createState() => OptimumFormFieldState(onSaveOrChangedCallback: onSaveOrChangedCallback, controller: controller, minLength: minLength);
 }
 
 class OptimumFormFieldState extends State<OptimumFormField> {
   FocusNode focusNode = FocusNode();
   bool _autoValidate = false;
   OnSaveOrChangedCallback onSaveOrChangedCallback;
-  String initialFieldValue;
+  TextEditingController controller;
   int minLength;
 
-  OptimumFormFieldState({this.onSaveOrChangedCallback, this.initialFieldValue, this.minLength});
+  OptimumFormFieldState({this.onSaveOrChangedCallback, this.controller, this.minLength});
 
   @override
   void initState() {
@@ -68,12 +70,12 @@ class OptimumFormFieldState extends State<OptimumFormField> {
   }
 
   String validate(String value) {
-    if(widget.required && value.isNotEmpty) {
-      return "test " + AppLocalizations.of(context).required;
+    if(widget.required && value.isEmpty) {
+      return '~ ' + AppLocalizations.of(context).required;
     }
-    if (value.length < minLength) {
+    /*if (value.length < minLength) {
         return '${AppLocalizations.of(context).nameMustBeMore} '+ minLength.toString() + ' ${AppLocalizations.of(context).characters}';
-    }
+    }*/
     if (widget.typeOfValidate == "email") {
       Pattern pattern =
           r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
@@ -109,14 +111,19 @@ class OptimumFormFieldState extends State<OptimumFormField> {
               autovalidate: _autoValidate,
               child: TextFormField(
                 focusNode: focusNode,
-                initialValue: widget.initialFieldValue,
+                controller: widget.controller,
+                //initialValue: widget.initialFieldValue,
                 onChanged: (value) {
                   onSaveOrChangedCallback(value);
                 },
                 keyboardType: widget.textInputType,
                 validator: validate,
                 decoration: InputDecoration(
+                  //helperText: widget.required ? '~ ' + AppLocalizations.of(context).required : null,
                   labelText: widget.label,
+                  helperStyle: TextStyle(
+                      color: BuytimeTheme.AccentRed
+                  ),
                   errorStyle: TextStyle(
                     color: BuytimeTheme.AccentRed
                   ),
