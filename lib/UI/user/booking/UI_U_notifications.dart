@@ -9,6 +9,7 @@ import 'package:Buytime/reblox/model/notification/notification_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/service/service_list_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
+import 'package:Buytime/reblox/reducer/notification_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
 import 'package:Buytime/reusable/buytime_icons.dart';
@@ -42,8 +43,6 @@ class _NotificationsState extends State<Notifications> {
   bool rippleLoading = false;
 
 
-  List<NotificationState> notifications = [];
-
   //NotificationState tmpNotification1 = NotificationState(serviceName: 'Test I', serviceState: 'canceled');
   //NotificationState tmpNotification2 = NotificationState(serviceName: 'Test II', serviceState: 'accepted');
 
@@ -56,6 +55,8 @@ class _NotificationsState extends State<Notifications> {
 
   String _selected = '';
   bool isManagerOrAbove = false;
+  //bool startRequest = false;
+  bool noActivity = false;
 
   @override
   Widget build(BuildContext context) {
@@ -64,10 +65,26 @@ class _NotificationsState extends State<Notifications> {
     return StoreConnector<AppState, AppState>(
       converter: (store) => store.state,
       onInit: (store) {
-
+          startRequest = true;
       },
       builder: (context, snapshot) {
+        List<NotificationState> notifications = snapshot.notificationListState.notificationListState;
+        /*if(notifications.isEmpty && startRequest){
+          noActivity = true;
+        }else{
+          if(notifications.isNotEmpty && notifications.first.userId.isEmpty)
+            notifications.removeLast();
 
+          if(notifications.isNotEmpty){
+            notifications.forEach((element) {
+              debugPrint('UI_U_notifications => ${element.timestamp}');
+            });
+            //notifications.sort((b,a) => a.timestamp != null ? a.timestamp : 0 .compareTo(b.timestamp != null ? b.timestamp : 0));
+            notifications.sort((b,a) => a.timestamp.compareTo(b.timestamp));
+          }
+          noActivity = false;
+          startRequest = false;
+        }*/
 
         order = snapshot.order.itemList != null ? (snapshot.order.itemList.length > 0 ? snapshot.order : OrderState().toEmpty()) : OrderState().toEmpty();
         debugPrint('UI_U_BookingPage => CART COUNT: ${order.cartCounter}');
@@ -227,8 +244,22 @@ class _NotificationsState extends State<Notifications> {
                                                       (context, index) {
                                                     //MenuItemModel menuItem = menuItems.elementAt(index);
                                                       NotificationState notification = notifications.elementAt(index);
+                                                      OrderState orderState = OrderState().toEmpty();
+                                                      ServiceState serviceState = ServiceState().toEmpty();
+                                                      widget.orderStateList.forEach((element) {
+                                                        if(notification.data.state != null && element.orderId == notification.data.state.orderId){
+                                                          //debugPrint('UI_U_notification => ${element.orderId}');
+                                                          orderState = element;
+                                                        }
+                                                      });
+                                                      snapshot.serviceList.serviceListState.forEach((element) {
+                                                        if(notification.data.state != null && element.serviceId == notification.data.state.serviceId){
+                                                          //debugPrint('UI_U_notification => ${element.orderId}');
+                                                          serviceState = element;
+                                                        }
+                                                      });
                                                     //debugPrint('booking_month_list: bookings booking status: ${booking.user.first.surname} ${booking.status}');
-                                                    return UserNotificationListItem(OrderState().toEmpty());
+                                                    return UserNotificationListItem(notification, orderState, serviceState);
                                                   },
                                                   childCount: notifications.length,
                                                 ),

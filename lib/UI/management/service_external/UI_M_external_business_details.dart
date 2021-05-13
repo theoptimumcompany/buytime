@@ -114,7 +114,6 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
     String url;
     List<double> coordinatesDouble = convertCoordinateString(coordinates);
     if(coordinatesDouble.isNotEmpty){
-
       if(Platform.isIOS)
         url = 'https://maps.googleapis.com/maps/api/staticmap?center=${coordinatesDouble[0]},${coordinatesDouble[1]}&zoom=18&size=640x640&scale=2&markers=color:red|${coordinatesDouble[0]},${coordinatesDouble[1]}&key=${BuytimeConfig.AndroidApiKey}';
       else
@@ -122,9 +121,9 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
       return url;
     }else{
       if(Platform.isIOS)
-        url = 'https://maps.googleapis.com/maps/api/staticmap?center=$coordinates&zoom=18&size=640x640&scale=2&markers=color:red|$coordinates&key=${BuytimeConfig.AndroidApiKey}';
+        url = 'https://maps.googleapis.com/maps/api/staticmap?center=$address&zoom=18&size=640x640&scale=2&markers=color:red|$address&key=${BuytimeConfig.AndroidApiKey}';
       else
-        url = 'https://maps.googleapis.com/maps/api/staticmap?center=$coordinates&zoom=18&size=640x640&scale=2&markers=color:red|$coordinates&key=${BuytimeConfig.AndroidApiKey}';
+        url = 'https://maps.googleapis.com/maps/api/staticmap?center=$address&zoom=18&size=640x640&scale=2&markers=color:red|$address&key=${BuytimeConfig.AndroidApiKey}';
       return url;
     }
   }
@@ -227,7 +226,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
     double lon1 = 0.0;
     double lat2 = 0.0;
     double lon2 = 0.0;
-    if(businessState.coordinate.isNotEmpty){
+    if(businessState.coordinate != null && businessState.coordinate.isNotEmpty){
       List<String> latLng1 = businessState.coordinate.replaceAll('(', '').replaceAll(')', '').replaceAll(' ', '').split(',');
       debugPrint('W_add_external_business_list_item => $businessState.name} | Cordinates 1: $latLng1');
       if(latLng1.length == 2){
@@ -235,7 +234,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
         lon1 = double.parse(latLng1[1]);
       }
     }
-    if(widget.externalBusinessState.coordinate.isNotEmpty){
+    if(widget.externalBusinessState.coordinate != null && widget.externalBusinessState.coordinate.isNotEmpty){
       List<String> latLng2 = widget.externalBusinessState.coordinate.replaceAll('(', '').replaceAll(')', '').replaceAll(' ', '').split(',');
       debugPrint('W_add_external_business_list_item => ${widget.externalBusinessState.name} | Cordinates 2: $latLng2');
       if(latLng2.length == 2){
@@ -270,7 +269,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
           debugPrint('UI_U_external_business_details => Business id: ${widget.externalBusinessState.id_firestore}');
           //store.state.serviceList.serviceListState.clear();
           store.dispatch(ServiceListRequest(widget.externalBusinessState.id_firestore, 'user'));
-          if(widget.externalBusinessState.coordinate.isNotEmpty){
+          if(widget.externalBusinessState.coordinate != null && widget.externalBusinessState.coordinate.isNotEmpty){
             convertCoordinateString(widget.externalBusinessState.coordinate);
           }
         }
@@ -316,9 +315,12 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
       },
       builder: (context, snapshot) {
         distance = calculateDistance(snapshot.business);
-        address = widget.externalBusinessState.email != null ?
-        widget.externalBusinessState.street + ', ' + widget.externalBusinessState.street_number + ', ' + widget.externalBusinessState.ZIP + ', ' + widget.externalBusinessState.state_province :
-        '...';
+        if(widget.externalBusinessState.businessAddress != null && widget.externalBusinessState.businessAddress.isNotEmpty)
+          address = widget.externalBusinessState.businessAddress;
+        else
+          address = widget.externalBusinessState.email != null ?
+          widget.externalBusinessState.street + ', ' + widget.externalBusinessState.street_number + ', ' + widget.externalBusinessState.ZIP + ', ' + widget.externalBusinessState.state_province :
+          '...';
         popularServiceList.clear();
         allServiceList.clear();
         List<ServiceState> tmpServiceList = snapshot.serviceList.serviceListState;
@@ -655,19 +657,23 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                   ///Address value
                                   Container(
                                     margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
-                                    child: FittedBox(
-                                      fit: BoxFit.scaleDown,
-                                      child: Text(
-                                        address,
-                                        style: TextStyle(
-                                            letterSpacing: 0.15,
-                                            fontFamily: BuytimeTheme.FontFamily,
-                                            color: BuytimeTheme.TextBlack,
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 16 ///SizeConfig.safeBlockHorizontal * 4
+                                    child: Row(
+                                      children: [
+                                        Flexible(
+                                          child: Text(
+                                            address,
+                                            maxLines: 2,
+                                            style: TextStyle(
+                                                letterSpacing: 0.15,
+                                                fontFamily: BuytimeTheme.FontFamily,
+                                                color: BuytimeTheme.TextBlack,
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 16 ///SizeConfig.safeBlockHorizontal * 4
+                                            ),
+                                          ),
                                         ),
-                                      ),
-                                    ),
+                                      ],
+                                    )
                                   ),
                                   ///Hour text
                                   Container(
@@ -740,7 +746,11 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                                   onTap: () {
                                                     Navigator.push(
                                                       context,
-                                                      MaterialPageRoute(builder: (context) => BuytimeMap(user: false, title: widget.externalBusinessState.name, businessState: BusinessState.fromExternalState(widget.externalBusinessState),)),
+                                                      MaterialPageRoute(builder: (context) => BuytimeMap(user: false, title: widget.externalBusinessState.name,
+                                                        businessState: BusinessState.fromExternalState(widget.externalBusinessState),
+                                                        serviceState: ServiceState().toEmpty(),
+                                                      )
+                                                      ),
                                                     );
                                                   },
                                                   borderRadius: BorderRadius.all(Radius.circular(5.0)),
@@ -774,7 +784,10 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                   String address = widget.externalBusinessState.name;
                                   //Utils.openMap(lat, lng);
                                   //Navigator.push(context, MaterialPageRoute(builder: (context) => BuytimeMap(user: true, title: widget.orderState.itemList.length > 1 ? widget.orderState.business.name : widget.orderState.itemList.first.name, businessState: snapshot.business,)),);
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => BuytimeMap(user: false, title: address, businessState: BusinessState.fromExternalState(widget.externalBusinessState),)),);
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => BuytimeMap(user: false, title: address,
+                                    businessState: BusinessState.fromExternalState(widget.externalBusinessState),
+                                    serviceState: ServiceState().toEmpty(),
+                                  )),);
                                   //Navigator.push(context, MaterialPageRoute(builder: (context) => AnimatedScreen()));
                                 },
                                 child: Container(

@@ -1,56 +1,71 @@
 import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
 import 'package:Buytime/reblox/model/notification/id_state.dart';
+import 'package:Buytime/reblox/model/notification/notification_data.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:json_annotation/json_annotation.dart';
 part 'notification_state.g.dart';
 
 
 @JsonSerializable(explicitToJson: true)
 class NotificationState {
-  String recipientId;
+  String body;
   String title;
-  String message;
-  IdState ids;
-  DateTime notifyDate;
+  String userId;
+  NotificationData data;
+  int timestamp;
+  bool opened;
+  String notificationId;
+
 
   NotificationState({
-    this.recipientId,
+    this.body,
     this.title,
-    this.message,
-    this.ids,
-    this.notifyDate,
+    this.userId,
+    this.data,
+    this.timestamp,
+    this.opened,
+    this.notificationId,
   });
 
   NotificationState toEmpty() {
     return NotificationState(
-        recipientId: '',
-        title: '',
-        message: '',
-        ids: IdState().toEmpty(),
-        notifyDate: DateTime.now().toUtc()
+        body: '',
+      title: '',
+      userId: '',
+      data: NotificationData().toEmpty(),
+      timestamp: 0,
+      opened: false,
+      notificationId: '',
     );
   }
 
   NotificationState.fromState(NotificationState state) {
-    this.recipientId = state.recipientId;
+    this.body = state.body;
     this.title = state.title;
-    this.message = state.message;
-    this.ids = state.ids;
-    this.notifyDate = state.notifyDate;
+    this.userId = state.userId;
+    this.data = state.data;
+    this.timestamp = state.timestamp;
+    this.opened = state.opened;
+    this.notificationId = state.notificationId;
   }
 
   NotificationState copyWith({
-    String recipientId,
+    String body,
     String title,
-    String message,
-    IdState ids,
-    DateTime notifyDate,
+    String userId,
+    NotificationData data,
+    int timestamp,
+    bool opened,
+    String notificationId
   }) {
     return NotificationState(
-      recipientId: recipientId ?? this.recipientId,
+      body: body ?? this.body,
       title: title ?? this.title,
-      message: message ?? this.message,
-      ids: ids ?? this.ids,
-      notifyDate: notifyDate ?? this.notifyDate,
+      userId: userId ?? this.userId,
+      data: data ?? this.data,
+      timestamp: timestamp ?? this.timestamp,
+      opened: opened ?? this.opened,
+      notificationId: notificationId ?? this.notificationId,
     );
   }
 

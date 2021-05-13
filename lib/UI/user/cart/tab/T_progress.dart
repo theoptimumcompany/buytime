@@ -122,13 +122,13 @@ class _ProgressState extends State<Progress> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(
-              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 5, bottom: SizeConfig.safeBlockVertical * 2.5),
-              padding: EdgeInsets.all(5.0),
-              child: FittedBox(
-                fit: BoxFit.scaleDown,
+            Flexible(
+              child: Container(
+                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 5, bottom: SizeConfig.safeBlockVertical * 2.5, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5),
+                padding: EdgeInsets.all(5.0),
                 child: Text(
                   widget.textToDisplay,
+                  maxLines: 2,
                   style: TextStyle(
                     letterSpacing: 1.25,
                     fontFamily: BuytimeTheme.FontFamily,

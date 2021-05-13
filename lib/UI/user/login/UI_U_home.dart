@@ -16,9 +16,9 @@ import 'package:path_provider/path_provider.dart';
 import 'package:video_player/video_player.dart';
 
 class Home extends StatefulWidget {
-  final Widget child;
-
-  Home({@required this.child});
+  //final Widget child;
+  static String route = '/home';
+  //Home();
 
   @override
   createState() => _HomeState();
@@ -64,7 +64,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     ).animate(new CurvedAnimation(parent: _animationController, curve: new Interval(0.6, 1.0, curve: Curves.ease)));
 
     super.initState();
-    backgroundVideoList.add('waves.mp4');
+    // backgroundVideoList.add('waves.mp4');
     backgroundVideoList.add('waves_2.mp4');
     backgroundVideoList.add('sea_trees.mp4');
     // backgroundVideoList.add('castle.mp4');
@@ -478,10 +478,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                 focusElevation: 0,
                                 highlightElevation: 0,
                                 onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => Registration()),
-                                  );
+                                  //Navigator.push(context, MaterialPageRoute(builder: (context) => Registration()),);
+                                  Navigator.of(context).pushNamed(Registration.route);
                                 },
                                 textColor: BuytimeTheme.TextWhite,
                                 color: BuytimeTheme.ButtonMalibu,
@@ -536,10 +534,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                     );
                                   },*/
                                 onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => Login()),
-                                  );
+                                  //Navigator.push(context, MaterialPageRoute(builder: (context) => Login()),;
+                                  Navigator.of(context).pushNamed(Login.route);
                                 },
                                 textColor: BuytimeTheme.UserPrimary.withOpacity(0.3),
                                 color: Colors.white,

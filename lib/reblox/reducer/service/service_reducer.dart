@@ -189,6 +189,28 @@ class SetServiceAddress {
 
   String get address => _address;
 }
+class SetServiceBusinessAddress {
+  String _address;
+
+  SetServiceBusinessAddress(this._address);
+
+  String get address => _address;
+}
+
+class SetServiceCoordinates {
+  String _coordinates;
+
+  SetServiceCoordinates(this._coordinates);
+
+  String get coordinates => _coordinates;
+}
+class SetServiceBusinessCoordinates {
+  String _coordinates;
+
+  SetServiceBusinessCoordinates(this._coordinates);
+
+  String get coordinates => _coordinates;
+}
 
 class SetServiceVisibility {
   String _visibility;
@@ -286,7 +308,19 @@ ServiceState serviceReducer(ServiceState state, action) {
     return serviceState;
   }
   if (action is SetServiceAddress) {
-    serviceState.address = action.address;
+    serviceState.serviceAddress = action.address;
+    return serviceState;
+  }
+  if (action is SetServiceBusinessAddress) {
+    serviceState.serviceBusinessAddress = action.address;
+    return serviceState;
+  }
+  if (action is SetServiceCoordinates) {
+    serviceState.serviceCoordinates = action.coordinates;
+    return serviceState;
+  }
+  if (action is SetServiceBusinessCoordinates) {
+    serviceState.serviceBusinessCoordinates = action.coordinates;
     return serviceState;
   }
   if (action is SetServiceVisibility) {

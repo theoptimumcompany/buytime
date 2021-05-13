@@ -8,23 +8,25 @@ part of 'notification_state.dart';
 
 NotificationState _$NotificationStateFromJson(Map<String, dynamic> json) {
   return NotificationState(
-    recipientId: json['recipientId'] as String,
+    body: json['body'] as String,
     title: json['title'] as String,
-    message: json['message'] as String,
-    ids: json['ids'] == null
+    userId: json['userId'] as String,
+    data: json['data'] == null
         ? null
-        : IdState.fromJson(json['ids'] as Map<String, dynamic>),
-    notifyDate: json['notifyDate'] == null
-        ? null
-        : DateTime.parse(json['notifyDate'] as String),
+        : NotificationData.fromJson(json['data'] as Map<String, dynamic>),
+    timestamp: json['timestamp'] as int,
+    opened: json['opened'] as bool,
+    notificationId: json['notificationId'] as String,
   );
 }
 
 Map<String, dynamic> _$NotificationStateToJson(NotificationState instance) =>
     <String, dynamic>{
-      'recipientId': instance.recipientId,
+      'body': instance.body,
       'title': instance.title,
-      'message': instance.message,
-      'ids': instance.ids?.toJson(),
-      'notifyDate': instance.notifyDate?.toIso8601String(),
+      'userId': instance.userId,
+      'data': instance.data?.toJson(),
+      'timestamp': instance.timestamp,
+      'opened': instance.opened,
+      'notificationId': instance.notificationId,
     };

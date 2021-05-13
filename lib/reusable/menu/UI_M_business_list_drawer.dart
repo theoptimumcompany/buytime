@@ -160,7 +160,7 @@ class _UI_M_BusinessListDrawerState extends State<UI_M_BusinessListDrawer> {
                       fontSize: 14,
                       fontFamily: BuytimeTheme.FontFamily,
                       letterSpacing: 0.1,
-                      color: drawerSelection == DrawerSelection.BusinessList ? BuytimeTheme.AccentRed : BuytimeTheme.TextBlack,
+                      color: drawerSelection == DrawerSelection.BusinessList ? BuytimeTheme.ManagerPrimary : BuytimeTheme.TextBlack,
                     ),
                   ),
                   //leading: Icon(Icons.list),
@@ -190,7 +190,7 @@ class _UI_M_BusinessListDrawerState extends State<UI_M_BusinessListDrawer> {
                       fontSize: 14,
                       fontFamily: BuytimeTheme.FontFamily,
                       letterSpacing: 0.1,
-                      color: drawerSelection == DrawerSelection.ActivityManagement ? BuytimeTheme.AccentRed : BuytimeTheme.TextBlack,
+                      color: drawerSelection == DrawerSelection.ActivityManagement ? BuytimeTheme.ManagerPrimary : BuytimeTheme.TextBlack,
                     ),
                   ),
                   //leading: Icon(Icons.list),
@@ -278,10 +278,8 @@ class _UI_M_BusinessListDrawerState extends State<UI_M_BusinessListDrawer> {
                             StoreProvider.of<AppState>(context).dispatch(SetUserStateToEmpty());
                             //Torno al Login
                             drawerSelection = DrawerSelection.BusinessList;
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(builder: (context) => Home()),
-                            );
+                            //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()),);
+                            Navigator.of(context).pushReplacementNamed(Home.route);
                           });
                         },
                         title: Text(AppLocalizations.of(context).logout,

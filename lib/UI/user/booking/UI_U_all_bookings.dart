@@ -81,9 +81,9 @@ class _AllBookingsState extends State<AllBookings> {
         //rippleLoading = true;
       },
       builder: (context, snapshot) {
-        debugPrint('UI_U_BookingPage => Order List LENGTH: ${snapshot.orderList.orderListState.length}');
-        orderList.clear();
-        orderList.addAll(snapshot.orderList.orderListState);
+        debugPrint('UI_U_all_bookings => Order List LENGTH: ${snapshot.orderList.orderListState.length}');
+        //orderList.clear();
+        //orderList.addAll(snapshot.orderList.orderListState);
         widget.orderStateList.sort((a,b) => b.date.isBefore(a.date) ? -1 : b.date.isAtSameMomentAs(a.date) ? 0 : 1);
         /*bookingState = snapshot.booking;
         businessState = snapshot.business;
@@ -97,7 +97,7 @@ class _AllBookingsState extends State<AllBookings> {
         //debugPrint('UI_U_BookingPage: service list lenght => ${serviceList.length}');
 
         order = snapshot.order.itemList != null ? (snapshot.order.itemList.length > 0 ? snapshot.order : OrderState().toEmpty()) : OrderState().toEmpty();
-        debugPrint('UI_U_BookingPage => CART COUNT: ${order.cartCounter}');
+        debugPrint('UI_U_all_bookings => CART COUNT: ${order.cartCounter}');
 
         return Stack(children: [
           Positioned.fill(
@@ -251,6 +251,7 @@ class _AllBookingsState extends State<AllBookings> {
                                             for (int i = 0; i <  widget.orderStateList.length; i++) {
                                               if ( widget.orderStateList[i].orderId == order.orderId) index = i;
                                             }
+                                            debugPrint('UI_U_all_bookings => CART COUNT: ${order.date}');
                                             return Column(
                                               children: [
                                                 UserServiceListItem(order),

@@ -2,6 +2,7 @@ import 'package:Buytime/UI/user/booking/UI_U_order_details.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
+import 'package:Buytime/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:intl/intl.dart';
@@ -108,7 +109,7 @@ class _UserServiceCardWidgetState extends State<UserServiceCardWidget> {
                           child: FittedBox(
                             fit: BoxFit.scaleDown,
                             child: Text(
-                              widget.orderState.itemList[0].name,
+                              Utils.retriveField(Localizations.localeOf(context).languageCode, widget.orderState.itemList[0].name),
                               style: TextStyle(
                                   fontFamily: BuytimeTheme.FontFamily,
                                   color: BuytimeTheme.TextWhite,

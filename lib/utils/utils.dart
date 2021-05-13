@@ -1,12 +1,13 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:Buytime/reblox/enum/order_time_intervals.dart';
+import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/reducer/service/service_reducer.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:emojis/emoji.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart'as http;
 
 typedef OnTranslatingCallback = void Function(bool translated);
+typedef OnPlaceDetailsCallback = void Function(List<dynamic> placeDetails);
+
 class Utils {
 
   ///Image sizes
@@ -153,15 +156,20 @@ class Utils {
     return tmp;
   }
 
-  static Future<List<TextEditingController>> googleTranslate(List<String> language, Locale myLocale, List<TextEditingController> controllers, List<String> flags, int myIndex) async{
-    for(int i = 0; i < language.length; i++) {
-      if(controllers[i].text.isEmpty){
-        if(language[i] != myLocale.languageCode){
+  static Future<List<TextEditingController>> googleTranslate(List<String> language, Locale myLocale, List<TextEditingController> controllers, List<String> flags, int myIndex) async {
+    for (int i = 0; i < language.length; i++) {
+      if (controllers[i].text.isEmpty) {
+        if (language[i] != myLocale.languageCode) {
           debugPrint('LanguageCode: ${language[i]} | Flag: ${flags[i]}');
-          var url = Uri.https('translation.googleapis.com', '/language/translate/v2', {'source': '${myLocale.languageCode}','target': '${language[i]}', 'key': '${BuytimeConfig.AndroidApiKey}', 'q': '${controllers[myIndex].text}'});
+          var url = Uri.https('translation.googleapis.com', '/language/translate/v2', {
+            'source': '${myLocale.languageCode}',
+            'target': '${language[i]}',
+            'key': '${BuytimeConfig.AndroidApiKey}',
+            'q': '${controllers[myIndex].text}'
+          });
           final http.Response response = await http.get(url);
           //debugPrint('Response code: ${response.statusCode} | Response Body: ${response.body}');
-          if(response.statusCode == 200){
+          if (response.statusCode == 200) {
             var langResponseMap = jsonDecode(response.body);
             debugPrint('${language[i]} DONE | Decode: $langResponseMap');
             debugPrint('${language[i]} ${langResponseMap['data']['translations'][0]['translatedText']}');
@@ -171,7 +179,33 @@ class Utils {
       }
     }
 
+
+
     return controllers;
+  }
+  static OrderTimeInterval getTimeInterval(OrderReservableState orderReservableState) {
+    OrderTimeInterval orderTimeIntervalResult;
+    DateTime closestTimeSlot;
+    /// find the service time slot closest to today
+    for (int i = 0; i < orderReservableState.itemList.length; i++) {
+      DateTime timeSlotToCheck = orderReservableState.itemList[i].date; // || timeSlotToCheck.difference(closestTimeSlot)
+      if (closestTimeSlot == null) {
+        closestTimeSlot = timeSlotToCheck;
+      } else if (timeSlotToCheck.difference(closestTimeSlot).isNegative){
+        closestTimeSlot = timeSlotToCheck;
+      }
+    }
+    /// check in which time interval the order has to be processed
+    Duration nowToServiceDuration = closestTimeSlot.difference(DateTime.now());
+    if (nowToServiceDuration.isNegative) {
+      /// TODO: error the service performance should be already happened
+    } else if (nowToServiceDuration.inHours <= 48) { // TODO: make hardcoded variables readable from the configuration (we have to create a collection "configurationPublic"
+      return OrderTimeInterval.directPayment;
+    } else if (nowToServiceDuration.inHours >= 48 && nowToServiceDuration.inDays <= 7) {
+      return OrderTimeInterval.holdAndReminder;
+    } else if (nowToServiceDuration.inDays > 7) {
+      return OrderTimeInterval.reminder;
+    }
   }
 
   static void multiLingualTranslate(BuildContext context, List<String> flags, List<String> language, String field, String stateField, FocusScopeNode node, OnTranslatingCallback translatingCallback) async{
@@ -452,16 +486,56 @@ class Utils {
     );
   }
 
-  static void googleSearch(BuildContext context){
+  static void googleSearch(BuildContext context, OnPlaceDetailsCallback detailsCallback){
     GooglePlace googlePlace = GooglePlace(BuytimeConfig.AndroidApiKey);
-    List<AutocompletePrediction> predictions = [];
+    List<List<String>> predictions = [];
+    List<dynamic> detailsResult = [];
 
-    void autoCompleteSearch(String value) async {
-      var result = await googlePlace.autocomplete.get(value);
-      if (result != null && result.predictions != null) {
-        predictions = result.predictions;
+    Future<List<List<String>>> autoCompleteSearch(String value) async {
+      List<List<String>> tmpPredictions = [];
+      ///https://maps.googleapis.com/maps/api/place/autocomplete/xml?input=Amoeba&types=establishment&location=37.76999,-122.44696&radius=500&key=YOUR_API_KEY
+     // var url = Uri.https('maps.googleapis.com', '/maps/api/place/autocomplete/json', {'input': '$value','types': 'establishment', 'radius': '500', 'key': '${BuytimeConfig.AndroidApiKey}'});
+      var url = Uri.https('maps.googleapis.com', '/maps/api/place/autocomplete/json', {'input': '$value', 'key': '${BuytimeConfig.AndroidApiKey}'});
+      final http.Response response = await http.get(url);
+      if(response.statusCode == 200){
+        //debugPrint('Place Autocomplete done => response body: ${response.body}');
+        var predictResponseMap = jsonDecode(response.body)['predictions'];
+        predictResponseMap.forEach((element) {
+          debugPrint('PREDICT DESCRIPTION: ${element['description']}');
+          debugPrint('PREDICT PLACE ID: ${element['place_id']}');
+          tmpPredictions.add([element['description'], element['place_id']]);
+        });
       }
+      return tmpPredictions;
     }
+
+    void getDetails(String placeId, BuildContext bootmContext) async {
+      ///https://maps.googleapis.com/maps/api/place/details/json?place_id=ChIJN1t_tDeuEmsRUsoyG83frY4&fields=name,rating,formatted_phone_number&key=YOUR_API_KEY
+      var url = Uri.https('maps.googleapis.com', '/maps/api/place/details/json', {'place_id': '$placeId', 'fields' : 'address_components,geometry,formatted_address', 'key': '${BuytimeConfig.AndroidApiKey}'});
+      final http.Response response = await http.get(url);
+      if(response.statusCode == 200){
+        //debugPrint('Place Details done => response body: ${response.body}');
+        var detailsResponseMap = jsonDecode(response.body)['result'];
+        debugPrint('PLACE FORMATTED ADDRESS: ${detailsResponseMap['formatted_address']}');
+        debugPrint('PLACE COORDINATES: LAT: ${detailsResponseMap['geometry']['location']['lat']} | LNG: ${detailsResponseMap['geometry']['location']['lng']}');
+        //debugPrint('PREDICT PLACE ID: ${element['place_id']}');
+        detailsResult.add(detailsResponseMap['formatted_address']); ///Complete address
+        detailsResult.add(detailsResponseMap['geometry']['location']['lat'].toString()); ///Latitude
+        detailsResult.add(detailsResponseMap['geometry']['location']['lng'].toString()); ///Longitude
+        detailsResult.add([]);
+        detailsResponseMap['address_components'].forEach((element) {
+          debugPrint('TYPES: ${element['types']}');
+          debugPrint('VALUE SHORT NAME: ${element['short_name']}');
+          debugPrint('VALUE LONG NAME: ${element['long_name']}');
+          detailsResult.last.add([element['types'].toString(), element['short_name'], element['long_name']]); ///Type
+        });
+      }
+
+      detailsCallback(detailsResult);
+      Navigator.of(bootmContext).pop();
+    }
+
+    TextEditingController addressController = TextEditingController();
 
     showModalBottomSheet(
       context: context,
@@ -473,77 +547,97 @@ class Utils {
           )
       ),
       builder: (BuildContext context) {
-        return SafeArea(
-          child: Container(
-            margin: EdgeInsets.only(right: 20, left: 20, top: 20),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                TextField(
-                  decoration: InputDecoration(
-                    labelText: AppLocalizations.of(context).address,
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: BuytimeTheme.ManagerPrimary,
-                        width: 1.0,
-                      ),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: BuytimeTheme.SymbolLightGrey,
-                        width: 1.0,
-                      ),
-                    ),
-                  ),
-                  onChanged: (value) {
-                    if (value.isNotEmpty) {
-                      autoCompleteSearch(value);
-                    } else {
-                      if (predictions.length > 0) {
-                        predictions = [];
-                      }
-                    }
-                  },
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Flexible(
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: predictions.length,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        leading: CircleAvatar(
-                          child: Icon(
-                            Icons.pin_drop,
-                            color: Colors.white,
+        FocusScopeNode currentFocus = FocusScope.of(context);
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState /*You can rename this!*/){
+            return SafeArea(
+              child: Container(
+                margin: EdgeInsets.only(right: 20, left: 20, top: 20),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    TextFormField(
+                        controller: addressController,
+                        decoration: InputDecoration(
+                          labelText: AppLocalizations.of(context).address,
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: BuytimeTheme.ManagerPrimary,
+                              width: 1.0,
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: BuytimeTheme.SymbolLightGrey,
+                              width: 1.0,
+                            ),
+                          ),border: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: BuytimeTheme.SymbolLightGrey,
+                            width: 1.0,
                           ),
                         ),
-                        title: Text(predictions[index].description),
-                        onTap: () {
-                          debugPrint(predictions[index].placeId);
-                          /*Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => DetailsPage(
-                                placeId: predictions[index].placeId,
-                                googlePlace: googlePlace,
-                              ),
+                        ),
+                        onEditingComplete: () async{
+                          currentFocus.unfocus();
+                          debugPrint('Google Place API Call');
+                          if (addressController.text.isNotEmpty){
+                            debugPrint('Search not empty');
+                            List<List<String>> tmpPredictions = await autoCompleteSearch(addressController.text);
+                            setState((){
+                              predictions.clear();
+                              predictions = tmpPredictions;
+                            });
+                          } else {
+                            debugPrint('Search empty');
+                            if (predictions.length > 0) {
+                              predictions = [];
+                            }
+                          }
+                        }
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    addressController.text.isNotEmpty && predictions.isNotEmpty ?
+                    Flexible(
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: predictions.length,
+                        itemBuilder: (context, index) {
+                          debugPrint('data found');
+                          return ListTile(
+                            leading: Icon(
+                              Icons.place,
+                              color: BuytimeTheme.ManagerPrimary,
                             ),
-                          );*/
+                            title: Text(predictions[index][0]),
+                            onTap: ()async{
+                              debugPrint(predictions[index][1]);
+                              getDetails(predictions[index][1], context);
+                              /*Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => DetailsPage(
+                                  placeId: predictions[index].placeId,
+                                  googlePlace: googlePlace,
+                                ),
+                              ),
+                            );*/
+                            },
+                          );
                         },
-                      );
-                    },
-                  ),
-                ),
-                /*Container(
+                      ),
+                    ) : Container(),
+                    /*Container(
                   margin: EdgeInsets.only(top: 10, bottom: 10),
                   child: Image.asset("assets/powered_by_google.png"),
                 ),*/
-              ],
-            ),
-          ),
+                  ],
+                ),
+              ),
+            );
+          },
         );
 
       },

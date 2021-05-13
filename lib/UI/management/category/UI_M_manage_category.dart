@@ -502,18 +502,18 @@ class ManageCategoryState extends State<ManageCategory> with SingleTickerProvide
                 );
               } : null,
             ) : Container(),
-          icon: Icon(
+          /*icon: Icon(
               expand[list[index]["nodeId"]] ? Icons.folder_open : Icons.folder
-          ).icon
+          ).icon*/
         );
       }
       return Node(
         bg: bg,
         label: list[index]["nodeName"],
         key: list[index]["nodeId"],
-        icon: Icon(
+        /*icon: Icon(
           expand[list[index]["nodeId"]] ? Icons.folder : Icons.folder_open
-        ).icon,
+        ).icon,*/
         actionIcon: StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin ?
         InkWell(
           /*padding: EdgeInsets.all(0.0),

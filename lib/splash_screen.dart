@@ -105,7 +105,7 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
           // If `onMessage` is triggered with a notification, construct our own
           // local notification to show to users using the created channel.
           if (notification != null && android != null) {
-            Navigator.pushReplacement(
+            Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => UI_U_OrderDetail()), /// TODO: @nipuna, redirect the user to the right UI (notification list?)
             );
@@ -309,16 +309,12 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
         //StoreProvider.of<AppState>(context).dispatch(new UserBookingRequest(user.email));
         Navigator.push(context, MaterialPageRoute(builder: (context) => Landing()));
       } else {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => Home()),
-        );
+        //Navigator.push(context, MaterialPageRoute(builder: (context) => Home()),);
+        Navigator.of(context).pushNamed(Home.route);
       }
     } else {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => Home()),
-      );
+      //Navigator.push(context, MaterialPageRoute(builder: (context) => Home()),);
+      Navigator.of(context).pushNamed(Home.route);
     }
   }
 

@@ -218,7 +218,8 @@ class _ActivityManagementItemDetailsState extends State<ActivityManagementItemDe
                                 Container(
                                   margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1),
                                   child: Text(
-                                    '${widget.orderEntry.name}',
+                                    Utils.retriveField(Localizations.localeOf(context).languageCode, widget.orderEntry.name),
+                                    //'${widget.orderEntry.name}',
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
                                         fontFamily: BuytimeTheme.FontFamily,
@@ -253,17 +254,20 @@ class _ActivityManagementItemDetailsState extends State<ActivityManagementItemDe
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Container(
-                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * .5, bottom: SizeConfig.safeBlockVertical * 1),
-                                  child: Text(
-                                    '${widget.orderEntry.description}',
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                    style: TextStyle(
-                                        fontFamily: BuytimeTheme.FontFamily,
-                                        fontWeight: FontWeight.w500,
-                                        color: BuytimeTheme.TextBlack,
-                                        fontSize: 16 /// mediaSize.height * 0.024
+                                Flexible(
+                                  child: Container(
+                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * .5, bottom: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 2.5),
+                                    child: Text(
+                                      Utils.retriveField(Localizations.localeOf(context).languageCode, widget.orderEntry.description),
+                                      //'${widget.orderEntry.description}',
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 2,
+                                      style: TextStyle(
+                                          fontFamily: BuytimeTheme.FontFamily,
+                                          fontWeight: FontWeight.w500,
+                                          color: BuytimeTheme.TextBlack,
+                                          fontSize: 16 /// mediaSize.height * 0.024
+                                      ),
                                     ),
                                   ),
                                 )
@@ -520,7 +524,7 @@ class _ActivityManagementItemDetailsState extends State<ActivityManagementItemDe
                       Container(
                           width: 158, ///SizeConfig.safeBlockHorizontal * 40
                           height: 44,
-                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, bottom: SizeConfig.safeBlockVertical * 2, right: SizeConfig.safeBlockHorizontal * 5),
+                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, bottom: SizeConfig.safeBlockVertical * 2, right: SizeConfig.safeBlockHorizontal * 0),
                           decoration: BoxDecoration(
                               borderRadius: new BorderRadius.circular(5),
 
@@ -589,11 +593,11 @@ class _ActivityManagementItemDetailsState extends State<ActivityManagementItemDe
                             ),
                           )
                       ) :
-                      widget.orderState.progress != Utils.enumToString(OrderStatus.paid) ?
+                      widget.orderState.progress != Utils.enumToString(OrderStatus.accepted) ?
                       Container(
                           width: 158, ///SizeConfig.safeBlockHorizontal * 40
                           height: 44,
-                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, bottom: SizeConfig.safeBlockVertical * 2),
+                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, bottom: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 5),
                           child: MaterialButton(
                             elevation: 0,
                             hoverElevation: 0,

@@ -125,6 +125,14 @@ class SetBusinessName {
   String get name => _name;
 }
 
+class SetBusinessAddress {
+  String _address;
+
+  SetBusinessAddress(this._address);
+
+  String get address => _address;
+}
+
 class SetBusinessMunicipality {
   String _municipality;
 
@@ -313,6 +321,10 @@ BusinessState businessReducer(BusinessState state, action) {
   BusinessState businessState = new BusinessState.fromState(state);
   if (action is SetBusinessName) {
     businessState.name = action.name;
+    return businessState;
+  }
+  if (action is SetBusinessAddress) {
+    businessState.businessAddress = action.address;
     return businessState;
   }
   if (action is SetBusinessResponsiblePersonName) {

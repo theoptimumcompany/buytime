@@ -16,13 +16,13 @@ class NotificationListState {
     this.notificationListState = state.notificationListState ;
   }
 
-  companyStateFieldUpdate(List<BookingState> bookingListState) {
+  companyStateFieldUpdate(List<NotificationState> notificationListState) {
     NotificationListState(
         notificationListState: notificationListState ?? this.notificationListState
     );
   }
 
-  NotificationListState copyWith({bookingListState}) {
+  NotificationListState copyWith({notificationListState}) {
     return NotificationListState(
         notificationListState: notificationListState ?? this.notificationListState
     );

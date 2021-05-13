@@ -4,9 +4,9 @@ import 'package:Buytime/reblox/model/notification/notification_state.dart';
 import 'package:flutter/material.dart';
 
 class RequestNotificationList {
-  String _businessId;
-  RequestNotificationList(this._businessId);
-  String get businessId => _businessId;
+  String _userId;
+  RequestNotificationList(this._userId);
+  String get userId => _userId;
 }
 
 class RequestedNotificationList {

@@ -12,6 +12,7 @@ import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/model/category/category_list_state.dart';
 import 'package:Buytime/reblox/model/category/category_state.dart';
+import 'package:Buytime/reblox/model/notification/notification_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/role/role.dart';
 import 'package:Buytime/reblox/model/service/service_list_state.dart';
@@ -23,6 +24,7 @@ import 'package:Buytime/reblox/reducer/business_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_tree_reducer.dart';
+import 'package:Buytime/reblox/reducer/notification_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reservable_list_reducer.dart';
@@ -95,6 +97,7 @@ class _BookingPageState extends State<BookingPage> {
 
   bool startRequest = false;
   bool rippleLoading = false;
+  bool noActivity = false;
 
   @override
   void initState() {
@@ -216,6 +219,7 @@ class _BookingPageState extends State<BookingPage> {
       serviceList.insert(index, item);
     });
   }
+  bool hasNotifications = false;
 
   @override
   Widget build(BuildContext context) {
@@ -225,6 +229,8 @@ class _BookingPageState extends State<BookingPage> {
       converter: (store) => store.state,
       onInit: (store) {
         store.dispatch(UserOrderListRequest());
+        store.state.notificationListState.notificationListState.clear();
+        store.dispatch(RequestNotificationList(store.state.user.uid));
         startRequest = true;
         rippleLoading = true;
       },
@@ -297,9 +303,33 @@ class _BookingPageState extends State<BookingPage> {
             sameMonth = false;
         }
 
+        List<NotificationState> notifications = snapshot.notificationListState.notificationListState;
+        if(notifications.isEmpty && startRequest){
+          noActivity = true;
+        }else{
+          if(notifications.isNotEmpty && notifications.first.userId.isEmpty)
+            notifications.removeLast();
+
+          if(notifications.isNotEmpty){
+            hasNotifications = false;
+            notifications.forEach((element) {
+              //debugPrint('UI_U_booking_page => ${element.timestamp}');
+              //debugPrint('UI_U_booking_page => ${element.notificationId} | ${element.opened}');
+              if(element.opened != null && !element.opened){
+                //debugPrint('UI_U_booking_page => ${element.notificationId} | ${element.data.state.orderId}');
+                hasNotifications = true;
+              }
+            });
+            //notifications.sort((b,a) => a.timestamp != null ? a.timestamp : 0 .compareTo(b.timestamp != null ? b.timestamp : 0));
+            notifications.sort((b,a) => a.timestamp.compareTo(b.timestamp));
+          }
+          noActivity = false;
+          startRequest = false;
+        }
+
         order = snapshot.order.itemList != null ? (snapshot.order.itemList.length > 0 ? snapshot.order : OrderState().toEmpty()) : OrderState().toEmpty();
         debugPrint('UI_U_BookingPage => CART COUNT: ${order.cartCounter}');
-
+        debugPrint('UI_U_booking_page =>has notifications? $hasNotifications');
         return Stack(children: [
           Positioned.fill(
             child: Align(
@@ -331,7 +361,8 @@ class _BookingPageState extends State<BookingPage> {
                                   Future.delayed(Duration.zero, () {
 
                                     //Navigator.of(context).pop();
-                                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Landing()));
+                                    //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Landing()));
+                                    Navigator.of(context).pushReplacementNamed(Landing.route);
                                   });
 
                                   //StoreProvider.of<AppState>(context).dispatch(NavigatePopAction());
@@ -346,7 +377,7 @@ class _BookingPageState extends State<BookingPage> {
                         flex: 2,
                         child: Utils.barTitle(snapshot.business.name),
                       ),
-                      ///Cart
+                      ///Notification & Cart
                       Expanded(
                         flex: 1,
                         child: Container(
@@ -354,42 +385,46 @@ class _BookingPageState extends State<BookingPage> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Flexible(child: Container(
-                                child: Stack(
-                                  children: [
-                                    Positioned.fill(
-                                      child: Align(
-                                        alignment: Alignment.center,
-                                        child: IconButton(
-                                          icon: Icon(
-                                            Icons.notifications_none_outlined,
-                                            color: BuytimeTheme.TextWhite,
-                                            size: 30.0,
-                                          ),
-                                          onPressed: () async{
-                                            Navigator.push(context, MaterialPageRoute(builder: (context) => Notifications()));
-                                          },
-                                        ),
-                                      ),
-                                    ),
-                                    Positioned.fill(
-                                      bottom: 20,
-                                      left: 15,
-                                      child: Align(
-                                        alignment: Alignment.center,
-                                        child: Container(
-                                          width: 15,
-                                          height: 15,
-                                          decoration: BoxDecoration(
-                                            color: BuytimeTheme.AccentRed,
-                                            borderRadius: BorderRadius.all(Radius.circular(7.5))
+                              ///Notification
+                              Flexible(
+                                  child: Container(
+                                    child: Stack(
+                                      children: [
+                                        Positioned.fill(
+                                          child: Align(
+                                            alignment: Alignment.center,
+                                            child: IconButton(
+                                              icon: Icon(
+                                                Icons.notifications_none_outlined,
+                                                color: BuytimeTheme.TextWhite,
+                                                size: 30.0,
+                                              ),
+                                              onPressed: () async{
+                                                Navigator.push(context, MaterialPageRoute(builder: (context) => Notifications(orderStateList: orderList,)));
+                                              },
+                                            ),
                                           ),
                                         ),
-                                      ),
+                                        hasNotifications ?
+                                        Positioned.fill(
+                                          bottom: 20,
+                                          left: 15,
+                                          child: Align(
+                                            alignment: Alignment.center,
+                                            child: Container(
+                                              width: 15,
+                                              height: 15,
+                                              decoration: BoxDecoration(
+                                                  color: BuytimeTheme.AccentRed,
+                                                  borderRadius: BorderRadius.all(Radius.circular(7.5))
+                                              ),
+                                            ),
+                                          ),
+                                        ) : Container(),
+                                      ],
                                     ),
-                                  ],
-                                ),
-                              )),
+                                  )),
+                              ///Cart
                               Flexible(
                                   child:
                                   Container(
@@ -681,7 +716,7 @@ class _BookingPageState extends State<BookingPage> {
                                                 Container(
                                                   margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 1),
                                                   child: Text(
-                                                    AppLocalizations.of(context).myBookings,
+                                                    AppLocalizations.of(context).myReservation,
                                                     style: TextStyle(
                                                       //letterSpacing: SizeConfig.safeBlockVertical * .4,
                                                         fontFamily: BuytimeTheme.FontFamily,
@@ -1190,7 +1225,7 @@ class _BookingPageState extends State<BookingPage> {
                                           : Container();
                                     }),
                                 ///Log out
-                                Flexible(
+                                /*Flexible(
                                   flex: 1,
                                   child: Container(
                                     color: Colors.white,
@@ -1249,7 +1284,7 @@ class _BookingPageState extends State<BookingPage> {
                                               ))),
                                     ),
                                   ),
-                                ),
+                                ),*/
                               ],
                             ),
                           ) :

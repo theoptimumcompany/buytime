@@ -5,11 +5,15 @@ import 'package:Buytime/UI/management/category/UI_M_manage_category.dart';
 import 'package:Buytime/UI/management/invite/UI_M_booking_details.dart';
 import 'package:Buytime/UI/management/invite/UI_M_booking_list.dart';
 import 'package:Buytime/UI/management/service_internal/UI_M_service_list.dart';
+import 'package:Buytime/UI/user/UI_U_tabs.dart';
 import 'package:Buytime/UI/user/booking/UI_U_booking_page.dart';
 import 'package:Buytime/UI/user/booking/UI_U_confirm_booking.dart';
 import 'package:Buytime/UI/user/booking/UI_U_my_bookings.dart';
 import 'package:Buytime/UI/user/cart/UI_U_ConfirmOrder.dart';
 import 'package:Buytime/UI/user/landing/UI_U_landing.dart';
+import 'package:Buytime/UI/user/login/UI_U_login.dart';
+import 'package:Buytime/UI/user/login/UI_U_registration.dart';
+import 'package:Buytime/UI/user/order/UI_U_order_detail.dart';
 import 'package:Buytime/UI/user/service/UI_U_service_details.dart';
 import 'package:Buytime/UI/user/turist/UI_U_service_explorer.dart';
 import 'package:Buytime/reblox/model/autoComplete/auto_complete_list_state.dart';
@@ -149,7 +153,6 @@ void main(){
     OrderReservableListRequestService(),
     OrderRequestService(),
     OrderReservableRequestService(),
-    OrderUpdateService(),
     OrderUpdateByManagerService(),
     OrderReservableUpdateService(),
     OrderCreateNativeAndPayService(),
@@ -159,6 +162,15 @@ void main(){
     OrderCreateCardPendingService(),
     OrderCreateNativePendingService(),
     OrderCreateRoomPendingService(),
+    CreateOrderReservableCardAndPayService(),
+    CreateOrderReservableCardAndHoldService(),
+    CreateOrderReservableCardAndReminderService(),
+    CreateOrderReservableNativeAndPayService(),
+    CreateOrderReservableNativeAndHoldService(),
+    CreateOrderReservableNativeAndReminderService(),
+    CreateOrderReservableNativePendingService(),
+    CreateOrderReservableRoomAndPayService(),
+    CreateOrderReservableRoomPendingService(),
     AddingReservableStripePaymentMethodRequest(),
     EmailCreateService(),
     ServiceListSnippetRequestService(),
@@ -175,7 +187,8 @@ void main(){
     ExternalServiceImportedCanceledService(),
     ExternalBusinessImportedCanceledService(),
     NotificationRequestService(),
-    NotificationCreateService()
+    NotificationListRequestService(),
+    NotificationUpdateRequestService()
   ]);
   final _initialState = AppState(
     category: CategoryState().toEmpty(),
@@ -233,9 +246,6 @@ void main(){
 }
 
 
-
-
-
 class Buytime extends StatelessWidget {
   final Store<AppState> store;
 
@@ -245,10 +255,16 @@ class Buytime extends StatelessWidget {
     switch (settings.name) {
       case AppRoutes.home:
         return MainRoute(Home(), settings: settings);
+      case AppRoutes.registration:
+        return SlideInEnterRoute(Registration(), settings: settings);
+      case AppRoutes.login:
+        return SlideInEnterRoute(Login(), settings: settings);
+      case AppRoutes.landing:
+        return FabRoute(Landing(), settings: settings);
       case AppRoutes.bookingDetails:
         return FabRoute(BookingDetails(), settings: settings);
       case AppRoutes.categories:
-        return SlideRoute(ManageCategory(), settings: settings);
+        return SlideInExitRoute(ManageCategory(), settings: settings);
       case AppRoutes.businessList:
         return FabRoute(UI_M_BusinessList(), settings: settings);
       case AppRoutes.business:
@@ -257,10 +273,8 @@ class Buytime extends StatelessWidget {
         return FabRoute(ConfirmBooking(), settings: settings);
       case AppRoutes.bookingPage:
         return FabRoute(BookingPage(), settings: settings);
-      case AppRoutes.landing:
-        return FabRoute(Landing(), settings: settings);
       case AppRoutes.managerServiceList:
-        return SlideRoute(UI_M_ServiceList(), settings: settings);
+        return SlideInExitRoute(UI_M_ServiceList(), settings: settings);
       case AppRoutes.myBookings:
         return FabRoute(MyBookings(), settings: settings);
       case AppRoutes.confirmOrder:
@@ -271,6 +285,8 @@ class Buytime extends StatelessWidget {
         return FabRoute(ServiceDetails(), settings: settings);
       case AppRoutes.serviceExplorer:
         return FabRoute(ServiceExplorer(), settings: settings);
+      default:
+        return MainRoute(Home(), settings: settings);
     }
   }
 
@@ -307,15 +323,16 @@ class Buytime extends StatelessWidget {
           dark: true,
           child: SplashScreen(),
         )*/,
-        /*routes: <String, WidgetBuilder>{
+        routes: <String, WidgetBuilder>{
           // Set routes for using the Navigator.
-          '/home': (BuildContext context) => Home(),
+          /*'/home': (BuildContext context) => Home(),
           '/login': (BuildContext context) => Login(),
           '/registration': (BuildContext context) => Registration(),
           '/orderDetail': (BuildContext context) => UI_U_OrderDetail(),
           '/tabs': (BuildContext context) => UI_U_Tabs(),
-          '/bookingDetails': (BuildContext context) => BookingDetails(),
-        },*/
+          '/bookingDetails': (BuildContext context) => BookingDetails(),*/
+        },
+        //onGenerateRoute: ,
       ),
     );
   }
@@ -352,8 +369,8 @@ class FabRoute<T> extends MaterialPageRoute<T> {
   }
 }
 
-class SlideRoute<T> extends MaterialPageRoute<T> {
-  SlideRoute(Widget widget, {RouteSettings settings})
+class SlideInExitRoute<T> extends MaterialPageRoute<T> {
+  SlideInExitRoute(Widget widget, {RouteSettings settings})
       : super(builder: (_) => RouteAwareWidget(child: widget), settings: settings);
 
   @override
@@ -362,6 +379,22 @@ class SlideRoute<T> extends MaterialPageRoute<T> {
     return SlideTransition(
       position: Tween(
           begin: Offset(-1.0, 0.0),
+          end: Offset(0.0, 0.0))
+          .animate(animation),
+      child: child,
+    );
+  }
+}
+class SlideInEnterRoute<T> extends MaterialPageRoute<T> {
+  SlideInEnterRoute(Widget widget, {RouteSettings settings})
+      : super(builder: (_) => RouteAwareWidget(child: widget), settings: settings);
+
+  @override
+  Widget buildTransitions(
+      BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
+    return SlideTransition(
+      position: Tween(
+          begin: Offset(1.0, 0.0),
           end: Offset(0.0, 0.0))
           .animate(animation),
       child: child,

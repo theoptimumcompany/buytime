@@ -126,6 +126,14 @@ class SetExternalBusinessName {
   String get name => _name;
 }
 
+class SetExternalBusinessAddress {
+  String _address;
+
+  SetExternalBusinessAddress(this._address);
+
+  String get address => _address;
+}
+
 class SetExternalBusinessMunicipality {
   String _municipality;
 
@@ -306,6 +314,10 @@ ExternalBusinessState externalBusinessReducer(ExternalBusinessState state, actio
   ExternalBusinessState externalBusinessState = new ExternalBusinessState.fromState(state);
   if (action is SetExternalBusinessName) {
     externalBusinessState.name = action.name;
+    return externalBusinessState;
+  }
+  if (action is SetExternalBusinessAddress) {
+    externalBusinessState.businessAddress = action.address;
     return externalBusinessState;
   }
   if (action is SetExternalBusinessResponsiblePersonName) {

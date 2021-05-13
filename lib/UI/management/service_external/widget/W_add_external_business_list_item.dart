@@ -35,7 +35,7 @@ class _AddExternalBusinessListItemState extends State<AddExternalBusinessListIte
     double lon1 = 0.0;
     double lat2 = 0.0;
     double lon2 = 0.0;
-   if(widget.businessState.coordinate.isNotEmpty){
+   if(widget.businessState.coordinate != null && widget.businessState.coordinate.isNotEmpty){
      List<String> latLng1 = widget.businessState.coordinate.replaceAll('(', '').replaceAll(')', '').replaceAll(' ', '').split(',');
      debugPrint('W_add_external_business_list_item => ${widget.businessState.name} | Cordinates 1: $latLng1');
      if(latLng1.length == 2){
@@ -43,7 +43,7 @@ class _AddExternalBusinessListItemState extends State<AddExternalBusinessListIte
        lon1 = double.parse(latLng1[1]);
      }
    }
-    if(widget.externalBusinessState.coordinate.isNotEmpty){
+    if(widget.externalBusinessState.coordinate != null && widget.externalBusinessState.coordinate.isNotEmpty){
       List<String> latLng2 = widget.externalBusinessState.coordinate.replaceAll('(', '').replaceAll(')', '').replaceAll(' ', '').split(',');
       debugPrint('W_add_external_business_list_item => ${widget.externalBusinessState.name} | Cordinates 2: $latLng2');
       if(latLng2.length == 2){

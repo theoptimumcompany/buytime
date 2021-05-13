@@ -121,6 +121,7 @@ AppState appReducer(AppState state, dynamic action) {
   ExternalServiceImportedListState externalServiceImportedListState = externalServiceImportedListReducer(state.externalServiceImportedListState, action);
 
   AppState newState = AppState.copyWith(
+      //route: navigationReducer(state.route, action),
       business: businessState,
       externalBusiness: externalBusinessState,
       booking: bookingState,

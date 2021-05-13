@@ -70,14 +70,33 @@ class _ExternalServiceDetailsState extends State<ExternalServiceDetails> with Si
     return result;
   }
 
-  String getShopLocationImage(String coordinates){
-    //List<double> coordinatesDouble = convertCoordinateString(coordinates);
+  String getShopLocationImage(String coordinates, String address){
     String url;
-    if(Platform.isIOS)
-      url = 'https://maps.googleapis.com/maps/api/staticmap?center=$coordinates&zoom=18&size=640x640&scale=2&markers=color:red|$coordinates&key=${BuytimeConfig.AndroidApiKey}';
-    else
-      url = 'https://maps.googleapis.com/maps/api/staticmap?center=$coordinates&zoom=18&size=640x640&scale=2&markers=color:red|$coordinates&key=${BuytimeConfig.AndroidApiKey}';
-    return url;
+    List<double> coordinatesDouble = convertCoordinateString(coordinates);
+    if(coordinatesDouble.isNotEmpty){
+      if(Platform.isIOS)
+        url = 'https://maps.googleapis.com/maps/api/staticmap?center=${coordinatesDouble[0]},${coordinatesDouble[1]}&zoom=18&size=640x640&scale=2&markers=color:red|${coordinatesDouble[0]},${coordinatesDouble[1]}&key=${BuytimeConfig.AndroidApiKey}';
+      else
+        url = 'https://maps.googleapis.com/maps/api/staticmap?center=${coordinatesDouble[0]},${coordinatesDouble[1]}&zoom=18&size=640x640&scale=2&markers=color:red|${coordinatesDouble[0]},${coordinatesDouble[1]}&key=${BuytimeConfig.AndroidApiKey}';
+      return url;
+    }else{
+      if(Platform.isIOS)
+        url = 'https://maps.googleapis.com/maps/api/staticmap?center=$address&zoom=18&size=640x640&scale=2&markers=color:red|$address&key=${BuytimeConfig.AndroidApiKey}';
+      else
+        url = 'https://maps.googleapis.com/maps/api/staticmap?center=$address&zoom=18&size=640x640&scale=2&markers=color:red|$address&key=${BuytimeConfig.AndroidApiKey}';
+      return url;
+    }
+  }
+
+  List<double> convertCoordinateString(String coordinates) {
+    double lat = 0;
+    double lng = 0;
+    List<String> latLng = coordinates.replaceAll(' ', '').split(',');
+    if(latLng.length == 2){
+      lat = double.parse(latLng[0]);
+      lng = double.parse(latLng[1]);
+    }
+    return [lat, lng];
   }
 
   String address = '';
@@ -88,7 +107,7 @@ class _ExternalServiceDetailsState extends State<ExternalServiceDetails> with Si
     double lon1 = 0.0;
     double lat2 = 0.0;
     double lon2 = 0.0;
-    if(businessState.coordinate.isNotEmpty){
+    if(businessState.coordinate != null && businessState.coordinate.isNotEmpty){
       List<String> latLng1 = businessState.coordinate.replaceAll('(', '').replaceAll(')', '').replaceAll(' ', '').split(',');
       debugPrint('W_add_external_business_list_item => $businessState.name} | Cordinates 1: $latLng1');
       if(latLng1.length == 2){
@@ -96,7 +115,14 @@ class _ExternalServiceDetailsState extends State<ExternalServiceDetails> with Si
         lon1 = double.parse(latLng1[1]);
       }
     }
-    if(widget.externalBusinessState.coordinate.isNotEmpty){
+    if(widget.serviceState.serviceCoordinates != null && widget.serviceState.serviceCoordinates.isNotEmpty){
+      List<String> latLng2 = widget.serviceState.serviceCoordinates.replaceAll('(', '').replaceAll(')', '').replaceAll(' ', '').split(',');
+      debugPrint('W_add_external_business_list_item => ${widget.serviceState.name} | Cordinates 2: $latLng2');
+      if(latLng2.length == 2){
+        lat2 = double.parse(latLng2[0]);
+        lon2 = double.parse(latLng2[1]);
+      }
+    }else if(widget.externalBusinessState.coordinate != null && widget.externalBusinessState.coordinate.isNotEmpty){
       List<String> latLng2 = widget.externalBusinessState.coordinate.replaceAll('(', '').replaceAll(')', '').replaceAll(' ', '').split(',');
       debugPrint('W_add_external_business_list_item => ${widget.externalBusinessState.name} | Cordinates 2: $latLng2');
       if(latLng2.length == 2){
@@ -125,8 +151,16 @@ class _ExternalServiceDetailsState extends State<ExternalServiceDetails> with Si
     return StoreConnector<AppState, AppState>(
       converter: (store) => store.state,
       onInit: (store){
-        address = widget.serviceState.address != null && widget.serviceState.address.isNotEmpty ? widget.serviceState.address : widget.externalBusinessState.street + ', ' + widget.externalBusinessState.street_number + ', ' + widget.externalBusinessState.ZIP + ', ' + widget.externalBusinessState.state_province;
-      },
+        if(widget.serviceState.serviceAddress != null && widget.serviceState.serviceAddress.isNotEmpty)
+          address = widget.serviceState.serviceAddress;
+        else if(widget.serviceState.serviceBusinessAddress != null && widget.serviceState.serviceBusinessAddress.isNotEmpty)
+          address = widget.serviceState.serviceBusinessAddress;
+        else if(widget.externalBusinessState.businessAddress != null && widget.externalBusinessState.businessAddress.isNotEmpty)
+          address = widget.externalBusinessState.businessAddress;
+        else
+          address = widget.externalBusinessState.street + ', ' + widget.externalBusinessState.street_number + ', ' + widget.externalBusinessState.ZIP + ', ' + widget.externalBusinessState.state_province;
+        debugPrint('UI_M_external_service_details => ADDRESS: $address');
+        },
       builder: (context, snapshot) {
         distance = calculateDistance(snapshot.business);
         bool equalService = false;
@@ -386,20 +420,24 @@ class _ExternalServiceDetailsState extends State<ExternalServiceDetails> with Si
                                       ),
                                       ///Address value
                                       Container(
-                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
-                                        child: FittedBox(
-                                          fit: BoxFit.scaleDown,
-                                          child: Text(
-                                            address,
-                                            style: TextStyle(
-                                                letterSpacing: 0.15,
-                                                fontFamily: BuytimeTheme.FontFamily,
-                                                color: BuytimeTheme.TextBlack,
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: 16 ///SizeConfig.safeBlockHorizontal * 4
-                                            ),
-                                          ),
-                                        ),
+                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
+                                          child: Row(
+                                            children: [
+                                              Flexible(
+                                                child: Text(
+                                                  address,
+                                                  maxLines: 2,
+                                                  style: TextStyle(
+                                                      letterSpacing: 0.15,
+                                                      fontFamily: BuytimeTheme.FontFamily,
+                                                      color: BuytimeTheme.TextBlack,
+                                                      fontWeight: FontWeight.w500,
+                                                      fontSize: 16 ///SizeConfig.safeBlockHorizontal * 4
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          )
                                       ),
                                       ///Hour text
                                       Container(
@@ -451,7 +489,9 @@ class _ExternalServiceDetailsState extends State<ExternalServiceDetails> with Si
                                               child: FittedBox(
                                                 fit: BoxFit.scaleDown,
                                                 child: Text(
-                                                  distance.toString().split('.').first.startsWith('0') ? distance.toString().split('.').last.substring(0,3) + ' m' : distance.toStringAsFixed(1) + ' Km',
+                                                  distance.toString().split('.').first.startsWith('0') && distance.toString().split('.').first.length != 1?
+                                                  distance.toString().split('.').last.substring(0,3) + ' m' :
+                                                  distance.toStringAsFixed(1) + ' Km',
                                                   style: TextStyle(
                                                       letterSpacing: 0.25,
                                                       fontFamily: BuytimeTheme.FontFamily,
@@ -472,7 +512,11 @@ class _ExternalServiceDetailsState extends State<ExternalServiceDetails> with Si
                                                       onTap: () {
                                                         Navigator.push(
                                                           context,
-                                                          MaterialPageRoute(builder: (context) => BuytimeMap(user: false, title: widget.externalBusinessState.name, businessState: BusinessState.fromExternalState(widget.externalBusinessState),)),
+                                                          MaterialPageRoute(builder: (context) => BuytimeMap(user: false, title: widget.externalBusinessState.name,
+                                                            businessState: BusinessState.fromExternalState(widget.externalBusinessState),
+                                                            serviceState: widget.serviceState,
+                                                          )
+                                                          ),
                                                         );
                                                       },
                                                       borderRadius: BorderRadius.all(Radius.circular(5.0)),
@@ -506,7 +550,10 @@ class _ExternalServiceDetailsState extends State<ExternalServiceDetails> with Si
                                       String address = widget.externalBusinessState.name;
                                       //Utils.openMap(lat, lng);
                                       //Navigator.push(context, MaterialPageRoute(builder: (context) => BuytimeMap(user: true, title: widget.orderState.itemList.length > 1 ? widget.orderState.business.name : widget.orderState.itemList.first.name, businessState: snapshot.business,)),);
-                                      Navigator.push(context, MaterialPageRoute(builder: (context) => BuytimeMap(user: false, title: address, businessState: BusinessState.fromExternalState(widget.externalBusinessState),)),);
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => BuytimeMap(user: false, title: address,
+                                        businessState: BusinessState.fromExternalState(widget.externalBusinessState),
+                                        serviceState: widget.serviceState,
+                                      )),);
                                       //Navigator.push(context, MaterialPageRoute(builder: (context) => AnimatedScreen()));
                                     },
                                     child: Container(
@@ -514,7 +561,10 @@ class _ExternalServiceDetailsState extends State<ExternalServiceDetails> with Si
                                       height: 169,
                                       //margin: EdgeInsets.only(left:10.0, right: 10.0),
                                       child: CachedNetworkImage(
-                                        imageUrl:  getShopLocationImage(address),
+                                        imageUrl:  getShopLocationImage(
+                                            widget.serviceState.serviceCoordinates != null && widget.serviceState.serviceCoordinates.isNotEmpty ?
+                                                widget.serviceState.serviceCoordinates : widget.externalBusinessState.coordinate,
+                                        address),
                                         imageBuilder: (context, imageProvider) => Container(
                                           decoration: BoxDecoration(
                                               color: BuytimeTheme.BackgroundWhite,

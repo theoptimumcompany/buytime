@@ -163,10 +163,8 @@ class MenuDrawer extends StatelessWidget {
                         StoreProvider.of<AppState>(context).dispatch(SetStripeToEmpty());
                         StoreProvider.of<AppState>(context).dispatch(SetUserStateToEmpty());
                         //Torno al Login
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (context) => Home()),
-                        );
+                        //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()),);
+                        Navigator.of(context).pushReplacementNamed(Home.route);
                       });
                     },
                     padding: EdgeInsets.all(media.width * 0.025),

@@ -39,6 +39,7 @@ class ExternalBusinessState {
   List<String> area;
   @JsonKey(defaultValue: false)
   bool hub;
+  String businessAddress;
 
   ExternalBusinessState({
     @required this.name,
@@ -72,6 +73,7 @@ class ExternalBusinessState {
     this.tag,
     this.area,
     this.hub,
+    this.businessAddress
   });
 
   ExternalBusinessState toEmpty() {
@@ -107,6 +109,7 @@ class ExternalBusinessState {
       tag: [],
       area: [],
       hub: false,
+      businessAddress: '',
     );
   }
 
@@ -142,6 +145,7 @@ class ExternalBusinessState {
     this.tag = state.tag;
     this.area = state.area;
     this.hub = state.hub;
+    this.businessAddress = state.businessAddress;
   }
 
   ExternalBusinessState copyWith({
@@ -175,7 +179,8 @@ class ExternalBusinessState {
     List<OptimumFileToUpload> fileToUploadList,
     List<String> tag,
     List<String> area,
-    bool hub
+    bool hub,
+    String businessAddress
   }) {
     return ExternalBusinessState(
       name: name ?? this.name,
@@ -209,6 +214,7 @@ class ExternalBusinessState {
       tag: tag ?? this.tag,
       area: area ?? this.area,
       hub: hub ?? this.hub,
+      businessAddress: businessAddress ?? this.businessAddress,
     );
   }
 
