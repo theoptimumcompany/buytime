@@ -1,6 +1,6 @@
+/*
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:nfc_in_flutter/nfc_in_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -91,7 +91,9 @@ class EasyCheckInState extends State<EasyCheckIn>
                           ),
                         ),
 
-                        /* Parte NFC */
+                        */
+/* Parte NFC *//*
+
                         // Far vedere solo se _supportsNFC is True
 
                         Container(
@@ -131,9 +133,13 @@ class EasyCheckInState extends State<EasyCheckIn>
                             ])
                                 : null),
 
-                        /* Fine Parte NFC */
+                        */
+/* Fine Parte NFC *//*
 
-                        /* Parte QR-Code */
+
+                        */
+/* Parte QR-Code *//*
+
 
                         Container(
                             child: Column(
@@ -170,7 +176,9 @@ class EasyCheckInState extends State<EasyCheckIn>
                           // height: media.height * 0.05,
                         ),
 
-                        /* Button and Remember*/
+                        */
+/* Button and Remember*//*
+
 
                         Container(
                             child: Column(children: [
@@ -238,4 +246,4 @@ class EasyCheckInState extends State<EasyCheckIn>
       ),
     );
   }
-}
+}*/

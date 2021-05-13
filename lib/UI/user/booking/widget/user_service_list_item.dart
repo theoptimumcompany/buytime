@@ -100,17 +100,11 @@ class _UserServiceListItemState extends State<UserServiceListItem> {
                             child: FittedBox(
                               fit: BoxFit.scaleDown,
                               child: Text(
-                                widget.orderState.progress == 'paid' ?
-                                '${AppLocalizations.of(context).accepted.toUpperCase()}' :
-                                widget.orderState.progress == 'canceled' ?
-                                '${AppLocalizations.of(context).canceled.toUpperCase()}' :
-                                widget.orderState.progress == 'declined' ?
-                                '${AppLocalizations.of(context).declined.toUpperCase()}' :
-                                '${AppLocalizations.of(context).pending.toUpperCase()}',
+                               Utils.translateOrderStatus(context, widget.orderState.progress).toUpperCase(),
                                 style: TextStyle(
                                     letterSpacing: 1.5,
                                     fontFamily: BuytimeTheme.FontFamily,
-                                    color: widget.orderState.progress == 'canceled' ? BuytimeTheme.AccentRed : widget.orderState.progress == 'pending' || widget.orderState.progress == 'unpaid' ? BuytimeTheme.Secondary : BuytimeTheme.ActionButton,
+                                    color: Utils.colorOrderStatus(context, widget.orderState.progress),
                                     fontWeight: FontWeight.w800,
                                     fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
                                 ),

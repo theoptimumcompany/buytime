@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:Buytime/reblox/enum/order_time_intervals.dart';
 import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
+import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/reducer/service/service_reducer.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_config.dart';
@@ -642,6 +643,57 @@ class Utils {
 
       },
     );
+
+
+  }
+
+  static String translateOrderStatus(BuildContext context, String progress) {
+    return progress == Utils.enumToString(OrderStatus.progress) ?
+    '${AppLocalizations.of(context).progress}' :
+    progress == Utils.enumToString(OrderStatus.unpaid) ?
+    '${AppLocalizations.of(context).unpaid}' :
+    progress == Utils.enumToString(OrderStatus.accepted) ?
+    '${AppLocalizations.of(context).accepted}' :
+    progress == Utils.enumToString(OrderStatus.paid) ?
+    '${AppLocalizations.of(context).paid}' :
+    progress == Utils.enumToString(OrderStatus.pending) ?
+    '${AppLocalizations.of(context).pending}' :
+    progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout) ?
+    '${AppLocalizations.of(context).toBePaidAtCheckout}' :
+    progress == Utils.enumToString(OrderStatus.canceled) ?
+    '${AppLocalizations.of(context).canceled}' :
+    progress == Utils.enumToString(OrderStatus.frozen) ?
+    '${AppLocalizations.of(context).frozen}' :
+    progress == Utils.enumToString(OrderStatus.declined) ?
+    '${AppLocalizations.of(context).declined}' :
+    progress == Utils.enumToString(OrderStatus.holding) ?
+    '${AppLocalizations.of(context).holding}' :
+    progress == Utils.enumToString(OrderStatus.creating) ?
+    '${AppLocalizations.of(context).creating}' : '???';
+  }
+  static Color colorOrderStatus(BuildContext context, String progress) {
+    return progress == Utils.enumToString(OrderStatus.progress) ?
+    BuytimeTheme.Secondary :
+    progress == Utils.enumToString(OrderStatus.unpaid) ?
+    BuytimeTheme.BackgroundCerulean :
+    progress == Utils.enumToString(OrderStatus.accepted) ?
+    BuytimeTheme.ActionButton :
+    progress == Utils.enumToString(OrderStatus.paid) ?
+    BuytimeTheme.ActionButton :
+    progress == Utils.enumToString(OrderStatus.pending) ?
+    BuytimeTheme.Secondary :
+    progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout) ?
+    BuytimeTheme.Secondary :
+    progress == Utils.enumToString(OrderStatus.canceled) ?
+    BuytimeTheme.AccentRed :
+    progress == Utils.enumToString(OrderStatus.frozen) ?
+    BuytimeTheme.BackgroundLightBlue :
+    progress == Utils.enumToString(OrderStatus.declined) ?
+    BuytimeTheme.AccentRed :
+    progress == Utils.enumToString(OrderStatus.holding) ?
+    BuytimeTheme.Secondary :
+    progress == Utils.enumToString(OrderStatus.creating) ?
+    BuytimeTheme.Secondary : BuytimeTheme.TextBlack;
   }
 }
 

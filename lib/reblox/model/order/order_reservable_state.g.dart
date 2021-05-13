@@ -29,6 +29,7 @@ OrderReservableState _$OrderReservableStateFromJson(Map<String, dynamic> json) {
         ? null
         : UserSnippet.fromJson(json['user'] as Map<String, dynamic>),
     businessId: json['businessId'] as String,
+    businessIdForGiveback: json['businessIdForGiveback'] as String,
     userId: json['userId'] as String,
     orderId: json['orderId'] as String,
     selected: (json['selected'] as List)
@@ -60,6 +61,7 @@ Map<String, dynamic> _$OrderReservableStateToJson(
       'business': instance.business?.toJson(),
       'user': instance.user?.toJson(),
       'businessId': instance.businessId,
+      'businessIdForGiveback': instance.businessIdForGiveback,
       'userId': instance.userId,
       'orderId': instance.orderId,
       'selected': instance.selected?.map((e) => e?.toJson())?.toList(),

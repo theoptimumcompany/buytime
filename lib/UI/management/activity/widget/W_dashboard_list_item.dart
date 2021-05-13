@@ -123,26 +123,7 @@ class _DashboardListItemState extends State<DashboardListItem> {
                       children: [
                         Container(
                           child: Text(
-                            widget.orderState.progress == Utils.enumToString(OrderStatus.progress) ?
-                            '${AppLocalizations.of(context).progress}' :
-                            widget.orderState.progress == Utils.enumToString(OrderStatus.unpaid) ?
-                            '${AppLocalizations.of(context).unpaid}' :
-                            widget.orderState.progress == Utils.enumToString(OrderStatus.accepted) ?
-                            '${AppLocalizations.of(context).accepted}' :
-                            widget.orderState.progress == Utils.enumToString(OrderStatus.paid) ?
-                            '${AppLocalizations.of(context).paid}' :
-                            widget.orderState.progress == Utils.enumToString(OrderStatus.pending) ?
-                            '${AppLocalizations.of(context).pending}' :
-                            widget.orderState.progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout) ?
-                            '${AppLocalizations.of(context).toBePaidAtCheckout}' :
-                            widget.orderState.progress == Utils.enumToString(OrderStatus.canceled) ?
-                            '${AppLocalizations.of(context).canceled}' :
-                            widget.orderState.progress == Utils.enumToString(OrderStatus.frozen) ?
-                            '${AppLocalizations.of(context).frozen}' :
-                            widget.orderState.progress == Utils.enumToString(OrderStatus.declined) ?
-                            '${AppLocalizations.of(context).declined}' :
-                            widget.orderState.progress == Utils.enumToString(OrderStatus.creating) ?
-                            '${AppLocalizations.of(context).creating}' : '???',
+                            Utils.translateOrderStatus(context, widget.orderState.progress),
                             style: TextStyle(
                                 fontFamily: BuytimeTheme.FontFamily,
                                 fontSize: 12,
@@ -164,6 +145,7 @@ class _DashboardListItemState extends State<DashboardListItem> {
       ),
     );
   }
+
 
 
 }
