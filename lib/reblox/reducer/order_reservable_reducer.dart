@@ -4,6 +4,7 @@ import 'package:Buytime/reblox/model/order/order_entry.dart';
 import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
 import 'package:Buytime/reblox/model/stripe/stripe_state.dart';
 import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
+import 'package:stripe_payment/stripe_payment.dart' as StripeRecommended;
 
 
 class CreateOrderReservableCardAndPay {
@@ -21,6 +22,8 @@ class CreateOrderReservableCardAndPay {
   String get country => _country;
   String get selectedCardPaymentMethodId => _selectedCardPaymentMethodId;
 }
+
+
 class CreateOrderReservableCardAndHold {
   OrderReservableState _orderReservableState;
   String _last4;
@@ -51,14 +54,14 @@ class CreateOrderReservableCardAndReminder {
   String get country => _country;
   String get selectedCardPaymentMethodId => _selectedCardPaymentMethodId;
 }
-class CreateOrderReservablePendingWithPaymentMethod {
+class CreateOrderReservableCardPending {
   OrderReservableState _orderReservableState;
   String _last4;
   String _brand;
   String _country;
   String _selectedCardPaymentMethodId;
   PaymentType _paymentType;
-  CreateOrderReservablePendingWithPaymentMethod(this._orderReservableState, this._last4, this._brand, this._country, this._selectedCardPaymentMethodId, this._paymentType);
+  CreateOrderReservableCardPending(this._orderReservableState, this._last4, this._brand, this._country, this._selectedCardPaymentMethodId, this._paymentType);
   OrderReservableState get orderReservableState => _orderReservableState;
   PaymentType get paymentType => _paymentType;
   String get last4 => _last4;
@@ -66,20 +69,68 @@ class CreateOrderReservablePendingWithPaymentMethod {
   String get country => _country;
   String get selectedCardPaymentMethodId => _selectedCardPaymentMethodId;
 }
-class CreateOrderReservablePending {
+class CreateOrderReservableNativeAndPay {
   OrderReservableState _orderReservableState;
-  String _last4;
-  String _brand;
-  String _country;
-  String _selectedCardPaymentMethodId;
+  StripeRecommended.PaymentMethod _paymentMethod;
   PaymentType _paymentType;
-  CreateOrderReservablePending(this._orderReservableState, this._last4, this._brand, this._country, this._selectedCardPaymentMethodId, this._paymentType);
+  CreateOrderReservableNativeAndPay(this._orderReservableState, this._paymentMethod, this._paymentType);
   OrderReservableState get orderReservableState => _orderReservableState;
   PaymentType get paymentType => _paymentType;
-  String get last4 => _last4;
-  String get brand => _brand;
-  String get country => _country;
-  String get selectedCardPaymentMethodId => _selectedCardPaymentMethodId;
+  StripeRecommended.PaymentMethod get paymentMethod => _paymentMethod;
+}
+class CreateOrderReservableNativeAndHold {
+  OrderReservableState _orderReservableState;
+  StripeRecommended.PaymentMethod _paymentMethod;
+  PaymentType _paymentType;
+  CreateOrderReservableNativeAndHold(this._orderReservableState, this._paymentMethod, this._paymentType);
+  OrderReservableState get orderReservableState => _orderReservableState;
+  PaymentType get paymentType => _paymentType;
+  StripeRecommended.PaymentMethod get paymentMethod => _paymentMethod;
+}
+class CreateOrderReservableNativeAndReminder {
+  OrderReservableState _orderReservableState;
+  StripeRecommended.PaymentMethod _paymentMethod;
+  PaymentType _paymentType;
+  CreateOrderReservableNativeAndReminder(this._orderReservableState, this._paymentMethod, this._paymentType);
+  OrderReservableState get orderReservableState => _orderReservableState;
+  PaymentType get paymentType => _paymentType;
+  StripeRecommended.PaymentMethod get paymentMethod => _paymentMethod;
+}
+class CreateOrderReservableNativePending {
+  OrderReservableState _orderReservableState;
+  StripeRecommended.PaymentMethod _paymentMethod;
+  PaymentType _paymentType;
+  CreateOrderReservableNativePending(this._orderReservableState, this._paymentMethod, this._paymentType);
+  OrderReservableState get orderReservableState => _orderReservableState;
+  PaymentType get paymentType => _paymentType;
+  StripeRecommended.PaymentMethod get paymentMethod => _paymentMethod;
+}
+
+class CreateOrderReservableRoomAndPay {
+  OrderReservableState _orderReservableState;
+  String _roomNumber;
+  PaymentType _paymentType;
+  CreateOrderReservableRoomAndPay(this._orderReservableState, this._roomNumber, this._paymentType);
+  OrderReservableState get orderReservableState => _orderReservableState;
+  PaymentType get paymentType => _paymentType;
+  String get roomNumber => _roomNumber;
+}
+
+class CreateOrderReservableRoomPending {
+  OrderReservableState _orderReservableState;
+  String _roomNumber;
+  PaymentType _paymentType;
+  CreateOrderReservableRoomPending(this._orderReservableState, this._roomNumber, this._paymentType);
+  OrderReservableState get orderReservableState => _orderReservableState;
+  PaymentType get paymentType => _paymentType;
+  String get roomNumber => _roomNumber;
+}
+
+class SetOrderReservablePaymentMethod
+{
+  StripeRecommended.PaymentMethod _paymentMethod;
+  SetOrderReservablePaymentMethod(this._paymentMethod);
+  StripeRecommended.PaymentMethod get paymentMethod => _paymentMethod;
 }
 
 
@@ -260,6 +311,10 @@ OrderReservableState orderReservableReducer(OrderReservableState state, action) 
   if (action is AddedReservableStripePaymentMethodAndNavigate) {
     orderReservableState.addCardProgress = "done";
     orderReservableState.navigate = true;
+    return orderReservableState;
+  }
+  if (action is SetOrderReservablePaymentMethod) {
+    orderReservableState.paymentMethod = action.paymentMethod;
     return orderReservableState;
   }
   if (action is AddItemToOrderReservable) {

@@ -104,15 +104,11 @@ class UserOrderListRequestService implements EpicClass<AppState> {
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     debugPrint("ORDER_SERVICE_EPIC - UserOrderListRequestService =>  CATCHED ACTION");
     return actions.whereType<UserOrderListRequest>().asyncMap((event) async {
-      //debugPrint("ORDER_SERVICE_EPIC - OrderListRequestService =>  USER ID: ${store.state.user.uid}");
       debugPrint("ORDER_SERVICE_EPIC - UserOrderListRequestService =>  BUSINESS ID: ${store.state.business.id_firestore}");
-
       DateTime currentTime = DateTime.now();
-      //currentTime = new DateTime(currentTime.year, currentTime.month - 1, currentTime.day, 0, 0, 0, 0, 0).toUtc();
       debugPrint('order_service_epic => current Time: $currentTime');
       orderStateList = [];
       currentTime = currentTime.subtract(Duration(days: 5));
-      //debugPrint("ORDER_SERVICE_EPIC - UserOrderListRequestService =>  BUSINESS ID: ${businessList[i].id_firestore}");
       QuerySnapshot ordersFirebase = await FirebaseFirestore.instance.collection("order") /// 1 READ - ? DOC
           .where("businessId", isEqualTo: store.state.business.id_firestore)
           .where("userId", isEqualTo: store.state.user.uid)
@@ -126,8 +122,6 @@ class UserOrderListRequestService implements EpicClass<AppState> {
       });
       debugPrint("ORDER_SERVICE_EPIC - UserOrderListRequestService => OrderListService return list with " + orderStateList.length.toString());
       statisticsComputation();
-      ///Return
-      //return new OrderListReturned(orderStateList);
     }).expand((element) => [
       OrderListReturned(orderStateList),
       UpdateStatistics(statisticsState),
@@ -169,7 +163,6 @@ class OrderUpdateByManagerService implements EpicClass<AppState> {
           .update(event.orderState.toJson())
       .then((value) {
         /// rebuild the local orderListState exchanging the updated content
-
         for (int i = 0; i < orderStateList.length; i++) {
           if (orderStateList[i] != null && orderStateList[i].orderId == event.orderState.orderId) {
             orderStateList[i] = event.orderState;
@@ -179,36 +172,8 @@ class OrderUpdateByManagerService implements EpicClass<AppState> {
         /// TODO send error
 
       });
-
-
      }).expand((element) => [
        OrderListReturned(orderStateList),
-       UpdatedOrder(orderState)
-    ]);
-  }
-}
-
-class OrderUpdateService implements EpicClass<AppState> {
-  OrderState orderState;
-  @override
-  Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    return actions.whereType<UpdateOrder>().asyncMap((event) async{
-    //   if (event.serviceState.fileToUploadList != null) {
-    //     uploadFiles(event.serviceState.fileToUploadList, event.serviceState).then((ServiceState updatedServiceState) {
-    //       return updateService(updatedServiceState);
-    //     });
-    //   }
-    //   return updateService(event.serviceState);
-
-      /*print("ORDER_SERVICE_EPIC - OrderUpdateService => ORDER ID: ${event.orderState.orderId}");
-
-      orderState = event.orderState;
-
-      await FirebaseFirestore.instance /// 1 WRITE
-          .collection("order")
-          .doc(event.orderState.orderId)
-          .update(event.orderState.toJson());*/
-     }).expand((element) => [
        UpdatedOrder(orderState)
     ]);
   }

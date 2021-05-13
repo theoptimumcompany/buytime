@@ -629,6 +629,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
 
   void confirmationCard(BuildContext context, AppState snapshot, String last4, String brand, String country, String selectedCardPaymentMethodId) {
     if (widget.reserve != null && widget.reserve) {
+      StoreProvider.of<AppState>(context).dispatch(CreatingOrder());
       /// Reservable payment process starts
       debugPrint('UI_U_ConfirmOrder => order is reservable' + snapshot.orderReservable.isOrderAutoConfirmable().toString());
       if (snapshot.orderReservable.isOrderAutoConfirmable()) {
@@ -640,12 +641,11 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
           StoreProvider.of<AppState>(context).dispatch(CreateOrderReservableCardAndReminder(snapshot.orderReservable, last4, brand, country, selectedCardPaymentMethodId, PaymentType.card));
         }
       } else {
-          StoreProvider.of<AppState>(context).dispatch(CreateOrderReservablePendingWithPaymentMethod(snapshot.orderReservable, last4, brand, country, selectedCardPaymentMethodId, PaymentType.card));
+          StoreProvider.of<AppState>(context).dispatch(CreateOrderReservableCardPending(snapshot.orderReservable, last4, brand, country, selectedCardPaymentMethodId, PaymentType.card));
       }
     } else {
       /// Direct Card Payment
       debugPrint('UI_U_ConfirmOrder => start direct payment process with Credit Card');
-      StoreProvider.of<AppState>(context).dispatch(CreatingOrder());
       if (snapshot.order.isOrderAutoConfirmable()) {
         StoreProvider.of<AppState>(context).dispatch(CreateOrderCardAndPay(snapshot.order, last4, brand, country, selectedCardPaymentMethodId, PaymentType.card));
       } else {
@@ -657,26 +657,30 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
   }
 
   Future<void> confirmationNative(BuildContext context, AppState snapshot) async {
+    StoreProvider.of<AppState>(context).dispatch(CreatingOrder());
+    /// 1: create the payment method
+    StripePaymentService stripePaymentService = StripePaymentService();
+    StripeRecommended.PaymentMethod paymentMethod = await stripePaymentService.createPaymentMethodNative(snapshot.order, snapshot.business.name);
     if (widget.reserve != null && widget.reserve) {
       /// Reservable payment process starts with Native Method
+      StoreProvider.of<AppState>(context).dispatch(SetOrderReservablePaymentMethod(paymentMethod));
       debugPrint('UI_U_ConfirmOrder => start reservable payment process with Native Method');
-
-      if (snapshot.order.isOrderAutoConfirmable()) {
-        /// POSSIBLE CHANGE IN FLOW IF IN RANGE OF 7 DAYS TO PAYMENT
-
+      if (snapshot.orderReservable.isOrderAutoConfirmable()) {
+        if(Utils.getTimeInterval(orderReservableState) == OrderTimeInterval.directPayment) {
+          StoreProvider.of<AppState>(context).dispatch(CreateOrderReservableNativeAndPay(snapshot.orderReservable, paymentMethod, PaymentType.card));
+        } else if (Utils.getTimeInterval(orderReservableState) == OrderTimeInterval.holdAndReminder) {
+          StoreProvider.of<AppState>(context).dispatch(CreateOrderReservableNativeAndHold(snapshot.orderReservable, paymentMethod, PaymentType.card));
+        } else if (Utils.getTimeInterval(orderReservableState) == OrderTimeInterval.reminder) {
+          StoreProvider.of<AppState>(context).dispatch(CreateOrderReservableNativeAndReminder(snapshot.orderReservable, paymentMethod, PaymentType.card));
+        }
       } else {
-        /// POSSIBLE CHANGE IN FLOW IF IN RANGE OF 7 DAYS TO PAYMENT
-
+        StoreProvider.of<AppState>(context).dispatch(CreateOrderReservableNativePending(snapshot.orderReservable, paymentMethod, PaymentType.card));
       }
     } else {
       /// Direct Native Payment
       debugPrint('UI_U_ConfirmOrder => start direct payment process with Native Method');
-      /// 1: create the payment method
-      StripePaymentService stripePaymentService = StripePaymentService();
-      StripeRecommended.PaymentMethod paymentMethod = await stripePaymentService.createPaymentMethodNative(snapshot.order, snapshot.business.name);
       /// 2: add the payment method to the order state
       StoreProvider.of<AppState>(context).dispatch(SetOrderPaymentMethod(paymentMethod));
-      StoreProvider.of<AppState>(context).dispatch(CreatingOrder());
       /// 3: now we can create the order on the database and its sub collection
       if (snapshot.order.isOrderAutoConfirmable()) {
         StoreProvider.of<AppState>(context).dispatch(CreateOrderNativeAndPay(snapshot.order, paymentMethod, PaymentType.native));
@@ -688,46 +692,41 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
   }
 
   Future<void> confirmationRoom(BuildContext context, AppState snapshot) async {
+    StoreProvider.of<AppState>(context).dispatch(CreatingOrder());
+    String roomNumber = '1';
     if (widget.reserve != null && widget.reserve) {
       /// Reservable payment process starts with Native Method
       debugPrint('UI_U_ConfirmOrder => start reservable payment process with Native Method');
-      if (snapshot.order.isOrderAutoConfirmable()) {
-        /// POSSIBLE CHANGE IN FLOW IF IN RANGE OF 7 DAYS TO PAYMENT
-
+      if (snapshot.orderReservable.isOrderAutoConfirmable()) {
+        if (roomNumber.isNotEmpty) {
+          StoreProvider.of<AppState>(context).dispatch(CreateOrderReservableRoomAndPay(snapshot.orderReservable, roomNumber, PaymentType.room));
+        } else {
+          /// 2B: we display a message to the user: "you have to ask the concierge to add your room number to be able to use this payment method"
+        }
       } else {
-        /// POSSIBLE CHANGE IN FLOW IF IN RANGE OF 7 DAYS TO PAYMENT
-
+        if (roomNumber.isNotEmpty) {
+          StoreProvider.of<AppState>(context).dispatch(CreateOrderReservableRoomPending(snapshot.orderReservable, roomNumber, PaymentType.room));
+        } else {
+          /// 2B: we display a message to the user: "you have to ask the concierge to add your room number to be able to use this payment method"
+        }
       }
     } else {
       /// Direct Payment process starts with Native Method
       debugPrint('UI_U_ConfirmOrder => start direct payment process with Native Method');
       if (snapshot.order.isOrderAutoConfirmable()) {
-        /// if the items are all autoconfirmed we can launch the paymentflow and create the order when the payment is successful
-        /// 1: search for the room number in the booking
-        String roomNumber = '1';
-        /// IMPORTANT for the moment we just approve and add all order ids to the booking state sub collection "room orders"
-        /// TODO: get the actual room number when the UX is defined?
         if (roomNumber.isNotEmpty) {
-          /// 2A: now we can create the order on the database and its sub collection
-          StoreProvider.of<AppState>(context).dispatch(CreatingOrder());
           StoreProvider.of<AppState>(context).dispatch(CreateOrderRoomAndPay(snapshot.order, roomNumber, PaymentType.room));
         } else {
           /// 2B: we display a message to the user: "you have to ask the concierge to add your room number to be able to use this payment method"
         }
       } else {
-        /// we create the order on firebase as "pending"
-        /// IMPORTANT for the moment we just approve and add all order ids to the booking state sub collection "room orders"
-        /// TODO: get the actual room number when the UX is defined?
         String roomNumber = '1';
         if (roomNumber.isNotEmpty) {
-          /// 2A: now we can create the order on the database and its sub collection
-          StoreProvider.of<AppState>(context).dispatch(CreatingOrder());
           StoreProvider.of<AppState>(context).dispatch(CreateOrderRoomPending(snapshot.order, roomNumber, PaymentType.room));
         } else {
           /// 2B: we display a message to the user: "you have to ask the concierge to add your room number to be able to use this payment method"
         }
       }
     }
-    // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ConfirmingOrder(_controller.index, widget.reserve, widget.tourist)));
   }
 }

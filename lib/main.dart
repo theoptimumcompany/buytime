@@ -152,7 +152,6 @@ void main(){
     OrderReservableListRequestService(),
     OrderRequestService(),
     OrderReservableRequestService(),
-    OrderUpdateService(),
     OrderUpdateByManagerService(),
     OrderReservableUpdateService(),
     OrderCreateNativeAndPayService(),
@@ -165,8 +164,12 @@ void main(){
     CreateOrderReservableCardAndPayService(),
     CreateOrderReservableCardAndHoldService(),
     CreateOrderReservableCardAndReminderService(),
-    CreateOrderReservablePendingWithPaymentMethodService(),
-    CreateOrderReservablePendingService(),
+    CreateOrderReservableNativeAndPayService(),
+    CreateOrderReservableNativeAndHoldService(),
+    CreateOrderReservableNativeAndReminderService(),
+    CreateOrderReservableNativePendingService(),
+    CreateOrderReservableRoomAndPayService(),
+    CreateOrderReservableRoomPendingService(),
     AddingReservableStripePaymentMethodRequest(),
     EmailCreateService(),
     ServiceListSnippetRequestService(),
@@ -185,7 +188,6 @@ void main(){
     NotificationRequestService(),
     NotificationListRequestService(),
     NotificationUpdateRequestService()
-   // NotificationCreateService()
   ]);
   final _initialState = AppState(
     category: CategoryState().toEmpty(),
