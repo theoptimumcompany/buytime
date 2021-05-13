@@ -34,7 +34,6 @@ dependencies:
   firebase_messaging: ^9.1.1
   email_validator: ^2.0.1
   progress_dialog: ^1.2.4
-  nfc_in_flutter: ^2.0.5
   shared_preferences: ^2.0.5
   cupertino_icons: ^1.0.2
   flutter_redux: ^0.8.2
@@ -134,8 +133,6 @@ flutter:
     - assets/img/back_button.png
     - assets/img/back_blue.png
     - assets/img/qr_code.png
-    - assets/img/hand_nfc.png
-    - assets/img/nfc.png
     - assets/img/pointer.png
     - assets/img/3archi.jpg
     - assets/img/approdo.jpeg
