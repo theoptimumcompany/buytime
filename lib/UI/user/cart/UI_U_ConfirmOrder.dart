@@ -120,20 +120,21 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment: MainAxisAlignment.start,
-                                //mainAxisSize: MainAxisSize.min,
+                                mainAxisSize: MainAxisSize.min,
                                 children: [
                                   ///Cart Details & Confirm Details
                                   Expanded(
                                     child: Column(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
+                                        ///Recap
                                         buildOrderRecap(context, snapshot, media),
                                         ///Divider
                                         Container(
                                           color: BuytimeTheme.BackgroundLightGrey,
                                           height: SizeConfig.safeBlockVertical * 2,
                                         ),
-                                        ///Confirm Details
+                                        ///Tab bar
                                         PreferredSize(
                                           preferredSize: Size.fromHeight(kToolbarHeight),
                                           child: Container(
@@ -153,8 +154,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                             child: buildTabBar(context),
                                           ),
                                         ),
-
-                                        ///Tab
+                                        ///Tab value
                                         (() {
                                           if (snapshot.order.progress == Utils.enumToString(OrderStatus.paid) || snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.paid) ||
                                               snapshot.order.progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout) || snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout)
@@ -262,6 +262,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
             }));
   }
 
+  ///Bavck to home
   MaterialButton buildBackButton(BuildContext context, Size media) {
     return MaterialButton(
       elevation: 0,

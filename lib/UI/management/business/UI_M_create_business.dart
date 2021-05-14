@@ -259,7 +259,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                               Row(
                                                                 children: [
                                                                   Text(
-                                                                    AppLocalizations.of(context).published,
+                                                                    AppLocalizations.of(context).publish,
                                                                     style: TextStyle(
                                                                         fontFamily: BuytimeTheme.FontFamily,
                                                                         fontWeight: FontWeight.w600
@@ -576,53 +576,75 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                                             )
                                                                         ),
                                                                       ),
-                                                                      IconButton(
-                                                                        icon: Icon(
-                                                                          Icons.add_location_rounded,
-                                                                          color: BuytimeTheme.ManagerPrimary,
+                                                                      Container(
+                                                                        margin: EdgeInsets.only(bottom: 25.0),
+                                                                        child: IconButton(
+                                                                          icon: Icon(
+                                                                            Icons.add_location_rounded,
+                                                                            color: BuytimeTheme.ManagerPrimary,
+                                                                          ),
+                                                                          onPressed: (){
+                                                                            Utils.googleSearch(
+                                                                                context,
+                                                                                    (place){
+                                                                                  //_serviceAddress = store.state.business.street + ', ' + store.state.business.street_number + ', ' + store.state.business.ZIP + ', ' + store.state.business.state_province;
+                                                                                  ///Address
+                                                                                  _addressController.text = place[0];
+                                                                                  StoreProvider.of<AppState>(context).dispatch(SetBusinessAddress(_addressController.text));
+                                                                                  ///Address Details
+                                                                                  _coordinateController.text = '${place[1]}, ${place[2]}';
+                                                                                  _streetController.clear();
+                                                                                  _streetNumberController.clear();
+                                                                                  _zipController.clear();
+                                                                                  _municipalityController.clear();
+                                                                                  _stateController.clear();
+                                                                                  _nationController.clear();
+                                                                                  place[3].forEach((element) {
+                                                                                    if(element[0].contains('route') || element[0].contains('natural_feature') || element[0].contains('establishment'))
+                                                                                      _streetController.text = element[1];
+                                                                                    if(element[0].contains('street_number'))
+                                                                                      _streetNumberController.text = element[1];
+                                                                                    if(element[0].contains('postal_code'))
+                                                                                      _zipController.text = element[1];
+                                                                                    if(element[0].contains('administrative_area_level_2') || element[0].contains('administrative_area_level_3'))
+                                                                                      _municipalityController.text = element[2];
+                                                                                    if(element[0].contains('administrative_area_level_1'))
+                                                                                      _stateController.text = element[1];
+                                                                                    if(element[0].contains('country'))
+                                                                                      _nationController.text = element[2];
+                                                                                  });
+                                                                                  StoreProvider.of<AppState>(context).dispatch(SetBusinessStreet(_streetController.text));
+                                                                                  StoreProvider.of<AppState>(context).dispatch(SetBusinessStreetNumber(_streetNumberController.text));
+                                                                                  StoreProvider.of<AppState>(context).dispatch(SetBusinessZIP(_zipController.text));
+                                                                                  StoreProvider.of<AppState>(context).dispatch(SetBusinessMunicipality(_municipalityController.text));
+                                                                                  StoreProvider.of<AppState>(context).dispatch(SetBusinessStateProvince(_stateController.text));
+                                                                                  StoreProvider.of<AppState>(context).dispatch(SetBusinessNation(_nationController.text));
+                                                                                  StoreProvider.of<AppState>(context).dispatch(SetBusinessCoordinate(_coordinateController.text));
+                                                                                }
+                                                                            );
+                                                                          },
                                                                         ),
-                                                                        onPressed: (){
-                                                                          Utils.googleSearch(
-                                                                              context,
-                                                                                  (place){
-                                                                                //_serviceAddress = store.state.business.street + ', ' + store.state.business.street_number + ', ' + store.state.business.ZIP + ', ' + store.state.business.state_province;
-                                                                                ///Address
-                                                                                _addressController.text = place[0];
-                                                                                StoreProvider.of<AppState>(context).dispatch(SetBusinessAddress(_addressController.text));
-                                                                                ///Address Details
-                                                                                _coordinateController.text = '${place[1]}, ${place[2]}';
-                                                                                _streetController.clear();
-                                                                                _streetNumberController.clear();
-                                                                                _zipController.clear();
-                                                                                _municipalityController.clear();
-                                                                                _stateController.clear();
-                                                                                _nationController.clear();
-                                                                                place[3].forEach((element) {
-                                                                                  if(element[0].contains('route') || element[0].contains('natural_feature') || element[0].contains('establishment'))
-                                                                                    _streetController.text = element[1];
-                                                                                  if(element[0].contains('street_number'))
-                                                                                    _streetNumberController.text = element[1];
-                                                                                  if(element[0].contains('postal_code'))
-                                                                                    _zipController.text = element[1];
-                                                                                  if(element[0].contains('administrative_area_level_2') || element[0].contains('administrative_area_level_3'))
-                                                                                    _municipalityController.text = element[2];
-                                                                                  if(element[0].contains('administrative_area_level_1'))
-                                                                                    _stateController.text = element[1];
-                                                                                  if(element[0].contains('country'))
-                                                                                    _nationController.text = element[2];
-                                                                                });
-                                                                                StoreProvider.of<AppState>(context).dispatch(SetBusinessStreet(_streetController.text));
-                                                                                StoreProvider.of<AppState>(context).dispatch(SetBusinessStreetNumber(_streetNumberController.text));
-                                                                                StoreProvider.of<AppState>(context).dispatch(SetBusinessZIP(_zipController.text));
-                                                                                StoreProvider.of<AppState>(context).dispatch(SetBusinessMunicipality(_municipalityController.text));
-                                                                                StoreProvider.of<AppState>(context).dispatch(SetBusinessStateProvince(_stateController.text));
-                                                                                StoreProvider.of<AppState>(context).dispatch(SetBusinessNation(_nationController.text));
-                                                                                StoreProvider.of<AppState>(context).dispatch(SetBusinessCoordinate(_coordinateController.text));
-                                                                              }
-                                                                          );
-                                                                        },
                                                                       )
                                                                     ],
+                                                                  ),
+                                                                ),
+                                                                ///Coordinate
+                                                                Container(
+                                                                  margin: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 1, top: SizeConfig.safeBlockVertical * 1),
+                                                                  child: OptimumFormField(
+                                                                    required: true,
+                                                                    controller: _coordinateController,
+                                                                    field: "coordinate",
+                                                                    textInputType: TextInputType.number,
+                                                                    minLength: 3,
+                                                                    label: AppLocalizations.of(context).coordinate,
+                                                                    globalFieldKey: _formKeyCoordinateField,
+                                                                    validateEmail: true,
+                                                                    typeOfValidate: "name",
+                                                                    //initialFieldValue: snapshot.coordinate,
+                                                                    onSaveOrChangedCallback: (value) {
+                                                                      StoreProvider.of<AppState>(context).dispatch(SetBusinessCoordinate(value));
+                                                                    },
                                                                   ),
                                                                 ),
                                                               ],
@@ -630,7 +652,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                         ///Address Details
                                                         Step(
                                                             title: Text(
-                                                              AppLocalizations.of(context).address,
+                                                              AppLocalizations.of(context).invoiceDetails,
                                                               style: TextStyle(
                                                                   fontFamily: BuytimeTheme.FontFamily,
                                                                   fontWeight: FontWeight.w600
@@ -729,25 +751,6 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                                   onSaveOrChangedCallback: (value) {
                                                                     StoreProvider.of<AppState>(context).dispatch(SetBusinessNation(value));
                                                                   },
-                                                                ),
-                                                                ///Coordinate
-                                                                Container(
-                                                                  margin: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2),
-                                                                  child: OptimumFormField(
-                                                                    required: true,
-                                                                    controller: _coordinateController,
-                                                                    field: "coordinate",
-                                                                    textInputType: TextInputType.number,
-                                                                    minLength: 3,
-                                                                    label: AppLocalizations.of(context).coordinate,
-                                                                    globalFieldKey: _formKeyCoordinateField,
-                                                                    validateEmail: true,
-                                                                    typeOfValidate: "name",
-                                                                    //initialFieldValue: snapshot.coordinate,
-                                                                    onSaveOrChangedCallback: (value) {
-                                                                      StoreProvider.of<AppState>(context).dispatch(SetBusinessCoordinate(value));
-                                                                    },
-                                                                  ),
                                                                 ),
                                                               ],
                                                             )),

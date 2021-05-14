@@ -2,6 +2,7 @@ import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/model/service/service_slot_time_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
+import 'package:Buytime/reblox/model/slot/interval_slot_state.dart';
 import 'package:Buytime/reblox/reducer/booking_reducer.dart';
 import 'package:Buytime/reblox/reducer/business_reducer.dart';
 import 'package:Buytime/utils/size_config.dart';
@@ -14,10 +15,11 @@ import 'package:intl/intl.dart';
 import 'package:share/share.dart';
 
 class TimeSlotWidget extends StatefulWidget {
-  dynamic serviceSlot;
-  dynamic index;
+  ServiceSlot serviceSlot;
+  SquareSlotState squareSlot;
+  int index;
   bool selected;
-  TimeSlotWidget(this.serviceSlot, this.index, this.selected);
+  TimeSlotWidget(this.serviceSlot, this.squareSlot, this.index, this.selected);
 
   @override
   _TimeSlotWidgetState createState() => _TimeSlotWidgetState();
@@ -72,7 +74,7 @@ class _TimeSlotWidgetState extends State<TimeSlotWidget> {
                  child: FittedBox(
                    fit: BoxFit.scaleDown,
                    child: Text(
-                     widget.index == 0 ? '${widget.serviceSlot.startTime.first}' : '${widget.serviceSlot.startTime.elementAt(widget.index)}',
+                     '${widget.squareSlot.startTime}',
                      style: TextStyle(
                        //letterSpacing: 1.25,
                          fontFamily: BuytimeTheme.FontFamily,

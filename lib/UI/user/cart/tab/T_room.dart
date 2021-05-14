@@ -51,151 +51,143 @@ class RoomState extends State<Room> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Flexible(
-              //height: SizeConfig.safeBlockVertical * 30,
-              flex: 1,
-              child: Column(
-                children: [
-                  ///Room Number
-                  Container(
-                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * .5),
-                    height: SizeConfig.safeBlockVertical * 8,
-                    color: Colors.white,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 0.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          ///Room Number Text
-                          Container(
-                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
-                            child: Text(
-                              AppLocalizations.of(context).roomNumberColon,
-                              textAlign: TextAlign.start,
-                              style: TextStyle(
-                                letterSpacing: 0.25,
-                                fontFamily: BuytimeTheme.FontFamily,
-                                color: BuytimeTheme.TextMedium,
-                                fontSize: 14,
+            ///Room Number
+            Container(
+              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * .5),
+              height: SizeConfig.safeBlockVertical * 8,
+              color: Colors.white,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 0.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    ///Room Number Text
+                    Container(
+                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
+                      child: Text(
+                        AppLocalizations.of(context).roomNumberColon,
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                          letterSpacing: 0.25,
+                          fontFamily: BuytimeTheme.FontFamily,
+                          color: BuytimeTheme.TextMedium,
+                          fontSize: 14,
 
-                                ///SizeConfig.safeBlockHorizontal * 3.5
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-
-                          ///Room Number Value
-                          Container(
-                            margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 5),
-                            child: Text(
-                              room,
-                              textAlign: TextAlign.start,
-                              style: TextStyle(
-                                letterSpacing: 0.5,
-                                fontFamily: BuytimeTheme.FontFamily,
-                                color: BuytimeTheme.TextBlack,
-                                fontSize: 16,
-
-                                ///SizeConfig.safeBlockHorizontal * 3.5
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 10, right: SizeConfig.safeBlockHorizontal * 10),
-                    color: BuytimeTheme.BackgroundLightGrey,
-                    height: SizeConfig.safeBlockVertical * .2,
-                  ),
-
-                  ///User Name
-                  Container(
-                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * .5),
-                    height: SizeConfig.safeBlockVertical * 8,
-                    color: Colors.white,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 0.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          ///Name Text
-                          Container(
-                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
-                            child: Text(
-                              AppLocalizations.of(context).nameColon,
-                              textAlign: TextAlign.start,
-                              style: TextStyle(
-                                letterSpacing: 0.25,
-                                fontFamily: BuytimeTheme.FontFamily,
-                                color: BuytimeTheme.TextMedium,
-                                fontSize: 14,
-
-                                ///SizeConfig.safeBlockHorizontal * 3.5
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-
-                          ///Name Value
-                          Container(
-                            margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 5),
-                            child: Text(
-                              fullName,
-                              textAlign: TextAlign.start,
-                              style: TextStyle(
-                                letterSpacing: 0.5,
-                                fontFamily: BuytimeTheme.FontFamily,
-                                color: BuytimeTheme.TextBlack,
-                                fontSize: 16,
-
-                                ///SizeConfig.safeBlockHorizontal * 3.5
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 10, right: SizeConfig.safeBlockHorizontal * 10),
-                    color: BuytimeTheme.BackgroundLightGrey,
-                    height: SizeConfig.safeBlockVertical * .2,
-                  ),
-
-                  ///Please ...
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Flexible(
-                        child: Container(
-                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
-                          padding: EdgeInsets.all(20.0),
-                          child: Text(
-                            AppLocalizations.of(context).pleaseChargeAmountToMyBill,
-                            overflow: TextOverflow.clip,
-                            style: TextStyle(
-                              letterSpacing: 0.5,
-                              fontFamily: BuytimeTheme.FontFamily,
-                              color: widget.tourist != null && widget.tourist  ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
-                              fontSize: 16,
-
-                              ///SizeConfig.safeBlockHorizontal * 3.5
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
+                          ///SizeConfig.safeBlockHorizontal * 3.5
+                          fontWeight: FontWeight.w500,
                         ),
-                      )
-                    ],
-                  ),
-                ],
+                      ),
+                    ),
+
+                    ///Room Number Value
+                    Container(
+                      margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 5),
+                      child: Text(
+                        room,
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                          letterSpacing: 0.5,
+                          fontFamily: BuytimeTheme.FontFamily,
+                          color: BuytimeTheme.TextBlack,
+                          fontSize: 16,
+
+                          ///SizeConfig.safeBlockHorizontal * 3.5
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
+            Container(
+              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 10, right: SizeConfig.safeBlockHorizontal * 10),
+              color: BuytimeTheme.BackgroundLightGrey,
+              height: SizeConfig.safeBlockVertical * .2,
+            ),
+
+            ///User Name
+            Container(
+              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * .5),
+              height: SizeConfig.safeBlockVertical * 8,
+              color: Colors.white,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 0.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    ///Name Text
+                    Container(
+                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
+                      child: Text(
+                        AppLocalizations.of(context).nameColon,
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                          letterSpacing: 0.25,
+                          fontFamily: BuytimeTheme.FontFamily,
+                          color: BuytimeTheme.TextMedium,
+                          fontSize: 14,
+
+                          ///SizeConfig.safeBlockHorizontal * 3.5
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+
+                    ///Name Value
+                    Container(
+                      margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 5),
+                      child: Text(
+                        fullName,
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                          letterSpacing: 0.5,
+                          fontFamily: BuytimeTheme.FontFamily,
+                          color: BuytimeTheme.TextBlack,
+                          fontSize: 16,
+
+                          ///SizeConfig.safeBlockHorizontal * 3.5
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 10, right: SizeConfig.safeBlockHorizontal * 10),
+              color: BuytimeTheme.BackgroundLightGrey,
+              height: SizeConfig.safeBlockVertical * .2,
+            ),
+
+            ///Please ...
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Flexible(
+                  child: Container(
+                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * .5),
+                    padding: EdgeInsets.all(20.0),
+                    child: Text(
+                      AppLocalizations.of(context).pleaseChargeAmountToMyBill,
+                      overflow: TextOverflow.clip,
+                      style: TextStyle(
+                        letterSpacing: 0.5,
+                        fontFamily: BuytimeTheme.FontFamily,
+                        color: widget.tourist != null && widget.tourist  ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+                        fontSize: 16,
+
+                        ///SizeConfig.safeBlockHorizontal * 3.5
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
           ],
-        ),
+        )
       ),
     );
   }

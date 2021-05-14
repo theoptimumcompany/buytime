@@ -39,7 +39,7 @@
   "spa": "Spa",
   "restaurant": "Restaurant",
   "definition": "Definició",
-  "published": "Publicat",
+  "publish": "Publicar",
   "companyName": "Nom de l'empresa",
   "responsibleName": "Nom de la persona responsable",
   "responsibleSurname": "Cognoms de la persona responsable",
@@ -523,10 +523,12 @@
   "businessPipeline": "Business pipeline",
   "translatedIn": "Translated in:",
   "businessAddress": "Business address",
-  "addressDetails": "Address Details",
+  "invoiceDetails": "Invoice Details",
   "imageRequired": "This Image is required",
   "myReservation": "My Reservations",
   "businessType": "Business Type",
-  "holding": "holding"
+  "holding": "holding",
+  "secs": "secs",
+  "sec": "sec"
 
 }

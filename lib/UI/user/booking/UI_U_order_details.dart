@@ -600,6 +600,40 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                             ),
                           ),
                         ),
+                        ///Location
+                        Container(
+                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(
+                              AppLocalizations.of(context).location.toUpperCase().replaceAll(' ', ''),
+                              style: TextStyle(
+                                  letterSpacing: 1.5,
+                                  fontFamily: BuytimeTheme.FontFamily,
+                                  color: BuytimeTheme.TextMedium,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 10 ///SizeConfig.safeBlockHorizontal * 4
+                              ),
+                            ),
+                          ),
+                        ),
+                        ///Location value
+                        Container(
+                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(
+                              widget.orderState.location,
+                              style: TextStyle(
+                                  letterSpacing: 0.15,
+                                  fontFamily: BuytimeTheme.FontFamily,
+                                  color: BuytimeTheme.TextBlack,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 16 ///SizeConfig.safeBlockHorizontal * 4
+                              ),
+                            ),
+                          ),
+                        ),
                         ///Conditions
                         widget.orderState.itemList.first.time != null  ?
                         Container(

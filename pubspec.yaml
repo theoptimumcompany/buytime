@@ -83,7 +83,7 @@ dependencies:
   carousel_pro: ^1.0.0
   flutter_icons: ^1.1.0
   map_launcher: ^2.0.0
-  another_flushbar: ^1.10.18
+  another_flushbar: ^1.10.22
   #flutter_treeview: ^0.9.0+1
   emojis: ^0.9.3
   google_place: ^0.4.0

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
+import 'package:Buytime/UI/user/booking/UI_U_notifications.dart';
 import 'package:Buytime/UI/user/landing/UI_U_landing.dart';
 import 'package:Buytime/main.dart';
 import 'package:Buytime/reblox/model/autoComplete/auto_complete_state.dart';
@@ -10,8 +11,11 @@ import 'package:Buytime/reblox/model/snippet/device.dart';
 import 'package:Buytime/reblox/model/snippet/token.dart';
 import 'package:Buytime/reblox/model/statistics_state.dart';
 import 'package:Buytime/reblox/reducer/auto_complete_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/notification_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/order_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/card_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/statistics_reducer.dart';
+import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/UI/user/order/UI_U_order_detail.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
@@ -19,6 +23,7 @@ import 'package:Buytime/reblox/model/user/user_state.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reblox/reducer/user_reducer.dart';
 import 'package:Buytime/UI/user/login/UI_U_home.dart';
+import 'package:another_flushbar/flushbar.dart';
 import 'package:device_info/device_info.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -33,6 +38,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stripe_payment/stripe_payment.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -88,12 +94,17 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
         FirebaseMessaging.onMessage.first.then((message) => () {
               print("onMessage: $message");
               var data = message.data['data'] ?? message;
+              RemoteNotification notification = message.notification;
               String orderId = data['orderId'];
               StoreProvider.of<AppState>(context).dispatch(new OrderRequest(orderId)); //TODO statistics
-              Navigator.push(
+              StoreProvider.of<AppState>(context).state.notificationListState.notificationListState.clear();
+              StoreProvider.of<AppState>(context)..dispatch(UserOrderListRequest());
+              StoreProvider.of<AppState>(context).dispatch(RequestNotificationList(StoreProvider.of<AppState>(context).state.user.uid));
+              notifyFlushbar('OMF: ' + notification.title);
+              /*Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => UI_U_OrderDetail()),
-              );
+              );*/
             });
         FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
@@ -105,20 +116,30 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
           // If `onMessage` is triggered with a notification, construct our own
           // local notification to show to users using the created channel.
           if (notification != null && android != null) {
-            Navigator.push(
+            //String messages = AppLocalizations.of(context).sendEmail;
+            StoreProvider.of<AppState>(context).state.notificationListState.notificationListState.clear();
+            StoreProvider.of<AppState>(context)..dispatch(UserOrderListRequest());
+            StoreProvider.of<AppState>(context).dispatch(RequestNotificationList(StoreProvider.of<AppState>(context).state.user.uid));
+            notifyFlushbar('OM: ' + notification.title);
+            /*Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => UI_U_OrderDetail()), /// TODO: @nipuna, redirect the user to the right UI (notification list?)
-            );
+            );*/
           }
         });
         FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
           var data = message.data['data'] ?? message;
+          RemoteNotification notification = message.notification;
           String orderId = data['orderId'];
           StoreProvider.of<AppState>(context).dispatch(new OrderRequest(orderId)); //TODO statistics
-          Navigator.push(
+          StoreProvider.of<AppState>(context).state.notificationListState.notificationListState.clear();
+          StoreProvider.of<AppState>(context)..dispatch(UserOrderListRequest());
+          StoreProvider.of<AppState>(context).dispatch(RequestNotificationList(StoreProvider.of<AppState>(context).state.user.uid));
+          notifyFlushbar('OMOA: ' + notification.title);
+          /*Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => UI_U_OrderDetail()),
-          );
+          );*/
         });
 
         firebaseMessaging.requestPermission(sound: true, badge: true, alert: true, provisional: true);
@@ -141,6 +162,57 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
     });
     checkIfNativePayReady();
     initPlatformState();
+  }
+
+
+  Flushbar notifyFlushbar(String message) {
+    return Flushbar(
+            flushbarPosition: FlushbarPosition.TOP,
+            padding: EdgeInsets.all(SizeConfig.safeBlockVertical * 2),
+            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5, left: SizeConfig.blockSizeHorizontal * 20, right: SizeConfig.blockSizeHorizontal * 20), ///2% - 20% - 20%
+            borderRadius: BorderRadius.all(Radius.circular(8)),
+            backgroundColor: BuytimeTheme.SymbolLightGrey,
+            //onTap: tapFlushbar(),
+            onTap: (ciao){
+              Navigator.push(context, MaterialPageRoute(builder: (context) => Notifications(orderStateList: StoreProvider.of<AppState>(context).state.orderList.orderListState)));
+            },
+            /*mainButton: Container(
+              margin: EdgeInsets.only(left: 5, right: 5),
+              child: MaterialButton(
+                color: BuytimeTheme.Secondary,
+                onPressed: (){
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => Notifications(orderStateList: StoreProvider.of<AppState>(context).state.orderList.orderListState)));
+                },
+                child: Text(
+                  'OPEN',
+                  style: TextStyle(
+                      color: BuytimeTheme.TextBlack
+                  ),
+                ),
+              ),
+            ),*/
+            boxShadows: [
+              BoxShadow(
+                color: Colors.black45,
+                offset: Offset(3, 3),
+                blurRadius: 3,
+              ),
+            ],
+            // All of the previous Flushbars could be dismissed by swiping down
+            // now we want to swipe to the sides
+            //dismissDirection: FlushbarDismissDirection.HORIZONTAL,
+            // The default curve is Curves.easeOut
+            duration:  Duration(seconds: 4),
+            forwardAnimationCurve: Curves.fastLinearToSlowEaseIn,
+            messageText: Text(
+             message,
+              style: TextStyle(
+                  color: BuytimeTheme.TextBlack,
+                  fontWeight: FontWeight.bold
+              ),
+              textAlign: TextAlign.center,
+            ),
+          )..show(context);
   }
 
   void checkIfNativePayReady() async {

@@ -80,6 +80,7 @@ class NotificationListRequestService implements EpicClass<AppState> {
      if(querySnapshot.docs.isNotEmpty){
        debugPrint("NOTIFICATION_SERVICE_EPIC - NotificationListRequestService => List not empty: ${querySnapshot.docs.length}");
        querySnapshot.docs.forEach((element) {
+         debugPrint("NOTIFICATION_SERVICE_EPIC - NotificationListRequestService => data: ${element.data()}");
          notificationListState.add(NotificationState.fromJson(element.data()));
          notificationListState.last.notificationId = element.id;
        });

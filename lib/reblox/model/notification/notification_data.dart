@@ -1,5 +1,6 @@
 import 'package:Buytime/reblox/model/notification/id_state.dart';
 import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
+import 'package:Buytime/utils/utils.dart';
 import 'package:json_annotation/json_annotation.dart';
 part 'notification_data.g.dart';
 
@@ -7,6 +8,7 @@ part 'notification_data.g.dart';
 @JsonSerializable(explicitToJson: true)
 class NotificationData {
   String click_action;
+  @JsonKey(fromJson: Utils.stringToMap, toJson: Utils.mapToString )
   IdState state;
 
   NotificationData({

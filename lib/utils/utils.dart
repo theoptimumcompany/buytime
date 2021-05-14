@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:Buytime/reblox/enum/order_time_intervals.dart';
+import 'package:Buytime/reblox/model/notification/id_state.dart';
 import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
@@ -64,6 +65,29 @@ class Utils {
   static setDate(DateTime date){
     return date;
   }
+
+  static IdState stringToMap(String string){
+    IdState tmp = IdState().toEmpty();
+    try{
+      debugPrint('STRING: $string');
+      if(string != null)
+        tmp = IdState.fromJson(jsonDecode(string));
+    }catch(e){
+      debugPrint('ERROR: $e');
+    }
+    return tmp;
+  }
+
+  static String mapToString(IdState state){
+    String tmp = '';
+    try{
+      tmp = jsonEncode(state.toJson());
+    }catch(e){
+      debugPrint('ERROR: $e');
+    }
+    return tmp;
+  }
+
 
   ///Convert enum to string
   static String enumToString(dynamic enumToTranslate){

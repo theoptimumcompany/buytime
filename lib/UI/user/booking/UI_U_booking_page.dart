@@ -477,7 +477,7 @@ class _BookingPageState extends State<BookingPage> {
                                         order.cartCounter > 0
                                             ? Positioned.fill(
                                           bottom: 20,
-                                          left: 2.5,
+                                          left: 7,
                                           child: Align(
                                             alignment: Alignment.center,
                                             child: Text(

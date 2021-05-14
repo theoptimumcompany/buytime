@@ -216,7 +216,6 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
           converter: (store) => store.state,
           onInit: (store){
             store.state.serviceState = ServiceState();
-            store.dispatch(SlotListSnippetRequest(widget.serviceId));
             store.dispatch(CategoryTreeRequest());
             store.dispatch(ServiceRequestByID(widget.serviceId));
             if(store.state.business.businessAddress != null && store.state.business.businessAddress.isNotEmpty)

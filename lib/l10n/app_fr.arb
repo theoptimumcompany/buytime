@@ -39,7 +39,7 @@
   "spa": "Spa",
   "restaurant": "Restaurant",
   "definition": "Definition",
-  "published": "Published",
+  "publish": "Publish",
   "companyName": "Company Name",
   "responsibleName": "Responsible Person Name",
   "responsibleSurname": "Responsible Person Surname",
@@ -522,9 +522,11 @@
   "businessPipeline": "Business pipeline",
   "translatedIn": "Translated in:",
   "businessAddress": "Business address",
-  "addressDetails": "Address Details",
+  "invoiceDetails": "Invoice Details",
   "imageRequired": "This Image is required",
   "myReservation": "My Reservations",
   "businessType": "Business Type",
-  "holding": "holding"
+  "holding": "holding",
+  "secs": "secs",
+  "sec": "sec"
 }

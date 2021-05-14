@@ -9,14 +9,12 @@ part of 'notification_data.dart';
 NotificationData _$NotificationDataFromJson(Map<String, dynamic> json) {
   return NotificationData(
     click_action: json['click_action'] as String,
-    state: json['state'] == null
-        ? null
-        : IdState.fromJson(json['state'] as Map<String, dynamic>),
+    state: Utils.stringToMap(json['state'] as String),
   );
 }
 
 Map<String, dynamic> _$NotificationDataToJson(NotificationData instance) =>
     <String, dynamic>{
       'click_action': instance.click_action,
-      'state': instance.state?.toJson(),
+      'state': Utils.mapToString(instance.state),
     };

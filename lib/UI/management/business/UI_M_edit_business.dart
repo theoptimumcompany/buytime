@@ -263,7 +263,7 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
                                                           Row(
                                                             children: [
                                                               Text(
-                                                                AppLocalizations.of(context).published,
+                                                                AppLocalizations.of(context).publish,
                                                                 style: TextStyle(
                                                                     fontFamily: BuytimeTheme.FontFamily,
                                                                     fontWeight: FontWeight.w600
@@ -619,12 +619,52 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
                                                                 ],
                                                               ),
                                                             ),
+                                                            ///Coordinate
+                                                            Container(
+                                                                margin: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2, top: SizeConfig.safeBlockVertical * 1),
+                                                                child: Form(
+                                                                  key: _formKeyCoordinateFieldEdit,
+                                                                  child: TextFormField(
+                                                                    enabled: false,
+                                                                    //focusNode: focusNode,
+                                                                    //initialValue: widget.initialFieldValue,
+                                                                    controller: _coordinateController,
+                                                                    onChanged: (value) {
+                                                                      StoreProvider.of<AppState>(context).dispatch(SetBusinessCoordinate(value));
+                                                                    },
+                                                                    keyboardType: TextInputType.text,
+                                                                    validator: (String value) {
+                                                                      if(true && value.isNotEmpty) {
+                                                                        return "test " + AppLocalizations.of(context).required;
+                                                                      }
+                                                                      return null;
+                                                                    },
+                                                                    style: TextStyle(
+                                                                        fontFamily: BuytimeTheme.FontFamily,
+                                                                        color: BuytimeTheme.TextGrey
+                                                                    ),
+                                                                    decoration: InputDecoration(
+                                                                      labelText:  AppLocalizations.of(context).coordinate,
+                                                                      errorStyle: TextStyle(
+                                                                          color: BuytimeTheme.AccentRed
+                                                                      ),
+                                                                      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                                      border: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                                      focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                                      focusedErrorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                                      errorBorder: OutlineInputBorder(borderSide: BorderSide(color: BuytimeTheme.AccentRed), borderRadius: BorderRadius.all(Radius.circular(8.0))),),
+                                                                    onSaved: (value) {
+                                                                      StoreProvider.of<AppState>(context).dispatch(SetBusinessCoordinate(value));
+                                                                    },
+                                                                  ),
+                                                                )
+                                                            ),
                                                           ],
                                                         )),
-                                                    ///Address Details
+                                                    ///Invoice Details
                                                     Step(
                                                         title: Text(
-                                                          AppLocalizations.of(context).addressDetails,
+                                                          AppLocalizations.of(context).invoiceDetails,
                                                           style: TextStyle(
                                                               fontFamily: BuytimeTheme.FontFamily,
                                                               fontWeight: FontWeight.w600
@@ -717,46 +757,6 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
                                                               onSaveOrChangedCallback: (value) {
                                                                 StoreProvider.of<AppState>(context).dispatch(SetBusinessNation(value));
                                                               },
-                                                            ),
-                                                            ///Coordinate
-                                                            Container(
-                                                                margin: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2),
-                                                                child: Form(
-                                                                  key: _formKeyCoordinateFieldEdit,
-                                                                  child: TextFormField(
-                                                                    enabled: false,
-                                                                    //focusNode: focusNode,
-                                                                    //initialValue: widget.initialFieldValue,
-                                                                    controller: _coordinateController,
-                                                                    onChanged: (value) {
-                                                                      StoreProvider.of<AppState>(context).dispatch(SetBusinessCoordinate(value));
-                                                                    },
-                                                                    keyboardType: TextInputType.text,
-                                                                    validator: (String value) {
-                                                                      if(true && value.isNotEmpty) {
-                                                                        return "test " + AppLocalizations.of(context).required;
-                                                                      }
-                                                                      return null;
-                                                                    },
-                                                                    style: TextStyle(
-                                                                        fontFamily: BuytimeTheme.FontFamily,
-                                                                        color: BuytimeTheme.TextGrey
-                                                                    ),
-                                                                    decoration: InputDecoration(
-                                                                      labelText:  AppLocalizations.of(context).coordinate,
-                                                                      errorStyle: TextStyle(
-                                                                          color: BuytimeTheme.AccentRed
-                                                                      ),
-                                                                      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                                                      border: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                                                      focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                                                      focusedErrorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                                                      errorBorder: OutlineInputBorder(borderSide: BorderSide(color: BuytimeTheme.AccentRed), borderRadius: BorderRadius.all(Radius.circular(8.0))),),
-                                                                    onSaved: (value) {
-                                                                      StoreProvider.of<AppState>(context).dispatch(SetBusinessCoordinate(value));
-                                                                    },
-                                                                  ),
-                                                                )
                                                             ),
 
                                                             /*Container(

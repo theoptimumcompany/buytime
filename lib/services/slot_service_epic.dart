@@ -32,12 +32,6 @@ class SlotListSnippetRequestService implements EpicClass<AppState> {
 
       debugPrint("SLOT_SERVICE_EPIC - SlotListSnippetRequestService => Epic ServiceListService return list with " + slotFirebaseShadow.docs.length.toString());
 
-      slotSnippetListState.slotListSnippet.forEach((sLSN) {
-        sLSN.slot.forEach((s) {
-          debugPrint("SLOT_SERVICE_EPIC - SlotListSnippetRequestService => START TIME: ${s.startTime}" );
-        });
-      });
-
       /*statisticsState = store.state.statistics;
       int reads = statisticsState.serviceListRequestServiceRead;
       int writes = statisticsState.serviceListRequestServiceWrite;

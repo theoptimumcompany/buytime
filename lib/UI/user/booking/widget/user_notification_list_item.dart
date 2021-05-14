@@ -33,6 +33,7 @@ class _UserNotificationListItemState extends State<UserNotificationListItem> {
   String days = '';
   String hours = '';
   String minutes = '';
+  String seconds = '';
 
   @override
   void initState() {
@@ -48,9 +49,12 @@ class _UserNotificationListItemState extends State<UserNotificationListItem> {
     }else if(tmpDuration.inHours != 0){
       debugPrint('user_notification_list_item => HOURS: ${tmpDuration.inHours}');
       hours = tmpDuration.inHours.toString();
-    }else{
+    }else if(tmpDuration.inMinutes != 0){
       debugPrint('user_notification_list_item => MINUTES: ${tmpDuration.inMinutes}');
       minutes = tmpDuration.inMinutes.toString();
+    }else{
+      debugPrint('user_notification_list_item => SECONDS: ${tmpDuration.inSeconds}');
+      seconds = tmpDuration.inSeconds.toString();
     }
   }
 
@@ -61,6 +65,10 @@ class _UserNotificationListItemState extends State<UserNotificationListItem> {
     return Container(
         //margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 4, right: SizeConfig.safeBlockHorizontal * 4),
         margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1),
+        decoration: BoxDecoration(
+            color: widget.notificationState.opened ? BuytimeTheme.BackgroundWhite : BuytimeTheme.UserPrimary.withOpacity(0.05),
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+        ),
         child: Material(
             color: Colors.transparent,
             child: InkWell(
@@ -73,7 +81,7 @@ class _UserNotificationListItemState extends State<UserNotificationListItem> {
                 }
               },
               child: Container(
-                height:  widget.notificationState.title.split(' ').last.toLowerCase() == 'canceled' ?
+                height:  widget.notificationState.title.split(' ').last.toLowerCase() == 'canceled' && widget.serviceState.switchSlots ?
                  122 :
                 110,  ///SizeConfig.safeBlockVertical * 15
                 margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 2.5, top: 1, bottom: 1),
@@ -148,11 +156,15 @@ class _UserNotificationListItemState extends State<UserNotificationListItem> {
                                             '$hours ${ AppLocalizations.of(context).hour}' :
                                             minutes.isNotEmpty && minutes != '1' ?
                                             '$minutes ${AppLocalizations.of(context).spaceMinutes}' :
-                                            '$minutes ${ AppLocalizations.of(context).spaceMinute}',
+                                            minutes.isNotEmpty && minutes == '1' ?
+                                            '$minutes ${AppLocalizations.of(context).spaceMinute}' :
+                                            seconds.isNotEmpty && seconds != '1' ?
+                                            '$seconds ${ AppLocalizations.of(context).secs}' :
+                                            '$seconds ${ AppLocalizations.of(context).sec}',
                                             style: TextStyle(
                                                 letterSpacing: 1.5,
                                                 fontFamily: BuytimeTheme.FontFamily,
-                                                color: BuytimeTheme.TextBlack,
+                                                color: widget.notificationState.opened ? BuytimeTheme.TextBlack : BuytimeTheme.UserPrimary,
                                                 fontWeight: FontWeight.w400,
                                                 fontSize: 11 ///SizeConfig.safeBlockHorizontal * 4
                                             ),
@@ -186,7 +198,7 @@ class _UserNotificationListItemState extends State<UserNotificationListItem> {
                         ],
                       ),
                     ),
-                    widget.notificationState.title.split(' ').last.toLowerCase() == 'canceled' ?
+                    widget.notificationState.title.split(' ').last.toLowerCase() == 'canceled' && widget.serviceState.switchSlots?
                     Container(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
