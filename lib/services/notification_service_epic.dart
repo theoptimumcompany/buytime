@@ -73,6 +73,7 @@ class NotificationListRequestService implements EpicClass<AppState> {
 
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('notification')
           .where("userId", isEqualTo: event.userId)
+          //.where("businessId", isEqualTo: event.businessId)
           .where("timestamp", isGreaterThanOrEqualTo: time)
           .get();
 

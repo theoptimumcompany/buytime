@@ -77,9 +77,11 @@ OrderReservableState configureOrderReservable(OrderReservableState orderStateFro
 }
 
 OrderReservableState orderReservableInitialization(dynamic event, int i) {
+  DateTime tmpDate = event.orderReservableState.itemList[i].date;
+  tmpDate = DateTime(tmpDate.year, tmpDate.month, tmpDate.day, DateTime.now().hour,  DateTime.now().minute,  DateTime.now().second, DateTime.now().millisecond, DateTime.now().microsecond);
   return OrderReservableState(
     position: event.orderReservableState.position,
-    date: event.orderReservableState.itemList[i].date,
+    date: tmpDate,
     itemList: [event.orderReservableState.itemList[i]],
     total: event.orderReservableState.itemList[i].price,
     tip: event.orderReservableState.tip,

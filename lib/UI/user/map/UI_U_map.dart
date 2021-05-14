@@ -161,7 +161,7 @@ class _BuytimeMapState extends State<BuytimeMap> with SingleTickerProviderStateM
             child: Padding(
               padding: const EdgeInsets.only(left: 0.0),
               child: Text(
-                widget.title,
+                Utils.retriveField(Localizations.localeOf(context).languageCode, widget.title),
                 textAlign: TextAlign.start,
                 style: BuytimeTheme.appbarTitle,
               ),

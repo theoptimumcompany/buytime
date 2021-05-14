@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 
 class RequestNotificationList {
   String _userId;
-  RequestNotificationList(this._userId);
+  String _businessId;
+  RequestNotificationList(this._userId, this._businessId);
   String get userId => _userId;
+  String get businessId => _businessId;
 }
 
 class RequestedNotificationList {

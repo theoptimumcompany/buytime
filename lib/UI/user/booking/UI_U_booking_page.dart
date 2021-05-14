@@ -230,7 +230,7 @@ class _BookingPageState extends State<BookingPage> {
       onInit: (store) {
         store.dispatch(UserOrderListRequest());
         store.state.notificationListState.notificationListState.clear();
-        store.dispatch(RequestNotificationList(store.state.user.uid));
+        store.dispatch(RequestNotificationList(store.state.user.uid, store.state.business.id_firestore));
         startRequest = true;
         rippleLoading = true;
       },
@@ -551,10 +551,10 @@ class _BookingPageState extends State<BookingPage> {
                                             gradient: LinearGradient(
                                               begin: Alignment.bottomCenter,
                                               end: Alignment.topCenter,
-                                              stops: [0.0, 0.1],
+                                              stops: [0.01, 0.3],
                                               colors: [
-                                               Colors.white,
-                                                Colors.transparent
+                                               Colors.white.withOpacity(1),
+                                                Colors.white.withOpacity(0.01)
                                               ],
                                             )
                                           ),

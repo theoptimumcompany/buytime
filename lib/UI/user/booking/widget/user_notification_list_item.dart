@@ -198,7 +198,7 @@ class _UserNotificationListItemState extends State<UserNotificationListItem> {
                         ],
                       ),
                     ),
-                    widget.notificationState.title.split(' ').last.toLowerCase() == 'canceled' && widget.serviceState.switchSlots?
+                    widget.notificationState.title.split(' ').last.toLowerCase() == 'canceled' && widget.serviceState.switchSlots ?
                     Container(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,

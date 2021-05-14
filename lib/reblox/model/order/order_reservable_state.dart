@@ -219,6 +219,8 @@ class OrderReservableState {
         added = true;
       }
     });*/
+    DateTime tmpDate = date;
+    tmpDate = DateTime(date.year, date.month, date.day, int.parse(time.split(':').first), int.parse(time.split(':').last));
     itemList.add(OrderEntry(
         number: 1,
         name: itemToAdd.name,
@@ -231,7 +233,7 @@ class OrderReservableState {
         id_owner: idOwner,
       time: time,
       minutes: minutes,
-      date: date,
+      date: tmpDate,
         switchAutoConfirm: itemToAdd.switchAutoConfirm
     ));
     this.total += price;
