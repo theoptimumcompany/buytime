@@ -163,8 +163,12 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                             return Progress(
                                               cardState: snapshot.cardState,
                                               orderReservableState: snapshot.orderReservable,
-                                              cardOrBooking: orderState.cardType != null && orderState.cardType.isNotEmpty ? orderState.cardType : AppLocalizations.of(context).bookingCode + ':',
-                                              fromValue: orderState.cardLast4Digit != null && orderState.cardLast4Digit.isNotEmpty ? orderState.cardLast4Digit : snapshot.booking.booking_code,
+                                              cardOrBooking: orderState != null ?
+                                                orderState.cardType != null && orderState.cardType.isNotEmpty ? orderState.cardType : AppLocalizations.of(context).bookingCode + ':' :
+                                                orderReservableState.cardType != null && orderReservableState.cardType.isNotEmpty ? orderReservableState.cardType : AppLocalizations.of(context).bookingCode + ':',
+                                              fromValue: orderState != null ?
+                                                orderState.cardLast4Digit != null && orderState.cardLast4Digit.isNotEmpty ? orderState.cardLast4Digit : snapshot.booking.booking_code :
+                                                orderReservableState.cardLast4Digit != null && orderReservableState.cardLast4Digit.isNotEmpty ? orderReservableState.cardLast4Digit : snapshot.booking.booking_code,
                                               textToDisplay: AppLocalizations.of(context).orderConfirmed,
                                               orderState: orderState,
                                               reservable: widget.reserve,
@@ -176,8 +180,12 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                             return Progress(
                                               cardState: snapshot.cardState,
                                               orderReservableState: snapshot.orderReservable,
-                                              cardOrBooking: orderState.cardType != null && orderState.cardType.isNotEmpty ? orderState.cardType : AppLocalizations.of(context).bookingCode + ':',
-                                              fromValue: orderState.cardLast4Digit != null && orderState.cardLast4Digit.isNotEmpty ? orderState.cardLast4Digit : snapshot.booking.booking_code,
+                                              cardOrBooking: orderState != null ?
+                                                orderState.cardType != null && orderState.cardType.isNotEmpty ? orderState.cardType : AppLocalizations.of(context).bookingCode + ':' :
+                                                orderReservableState.cardType != null && orderReservableState.cardType.isNotEmpty ? orderReservableState.cardType : AppLocalizations.of(context).bookingCode + ':',
+                                              fromValue: orderState != null ?
+                                                orderState.cardLast4Digit != null && orderState.cardLast4Digit.isNotEmpty ? orderState.cardLast4Digit : snapshot.booking.booking_code :
+                                                orderReservableState.cardLast4Digit != null && orderReservableState.cardLast4Digit.isNotEmpty ? orderReservableState.cardLast4Digit : snapshot.booking.booking_code,
                                               textToDisplay: AppLocalizations.of(context).orderPending,
                                               orderState: orderState,
                                               reservable: widget.reserve,
@@ -190,8 +198,12 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                             return Progress(
                                               cardState: snapshot.cardState,
                                               orderReservableState: snapshot.orderReservable,
-                                              cardOrBooking: orderState.cardType != null && orderState.cardType.isNotEmpty ? orderState.cardType : AppLocalizations.of(context).bookingCode + ':',
-                                              fromValue: orderState.cardLast4Digit != null && orderState.cardLast4Digit.isNotEmpty ? orderState.cardLast4Digit : snapshot.booking.booking_code,
+                                              cardOrBooking: orderState != null ?
+                                                orderState.cardType != null && orderState.cardType.isNotEmpty ? orderState.cardType : AppLocalizations.of(context).bookingCode + ':' :
+                                                orderReservableState.cardType != null && orderReservableState.cardType.isNotEmpty ? orderReservableState.cardType : AppLocalizations.of(context).bookingCode + ':',
+                                              fromValue: orderState != null ?
+                                                orderState.cardLast4Digit != null && orderState.cardLast4Digit.isNotEmpty ? orderState.cardLast4Digit : snapshot.booking.booking_code :
+                                                orderReservableState.cardLast4Digit != null && orderReservableState.cardLast4Digit.isNotEmpty ? orderReservableState.cardLast4Digit : snapshot.booking.booking_code,
                                               textToDisplay: AppLocalizations.of(context).anErrorOccurredTryLater,
                                               orderState: orderState,
                                               reservable: widget.reserve,
@@ -204,8 +216,12 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                             return Progress(
                                               cardState: snapshot.cardState,
                                               orderReservableState: snapshot.orderReservable,
-                                              cardOrBooking: orderState.cardType != null && orderState.cardType.isNotEmpty ? orderState.cardType : AppLocalizations.of(context).bookingCode + ':',
-                                              fromValue: orderState.cardLast4Digit != null && orderState.cardLast4Digit.isNotEmpty ? orderState.cardLast4Digit : snapshot.booking.booking_code,
+                                              cardOrBooking: orderState != null ?
+                                                orderState.cardType != null && orderState.cardType.isNotEmpty ? orderState.cardType : AppLocalizations.of(context).bookingCode + ':' :
+                                                orderReservableState.cardType != null && orderReservableState.cardType.isNotEmpty ? orderReservableState.cardType : AppLocalizations.of(context).bookingCode + ':',
+                                              fromValue: orderState != null ?
+                                                orderState.cardLast4Digit != null && orderState.cardLast4Digit.isNotEmpty ? orderState.cardLast4Digit : snapshot.booking.booking_code :
+                                                orderReservableState.cardLast4Digit != null && orderReservableState.cardLast4Digit.isNotEmpty ? orderReservableState.cardLast4Digit : snapshot.booking.booking_code,
                                               textToDisplay: AppLocalizations.of(context).orderConfirming,
                                               orderState: orderState,
                                               reservable: widget.reserve,
@@ -632,7 +648,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
     if (widget.reserve != null && widget.reserve) {
       StoreProvider.of<AppState>(context).dispatch(CreatingOrder());
       /// Reservable payment process starts
-      debugPrint('UI_U_ConfirmOrder => order is reservable' + snapshot.orderReservable.isOrderAutoConfirmable().toString());
+      debugPrint('UI_U_ConfirmOrder => order is reservable ' + snapshot.orderReservable.isOrderAutoConfirmable().toString());
       if (snapshot.orderReservable.isOrderAutoConfirmable()) {
         if(Utils.getTimeInterval(orderReservableState) == OrderTimeInterval.directPayment) {
           StoreProvider.of<AppState>(context).dispatch(CreateOrderReservableCardAndPay(snapshot.orderReservable, last4, brand, country, selectedCardPaymentMethodId, PaymentType.card));

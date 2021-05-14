@@ -601,6 +601,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                           ),
                         ),
                         ///Location
+                        widget.orderState.itemList.first.time == null ?
                         Container(
                           margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                           child: FittedBox(
@@ -616,8 +617,9 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                               ),
                             ),
                           ),
-                        ),
+                        ) : Container(),
                         ///Location value
+                        widget.orderState.itemList.first.time == null ?
                         Container(
                           margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
                           child: FittedBox(
@@ -633,7 +635,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                               ),
                             ),
                           ),
-                        ),
+                        ) : Container(),
                         ///Conditions
                         widget.orderState.itemList.first.time != null  ?
                         Container(

@@ -545,6 +545,20 @@ class _BookingPageState extends State<BookingPage> {
                                               fit: BoxFit.fitWidth,
                                             )
                                         ),
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            //color: Color(0xffE6E7E8),
+                                            gradient: LinearGradient(
+                                              begin: Alignment.bottomCenter,
+                                              end: Alignment.topCenter,
+                                              stops: [0.0, 0.1],
+                                              colors: [
+                                               Colors.white,
+                                                Colors.transparent
+                                              ],
+                                            )
+                                          ),
+                                        ),
                                       ),
                                       placeholder: (context, url) => Row(
                                         mainAxisAlignment: MainAxisAlignment.center,

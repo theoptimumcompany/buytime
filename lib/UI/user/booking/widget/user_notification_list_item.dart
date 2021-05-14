@@ -213,7 +213,7 @@ class _UserNotificationListItemState extends State<UserNotificationListItem> {
                                       if(widget.notificationState.notificationId != null && widget.notificationState.notificationId.isNotEmpty && widget.serviceState.serviceId.isNotEmpty){
                                         //widget.notificationState.opened = true;
                                         //StoreProvider.of<AppState>(context).dispatch(UpdateNotification(widget.notificationState));
-                                        Navigator.push(context, MaterialPageRoute(builder: (context) => ServiceReserve(serviceState: widget.serviceState)));
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => ServiceReserve(serviceState: widget.serviceState, tourist: false,)));
                                       }
                                     },
                                     borderRadius: BorderRadius.all(Radius.circular(5.0)),

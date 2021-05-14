@@ -224,6 +224,7 @@ class Utils {
     Duration nowToServiceDuration = closestTimeSlot.difference(DateTime.now());
     if (nowToServiceDuration.isNegative) {
       /// TODO: error the service performance should be already happened
+      return OrderTimeInterval.directPayment;
     } else if (nowToServiceDuration.inHours <= 48) { // TODO: make hardcoded variables readable from the configuration (we have to create a collection "configurationPublic"
       return OrderTimeInterval.directPayment;
     } else if (nowToServiceDuration.inHours >= 48 && nowToServiceDuration.inDays <= 7) {
@@ -231,6 +232,8 @@ class Utils {
     } else if (nowToServiceDuration.inDays > 7) {
       return OrderTimeInterval.reminder;
     }
+
+    return OrderTimeInterval.directPayment;
   }
 
   static void multiLingualTranslate(BuildContext context, List<String> flags, List<String> language, String field, String stateField, FocusScopeNode node, OnTranslatingCallback translatingCallback) async{
