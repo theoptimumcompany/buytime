@@ -11,9 +11,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:video_player/video_player.dart';
+import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 
 class Home extends StatefulWidget {
   //final Widget child;
@@ -39,13 +39,65 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   List backgroundVideoList = new List();
 
   int randomNumber = 0;
+  String _authStatus = 'Unknown';
 
   String tcPdfPath = '';
   String tosPdfPath = '';
   String urlPdf = '';
 
+  Future<void> initPlugin() async {
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      final TrackingStatus status = await AppTrackingTransparency.trackingAuthorizationStatus;
+      setState(() => _authStatus = '$status');
+      // If the system can show an authorization request dialog
+      if (status == TrackingStatus.notDetermined) {
+        // Show a custom explainer dialog before the system dialog
+        if (await showCustomTrackingDialog(context)) {
+          // Wait for dialog popping animation
+          await Future.delayed(const Duration(milliseconds: 200));
+          // Request system's tracking authorization dialog
+          final TrackingStatus status = await AppTrackingTransparency.requestTrackingAuthorization();
+          setState(() => _authStatus = '$status');
+        }
+      }
+    } on PlatformException {
+      setState(() => _authStatus = 'PlatformException was thrown');
+    }
+
+    final uuid = await AppTrackingTransparency.getAdvertisingIdentifier();
+    print("UUID: $uuid");
+  }
+
+  Future<bool> showCustomTrackingDialog(BuildContext context) async =>
+      await showDialog<bool>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Dear User'),
+          content: const Text(
+            'We care about your privacy and data security. We keep this app free by showing ads. '
+                'Can we continue to use your data to tailor ads for you?\n\nYou can change your choice anytime in the app settings. '
+                'Our partners will collect data and use a unique identifier on your device to show you ads.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text("I'll decide later"),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: const Text('Allow tracking'),
+            ),
+          ],
+        ),
+      ) ??
+          false;
+
+
   @override
   void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) => initPlugin());
+
     _animationController = AnimationController(vsync: this, duration: Duration(seconds: 5));
 
     _animation = new Tween(
@@ -575,7 +627,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                 ///By signing ...
                                 Container(
                                   child: Text(
-                                    AppLocalizations.of(context).bySigningUpYourAgreeToOur,
+                                    "${AppLocalizations.of(context).bySigningUpYourAgreeToOur} ",
                                     style: TextStyle(color: Colors.grey, fontSize: 14, fontWeight: FontWeight.w400),
                                   ),
                                 ),
@@ -596,7 +648,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                 ///And
                                 Container(
                                   child: Text(
-                                    AppLocalizations.of(context).and,
+                                    " ${AppLocalizations.of(context).and} ",
                                     style: TextStyle(color: Colors.grey, fontSize: 14, fontWeight: FontWeight.w400),
                                   ),
                                 ),

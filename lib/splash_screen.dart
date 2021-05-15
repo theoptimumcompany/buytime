@@ -4,7 +4,6 @@ import 'dart:io';
 import 'dart:ui';
 import 'package:Buytime/UI/user/booking/UI_U_notifications.dart';
 import 'package:Buytime/UI/user/landing/UI_U_landing.dart';
-import 'package:Buytime/main.dart';
 import 'package:Buytime/reblox/model/autoComplete/auto_complete_state.dart';
 import 'package:Buytime/reblox/model/card/card_state.dart';
 import 'package:Buytime/reblox/model/snippet/device.dart';
@@ -14,10 +13,8 @@ import 'package:Buytime/reblox/reducer/auto_complete_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/notification_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/card_list_reducer.dart';
-import 'package:Buytime/reblox/reducer/statistics_reducer.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
-import 'package:Buytime/UI/user/order/UI_U_order_detail.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/user/user_state.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
@@ -57,7 +54,6 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
   StatisticsState statisticsState;
 
   readFromStorage() async {
-
     final prefs = await SharedPreferences.getInstance();
     //prefs.setBool('first_run', true);
     if (prefs.getBool('first_run') ?? true) {
@@ -82,10 +78,13 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
     StoreProvider.of<AppState>(context).dispatch(AddAutoCompleteToList(completes));
   }
 
+
   @override
   void initState() {
     WidgetsBinding.instance.addObserver(this);
     super.initState();
+
+
     Firebase.initializeApp().then((value) {
       final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
       if (!kIsWeb) {
@@ -164,19 +163,20 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
     initPlatformState();
   }
 
-
   Flushbar notifyFlushbar(String message) {
     return Flushbar(
-            flushbarPosition: FlushbarPosition.TOP,
-            padding: EdgeInsets.all(SizeConfig.safeBlockVertical * 2),
-            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5, left: SizeConfig.blockSizeHorizontal * 20, right: SizeConfig.blockSizeHorizontal * 20), ///2% - 20% - 20%
-            borderRadius: BorderRadius.all(Radius.circular(8)),
-            backgroundColor: BuytimeTheme.SymbolLightGrey,
-            //onTap: tapFlushbar(),
-            onTap: (ciao){
-              Navigator.push(context, MaterialPageRoute(builder: (context) => Notifications(orderStateList: StoreProvider.of<AppState>(context).state.orderList.orderListState)));
-            },
-            /*mainButton: Container(
+      flushbarPosition: FlushbarPosition.TOP,
+      padding: EdgeInsets.all(SizeConfig.safeBlockVertical * 2),
+      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5, left: SizeConfig.blockSizeHorizontal * 20, right: SizeConfig.blockSizeHorizontal * 20),
+
+      ///2% - 20% - 20%
+      borderRadius: BorderRadius.all(Radius.circular(8)),
+      backgroundColor: BuytimeTheme.SymbolLightGrey,
+      //onTap: tapFlushbar(),
+      onTap: (ciao) {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => Notifications(orderStateList: StoreProvider.of<AppState>(context).state.orderList.orderListState)));
+      },
+      /*mainButton: Container(
               margin: EdgeInsets.only(left: 5, right: 5),
               child: MaterialButton(
                 color: BuytimeTheme.Secondary,
@@ -191,35 +191,29 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
                 ),
               ),
             ),*/
-            boxShadows: [
-              BoxShadow(
-                color: Colors.black45,
-                offset: Offset(3, 3),
-                blurRadius: 3,
-              ),
-            ],
-            // All of the previous Flushbars could be dismissed by swiping down
-            // now we want to swipe to the sides
-            //dismissDirection: FlushbarDismissDirection.HORIZONTAL,
-            // The default curve is Curves.easeOut
-            duration:  Duration(seconds: 4),
-            forwardAnimationCurve: Curves.fastLinearToSlowEaseIn,
-            messageText: Text(
-             message,
-              style: TextStyle(
-                  color: BuytimeTheme.TextBlack,
-                  fontWeight: FontWeight.bold
-              ),
-              textAlign: TextAlign.center,
-            ),
-          )..show(context);
+      boxShadows: [
+        BoxShadow(
+          color: Colors.black45,
+          offset: Offset(3, 3),
+          blurRadius: 3,
+        ),
+      ],
+      // All of the previous Flushbars could be dismissed by swiping down
+      // now we want to swipe to the sides
+      //dismissDirection: FlushbarDismissDirection.HORIZONTAL,
+      // The default curve is Curves.easeOut
+      duration: Duration(seconds: 4),
+      forwardAnimationCurve: Curves.fastLinearToSlowEaseIn,
+      messageText: Text(
+        message,
+        style: TextStyle(color: BuytimeTheme.TextBlack, fontWeight: FontWeight.bold),
+        textAlign: TextAlign.center,
+      ),
+    )..show(context);
   }
 
   void checkIfNativePayReady() async {
-    StripePayment.setOptions(StripeOptions(
-        publishableKey: "pk_test_51HS20eHr13hxRBpCZl1V0CKFQ7XzJbku7UipKLLIcuNGh3rp4QVsEDCThtV0l2AQ3jMtLsDN2zdC0fQ4JAK6yCOp003FIf3Wjz",
-        merchantId: "Test",
-        androidPayMode: 'test'));
+    StripePayment.setOptions(StripeOptions(publishableKey: "pk_test_51HS20eHr13hxRBpCZl1V0CKFQ7XzJbku7UipKLLIcuNGh3rp4QVsEDCThtV0l2AQ3jMtLsDN2zdC0fQ4JAK6yCOp003FIf3Wjz", merchantId: "Test", androidPayMode: 'test'));
 
     debugPrint('splash_screen: started to check if native pay ready');
     bool deviceSupportNativePay = await StripePayment.deviceSupportsNativePay();
