@@ -88,7 +88,10 @@ class LandingState extends State<Landing> {
         else if (deepLink.queryParameters.containsKey('categoryInvite')) {
           String businessId = deepLink.queryParameters['businessId'];
           debugPrint('UI_U_landing: businessId: $businessId');
-          StoreProvider.of<AppState>(context).dispatch(BusinessRequestAndNavigate(businessId));
+          //StoreProvider.of<AppState>(context).dispatch(BusinessRequestAndNavigate(businessId));
+          StoreProvider.of<AppState>(context).dispatch(UserBookingListRequest(StoreProvider.of<AppState>(context).state.user.email, false));
+
+          Navigator.push(context, MaterialPageRoute(builder: (context) => UI_M_BusinessList()));
         }
       }
     }, onError: (OnLinkErrorException e) async {
@@ -114,7 +117,10 @@ class LandingState extends State<Landing> {
       else if (deepLink.queryParameters.containsKey('categoryInvite')) {
         String id = deepLink.queryParameters['categoryInvite'];
         debugPrint('UI_U_landing: categoryInvite: $id');
-        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => InviteGuestForm(id: id, fromLanding: false)), (Route<dynamic> route) => false);
+        //Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => InviteGuestForm(id: id, fromLanding: false)), (Route<dynamic> route) => false);
+        StoreProvider.of<AppState>(context).dispatch(UserBookingListRequest(StoreProvider.of<AppState>(context).state.user.email, false));
+
+        Navigator.push(context, MaterialPageRoute(builder: (context) => UI_M_BusinessList()));
       }
     }
   }

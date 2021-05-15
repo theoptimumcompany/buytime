@@ -722,7 +722,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                               ),
                               ///Ending **** ....
                               Text(
-                                widget.orderState.cardType != null ?
+                                widget.orderState.cardType != null && widget.orderState.cardLast4Digit != null  ?
                                   '**** ' + widget.orderState.cardLast4Digit :
                                  '**** 0000',
                                 style: TextStyle(

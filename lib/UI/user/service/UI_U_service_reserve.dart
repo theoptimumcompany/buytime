@@ -23,6 +23,7 @@ import 'package:Buytime/reusable/sliverAppBarDelegate.dart';
 import 'package:Buytime/reusable/time_slot_widget.dart';
 import 'package:Buytime/utils/globals.dart';
 import 'package:Buytime/utils/utils.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
@@ -890,6 +891,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                 });
                                                                 if(select[i]){
                                                                   String duration = '';
+                                                                  //debugPrint('TIMESTAMP: ${Timestamp.fromDate(serviceSlot[2].date)}');
                                                                   if(serviceSlot[1].day != 0){
                                                                     if(serviceSlot[1].day > 1){
                                                                       duration = '${serviceSlot[1].day} ${AppLocalizations.of(context).days}';
@@ -913,7 +915,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                   }
                                                                   order.user.name = snapshot.user.name;
                                                                   order.user.id = snapshot.user.uid;
-                                                                  order.addReserveItem(widget.serviceState, snapshot.business.ownerId, serviceSlot[2].startTime, duration , dates[index], serviceSlot[2].price);
+                                                                  order.addReserveItem(widget.serviceState, snapshot.business.ownerId, serviceSlot[2].startTime, duration, dates[index], serviceSlot[2].price);
                                                                   order.selected.add(indexes[index][i]);
                                                                   //order.selected.add(selected);
                                                                   order.cartCounter++;
@@ -924,8 +926,10 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                   order.itemList.forEach((element) {
                                                                     if(element.time ==  serviceSlot[2].startTime && element.date.isAtSameMomentAs(dates[index])){
                                                                       tmp = element;
+                                                                      debugPrint('UI_U_service_reserve => ENTRY: ${element.id_business}');
                                                                     }
                                                                   });
+                                                                  //debugPrint('UI_U_service_reserve => ENTRY: ${tmp.id_business}');
                                                                   order.selected.remove(indexes[index][i]);
                                                                   //order.selected.remove(selected);
                                                                   deleteItem(snapshot.order, tmp);

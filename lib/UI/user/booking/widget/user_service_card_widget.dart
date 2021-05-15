@@ -1,10 +1,13 @@
 import 'package:Buytime/UI/user/booking/UI_U_order_details.dart';
+import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
+import 'package:Buytime/reblox/reducer/notification_reducer.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -72,7 +75,14 @@ class _UserServiceCardWidgetState extends State<UserServiceCardWidget> {
           child: InkWell(
             splashColor: Colors.black.withOpacity(.3),
             onTap: (){
+              StoreProvider.of<AppState>(context).state.notificationListState.notificationListState.forEach((element) {
+                if(element.notificationId != null && element.notificationId.isNotEmpty && widget.orderState.orderId.isNotEmpty && widget.orderState.orderId == element.data.state.orderId){
+                  element.opened = true;
+                  StoreProvider.of<AppState>(context).dispatch(UpdateNotification(element));
+                }
+              });
               Navigator.push(context, MaterialPageRoute(builder: (context) => OrderDetails(orderState: widget.orderState)));
+              //Navigator.push(context, MaterialPageRoute(builder: (context) => OrderDetails(orderState: widget.orderState)));
              /* widget.fromBookingPage ?
               Navigator.push(context, MaterialPageRoute(builder: (context) => FilterByCategory(fromBookingPage: true, categoryState: widget.categoryState,))) :
               Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => FilterByCategory(fromBookingPage: false,categoryState: widget.categoryState,)));*/
