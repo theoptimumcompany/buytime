@@ -357,7 +357,7 @@
   "owner": "Proprietario",
   "passwordError": "La password ha un minimo di 6 caratteri e deve contenere almeno una cifra, una lettera minuscola ed una maiuscola",
   "reservation": "Prenotazione",
-  "activityManagement": "Gestione Attiva",
+  "activityManagement": "Gestione Attività",
   "seeAllWeek": "Vedi tutta la settimana",
   "noReservationYet": "Non hai ancora prenotazioni",
   "pending": "In attesa",
