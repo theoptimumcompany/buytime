@@ -11,17 +11,19 @@ class OrderEntry {
   String description;
   double price;
   String thumbnail;
-  String id;
+  String id; //TODO: Change name into id_service
   String id_business;
   String id_owner;
   String id_category;
   ///Reserve
-  String time;
+  String time;  ///time NULL -> No Reservable
   String minutes;
   @JsonKey(fromJson: Utils.getDate, toJson: Utils.setDate)
   DateTime date;
   @JsonKey(defaultValue: false)
   bool switchAutoConfirm = false;
+  @JsonKey(defaultValue: '')
+  String idSquareSlot;
 
   OrderEntry({
     this.number = 0,
@@ -37,6 +39,7 @@ class OrderEntry {
     this.minutes,
     this.date,
     this.switchAutoConfirm,
+    this.idSquareSlot,
   });
 
   factory OrderEntry.fromJson(Map<String, dynamic> json) => _$OrderEntryFromJson(json);
