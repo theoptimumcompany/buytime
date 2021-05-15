@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/card/card_state.dart';
@@ -16,12 +17,13 @@ import 'package:Buytime/services/payment/util.dart';
 import 'package:Buytime/services/statistic/util.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:redux_epics/redux_epics.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:stripe_sdk/stripe_sdk_ui.dart' as StripeUnofficialUI;
 import 'package:stripe_sdk/stripe_sdk.dart' as StripeUnofficial;
 import 'package:stripe_payment/stripe_payment.dart' as StripeRecommended;
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
 
@@ -314,7 +316,7 @@ class StripePaymentService {
     }
   }
 
-  Future<String> processPaymentAsDirectCharge(String orderId) async {
+  Future<String> processPaymentAsDirectCharge(String orderId, String StripeConnectedBusinessId) async {
     var url = Uri.https(cloudAddress, cloudFunctionPathPay, {'orderId': '$orderId', 'currency': currency});
     final http.Response response = await http.get(url);
     debugPrint('processPaymentAsDirectCharge: Now i decode');
@@ -331,8 +333,8 @@ class StripePaymentService {
         /// stop spinner
       } else {
         //step 4: there is a need to authenticate
-        /// why should I set another stripe account? TODO: discover this.
-        /// StripeRecommended.StripePayment.setStripeAccount(strAccount);
+        /// set stripe account of connected business
+        StripeRecommended.StripePayment.setStripeAccount(StripeConnectedBusinessId);
         StripeRecommended.PaymentIntentResult paymentIntentResult = await StripeRecommended.StripePayment.confirmPaymentIntent(StripeRecommended.PaymentIntent(
             paymentMethodId: paymentIntentX['payment_method'],
             clientSecret: paymentIntentX['client_secret']
@@ -366,44 +368,34 @@ class StripePaymentService {
     }
   }
 
-  Future<String> processHoldCharge(String orderId) async {
+  Future<String> processHoldCharge(String orderId, String StripeConnectedBusinessId, BuildContext context) async {
     var url = Uri.https(cloudAddress, cloudFunctionPathHold, {'orderId': '$orderId', 'currency': currency});
-    final http.Response response = await http.get(url);
-    debugPrint('processPaymentAsDirectCharge: Now i decode');
+    final http.Response response  = await http.get(url);
     if (response.body != null && response.body != 'error') {
       final paymentIntentX = jsonDecode(response.body);
       final status = paymentIntentX['status'];
       final nextAction = paymentIntentX['next_action'];
-      //step 3: check if payment was succesfully confirmed
       if (status == 'succeeded' && nextAction == null) {
         //payment was confirmed by the server without need for futher authentification
-        // StripeRecommended.StripePayment.completeNativePayRequest();
+        StripeRecommended.StripePayment.completeNativePayRequest();
         debugPrint('processPaymentAsDirectCharge:  Payment completed. ${paymentIntentX['amount'].toString()} successfully charged');
         return "success";
         /// stop spinner
       } else {
-        //step 4: there is a need to authenticate
-        /// TODO: discover if this works also for HOLDS
-        StripeRecommended.PaymentIntentResult paymentIntentResult = await StripeRecommended.StripePayment.confirmPaymentIntent(StripeRecommended.PaymentIntent(
-            paymentMethodId: paymentIntentX['payment_method'],
-            clientSecret: paymentIntentX['client_secret']
-        ));
-        //This code will be executed if the authentication is successful
-        //step 5: request the server to confirm the payment with
+        /// set stripe account of connected business
+        StripeRecommended.StripePayment.setStripeAccount(StripeConnectedBusinessId);
+        StripeRecommended.PaymentIntentResult paymentIntentResult = await StripeRecommended.StripePayment.authenticatePaymentIntent(clientSecret: paymentIntentX['client_secret']);
+        // confirmPaymentIntent(StripeRecommended.PaymentIntent(
+        //     paymentMethodId: paymentIntentX['payment_method'],
+        //     clientSecret: paymentIntentX['client_secret']
+        // ));
         final statusFinal = paymentIntentResult.status;
-        if (statusFinal == 'succeeded') {
-          StripeRecommended.StripePayment.completeNativePayRequest();
-          /// stop spinner
+        if (statusFinal == 'requires_capture' || statusFinal == 'requires_confirmation' ) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context).holdingConfirmed)));
           debugPrint('processPaymentAsDirectCharge:  Payment success');
           return "success";
-        } else if (statusFinal == 'processing') {
-          StripeRecommended.StripePayment.cancelNativePayRequest();
-          /// stop spinner
-          debugPrint('processPaymentAsDirectCharge:  processing. this is weird');
-          return "trouble";
         } else {
-          StripeRecommended.StripePayment.cancelNativePayRequest();
-          /// stop spinner
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context).holdingError)));
           debugPrint('processPaymentAsDirectCharge:  Payment error. canceling.');
           return "error";
         }
@@ -415,6 +407,27 @@ class StripePaymentService {
       debugPrint('processPaymentAsDirectCharge:  Payment error. canceling.');
       return "error";
     }
+  }
+
+
+  Future<String> confirmPaymentIntent(BuildContext context, String paymentIntentClientSecret,  String paymentMethodId) async {
+    String result = 'processing';
+    await StripeRecommended.StripePayment.confirmPaymentIntent(
+      StripeRecommended.PaymentIntent(
+          clientSecret: paymentIntentClientSecret,
+          paymentMethodId: paymentMethodId,
+        ),
+      ).then((paymentIntent) {
+        /// TODO: check if the payment intent has a next action, if so, redirect the user to the link
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context).holdingConfirmed)));
+        result = "success";
+        debugPrint('confirmPaymentIntent: success');
+      }).catchError((error) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context).holdingError)));
+        result = "error";
+        debugPrint('confirmPaymentIntent: error ' + error);
+    });
+    return result;
   }
 
   static Future<Map<String, dynamic>> createPaymentMethodFromCard(StripeUnofficialUI.StripeCard stripeCard) async {

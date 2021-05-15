@@ -39,6 +39,7 @@ ExternalBusinessState _$ExternalBusinessStateFromJson(
         ? null
         : GenericState.fromJson(json['salesman'] as Map<String, dynamic>),
     salesmanId: json['salesmanId'] as String,
+    stripeCustomerId: json['stripeCustomerId'] as String,
     owner: json['owner'] == null
         ? null
         : GenericState.fromJson(json['owner'] as Map<String, dynamic>),
@@ -78,6 +79,7 @@ Map<String, dynamic> _$ExternalBusinessStateToJson(
       'id_firestore': instance.id_firestore,
       'salesman': instance.salesman?.toJson(),
       'salesmanId': instance.salesmanId,
+      'stripeCustomerId': instance.stripeCustomerId,
       'owner': instance.owner?.toJson(),
       'ownerId': instance.ownerId,
       'draft': instance.draft,

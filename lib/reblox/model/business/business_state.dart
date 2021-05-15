@@ -31,6 +31,8 @@ class BusinessState {
   String id_firestore;
   GenericState salesman;
   String salesmanId;
+  @JsonKey(defaultValue: '')
+  String stripeCustomerId;
   GenericState owner;
   String ownerId;
   bool draft;
@@ -68,6 +70,7 @@ class BusinessState {
     @required this.id_firestore,
     this.salesman,
     this.salesmanId,
+    this.stripeCustomerId,
     this.owner,
     this.ownerId,
     this.fileToUploadList,
@@ -104,6 +107,7 @@ class BusinessState {
       id_firestore: "",
       salesman: GenericState(),
       salesmanId: "",
+        stripeCustomerId: "",
       owner: GenericState(),
       ownerId: "",
       fileToUploadList: null,
@@ -139,6 +143,7 @@ class BusinessState {
     this.id_firestore = state.id_firestore;
     this.salesman = state.salesman;
     this.salesmanId = state.salesmanId;
+    this.stripeCustomerId = state.stripeCustomerId;
     this.owner = state.owner;
     this.ownerId = state.ownerId;
     this.draft = state.draft;
@@ -174,6 +179,7 @@ class BusinessState {
     this.id_firestore = state.id_firestore;
     this.salesman = state.salesman;
     this.salesmanId = state.salesmanId;
+    this.stripeCustomerId = state.stripeCustomerId;
     this.owner = state.owner;
     this.ownerId = state.ownerId;
     this.draft = state.draft;
@@ -209,6 +215,7 @@ class BusinessState {
     String id_firestore,
     GenericState salesaman,
     String salesmanId,
+    String stripeCustomerId,
     GenericState owner,
     String ownerId,
     bool draft,
@@ -243,6 +250,7 @@ class BusinessState {
       id_firestore: id_firestore ?? this.id_firestore,
       salesman: salesman ?? this.salesman,
       salesmanId: salesmanId ?? this.salesmanId,
+      stripeCustomerId: stripeCustomerId ?? this.stripeCustomerId,
       owner: owner ?? this.owner,
       ownerId: ownerId ?? this.ownerId,
       draft: draft ?? this.draft,

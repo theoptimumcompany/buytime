@@ -207,7 +207,7 @@ class OrderCreateNativeAndPayService implements EpicClass<AppState> {
           'booking_id': store.state.booking.booking_id
         });
         StripePaymentService stripePaymentService = StripePaymentService();
-        paymentResult = await stripePaymentService.processPaymentAsDirectCharge(orderState.orderId);
+        paymentResult = await stripePaymentService.processPaymentAsDirectCharge(orderState.orderId, event.businessStripeAccount );
       }
       statisticsComputation();
      }).expand((element) {
@@ -251,7 +251,7 @@ class OrderCreateCardAndPayService implements EpicClass<AppState> {
           'booking_id': store.state.booking.booking_id
         });
         StripePaymentService stripePaymentService = StripePaymentService();
-        paymentResult = await stripePaymentService.processPaymentAsDirectCharge(orderState.orderId);
+        paymentResult = await stripePaymentService.processPaymentAsDirectCharge(orderState.orderId, event.businessStripeAccount );
       }
       statisticsComputation();
      }).expand((element) {

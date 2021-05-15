@@ -369,7 +369,7 @@ class CreateOrderReservableCardAndPayService implements EpicClass<AppState> {
             'booking_id': store.state.booking.booking_id
           });
           StripePaymentService stripePaymentService = StripePaymentService();
-          paymentResult = await stripePaymentService.processPaymentAsDirectCharge(orderReservableState.orderId);
+          paymentResult = await stripePaymentService.processPaymentAsDirectCharge(orderReservableState.orderId, event.businessStripeAccount );
         }
       }
       statisticsComputation();
@@ -394,7 +394,7 @@ class CreateOrderReservableCardAndPayService implements EpicClass<AppState> {
 class CreateOrderReservableCardAndHoldService implements EpicClass<AppState> {
   StatisticsState statisticsState;
   String state = '';
-  String paymentResult = '';
+  dynamic paymentResult;
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<CreateOrderReservableCardAndHold>().asyncMap((event) async {
@@ -409,6 +409,8 @@ class CreateOrderReservableCardAndHoldService implements EpicClass<AppState> {
           /// there are really low chances that the rest of the id is also colliding.
           String timeBasedId = Uuid().v1();
           orderReservableState.orderId = timeBasedId;
+          reservable.cardType = Utils.enumToString(PaymentType.card);
+          reservable.progress = Utils.enumToString(OrderStatus.holding);
           /// send document to orders collection
           var addedOrder = await FirebaseFirestore.instance.collection("order").doc(timeBasedId).set(orderReservableState.toJson());
           /// add the payment method to the order sub collection on firebase
@@ -421,7 +423,7 @@ class CreateOrderReservableCardAndHoldService implements EpicClass<AppState> {
             'booking_id': store.state.booking.booking_id
           });
           StripePaymentService stripePaymentService = StripePaymentService();
-          paymentResult = await stripePaymentService.processHoldCharge(orderReservableState.orderId);
+          paymentResult = await stripePaymentService.processHoldCharge(orderReservableState.orderId, event.businessStripeAccount, event.context);
         }
       }
       statisticsComputation();
@@ -429,7 +431,7 @@ class CreateOrderReservableCardAndHoldService implements EpicClass<AppState> {
       var actionArray = [];
       actionArray.add(CreatedOrderReservable());
       actionArray.add(UpdateStatistics(statisticsState));
-      if (paymentResult == "success") {
+      if (paymentResult != "error") {
         actionArray.add(SetOrderReservableProgress(Utils.enumToString(OrderStatus.holding)));
       } else {
         actionArray.add(SetOrderReservableProgress(Utils.enumToString(OrderStatus.canceled)));
@@ -462,6 +464,8 @@ class CreateOrderReservableCardAndReminderService implements EpicClass<AppState>
           /// there are really low chances that the rest of the id is also colliding.
           String timeBasedId = Uuid().v1();
           orderReservableState.orderId = timeBasedId;
+          reservable.cardType = Utils.enumToString(PaymentType.card);
+          reservable.progress = Utils.enumToString(OrderStatus.holding);
           /// send document to orders collection
           var addedOrder = await FirebaseFirestore.instance.collection("order").doc(timeBasedId).set(orderReservableState.toJson());
           /// add the payment method to the order sub collection on firebase
@@ -576,7 +580,7 @@ class CreateOrderReservableNativeAndPayService implements EpicClass<AppState> {
             'booking_id': store.state.booking.booking_id
           });
           StripePaymentService stripePaymentService = StripePaymentService();
-          paymentResult = await stripePaymentService.processPaymentAsDirectCharge(orderReservableState.orderId);
+          paymentResult = await stripePaymentService.processPaymentAsDirectCharge(orderReservableState.orderId, event.businessStripeAccount );
         }
       }
       statisticsComputation();
@@ -599,7 +603,7 @@ class CreateOrderReservableNativeAndPayService implements EpicClass<AppState> {
 class CreateOrderReservableNativeAndHoldService implements EpicClass<AppState> {
   StatisticsState statisticsState;
   String state = '';
-  String paymentResult = '';
+  dynamic paymentResult;
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<CreateOrderReservableNativeAndHold>().asyncMap((event) async {
@@ -627,7 +631,7 @@ class CreateOrderReservableNativeAndHoldService implements EpicClass<AppState> {
             'booking_id': store.state.booking.booking_id
           });
           StripePaymentService stripePaymentService = StripePaymentService();
-          paymentResult = await stripePaymentService.processHoldCharge(orderReservableState.orderId);
+          paymentResult = await stripePaymentService.processHoldCharge(orderReservableState.orderId, event.businessStripeAccount, event.context );
         }
       }
       statisticsComputation();

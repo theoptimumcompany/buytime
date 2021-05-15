@@ -497,6 +497,7 @@
   "sendEmail": "An email has been sent",
   "pleaseFillAllFields": "Please fill in all required fields",
   "required": "This field is required",
+
   "noServices": "No network services",
   "alreadyInYourNetwork": "Already in your network",
   "serviceNotVisible": "The Service is Not Visible",
@@ -529,6 +530,7 @@
   "businessType": "Business Type",
   "holding": "holding",
   "secs": "secs",
-  "sec": "sec"
-
+  "sec": "sec",
+  "holdingConfirmed": "Your card has now a hold for the order total amount. The money will be charged about 48 hours before the service is used.",
+  "holdingError": "There was a problem with your card, please try again with another payment method"
 }

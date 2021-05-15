@@ -3,6 +3,7 @@ import 'package:Buytime/reblox/model/order/order_entry.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/stripe/stripe_state.dart';
 import 'package:Buytime/utils/utils.dart';
+import 'package:flutter/widgets.dart';
 import 'package:stripe_payment/stripe_payment.dart' as StripeRecommended;
 import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
 
@@ -55,22 +56,30 @@ class CreateOrderCardAndPay {
   String _country;
   String _selectedCardPaymentMethodId;
   PaymentType _paymentType;
-  CreateOrderCardAndPay(this._orderState, this._last4, this._brand, this._country, this._selectedCardPaymentMethodId, this._paymentType);
+  String _businessStripeAccount;
+  BuildContext _context;
+  CreateOrderCardAndPay(this._orderState, this._last4, this._brand, this._country, this._selectedCardPaymentMethodId, this._paymentType, this._context, this._businessStripeAccount);
   OrderState get orderState => _orderState;
   PaymentType get paymentType => _paymentType;
   String get last4 => _last4;
   String get brand => _brand;
   String get country => _country;
   String get selectedCardPaymentMethodId => _selectedCardPaymentMethodId;
+  BuildContext get context => _context;
+  String get businessStripeAccount => _businessStripeAccount;
 }
 class CreateOrderNativeAndPay {
   OrderState _orderState;
   StripeRecommended.PaymentMethod _paymentMethod;
   PaymentType _paymentType;
-  CreateOrderNativeAndPay(this._orderState, this._paymentMethod, this._paymentType);
+  String _businessStripeAccount;
+  BuildContext _context;
+  CreateOrderNativeAndPay(this._orderState, this._paymentMethod, this._paymentType, this._context, this._businessStripeAccount);
   OrderState get orderState => _orderState;
   PaymentType get paymentType => _paymentType;
   StripeRecommended.PaymentMethod get paymentMethod => _paymentMethod;
+  BuildContext get context => _context;
+  String get businessStripeAccount => _businessStripeAccount;
 }
 
 class CreateOrderRoomAndPay {

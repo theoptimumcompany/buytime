@@ -13,18 +13,19 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 part 'order_state.g.dart';
 
 enum OrderStatus {
-  progress,
-  unpaid,
+  progress, /// non lo vedranno mai
+  unpaid, /// non lo vedranno mai
   accepted,
   paid,
   pending,
   toBePaidAtCheckout,
-  canceled,
-  frozen,
-  declined,
+  canceled, /// Viene cancellato DOPO il pagamento dall'utente o dal business
+  frozen, /// non lo vedranno mai
+  declined, /// Viene cancellato PRIMA del pagamento dal business POTREBBE VENIRE RIAPERTO DAL BUSINESS
   holding,
-  creating
+  creating /// non lo vedranno mai
 }
+
 enum AddCardStatus {
   notStarted,
   done,
