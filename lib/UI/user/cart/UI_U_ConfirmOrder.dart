@@ -3,7 +3,6 @@ import 'package:Buytime/UI/user/cart/tab/T_native_apple.dart';
 import 'package:Buytime/UI/user/cart/tab/T_native_google.dart';
 import 'package:Buytime/UI/user/cart/tab/T_credit_cards.dart';
 import 'package:Buytime/UI/user/cart/tab/T_room.dart';
-import 'package:Buytime/UI/user/cart/tab/T_progress.dart';
 import 'package:Buytime/reblox/enum/order_time_intervals.dart';
 import 'package:Buytime/reblox/model/card/card_state.dart';
 import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
@@ -57,7 +56,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
       setState(() {
         _selectedIndex = _controller.index;
       });
-      print("Selected Index: " + _controller.index.toString());
+      // print("Selected Index: " + _controller.index.toString());
     });
   }
 
@@ -156,87 +155,42 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                         ),
                                         ///Tab value
                                         (() {
-                                          if (snapshot.order.progress == Utils.enumToString(OrderStatus.paid) || snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.paid) ||
-                                              snapshot.order.progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout) || snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout)
-                                          ) {
-                                            /// return confirmed
-                                            return Progress(
-                                              cardState: snapshot.cardState,
-                                              orderReservableState: snapshot.orderReservable,
-                                              cardOrBooking: orderState != null ?
-                                                orderState.cardType != null && orderState.cardType.isNotEmpty ? orderState.cardType : AppLocalizations.of(context).bookingCode + ':' :
-                                                orderReservableState.cardType != null && orderReservableState.cardType.isNotEmpty ? orderReservableState.cardType : AppLocalizations.of(context).bookingCode + ':',
-                                              fromValue: orderState != null ?
-                                                orderState.cardLast4Digit != null && orderState.cardLast4Digit.isNotEmpty ? orderState.cardLast4Digit : snapshot.booking.booking_code :
-                                                orderReservableState.cardLast4Digit != null && orderReservableState.cardLast4Digit.isNotEmpty ? orderReservableState.cardLast4Digit : snapshot.booking.booking_code,
-                                              textToDisplay: AppLocalizations.of(context).orderConfirmed,
-                                              orderState: orderState,
-                                              reservable: widget.reserve,
-                                              tourist:widget.tourist,
-                                              // videoAsset: "assets/video/success.mp4",
-                                            );
-                                          } else if (snapshot.order.progress == Utils.enumToString(OrderStatus.pending) || snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.canceled)) {
-                                            /// return canceled
-                                            return Progress(
-                                              cardState: snapshot.cardState,
-                                              orderReservableState: snapshot.orderReservable,
-                                              cardOrBooking: orderState != null ?
-                                                orderState.cardType != null && orderState.cardType.isNotEmpty ? orderState.cardType : AppLocalizations.of(context).bookingCode + ':' :
-                                                orderReservableState.cardType != null && orderReservableState.cardType.isNotEmpty ? orderReservableState.cardType : AppLocalizations.of(context).bookingCode + ':',
-                                              fromValue: orderState != null ?
-                                                orderState.cardLast4Digit != null && orderState.cardLast4Digit.isNotEmpty ? orderState.cardLast4Digit : snapshot.booking.booking_code :
-                                                orderReservableState.cardLast4Digit != null && orderReservableState.cardLast4Digit.isNotEmpty ? orderReservableState.cardLast4Digit : snapshot.booking.booking_code,
-                                              textToDisplay: AppLocalizations.of(context).orderPending,
-                                              orderState: orderState,
-                                              reservable: widget.reserve,
-                                              tourist:widget.tourist,
-                                              // videoAsset: "assets/video/canceled.mp4",
-
-                                            );
-                                          } else if (snapshot.order.progress == Utils.enumToString(OrderStatus.canceled) || snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.canceled)) {
-                                            /// return canceled
-                                            return Progress(
-                                              cardState: snapshot.cardState,
-                                              orderReservableState: snapshot.orderReservable,
-                                              cardOrBooking: orderState != null ?
-                                                orderState.cardType != null && orderState.cardType.isNotEmpty ? orderState.cardType : AppLocalizations.of(context).bookingCode + ':' :
-                                                orderReservableState.cardType != null && orderReservableState.cardType.isNotEmpty ? orderReservableState.cardType : AppLocalizations.of(context).bookingCode + ':',
-                                              fromValue: orderState != null ?
-                                                orderState.cardLast4Digit != null && orderState.cardLast4Digit.isNotEmpty ? orderState.cardLast4Digit : snapshot.booking.booking_code :
-                                                orderReservableState.cardLast4Digit != null && orderReservableState.cardLast4Digit.isNotEmpty ? orderReservableState.cardLast4Digit : snapshot.booking.booking_code,
-                                              textToDisplay: AppLocalizations.of(context).anErrorOccurredTryLater,
-                                              orderState: orderState,
-                                              reservable: widget.reserve,
-                                              tourist:widget.tourist,
-                                              // videoAsset: "assets/video/canceled.mp4",
-
-                                            );
-                                          } else if (snapshot.order.progress == Utils.enumToString(OrderStatus.creating) || snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.creating)){
-                                            /// return creating
-                                            return Progress(
-                                              cardState: snapshot.cardState,
-                                              orderReservableState: snapshot.orderReservable,
-                                              cardOrBooking: orderState != null ?
-                                                orderState.cardType != null && orderState.cardType.isNotEmpty ? orderState.cardType : AppLocalizations.of(context).bookingCode + ':' :
-                                                orderReservableState.cardType != null && orderReservableState.cardType.isNotEmpty ? orderReservableState.cardType : AppLocalizations.of(context).bookingCode + ':',
-                                              fromValue: orderState != null ?
-                                                orderState.cardLast4Digit != null && orderState.cardLast4Digit.isNotEmpty ? orderState.cardLast4Digit : snapshot.booking.booking_code :
-                                                orderReservableState.cardLast4Digit != null && orderReservableState.cardLast4Digit.isNotEmpty ? orderReservableState.cardLast4Digit : snapshot.booking.booking_code,
-                                              textToDisplay: AppLocalizations.of(context).orderConfirming,
-                                              orderState: orderState,
-                                              reservable: widget.reserve,
-                                              tourist:widget.tourist,
-                                              // videoAsset: "assets/video/moneyCat.mp4",
-                                            );
-                                          } else {
-                                            /// normal case
-                                            if (_controller.index == 0) {
-                                              return Room(tourist: widget.tourist);
-                                            } else if (_controller.index == 1) {
-                                              return Platform.isAndroid ? NativeGoogle() : NativeApple();
-                                            } else if (_controller.index == 2) {
-                                              return CreditCards(tourist: widget.tourist != null && widget.tourist);
+                                          if(snapshot.order != null && snapshot.order.itemList != null && snapshot.order.itemList.isNotEmpty) {
+                                            /// order is not reservable
+                                            if (snapshot.order.itemList[0].time == null) {
+                                              if (snapshot.order.progress == Utils.enumToString(OrderStatus.paid) ||
+                                                  snapshot.order.progress == Utils.enumToString(OrderStatus.holding) ||
+                                                  snapshot.order.progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout)
+                                              ) {
+                                                return buildConfirmation(context);
+                                              } else if (snapshot.order.progress == Utils.enumToString(OrderStatus.pending)) {
+                                                return buildPending(snapshot, context);
+                                              } else if (snapshot.order.progress == Utils.enumToString(OrderStatus.canceled)) {
+                                                return buildCanceled(snapshot, context);
+                                              } else if (snapshot.order.progress == Utils.enumToString(OrderStatus.creating)){
+                                                return buildCreating(snapshot, context);
+                                              } else {
+                                                return buildTabsBeforeConfirmation();
+                                              }
+                                            } else {
+                                              /// order is reservable
+                                              if (snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.paid) ||
+                                                  snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.holding) ||
+                                                  snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout)
+                                              ) {
+                                                return buildConfirmation(context);
+                                              } else if (snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.canceled)) {
+                                                return buildPending(snapshot, context);
+                                              } else if (snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.canceled)) {
+                                                return buildCanceled(snapshot, context);
+                                              } else if (snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.creating)){
+                                                return buildCreating(snapshot, context);
+                                              } else {
+                                                return buildTabsBeforeConfirmation();
+                                              }
                                             }
+                                          } else {
+                                            return buildTabsBeforeConfirmation();
                                           }
                                         }())
                                       ],
@@ -247,11 +201,12 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                       if (snapshot.order.progress == Utils.enumToString(OrderStatus.paid) || snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.paid) ||
                                           snapshot.order.progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout) || snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout) ||
                                           snapshot.order.progress == Utils.enumToString(OrderStatus.pending) || snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.pending) ||
+                                          snapshot.order.progress == Utils.enumToString(OrderStatus.holding) || snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.holding) ||
                                           snapshot.order.progress == Utils.enumToString(OrderStatus.canceled) || snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.canceled)
                                       ) {
                                         return buildBackButton(context, media);
                                       }  else if (snapshot.order.progress == Utils.enumToString(OrderStatus.creating) || snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.creating)){
-                                        /// return nothing
+                                        return buildBackButton(context, media);
                                       } else {
                                         return buildConfirmButton(context, snapshot, selected, last4, brand, country, selectedCardPaymentMethodId, media);
                                       }
@@ -275,7 +230,87 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                 )
                     : Container()
               ]);
-            }));
+            })
+    );
+  }
+
+  Widget buildTabsBeforeConfirmation() {
+    if (_controller.index == 0) {
+      return Room(tourist: widget.tourist);
+    } else if (_controller.index == 1) {
+      return Platform.isAndroid ? NativeGoogle() : NativeApple();
+    } else if (_controller.index == 2) {
+      return CreditCards(tourist: widget.tourist != null && widget.tourist);
+    }
+    return Container();
+  }
+
+  Padding buildCreating(AppState snapshot, BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 8.0, top: 100.0, right: 8.0, bottom: 8.0),
+      child: Text(
+        AppLocalizations.of(context).orderConfirming,
+        maxLines: 4,
+        style: TextStyle(
+          letterSpacing: 1.25,
+          fontFamily: BuytimeTheme.FontFamily,
+          color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+          fontSize: 16, ///SizeConfig.safeBlockHorizontal * 3.5
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    );
+  }
+
+  Padding buildCanceled(AppState snapshot, BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 8.0, top: 100.0, right: 8.0, bottom: 8.0),
+      child: Text(
+        AppLocalizations.of(context).anErrorOccurredTryLater,
+        maxLines: 4,
+        style: TextStyle(
+          letterSpacing: 1.25,
+          fontFamily: BuytimeTheme.FontFamily,
+          color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+          fontSize: 16, ///SizeConfig.safeBlockHorizontal * 3.5
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    );
+  }
+
+  Padding buildPending(AppState snapshot, BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 8.0, top: 100.0, right: 8.0, bottom: 8.0),
+      child: Text(
+        AppLocalizations.of(context).orderPending,
+        maxLines: 4,
+        style: TextStyle(
+          letterSpacing: 1.25,
+          fontFamily: BuytimeTheme.FontFamily,
+          color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+          fontSize: 16, ///SizeConfig.safeBlockHorizontal * 3.5
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    );
+  }
+
+  Padding buildConfirmation(BuildContext context) {
+    return Padding(
+              padding: const EdgeInsets.only(left: 8.0, top: 100.0, right: 8.0, bottom: 8.0),
+              child: Text(
+                AppLocalizations.of(context).orderConfirmed,
+                maxLines: 4,
+                style: TextStyle(
+                  letterSpacing: 1.25,
+                  fontFamily: BuytimeTheme.FontFamily,
+                  color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+                  fontSize: 16, ///SizeConfig.safeBlockHorizontal * 3.5
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            );
   }
 
   ///Bavck to home
@@ -463,11 +498,11 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
             //color: Colors.black87,
               child: () {
                 if (widget.reserve != null && widget.reserve) {
-                  print("UI_U_ConfirmOrder => " + snapshot.orderReservable.itemList.length.toString());
+                  // print("UI_U_ConfirmOrder => " + snapshot.orderReservable.itemList.length.toString());
                   return OrderTotal(
                       media: media, orderState: OrderState.fromReservableState(snapshot.orderReservable));
                 } else {
-                  print("UI_U_ConfirmOrder => " + snapshot.order.itemList.length.toString());
+                  // print("UI_U_ConfirmOrder => " + snapshot.order.itemList.length.toString());
                   return OrderTotal(media: media, orderState: snapshot.order);
                 }
               }()),
