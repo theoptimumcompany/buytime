@@ -787,7 +787,7 @@ class _BookingPageState extends State<BookingPage> {
                                                         width: 151,
                                                         height: 100,
                                                         margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1, right: SizeConfig.safeBlockHorizontal * 1),
-                                                        child: UserServiceCardWidget(order),
+                                                        child: UserServiceCardWidget(order, false),
                                                       );
                                                     },
                                                     childCount: userOrderList.length,

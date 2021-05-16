@@ -1,4 +1,6 @@
+import 'package:Buytime/UI/user/booking/UI_U_all_bookings.dart';
 import 'package:Buytime/UI/user/booking/UI_U_notifications.dart';
+import 'package:Buytime/UI/user/booking/widget/user_service_card_widget.dart';
 import 'package:Buytime/UI/user/cart/UI_U_cart.dart';
 import 'package:Buytime/UI/user/login/UI_U_home.dart';
 import 'package:Buytime/UI/user/turist/widget/discover_card_widget.dart';
@@ -474,6 +476,85 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                                 });
                               },
                             ),
+                          ),
+                          ///My bookings & View all
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  ///My bookings
+                                  Container(
+                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1.5, bottom: SizeConfig.safeBlockVertical * 1),
+                                    child: Text(
+                                      AppLocalizations.of(context).myReservation,
+                                      style: TextStyle(
+                                        //letterSpacing: SizeConfig.safeBlockVertical * .4,
+                                          fontFamily: BuytimeTheme.FontFamily,
+                                          color: BuytimeTheme.TextBlack,
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 18
+
+                                        ///SizeConfig.safeBlockHorizontal * 4
+                                      ),
+                                    ),
+                                  ),
+                                  ///View All
+                                  Container(
+                                      margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 2.5),
+                                      alignment: Alignment.center,
+                                      child: Material(
+                                        color: Colors.transparent,
+                                        child: InkWell(
+                                            onTap: () {
+                                              Navigator.push(context, MaterialPageRoute(builder: (context) => AllBookings(orderStateList: orderList, tourist: true)),);
+                                            },
+                                            borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                            child: Container(
+                                              padding: EdgeInsets.all(5.0),
+                                              child: Text(
+                                                AppLocalizations.of(context).viewAll,
+                                                style: TextStyle(
+                                                    letterSpacing: SizeConfig.safeBlockHorizontal * .2,
+                                                    fontFamily: BuytimeTheme.FontFamily,
+                                                    color: BuytimeTheme.UserPrimary,
+                                                    fontWeight: FontWeight.w400,
+                                                    fontSize: 16
+
+                                                  ///SizeConfig.safeBlockHorizontal * 4
+                                                ),
+                                              ),
+                                            )),
+                                      ))
+                                ],
+                              ),
+                              userOrderList.isNotEmpty ?
+                              ///List
+                              Container(
+                                height: 120,
+                                width: double.infinity,
+                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
+                                child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
+                                  SliverList(
+                                    delegate: SliverChildBuilderDelegate(
+                                          (context, index) {
+                                        //MenuItemModel menuItem = menuItems.elementAt(index);
+                                        OrderState order = userOrderList.elementAt(index);
+                                        return Container(
+                                          width: 151,
+                                          height: 100,
+                                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1, right: SizeConfig.safeBlockHorizontal * 1),
+                                          child: UserServiceCardWidget(order, true),
+                                        );
+                                      },
+                                      childCount: userOrderList.length,
+                                    ),
+                                  ),
+                                ]),
+                              ): Container(),
+                            ],
                           ),
                           ///Discover & Popular & Recommended & Log out
                           _searchController.text.isEmpty ?

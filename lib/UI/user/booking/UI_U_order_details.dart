@@ -118,9 +118,11 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
     return StoreConnector<AppState, AppState>(
       converter: (store) => store.state,
       onInit: (store){
-        List<String> latLng = store.state.business.coordinate.replaceAll(' ', '').split(',');
-        lat = double.parse(latLng[0]);
-        lng = double.parse(latLng[1]);
+        if(store.state.business.id_firestore != null && store.state.business.id_firestore.isNotEmpty){
+          List<String> latLng = store.state.business.coordinate.replaceAll(' ', '').split(',');
+          lat = double.parse(latLng[0]);
+          lng = double.parse(latLng[1]);
+        }
       },
       builder: (context, snapshot) {
         debugPrint('UI_U_ServiceDetails => SNAPSHOT CART COUNT: ${snapshot.order}');
@@ -602,7 +604,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                           ),
                         ),
                         ///Location
-                        widget.orderState.itemList.first.time == null ?
+                        widget.orderState.itemList.first.time == null && widget.orderState.location.isNotEmpty ?
                         Container(
                           margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                           child: FittedBox(
@@ -620,7 +622,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                           ),
                         ) : Container(),
                         ///Location value
-                        widget.orderState.itemList.first.time == null ?
+                        widget.orderState.itemList.first.time == null && widget.orderState.location.isNotEmpty ?
                         Container(
                           margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
                           child: FittedBox(

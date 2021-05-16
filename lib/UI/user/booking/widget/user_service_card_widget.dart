@@ -14,7 +14,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 class UserServiceCardWidget extends StatefulWidget {
 
   OrderState orderState;
-  UserServiceCardWidget(this.orderState);
+  bool tourist;
+  UserServiceCardWidget(this.orderState, this.tourist);
 
   @override
   _UserServiceCardWidgetState createState() => _UserServiceCardWidgetState();
@@ -81,7 +82,7 @@ class _UserServiceCardWidgetState extends State<UserServiceCardWidget> {
                   StoreProvider.of<AppState>(context).dispatch(UpdateNotification(element));
                 }
               });
-              Navigator.push(context, MaterialPageRoute(builder: (context) => OrderDetails(orderState: widget.orderState)));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => OrderDetails(orderState: widget.orderState, tourist: widget.tourist,)));
               //Navigator.push(context, MaterialPageRoute(builder: (context) => OrderDetails(orderState: widget.orderState)));
              /* widget.fromBookingPage ?
               Navigator.push(context, MaterialPageRoute(builder: (context) => FilterByCategory(fromBookingPage: true, categoryState: widget.categoryState,))) :

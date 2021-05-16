@@ -14,7 +14,8 @@ import 'package:Buytime/UI/user/service/UI_U_service_details.dart';
 class UserServiceListItem extends StatefulWidget {
 
   OrderState orderState;
-  UserServiceListItem(this.orderState);
+  bool tourist;
+  UserServiceListItem(this.orderState, this.tourist);
 
   @override
   _UserServiceListItemState createState() => _UserServiceListItemState();
@@ -33,7 +34,7 @@ class _UserServiceListItemState extends State<UserServiceListItem> {
             child: InkWell(
               borderRadius: BorderRadius.all(Radius.circular(10)),
               onTap: () async {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => OrderDetails(orderState: widget.orderState)));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => OrderDetails(orderState: widget.orderState, tourist: widget.tourist,)));
               },
               child: Container(
                 height: 91,  ///SizeConfig.safeBlockVertical * 15

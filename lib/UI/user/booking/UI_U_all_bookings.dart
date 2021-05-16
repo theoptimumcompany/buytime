@@ -22,7 +22,8 @@ class AllBookings extends StatefulWidget {
   static String route = '/bookingPage';
   bool fromConfirm;
   List<OrderState> orderStateList;
-  AllBookings({Key key, this.fromConfirm, this.orderStateList}) : super(key: key);
+  bool tourist;
+  AllBookings({Key key, this.fromConfirm, this.orderStateList, this.tourist}) : super(key: key);
 
   @override
   _AllBookingsState createState() => _AllBookingsState();
@@ -107,7 +108,7 @@ class _AllBookingsState extends State<AllBookings> {
                 onWillPop: () async => false,
                 child: Scaffold(
                   appBar: BuytimeAppbar(
-                    background: BuytimeTheme.UserPrimary,
+                    background: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
                     width: media.width,
                     children: [
                       ///Back Button
@@ -254,7 +255,7 @@ class _AllBookingsState extends State<AllBookings> {
                                             debugPrint('UI_U_all_bookings => CART COUNT: ${order.date}');
                                             return Column(
                                               children: [
-                                                UserServiceListItem(order),
+                                                UserServiceListItem(order, widget.tourist),
                                                 Container(
                                                   margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 30),
                                                   height: SizeConfig.safeBlockVertical * .2,
