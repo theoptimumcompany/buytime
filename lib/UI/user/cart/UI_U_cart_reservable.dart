@@ -1,4 +1,5 @@
 import 'package:Buytime/UI/user/cart/UI_U_ConfirmOrder.dart';
+import 'package:Buytime/UI/user/login/tourist_session/UI_U_tourist_session.dart';
 import 'package:Buytime/reblox/enum/order_time_intervals.dart';
 import 'package:Buytime/reblox/model/order/order_entry.dart';
 import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
@@ -19,6 +20,7 @@ import 'package:Buytime/reusable/order/order_total.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 
 class CartReservable extends StatefulWidget {
   ServiceState serviceState;
@@ -370,10 +372,18 @@ class CartReservableState extends State<CartReservable> {
                                             });
                                             //orderReservableState.itemList.first.idSquareSlot
                                             /// if we are before the 7 days we just create a reminder
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(builder: (context) => ConfirmOrder(reserve: true, tourist: widget.tourist,)),
-                                            );
+                                            auth.User user = auth.FirebaseAuth.instance.currentUser;
+                                            if (user == null) {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(builder: (context) => TouristSession()),
+                                              );
+                                            }else{
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(builder: (context) => ConfirmOrder(reserve: true, tourist: widget.tourist,)),
+                                              );
+                                            }
 
                                           },
                                           textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
