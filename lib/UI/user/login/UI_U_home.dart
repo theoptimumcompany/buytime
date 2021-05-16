@@ -608,18 +608,23 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                         FadeTransition(
                             opacity: _animation3,
                             child: Container(
-                                width: 247,
-                                height: 50,
-                                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical),
-                                child: TextButton(
-                                  child: Text(
-                                    AppLocalizations.of(context).exploreNetwork,
-                                    style: TextStyle(letterSpacing: 1.25, fontSize: 16, fontFamily: BuytimeTheme.FontFamily, fontWeight: FontWeight.w500, color: BuytimeTheme.TextMalibu),
-                                  ),
-                                  onPressed: () {
-                                    Navigator.of(context).pushNamed(ServiceExplorer.route);
-                                  },
-                                ))),
+                                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
+                                alignment: Alignment.center,
+                                child: Material(
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                      onTap: () {
+                                        Navigator.of(context).pushNamed(ServiceExplorer.route);
+                                      },
+                                      borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                      child: Container(
+                                        padding: EdgeInsets.all(5.0),
+                                        child: Text(
+                                          AppLocalizations.of(context).exploreNetwork,
+                                          style: TextStyle(letterSpacing: 1.25, fontSize: 14, fontFamily: BuytimeTheme.FontFamily, fontWeight: FontWeight.w500, color: BuytimeTheme.TextMalibu),
+                                        ),
+                                      )),
+                                )))
                       ],
                     ),
 
@@ -630,7 +635,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                         child: FittedBox(
                           fit: BoxFit.scaleDown,
                           child: Container(
-                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, bottom: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 10, right: SizeConfig.safeBlockHorizontal * 10),
+                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1.5, bottom: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 10, right: SizeConfig.safeBlockHorizontal * 10),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [

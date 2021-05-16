@@ -132,7 +132,7 @@
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>Can i use Speech please?</string>
 	<key>NSUserTrackingUsageDescription</key>
-	<string>This identifier will be used to deliver personalized ads to you.</string>
+	<string>Allow BT to track your activity. No third party or other companies involved. We care of your privacy! We do not sell or trade your data.</string>
 	<key>SKAdNetworkItems</key>
 	<array>
 		<dict>
