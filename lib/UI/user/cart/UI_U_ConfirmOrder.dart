@@ -317,7 +317,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
 
   ///Bavck to home
   MaterialButton buildBackButton(BuildContext context, Size media) {
-    return MaterialButton(
+    return !widget.tourist ? MaterialButton(
       elevation: 0,
       hoverElevation: 0,
       focusElevation: 0,
@@ -350,7 +350,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
           ),
         ),
       ),
-    );
+    ) : Container();
   }
 
   Align buildConfirmButton(BuildContext context, AppState snapshot, bool selected, String last4, String brand, String country, String selectedCardPaymentMethodId, Size media) {

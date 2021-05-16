@@ -60,7 +60,7 @@ class CreditCards extends StatelessWidget {
                     rebuildOnChange: true,
                     builder: (context, snapshot) {
                     return
-                      snapshot.cardList.length == 0 ?
+                      snapshot.cardList == null || (snapshot.cardList != null && snapshot.cardList.length == 0) ?
                       Container(
                         margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5, right: SizeConfig.safeBlockHorizontal * 5),
                         alignment: Alignment.center,
