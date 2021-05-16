@@ -1,9 +1,11 @@
+import 'package:Buytime/UI/user/booking/UI_U_notifications.dart';
 import 'package:Buytime/UI/user/cart/UI_U_cart.dart';
 import 'package:Buytime/UI/user/login/UI_U_home.dart';
 import 'package:Buytime/UI/user/turist/widget/discover_card_widget.dart';
 import 'package:Buytime/UI/user/turist/widget/p_r_card_widget.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/category/category_state.dart';
+import 'package:Buytime/reblox/model/notification/notification_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/reducer/booking_list_reducer.dart';
@@ -13,6 +15,7 @@ import 'package:Buytime/reblox/reducer/business_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_tree_reducer.dart';
+import 'package:Buytime/reblox/reducer/notification_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reblox/reducer/pipeline_list_reducer.dart';
@@ -54,7 +57,8 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
   List<ServiceState> popularList = [];
   List<ServiceState> recommendedList = [];
   List<CategoryState> categoryList = [];
-
+  List<OrderState> userOrderList = [];
+  List<OrderState> orderList = [];
   String sortBy = '';
   OrderState order = OrderState().toEmpty();
 
@@ -147,7 +151,7 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
   bool noActivity = false;
 
   bool searching = false;
-
+  bool hasNotifications = false;
   @override
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
@@ -158,6 +162,9 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
         store.state.categoryList.categoryListState.clear();
         store.state.serviceList.serviceListState.clear();
         store.dispatch(AllRequestListCategory());
+        store.dispatch(UserOrderListRequest());
+        store.state.notificationListState.notificationListState.clear();
+        store.dispatch(RequestNotificationList(store.state.user.uid, store.state.business.id_firestore));
         startRequest = true;
       },
       builder: (context, snapshot) {
@@ -192,7 +199,40 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
           }
         }
         order = snapshot.order.itemList != null ? (snapshot.order.itemList.length > 0 ? snapshot.order : OrderState().toEmpty()) : OrderState().toEmpty();
+        debugPrint('UI_U_BookingPage => Order List LENGTH: ${snapshot.orderList.orderListState.length}');
+        orderList.clear();
+        userOrderList.clear();
+        DateTime currentTime = DateTime.now();
+        currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0).toUtc();
+        snapshot.orderList.orderListState.forEach((element) {
+          if((element.progress == 'paid' || element.progress == 'pending' || element.progress == 'holding') && (element.date.isAtSameMomentAs(currentTime) || element.date.isAfter(currentTime)) && element.itemList.first.time != null)
+            userOrderList.add(element);
+        });
+        orderList.addAll(snapshot.orderList.orderListState);
+        userOrderList.sort((a,b) => a.date.isBefore(b.date) ? -1 : a.date.isAtSameMomentAs(b.date) ? 0 : 1);
+        List<NotificationState> notifications = snapshot.notificationListState.notificationListState;
+        if(notifications.isEmpty && startRequest){
+          noActivity = true;
+        }else{
+          if(notifications.isNotEmpty && notifications.first.userId.isEmpty)
+            notifications.removeLast();
 
+          if(notifications.isNotEmpty){
+            hasNotifications = false;
+            notifications.forEach((element) {
+              //debugPrint('UI_U_booking_page => ${element.timestamp}');
+              //debugPrint('UI_U_booking_page => ${element.notificationId} | ${element.opened}');
+              if(element.opened != null && !element.opened){
+                //debugPrint('UI_U_booking_page => ${element.notificationId} | ${element.data.state.orderId}');
+                hasNotifications = true;
+              }
+            });
+            //notifications.sort((b,a) => a.timestamp != null ? a.timestamp : 0 .compareTo(b.timestamp != null ? b.timestamp : 0));
+            notifications.sort((b,a) => a.timestamp.compareTo(b.timestamp));
+          }
+          noActivity = false;
+          startRequest = false;
+        }
         return GestureDetector(
           onTap: () {
             FocusScopeNode currentFocus = FocusScope.of(context);
@@ -209,109 +249,157 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                 width: media.width,
                 children: [
                   ///Back Button
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
-                        child: IconButton(
-                          icon: const Icon(
-                            Icons.keyboard_arrow_left,
-                            color: Colors.white,
-                            size: 25.0,
+                  Expanded(
+                    flex: 1,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
+                          child: IconButton(
+                            icon: const Icon(
+                              Icons.keyboard_arrow_left,
+                              color: Colors.white,
+                              size: 25.0,
+                            ),
+                            tooltip: AppLocalizations.of(context).comeBack,
+                            onPressed: () {
+                              //widget.fromConfirm != null ? Navigator.of(context).pop() : Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Landing()),);
+                              Future.delayed(Duration.zero, () {
+                                Navigator.of(context).pop();
+                              });
+                            },
                           ),
-                          tooltip: AppLocalizations.of(context).comeBack,
-                          onPressed: () {
-                            //widget.fromConfirm != null ? Navigator.of(context).pop() : Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Landing()),);
-                            Future.delayed(Duration.zero, () {
-                              Navigator.of(context).pop();
-                            });
-                          },
                         ),
-                      ),
-                    ],
-                  ),
-
-                  ///Title
-                  Container(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 10.0),
-                      child: Text(
-                        AppLocalizations.of(context).buytime,
-                        textAlign: TextAlign.start,
-                        style: BuytimeTheme.appbarTitle,
-                      ),
+                      ],
                     ),
                   ),
 
+                  ///Title
+                  Expanded(
+                    flex: 2,
+                    child:  Utils.barTitle(AppLocalizations.of(context).buytime)
+                  ),
+
                   ///Cart
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 10.0),
+                  ///Notification & Cart
+                  Expanded(
+                    flex: 1,
                     child: Container(
-                      width: 50,
-                      height: 50,
-                      child: Stack(
+                      width: 100,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Positioned.fill(
-                            child: Align(
-                              alignment: Alignment.center,
-                              child: IconButton(
-                                icon: Icon(
-                                  BuytimeIcons.shopping_cart,
-                                  color: BuytimeTheme.TextWhite,
-                                  size: 24.0,
-                                ),
-                                onPressed: () {
-                                  if (order.cartCounter > 0) {
-                                    // dispatch the order
-                                    StoreProvider.of<AppState>(context).dispatch(SetOrder(order));
-                                    // go to the cart page
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (context) => Cart(tourist: true,)),
-                                    );
-                                  } else {
-                                    showDialog(
-                                        context: context,
-                                        builder: (_) => new AlertDialog(
-                                              title: new Text(AppLocalizations.of(context).warning),
-                                              content: new Text(AppLocalizations.of(context).emptyCart),
-                                              actions: <Widget>[
-                                                MaterialButton(
-                                                  elevation: 0,
-                                                  hoverElevation: 0,
-                                                  focusElevation: 0,
-                                                  highlightElevation: 0,
-                                                  child: Text(AppLocalizations.of(context).ok),
-                                                  onPressed: () {
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                )
-                                              ],
-                                            ));
-                                  }
-                                },
-                              ),
-                            ),
-                          ),
-                          order.cartCounter > 0
-                              ? Positioned.fill(
-                                  top: 5,
-                                  left: 2.5,
-                                  child: Align(
-                                    alignment: Alignment.topCenter,
-                                    child: Text(
-                                      '${order.cartCounter}',
-                                      textAlign: TextAlign.start,
-                                      style: TextStyle(
-                                        fontSize: SizeConfig.safeBlockHorizontal * 3,
-                                        color: BuytimeTheme.TextWhite,
-                                        fontWeight: FontWeight.w400,
+                          ///Notification
+                          Flexible(
+                              child: Container(
+                                child: Stack(
+                                  children: [
+                                    Positioned.fill(
+                                      child: Align(
+                                        alignment: Alignment.center,
+                                        child: IconButton(
+                                          icon: Icon(
+                                            Icons.notifications_none_outlined,
+                                            color: BuytimeTheme.TextWhite,
+                                            size: 30.0,
+                                          ),
+                                          onPressed: () async{
+                                            Navigator.push(context, MaterialPageRoute(builder: (context) => Notifications(orderStateList: orderList, tourist: true)));
+                                          },
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                )
-                              : Container(),
+                                    hasNotifications ?
+                                    Positioned.fill(
+                                      bottom: 20,
+                                      left: 15,
+                                      child: Align(
+                                        alignment: Alignment.center,
+                                        child: Container(
+                                          width: 15,
+                                          height: 15,
+                                          decoration: BoxDecoration(
+                                              color: BuytimeTheme.AccentRed,
+                                              borderRadius: BorderRadius.all(Radius.circular(7.5))
+                                          ),
+                                        ),
+                                      ),
+                                    ) : Container(),
+                                  ],
+                                ),
+                              )),
+                          ///Cart
+                          Flexible(
+                              child:
+                              Container(
+                                margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 2.5),
+                                child: Stack(
+                                  children: [
+                                    Positioned.fill(
+                                      child: Align(
+                                        alignment: Alignment.center,
+                                        child: IconButton(
+                                          icon: Icon(
+                                            BuytimeIcons.shopping_cart,
+                                            color: BuytimeTheme.TextWhite,
+                                            size: 24.0,
+                                          ),
+                                          onPressed: () {
+                                            if (order.cartCounter > 0) {
+                                              // dispatch the order
+                                              StoreProvider.of<AppState>(context).dispatch(SetOrder(order));
+                                              // go to the cart page
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(builder: (context) => Cart(tourist: false,)),
+                                              );
+                                            } else {
+                                              showDialog(
+                                                  context: context,
+                                                  builder: (_) => new AlertDialog(
+                                                    title: new Text(AppLocalizations.of(context).warning),
+                                                    content: new Text(AppLocalizations.of(context).emptyCart),
+                                                    actions: <Widget>[
+                                                      MaterialButton(
+                                                        elevation: 0,
+                                                        hoverElevation: 0,
+                                                        focusElevation: 0,
+                                                        highlightElevation: 0,
+                                                        child: Text(AppLocalizations.of(context).ok),
+                                                        onPressed: () {
+                                                          Navigator.of(context).pop();
+                                                        },
+                                                      )
+                                                    ],
+                                                  )
+                                              );
+                                            }
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                    order.cartCounter > 0
+                                        ? Positioned.fill(
+                                      bottom: 20,
+                                      left: 7,
+                                      child: Align(
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          '${order.cartCounter}',
+                                          textAlign: TextAlign.start,
+                                          style: TextStyle(
+                                            fontSize: SizeConfig.safeBlockHorizontal * 3,
+                                            color: BuytimeTheme.TextWhite,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                        : Container(),
+                                  ],
+                                ),
+                              ))
                         ],
                       ),
                     ),

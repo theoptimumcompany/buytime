@@ -25,7 +25,8 @@ class Notifications extends StatefulWidget {
   static String route = '/notifications';
   bool fromConfirm;
   List<OrderState> orderStateList;
-  Notifications({Key key, this.fromConfirm, this.orderStateList}) : super(key: key);
+  bool tourist;
+  Notifications({Key key, this.fromConfirm, this.orderStateList, this.tourist}) : super(key: key);
 
   @override
   _NotificationsState createState() => _NotificationsState();
@@ -97,7 +98,7 @@ class _NotificationsState extends State<Notifications> {
                 onWillPop: () async => false,
                 child: Scaffold(
                   appBar: BuytimeAppbar(
-                    background: BuytimeTheme.UserPrimary,
+                    background: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
                     width: media.width,
                     children: [
                       ///Back Button
@@ -162,7 +163,7 @@ class _NotificationsState extends State<Notifications> {
                                         // go to the cart page
                                         Navigator.push(
                                           context,
-                                          MaterialPageRoute(builder: (context) => Cart(tourist: false,)),
+                                          MaterialPageRoute(builder: (context) => Cart(tourist: widget.tourist,)),
                                         );
                                       } else {
                                         showDialog(
@@ -259,7 +260,7 @@ class _NotificationsState extends State<Notifications> {
                                                         }
                                                       });
                                                     //debugPrint('booking_month_list: bookings booking status: ${booking.user.first.surname} ${booking.status}');
-                                                    return UserNotificationListItem(notification, orderState, serviceState);
+                                                    return UserNotificationListItem(notification, orderState, serviceState, widget.tourist);
                                                   },
                                                   childCount: notifications.length,
                                                 ),

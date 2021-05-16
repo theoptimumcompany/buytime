@@ -174,7 +174,7 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
       backgroundColor: BuytimeTheme.SymbolLightGrey,
       //onTap: tapFlushbar(),
       onTap: (ciao) {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => Notifications(orderStateList: StoreProvider.of<AppState>(context).state.orderList.orderListState)));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => Notifications(orderStateList: StoreProvider.of<AppState>(context).state.orderList.orderListState, tourist: false,)));
       },
       /*mainButton: Container(
               margin: EdgeInsets.only(left: 5, right: 5),

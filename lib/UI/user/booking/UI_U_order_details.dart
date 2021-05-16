@@ -28,7 +28,8 @@ import 'package:url_launcher/url_launcher.dart';
 class OrderDetails extends StatefulWidget {
   final OrderState orderState;
   static String route = '/orderDetails';
-  OrderDetails({@required this.orderState});
+  bool tourist;
+  OrderDetails({@required this.orderState, this.tourist});
 
   @override
   createState() => _OrderDetailsState();
@@ -137,7 +138,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
             onWillPop: () async => false,
             child: Scaffold(
               appBar: BuytimeAppbar(
-                background: BuytimeTheme.UserPrimary,
+                background: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
                 width: media.width,
                 children: [
                   ///Back Button

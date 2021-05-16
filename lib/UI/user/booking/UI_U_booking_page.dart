@@ -400,7 +400,7 @@ class _BookingPageState extends State<BookingPage> {
                                                 size: 30.0,
                                               ),
                                               onPressed: () async{
-                                                Navigator.push(context, MaterialPageRoute(builder: (context) => Notifications(orderStateList: orderList,)));
+                                                Navigator.push(context, MaterialPageRoute(builder: (context) => Notifications(orderStateList: orderList, tourist: false,)));
                                               },
                                             ),
                                           ),

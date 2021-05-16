@@ -77,172 +77,162 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
           FocusScope.of(context).unfocus();
           return false;
         },
-        child: Column(
-          children: [
-            /*StoreProvider.of<AppState>(context).state.user.uid != null && StoreProvider.of<AppState>(context).state.user.uid.isNotEmpty ?
-            StreamBuilder<DocumentSnapshot>(
-                stream: FirebaseFirestore.instance.collection('stripeCustomer').doc(StoreProvider.of<AppState>(context).state.user.uid).snapshots(),
-                builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-                  return snapshot.data.exists ? spinnerConfirmOrder() : Container();
-                }) : Container(),*/
-            StoreConnector<AppState, AppState>(
-                onInit: (store) {
-                  debugPrint('UI_U_ConfirmOrder => ON INIT');
-                },
-                distinct: true,
-                converter: (store) => store.state,
-                builder: (context, snapshot) {
-                  /// check if the stripe customer have been created for this user:
+        child: StoreConnector<AppState, AppState>(
+            onInit: (store) {
+              debugPrint('UI_U_ConfirmOrder => ON INIT');
+            },
+            distinct: true,
+            converter: (store) => store.state,
+            builder: (context, snapshot) {
+              /// check if the stripe customer have been created for this user:
 
-                  if (widget.reserve != null && widget.reserve)
-                    orderReservableState = snapshot.orderReservable;
-                  else
-                    orderState = snapshot.order;
-                  bool selected = false;
-                  String last4 = '';
-                  String brand = '';
-                  String country = '';
-                  String selectedCardPaymentMethodId = '';
-                  List<CardState> cardList = StoreProvider.of<AppState>(context).state.cardListState.cardList;
-                  if (cardList != null) {
-                    cardList.forEach((element) {
-                      if (element.selected) {
-                        last4 = element.stripeState.stripeCard.last4;
-                        brand = element.stripeState.stripeCard.brand;
-                        country = element.stripeState.stripeCard.country;
-                        selectedCardPaymentMethodId = element.stripeState.stripeCard.paymentMethodId;
-                        selected = true;
-                      }
-                    });
+              if (widget.reserve != null && widget.reserve)
+                orderReservableState = snapshot.orderReservable;
+              else
+                orderState = snapshot.order;
+              bool selected = false;
+              String last4 = '';
+              String brand = '';
+              String country = '';
+              String selectedCardPaymentMethodId = '';
+              List<CardState> cardList = StoreProvider.of<AppState>(context).state.cardListState.cardList;
+              if (cardList != null) {
+                cardList.forEach((element) {
+                  if (element.selected) {
+                    last4 = element.stripeState.stripeCard.last4;
+                    brand = element.stripeState.stripeCard.brand;
+                    country = element.stripeState.stripeCard.country;
+                    selectedCardPaymentMethodId = element.stripeState.stripeCard.paymentMethodId;
+                    selected = true;
                   }
+                });
+              }
 
-                  return Stack(children: [
-                    Positioned.fill(
-                      child: Align(
-                        alignment: Alignment.topCenter,
-                        child: Scaffold(
-                            appBar: buildBuytimeAppbar(media, context),
-                            body: SafeArea(
-                              child: Center(
-                                child: ConstrainedBox(
-                                  constraints: BoxConstraints(),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      ///Cart Details & Confirm Details
-                                      Expanded(
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            ///Recap
-                                            buildOrderRecap(context, snapshot, media),
-                                            ///Divider
-                                            Container(
-                                              color: BuytimeTheme.BackgroundLightGrey,
-                                              height: SizeConfig.safeBlockVertical * 2,
-                                            ),
-                                            ///Tab bar
-                                            PreferredSize(
-                                              preferredSize: Size.fromHeight(kToolbarHeight),
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  color: widget.tourist != null && widget.tourist
-                                                      ? BuytimeTheme.BackgroundCerulean
-                                                      : BuytimeTheme.UserPrimary,
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                      color: Colors.black87.withOpacity(.3),
-                                                      spreadRadius: 1,
-                                                      blurRadius: 1,
-                                                      offset: Offset(0, 2), // changes position of shadow
-                                                    ),
-                                                  ],
+              return Stack(children: [
+                Positioned.fill(
+                  child: Align(
+                    alignment: Alignment.topCenter,
+                    child: Scaffold(
+                        appBar: buildBuytimeAppbar(media, context),
+                        body: SafeArea(
+                          child: Center(
+                            child: ConstrainedBox(
+                              constraints: BoxConstraints(),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  ///Cart Details & Confirm Details
+                                  Expanded(
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        ///Recap
+                                        buildOrderRecap(context, snapshot, media),
+                                        ///Divider
+                                        Container(
+                                          color: BuytimeTheme.BackgroundLightGrey,
+                                          height: SizeConfig.safeBlockVertical * 2,
+                                        ),
+                                        ///Tab bar
+                                        PreferredSize(
+                                          preferredSize: Size.fromHeight(kToolbarHeight),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              color: widget.tourist != null && widget.tourist
+                                                  ? BuytimeTheme.BackgroundCerulean
+                                                  : BuytimeTheme.UserPrimary,
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.black87.withOpacity(.3),
+                                                  spreadRadius: 1,
+                                                  blurRadius: 1,
+                                                  offset: Offset(0, 2), // changes position of shadow
                                                 ),
-                                                child: buildTabBar(context),
-                                              ),
+                                              ],
                                             ),
-                                            ///Tab value
-                                            (() {
-                                              if(snapshot.order != null && snapshot.order.itemList != null && snapshot.order.itemList.isNotEmpty) {
-                                                /// order is not reservable
-                                                if (snapshot.order.itemList[0].time == null) {
-                                                  if (snapshot.order.progress == Utils.enumToString(OrderStatus.paid) ||
-                                                      snapshot.order.progress == Utils.enumToString(OrderStatus.holding) ||
-                                                      snapshot.order.progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout)
-                                                  ) {
-                                                    return buildConfirmation(context);
-                                                  } else if (snapshot.order.progress == Utils.enumToString(OrderStatus.pending)) {
-                                                    return buildPending(snapshot, context);
-                                                  } else if (snapshot.order.progress == Utils.enumToString(OrderStatus.canceled)) {
-                                                    return buildCanceled(snapshot, context);
-                                                  } else if (snapshot.order.progress == Utils.enumToString(OrderStatus.creating)){
-                                                    return buildCreating(snapshot, context);
-                                                  } else {
-                                                    return buildTabsBeforeConfirmation();
-                                                  }
-                                                } else {
-                                                  /// order is reservable
-                                                  if (snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.paid) ||
-                                                      snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.holding) ||
-                                                      snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout)
-                                                  ) {
-                                                    return buildConfirmation(context);
-                                                  } else if (snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.canceled)) {
-                                                    return buildPending(snapshot, context);
-                                                  } else if (snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.canceled)) {
-                                                    return buildCanceled(snapshot, context);
-                                                  } else if (snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.creating)){
-                                                    return buildCreating(snapshot, context);
-                                                  } else {
-                                                    return buildTabsBeforeConfirmation();
-                                                  }
-                                                }
+                                            child: buildTabBar(context),
+                                          ),
+                                        ),
+                                        ///Tab value
+                                        (() {
+                                          if(snapshot.order != null && snapshot.order.itemList != null && snapshot.order.itemList.isNotEmpty) {
+                                            /// order is not reservable
+                                            if (snapshot.order.itemList[0].time == null) {
+                                              if (snapshot.order.progress == Utils.enumToString(OrderStatus.paid) ||
+                                                  snapshot.order.progress == Utils.enumToString(OrderStatus.holding) ||
+                                                  snapshot.order.progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout)
+                                              ) {
+                                                return buildConfirmation(context);
+                                              } else if (snapshot.order.progress == Utils.enumToString(OrderStatus.pending)) {
+                                                return buildPending(snapshot, context);
+                                              } else if (snapshot.order.progress == Utils.enumToString(OrderStatus.canceled)) {
+                                                return buildCanceled(snapshot, context);
+                                              } else if (snapshot.order.progress == Utils.enumToString(OrderStatus.creating)){
+                                                return buildCreating(snapshot, context);
                                               } else {
                                                 return buildTabsBeforeConfirmation();
                                               }
-                                            }())
-                                          ],
-                                        ),
-                                      ),
-                                      Center(
-                                        child: (() {
-                                          if (snapshot.order.progress == Utils.enumToString(OrderStatus.paid) || snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.paid) ||
-                                              snapshot.order.progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout) || snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout) ||
-                                              snapshot.order.progress == Utils.enumToString(OrderStatus.pending) || snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.pending) ||
-                                              snapshot.order.progress == Utils.enumToString(OrderStatus.holding) || snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.holding) ||
-                                              snapshot.order.progress == Utils.enumToString(OrderStatus.canceled) || snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.canceled)
-                                          ) {
-                                            return buildBackButton(context, media);
-                                          }  else if (snapshot.order.progress == Utils.enumToString(OrderStatus.creating) || snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.creating)){
-                                            return buildBackButton(context, media);
+                                            } else {
+                                              /// order is reservable
+                                              if (snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.paid) ||
+                                                  snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.holding) ||
+                                                  snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout)
+                                              ) {
+                                                return buildConfirmation(context);
+                                              } else if (snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.canceled)) {
+                                                return buildPending(snapshot, context);
+                                              } else if (snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.canceled)) {
+                                                return buildCanceled(snapshot, context);
+                                              } else if (snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.creating)){
+                                                return buildCreating(snapshot, context);
+                                              } else {
+                                                return buildTabsBeforeConfirmation();
+                                              }
+                                            }
                                           } else {
-                                            return buildConfirmButton(context, snapshot, selected, last4, brand, country, selectedCardPaymentMethodId, media);
+                                            return buildTabsBeforeConfirmation();
                                           }
-                                        }()),
-                                      )
-                                    ],
+                                        }())
+                                      ],
+                                    ),
                                   ),
-                                ),
+                                  Center(
+                                    child: (() {
+                                      if (snapshot.order.progress == Utils.enumToString(OrderStatus.paid) || snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.paid) ||
+                                          snapshot.order.progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout) || snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout) ||
+                                          snapshot.order.progress == Utils.enumToString(OrderStatus.pending) || snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.pending) ||
+                                          snapshot.order.progress == Utils.enumToString(OrderStatus.holding) || snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.holding) ||
+                                          snapshot.order.progress == Utils.enumToString(OrderStatus.canceled) || snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.canceled)
+                                      ) {
+                                        return buildBackButton(context, media);
+                                      }  else if (snapshot.order.progress == Utils.enumToString(OrderStatus.creating) || snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.creating)){
+                                        return buildBackButton(context, media);
+                                      } else {
+                                        return buildConfirmButton(context, snapshot, selected, last4, brand, country, selectedCardPaymentMethodId, media);
+                                      }
+                                    }()),
+                                  )
+                                ],
                               ),
-                            )),
-                      ),
-                    ),
-                    snapshot.order.addCardProgress == Utils.enumToString(AddCardStatus.inProgress)
-                        ? spinnerConfirmOrder()
-                        : Container(),
-                    snapshot.lastError != null && snapshot.lastError.isNotEmpty
-                        ? ShowErrorDialogToDismiss(
-                      buttonText: AppLocalizations.of(context).ok,
-                      content: snapshot.lastError,
-                      title: AppLocalizations.of(context).error,
-                    )
-                        : Container()
-                  ]);
-                }),
-          ],
-        )
+                            ),
+                          ),
+                        )),
+                  ),
+                ),
+                snapshot.order.addCardProgress == Utils.enumToString(AddCardStatus.inProgress)
+                    ? spinnerConfirmOrder()
+                    : Container(),
+                snapshot.lastError != null && snapshot.lastError.isNotEmpty
+                    ? ShowErrorDialogToDismiss(
+                  buttonText: AppLocalizations.of(context).ok,
+                  content: snapshot.lastError,
+                  title: AppLocalizations.of(context).error,
+                )
+                    : Container()
+              ]);
+            }),
     );
   }
 

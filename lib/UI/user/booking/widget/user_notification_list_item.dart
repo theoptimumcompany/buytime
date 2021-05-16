@@ -22,7 +22,8 @@ class UserNotificationListItem extends StatefulWidget {
   OrderState orderState;
   NotificationState notificationState;
   ServiceState serviceState;
-  UserNotificationListItem(this.notificationState, this.orderState, this.serviceState);
+  bool tourist;
+  UserNotificationListItem(this.notificationState, this.orderState, this.serviceState, this.tourist);
 
   @override
   _UserNotificationListItemState createState() => _UserNotificationListItemState();
@@ -78,7 +79,7 @@ class _UserNotificationListItemState extends State<UserNotificationListItem> {
                   widget.notificationState.opened = true;
                   StoreProvider.of<AppState>(context).dispatch(UpdateNotification(widget.notificationState));
                   debugPrint('user_notification_list_item => ORDER ID: ${widget.orderState.orderId}');
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => OrderDetails(orderState: widget.orderState)));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => OrderDetails(orderState: widget.orderState, tourist: widget.tourist)));
                 }
               },
               child: Container(
