@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:math';
+import 'package:Buytime/UI/user/turist/UI_U_service_explorer.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:Buytime/UI/user/login/UI_U_t_o_s_terms_conditons.dart';
@@ -18,6 +19,7 @@ import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 class Home extends StatefulWidget {
   //final Widget child;
   static String route = '/home';
+
   //Home();
 
   @override
@@ -76,8 +78,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           title: const Text('Dear User'),
           content: const Text(
             'We care about your privacy and data security. We keep this app free by showing ads. '
-                'Can we continue to use your data to tailor ads for you?\n\nYou can change your choice anytime in the app settings. '
-                'Our partners will collect data and use a unique identifier on your device to show you ads.',
+            'Can we continue to use your data to tailor ads for you?\n\nYou can change your choice anytime in the app settings. '
+            'Our partners will collect data and use a unique identifier on your device to show you ads.',
           ),
           actions: [
             TextButton(
@@ -91,8 +93,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           ],
         ),
       ) ??
-          false;
-
+      false;
 
   @override
   void initState() {
@@ -207,7 +208,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     _controller.dispose();
     super.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -566,14 +566,9 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                               height: 50,
 
                               /// 50 | SizeConfig.safeBlockVertical * 8.5
-                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3),
-                              decoration: BoxDecoration(
-                                  borderRadius: new BorderRadius.circular(5),
-                                  border: Border.all(
-                                      color: BuytimeTheme.SymbolLightGrey
-                                  )
-                              ),
-                              child:  MaterialButton(
+                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
+                              decoration: BoxDecoration(borderRadius: new BorderRadius.circular(5), border: Border.all(color: BuytimeTheme.SymbolLightGrey)),
+                              child: MaterialButton(
                                 elevation: 0,
                                 hoverElevation: 0,
                                 focusElevation: 0,
@@ -606,9 +601,25 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                       fontWeight: FontWeight.w500,
                                       color: BuytimeTheme.ButtonMalibu),
                                 ),
-                              )
-                          ),
+                              )),
                         ),
+
+                        ///Free Access (Tourist)
+                        FadeTransition(
+                            opacity: _animation3,
+                            child: Container(
+                                width: 247,
+                                height: 50,
+                                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical),
+                                child: TextButton(
+                                  child: Text(
+                                    AppLocalizations.of(context).exploreNetwork,
+                                    style: TextStyle(letterSpacing: 1.25, fontSize: 16, fontFamily: BuytimeTheme.FontFamily, fontWeight: FontWeight.w500, color: BuytimeTheme.TextMalibu),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.of(context).pushNamed(ServiceExplorer.route);
+                                  },
+                                ))),
                       ],
                     ),
 
@@ -619,8 +630,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                         child: FittedBox(
                           fit: BoxFit.scaleDown,
                           child: Container(
-                            margin: EdgeInsets.only(
-                                top: SizeConfig.safeBlockVertical * 3, bottom: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 10, right: SizeConfig.safeBlockHorizontal * 10),
+                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, bottom: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 10, right: SizeConfig.safeBlockHorizontal * 10),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
