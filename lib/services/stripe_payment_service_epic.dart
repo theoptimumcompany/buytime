@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/card/card_state.dart';
+import 'package:Buytime/reblox/model/order/order_entry.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/statistics_state.dart';
 import 'package:Buytime/reblox/model/stripe/stripe_card_response.dart';
@@ -286,8 +287,14 @@ class StripePaymentService {
     print('started NATIVE payment method creation...');
     /// why setting the account to null????? TODO: discover why
     /// StripeRecommended.StripePayment.setStripeAccount(null);
-    ///
+
     List<StripeRecommended.ApplePayItem> items = [];
+    for (int i = 0; i < orderState.itemList.length; i++) {
+      OrderEntry orderEntry = orderState.itemList[i];
+      String totalItemPrice = (orderEntry.price * orderEntry.number).toString();
+      StripeRecommended.ApplePayItem item = StripeRecommended.ApplePayItem(label: orderEntry.name, amount: totalItemPrice);
+      items.add(item);
+    }
     //step 1: add card
     var token = await StripeRecommended.StripePayment.paymentRequestWithNativePay(
       androidPayOptions: StripeRecommended.AndroidPayPaymentRequest(
