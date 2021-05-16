@@ -4,7 +4,6 @@ import 'dart:io';
 import 'dart:math';
 import 'package:Buytime/UI/user/cart/UI_U_ConfirmOrder.dart';
 import 'package:Buytime/UI/user/landing/UI_U_landing.dart';
-import 'package:Buytime/UI/user/login/tourist_session/UI_U_tourist_session_register.dart';
 import 'package:Buytime/UI/user/turist/UI_U_service_explorer.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/autoComplete/auto_complete_state.dart';
@@ -42,11 +41,11 @@ import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import '../UI_U_forgot_password.dart';
 
-class TouristSession extends StatefulWidget {
-  static String route = '/touristSession';
+class TouristSessionRegister extends StatefulWidget {
+  static String route = '/touristSessionRegister';
 
   @override
-  createState() => _TouristSessionState();
+  createState() => _TouristSessionRegisterState();
 }
 
 /// Generates a cryptographically secure random nonce, to be included in a
@@ -67,7 +66,7 @@ String sha256ofString(String input) {
 OverlayEntry overlayEntry;
 bool isMenuOpen = false;
 
-class _TouristSessionState extends State<TouristSession> with SingleTickerProviderStateMixin {
+class _TouristSessionRegisterState extends State<TouristSessionRegister> with SingleTickerProviderStateMixin {
   ///Global key
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -172,8 +171,7 @@ class _TouristSessionState extends State<TouristSession> with SingleTickerProvid
 
   ///Init Google sign in
   void routeToRegisterTourist() {
-    //print("Tegistr");
-    Navigator.push(context, MaterialPageRoute(builder: (context) => TouristSessionRegister()),);
+    print("Tegistr");
   }
 
   void routeToAfterLogged() {
@@ -195,62 +193,18 @@ class _TouristSessionState extends State<TouristSession> with SingleTickerProvid
     });
   }
 
-  void _signInWithEmailAndPassword() async {
-    setState(() {
-      responseMessage = '';
-    });
-
-    showDialog(
-        context: context,
-        builder: (context) {
-          return WillPopScope(
-              onWillPop: () async {
-                FocusScope.of(context).unfocus();
-                return false;
-              },
-              child: Container(
-                  height: SizeConfig.safeBlockVertical * 100,
-                  decoration: BoxDecoration(
-                    color: BuytimeTheme.BackgroundCerulean.withOpacity(.8),
-                  ),
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Container(
-                          width: SizeConfig.safeBlockVertical * 20,
-                          height: SizeConfig.safeBlockVertical * 20,
-                          child: Center(
-                            child: SpinKitRipple(
-                              color: Colors.white,
-                              size: SizeConfig.safeBlockVertical * 18,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  )));
-        });
-
-    setState(() {
-      _isRequestFlying = true;
-    });
-
+  void _register() async {
     auth.User user;
     auth.UserCredential tmpUserCredential;
     if (!emailHasError && !passwordHasError)
       tmpUserCredential = (await _auth
-          .signInWithEmailAndPassword(
-            email: _emailController.text,
-            password: _passwordController.text,
-          )
+          .createUserWithEmailAndPassword(
+        email: _emailController.text,
+        password: _passwordController.text,
+      )
           .catchError(onError));
 
     if (tmpUserCredential != null) user = tmpUserCredential.user;
-
-    setState(() {
-      _isRequestFlying = false;
-    });
 
     if (user != null) {
       AutoCompleteState autoComplete = AutoCompleteState().toEmpty();
@@ -272,6 +226,28 @@ class _TouristSessionState extends State<TouristSession> with SingleTickerProvid
         await autoComplete.writeToStorage(list);
         StoreProvider.of<AppState>(context).dispatch(AddAutoCompleteToList(list));
       }
+      /*if (remeberMe) {
+        AutoCompleteState autoComplete = AutoCompleteState().toEmpty();
+        autoComplete.email = _emailController.text;
+        autoComplete.password = _passwordController.text;
+        if (autoCompleteList.isNotEmpty) {
+          int i = 0;
+          autoCompleteList.forEach((element) {
+            if (element.email == autoComplete.email) ++i;
+          });
+          if (i == 0) {
+            autoCompleteList.add(autoComplete);
+            await autoComplete.writeToStorage(autoCompleteList);
+            StoreProvider.of<AppState>(context).dispatch(AddAutoCompleteToList(autoCompleteList));
+          }
+        } else {
+          List<AutoCompleteState> list = [];
+          list.add(autoComplete);
+          await autoComplete.writeToStorage(list);
+          StoreProvider.of<AppState>(context).dispatch(AddAutoCompleteToList(list));
+        }
+      }*/
+
       String deviceId = "web";
       if (!kIsWeb) {
         try {
@@ -286,7 +262,6 @@ class _TouristSessionState extends State<TouristSession> with SingleTickerProvid
           print('Failed to get platform version');
         }
       }
-
       print("Device ID : " + deviceId);
       StoreProvider.of<AppState>(context).dispatch(new LoggedUser(UserState.fromFirebaseUser(user, deviceId, [serverToken])));
       Device device = Device(name: "device", id: deviceId, user_uid: user.uid);
@@ -298,14 +273,9 @@ class _TouristSessionState extends State<TouristSession> with SingleTickerProvid
         routeToAfterLogged();
       });
     } else {
-      Navigator.of(context).pop();
-      debugPrint('response: $responseMessage');
-      if (responseMessage.isEmpty) {
-        setState(() {
-          _success = false;
-        });
-        checkFormValidation();
-      }
+      setState(() {
+        _success = false;
+      });
     }
   }
 
@@ -620,7 +590,7 @@ class _TouristSessionState extends State<TouristSession> with SingleTickerProvid
                                           _emailController.text = autoCompleteList.elementAt(index).email;
                                           _passwordController.text = autoCompleteList.elementAt(index).password;
                                           if (_formKey.currentState.validate() && !_isRequestFlying) {
-                                            _signInWithEmailAndPassword();
+                                            _register();
                                           }
                                           closeMenu();
                                         }
@@ -779,7 +749,7 @@ class _TouristSessionState extends State<TouristSession> with SingleTickerProvid
                                               //width: 328,
                                               margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 5),
                                               child: Text(
-                                                AppLocalizations.of(context).pleaseLogin,
+                                                AppLocalizations.of(context).pleaseRegister,
                                                 style: TextStyle(
                                                   fontFamily: BuytimeTheme.FontFamily,
                                                   color: BuytimeTheme.TextBlack,
@@ -1036,7 +1006,7 @@ class _TouristSessionState extends State<TouristSession> with SingleTickerProvid
                                           FloatingActionButton(
                                             onPressed: () async {
                                               if (_formKey.currentState.validate() && !_isRequestFlying) {
-                                                _signInWithEmailAndPassword();
+                                                _register();
                                               }
                                             },
                                             shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(500.0)),
@@ -1061,21 +1031,6 @@ class _TouristSessionState extends State<TouristSession> with SingleTickerProvid
                           ),
                         ),
                       ),
-
-                      ///Google & Facebook & Apple Sign up buttons
-                      Expanded(
-                        flex: 2,
-                        child: Container(
-                          //height: SizeConfig.safeBlockVertical * 30,
-                          //height: 243, ///285
-                          padding: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, bottom: SizeConfig.safeBlockVertical * 2),
-                          color: BuytimeTheme.BackgroundWhite,
-                          child: Column(mainAxisAlignment: MainAxisAlignment.center, mainAxisSize: MainAxisSize.min, children: [
-                            BrandedButtonTourist("", AppLocalizations.of(context).register, routeToRegisterTourist),
-                            //BrandedButton("assets/img/facebook_logo.png", AppLocalizations.of(context).signFacebook, initiateFacebookSignIn),
-                          ]),
-                        ),
-                      )
                     ]),
                   ),
                 ),

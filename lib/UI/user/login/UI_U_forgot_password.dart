@@ -36,7 +36,7 @@ class ForgotPasswordState extends State<ForgotPassword> {
   final TextEditingController _passwordController = TextEditingController();
   bool isLoggedIn = false;
   bool _isRequestFlying = false;
-  bool _success;
+  bool _success = false;
   bool _commited = false;
 
   final auth.FirebaseAuth _auth = auth.FirebaseAuth.instance;
@@ -270,11 +270,11 @@ class ForgotPasswordState extends State<ForgotPassword> {
                                       crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
                                         FloatingActionButton(
-                                          onPressed: () async {
+                                          onPressed: !_success ? () async {
                                             if (_formKey.currentState.validate()) {
                                               requestNewPassword(_emailController.text);
                                             }
-                                          },
+                                          } : null,
                                           shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(500.0)),
                                           child: Icon(
                                             Icons.chevron_right,

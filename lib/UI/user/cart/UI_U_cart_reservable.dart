@@ -360,6 +360,15 @@ class CartReservableState extends State<CartReservable> {
                                           focusElevation: 0,
                                           highlightElevation: 0,
                                           onPressed: () {
+                                            snapshot.slotSnippetListState.slotListSnippet.forEach((sLS) {
+                                              sLS.slot.forEach((s) {
+                                                if(orderReservableState.itemList.first.idSquareSlot == s.slotId){
+                                                  debugPrint('UI_U_cart_reservable => SLOT TIME: ${s.startTime}');
+                                                  debugPrint('UI_U_cart_reservable => SLOT DATE: ${s.date}');
+                                                }
+                                              });
+                                            });
+                                            //orderReservableState.itemList.first.idSquareSlot
                                             /// if we are before the 7 days we just create a reminder
                                             Navigator.push(
                                               context,

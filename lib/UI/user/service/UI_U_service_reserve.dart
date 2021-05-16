@@ -206,7 +206,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
             days.add(startDate.add(Duration(days: i)));
             tmpSlots.add([]);
             for (int j = 0; j < mySlots.length; j++) {
-              if (mySlots[i].availablePlaces != 0) {
+              if (mySlots[i].availablePlaces != 0 && mySlots[i].visibility) {
                 DateTime squareDate = mySlots[j].date;
                 squareDate = new DateTime(mySlots[j].date.year, mySlots[j].date.month, mySlots[j].date.day, 0, 0, 0, 0, 0);
                 if(squareDate.isAtSameMomentAs(startDate.add(Duration(days: i)))){
@@ -414,7 +414,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
             indexes.add(List.generate(element.length, (index) => SelectedEntry(first: 0, last: 0)));
           });*/
 
-          if(slots.isNotEmpty){
+          if(slots.isNotEmpty && slots[0] != null && slots[0].isNotEmpty){
             if(slots[0][0][1].day != 0){
               if(slots[0][0][1].day > 1){
                 firstSlot = '${slots[0][0][1].day} ${AppLocalizations.of(context).days}';
@@ -435,8 +435,8 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
 
 
         order = snapshot.orderReservable.itemList != null ? (snapshot.orderReservable.itemList.length > 0 ? snapshot.orderReservable : OrderReservableState().toEmpty()) : OrderReservableState().toEmpty();
-        int start = int.parse(widget.serviceState.serviceSlot.first.checkIn.substring(0,2));
-        int end = int.parse(widget.serviceState.serviceSlot.first.checkOut.substring(0,2));
+        //int start = int.parse(widget.serviceState.serviceSlot.first.checkIn.substring(0,2));
+        //int end = int.parse(widget.serviceState.serviceSlot.first.checkOut.substring(0,2));
 
         ///First try
         /*if(order.itemList.isNotEmpty){
@@ -478,7 +478,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
 
         debugPrint("UI_U_ServiceReserve => CART COUNT: ${order.cartCounter}");
         debugPrint('UI_U_ServiceReserve => PICKED: ${picked.length}');
-        debugPrint('UI_U_ServiceReserve => INTERVAL SLOTS LENGTH: ${widget.serviceState.serviceSlot.first.startTime.length}');
+        //debugPrint('UI_U_ServiceReserve => INTERVAL SLOTS LENGTH: ${widget.serviceState.serviceSlot.first.startTime.length}');
         return  GestureDetector(
           onTap: (){
             FocusScopeNode currentFocus = FocusScope.of(context);
@@ -915,7 +915,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                   }
                                                                   order.user.name = snapshot.user.name;
                                                                   order.user.id = snapshot.user.uid;
-                                                                  order.addReserveItem(widget.serviceState, snapshot.business.ownerId, serviceSlot[2].startTime, duration, dates[index], serviceSlot[2].price);
+                                                                  order.addReserveItem(widget.serviceState, snapshot.business.ownerId, serviceSlot[2].startTime, duration, dates[index], serviceSlot[2].price, serviceSlot[2].slotId);
                                                                   order.selected.add(indexes[index][i]);
                                                                   //order.selected.add(selected);
                                                                   order.cartCounter++;
@@ -923,8 +923,11 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                   StoreProvider.of<AppState>(context).dispatch(SetOrderReservable(order));
                                                                 }else{
                                                                   OrderEntry tmp;
+
                                                                   order.itemList.forEach((element) {
-                                                                    if(element.time ==  serviceSlot[2].startTime && element.date.isAtSameMomentAs(dates[index])){
+                                                                    DateTime tmpDate = dates[index];
+                                                                    tmpDate = DateTime(dates[index].year, dates[index].month, dates[index].day, int.parse(element.time.split(':').first), int.parse(element.time.split(':').last));
+                                                                    if(element.time ==  serviceSlot[2].startTime && element.date.isAtSameMomentAs(tmpDate)){
                                                                       tmp = element;
                                                                       debugPrint('UI_U_service_reserve => ENTRY: ${element.id_business}');
                                                                     }

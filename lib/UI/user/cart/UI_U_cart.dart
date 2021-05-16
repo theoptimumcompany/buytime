@@ -101,8 +101,10 @@ class CartState extends State<Cart> {
             converter: (store) => store.state,
             onInit: (store) {
               tmp = store.state.serviceState;
-              _locationController.text = store.state.business.area.first;
-              store.state.order.location = store.state.business.area.first;
+              if(!widget.tourist){
+                _locationController.text = store.state.business.area.first;
+                store.state.order.location = store.state.business.area.first;
+              }
             },
             builder: (context, snapshot) {
               orderState = snapshot.order;
@@ -258,15 +260,17 @@ class CartState extends State<Cart> {
                                             ),
 
                                             ///Location TExt
+                                            !widget.tourist ?
                                             Container(
                                               margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
                                               child: Text(
                                                 AppLocalizations.of(context).whereDoYouWantToRecive,
                                                 style: TextStyle(fontFamily: BuytimeTheme.FontFamily, fontWeight: FontWeight.w600, fontSize: 14),
                                               ),
-                                            ),
+                                            ) : Container(),
 
                                             ///Location
+                                            !widget.tourist ?
                                             Container(
                                                 width: 335.0,
                                                 margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
@@ -335,7 +339,7 @@ class CartState extends State<Cart> {
                                                       style: Theme.of(context).textTheme.title,
                                                     ),
                                                   ),
-                                                )),
+                                                )) : Container(),
                                           ],
                                         );
                                       }),

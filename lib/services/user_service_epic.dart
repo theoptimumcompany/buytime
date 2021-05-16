@@ -64,10 +64,13 @@ class UserRequestService implements EpicClass<AppState> {
         print(onError);
         return new CreateUser(event.userState);
       });*/
-    }).expand((element) => [
-      UpdateStatistics(statisticsState),
-      CreateUser(stateFromFirebase),
-    ]);
+    }).expand((element) {
+      var actionArray = [];
+      actionArray.add(UpdateStatistics(statisticsState));
+      if(stateFromFirebase != null)
+       actionArray.add(UserToState(stateFromFirebase));
+      return actionArray;
+    });
   }
 }
 

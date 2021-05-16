@@ -119,7 +119,7 @@ class NotificationUpdateRequestService implements EpicClass<AppState> {
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<UpdateNotification>().asyncMap((event) async {
 
-      print("NOTIFICATION_SERVICE_EPIC - NotificationUpdateRequestService => Order ID: ${event.notificationState.notificationId}");
+      print("NOTIFICATION_SERVICE_EPIC - NotificationUpdateRequestService => Notification ID: ${event.notificationState.notificationId}");
       await FirebaseFirestore.instance /// 1 WRITE
           .collection("notification")
           .doc(event.notificationState.notificationId)
@@ -137,7 +137,7 @@ class NotificationUpdateRequestService implements EpicClass<AppState> {
       notificationListState.add(notificationState);
 
       notificationListState.forEach((element) {
-        print("NOTIFICATION_SERVICE_EPIC - NotificationUpdateRequestService => Opened: ${event.notificationState.opened}");
+        //print("NOTIFICATION_SERVICE_EPIC - NotificationUpdateRequestService => Opened: ${event.notificationState.opened}");
       });
 
       /*statisticsState = store.state.statistics;

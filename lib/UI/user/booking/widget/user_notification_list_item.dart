@@ -44,16 +44,16 @@ class _UserNotificationListItemState extends State<UserNotificationListItem> {
     DateTime currentTime = DateTime.now();
     Duration tmpDuration = currentTime.difference(notificationTime);
     if(tmpDuration.inDays != 0){
-      debugPrint('user_notification_list_item => DAYS: ${tmpDuration.inDays}');
+      //debugPrint('user_notification_list_item => DAYS: ${tmpDuration.inDays}');
       days = tmpDuration.inDays.toString();
     }else if(tmpDuration.inHours != 0){
-      debugPrint('user_notification_list_item => HOURS: ${tmpDuration.inHours}');
+      //debugPrint('user_notification_list_item => HOURS: ${tmpDuration.inHours}');
       hours = tmpDuration.inHours.toString();
     }else if(tmpDuration.inMinutes != 0){
-      debugPrint('user_notification_list_item => MINUTES: ${tmpDuration.inMinutes}');
+      //debugPrint('user_notification_list_item => MINUTES: ${tmpDuration.inMinutes}');
       minutes = tmpDuration.inMinutes.toString();
     }else{
-      debugPrint('user_notification_list_item => SECONDS: ${tmpDuration.inSeconds}');
+      //debugPrint('user_notification_list_item => SECONDS: ${tmpDuration.inSeconds}');
       seconds = tmpDuration.inSeconds.toString();
     }
   }
@@ -77,6 +77,7 @@ class _UserNotificationListItemState extends State<UserNotificationListItem> {
                 if(widget.notificationState.notificationId != null && widget.notificationState.notificationId.isNotEmpty && widget.orderState.orderId.isNotEmpty){
                   widget.notificationState.opened = true;
                   StoreProvider.of<AppState>(context).dispatch(UpdateNotification(widget.notificationState));
+                  debugPrint('user_notification_list_item => ORDER ID: ${widget.orderState.orderId}');
                   Navigator.push(context, MaterialPageRoute(builder: (context) => OrderDetails(orderState: widget.orderState)));
                 }
               },

@@ -95,7 +95,7 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
               var data = message.data['data'] ?? message;
               RemoteNotification notification = message.notification;
               String orderId = data['orderId'];
-              StoreProvider.of<AppState>(context).dispatch(new OrderRequest(orderId)); //TODO statistics
+              //StoreProvider.of<AppState>(context).dispatch(new OrderRequest(orderId)); //TODO statistics
               StoreProvider.of<AppState>(context).state.notificationListState.notificationListState.clear();
               StoreProvider.of<AppState>(context)..dispatch(UserOrderListRequest());
               StoreProvider.of<AppState>(context).dispatch(RequestNotificationList(StoreProvider.of<AppState>(context).state.user.uid, StoreProvider.of<AppState>(context).state.business.id_firestore));
@@ -130,7 +130,7 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
           var data = message.data['data'] ?? message;
           RemoteNotification notification = message.notification;
           String orderId = data['orderId'];
-          StoreProvider.of<AppState>(context).dispatch(new OrderRequest(orderId)); //TODO statistics
+          //StoreProvider.of<AppState>(context).dispatch(new OrderRequest(orderId)); //TODO statistics
           StoreProvider.of<AppState>(context).state.notificationListState.notificationListState.clear();
           StoreProvider.of<AppState>(context)..dispatch(UserOrderListRequest());
           StoreProvider.of<AppState>(context).dispatch(RequestNotificationList(StoreProvider.of<AppState>(context).state.user.uid, StoreProvider.of<AppState>(context).state.business.id_firestore));

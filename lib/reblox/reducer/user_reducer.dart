@@ -27,9 +27,9 @@ class UpdatedUser {
   UserState get userState => _userState;
 }
 
-class CreateUser {
+class UserToState {
   UserState _userState;
-  CreateUser(this._userState);
+  UserToState(this._userState);
   UserState get userState => _userState;
 }
 
@@ -245,7 +245,7 @@ UserState userReducer(UserState state, action) {
     userState = action.userState.copyWith();
     return userState;
   }
-  if (action is CreateUser) {
+  if (action is UserToState) {
     userState = action.userState.copyWith();
     return userState;
   }

@@ -10,6 +10,7 @@ class SquareSlotState {
   DateTime date;
   String startTime;
   String stopTime;
+  String slotId;
   double price;
   int availablePlaces;
   int maxAvailablePlace;
@@ -21,6 +22,7 @@ class SquareSlotState {
     this.date,
     this.startTime,
     this.stopTime,
+    this.slotId,
     this.price,
     this.availablePlaces,
     this.maxAvailablePlace,
@@ -32,6 +34,7 @@ class SquareSlotState {
     DateTime date,
     String startTime,
     String stopTime,
+    String slotId,
     double price,
     int availablePlaces,
     int maxAvailablePlace,
@@ -42,6 +45,7 @@ class SquareSlotState {
       date: date ?? this.date,
       startTime: startTime ?? this.startTime,
       stopTime: stopTime ?? this.stopTime,
+      slotId: slotId ?? this.slotId,
       price: price ?? this.price,
       availablePlaces: availablePlaces ?? this.availablePlaces,
       maxAvailablePlace: maxAvailablePlace ?? this.maxAvailablePlace,
@@ -55,6 +59,7 @@ class SquareSlotState {
       date: DateTime.now(),
       startTime: '',
       stopTime: '',
+      slotId: '',
       price: 0.0,
       availablePlaces: 0,
       maxAvailablePlace: 0,
@@ -67,6 +72,7 @@ class SquareSlotState {
     this.date = serviceSlot.date;
     this.startTime = serviceSlot.startTime;
     this.stopTime = serviceSlot.stopTime;
+    this.slotId = serviceSlot.slotId;
     this.price = serviceSlot.price;
     this.availablePlaces = serviceSlot.availablePlaces;
     this.maxAvailablePlace = serviceSlot.maxAvailablePlace;

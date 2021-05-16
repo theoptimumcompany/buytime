@@ -657,7 +657,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                               child: MaterialButton(
                                 onPressed: StoreProvider.of<AppState>(context).state.user.getRole() == Role.user
                                     ? () {
-                                        StoreProvider.of<AppState>(context).dispatch(OrderReservableListRequest(widget.serviceState.serviceId));
+                                        //StoreProvider.of<AppState>(context).dispatch(OrderReservableListRequest(widget.serviceState.serviceId));
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(builder: (context) => ServiceReserve(serviceState: serviceState, tourist: widget.tourist)),

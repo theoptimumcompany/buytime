@@ -211,7 +211,7 @@ class OrderReservableState {
     this.total += itemToAdd.price;
   }
 
-  addReserveItem(ServiceState itemToAdd, String idOwner, String time, String minutes, DateTime date, dynamic price) {
+  addReserveItem(ServiceState itemToAdd, String idOwner, String time, String minutes, DateTime date, dynamic price, String slotId) {
     /*bool added = false;
     itemList.forEach((element) {
       if (!added && element.id == itemToAdd.serviceId) {
@@ -219,9 +219,10 @@ class OrderReservableState {
         added = true;
       }
     });*/
-    /*DateTime tmpDate = date;
-    tmpDate = DateTime(date.year, date.month, date.day, int.parse(time.split(':').first), int.parse(time.split(':').last));*/
+    DateTime tmpDate = date;
+    tmpDate = DateTime(date.year, date.month, date.day, int.parse(time.split(':').first), int.parse(time.split(':').last));
     itemList.add(OrderEntry(
+      idSquareSlot: slotId,
         number: 1,
         name: itemToAdd.name,
         description: itemToAdd.description,
@@ -233,7 +234,7 @@ class OrderReservableState {
         id_owner: idOwner,
       time: time,
       minutes: minutes,
-      date: date,
+      date: tmpDate,
         switchAutoConfirm: itemToAdd.switchAutoConfirm
     ));
     this.total += price;
