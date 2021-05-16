@@ -323,6 +323,48 @@ class StripePaymentService {
     }
   }
 
+  Future<StripeRecommended.PaymentMethod> createPaymentMethodNativeReservable(OrderState orderState, String businessName) async {
+    StripeRecommended.PaymentMethod paymentMethod;
+    initializePaymentValues(orderState, businessName);
+    print('started NATIVE payment method creation...');
+    /// why setting the account to null????? TODO: discover why
+    /// StripeRecommended.StripePayment.setStripeAccount(null);
+
+    List<StripeRecommended.ApplePayItem> items = [];
+    for (int i = 0; i < orderState.itemList.length; i++) {
+      OrderEntry orderEntry = orderState.itemList[i];
+      String totalItemPrice = (orderEntry.price * orderEntry.number).toString();
+      StripeRecommended.ApplePayItem item = StripeRecommended.ApplePayItem(label: orderEntry.name, amount: totalItemPrice);
+      items.add(item);
+    }
+    //step 1: add card
+    var token = await StripeRecommended.StripePayment.paymentRequestWithNativePay(
+      androidPayOptions: StripeRecommended.AndroidPayPaymentRequest(
+        totalPrice: (totalCost + tip).toStringAsFixed(2),
+        currencyCode: currency,
+      ),
+      applePayOptions: StripeRecommended.ApplePayPaymentOptions(
+        countryCode: country,
+        currencyCode: currency,
+        items: items,
+      ),
+    );
+    debugPrint('UI_U_ConfirmOrder => token received:' + token.toString());
+    paymentMethod = await StripeRecommended.StripePayment.createPaymentMethod(
+      StripeRecommended.PaymentMethodRequest(
+        card: StripeRecommended.CreditCard(
+          token: token.tokenId,
+        ),
+      ),
+    );
+    if (paymentMethod != null) {
+      return paymentMethod;
+    } else {
+      debugPrint('UI_U_ConfirmOrder => error in creating Native Method, the response from stripe is null');
+      return null;
+    }
+  }
+
   Future<String> processPaymentAsDirectCharge(String orderId, String StripeConnectedBusinessId) async {
     var url = Uri.https(cloudAddress, cloudFunctionPathPay, {'orderId': '$orderId', 'currency': currency});
     final http.Response response = await http.get(url);

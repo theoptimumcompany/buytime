@@ -25,7 +25,6 @@ class UserRequestService implements EpicClass<AppState> {
         debugPrint('USER_SERVICE_EPIC - UserRequstService => ERROR: $onError');
         stateFromFirebase = event.userState;
         ///Return
-        //return CreateUser(event.userState);
       });
 
 
@@ -47,8 +46,7 @@ class UserRequestService implements EpicClass<AppState> {
       statisticsState.userRequestServiceDocuments = documents;
 
       ///Return
-      /*return new CreateUser(stateFromFirebase);
-
+      /*
       return FirebaseFirestore.instance
           .collection('user')
           .doc(event.userState.uid)
