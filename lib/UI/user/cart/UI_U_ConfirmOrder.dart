@@ -547,7 +547,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                         alignment: Alignment.center,
                         //margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 20),
                         child: Text(
-                          snapshot.order.location,
+                          snapshot.order.location ?? '',
                           style: TextStyle(
                               fontFamily: BuytimeTheme.FontFamily,
                               fontWeight: FontWeight.w600,
