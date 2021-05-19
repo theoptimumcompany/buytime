@@ -61,6 +61,19 @@ class _TimeSlotWidgetState extends State<TimeSlotWidget> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          widget.selected ? Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Container(
+                margin: EdgeInsets.only(bottom: 0, right: .5),
+                child: Icon(
+                  Icons.bookmark,
+                  color: BuytimeTheme.UserPrimary.withOpacity(.5),
+                  size: 18,
+                ),
+              )
+            ],
+          ) : Container(),
          Container(
            height: 78,
            child: Column(
@@ -69,17 +82,17 @@ class _TimeSlotWidgetState extends State<TimeSlotWidget> {
                ///Time
                Container(
                  width: 100,
-                 margin: EdgeInsets.only(top: 15),
+                 margin: EdgeInsets.only(top: 0),
                  //margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 10),
                  child: FittedBox(
                    fit: BoxFit.scaleDown,
                    child: Text(
-                     '${widget.squareSlot.startTime}',
+                     '${widget.squareSlot.on}',
                      style: TextStyle(
                        //letterSpacing: 1.25,
                          fontFamily: BuytimeTheme.FontFamily,
                          color: BuytimeTheme.TextBlack,
-                         fontWeight: FontWeight.w400,
+                         fontWeight: FontWeight.bold,
                          fontSize: 16 ///SizeConfig.safeBlockHorizontal * 4
                      ),
                    ),
@@ -107,7 +120,7 @@ class _TimeSlotWidgetState extends State<TimeSlotWidget> {
                ///Price
                Container(
                  width: 100,
-                 //margin: EdgeInsets.only(top: 5),
+                 margin: EdgeInsets.only(bottom: 15),
                  child: FittedBox(
                    fit: BoxFit.scaleDown,
                    child: Text(
@@ -125,19 +138,6 @@ class _TimeSlotWidgetState extends State<TimeSlotWidget> {
              ],
            ),
          ),
-          widget.selected ? Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Container(
-                margin: EdgeInsets.only(bottom: 0, right: .5),
-                child: Icon(
-                  Icons.check_circle,
-                  color: BuytimeTheme.UserPrimary.withOpacity(.5),
-                  size: 20,
-                ),
-              )
-            ],
-          ) : Container()
         ],
       ),
     );

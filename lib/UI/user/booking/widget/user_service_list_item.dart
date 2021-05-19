@@ -15,7 +15,8 @@ class UserServiceListItem extends StatefulWidget {
 
   OrderState orderState;
   bool tourist;
-  UserServiceListItem(this.orderState, this.tourist);
+  ServiceState serviceState;
+  UserServiceListItem(this.orderState, this.tourist, this.serviceState);
 
   @override
   _UserServiceListItemState createState() => _UserServiceListItemState();
@@ -34,7 +35,7 @@ class _UserServiceListItemState extends State<UserServiceListItem> {
             child: InkWell(
               borderRadius: BorderRadius.all(Radius.circular(10)),
               onTap: () async {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => OrderDetails(orderState: widget.orderState, tourist: widget.tourist,)));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => OrderDetails(orderState: widget.orderState, tourist: widget.tourist, serviceState: widget.serviceState,)));
               },
               child: Container(
                 height: 91,  ///SizeConfig.safeBlockVertical * 15

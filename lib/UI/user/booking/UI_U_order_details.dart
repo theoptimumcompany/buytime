@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:math';
 import 'package:Buytime/UI/user/cart/UI_U_cart.dart';
 import 'package:Buytime/UI/user/cart/UI_U_ConfirmOrder.dart';
 import 'package:Buytime/UI/user/service/UI_U_service_reserve.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
+import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reservable_list_reducer.dart';
@@ -19,9 +21,12 @@ import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:Buytime/UI/user/map/UI_U_map.dart';
 import 'package:Buytime/UI/user/map/animated_screen.dart';
+import 'package:location/location.dart' as loc;
+import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 
@@ -29,7 +34,8 @@ class OrderDetails extends StatefulWidget {
   final OrderState orderState;
   static String route = '/orderDetails';
   bool tourist;
-  OrderDetails({@required this.orderState, this.tourist});
+  ServiceState serviceState;
+  OrderDetails({@required this.orderState, this.tourist, this.serviceState});
 
   @override
   createState() => _OrderDetailsState();
@@ -108,6 +114,128 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
     return url;
   }
 
+  double currentLat = 0;
+  double currentLng = 0;
+  Position _currentPosition;
+  double distanceFromBusiness;
+  double distanceFromCurrentPosition;
+  bool gettingLocation = true;
+  Future<bool> requestLocationPermission({Function onPermissionDenied}) async {
+    var granted = await Permission.location.isGranted;
+    if (!granted) {
+      requestLocationPermission();
+    }
+    debugPrint('requestContactsPermission $granted');
+    return granted;
+  }
+
+  /// Check if gps service is enabled or not
+  Future _gpsService() async {
+    if (!(await Geolocator.isLocationServiceEnabled())) {
+      //_checkGps();
+      debugPrint('UI_U_order_details => GPS NOT AVAILABLE');
+      return null;
+    } else{
+      debugPrint('UI_U_order_details => GPS AVAILABLE');
+      return true;
+    }
+
+  }
+  _getCurrentLocation() {
+    Geolocator
+        .getCurrentPosition(desiredAccuracy: LocationAccuracy.best, forceAndroidLocationManager: true)
+        .then((Position position) {
+      setState(() {
+        _currentPosition = position;
+        debugPrint('UI_U_order_details => FROM GEOLOCATOR: $_currentPosition');
+        currentLat = _currentPosition.latitude;
+        currentLng = _currentPosition.longitude;
+      });
+    }).catchError((e) {
+      print(e);
+    });
+  }
+
+  _getLocation(BusinessState businessState) async{
+    loc.Location location = new loc.Location();
+
+    bool _serviceEnabled;
+    loc.PermissionStatus _permissionGranted;
+    loc.LocationData _locationData;
+
+    _serviceEnabled = await location.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await location.requestService();
+      if (!_serviceEnabled) {
+        debugPrint('UI_U_order_details => LOCATION NOT ENABLED');
+        setState(() {
+          gettingLocation = false;
+          distanceFromBusiness = calculateDistance(businessState.coordinate);
+        });
+        return;
+      }
+    }
+
+    _permissionGranted = await location.hasPermission();
+    if (_permissionGranted == loc.PermissionStatus.denied) {
+      _permissionGranted = await location.requestPermission();
+      if (_permissionGranted != loc.PermissionStatus.granted) {
+        debugPrint('UI_U_order_details => PERMISSION NOY GARANTED');
+        return;
+      }
+    }
+
+    _locationData = await location.getLocation();
+    debugPrint('UI_U_order_details => FROM LOCATION: $_locationData');
+    if(_locationData.latitude != null){
+      setState(() {
+        gettingLocation = false;
+        distanceFromCurrentPosition = calculateDistance('$currentLat, $currentLng');
+      });
+    }
+    _getCurrentLocation();
+  }
+
+  double calculateDistance(String coordiantes){
+    double lat1 = 0.0;
+    double lon1 = 0.0;
+    double lat2 = 0.0;
+    double lon2 = 0.0;
+    if(coordiantes.isNotEmpty){
+      List<String> latLng1 = coordiantes.replaceAll('(', '').replaceAll(')', '').replaceAll(' ', '').split(',');
+      //debugPrint('W_add_external_business_list_item => $businessState.name} | Cordinates 1: $latLng1');
+      if(latLng1.length == 2){
+        lat1 = double.parse(latLng1[0]);
+        lon1 = double.parse(latLng1[1]);
+      }
+    }
+    if(widget.serviceState.serviceCoordinates != null && widget.serviceState.serviceCoordinates.isNotEmpty){
+      List<String> latLng2 = widget.serviceState.serviceCoordinates.replaceAll('(', '').replaceAll(')', '').replaceAll(' ', '').split(',');
+      debugPrint('W_add_external_business_list_item => ${widget.serviceState.name} | Cordinates 2: $latLng2');
+      if(latLng2.length == 2){
+        lat2 = double.parse(latLng2[0]);
+        lon2 = double.parse(latLng2[1]);
+      }
+    }else if(widget.serviceState.serviceBusinessCoordinates != null && widget.serviceState.serviceBusinessCoordinates.isNotEmpty){
+      List<String> latLng2 = widget.serviceState.serviceBusinessCoordinates.replaceAll('(', '').replaceAll(')', '').replaceAll(' ', '').split(',');
+      //debugPrint('W_add_external_business_list_item => ${widget.externalBusinessState.name} | Cordinates 2: $latLng2');
+      if(latLng2.length == 2){
+        lat2 = double.parse(latLng2[0]);
+        lon2 = double.parse(latLng2[1]);
+      }
+    }
+    var p = 0.017453292519943295;
+    var c = cos;
+    var a = 0.5 - c((lat2 - lat1) * p)/2 +
+        c(lat1 * p) * c(lat2 * p) *
+            (1 - c((lon2 - lon1) * p))/2;
+    double tmp = (12742 * asin(sqrt(a)));
+    debugPrint('W_add_external_business_list_item => Distance: $tmp');
+
+    return  tmp;
+  }
+
+
   @override
   Widget build(BuildContext context) {
     // the media containing information on width and height
@@ -123,11 +251,16 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
           lat = double.parse(latLng[0]);
           lng = double.parse(latLng[1]);
         }
+        //requestLocationPermission();
+        //_gpsService();
+       // _getCurrentLocation();
+        _getLocation(store.state.business);
       },
       builder: (context, snapshot) {
         debugPrint('UI_U_ServiceDetails => SNAPSHOT CART COUNT: ${snapshot.order}');
         order = snapshot.order.itemList != null ? (snapshot.order.itemList.length > 0 ? snapshot.order : OrderState().toEmpty()) : OrderState().toEmpty();
         debugPrint('UI_U_ServiceDetails => CART COUNT: ${order.cartCounter}');
+
         return  GestureDetector(
           onTap: (){
             FocusScopeNode currentFocus = FocusScope.of(context);
@@ -442,17 +575,36 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                                     child: Row(
                                       children: [
                                         Icon(
-                                          Icons.directions_walk,
+                                          Icons.location_pin,
                                           size: 14,
                                           color: BuytimeTheme.SymbolGrey,
                                         ),
                                         ///Min
+                                        gettingLocation ? Container(
+                                          margin: EdgeInsets.only(left: 5, right: 2.5),
+                                          height: 12,
+                                          width: 12,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2,
+                                            //valueColor: new AlwaysStoppedAnimation<Color>(widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary),
+                                          ),
+                                        ) :
                                         Container(
-                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 1.5, right: SizeConfig.safeBlockHorizontal * 1, top: SizeConfig.safeBlockVertical * 0),
+                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 0.5, right: SizeConfig.safeBlockHorizontal * 1, top: SizeConfig.safeBlockVertical * 0),
                                           child: FittedBox(
                                             fit: BoxFit.scaleDown,
                                             child: Text(
-                                              '? ' + AppLocalizations.of(context).min,
+                                              (){
+                                                if(distanceFromCurrentPosition != null){
+                                                  return distanceFromCurrentPosition.toString().split('.').first.startsWith('0') && distanceFromCurrentPosition.toString().split('.').first.length != 1?
+                                                  distanceFromCurrentPosition.toString().split('.').last.substring(0,3) + ' m' :
+                                                  distanceFromCurrentPosition.toStringAsFixed(1) + ' Km';
+                                                }else{
+                                                  return distanceFromBusiness.toString().split('.').first.startsWith('0') && distanceFromBusiness.toString().split('.').first.length != 1?
+                                                  distanceFromBusiness.toString().split('.').last.substring(0,3) + ' m' :
+                                                  distanceFromBusiness.toStringAsFixed(1) + ' Km';
+                                                }
+                                              }(),
                                               style: TextStyle(
                                                   letterSpacing: 0.25,
                                                   fontFamily: BuytimeTheme.FontFamily,
@@ -473,10 +625,10 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                                                   onTap: () {
                                                     Navigator.push(
                                                       context,
-                                                      MaterialPageRoute(builder: (context) => BuytimeMap(user: true,
-                                                        title: widget.orderState.itemList.length > 1 ? widget.orderState.business.name : widget.orderState.itemList.first.name,
+                                                      MaterialPageRoute(builder: (context) => BuytimeMap(user: false, title: snapshot.business.name,
                                                         businessState: snapshot.business,
-                                                          serviceState: ServiceState().toEmpty()) ///TODO service address
+                                                        serviceState: widget.serviceState,
+                                                      )
                                                       ),
                                                     );
                                                   },

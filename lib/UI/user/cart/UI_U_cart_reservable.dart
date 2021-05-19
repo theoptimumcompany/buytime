@@ -364,10 +364,14 @@ class CartReservableState extends State<CartReservable> {
                                           onPressed: () {
                                             snapshot.slotSnippetListState.slotListSnippet.forEach((sLS) {
                                               sLS.slot.forEach((s) {
-                                                if(orderReservableState.itemList.first.idSquareSlot == s.slotId){
-                                                  debugPrint('UI_U_cart_reservable => SLOT TIME: ${s.startTime}');
-                                                  debugPrint('UI_U_cart_reservable => SLOT DATE: ${s.date}');
-                                                }
+                                                orderReservableState.itemList.forEach((iT) {
+                                                  if(iT.idSquareSlot == s.uid){
+                                                    debugPrint('UI_U_cart_reservable => SLOT TIME: ${s.on}');
+                                                    debugPrint('UI_U_cart_reservable => SLOT DATE: ${s.date}');
+                                                    debugPrint('UI_U_cart_reservable => SLOT PRICE: ${iT.price}');
+                                                    debugPrint('UI_U_cart_reservable => SLOT QUANTITY: ${iT.orderCapacity}');
+                                                  }
+                                                });
                                               });
                                             });
                                             //orderReservableState.itemList.first.idSquareSlot

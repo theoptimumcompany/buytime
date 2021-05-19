@@ -253,9 +253,18 @@ class _AllBookingsState extends State<AllBookings> {
                                               if ( widget.orderStateList[i].orderId == order.orderId) index = i;
                                             }
                                             debugPrint('UI_U_all_bookings => CART COUNT: ${order.date}');
+                                            ServiceState service = ServiceState().toEmpty();
+                                            StoreProvider.of<AppState>(context).state.notificationListState.notificationListState.forEach((element) {
+                                              if(element.notificationId != null && element.notificationId.isNotEmpty && order.orderId.isNotEmpty && order.orderId == element.data.state.orderId){
+                                                snapshot.serviceList.serviceListState.forEach((s) {
+                                                  if(element.data.state.serviceId == s.serviceId)
+                                                    service = s;
+                                                });
+                                              }
+                                            });
                                             return Column(
                                               children: [
-                                                UserServiceListItem(order, widget.tourist),
+                                                UserServiceListItem(order, widget.tourist, service),
                                                 Container(
                                                   margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 30),
                                                   height: SizeConfig.safeBlockVertical * .2,

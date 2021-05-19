@@ -22,6 +22,7 @@ OrderEntry _$OrderEntryFromJson(Map<String, dynamic> json) {
     date: Utils.getDate(json['date'] as Timestamp),
     switchAutoConfirm: json['switchAutoConfirm'] as bool ?? false,
     idSquareSlot: json['idSquareSlot'] as String ?? '',
+    orderCapacity: json['orderCapacity'] as int,
   );
 }
 
@@ -41,4 +42,5 @@ Map<String, dynamic> _$OrderEntryToJson(OrderEntry instance) =>
       'date': Utils.setDate(instance.date),
       'switchAutoConfirm': instance.switchAutoConfirm,
       'idSquareSlot': instance.idSquareSlot,
+      'orderCapacity': instance.orderCapacity,
     };

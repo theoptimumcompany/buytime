@@ -8,27 +8,21 @@ part of 'interval_slot_state.dart';
 
 SquareSlotState _$SquareSlotStateFromJson(Map<String, dynamic> json) {
   return SquareSlotState(
-    date: Utils.getDate(json['date'] as Timestamp),
-    startTime: json['startTime'] as String,
-    stopTime: json['stopTime'] as String,
-    slotId: json['slotId'] as String,
-    price: (json['price'] as num)?.toDouble(),
-    availablePlaces: json['availablePlaces'] as int,
-    maxAvailablePlace: json['maxAvailablePlace'] as int,
-    parallelDelivery: json['parallelDelivery'] as int,
-    visibility: json['visibility'] as bool ?? true,
+    date: json['date'] as String,
+    on: json['on'] as String,
+    off: json['off'] as String,
+    uid: json['uid'] as String,
+    free: json['free'] as int,
+    max: json['max'] as int,
   );
 }
 
 Map<String, dynamic> _$SquareSlotStateToJson(SquareSlotState instance) =>
     <String, dynamic>{
-      'date': Utils.setDate(instance.date),
-      'startTime': instance.startTime,
-      'stopTime': instance.stopTime,
-      'slotId': instance.slotId,
-      'price': instance.price,
-      'availablePlaces': instance.availablePlaces,
-      'maxAvailablePlace': instance.maxAvailablePlace,
-      'parallelDelivery': instance.parallelDelivery,
-      'visibility': instance.visibility,
+      'date': instance.date,
+      'on': instance.on,
+      'off': instance.off,
+      'uid': instance.uid,
+      'free': instance.free,
+      'max': instance.max,
     };

@@ -24,6 +24,7 @@ class OrderEntry {
   bool switchAutoConfirm = false;
   @JsonKey(defaultValue: '')
   String idSquareSlot;
+  int orderCapacity;
 
   OrderEntry({
     this.number = 0,
@@ -40,6 +41,7 @@ class OrderEntry {
     this.date,
     this.switchAutoConfirm,
     this.idSquareSlot,
+    this.orderCapacity,
   });
 
   factory OrderEntry.fromJson(Map<String, dynamic> json) => _$OrderEntryFromJson(json);

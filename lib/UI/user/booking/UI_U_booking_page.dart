@@ -241,7 +241,7 @@ class _BookingPageState extends State<BookingPage> {
         DateTime currentTime = DateTime.now();
         currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0).toUtc();
         snapshot.orderList.orderListState.forEach((element) {
-          if((element.progress == 'paid' || element.progress == 'pending' || element.progress == 'holding') && (element.date.isAtSameMomentAs(currentTime) || element.date.isAfter(currentTime)) && element.itemList.first.time != null)
+          if((element.progress == 'paid' || element.progress == 'pending' || element.progress == 'holding' || element.progress == 'accepted') && (element.date.isAtSameMomentAs(currentTime) || element.date.isAfter(currentTime)) && element.itemList.first.time != null)
             userOrderList.add(element);
         });
         orderList.addAll(snapshot.orderList.orderListState);
@@ -750,7 +750,7 @@ class _BookingPageState extends State<BookingPage> {
                                                       color: Colors.transparent,
                                                       child: InkWell(
                                                           onTap: () {
-                                                            Navigator.push(context, MaterialPageRoute(builder: (context) => AllBookings(orderStateList: orderList,)),);
+                                                            Navigator.push(context, MaterialPageRoute(builder: (context) => AllBookings(orderStateList: orderList, tourist: false,)),);
                                                           },
                                                           borderRadius: BorderRadius.all(Radius.circular(5.0)),
                                                           child: Container(
@@ -783,11 +783,20 @@ class _BookingPageState extends State<BookingPage> {
                                                         (context, index) {
                                                       //MenuItemModel menuItem = menuItems.elementAt(index);
                                                       OrderState order = userOrderList.elementAt(index);
+                                                      ServiceState service = ServiceState().toEmpty();
+                                                      StoreProvider.of<AppState>(context).state.notificationListState.notificationListState.forEach((element) {
+                                                        if(element.notificationId != null && element.notificationId.isNotEmpty && order.orderId.isNotEmpty && order.orderId == element.data.state.orderId){
+                                                          snapshot.serviceList.serviceListState.forEach((s) {
+                                                            if(element.data.state.serviceId == s.serviceId)
+                                                              service = s;
+                                                          });
+                                                        }
+                                                      });
                                                       return Container(
                                                         width: 151,
                                                         height: 100,
                                                         margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1, right: SizeConfig.safeBlockHorizontal * 1),
-                                                        child: UserServiceCardWidget(order, false),
+                                                        child: UserServiceCardWidget(order, false, service),
                                                       );
                                                     },
                                                     childCount: userOrderList.length,

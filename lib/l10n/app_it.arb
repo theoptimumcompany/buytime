@@ -530,5 +530,7 @@
   "holdingConfirmed": "Your card has now a hold for the order total amount. The money will be charged about 48 hours before the service is used.",
   "holdingError": "There was a problem with your card, please try again with another payment method",
   "exploreNetwork": "Explore The Network",
-  "startSession": "Iniziare Sessione"
+  "startSession": "Iniziare Sessione",
+  "numberOfPeople": "Number of people",
+  "spot": "spot left"
 }

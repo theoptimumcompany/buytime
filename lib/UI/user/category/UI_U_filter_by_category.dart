@@ -208,14 +208,16 @@ class _FilterByCategoryState extends State<FilterByCategory> {
               l.forEach((element) {
                 if (element.parent != null && element.parent.id == widget.categoryState.id) {
                   subCategoryList.add(element);
+                }else{
+                  categoryList.add(element);
                 }
               });
             }
           });
         });
-        categoryListState = store.state.categoryList;
+        /*categoryListState = store.state.categoryList;
         categoryList.addAll(categoryListState.categoryListState);
-        categoryList.remove(widget.categoryState);
+        categoryList.remove(widget.categoryState);*/
         categoryList.shuffle();
       },
       builder: (context, snapshot) {

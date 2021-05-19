@@ -6,78 +6,79 @@ part 'interval_slot_state.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class SquareSlotState {
-  @JsonKey(fromJson: Utils.getDate, toJson: Utils.setDate)
-  DateTime date;
-  String startTime;
-  String stopTime;
-  String slotId;
-  double price;
-  int availablePlaces;
-  int maxAvailablePlace;
-  int parallelDelivery;
+  //@JsonKey(fromJson: Utils.getDate, toJson: Utils.setDate)
+  //DateTime date;
+  String date;
+  String on;
+  String off;
+  String uid;
+  //double price;
+  int free;
+  int max;
+  //int parallelDelivery;
   @JsonKey(defaultValue: true)
-  bool visibility;
+  //bool visibility;
 
   SquareSlotState({
     this.date,
-    this.startTime,
-    this.stopTime,
-    this.slotId,
-    this.price,
-    this.availablePlaces,
-    this.maxAvailablePlace,
-    this.parallelDelivery,
-    this.visibility,
+    this.on,
+    this.off,
+    this.uid,
+    //this.price,
+    this.free,
+    this.max,
+    //this.parallelDelivery,
+    //this.visibility,
   });
 
   SquareSlotState copyWith({
-    DateTime date,
+    String date,
     String startTime,
     String stopTime,
     String slotId,
-    double price,
+    //double price,
     int availablePlaces,
     int maxAvailablePlace,
-    int parallelDelivery,
-    bool visibility,
+    //int parallelDelivery,
+    //bool visibility,
   }) {
     return SquareSlotState(
       date: date ?? this.date,
-      startTime: startTime ?? this.startTime,
-      stopTime: stopTime ?? this.stopTime,
-      slotId: slotId ?? this.slotId,
-      price: price ?? this.price,
-      availablePlaces: availablePlaces ?? this.availablePlaces,
-      maxAvailablePlace: maxAvailablePlace ?? this.maxAvailablePlace,
-      parallelDelivery: parallelDelivery ?? this.parallelDelivery,
-      visibility: visibility ?? this.visibility,
+      on: startTime ?? this.on,
+      off: stopTime ?? this.off,
+      uid: slotId ?? this.uid,
+      //price: price ?? this.price,
+      free: availablePlaces ?? this.free,
+      max: maxAvailablePlace ?? this.max,
+      //parallelDelivery: parallelDelivery ?? this.parallelDelivery,
+      //visibility: visibility ?? this.visibility,
     );
   }
 
   SquareSlotState toEmpty() {
     return SquareSlotState(
-      date: DateTime.now(),
-      startTime: '',
-      stopTime: '',
-      slotId: '',
-      price: 0.0,
-      availablePlaces: 0,
-      maxAvailablePlace: 0,
-      parallelDelivery: 0,
-      visibility: true,
+      date: '',
+      on: '',
+      off: '',
+      uid: '',
+      //price: 0.0,
+      free: 0,
+      max: 0,
+      //parallelDelivery: 0,
+      //visibility: true,
     );
   }
 
   SquareSlotState.fromState(SquareSlotState serviceSlot) {
     this.date = serviceSlot.date;
-    this.startTime = serviceSlot.startTime;
-    this.stopTime = serviceSlot.stopTime;
-    this.slotId = serviceSlot.slotId;
-    this.price = serviceSlot.price;
-    this.availablePlaces = serviceSlot.availablePlaces;
-    this.maxAvailablePlace = serviceSlot.maxAvailablePlace;
-    this.parallelDelivery = serviceSlot.parallelDelivery;
-    this.visibility = serviceSlot.visibility;
+    this.on = serviceSlot.on;
+    this.off = serviceSlot.off;
+    this.uid = serviceSlot.uid;
+    //this.price = serviceSlot.price;
+    this.free = serviceSlot.free;
+    this.max = serviceSlot.max;
+    //this.parallelDelivery = serviceSlot.parallelDelivery;
+    //this.visibility = serviceSlot.visibility;
   }
 
 

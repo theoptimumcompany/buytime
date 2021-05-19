@@ -40,7 +40,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:location/location.dart' as loc;
 
 class ServiceExplorer extends StatefulWidget {
   static String route = '/serviceExplorer';
@@ -154,6 +156,68 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
 
   bool searching = false;
   bool hasNotifications = false;
+  double currentLat = 0;
+  double currentLng = 0;
+  Position _currentPosition;
+  double distanceFromBusiness;
+  double distanceFromCurrentPosition;
+  bool gettingLocation = true;
+
+  _getCurrentLocation() {
+    Geolocator
+        .getCurrentPosition(desiredAccuracy: LocationAccuracy.best, forceAndroidLocationManager: true)
+        .then((Position position) {
+      setState(() {
+        _currentPosition = position;
+        debugPrint('UI_U_order_details => FROM GEOLOCATOR: $_currentPosition');
+        currentLat = _currentPosition.latitude;
+        currentLng = _currentPosition.longitude;
+      });
+    }).catchError((e) {
+      print(e);
+    });
+  }
+
+  _getLocation() async{
+    loc.Location location = new loc.Location();
+
+    bool _serviceEnabled;
+    loc.PermissionStatus _permissionGranted;
+    loc.LocationData _locationData;
+
+    _serviceEnabled = await location.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await location.requestService();
+      if (!_serviceEnabled) {
+        debugPrint('UI_U_order_details => LOCATION NOT ENABLED');
+        setState(() {
+          gettingLocation = false;
+          distanceFromBusiness = 0.0;
+        });
+        return;
+      }
+    }
+
+    _permissionGranted = await location.hasPermission();
+    if (_permissionGranted == loc.PermissionStatus.denied) {
+      _permissionGranted = await location.requestPermission();
+      if (_permissionGranted != loc.PermissionStatus.granted) {
+        debugPrint('UI_U_order_details => PERMISSION NOY GARANTED');
+        return;
+      }
+    }
+
+    _locationData = await location.getLocation();
+    debugPrint('UI_U_order_details => FROM LOCATION: $_locationData');
+    if(_locationData.latitude != null){
+      setState(() {
+        gettingLocation = false;
+        distanceFromCurrentPosition = 0.0;
+      });
+    }
+    _getCurrentLocation();
+  }
+
   @override
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
@@ -542,11 +606,20 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                                           (context, index) {
                                         //MenuItemModel menuItem = menuItems.elementAt(index);
                                         OrderState order = userOrderList.elementAt(index);
+                                        ServiceState service = ServiceState().toEmpty();
+                                        StoreProvider.of<AppState>(context).state.notificationListState.notificationListState.forEach((element) {
+                                          if(element.notificationId != null && element.notificationId.isNotEmpty && order.orderId.isNotEmpty && order.orderId == element.data.state.orderId){
+                                            snapshot.serviceList.serviceListState.forEach((s) {
+                                              if(element.data.state.serviceId == s.serviceId)
+                                                service = s;
+                                            });
+                                          }
+                                        });
                                         return Container(
                                           width: 151,
                                           height: 100,
                                           margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1, right: SizeConfig.safeBlockHorizontal * 1),
-                                          child: UserServiceCardWidget(order, true),
+                                          child: UserServiceCardWidget(order, true, service),
                                         );
                                       },
                                       childCount: userOrderList.length,

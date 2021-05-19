@@ -1,6 +1,7 @@
 import 'package:Buytime/UI/user/booking/UI_U_order_details.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
+import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/reducer/notification_reducer.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
@@ -15,7 +16,8 @@ class UserServiceCardWidget extends StatefulWidget {
 
   OrderState orderState;
   bool tourist;
-  UserServiceCardWidget(this.orderState, this.tourist);
+  ServiceState serviceState;
+  UserServiceCardWidget(this.orderState, this.tourist, this.serviceState);
 
   @override
   _UserServiceCardWidgetState createState() => _UserServiceCardWidgetState();
@@ -82,7 +84,7 @@ class _UserServiceCardWidgetState extends State<UserServiceCardWidget> {
                   StoreProvider.of<AppState>(context).dispatch(UpdateNotification(element));
                 }
               });
-              Navigator.push(context, MaterialPageRoute(builder: (context) => OrderDetails(orderState: widget.orderState, tourist: widget.tourist,)));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => OrderDetails(orderState: widget.orderState, tourist: widget.tourist, serviceState: widget.serviceState,)));
               //Navigator.push(context, MaterialPageRoute(builder: (context) => OrderDetails(orderState: widget.orderState)));
              /* widget.fromBookingPage ?
               Navigator.push(context, MaterialPageRoute(builder: (context) => FilterByCategory(fromBookingPage: true, categoryState: widget.categoryState,))) :
