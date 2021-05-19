@@ -21,6 +21,7 @@ enum OrderStatus {
   toBePaidAtCheckout,
   canceled, /// Viene cancellato DOPO il pagamento dall'utente o dal business
   frozen, /// non lo vedranno mai
+  created,
   declined, /// Viene cancellato PRIMA del pagamento dal business POTREBBE VENIRE RIAPERTO DAL BUSINESS
   holding,
   creating /// non lo vedranno mai

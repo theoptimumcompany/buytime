@@ -685,6 +685,8 @@ class Utils {
     '${AppLocalizations.of(context).paid}' :
     progress == Utils.enumToString(OrderStatus.pending) ?
     '${AppLocalizations.of(context).pending}' :
+    progress == Utils.enumToString(OrderStatus.created) ?
+    '${AppLocalizations.of(context).created}' :
     progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout) ?
     '${AppLocalizations.of(context).toBePaidAtCheckout}' :
     progress == Utils.enumToString(OrderStatus.canceled) ?
@@ -704,6 +706,8 @@ class Utils {
     progress == Utils.enumToString(OrderStatus.unpaid) ?
     BuytimeTheme.BackgroundCerulean :
     progress == Utils.enumToString(OrderStatus.accepted) ?
+    BuytimeTheme.ActionButton :
+    progress == Utils.enumToString(OrderStatus.created) ?
     BuytimeTheme.ActionButton :
     progress == Utils.enumToString(OrderStatus.paid) ?
     BuytimeTheme.ActionButton :

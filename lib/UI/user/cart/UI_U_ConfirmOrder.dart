@@ -8,11 +8,9 @@ import 'package:Buytime/reblox/model/card/card_state.dart';
 import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
 import 'package:Buytime/reblox/model/stripe/stripe_state.dart';
 import 'package:Buytime/reblox/reducer/order_reservable_reducer.dart';
-import 'package:Buytime/reblox/reducer/stripe_payment_reducer.dart';
 import 'package:Buytime/reusable/stripe/show_dialog_to_dismiss.dart';
 import 'package:Buytime/services/stripe_payment_service_epic.dart';
 import 'package:Buytime/utils/utils.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
@@ -27,7 +25,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:stripe_payment/stripe_payment.dart' as StripeRecommended;
-import 'package:video_player/video_player.dart';
 
 class ConfirmOrder extends StatefulWidget {
   final String title = 'confirmOrder';
@@ -157,9 +154,11 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                         ),
                                         ///Tab value
                                         (() {
-                                          if(snapshot.order != null && snapshot.order.itemList != null && snapshot.order.itemList.isNotEmpty) {
+                                      if( snapshot.order != null && snapshot.order.itemList != null && snapshot.order.itemList.isNotEmpty ||
+                                          snapshot.orderReservable != null && snapshot.orderReservable.itemList != null && snapshot.orderReservable.itemList.isNotEmpty
+                                      ) {
                                             /// order is not reservable
-                                            if (snapshot.order.itemList[0].time == null) {
+                                        if (snapshot.order != null && snapshot.order.itemList != null && snapshot.order.itemList.isNotEmpty && snapshot.order.itemList[0].time == null) {
                                               if (snapshot.order.progress == Utils.enumToString(OrderStatus.paid) ||
                                                   snapshot.order.progress == Utils.enumToString(OrderStatus.holding) ||
                                                   snapshot.order.progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout)
@@ -181,7 +180,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                                   snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout)
                                               ) {
                                                 return buildConfirmation(context);
-                                              } else if (snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.canceled)) {
+                                          } else if (snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.pending)) {
                                                 return buildPending(snapshot, context);
                                               } else if (snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.canceled)) {
                                                 return buildCanceled(snapshot, context);
@@ -208,7 +207,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                       ) {
                                         return buildBackButton(context, media);
                                       }  else if (snapshot.order.progress == Utils.enumToString(OrderStatus.creating) || snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.creating)){
-                                        return buildBackButton(context, media);
+                                    /// return buildConfirmation(context)
                                       } else {
                                         return buildConfirmButton(context, snapshot, selected, last4, brand, country, selectedCardPaymentMethodId, media);
                                       }
@@ -548,7 +547,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                         alignment: Alignment.center,
                         //margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 20),
                         child: Text(
-                          snapshot.order.location,
+                          snapshot.order.location ?? '',
                           style: TextStyle(
                               fontFamily: BuytimeTheme.FontFamily,
                               fontWeight: FontWeight.w600,
@@ -705,7 +704,6 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
       } else {
         StoreProvider.of<AppState>(context).dispatch(CreateOrderCardPending(snapshot.order, last4, brand, country, selectedCardPaymentMethodId, PaymentType.card));
       }
-
     }
 
   }

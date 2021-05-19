@@ -509,6 +509,7 @@
   "frozen": "frozen",
   "creating": "creating",
   "info": "Info",
+  "created": "created",
   "networkRequestStillInProgress": "network request is still ongoing, wait or refresh this page",
   "atTheMomentWeOnlySupportOneCreditCard": "Only one credit card at the time is supported, if you want to add another card, you have to remove the old one.",
   "selectACardToPay": "Select the card to be able to confirm it as a payment method.",

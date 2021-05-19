@@ -102,8 +102,8 @@ class CartState extends State<Cart> {
             onInit: (store) {
               tmp = store.state.serviceState;
               if(!widget.tourist){
-                _locationController.text = store.state.business.area.first;
-                store.state.order.location = store.state.business.area.first;
+                _locationController.text = store.state.business.area?.first;
+                store.state.order.location = store.state.business.area?.first;
               }
             },
             builder: (context, snapshot) {
@@ -294,7 +294,7 @@ class CartState extends State<Cart> {
                                                         ),
                                                       ),
                                                       //value: _locationController.text,
-                                                      items: StoreProvider.of<AppState>(context).state.business.area.map(
+                                                      items: StoreProvider.of<AppState>(context).state.business.area?.map(
                                                         (val) {
                                                           return DropdownMenuItem<String>(
                                                             value: val,
@@ -328,7 +328,7 @@ class CartState extends State<Cart> {
                                                             ),
                                                           );
                                                         },
-                                                      ).toList(),
+                                                      )?.toList(),
                                                       onChanged: (value) {
                                                         setState(() {
                                                           _locationController.text = value;

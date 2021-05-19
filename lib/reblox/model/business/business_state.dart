@@ -39,6 +39,7 @@ class BusinessState {
   @JsonKey(ignore: true)
   List<OptimumFileToUpload> fileToUploadList;
   List<String> tag;
+  @JsonKey(defaultValue: [''])
   List<String> area;
   @JsonKey(defaultValue: false)
   bool hub;
