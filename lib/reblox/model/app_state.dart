@@ -41,6 +41,7 @@ import 'package:Buytime/reblox/model/stripe/stripe_state.dart';
 import 'package:Buytime/reblox/model/user/user_state.dart';
 import 'package:flutter/foundation.dart';
 import 'category/tree/category_tree_state.dart';
+import 'order/order_detail_state.dart';
 
 class AppRoutes {
   static const home = "/home";
@@ -57,6 +58,7 @@ class AppRoutes {
   static const managerServiceList = "/managerServiceList";
   static const myBookings = "/myBookings";
   static const confirmOrder = "/confirmOrder";
+  static const orderDetailsRealtime = "/orderDetailsRealtime";
   static const bookingList = "/bookingList";
   static const serviceDetails = "/serviceDetails";
   static const serviceExplorer = "/serviceExplorer";
@@ -71,6 +73,7 @@ class AppState {
   ExternalBusinessListState externalBusinessList;
   BookingListState bookingList;
   OrderState order;
+  OrderDetailState orderDetail;
   OrderReservableState orderReservable;
   OrderListState orderList;
   OrderReservableListState orderReservableList;
@@ -115,6 +118,7 @@ class AppState {
     @required this.externalBusiness,
     @required this.booking,
     @required this.order,
+    @required this.orderDetail,
     @required this.orderReservable,
     @required this.orderList,
     @required this.orderReservableList,
@@ -163,6 +167,7 @@ class AppState {
     externalBusiness = ExternalBusinessState();
     booking = BookingState();
     order = OrderState();
+    orderDetail = OrderDetailState();
     orderReservable = OrderReservableState();
     stripe = StripeState();
     orderList = OrderListState();
@@ -211,6 +216,7 @@ class AppState {
       ExternalBusinessState externalBusiness,
       BookingState booking,
       OrderState order,
+      OrderDetailState orderDetail,
       OrderReservableState orderReservable,
       OrderListState orderList,
       OrderReservableListState orderReservableList,
@@ -257,6 +263,7 @@ class AppState {
     this.externalBusiness = externalBusiness;
     this.booking = booking;
     this.order = order;
+    this.orderDetail = orderDetail;
     this.orderReservable = orderReservable;
     this.orderList = orderList;
     this.orderReservableList = orderReservableList;

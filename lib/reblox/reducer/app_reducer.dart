@@ -18,6 +18,7 @@ import 'package:Buytime/reblox/model/category/tree/category_tree_state.dart';
 import 'package:Buytime/reblox/model/email/email_state.dart';
 import 'package:Buytime/reblox/model/notification/notification_list_state.dart';
 import 'package:Buytime/reblox/model/notification/notification_state.dart';
+import 'package:Buytime/reblox/model/order/order_detail_state.dart';
 import 'package:Buytime/reblox/model/order/order_list_state.dart';
 import 'package:Buytime/reblox/model/order/order_reservable_list_state.dart';
 import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
@@ -74,6 +75,7 @@ import 'business_reducer.dart';
 import 'business_list_reducer.dart';
 import 'category_reducer.dart';
 import 'category_tree_reducer.dart';
+import 'order_detail_reducer.dart';
 
 class ClickOnBusinessState {}
 class ErrorAction {
@@ -88,6 +90,7 @@ AppState appReducer(AppState state, dynamic action) {
   ExternalBusinessState externalBusinessState = externalBusinessReducer(state.externalBusiness, action);
   BookingState bookingState = bookingReducer(state.booking, action);
   OrderState orderState = orderReducer(state.order, action);
+  OrderDetailState orderDetailState = orderDetailReducer(state.orderDetail, action);
   OrderReservableState orderReservableState = orderReservableReducer(state.orderReservable, action);
   OrderListState orderListState = orderListReducer(state.orderList, action);
   OrderReservableListState orderReservableListState = orderReservableListReducer(state.orderReservableList, action);
@@ -129,6 +132,7 @@ AppState appReducer(AppState state, dynamic action) {
       externalBusiness: externalBusinessState,
       booking: bookingState,
       order: orderState,
+      orderDetail: orderDetailState,
       orderReservable: orderReservableState,
       orderList: orderListState,
       orderReservableList: orderReservableListState,

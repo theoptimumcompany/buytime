@@ -69,7 +69,7 @@ class Utils {
   static IdState stringToMap(String string){
     IdState tmp = IdState().toEmpty();
     try{
-      debugPrint('STRING: $string');
+      // debugPrint('STRING: $string');
       if(string != null)
         tmp = IdState.fromJson(jsonDecode(string));
     }catch(e){

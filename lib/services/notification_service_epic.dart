@@ -69,7 +69,7 @@ class NotificationListRequestService implements EpicClass<AppState> {
       DateTime currentTime = DateTime.now();
       //currentTime = currentTime.subtract(Duration(days: 5));
       int time = int.parse(Timestamp.fromDate(currentTime).seconds.toString());
-      debugPrint("NOTIFICATION_SERVICE_EPIC - NotificationListRequestService => TIMESTAMP: $time");
+      // debugPrint("NOTIFICATION_SERVICE_EPIC - NotificationListRequestService => TIMESTAMP: $time");
 
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('notification')
           .where("userId", isEqualTo: event.userId)
@@ -79,9 +79,9 @@ class NotificationListRequestService implements EpicClass<AppState> {
 
       notificationListState = [];
      if(querySnapshot.docs.isNotEmpty){
-       debugPrint("NOTIFICATION_SERVICE_EPIC - NotificationListRequestService => List not empty: ${querySnapshot.docs.length}");
+       // debugPrint("NOTIFICATION_SERVICE_EPIC - NotificationListRequestService => List not empty: ${querySnapshot.docs.length}");
        querySnapshot.docs.forEach((element) {
-         debugPrint("NOTIFICATION_SERVICE_EPIC - NotificationListRequestService => data: ${element.data()}");
+         // debugPrint("NOTIFICATION_SERVICE_EPIC - NotificationListRequestService => data: ${element.data()}");
          notificationListState.add(NotificationState.fromJson(element.data()));
          notificationListState.last.notificationId = element.id;
        });

@@ -5,7 +5,6 @@ import 'package:Buytime/UI/management/category/UI_M_manage_category.dart';
 import 'package:Buytime/UI/management/invite/UI_M_booking_details.dart';
 import 'package:Buytime/UI/management/invite/UI_M_booking_list.dart';
 import 'package:Buytime/UI/management/service_internal/UI_M_service_list.dart';
-import 'package:Buytime/UI/user/UI_U_tabs.dart';
 import 'package:Buytime/UI/user/booking/UI_U_booking_page.dart';
 import 'package:Buytime/UI/user/booking/UI_U_confirm_booking.dart';
 import 'package:Buytime/UI/user/booking/UI_U_my_bookings.dart';
@@ -13,7 +12,7 @@ import 'package:Buytime/UI/user/cart/UI_U_ConfirmOrder.dart';
 import 'package:Buytime/UI/user/landing/UI_U_landing.dart';
 import 'package:Buytime/UI/user/login/UI_U_login.dart';
 import 'package:Buytime/UI/user/login/UI_U_registration.dart';
-import 'package:Buytime/UI/user/order/UI_U_order_detail.dart';
+import 'package:Buytime/UI/user/booking/RUI_U_order_detail.dart';
 import 'package:Buytime/UI/user/service/UI_U_service_details.dart';
 import 'package:Buytime/UI/user/turist/UI_U_service_explorer.dart';
 import 'package:Buytime/reblox/model/autoComplete/auto_complete_list_state.dart';
@@ -34,6 +33,7 @@ import 'package:Buytime/reblox/model/email/template_data_state.dart';
 import 'package:Buytime/reblox/model/email/template_state.dart';
 import 'package:Buytime/reblox/model/notification/notification_list_state.dart';
 import 'package:Buytime/reblox/model/notification/notification_state.dart';
+import 'package:Buytime/reblox/model/order/order_detail_state.dart';
 import 'package:Buytime/reblox/model/order/order_reservable_list_state.dart';
 import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
 import 'package:Buytime/reblox/model/service/external_service_imported_list_state.dart';
@@ -201,6 +201,7 @@ void main(){
     externalBusiness: ExternalBusinessState().toEmpty(),
     booking: BookingState().toEmpty(),
     order: OrderState().toEmpty(),
+    orderDetail: OrderDetailState().toEmpty(),
     orderReservable: OrderReservableState().toEmpty(),
     orderList: OrderListState().toEmpty(),
     orderReservableList: OrderReservableListState().toEmpty(),
@@ -283,6 +284,8 @@ class Buytime extends StatelessWidget {
         return FabRoute(MyBookings(), settings: settings);
       case AppRoutes.confirmOrder:
         return FabRoute(ConfirmOrder(), settings: settings);
+      case AppRoutes.orderDetailsRealtime:
+        return FabRoute(RUI_U_OrderDetail(), settings: settings);
       case AppRoutes.bookingList:
         return FabRoute(BookingList(), settings: settings);
       case AppRoutes.serviceDetails:

@@ -5,8 +5,10 @@ import 'package:Buytime/UI/user/cart/tab/T_credit_cards.dart';
 import 'package:Buytime/UI/user/cart/tab/T_room.dart';
 import 'package:Buytime/reblox/enum/order_time_intervals.dart';
 import 'package:Buytime/reblox/model/card/card_state.dart';
+import 'package:Buytime/reblox/model/order/order_detail_state.dart';
 import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
 import 'package:Buytime/reblox/model/stripe/stripe_state.dart';
+import 'package:Buytime/reblox/reducer/order_detail_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reservable_reducer.dart';
 import 'package:Buytime/reusable/stripe/show_dialog_to_dismiss.dart';
 import 'package:Buytime/services/stripe_payment_service_epic.dart';
@@ -154,63 +156,14 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                         ),
                                         ///Tab value
                                         (() {
-                                      if( snapshot.order != null && snapshot.order.itemList != null && snapshot.order.itemList.isNotEmpty ||
-                                          snapshot.orderReservable != null && snapshot.orderReservable.itemList != null && snapshot.orderReservable.itemList.isNotEmpty
-                                      ) {
-                                            /// order is not reservable
-                                        if (snapshot.order != null && snapshot.order.itemList != null && snapshot.order.itemList.isNotEmpty && snapshot.order.itemList[0].time == null) {
-                                              if (snapshot.order.progress == Utils.enumToString(OrderStatus.paid) ||
-                                                  snapshot.order.progress == Utils.enumToString(OrderStatus.holding) ||
-                                                  snapshot.order.progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout)
-                                              ) {
-                                                return buildConfirmation(context);
-                                              } else if (snapshot.order.progress == Utils.enumToString(OrderStatus.pending)) {
-                                                return buildPending(snapshot, context);
-                                              } else if (snapshot.order.progress == Utils.enumToString(OrderStatus.canceled)) {
-                                                return buildCanceled(snapshot, context);
-                                              } else if (snapshot.order.progress == Utils.enumToString(OrderStatus.creating)){
-                                                return buildCreating(snapshot, context);
-                                              } else {
-                                                return buildTabsBeforeConfirmation();
-                                              }
-                                            } else {
-                                              /// order is reservable
-                                              if (snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.paid) ||
-                                                  snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.holding) ||
-                                                  snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout)
-                                              ) {
-                                                return buildConfirmation(context);
-                                          } else if (snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.pending)) {
-                                                return buildPending(snapshot, context);
-                                              } else if (snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.canceled)) {
-                                                return buildCanceled(snapshot, context);
-                                              } else if (snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.creating)){
-                                                return buildCreating(snapshot, context);
-                                              } else {
-                                                return buildTabsBeforeConfirmation();
-                                              }
-                                            }
-                                          } else {
-                                            return buildTabsBeforeConfirmation();
-                                          }
-                                        }())
+                                              return buildTabsBeforeConfirmation();
+                                      }())
                                       ],
                                     ),
                                   ),
                                   Center(
                                     child: (() {
-                                      if (snapshot.order.progress == Utils.enumToString(OrderStatus.paid) || snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.paid) ||
-                                          snapshot.order.progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout) || snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout) ||
-                                          snapshot.order.progress == Utils.enumToString(OrderStatus.pending) || snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.pending) ||
-                                          snapshot.order.progress == Utils.enumToString(OrderStatus.holding) || snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.holding) ||
-                                          snapshot.order.progress == Utils.enumToString(OrderStatus.canceled) || snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.canceled)
-                                      ) {
-                                        return buildBackButton(context, media);
-                                      }  else if (snapshot.order.progress == Utils.enumToString(OrderStatus.creating) || snapshot.orderReservable.progress == Utils.enumToString(OrderStatus.creating)){
-                                    /// return buildConfirmation(context)
-                                      } else {
-                                        return buildConfirmButton(context, snapshot, selected, last4, brand, country, selectedCardPaymentMethodId, media);
-                                      }
+                                      return buildConfirmButton(context, snapshot, selected, last4, brand, country, selectedCardPaymentMethodId, media);
                                     }()),
                                   )
                                 ],
@@ -375,23 +328,21 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                   hoverElevation: 0,
                   focusElevation: 0,
                   highlightElevation: 0,
-                  onPressed: _selectedIndex == 0
-                      ? () {
-                    debugPrint("UI_U_ConfirmOrder confirmation ROOM");
-                    confirmationRoom(context, snapshot);
-                  }
-                      : _selectedIndex == 1
-                      ? () {
-                    debugPrint("UI_U_ConfirmOrder confirmation NATIVE");
-                    confirmationNative(context, snapshot);
-                  }
-                      : selected && _selectedIndex == 2
-                      ? () {
-                    debugPrint("UI_U_ConfirmOrder  confirmation CREDIT CARD");
-                    confirmationCard(
-                        context, snapshot, last4, brand, country, selectedCardPaymentMethodId);
-                  }
-                      : null,
+                  onPressed: () {
+
+                    if (_selectedIndex == 0) {
+                      debugPrint("UI_U_ConfirmOrder confirmation ROOM");
+                      confirmationRoom(context, snapshot);
+                    } else if (_selectedIndex == 1) {
+                      debugPrint("UI_U_ConfirmOrder confirmation NATIVE");
+                      confirmationNative(context, snapshot);
+                    } else if (selected && _selectedIndex == 2) {
+                      debugPrint("UI_U_ConfirmOrder  confirmation CREDIT CARD");
+                      confirmationCard(context, snapshot, last4, brand, country, selectedCardPaymentMethodId);
+                    } else {
+                      return null;
+                    }
+                  },
                   textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
                   color: widget.tourist != null && widget.tourist
                       ? BuytimeTheme.BackgroundCerulean

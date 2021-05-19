@@ -44,7 +44,7 @@ BusinessState _$BusinessStateFromJson(Map<String, dynamic> json) {
         : GenericState.fromJson(json['owner'] as Map<String, dynamic>),
     ownerId: json['ownerId'] as String,
     tag: (json['tag'] as List)?.map((e) => e as String)?.toList(),
-    area: (json['area'] as List)?.map((e) => e as String)?.toList(),
+    area: (json['area'] as List)?.map((e) => e as String)?.toList() ?? [''],
     hub: json['hub'] as bool ?? false,
     businessAddress: json['businessAddress'] as String,
   );

@@ -1,8 +1,12 @@
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
+import 'package:Buytime/reblox/model/order/order_detail_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/statistics_state.dart';
 import 'package:Buytime/reblox/model/stripe/stripe_state.dart';
+import 'package:Buytime/reblox/navigation/navigation_reducer.dart';
+import 'package:Buytime/reblox/reducer/category_reducer.dart';
+import 'package:Buytime/reblox/reducer/order_detail_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reblox/reducer/statistics_reducer.dart';
@@ -55,6 +59,9 @@ List<DateTime> getStringPeriod(int unix, startValue, endValue){
   DateTime endStringUnix = DateTime.fromMillisecondsSinceEpoch(endUnix, isUtc: true);
   return [startStringUnix, endStringUnix];
 }
+
+
+
 
 class OrderListRequestService implements EpicClass<AppState> {
   StatisticsState statisticsState;
@@ -312,12 +319,13 @@ class OrderCreateNativePendingService implements EpicClass<AppState> {
   StatisticsState statisticsState;
   String state = '';
   String paymentResult = '';
+  OrderState orderState;
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<CreateOrderNativePending>().asyncMap((event) async {
       debugPrint('CreateOrderPending start');
       /// add needed data to the order state
-      OrderState orderState = configureOrder(event.orderState, store);
+      orderState = configureOrder(event.orderState, store);
       orderState.cardType = Utils.enumToString(PaymentType.room);
       orderState.progress = Utils.enumToString(OrderStatus.pending);
       /// send document to orders collection
@@ -341,7 +349,7 @@ class OrderCreateNativePendingService implements EpicClass<AppState> {
       var actionArray = [];
       actionArray.add(CreatedOrder());
       actionArray.add(UpdateStatistics(statisticsState));
-      actionArray.add(SetOrderProgress(Utils.enumToString(OrderStatus.pending)));
+      actionArray.add(SetOrderDetail(OrderDetailState.fromOrderState(orderState)));
       return actionArray;
     });
   }
@@ -394,21 +402,24 @@ class OrderCreateRoomPendingService implements EpicClass<AppState> {
   StatisticsState statisticsState;
   String state = '';
   String paymentResult = '';
+  String orderId = '';
+  OrderState orderState;
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<CreateOrderRoomPending>().asyncMap((event) async {
       debugPrint('CreateOrderPending start');
       /// add needed data to the order state
-      OrderState orderState = configureOrder(event.orderState, store);
+      orderState = configureOrder(event.orderState, store);
       orderState.cardType = Utils.enumToString(PaymentType.room);
-      orderState.progress = Utils.enumToString(OrderStatus.pending);
       /// send document to orders collection
       /// This is a time based id, meaning that even if 2 users are going to generate a document at the same moment in time
       /// there are really low chances that the rest of the id is also colliding.
       String timeBasedId = Uuid().v1();
       orderState.orderId = timeBasedId;
+      orderId = timeBasedId;
       var addedOrder = await FirebaseFirestore.instance.collection("order").doc(timeBasedId).set(orderState.toJson());
       /// add the payment method to the order sub collection on firebase
+
       var addedPaymentMethod = await FirebaseFirestore.instance.collection("order/" + orderState.orderId + "/orderPaymentMethod").add({
         'paymentMethodId' : '',
         'last4': '',
@@ -417,13 +428,20 @@ class OrderCreateRoomPendingService implements EpicClass<AppState> {
         'country': '',
         'bookingId': store.state.booking.booking_id
       });
+
       statisticsComputation();
       debugPrint('CreateOrderPending done');
     }).expand((element) {
       var actionArray = [];
+      actionArray.add(SetOrderOrderId(orderId));
+      return actionArray;
+    }).expand((element) {
+      var actionArray = [];
       actionArray.add(CreatedOrder());
+      actionArray.add(SetOrderOrderId(orderId));
       actionArray.add(UpdateStatistics(statisticsState));
-      actionArray.add(SetOrderProgress(Utils.enumToString(OrderStatus.pending)));
+      actionArray.add(SetOrderDetail(OrderDetailState.fromOrderState(orderState)));
+      actionArray.add(NavigatePushAction(AppRoutes.orderDetailsRealtime));
       return actionArray;
     });
   }

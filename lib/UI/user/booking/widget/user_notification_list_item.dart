@@ -1,10 +1,13 @@
+import 'package:Buytime/UI/user/booking/RUI_U_order_detail.dart';
 import 'package:Buytime/UI/user/booking/UI_U_order_details.dart';
 import 'package:Buytime/UI/user/service/UI_U_service_reserve.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/notification/notification_state.dart';
+import 'package:Buytime/reblox/model/order/order_detail_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/reducer/notification_reducer.dart';
+import 'package:Buytime/reblox/reducer/order_detail_reducer.dart';
 import 'package:Buytime/reusable/buytime_icons.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
@@ -79,7 +82,9 @@ class _UserNotificationListItemState extends State<UserNotificationListItem> {
                   widget.notificationState.opened = true;
                   StoreProvider.of<AppState>(context).dispatch(UpdateNotification(widget.notificationState));
                   debugPrint('user_notification_list_item => ORDER ID: ${widget.orderState.orderId}');
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => OrderDetails(orderState: widget.orderState, tourist: widget.tourist, serviceState: widget.serviceState)));
+                  // Navigator.push(context, MaterialPageRoute(builder: (context) => OrderDetails(orderState: widget.orderState, tourist: widget.tourist)));
+                  StoreProvider.of<AppState>(context).dispatch(SetOrderDetail(OrderDetailState.fromOrderState(widget.orderState)));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => RUI_U_OrderDetail()));
                 }
               },
               child: Container(

@@ -1,4 +1,5 @@
 import 'package:Buytime/reblox/model/business/snippet/order_business_snippet_state.dart';
+import 'package:Buytime/reblox/model/order/order_detail_state.dart';
 import 'package:Buytime/reblox/model/order/order_entry.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/stripe/stripe_state.dart';
@@ -7,50 +8,50 @@ import 'package:flutter/widgets.dart';
 import 'package:stripe_payment/stripe_payment.dart' as StripeRecommended;
 import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
 
-class SetOrder {
-  OrderState _orderState;
-  SetOrder(this._orderState);
-  OrderState get orderState => _orderState;
+class SetOrderDetail {
+  OrderDetailState _orderState;
+  SetOrderDetail(this._orderState);
+  OrderDetailState get orderState => _orderState;
 }
-class SetOrderToEmpty {
+class SetOrderDetailToEmpty {
   String _something;
-  SetOrderToEmpty(this._something);
+  SetOrderDetailToEmpty(this._something);
   String get something => _something;
 }
-class OrderRequest {
+class OrderDetailRequest {
   String _orderStateId;
-  OrderRequest(this._orderStateId);
+  OrderDetailRequest(this._orderStateId);
   String get orderStateId => _orderStateId;
 }
-class AddItemToOrder {
+class AddItemToOrderDetail {
   OrderEntry _orderEntry;
-  AddItemToOrder(this._orderEntry);
+  AddItemToOrderDetail(this._orderEntry);
   OrderEntry get orderEntry => _orderEntry;
 }
-class UpdateOrder {
-  OrderState _orderState;
-  UpdateOrder(this._orderState);
-  OrderState get orderState => _orderState;
+class UpdateOrderDetail {
+  OrderDetailState _orderState;
+  UpdateOrderDetail(this._orderState);
+  OrderDetailState get orderState => _orderState;
 }
-class UpdateOrderByManager{
-  OrderState _orderState;
+class UpdateOrderDetailByManager{
+  OrderDetailState _orderState;
   OrderStatus _orderStatus;
-  UpdateOrderByManager(this._orderState, this._orderStatus);
-  OrderState get orderState => _orderState;
+  UpdateOrderDetailByManager(this._orderState, this._orderStatus);
+  OrderDetailState get orderState => _orderState;
   OrderStatus get orderStatus => _orderStatus;
 }
-class UpdatedOrder {
-  OrderState _orderState;
-  UpdatedOrder(this._orderState);
-  OrderState get orderState => _orderState;
+class UpdatedOrderDetail {
+  OrderDetailState _orderState;
+  UpdatedOrderDetail(this._orderState);
+  OrderDetailState get orderState => _orderState;
 }
-class CreateOrder {
-  OrderState _orderState;
-  CreateOrder(this._orderState);
-  OrderState get orderState => _orderState;
+class CreateOrderDetail {
+  OrderDetailState _orderState;
+  CreateOrderDetail(this._orderState);
+  OrderDetailState get orderState => _orderState;
 }
-class CreateOrderCardAndPay {
-  OrderState _orderState;
+class CreateOrderDetailCardAndPay {
+  OrderDetailState _orderState;
   String _last4;
   String _brand;
   String _country;
@@ -58,8 +59,8 @@ class CreateOrderCardAndPay {
   PaymentType _paymentType;
   String _businessStripeAccount;
   BuildContext _context;
-  CreateOrderCardAndPay(this._orderState, this._last4, this._brand, this._country, this._selectedCardPaymentMethodId, this._paymentType, this._context, this._businessStripeAccount);
-  OrderState get orderState => _orderState;
+  CreateOrderDetailCardAndPay(this._orderState, this._last4, this._brand, this._country, this._selectedCardPaymentMethodId, this._paymentType, this._context, this._businessStripeAccount);
+  OrderDetailState get orderState => _orderState;
   PaymentType get paymentType => _paymentType;
   String get last4 => _last4;
   String get brand => _brand;
@@ -68,137 +69,137 @@ class CreateOrderCardAndPay {
   BuildContext get context => _context;
   String get businessStripeAccount => _businessStripeAccount;
 }
-class CreateOrderNativeAndPay {
-  OrderState _orderState;
+class CreateOrderDetailNativeAndPay {
+  OrderDetailState _orderState;
   StripeRecommended.PaymentMethod _paymentMethod;
   PaymentType _paymentType;
   String _businessStripeAccount;
   BuildContext _context;
-  CreateOrderNativeAndPay(this._orderState, this._paymentMethod, this._paymentType, this._context, this._businessStripeAccount);
-  OrderState get orderState => _orderState;
+  CreateOrderDetailNativeAndPay(this._orderState, this._paymentMethod, this._paymentType, this._context, this._businessStripeAccount);
+  OrderDetailState get orderState => _orderState;
   PaymentType get paymentType => _paymentType;
   StripeRecommended.PaymentMethod get paymentMethod => _paymentMethod;
   BuildContext get context => _context;
   String get businessStripeAccount => _businessStripeAccount;
 }
 
-class CreateOrderRoomAndPay {
-  OrderState _orderState;
+class CreateOrderDetailRoomAndPay {
+  OrderDetailState _orderState;
   String _roomNumber;
   PaymentType _paymentType;
-  CreateOrderRoomAndPay(this._orderState, this._roomNumber, this._paymentType);
-  OrderState get orderState => _orderState;
+  CreateOrderDetailRoomAndPay(this._orderState, this._roomNumber, this._paymentType);
+  OrderDetailState get orderState => _orderState;
   PaymentType get paymentType => _paymentType;
   String get roomNumber => _roomNumber;
 }
 
-class CreateOrderCardPending {
-  OrderState _orderState;
+class CreateOrderDetailCardPending {
+  OrderDetailState _orderState;
   String _last4;
   String _brand;
   String _country;
   String _selectedCardPaymentMethodId;
   PaymentType _paymentType;
-  CreateOrderCardPending(this._orderState, this._last4, this._brand, this._country, this._selectedCardPaymentMethodId, this._paymentType);
-  OrderState get orderState => _orderState;
+  CreateOrderDetailCardPending(this._orderState, this._last4, this._brand, this._country, this._selectedCardPaymentMethodId, this._paymentType);
+  OrderDetailState get orderState => _orderState;
   PaymentType get paymentType => _paymentType;
   String get last4 => _last4;
   String get brand => _brand;
   String get country => _country;
   String get selectedCardPaymentMethodId => _selectedCardPaymentMethodId;
 }
-class CreateOrderNativePending {
-  OrderState _orderState;
+class CreateOrderDetailNativePending {
+  OrderDetailState _orderState;
   StripeRecommended.PaymentMethod _paymentMethod;
   PaymentType _paymentType;
-  CreateOrderNativePending(this._orderState, this._paymentMethod, this._paymentType);
-  OrderState get orderState => _orderState;
+  CreateOrderDetailNativePending(this._orderState, this._paymentMethod, this._paymentType);
+  OrderDetailState get orderState => _orderState;
   PaymentType get paymentType => _paymentType;
   StripeRecommended.PaymentMethod get paymentMethod => _paymentMethod;
 }
-class CreateOrderRoomPending {
-  OrderState _orderState;
+class CreateOrderDetailRoomPending {
+  OrderDetailState _orderState;
   String _roomNumber;
   PaymentType _paymentType;
-  CreateOrderRoomPending(this._orderState, this._roomNumber, this._paymentType);
-  OrderState get orderState => _orderState;
+  CreateOrderDetailRoomPending(this._orderState, this._roomNumber, this._paymentType);
+  OrderDetailState get orderState => _orderState;
   PaymentType get paymentType => _paymentType;
   String get roomNumber => _roomNumber;
 }
 
-class CreatedOrder {}
-class CreatingOrder {}
-class ResetOrderIfPaidOrCanceled {}
-class DeleteOrder {
+class CreatedOrderDetail {}
+class CreatingOrderDetail {}
+class ResetOrderDetailIfPaidOrCanceled {}
+class DeleteOrderDetail {
   String _orderId;
-  DeleteOrder(this._orderId);
+  DeleteOrderDetail(this._orderId);
   String get orderId => _orderId;
 }
-class DeletedOrder {
-  OrderState _orderState;
-  DeletedOrder();
-  OrderState get orderState => _orderState;
+class DeletedOrderDetail {
+  OrderDetailState _orderState;
+  DeletedOrderDetail();
+  OrderDetailState get orderState => _orderState;
 }
-class OrderRequestResponse {
-  OrderState _orderState;
-  OrderRequestResponse(this._orderState);
-  OrderState get orderState => _orderState;
+class OrderDetailRequestResponse {
+  OrderDetailState _orderState;
+  OrderDetailRequestResponse(this._orderState);
+  OrderDetailState get orderState => _orderState;
 }
-class SetOrderDate
+class SetOrderDetailDate
 {
   DateTime _date;
-  SetOrderDate(this._date);
+  SetOrderDetailDate(this._date);
   DateTime get date => _date;
 }
-class SetOrderPosition
+class SetOrderDetailPosition
 {
   String _position;
-  SetOrderPosition(this._position);
+  SetOrderDetailPosition(this._position);
   String get position => _position;
 }
-class SetOrderProgress
+class SetOrderDetailProgress
 {
   String _progress;
-  SetOrderProgress(this._progress);
+  SetOrderDetailProgress(this._progress);
   String get progress => _progress;
 }
 
-class SetOrderOrderId
+class SetOrderDetailOrderDetailId
 {
   String _orderId;
-  SetOrderOrderId(this._orderId);
+  SetOrderDetailOrderDetailId(this._orderId);
   String get orderId => _orderId;
 }
 
-class SetOrderPaymentMethod
+class SetOrderDetailPaymentMethod
 {
   StripeRecommended.PaymentMethod _paymentMethod;
-  SetOrderPaymentMethod(this._paymentMethod);
+  SetOrderDetailPaymentMethod(this._paymentMethod);
   StripeRecommended.PaymentMethod get paymentMethod => _paymentMethod;
 }
-class SetOrderCartCounter
+class SetOrderDetailCartCounter
 {
   int _cartCounter;
-  SetOrderCartCounter(this._cartCounter);
+  SetOrderDetailCartCounter(this._cartCounter);
   int get cartCounter => _cartCounter;
 }
-class SetOrderBusiness
+class SetOrderDetailBusiness
 {
   OrderBusinessSnippetState _business;
-  SetOrderBusiness(this._business);
+  SetOrderDetailBusiness(this._business);
   OrderBusinessSnippetState get business => _business;
 }
-class SetOrderUser
+class SetOrderDetailUser
 {
   UserSnippet _user;
-  SetOrderUser(this._user);
+  SetOrderDetailUser(this._user);
   UserSnippet get user => _user;
 }
-class ConfirmOrderWait
+class ConfirmOrderDetailWait
 {
-  bool _confirmOrderWait;
-  ConfirmOrderWait(this._confirmOrderWait);
-  bool get confirmOrderWait => _confirmOrderWait;
+  bool _confirmOrderDetailWait;
+  ConfirmOrderDetailWait(this._confirmOrderDetailWait);
+  bool get confirmOrderDetailWait => _confirmOrderDetailWait;
 }
 class AddingStripePaymentMethod {
   AddingStripePaymentMethod();
@@ -216,58 +217,58 @@ class AddedStripePaymentMethod
 {
   AddedStripePaymentMethod();
 }
-OrderState orderReducer(OrderState state, action) {
-  OrderState orderState = new OrderState.fromState(state);
-  if (action is SetOrderDate) {
+OrderDetailState orderDetailReducer(OrderDetailState state, action) {
+  OrderDetailState orderState = new OrderDetailState.fromState(state);
+  if (action is SetOrderDetailDate) {
     orderState.date = action.date;
     return orderState;
   }
-  if (action is SetOrderPosition) {
+  if (action is SetOrderDetailPosition) {
     orderState.position = action.position;
     return orderState;
   }
-  if (action is SetOrderProgress) {
+  if (action is SetOrderDetailProgress) {
     orderState.progress = action.progress;
     return orderState;
   }
-  if (action is SetOrderOrderId) {
+  if (action is SetOrderDetailOrderDetailId) {
     orderState.orderId = action.orderId;
     return orderState;
   }
-  if (action is SetOrderPaymentMethod) {
+  if (action is SetOrderDetailPaymentMethod) {
     orderState.paymentMethod = action.paymentMethod;
     return orderState;
   }
-  if (action is SetOrderBusiness) {
+  if (action is SetOrderDetailBusiness) {
     orderState.business = action.business;
     return orderState;
   }
-  if (action is SetOrderUser) {
+  if (action is SetOrderDetailUser) {
     orderState.user = action.user;
     return orderState;
   }
-  if (action is OrderRequestResponse) {
+  if (action is OrderDetailRequestResponse) {
     orderState = action.orderState.copyWith();
     return orderState;
   }
-  if (action is SetOrder) {
+  if (action is SetOrderDetail) {
     orderState = action.orderState.copyWith();
     return orderState;
   }
-  if (action is CreatingOrder) {
+  if (action is CreatingOrderDetail) {
     orderState.progress = Utils.enumToString(OrderStatus.creating);
     return orderState;
   }
-  if (action is CreatedOrder) {
+  if (action is CreatedOrderDetail) {
     orderState.progress = Utils.enumToString(OrderStatus.unpaid);
     return orderState;
   }
-  if (action is SetOrderCartCounter) {
+  if (action is SetOrderDetailCartCounter) {
     orderState.cartCounter = action.cartCounter;
     return orderState;
   }
-  if (action is SetOrderToEmpty) {
-    orderState = OrderState().toEmpty();
+  if (action is SetOrderDetailToEmpty) {
+    orderState = OrderDetailState().toEmpty();
     return orderState;
   }
   if (action is AddingStripePaymentMethod) {
@@ -282,7 +283,7 @@ OrderState orderReducer(OrderState state, action) {
     orderState.addCardProgress = Utils.enumToString(AddCardStatus.done);
     return orderState;
   }
-  if (action is ResetOrderIfPaidOrCanceled) {
+  if (action is ResetOrderDetailIfPaidOrCanceled) {
     if (orderState.progress == Utils.enumToString(OrderStatus.paid) 
         || orderState.progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout)
         || orderState.progress == Utils.enumToString(OrderStatus.canceled)
@@ -297,7 +298,7 @@ OrderState orderReducer(OrderState state, action) {
     orderState.addCardProgress = Utils.enumToString(AddCardStatus.done);
     return orderState;
   }
-  if (action is AddItemToOrder) {
+  if (action is AddItemToOrderDetail) {
     if (state.itemList != null) {
       print("order_reducer: itemList != null");
       orderState.itemList

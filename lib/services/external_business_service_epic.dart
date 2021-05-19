@@ -290,7 +290,7 @@ class ExternalBusinessRequestAndNavigateService implements EpicClass<AppState> {
     }).expand((element) => [
       ExternalBusinessRequestResponse(businessState),
       UpdateStatistics(statisticsState),
-      NavigatePushAction(AppRoutes.business)
+      NavigatePushAction(AppRoutes.orderDetailsRealtime)
     ]);
   }
 }
