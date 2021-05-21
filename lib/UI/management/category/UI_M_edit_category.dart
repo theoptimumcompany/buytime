@@ -557,6 +557,25 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
     ));
   }
 
+  bool canEdit(CategoryState categoryState){
+    bool edit = false;
+    debugPrint('UI_M_edit_category => USER ROLE: ${StoreProvider.of<AppState>(context).state.user.getRole()}');
+    if(StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin ||
+        StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman ||
+        StoreProvider.of<AppState>(context).state.user.getRole() == Role.owner){
+      edit = true;
+      debugPrint('UI_M_edit_category => CAN EDIT ${Utils.enumToString(StoreProvider.of<AppState>(context).state.user.getRole())}');
+    }
+    categoryState.manager.forEach((email) {
+      if(email.mail == StoreProvider.of<AppState>(context).state.user.email){
+        edit = true;
+        debugPrint('UI_M_edit_category => CAN EDIT MANAGER');
+      }
+    });
+
+    return edit;
+  }
+
   bool hasService = false;
   @override
   Widget build(BuildContext context) {
@@ -638,6 +657,7 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                               ),
                               ///Title
                               Utils.barTitle(AppLocalizations.of(context).editSpace + ' ' + snapshot.category.name),
+                              canEdit(snapshot.category) ?
                               Padding(
                                 padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
                                 child: IconButton(
@@ -678,16 +698,18 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                                         }
                                       }
                                     } : null),
+                              ) :  SizedBox(
+                                width: 56.0,
                               ),
                             ],
                           ),
                           floatingActionButton: FloatingActionButton(
-                            onPressed: () {
+                            onPressed: canEdit(snapshot.category) ? () {
                               print("add worker/manager");
                               _modalAddPerson(context);
-                            },
+                            } : null,
                             child: Icon(Icons.add),
-                            backgroundColor: BuytimeTheme.Secondary,
+                            backgroundColor: canEdit(snapshot.category) ? BuytimeTheme.Secondary : BuytimeTheme.TextMedium,
                           ),
                           body: SingleChildScrollView(
                             child: ConstrainedBox(
@@ -789,13 +811,15 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                                                     ),
                                                   ],
                                                   decoration:
-                                                  InputDecoration(labelText: AppLocalizations.of(context).customTag, enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white))),
-                                                  onChanged: (value) {
+                                                  InputDecoration(
+                                                      enabled: canEdit(snapshot.category) ? true : false,
+                                                      labelText: AppLocalizations.of(context).customTag, enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white))),
+                                                  onChanged: canEdit(snapshot.category) ? (value) {
                                                     setState(() {
                                                       customTag = value;
                                                       setNewCategoryCustomTag(customTag);
                                                     });
-                                                  }),
+                                                  } : null),
                                             ),
                                           ),
                                         ),
@@ -916,7 +940,7 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                                                               //_selected = !_selected;
                                                             });
                                                           },
-                                                          onDeleted: () {
+                                                          onDeleted: canEdit(snapshot.category) ? () {
                                                             Manager managerToDelete = Manager(id: "", name: "", surname: "", mail:e.mail);
                                                             print("Mail di invito Manager da eliminare : " + e.mail);
                                                             CategoryInviteState categoryInviteState = CategoryInviteState().toEmpty();
@@ -926,7 +950,7 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                                                             StoreProvider.of<AppState>(context).dispatch(DeleteCategoryInvite(categoryInviteState));
                                                             StoreProvider.of<AppState>(context).dispatch(new DeleteCategoryManager(managerToDelete));
                                                             print('Manager is deleted');
-                                                          },
+                                                          } : null,
                                                         )).toList(),
                                                         /*shrinkWrap: true,
                                                         itemCount: managerList.length,
@@ -1042,7 +1066,7 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                                                                 //_selected = !_selected;
                                                               });
                                                             },
-                                                            onDeleted: () {
+                                                            onDeleted: canEdit(snapshot.category) ? () {
                                                               Worker workerToDelete = Worker(id: "", name: "", surname: "", mail: e.mail);
                                                               print("Mail di invito Worker da eliminare : " + e.mail);
                                                               CategoryInviteState categoryInviteState = CategoryInviteState().toEmpty();
@@ -1052,7 +1076,7 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                                                               StoreProvider.of<AppState>(context).dispatch(DeleteCategoryInvite(categoryInviteState));
                                                               StoreProvider.of<AppState>(context).dispatch(new DeleteCategoryWorker(workerToDelete));
                                                               print('Worker is deleted');
-                                                            },
+                                                            } : null,
                                                           )).toList(),
                                                           /*shrinkWrap: true,
                                                           itemCount: workerList.length,

@@ -63,6 +63,7 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
       List<ServiceSnippetState> listRoot = [];
       List<bool> internalSpinnerVisibility = [];
       for (int s = 0; s < categories[c].serviceList.length; s++) {
+        debugPrint('UI_M_service_litt => ${categories[c].categoryName} - ${categories[c].serviceList[s].serviceName}');
         listRoot.add(categories[c].serviceList[s]);
         internalSpinnerVisibility.add(false);
       }
@@ -232,7 +233,7 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                       },
                     ),
                     Utils.barTitle(AppLocalizations.of(context).serviceList),
-                    categories.isNotEmpty ? IconButton(
+                    categories.isNotEmpty && !snapshot.user.worker ? IconButton(
                       icon: Icon(Icons.add, color: BuytimeTheme.SymbolWhite),
                       onPressed: () {
                         StoreProvider.of<AppState>(context).dispatch(SetService(ServiceState().toEmpty()));
@@ -247,7 +248,7 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                                 from: true));
                       },
                     ) : SizedBox(
-                      width: 56.0,
+                      width: 50.0,
                     ),
                   ],
                 ),
@@ -324,11 +325,11 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                                       color: Colors.transparent,
                                       child: InkWell(
                                         //borderRadius: BorderRadius.all(Radius.circular(10)),
-                                        onTap: () async {
+                                        onTap: !snapshot.user.worker ? () async {
                                           StoreProvider.of<AppState>(context).dispatch(SetService(ServiceState().toEmpty()));
                                           //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_CreateService(categoryId: categoryRootList[i].id)),);
                                           Navigator.push(context, EnterExitRoute(enterPage: UI_CreateService(categoryId: id(categories[i].categoryAbsolutePath)), exitPage: UI_M_ServiceList(), from: true));
-                                        },
+                                        } : null,
                                         child: Container(
                                           height: 56,
                                           child: Row(
@@ -337,7 +338,9 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                                               Padding(
                                                 padding: EdgeInsets.only(left: mediaWidth * 0.12, right: mediaWidth * 0.07),
                                                 child: Container(
-                                                  child: Icon(Icons.add_box_rounded, color: BuytimeTheme.ManagerPrimary.withOpacity(0.5), size: mediaWidth * 0.07),
+                                                  child: Icon(Icons.add_box_rounded,
+                                                      color: BuytimeTheme.ManagerPrimary.withOpacity(0.5),
+                                                      size: mediaWidth * 0.07),
                                                 ),
                                               ),
                                               Expanded(
@@ -403,12 +406,15 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                                             color: Colors.transparent,
                                             child: InkWell(
                                               //borderRadius: BorderRadius.all(Radius.circular(10)),
-                                              onTap: () async {},
+                                              onTap: () {
+                                                debugPrint('UI_M_service_list => TAP SERVICE in Inkwell');
+                                              },
                                               child: AbsorbPointer(
-                                                absorbing: !(snapshot.user.owner || snapshot.user.admin || snapshot.user.salesman),
+                                                //absorbing: !(snapshot.user.owner || snapshot.user.admin || snapshot.user.salesman),
+                                                absorbing: false,
                                                 child: Dismissible(
                                                   key: UniqueKey(),
-                                                  direction: DismissDirection.endToStart,
+                                                  direction: !snapshot.user.worker ? DismissDirection.endToStart : DismissDirection.none,
                                                   background: Container(
                                                     height: 56,
                                                     color: Colors.red,
@@ -515,6 +521,7 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                                                         Expanded(
                                                           child: GestureDetector(
                                                             onTap: () {
+                                                              debugPrint('UI_M_service_list => TAP SERVICE in Gesture');
                                                               //StoreProvider.of<AppState>(context).dispatch(SetService(listOfServiceEachRoot[i][index]));
                                                               //Navigator.push(context, MaterialPageRoute(builder: (context) => UI_EditService()),);
                                                               Navigator.push(context, EnterExitRoute(enterPage: UI_EditService(id(listOfServiceEachRoot[i][index].serviceAbsolutePath),listOfServiceEachRoot[i][index].serviceName), exitPage: UI_M_ServiceList(), from: true));

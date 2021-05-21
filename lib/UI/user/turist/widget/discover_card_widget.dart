@@ -10,8 +10,9 @@ class DiscoverCardWidget extends StatefulWidget {
   double width;
   double heigth;
   CategoryState categoryState;
+  List<String> categoryListIds;
   bool fromBookingPage;
-  DiscoverCardWidget(this.width, this.heigth,this.categoryState, this.fromBookingPage);
+  DiscoverCardWidget(this.width, this.heigth,this.categoryState, this.fromBookingPage, this.categoryListIds);
 
   @override
   _DiscoverCardWidgetState createState() => _DiscoverCardWidgetState();
@@ -50,8 +51,8 @@ class _DiscoverCardWidgetState extends State<DiscoverCardWidget> {
             splashColor: Colors.black.withOpacity(.3),
             onTap: (){
               widget.fromBookingPage ?
-              Navigator.push(context, MaterialPageRoute(builder: (context) => FilterByCategory(fromBookingPage: true, categoryState: widget.categoryState, tourist: true,))) :
-              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => FilterByCategory(fromBookingPage: false,categoryState: widget.categoryState, tourist: true)));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => FilterByCategory(fromBookingPage: true, categoryState: widget.categoryState, tourist: true, categoryListIds: widget.categoryListIds,))) :
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => FilterByCategory(fromBookingPage: false,categoryState: widget.categoryState, tourist: true, categoryListIds: widget.categoryListIds,)));
             },
             borderRadius: BorderRadius.all(Radius.circular(5)),
             child: Container(

@@ -82,20 +82,22 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
   }*/
 
   List<dynamic> searchedList = [];
+  Map<String, List<String>> categoryListIds = Map();
 
   void searchCategory(List<CategoryState> list) {
+    debugPrint('UI_U_service_explorer => CATEGORY SEARCH');
     setState(() {
       List<CategoryState> categoryState = list;
+
       categoryList.clear();
       if (_searchController.text.isNotEmpty) {
         categoryState.forEach((element) {
           if (element.name.toLowerCase().contains(_searchController.text.toLowerCase())) {
-            categoryList.add(element);
+            //categoryList.add(element);
+            createCategoryList(element);
           }
           if(element.customTag != null && element.customTag.isNotEmpty && element.customTag.toLowerCase().contains(_searchController.text.toLowerCase())) {
-            if(!categoryList.contains(element)){
-              categoryList.add(element);
-            }
+            createCategoryList(element);
           }
         });
       }
@@ -103,7 +105,24 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
       searchedList.add(categoryList);
     });
   }
+
+  void createCategoryList(CategoryState element) {
+    bool found = false;
+    categoryList.forEach((cL) {
+      if(cL.name == element.name)
+        found = true;
+    });
+
+    if(!found){
+      categoryList.add(element);
+      categoryListIds.putIfAbsent(element.name, () => [element.id]);
+    }else{
+      categoryListIds[element.name].add(element.id);
+    }
+  }
+
   void searchPopular(List<ServiceState> list) {
+    debugPrint('UI_U_service_explorer => POPULAR SEARCH');
     setState(() {
       List<ServiceState> serviceState = list;
       popularList.clear();
@@ -128,6 +147,7 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
     });
   }
   void searchRecommended(List<ServiceState> list) {
+    debugPrint('UI_U_service_explorer => RECCOMENDED SEARCH');
     setState(() {
       recommendedList.clear();
       List<ServiceState> serviceState = list;
@@ -148,7 +168,25 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
         });
       }
       recommendedList.shuffle();
-      searchedList.add(recommendedList);
+      List<ServiceState> tmp = [];
+      bool found = false;
+      recommendedList.forEach((rL) {
+        searchedList[1].forEach((cL) {
+          if(cL.serviceId == rL.serviceId)
+            found = true;
+        });
+
+        tmp.forEach((cL) {
+          if(cL.serviceId == rL.serviceId)
+            found = true;
+        });
+
+        if(!found){
+          tmp.add(rL);
+        }
+      });
+      //searchedList.add(recommendedList);
+      searchedList.add(tmp);
     });
   }
   bool startRequest = false;
@@ -232,18 +270,42 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
         store.state.notificationListState.notificationListState.clear();
         store.dispatch(RequestNotificationList(store.state.user.uid, store.state.business.id_firestore));
         startRequest = true;
+        _getLocation();
       },
       builder: (context, snapshot) {
         if(_searchController.text.isEmpty){
           categoryList.clear();
           popularList.clear();
           recommendedList.clear();
+          categoryListIds.clear();
+          List<NotificationState> notifications = snapshot.notificationListState.notificationListState;
 
           if(snapshot.categoryList.categoryListState.isEmpty && snapshot.serviceList.serviceListState.isEmpty && startRequest){
             noActivity = true;
           }else{
             if(snapshot.categoryList.categoryListState.isNotEmpty && snapshot.serviceList.serviceListState.isNotEmpty && categoryList.isEmpty && popularList.isEmpty && recommendedList.isEmpty || _searchController.text.isEmpty){
-              categoryList.addAll(snapshot.categoryList.categoryListState);
+              if(notifications.isNotEmpty && notifications.first.userId.isEmpty)
+                notifications.removeLast();
+
+              if(notifications.isNotEmpty){
+                hasNotifications = false;
+                notifications.forEach((element) {
+                  //debugPrint('UI_U_booking_page => ${element.timestamp}');
+                  //debugPrint('UI_U_booking_page => ${element.notificationId} | ${element.opened}');
+                  if(element.opened != null && !element.opened){
+                    //debugPrint('UI_U_booking_page => ${element.notificationId} | ${element.data.state.orderId}');
+                    hasNotifications = true;
+                  }
+                });
+                //notifications.sort((b,a) => a.timestamp != null ? a.timestamp : 0 .compareTo(b.timestamp != null ? b.timestamp : 0));
+                notifications.sort((b,a) => a.timestamp.compareTo(b.timestamp));
+              }
+
+              snapshot.categoryList.categoryListState.forEach((cLS) {
+                createCategoryList(cLS);
+              });
+
+              //categoryList.addAll(snapshot.categoryList.categoryListState);
               popularList.addAll(snapshot.serviceList.serviceListState);
               recommendedList.addAll(snapshot.serviceList.serviceListState);
               if(snapshot.categoryList.categoryListState.isNotEmpty && snapshot.serviceList.serviceListState.isNotEmpty && categoryList.isEmpty && popularList.isEmpty && recommendedList.isEmpty){
@@ -264,6 +326,8 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
             //recommendedList.shuffle();
           }
         }
+        debugPrint('UI_U_service_explorer => CATEGORY LIST: ${categoryList.length}');
+        debugPrint('UI_U_service_explorer => SERVICE LIST: ${popularList.length}');
         order = snapshot.order.itemList != null ? (snapshot.order.itemList.length > 0 ? snapshot.order : OrderState().toEmpty()) : OrderState().toEmpty();
         debugPrint('UI_U_BookingPage => Order List LENGTH: ${snapshot.orderList.orderListState.length}');
         orderList.clear();
@@ -276,29 +340,7 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
         });
         orderList.addAll(snapshot.orderList.orderListState);
         userOrderList.sort((a,b) => a.date.isBefore(b.date) ? -1 : a.date.isAtSameMomentAs(b.date) ? 0 : 1);
-        List<NotificationState> notifications = snapshot.notificationListState.notificationListState;
-        if(notifications.isEmpty && startRequest){
-          noActivity = true;
-        }else{
-          if(notifications.isNotEmpty && notifications.first.userId.isEmpty)
-            notifications.removeLast();
 
-          if(notifications.isNotEmpty){
-            hasNotifications = false;
-            notifications.forEach((element) {
-              //debugPrint('UI_U_booking_page => ${element.timestamp}');
-              //debugPrint('UI_U_booking_page => ${element.notificationId} | ${element.opened}');
-              if(element.opened != null && !element.opened){
-                //debugPrint('UI_U_booking_page => ${element.notificationId} | ${element.data.state.orderId}');
-                hasNotifications = true;
-              }
-            });
-            //notifications.sort((b,a) => a.timestamp != null ? a.timestamp : 0 .compareTo(b.timestamp != null ? b.timestamp : 0));
-            notifications.sort((b,a) => a.timestamp.compareTo(b.timestamp));
-          }
-          noActivity = false;
-          startRequest = false;
-        }
         return GestureDetector(
           onTap: () {
             FocusScopeNode currentFocus = FocusScope.of(context);
@@ -485,63 +527,91 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                         children: [
                           ///Search
                           Container(
-                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5),
-                            height: SizeConfig.safeBlockHorizontal * 20,
-                            child: TextFormField(
-                              controller: _searchController,
-                              textAlign: TextAlign.start,
-                              textInputAction: TextInputAction.search,
-                              decoration: InputDecoration(
-                                enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                labelText: AppLocalizations.of(context).whatAreYouLookingFor,
-                                helperText: AppLocalizations.of(context).searchForServicesAndIdeasAroundYou,
-                                //hintText: "email *",
-                                //hintStyle: TextStyle(color: Color(0xff666666)),
-                                labelStyle: TextStyle(
-                                  fontFamily: BuytimeTheme.FontFamily,
-                                  color: Color(0xff666666),
-                                  fontWeight: FontWeight.w400,
-                                ),
-                                helperStyle: TextStyle(
-                                  fontFamily: BuytimeTheme.FontFamily,
-                                  color: Color(0xff666666),
-                                  fontWeight: FontWeight.w400,
-                                ),
-                                suffixIcon: InkWell(
-                                  onTap: () {
-                                    debugPrint('done');
-                                    FocusScope.of(context).unfocus();
-                                    searchedList.clear();
-                                    searchCategory(snapshot.categoryList.categoryListState);
-                                    searchPopular(snapshot.serviceList.serviceListState);
-                                    searchRecommended(snapshot.serviceList.serviceListState);
-                                  },
-                                  child: Icon(
-                                    // Based on passwordVisible state choose the icon
-                                    Icons.search,
-                                    color: Color(0xff666666),
+                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 5, bottom: SizeConfig.safeBlockVertical * 1,
+                                right: _searchController.text.isNotEmpty ? SizeConfig.safeBlockHorizontal * .5: SizeConfig.safeBlockHorizontal * 5),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                ///Search
+                                Flexible(
+                                  child: Container(
+                                    //width: SizeConfig.safeBlockHorizontal * 60,
+                                    // decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
+                                      child: TextFormField(
+                                        controller: _searchController,
+                                        textAlign: TextAlign.start,
+                                        textInputAction: TextInputAction.search,
+                                        decoration: InputDecoration(
+                                          enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                          focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                          errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                          labelText: AppLocalizations.of(context).whatAreYouLookingFor,
+                                          helperText: AppLocalizations.of(context).searchForServicesAndIdeasAroundYou,
+                                          //hintText: "email *",
+                                          //hintStyle: TextStyle(color: Color(0xff666666)),
+                                          labelStyle: TextStyle(
+                                            fontFamily: BuytimeTheme.FontFamily,
+                                            color: Color(0xff666666),
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                          helperStyle: TextStyle(
+                                            fontFamily: BuytimeTheme.FontFamily,
+                                            color: Color(0xff666666),
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                          suffixIcon: InkWell(
+                                            onTap: () {
+                                              debugPrint('done');
+                                              FocusScope.of(context).unfocus();
+                                              searchedList.clear();
+                                              searchCategory(snapshot.categoryList.categoryListState);
+                                              searchPopular(snapshot.serviceList.serviceListState);
+                                              searchRecommended(snapshot.serviceList.serviceListState);
+                                            },
+                                            child: Icon(
+                                              // Based on passwordVisible state choose the icon
+                                              Icons.search,
+                                              color: Color(0xff666666),
+                                            ),
+                                          ),
+                                        ),
+                                        style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextMedium, fontWeight: FontWeight.w400, fontSize: 16),
+                                        onEditingComplete: () {
+                                          debugPrint('done');
+                                          FocusScope.of(context).unfocus();
+                                          searchedList.clear();
+                                          searchCategory(snapshot.categoryList.categoryListState);
+                                          searchPopular(snapshot.serviceList.serviceListState);
+                                          searchRecommended(snapshot.serviceList.serviceListState);
+                                        },
+                                        onTap: (){
+                                          setState(() {
+                                            searching = !searching;
+                                          });
+                                        },
+                                      ),
                                   ),
                                 ),
-                              ),
-                              style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextMedium, fontWeight: FontWeight.w400, fontSize: 16),
-                              onEditingComplete: () {
-                                debugPrint('done');
-                                FocusScope.of(context).unfocus();
-                                searchedList.clear();
-                                searchCategory(snapshot.categoryList.categoryListState);
-                                searchPopular(snapshot.serviceList.serviceListState);
-                                searchRecommended(snapshot.serviceList.serviceListState);
-                              },
-                              onTap: (){
-                                setState(() {
-                                  searching = !searching;
-                                });
-                              },
+                                _searchController.text.isNotEmpty ?Container(
+                                  margin: EdgeInsets.only(bottom: 20),
+                                  child: IconButton(
+                                    icon: Icon(
+                                      // Based on passwordVisible state choose the icon
+                                      BuytimeIcons.remove,
+                                      color: Color(0xff666666),
+                                    ),
+                                    onPressed: (){
+                                      setState(() {
+                                        _searchController.clear();
+                                      });
+                                    },
+                                  ),
+                                ) : Container()
+                              ],
                             ),
                           ),
                           ///My bookings & View all
+                          _searchController.text.isEmpty && userOrderList.isNotEmpty ?
                           Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -628,7 +698,7 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                                 ]),
                               ): Container(),
                             ],
-                          ),
+                          ) : Container(),
                           ///Discover & Popular & Recommended & Log out
                           _searchController.text.isEmpty ?
                           Column(
@@ -671,10 +741,11 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                                                   (context, index) {
                                                 //MenuItemModel menuItem = menuItems.elementAt(index);
                                                 CategoryState category = categoryList.elementAt(index);
+                                                debugPrint('UI_U_service_explorer => ${category.name}: ${categoryListIds[category.name]}');
                                                 return Container(
                                                   width: 80,
                                                   margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0, right: SizeConfig.safeBlockHorizontal * 1),
-                                                  child: DiscoverCardWidget(80, 80, category, true),
+                                                  child: DiscoverCardWidget(80, 80, category, true, categoryListIds[category.name]),
                                                 );
                                               },
                                               childCount: categoryList.length,
@@ -1086,7 +1157,7 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                                       //MenuItemModel menuItem = menuItems.elementAt(index);
                                       if(index == 0){
                                         return Container(
-                                          height: 80,
+                                          height: categoryList.isEmpty ? 0 : 80,
                                           margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 4.5, bottom: SizeConfig.safeBlockVertical * 1),
                                           child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
                                             SliverList(
@@ -1094,10 +1165,11 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                                                     (context, index) {
                                                   //MenuItemModel menuItem = menuItems.elementAt(index);
                                                   CategoryState category = categoryList.elementAt(index);
+                                                  debugPrint('UI_U_service_explorer => ${categoryListIds[category.name]}');
                                                   return Container(
                                                     width: 80,
                                                     margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0, right: SizeConfig.safeBlockHorizontal * 1),
-                                                    child: DiscoverCardWidget(80, 80, category, true),
+                                                    child: DiscoverCardWidget(80, 80, category, true, categoryListIds[category.name]),
                                                   );
                                                 },
                                                 childCount: categoryList.length,
