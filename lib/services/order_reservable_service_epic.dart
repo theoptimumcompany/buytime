@@ -2,11 +2,14 @@ import 'dart:convert';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/model/business/external_business_state.dart';
+import 'package:Buytime/reblox/model/order/order_detail_state.dart';
 import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/statistics_state.dart';
 import 'package:Buytime/reblox/model/stripe/stripe_state.dart';
 import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
+import 'package:Buytime/reblox/navigation/navigation_reducer.dart';
+import 'package:Buytime/reblox/reducer/order_detail_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reservable_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reservable_reducer.dart';
 import 'package:Buytime/reblox/reducer/statistics_reducer.dart';
@@ -344,11 +347,13 @@ class CreateOrderReservableCardAndPayService implements EpicClass<AppState> {
   StatisticsState statisticsState;
   String state = '';
   String paymentResult = '';
+  OrderReservableState reservable;
+
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<CreateOrderReservableCardAndPay>().asyncMap((event) async {
       for (int i = 0; i < event.orderReservableState.itemList.length; i++) {
-        OrderReservableState reservable = orderReservableInitialization(event, i);
+        reservable = orderReservableInitialization(event, i);
         debugPrint('UI_U_ConfirmOrder => Date: ${reservable.date}');
         /// add needed data to the order state
         OrderReservableState orderReservableState = configureOrderReservable(reservable, store);
@@ -377,11 +382,9 @@ class CreateOrderReservableCardAndPayService implements EpicClass<AppState> {
       var actionArray = [];
       actionArray.add(CreatedOrderReservable());
       actionArray.add(UpdateStatistics(statisticsState));
-      if (paymentResult == "success") {
-        actionArray.add(SetOrderReservableProgress(Utils.enumToString(OrderStatus.paid)));
-      } else {
-        actionArray.add(SetOrderReservableProgress(Utils.enumToString(OrderStatus.canceled)));
-      }
+      actionArray.add(SetOrderReservableOrderId(reservable.orderId));
+      actionArray.add(SetOrderDetail(OrderDetailState.fromReservableState(reservable)));
+      actionArray.add(NavigatePushAction(AppRoutes.orderDetailsRealtime));
       return actionArray;
     });
   }
@@ -395,11 +398,13 @@ class CreateOrderReservableCardAndHoldService implements EpicClass<AppState> {
   StatisticsState statisticsState;
   String state = '';
   dynamic paymentResult;
+  OrderReservableState reservable;
+
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<CreateOrderReservableCardAndHold>().asyncMap((event) async {
       for (int i = 0; i < event.orderReservableState.itemList.length; i++) {
-        OrderReservableState reservable = orderReservableInitialization(event, i);
+        reservable = orderReservableInitialization(event, i);
         debugPrint('order_reservable_service_epic, CreateOrderReservableCardAndHoldService => Date: ${reservable.date}');
         /// add needed data to the order state
         OrderReservableState orderReservableState = configureOrderReservable(reservable, store);
@@ -431,11 +436,9 @@ class CreateOrderReservableCardAndHoldService implements EpicClass<AppState> {
       var actionArray = [];
       actionArray.add(CreatedOrderReservable());
       actionArray.add(UpdateStatistics(statisticsState));
-      if (paymentResult != "error") {
-        actionArray.add(SetOrderReservableProgress(Utils.enumToString(OrderStatus.holding)));
-      } else {
-        actionArray.add(SetOrderReservableProgress(Utils.enumToString(OrderStatus.canceled)));
-      }
+      actionArray.add(SetOrderReservableOrderId(reservable.orderId));
+      actionArray.add(SetOrderDetail(OrderDetailState.fromReservableState(reservable)));
+      actionArray.add(NavigatePushAction(AppRoutes.orderDetailsRealtime));
       return actionArray;
     });
   }
@@ -451,11 +454,13 @@ class CreateOrderReservableCardAndReminderService implements EpicClass<AppState>
   StatisticsState statisticsState;
   String state = '';
   String paymentResult = '';
+  OrderReservableState reservable;
+
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<CreateOrderReservableCardAndReminder>().asyncMap((event) async {
       for (int i = 0; i < event.orderReservableState.itemList.length; i++) {
-        OrderReservableState reservable = orderReservableInitialization(event, i);
+        reservable = orderReservableInitialization(event, i);
         debugPrint('UI_U_ConfirmOrder => Date: ${reservable.date}');
         /// add needed data to the order state
         OrderReservableState orderReservableState = configureOrderReservable(reservable, store);
@@ -484,11 +489,9 @@ class CreateOrderReservableCardAndReminderService implements EpicClass<AppState>
       var actionArray = [];
       actionArray.add(CreatedOrderReservable());
       actionArray.add(UpdateStatistics(statisticsState));
-      if (paymentResult == "success") {
-        actionArray.add(SetOrderReservableProgress(Utils.enumToString(OrderStatus.holding)));
-      } else {
-        actionArray.add(SetOrderReservableProgress(Utils.enumToString(OrderStatus.canceled)));
-      }
+      actionArray.add(SetOrderReservableOrderId(reservable.orderId));
+      actionArray.add(SetOrderDetail(OrderDetailState.fromReservableState(reservable)));
+      actionArray.add(NavigatePushAction(AppRoutes.orderDetailsRealtime));
       return actionArray;
     });
   }
@@ -504,11 +507,13 @@ class CreateOrderReservableCardPendingService implements EpicClass<AppState> {
   StatisticsState statisticsState;
   String state = '';
   String paymentResult = '';
+  OrderReservableState reservable;
+
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<CreateOrderReservableCardPending>().asyncMap((event) async {
       for (int i = 0; i < event.orderReservableState.itemList.length; i++) {
-        OrderReservableState reservable = orderReservableInitialization(event, i);
+        reservable = orderReservableInitialization(event, i);
         debugPrint('UI_U_ConfirmOrder => Date: ${reservable.date}');
         /// add needed data to the order state
         OrderReservableState orderReservableState = configureOrderReservable(reservable, store);
@@ -537,11 +542,9 @@ class CreateOrderReservableCardPendingService implements EpicClass<AppState> {
       var actionArray = [];
       actionArray.add(CreatedOrderReservable());
       actionArray.add(UpdateStatistics(statisticsState));
-      if (paymentResult == "success") {
-        actionArray.add(SetOrderReservableProgress(Utils.enumToString(OrderStatus.pending)));
-      } else {
-        actionArray.add(SetOrderReservableProgress(Utils.enumToString(OrderStatus.canceled)));
-      }
+      actionArray.add(SetOrderReservableOrderId(reservable.orderId));
+      actionArray.add(SetOrderDetail(OrderDetailState.fromReservableState(reservable)));
+      actionArray.add(NavigatePushAction(AppRoutes.orderDetailsRealtime));
       return actionArray;
     });
   }
@@ -554,11 +557,13 @@ class CreateOrderReservableNativeAndPayService implements EpicClass<AppState> {
   StatisticsState statisticsState;
   String state = '';
   String paymentResult = '';
+  OrderReservableState reservable;
+
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<CreateOrderReservableNativeAndPay>().asyncMap((event) async {
       for (int i = 0; i < event.orderReservableState.itemList.length; i++) {
-        OrderReservableState reservable = orderReservableInitialization(event, i);
+        reservable = orderReservableInitialization(event, i);
         OrderReservableState orderReservableState = configureOrderReservable(reservable, store);
         debugPrint('UI_U_ConfirmOrder => Date: ${reservable.date}');
         if(event.paymentMethod != null && store.state.booking != null && store.state.booking.booking_id != null) {
@@ -588,11 +593,9 @@ class CreateOrderReservableNativeAndPayService implements EpicClass<AppState> {
       var actionArray = [];
       actionArray.add(CreatedOrderReservable());
       actionArray.add(UpdateStatistics(statisticsState));
-      if (paymentResult == "success") {
-        actionArray.add(SetOrderReservableProgress(Utils.enumToString(OrderStatus.paid)));
-      } else {
-        actionArray.add(SetOrderReservableProgress(Utils.enumToString(OrderStatus.canceled)));
-      }
+      actionArray.add(SetOrderReservableOrderId(reservable.orderId));
+      actionArray.add(SetOrderDetail(OrderDetailState.fromReservableState(reservable)));
+      actionArray.add(NavigatePushAction(AppRoutes.orderDetailsRealtime));
       return actionArray;
     });
   }
@@ -604,11 +607,13 @@ class CreateOrderReservableNativeAndHoldService implements EpicClass<AppState> {
   StatisticsState statisticsState;
   String state = '';
   dynamic paymentResult;
+  OrderReservableState reservable;
+
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<CreateOrderReservableNativeAndHold>().asyncMap((event) async {
       for (int i = 0; i < event.orderReservableState.itemList.length; i++) {
-        OrderReservableState reservable = orderReservableInitialization(event, i);
+        reservable = orderReservableInitialization(event, i);
         debugPrint('UI_U_ConfirmOrder => Date: ${reservable.date}');
         /// add needed data to the order state
         OrderReservableState orderReservableState = configureOrderReservable(reservable, store);
@@ -639,11 +644,9 @@ class CreateOrderReservableNativeAndHoldService implements EpicClass<AppState> {
       var actionArray = [];
       actionArray.add(CreatedOrderReservable());
       actionArray.add(UpdateStatistics(statisticsState));
-      if (paymentResult == "success") {
-        actionArray.add(SetOrderReservableProgress(Utils.enumToString(OrderStatus.holding)));
-      } else {
-        actionArray.add(SetOrderReservableProgress(Utils.enumToString(OrderStatus.canceled)));
-      }
+      actionArray.add(SetOrderReservableOrderId(reservable.orderId));
+      actionArray.add(SetOrderDetail(OrderDetailState.fromReservableState(reservable)));
+      actionArray.add(NavigatePushAction(AppRoutes.orderDetailsRealtime));
       return actionArray;
     });
   }
@@ -655,11 +658,13 @@ class CreateOrderReservableNativeAndReminderService implements EpicClass<AppStat
   StatisticsState statisticsState;
   String state = '';
   String paymentResult = '';
+  OrderReservableState reservable;
+
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<CreateOrderReservableNativeAndReminder>().asyncMap((event) async {
       for (int i = 0; i < event.orderReservableState.itemList.length; i++) {
-        OrderReservableState reservable = orderReservableInitialization(event, i);
+        reservable = orderReservableInitialization(event, i);
         debugPrint('UI_U_ConfirmOrder => Date: ${reservable.date}');
         /// add needed data to the order state
         OrderReservableState orderReservableState = configureOrderReservable(reservable, store);
@@ -688,11 +693,9 @@ class CreateOrderReservableNativeAndReminderService implements EpicClass<AppStat
       var actionArray = [];
       actionArray.add(CreatedOrderReservable());
       actionArray.add(UpdateStatistics(statisticsState));
-      if (paymentResult == "success") {
-        actionArray.add(SetOrderReservableProgress(Utils.enumToString(OrderStatus.holding)));
-      } else {
-        actionArray.add(SetOrderReservableProgress(Utils.enumToString(OrderStatus.canceled)));
-      }
+      actionArray.add(SetOrderReservableOrderId(reservable.orderId));
+      actionArray.add(SetOrderDetail(OrderDetailState.fromReservableState(reservable)));
+      actionArray.add(NavigatePushAction(AppRoutes.orderDetailsRealtime));
       return actionArray;
     });
   }
@@ -704,11 +707,13 @@ class CreateOrderReservableNativePendingService implements EpicClass<AppState> {
   StatisticsState statisticsState;
   String state = '';
   String paymentResult = '';
+  OrderReservableState reservable;
+
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<CreateOrderReservableNativePending>().asyncMap((event) async {
       for (int i = 0; i < event.orderReservableState.itemList.length; i++) {
-        OrderReservableState reservable = orderReservableInitialization(event, i);
+         reservable = orderReservableInitialization(event, i);
         debugPrint('UI_U_ConfirmOrder => Date: ${reservable.date}');
         /// add needed data to the order state
         OrderReservableState orderReservableState = configureOrderReservable(reservable, store);
@@ -737,11 +742,9 @@ class CreateOrderReservableNativePendingService implements EpicClass<AppState> {
       var actionArray = [];
       actionArray.add(CreatedOrderReservable());
       actionArray.add(UpdateStatistics(statisticsState));
-      if (paymentResult == "success") {
-        actionArray.add(SetOrderReservableProgress(Utils.enumToString(OrderStatus.pending)));
-      } else {
-        actionArray.add(SetOrderReservableProgress(Utils.enumToString(OrderStatus.canceled)));
-      }
+      actionArray.add(SetOrderReservableOrderId(reservable.orderId));
+      actionArray.add(SetOrderDetail(OrderDetailState.fromReservableState(reservable)));
+      actionArray.add(NavigatePushAction(AppRoutes.orderDetailsRealtime));
       return actionArray;
     });
   }
@@ -753,11 +756,13 @@ class CreateOrderReservableRoomAndPayService implements EpicClass<AppState> {
   StatisticsState statisticsState;
   String state = '';
   String paymentResult = '';
+  OrderReservableState reservable;
+
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<CreateOrderReservableRoomAndPay>().asyncMap((event) async {
       for (int i = 0; i < event.orderReservableState.itemList.length; i++) {
-        OrderReservableState reservable = orderReservableInitialization(event, i);
+        reservable = orderReservableInitialization(event, i);
         debugPrint('UI_U_ConfirmOrder => Date: ${reservable.date}');
         /// add needed data to the order state
         OrderReservableState orderReservableState = configureOrderReservable(reservable, store);
@@ -786,11 +791,9 @@ class CreateOrderReservableRoomAndPayService implements EpicClass<AppState> {
       var actionArray = [];
       actionArray.add(CreatedOrderReservable());
       actionArray.add(UpdateStatistics(statisticsState));
-      if (paymentResult == "success") {
-        actionArray.add(SetOrderReservableProgress(Utils.enumToString(OrderStatus.paid)));
-      } else {
-        actionArray.add(SetOrderReservableProgress(Utils.enumToString(OrderStatus.canceled)));
-      }
+      actionArray.add(SetOrderReservableOrderId(reservable.orderId));
+      actionArray.add(SetOrderDetail(OrderDetailState.fromReservableState(reservable)));
+      actionArray.add(NavigatePushAction(AppRoutes.orderDetailsRealtime));
       return actionArray;
     });
   }
@@ -802,11 +805,12 @@ class CreateOrderReservableRoomPendingService implements EpicClass<AppState> {
   StatisticsState statisticsState;
   String state = '';
   String paymentResult = '';
+  OrderReservableState reservable;
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<CreateOrderReservableRoomPending>().asyncMap((event) async {
       for (int i = 0; i < event.orderReservableState.itemList.length; i++) {
-        OrderReservableState reservable = orderReservableInitialization(event, i);
+        reservable = orderReservableInitialization(event, i);
         debugPrint('UI_U_ConfirmOrder => Date: ${reservable.date}');
         /// add needed data to the order state
         OrderReservableState orderReservableState = configureOrderReservable(reservable, store);
@@ -835,11 +839,9 @@ class CreateOrderReservableRoomPendingService implements EpicClass<AppState> {
       var actionArray = [];
       actionArray.add(CreatedOrderReservable());
       actionArray.add(UpdateStatistics(statisticsState));
-      if (paymentResult == "success") {
-        actionArray.add(SetOrderReservableProgress(Utils.enumToString(OrderStatus.pending)));
-      } else {
-        actionArray.add(SetOrderReservableProgress(Utils.enumToString(OrderStatus.canceled)));
-      }
+      actionArray.add(SetOrderReservableOrderId(reservable.orderId));
+      actionArray.add(SetOrderDetail(OrderDetailState.fromReservableState(reservable)));
+      actionArray.add(NavigatePushAction(AppRoutes.orderDetailsRealtime));
       return actionArray;
     });
   }

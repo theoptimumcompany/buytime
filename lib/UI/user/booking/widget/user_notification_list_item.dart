@@ -77,7 +77,8 @@ class _UserNotificationListItemState extends State<UserNotificationListItem> {
             color: Colors.transparent,
             child: InkWell(
               borderRadius: BorderRadius.all(Radius.circular(10)),
-              onTap: () async {
+              onTap: () {
+                debugPrint('user_notification_list_item => onTap: ${widget.notificationState.notificationId} ${widget.notificationState.notificationId.isNotEmpty} ${widget.orderState.orderId.isNotEmpty} ');
                 if(widget.notificationState.notificationId != null && widget.notificationState.notificationId.isNotEmpty && widget.orderState.orderId.isNotEmpty){
                   widget.notificationState.opened = true;
                   StoreProvider.of<AppState>(context).dispatch(UpdateNotification(widget.notificationState));

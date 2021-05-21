@@ -192,11 +192,13 @@ class OrderCreateNativeAndPayService implements EpicClass<AppState> {
   StatisticsState statisticsState;
   String state = '';
   String paymentResult = '';
+  OrderState orderState;
+
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
      return actions.whereType<CreateOrderNativeAndPay>().asyncMap((event) async {
       /// add needed data to the order state
-      OrderState orderState = configureOrder(event.orderState, store);
+      orderState = configureOrder(event.orderState, store);
       if(event.paymentMethod != null) {
         /// This is a time based id, meaning that even if 2 users are going to generate a document at the same moment in time
         /// there are really low chances that the rest of the id is also colliding.
@@ -221,11 +223,9 @@ class OrderCreateNativeAndPayService implements EpicClass<AppState> {
        var actionArray = [];
        actionArray.add(CreatedOrder());
        actionArray.add(UpdateStatistics(statisticsState));
-       if (paymentResult == "success") {
-         actionArray.add(SetOrderProgress(Utils.enumToString(OrderStatus.paid)));
-       } else {
-         actionArray.add(SetOrderProgress(Utils.enumToString(OrderStatus.canceled)));
-       }
+       actionArray.add(SetOrderOrderId(orderState.orderId));
+       actionArray.add(SetOrderDetail(OrderDetailState.fromOrderState(orderState)));
+       actionArray.add(NavigatePushAction(AppRoutes.orderDetailsRealtime));
        return actionArray;
      });
   }
@@ -236,11 +236,13 @@ class OrderCreateCardAndPayService implements EpicClass<AppState> {
   StatisticsState statisticsState;
   String state = '';
   String paymentResult = '';
+  OrderState orderState;
+
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
      return actions.whereType<CreateOrderCardAndPay>().asyncMap((event) async {
       /// add needed data to the order state
-      OrderState orderState = configureOrder(event.orderState, store);
+      orderState = configureOrder(event.orderState, store);
       if(event.selectedCardPaymentMethodId != null && store.state.booking != null && store.state.booking.booking_id != null) {
         /// This is a time based id, meaning that even if 2 users are going to generate a document at the same moment in time
         /// there are really low chances that the rest of the id is also colliding.
@@ -265,11 +267,9 @@ class OrderCreateCardAndPayService implements EpicClass<AppState> {
        var actionArray = [];
        actionArray.add(CreatedOrder());
        actionArray.add(UpdateStatistics(statisticsState));
-       if (paymentResult == "success") {
-         actionArray.add(SetOrderProgress(Utils.enumToString(OrderStatus.paid)));
-       } else {
-         actionArray.add(SetOrderProgress(Utils.enumToString(OrderStatus.canceled)));
-       }
+       actionArray.add(SetOrderOrderId(orderState.orderId));
+       actionArray.add(SetOrderDetail(OrderDetailState.fromOrderState(orderState)));
+       actionArray.add(NavigatePushAction(AppRoutes.orderDetailsRealtime));
        return actionArray;
      });
   }
@@ -281,11 +281,13 @@ class OrderCreateRoomAndPayService implements EpicClass<AppState> {
   StatisticsState statisticsState;
   String state = '';
   String paymentResult = '';
+  OrderState orderState;
+
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
      return actions.whereType<CreateOrderRoomAndPay>().asyncMap((event) async {
       /// add needed data to the order state
-      OrderState orderState = configureOrder(event.orderState, store);
+      orderState = configureOrder(event.orderState, store);
       orderState.cardType = Utils.enumToString(PaymentType.room);
       /// This is a time based id, meaning that even if 2 users are going to generate a document at the same moment in time
       /// there are really low chances that the rest of the id is also colliding.
@@ -307,7 +309,9 @@ class OrderCreateRoomAndPayService implements EpicClass<AppState> {
        var actionArray = [];
        actionArray.add(CreatedOrder());
        actionArray.add(UpdateStatistics(statisticsState));
-       actionArray.add(SetOrderProgress(Utils.enumToString(OrderStatus.toBePaidAtCheckout)));
+       actionArray.add(SetOrderOrderId(orderState.orderId));
+       actionArray.add(SetOrderDetail(OrderDetailState.fromOrderState(orderState)));
+       actionArray.add(NavigatePushAction(AppRoutes.orderDetailsRealtime));
        return actionArray;
      });
   }
@@ -349,7 +353,9 @@ class OrderCreateNativePendingService implements EpicClass<AppState> {
       var actionArray = [];
       actionArray.add(CreatedOrder());
       actionArray.add(UpdateStatistics(statisticsState));
+      actionArray.add(SetOrderOrderId(orderState.orderId));
       actionArray.add(SetOrderDetail(OrderDetailState.fromOrderState(orderState)));
+      actionArray.add(NavigatePushAction(AppRoutes.orderDetailsRealtime));
       return actionArray;
     });
   }
@@ -361,12 +367,14 @@ class OrderCreateCardPendingService implements EpicClass<AppState> {
   StatisticsState statisticsState;
   String state = '';
   String paymentResult = '';
+  OrderState orderState;
+
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<CreateOrderCardPending>().asyncMap((event) async {
       debugPrint('CreateOrderPending start');
       /// add needed data to the order state
-      OrderState orderState = configureOrder(event.orderState, store);
+      orderState = configureOrder(event.orderState, store);
       orderState.cardType = Utils.enumToString(PaymentType.card);
       orderState.progress = Utils.enumToString(OrderStatus.pending);
       /// send document to orders collection
@@ -390,7 +398,9 @@ class OrderCreateCardPendingService implements EpicClass<AppState> {
       var actionArray = [];
       actionArray.add(CreatedOrder());
       actionArray.add(UpdateStatistics(statisticsState));
-      actionArray.add(SetOrderProgress(Utils.enumToString(OrderStatus.pending)));
+      actionArray.add(SetOrderOrderId(orderState.orderId));
+      actionArray.add(SetOrderDetail(OrderDetailState.fromOrderState(orderState)));
+      actionArray.add(NavigatePushAction(AppRoutes.orderDetailsRealtime));
       return actionArray;
     });
   }
@@ -411,6 +421,7 @@ class OrderCreateRoomPendingService implements EpicClass<AppState> {
       /// add needed data to the order state
       orderState = configureOrder(event.orderState, store);
       orderState.cardType = Utils.enumToString(PaymentType.room);
+      orderState.progress = Utils.enumToString(OrderStatus.pending);
       /// send document to orders collection
       /// This is a time based id, meaning that even if 2 users are going to generate a document at the same moment in time
       /// there are really low chances that the rest of the id is also colliding.

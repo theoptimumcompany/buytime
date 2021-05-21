@@ -251,6 +251,13 @@ class SetOrderReservableProgress
   String get progress => _progress;
 }
 
+class SetOrderReservableOrderId
+{
+  String _orderId;
+  SetOrderReservableOrderId(this._orderId);
+  String get orderId => _orderId;
+}
+
 class SetOrderReservableCartCounter
 {
   int _cartCounter;
@@ -303,6 +310,10 @@ OrderReservableState orderReservableReducer(OrderReservableState state, action) 
   }
   if (action is SetOrderReservableProgress) {
     orderReservableState.progress = action.progress;
+    return orderReservableState;
+  }
+  if (action is SetOrderReservableOrderId) {
+    orderReservableState.orderId = action.orderId;
     return orderReservableState;
   }
   if (action is SetOrderReservableBusiness) {

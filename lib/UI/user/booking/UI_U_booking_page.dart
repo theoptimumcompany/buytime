@@ -221,7 +221,7 @@ class _BookingPageState extends State<BookingPage> {
         DateTime currentTime = DateTime.now();
         currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0).toUtc();
         snapshot.orderList.orderListState.forEach((element) {
-          if((element.progress == 'paid' || element.progress == 'pending' || element.progress == 'holding' || element.progress == 'accepted') && (element.date.isAtSameMomentAs(currentTime) || element.date.isAfter(currentTime)) && element.itemList.first.time != null)
+          if((element.progress == Utils.enumToString(OrderStatus.paid) || element.progress == Utils.enumToString(OrderStatus.pending) || element.progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout) || element.progress == Utils.enumToString(OrderStatus.holding) || element.progress == Utils.enumToString(OrderStatus.accepted)) && (element.date.isAtSameMomentAs(currentTime) || element.date.isAfter(currentTime)) && element.itemList.first.time != null)
             userOrderList.add(element);
         });
         orderList.addAll(snapshot.orderList.orderListState);

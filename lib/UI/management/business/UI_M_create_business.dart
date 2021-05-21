@@ -8,7 +8,7 @@ import 'package:Buytime/reblox/reducer/business_reducer.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
 import 'package:Buytime/reusable/enterExitRoute.dart';
 import 'package:Buytime/reusable/form/optimum_form_field.dart';
-import 'package:Buytime/reusable/form/optimum_form_multi_photo.dart' if (dart.library.html) 'package:Buytime/reusable/form/optimum_form_multi_photo_web.dart';
+import 'package:Buytime/reusable/form/optimum_form_multi_photo.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/utils/utils.dart';

@@ -245,11 +245,11 @@ class _NotificationsState extends State<Notifications> {
                                                       (context, index) {
                                                     //MenuItemModel menuItem = menuItems.elementAt(index);
                                                       NotificationState notification = notifications.elementAt(index);
-                                                      OrderState orderState = OrderState().toEmpty();
+                                                      OrderState orderState;
                                                       ServiceState serviceState = ServiceState().toEmpty();
                                                       widget.orderStateList.forEach((element) {
                                                         if(notification.data.state != null && element.orderId == notification.data.state.orderId){
-                                                          //debugPrint('UI_U_notification => ${element.orderId}');
+                                                          debugPrint('UI_U_notification => ${element.orderId}');
                                                           orderState = element;
                                                         }
                                                       });
@@ -259,8 +259,12 @@ class _NotificationsState extends State<Notifications> {
                                                           serviceState = element;
                                                         }
                                                       });
+                                                      if (orderState != null) {
+                                                        return UserNotificationListItem(notification, orderState, serviceState, widget.tourist);
+                                                      }
+                                                      return Container();
+
                                                     //debugPrint('booking_month_list: bookings booking status: ${booking.user.first.surname} ${booking.status}');
-                                                    return UserNotificationListItem(notification, orderState, serviceState, widget.tourist);
                                                   },
                                                   childCount: notifications.length,
                                                 ),

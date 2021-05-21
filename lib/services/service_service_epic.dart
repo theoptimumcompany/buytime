@@ -794,7 +794,16 @@ class ServiceUpdateService implements EpicClass<AppState> {
 
 Future<ServiceState> uploadFiles(List<OptimumFileToUpload> fileToUploadList, ServiceState serviceState) async {
   for (int index = 0; index < fileToUploadList.length; index++) {
-    await uploadToFirebaseStorage(fileToUploadList[index]).then((fileUrl) {
+    // String fileUrl = await uploadToFirebaseStorage(fileToUploadList[index]);
+    // if (Uri.parse(fileUrl).toString().contains(serviceState.name + '_1')) {
+    //   serviceState.image1 = fileUrl.toString();
+    // } else if (Uri.parse(fileUrl).toString().contains(serviceState.name + '_2')) {
+    //   serviceState.image2 = fileUrl.toString();
+    // } else if (Uri.parse(fileUrl).toString().contains(serviceState.name + '_3')) {
+    //   serviceState.image3 = fileUrl.toString();
+    // }
+
+    await uploadToFirebaseStorage(fileToUploadList[index]).then((String fileUrl) {
       if (Uri.decodeFull(fileUrl).contains(serviceState.name + '_1')) {
         serviceState.image1 = fileUrl.toString();
       } else if (Uri.decodeFull(fileUrl).contains(serviceState.name + '_2')) {

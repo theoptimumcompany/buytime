@@ -20,7 +20,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../reusable/form/optimum_chip.dart';
 import '../../../reusable/form/optimum_form_field.dart';
-import 'package:Buytime/reusable/form/optimum_form_multi_photo.dart' if (dart.library.html) 'package:Buytime/reusable/form/optimum_form_multi_photo_web.dart';
+import 'package:Buytime/reusable/form/optimum_form_multi_photo.dart';
 
 class UI_M_EditBusiness extends StatefulWidget {
   @override

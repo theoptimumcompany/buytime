@@ -1,3 +1,4 @@
+import 'package:Buytime/UI/management/activity/RUI_M_activity_management.dart';
 import 'package:Buytime/UI/management/activity/UI_M_activity_management.dart';
 import 'package:Buytime/UI/management/business/UI_M_business_list.dart';
 import 'package:Buytime/UI/user/landing/UI_U_landing.dart';
@@ -198,7 +199,7 @@ class _UI_M_BusinessListDrawerState extends State<UI_M_BusinessListDrawer> {
                     //Navigator.pop(context);
                     setState(() {
                       drawerSelection = DrawerSelection.ActivityManagement;
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ActivityManagement()));
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => RActivityManagement()));
                     });
                   },
                 ),

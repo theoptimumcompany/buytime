@@ -6,7 +6,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:uuid/uuid.dart';
 
 Future<String> uploadToFirebaseStorage(OptimumFileToUpload optimumFileToUpload) async {
-
+  String result = '';
   print("file_upload_service: starting upload");
   final Reference storageReference = FirebaseStorage.instance.ref();
   if(await Permission.storage.request().isGranted) {
@@ -17,9 +17,8 @@ Future<String> uploadToFirebaseStorage(OptimumFileToUpload optimumFileToUpload) 
       print('EVENT ${event.runtimeType}');
     });
     streamSubscription.cancel();
-    String result = await (await uploadTask).ref.getDownloadURL();
+    result = await (await uploadTask).ref.getDownloadURL();
     return result;
-  } else {
-    // TODO return notification that permission is not granted
   }
+  return result;
 }

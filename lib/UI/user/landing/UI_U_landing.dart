@@ -1,4 +1,5 @@
 import 'dart:core';
+import 'package:Buytime/UI/management/activity/RUI_M_activity_management.dart';
 import 'package:Buytime/UI/management/activity/UI_M_activity_management.dart';
 import 'package:Buytime/UI/management/business/UI_M_business_list.dart';
 import 'package:Buytime/UI/user/booking/UI_U_my_bookings.dart';
@@ -406,7 +407,7 @@ class LandingState extends State<Landing> {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                  drawerSelection == DrawerSelection.BusinessList ? UI_M_BusinessList() : ActivityManagement()),
+                                                  drawerSelection == DrawerSelection.BusinessList ? UI_M_BusinessList() : RActivityManagement()),
                                             );
                                           },
                                           child: CustomBottomButtonWidget(
