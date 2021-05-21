@@ -495,7 +495,6 @@
   "externalServiceAdded": "Service added to your network",
   "pleaseFillAllFields": "Please fill in all required fields",
   "required": "This field is required",
-
   "noServices": "No network services",
   "alreadyInYourNetwork": "Already in your network",
   "serviceNotVisible": "The Service is Not Visible",
@@ -516,8 +515,8 @@
   "orderPending": "The Staff is reviewing your order, you will get a notification when an update is available.",
   "serviceArea": "Service Area",
   "addNewArea": "Add new area",
-  "whereDoYouWantToRecive": " Where do you want to receive it?",
-  "location": " Location",
+  "whereDoYouWantToRecive": "Where do you want to receive it?",
+  "location": "Location",
   "businessPipeline": "Business pipeline",
   "translatedIn": "Translated in:",
   "businessAddress": "Business address",
@@ -533,5 +532,5 @@
   "exploreNetwork": "Explore The Network",
   "startSession": "Start Session",
   "numberOfPeople": "Number of people",
-  "spot": "spot left"
+  "spot": "spot left",
 }
