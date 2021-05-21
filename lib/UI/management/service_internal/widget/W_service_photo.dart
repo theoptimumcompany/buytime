@@ -1,12 +1,14 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:ui' as ui;
+import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/file/optimum_file_to_upload.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/utils/utils.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:path/path.dart' as path;
 import 'package:flutter/material.dart';
@@ -234,9 +236,9 @@ class WidgetServicePhotoState extends State<WidgetServicePhoto> {
               ),
               errorWidget: (context, url, error) => croppedImage == null ? Image(width: SizeConfig.blockSizeHorizontal * 100, image: assetImage) : croppedImage,
             ) : Image(width: SizeConfig.blockSizeHorizontal * 100, image: assetImage)),
-            onTap: () {
+            onTap: !StoreProvider.of<AppState>(context).state.user.worker ? () {
               manageImage();
-            },
+            } : null,
           ),
         )
       ],

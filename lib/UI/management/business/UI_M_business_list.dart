@@ -126,7 +126,7 @@ class UI_M_BusinessListState extends State<UI_M_BusinessList> {
                     ///Title
                     Utils.barTitle(AppLocalizations.of(context).businessManagement),
                     ///Add Icon
-                    Padding(
+                    !snapshot.user.manager && !snapshot.user.worker ? Padding(
                       padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
                       child: IconButton(
                         icon: const Icon(
@@ -140,6 +140,8 @@ class UI_M_BusinessListState extends State<UI_M_BusinessList> {
                           Navigator.push(context, EnterExitRoute(enterPage: UI_M_CreateBusiness(), exitPage: UI_M_BusinessList(), from: true));
                         },
                       ),
+                    ) :  SizedBox(
+                      width: 56.0,
                     ),
                   ],
                 ),

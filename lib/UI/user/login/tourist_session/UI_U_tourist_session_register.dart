@@ -4,6 +4,7 @@ import 'dart:io';
 import 'dart:math';
 import 'package:Buytime/UI/user/cart/UI_U_ConfirmOrder.dart';
 import 'package:Buytime/UI/user/landing/UI_U_landing.dart';
+import 'package:Buytime/UI/user/login/tourist_session/UI_U_tourist_session.dart';
 import 'package:Buytime/UI/user/turist/UI_U_service_explorer.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/autoComplete/auto_complete_state.dart';
@@ -653,66 +654,20 @@ class _TouristSessionRegisterState extends State<TouristSessionRegister> with Si
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
-          appBar: BuytimeAppbar(
-            background: BuytimeTheme.BackgroundCerulean,
-            width: media.width,
-            children: [
-              ///Back Button
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
-                    child: IconButton(
-                      icon: const Icon(
-                        Icons.keyboard_arrow_left,
-                        color: BuytimeTheme.SymbolWhite,
-                        size: 25.0,
-                      ),
-                      tooltip: AppLocalizations.of(context).comeBack,
-                      onPressed: () {
-                        //widget.fromConfirm != null ? Navigator.of(context).pop() : Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Landing()),);
-                        Future.delayed(Duration.zero, () {
-                          Navigator.of(context).pop();
-                        });
-                      },
-                    ),
-                  ),
-                ],
+          resizeToAvoidBottomInset: false,
+          appBar: AppBar(
+            leading: IconButton(
+              icon: Icon(
+                Icons.keyboard_arrow_left,
+                color: BuytimeTheme.UserPrimary,
               ),
-
-              ///Title
-              Container(
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 10.0),
-                  child: Text(
-                    AppLocalizations.of(context).startSession,
-                    textAlign: TextAlign.start,
-                    style: BuytimeTheme.appbarTitle,
-                  ),
-                ),
-              ),
-
-              ///Empty Space
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
-                    child: IconButton(
-                      icon: const Icon(
-                        Icons.keyboard_arrow_left,
-                        color: BuytimeTheme.BackgroundCerulean,
-                        size: 25.0,
-                      ),
-                      onPressed: () {
-                        return;
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            ],
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            backgroundColor: Colors.white,
+            elevation: 0,
+            brightness: Platform.isIOS ? Brightness.light : Brightness.dark,
           ),
           body: Form(
               key: _formKey,
@@ -720,19 +675,43 @@ class _TouristSessionRegisterState extends State<TouristSessionRegister> with Si
                 child: SingleChildScrollView(
                   child: Container(
                     height: (SizeConfig.safeBlockVertical * 100) - 56,
+                    //constraints: BoxConstraints(minHeight: (SizeConfig.safeBlockVertical * 100) - 56),
                     child: Column(mainAxisSize: MainAxisSize.min, children: [
-                      ///Logo & Email & Password & & Error message & Log in button
+                      ///Logo & Email & Password & & Error message & Sign up button
                       Expanded(
-                        flex: 8,
+                        flex: 6,
                         child: Container(
                           //height: SizeConfig.safeBlockVertical * 75,
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
+                              ///Logo
+                              Container(
+                                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                                  /*boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black54.withOpacity(0.3),
+                                  spreadRadius: 2,
+                                  blurRadius: 6,
+                                  offset: Offset(0, 0), // changes position of shadow
+                                ),
+                              ],*/
+                                ),
+                                child: Image.asset(
+                                  'assets/img/brand/logo.png',
+                                  height: 96,
+
+                                  ///media.height * 0.12
+                                ),
+                              ),
+
                               ///Email & Password & Error message
                               Flexible(
-                                flex: 4,
+                                flex: 3,
                                 child: Container(
                                     margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 10, right: SizeConfig.safeBlockHorizontal * 10),
 
@@ -741,13 +720,13 @@ class _TouristSessionRegisterState extends State<TouristSessionRegister> with Si
                                       //mainAxisSize: MainAxisSize.min,
                                       mainAxisAlignment: MainAxisAlignment.start,
                                       children: [
-                                        ///Log in text
+                                        ///Sign up text
                                         Row(
                                           mainAxisAlignment: MainAxisAlignment.start,
                                           children: [
                                             Container(
                                               //width: 328,
-                                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 5),
+                                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 8),
                                               child: Text(
                                                 AppLocalizations.of(context).pleaseRegister,
                                                 style: TextStyle(
@@ -755,6 +734,8 @@ class _TouristSessionRegisterState extends State<TouristSessionRegister> with Si
                                                   color: BuytimeTheme.TextBlack,
                                                   fontWeight: FontWeight.w400,
                                                   fontSize: 16,
+
+                                                  ///SizeConfig.safeBlockHorizontal * 3
                                                 ),
                                               ),
                                             ),
@@ -762,70 +743,45 @@ class _TouristSessionRegisterState extends State<TouristSessionRegister> with Si
                                         ),
 
                                         ///Email address
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                          children: [
-                                            Flexible(
-                                                child: Container(
-                                              key: _key,
-                                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5),
-                                              height: 55,
+                                        Container(
+                                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5),
+                                          height: 55,
 
-                                              ///SizeConfig.safeBlockHorizontal * 14
-                                              //width: 2,
-                                              child: TextFormField(
-                                                //autofillHints: [AutofillHints.username],
-                                                controller: _emailController,
-                                                textAlign: TextAlign.start,
-                                                keyboardType: TextInputType.emailAddress,
-                                                textInputAction: TextInputAction.next,
-                                                autofillHints: [AutofillHints.email],
-                                                decoration: InputDecoration(
-                                                  enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                                  focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                                  errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                                  labelText: AppLocalizations.of(context).emailAddress,
-                                                  //hintText: "email *",
-                                                  //hintStyle: TextStyle(color: Color(0xff666666)),
-                                                  labelStyle: TextStyle(
-                                                    fontFamily: BuytimeTheme.FontFamily,
-                                                    color: Color(0xff666666),
-                                                    fontWeight: FontWeight.w400,
-                                                  ),
-                                                ),
-                                                style: TextStyle(
-                                                  fontFamily: BuytimeTheme.FontFamily,
-                                                  color: Color(0xff666666),
-                                                  fontWeight: FontWeight.w800,
-                                                ),
-                                                validator: (String value) {
-                                                  setState(() {
-                                                    if (value.isNotEmpty && EmailValidator.validate(value)) {
-                                                      emailHasError = false;
-                                                    } else
-                                                      emailHasError = true;
-                                                  });
-                                                  return null;
-                                                },
-                                                onTap: autoCompleteList.isNotEmpty
-                                                    ? () async {
-                                                        if (isMenuOpen) {
-                                                          closeMenu();
-                                                        } else {
-                                                          openMenu();
-                                                        }
-                                                      }
-                                                    : null,
-                                                onFieldSubmitted: (submit) {
-                                                  if (overlayEntry != null && isMenuOpen) {
-                                                    overlayEntry.remove();
-                                                    isMenuOpen = !isMenuOpen;
-                                                  }
-                                                },
+                                          ///SizeConfig.safeBlockHorizontal * 14
+                                          //width: 328,
+                                          child: TextFormField(
+                                            controller: _emailController,
+                                            textAlign: TextAlign.start,
+                                            keyboardType: TextInputType.emailAddress,
+                                            autofillHints: [AutofillHints.email],
+                                            decoration: InputDecoration(
+                                              enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                              focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                              errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                              labelText: AppLocalizations.of(context).emailAddress,
+                                              //hintText: "email *",
+                                              //hintStyle: TextStyle(color: Color(0xff666666)),
+                                              labelStyle: TextStyle(
+                                                fontFamily: BuytimeTheme.FontFamily,
+                                                color: Color(0xff666666),
+                                                fontWeight: FontWeight.w400,
                                               ),
-                                            )),
-                                          ],
+                                            ),
+                                            style: TextStyle(
+                                              fontFamily: BuytimeTheme.FontFamily,
+                                              color: Color(0xff666666),
+                                              fontWeight: FontWeight.w800,
+                                            ),
+                                            validator: (String value) {
+                                              setState(() {
+                                                if (value.isNotEmpty && EmailValidator.validate(value)) {
+                                                  emailHasError = false;
+                                                } else
+                                                  emailHasError = true;
+                                              });
+                                              return null;
+                                            },
+                                          ),
                                         ),
 
                                         ///Password
@@ -895,8 +851,8 @@ class _TouristSessionRegisterState extends State<TouristSessionRegister> with Si
                                                   style: TextStyle(
                                                       color: _success != null
                                                           ? _success
-                                                              ? Colors.greenAccent
-                                                              : Colors.redAccent
+                                                          ? Colors.greenAccent
+                                                          : Colors.redAccent
                                                           : Colors.redAccent,
                                                       fontWeight: FontWeight.bold,
                                                       fontSize: 12),
@@ -905,100 +861,67 @@ class _TouristSessionRegisterState extends State<TouristSessionRegister> with Si
                                             ],
                                           ),
                                         ),
-
-                                        ///Remeber Me & Forgot Password
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            ///Forgot Password
-                                            Container(
-                                                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
-                                                //margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 0.5),
-                                                alignment: Alignment.center,
-                                                child: Material(
-                                                  color: Colors.transparent,
-                                                  child: InkWell(
-                                                    onTap: () {
-                                                      Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(builder: (context) => ForgotPassword()),
-                                                      );
+                                        ///Remeber Me
+                                        /*Row(
+                                        mainAxisAlignment: MainAxisAlignment.end,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          ///Remeber Me
+                                          Container(
+                                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.start,
+                                              children: [
+                                                SizedBox(
+                                                  width: 15,
+                                                  height: 15,
+                                                  child: Checkbox(
+                                                    checkColor: BuytimeTheme.TextWhite,
+                                                    activeColor: BuytimeTheme.TextGrey,
+                                                    value: remeberMe,
+                                                    onChanged: (bool value) {
+                                                      setState(() {
+                                                        remeberMe = value;
+                                                      });
                                                     },
-                                                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                                                    child: Container(
-                                                      //width: 328,
-                                                      width: 139,
-                                                      height: 28,
-                                                      padding: EdgeInsets.only(top: 5.0, bottom: 5.0, right: 5.0),
-                                                      child: FittedBox(
-                                                        child: Text(
-                                                          AppLocalizations.of(context).forgotPassword,
-                                                          style: TextStyle(
-                                                            fontFamily: BuytimeTheme.FontFamily,
-                                                            color: BuytimeTheme.ManagerPrimary,
-                                                            fontWeight: FontWeight.w400,
-                                                            fontSize: 16,
+                                                  ),
+                                                ),
+                                                Container(
+                                                  //padding: EdgeInsets.all(5.0),
+                                                  margin: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 3),
+                                                  width: 100,
+                                                  height: 28,
+                                                  child: FittedBox(
+                                                    fit: BoxFit.scaleDown,
+                                                    child: Text(
+                                                      AppLocalizations.of(context).saveCredentials,
+                                                      style: TextStyle(
+                                                          letterSpacing: 1.25, fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextGrey, fontWeight: FontWeight.w500, fontSize: 16
 
-                                                            ///SizeConfig.safeBlockHorizontal * 3
-                                                          ),
-                                                        ),
+                                                        ///SizeConfig.safeBlockHorizontal * 4
                                                       ),
                                                     ),
                                                   ),
-                                                )),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),*/
 
-                                            ///Remeber Me
-                                            /*Container(
-                                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
-                                                  child: Row(
-                                                    mainAxisAlignment: MainAxisAlignment.start,
-                                                    children: [
-                                                      SizedBox(
-                                                        width: 15,
-                                                        height: 15,
-                                                        child: Checkbox(
-                                                          checkColor: BuytimeTheme.TextWhite,
-                                                          activeColor: BuytimeTheme.TextGrey,
-                                                          value: remeberMe,
-                                                          onChanged: (bool value) {
-                                                            setState(() {
-                                                              remeberMe = value;
-                                                            });
-                                                          },
-                                                        ),
-                                                      ),
-                                                      Container(
-                                                        //padding: EdgeInsets.all(5.0),
-                                                        margin: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 3),
-                                                        width: 100,
-                                                        height: 28,
-                                                        child: FittedBox(
-                                                          fit: BoxFit.scaleDown,
-                                                          child: Text(
-                                                            AppLocalizations.of(context).saveCredentials,
-                                                            style: TextStyle(
-                                                                letterSpacing: 1.25, fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextGrey, fontWeight: FontWeight.w500, fontSize: 16
-
-                                                              ///SizeConfig.safeBlockHorizontal * 4
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      )
-                                                    ],
-                                                  ),
-                                                ),*/
-                                          ],
-                                        ),
                                       ],
                                     )),
                               ),
 
-                              ///Log in button
+                              ///Register button
                               Flexible(
                                   flex: 1,
                                   child: Container(
-                                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 2.5, left: SizeConfig.safeBlockHorizontal * 8, right: SizeConfig.safeBlockHorizontal * 8),
+                                      margin: EdgeInsets.only(
+                                          top: SizeConfig.safeBlockVertical * 2.5,
+                                          bottom: SizeConfig.safeBlockVertical * 2.5,
+                                          left: SizeConfig.safeBlockHorizontal * 8,
+                                          right: SizeConfig.safeBlockHorizontal * 8),
                                       child: Row(
                                         mainAxisAlignment: MainAxisAlignment.end,
                                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -1007,6 +930,7 @@ class _TouristSessionRegisterState extends State<TouristSessionRegister> with Si
                                             onPressed: () async {
                                               if (_formKey.currentState.validate() && !_isRequestFlying) {
                                                 _register();
+                                                checkFormValidation();
                                               }
                                             },
                                             shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(500.0)),
@@ -1017,24 +941,67 @@ class _TouristSessionRegisterState extends State<TouristSessionRegister> with Si
                                             ),
                                           )
                                         ],
-                                      ))),
-                              Container(
-                                padding: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, bottom: SizeConfig.safeBlockVertical * 2),
-                                color: BuytimeTheme.BackgroundWhite,
-                                child: Column(mainAxisAlignment: MainAxisAlignment.center, mainAxisSize: MainAxisSize.min, children: [
-                                  BrandedButtonTourist("assets/img/google_logo.png", AppLocalizations.of(context).logInWithGoogle, initiateGoogleSignIn),
-                                  BrandedButtonTourist("assets/img/apple_logo.png", AppLocalizations.of(context).logInWithApple, initiateAppleSignIn),
-                                  //BrandedButton("assets/img/facebook_logo.png", AppLocalizations.of(context).signFacebook, initiateFacebookSignIn),
-                                ]),
-                              ),
+                                      )))
                             ],
                           ),
                         ),
                       ),
+                      ///Google & Facebook & Apple Sign up buttons
+                      Expanded(
+                        flex: 2,
+                        child: Container(
+                          //height: SizeConfig.safeBlockVertical * 30,
+                          //height: 243, ///285
+                          padding: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, bottom: SizeConfig.safeBlockVertical * 2),
+                          color: BuytimeTheme.BackgroundCerulean,
+                          child: Column(mainAxisAlignment: MainAxisAlignment.center, mainAxisSize: MainAxisSize.min, children: [
+                            BrandedButton("assets/img/google_logo.png", AppLocalizations.of(context).logInWithGoogle, initiateGoogleSignIn),
+                            BrandedButton("assets/img/apple_logo.png", AppLocalizations.of(context).logInWithApple, initiateAppleSignIn),
+                            Container(
+                                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
+                                //margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 0.5),
+                                alignment: Alignment.center,
+                                child: Material(
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                    onTap: () {
+                                      Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => TouristSession()),
+                                      );
+                                    },
+                                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                    child: Container(
+                                      //width: 328,
+                                      width: 80,
+                                      height: 28,
+                                      padding: EdgeInsets.all(5.0),
+                                      child: FittedBox(
+                                        child: Text(
+                                          AppLocalizations.of(context).logIn,
+                                          style: TextStyle(
+                                            fontFamily: BuytimeTheme.FontFamily,
+                                            color: BuytimeTheme.TextWhite,
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 16,
+
+                                            ///SizeConfig.safeBlockHorizontal * 3
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                )),
+                            //BrandedButton("assets/img/facebook_logo.png", AppLocalizations.of(context).signFacebook, initiateFacebookSignIn),
+                          ]),
+                        ),
+                      )
                     ]),
                   ),
                 ),
-              ))),
+              )
+          )
+      ),
     );
   }
 }

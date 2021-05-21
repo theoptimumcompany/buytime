@@ -268,18 +268,18 @@ class ManageCategoryState extends State<ManageCategory> with SingleTickerProvide
                             ),
                           ),
                         ),
-                        StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin ?
+                        StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin || StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman ?
                         IconButton(
                           padding: EdgeInsets.all(0.0),
                           splashRadius: 1.0,
                           alignment: Alignment.centerRight,
                           icon: Icon(
                             Icons.my_library_add,
-                            color: BuytimeTheme.ManagerPrimary,
+                            color: BuytimeTheme.SymbolWhite,
                             size: 24.0,
                           ),
                           tooltip: AppLocalizations.of(context).createSubCategory,
-                          onPressed: StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin ? () {
+                          onPressed: StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin || StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman ? () {
                             StoreProvider.of<AppState>(context).dispatch(CategoryRequest(list[index]["nodeId"]));
                             StoreProvider.of<AppState>(context).state.categoryTree.numberOfCategories < 50
                                 ?
@@ -342,7 +342,7 @@ class ManageCategoryState extends State<ManageCategory> with SingleTickerProvide
                         ),
                       ),
                       list[index]['level'] < 4 ?
-                      StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin ?
+                      StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin || StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman ?
                       Container(
                         margin: EdgeInsets.only(left: 10.0),
                         child: IconButton(
@@ -350,11 +350,11 @@ class ManageCategoryState extends State<ManageCategory> with SingleTickerProvide
                           alignment: Alignment.centerLeft,
                           icon: Icon(
                             Icons.my_library_add,
-                            color: StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin ? BuytimeTheme.ManagerPrimary : BuytimeTheme.SymbolGrey,
+                            color: StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin || StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman ? BuytimeTheme.ManagerPrimary : BuytimeTheme.SymbolGrey,
                             size: 24.0,
                           ),
                           tooltip: AppLocalizations.of(context).createSubCategory,
-                          onPressed: StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin ? () {
+                          onPressed: StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin || StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman ? () {
                             StoreProvider.of<AppState>(context).dispatch(CategoryRequest(list[index]["nodeId"]));
                             StoreProvider.of<AppState>(context).state.categoryTree.numberOfCategories < 50
                                 ?
@@ -473,7 +473,7 @@ class ManageCategoryState extends State<ManageCategory> with SingleTickerProvide
           key: list[index]["nodeId"],
           expanded: expand[list[index]["nodeId"]],
           children: listChildrenNodeBranchCategory(list[index]['nodeCategory']),
-          actionIcon: StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin ?
+          actionIcon: StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin || StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman ?
             InkWell(
               /*padding: EdgeInsets.all(0.0),
               splashRadius: 1.0,
@@ -484,7 +484,7 @@ class ManageCategoryState extends State<ManageCategory> with SingleTickerProvide
                 size: 24.0,
               ),
              // tooltip: AppLocalizations.of(context).createSubCategory,
-              onTap: StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin ? () {
+              onTap: StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin || StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman ? () {
                 StoreProvider.of<AppState>(context).dispatch(CategoryRequest(list[index]["nodeId"]));
                 StoreProvider.of<AppState>(context).state.categoryTree.numberOfCategories < 50
                     ?
@@ -514,7 +514,7 @@ class ManageCategoryState extends State<ManageCategory> with SingleTickerProvide
         /*icon: Icon(
           expand[list[index]["nodeId"]] ? Icons.folder : Icons.folder_open
         ).icon,*/
-        actionIcon: StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin ?
+        actionIcon: StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin || StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman ?
         InkWell(
           /*padding: EdgeInsets.all(0.0),
           splashRadius: 1.0,
@@ -525,7 +525,7 @@ class ManageCategoryState extends State<ManageCategory> with SingleTickerProvide
             size: 24.0,
           ),
           //tooltip: AppLocalizations.of(context).createSubCategory,
-          onTap: StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin ? () {
+          onTap: StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin || StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman ? () {
             StoreProvider.of<AppState>(context).dispatch(CategoryRequest(list[index]["nodeId"]));
             StoreProvider.of<AppState>(context).state.categoryTree.numberOfCategories < 50
                 ?

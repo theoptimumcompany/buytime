@@ -165,7 +165,7 @@ class _BookingPageState extends State<BookingPage> {
             ? Flexible(
           flex: 1,
           child: FindYourInspirationCardWidget(list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2,
-              list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2, list[0], true, false),
+              list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2, list[0], true, false, [list[0].id]),
         )
             : Container(),
 
@@ -174,7 +174,7 @@ class _BookingPageState extends State<BookingPage> {
             ? Flexible(
           flex: 1,
           child: FindYourInspirationCardWidget(list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2,
-              list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2, list[1], true, false),
+              list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2, list[1], true, false, [list[1].id]),
         )
             : Container(),
 
@@ -183,7 +183,7 @@ class _BookingPageState extends State<BookingPage> {
             ? Flexible(
           flex: 1,
           child: FindYourInspirationCardWidget(list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2,
-              list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2, list[2], true, false),
+              list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2, list[2], true, false, [list[2].id]),
         )
             : Container(),
       ],
@@ -699,7 +699,7 @@ class _BookingPageState extends State<BookingPage> {
                                           ),
                                         ),
                                         ///My bookings & View all
-                                        Column(
+                                        userOrderList.isNotEmpty ? Column(
                                           mainAxisAlignment: MainAxisAlignment.start,
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
@@ -751,7 +751,6 @@ class _BookingPageState extends State<BookingPage> {
                                                     ))
                                               ],
                                             ),
-                                            userOrderList.isNotEmpty ?
                                             ///List
                                             Container(
                                               height: 120,
@@ -783,9 +782,9 @@ class _BookingPageState extends State<BookingPage> {
                                                   ),
                                                 ),
                                               ]),
-                                            ): Container(),
+                                            ),
                                           ],
-                                        )
+                                        ): Container()
                                       ],
                                     ),
                                   ),

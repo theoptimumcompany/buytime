@@ -138,20 +138,20 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
               });
             //print("UI_M_Business => AFTER | Categories length: ${categories.length}");
             tmpCategories.forEach((allC) {
-              //print("UI_M_Business => Category: ${allC.categoryName} | Category services: ${allC.serviceList.length}");
+              print("UI_M_Business => Category: ${allC.categoryName} | Category services: ${allC.serviceList.length}");
               if(allC.categoryAbsolutePath.split('/').first == snapshot.business.id_firestore){
                 internalCategories.forEach((c) {
-                  //print("UI_M_Business => Category: ${c.categoryName} | Category services: ${c.serviceList.length}");
+                  print("UI_M_Business => Category: ${c.categoryName} | Category services: ${c.serviceList.length}");
                   if(allC.categoryAbsolutePath != c.categoryAbsolutePath && allC.categoryAbsolutePath.split('/').contains(c.categoryAbsolutePath.split('/').last)){
-                    //print("UI_M_Business => Main category: ${c.categoryName}");
-                    //print("UI_M_Business => Sub category: ${allC.categoryName}");
-                    //print("UI_M_Business => Sub category service list length: ${allC.serviceList.length}");
-                    //print("UI_M_Business => BEFORE | Main category service list length: ${c.serviceList.length}");
+                    print("UI_M_Business => Main category: ${c.categoryName}");
+                    print("UI_M_Business => Sub category: ${allC.categoryName}");
+                    print("UI_M_Business => Sub category service list length: ${allC.serviceList.length}");
+                    print("UI_M_Business => BEFORE | Main category service list length: ${c.serviceList.length}");
                     allC.serviceList.forEach((s) {
                       if(!c.serviceList.contains(s))
                         c.serviceList.add(s);
                     });
-                    //print("UI_M_Business => AFTER | Main category service list length: ${c.serviceList.length}");
+                    print("UI_M_Business => AFTER | Main category service list length: ${c.serviceList.length}");
                     c.serviceNumberInternal = c.serviceList.length;
                   }
                 });
@@ -159,17 +159,17 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
 
               if(allC.categoryAbsolutePath.split('/').first != snapshot.business.id_firestore){
                 externalCategories.forEach((c) {
-                  //print("UI_M_Business => Category: ${c.categoryName} | Category services: ${c.serviceList.length}");
+                  print("UI_M_Business => Category: ${c.categoryName} | Category services: ${c.serviceList.length}");
                   if(allC.categoryAbsolutePath != c.categoryAbsolutePath && allC.categoryAbsolutePath.split('/').contains(c.categoryAbsolutePath.split('/').last)){
-                    //print("UI_M_Business => Main category: ${c.categoryName}");
-                    //print("UI_M_Business => Sub category: ${allC.categoryName}");
-                    //print("UI_M_Business => Sub category service list length: ${allC.serviceList.length}");
-                    //print("UI_M_Business => BEFORE | Main category service list length: ${c.serviceList.length}");
+                    print("UI_M_Business => Main category: ${c.categoryName}");
+                    print("UI_M_Business => Sub category: ${allC.categoryName}");
+                    print("UI_M_Business => Sub category service list length: ${allC.serviceList.length}");
+                    print("UI_M_Business => BEFORE | Main category service list length: ${c.serviceList.length}");
                     allC.serviceList.forEach((s) {
                       if(!c.serviceList.contains(s))
                         c.serviceList.add(s);
                     });
-                    //print("UI_M_Business => AFTER | Main category service list length: ${c.serviceList.length}");
+                    print("UI_M_Business => AFTER | Main category service list length: ${c.serviceList.length}");
                     c.serviceNumberExternal = c.serviceList.length;
                   }
                 });
@@ -193,6 +193,9 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
             }else{
               tmpInternalCategoriesTable.addAll(internalCategories);
             }
+            tmpInternalCategoriesTable.forEach((element) {
+              debugPrint('UI_M_business => INTERNAL: ${element.categoryName} - ${element.serviceList.length}');
+            });
 
             if(externalCategories.length > 4){
               tmpExternalCategoriesTable.addAll(externalCategories.sublist(0,4));
@@ -205,6 +208,9 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
             }else{
               tmpExternalCategoriesTable.addAll(externalCategories);
             }
+            tmpExternalCategoriesTable.forEach((element) {
+              debugPrint('UI_M_business => EXTERNAL: ${element.categoryName} - ${element.serviceList.length}');
+            });
 
             generated = true;
           }
@@ -241,7 +247,7 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                 ///Title
                 //Utils.barTitle(AppLocalizations.of(context).dashboard),
                 Utils.barTitle('${snapshot.business.name} ${AppLocalizations.of(context).justDashboard}'),
-                Padding(
+                !snapshot.user.manager && !snapshot.user.worker ? Padding(
                     padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
                     child: InkWell(
                       borderRadius: BorderRadius.all(Radius.circular(5.0)),
@@ -276,7 +282,9 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                           ),
                         ),
                       ),
-                    )),
+                    )) :  SizedBox(
+                  width: 50.0,
+                ),
               ],
             ),
             drawer: UI_M_BusinessListDrawer(),

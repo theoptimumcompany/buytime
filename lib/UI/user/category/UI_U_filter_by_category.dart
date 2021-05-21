@@ -28,8 +28,9 @@ class FilterByCategory extends StatefulWidget {
   static String route = '/filterByCategory';
   bool fromBookingPage;
   CategoryState categoryState;
+  List<String> categoryListIds;
   bool tourist;
-  FilterByCategory({Key key, this.fromBookingPage, this.categoryState, this.tourist}) : super(key: key);
+  FilterByCategory({Key key, this.fromBookingPage, this.categoryState, this.tourist, this.categoryListIds}) : super(key: key);
 
   @override
   _FilterByCategoryState createState() => _FilterByCategoryState();
@@ -57,6 +58,8 @@ class _FilterByCategoryState extends State<FilterByCategory> {
 
   List<CategoryState> rowLess1 = [];
   List<CategoryState> rowLess2 = [];
+
+  Map<String, List<String>> categoryListIds = Map();
 
   @override
   void initState() {
@@ -153,6 +156,21 @@ class _FilterByCategoryState extends State<FilterByCategory> {
   }
 
   Widget inspiration(List<CategoryState> list) {
+    List<String> i1 = [];
+    List<String> i2 = [];
+    List<String> i3 = [];
+    for(int i = 0; i< list.length; i++){
+      categoryListIds.forEach((key, value) {
+        if(key == list[i].name){
+          if(i == 0)
+            i1 = value;
+          else if(i == 1)
+            i2 = value;
+          else
+            i3 = value;
+        }
+      });
+    }
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -161,7 +179,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
             ? Flexible(
                 flex: 1,
                 child: FindYourInspirationCardWidget(list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2,
-                    list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2, list[0], false, widget.tourist),
+                    list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2, list[0], false, widget.tourist, i1),
               )
             : Container(),
 
@@ -170,7 +188,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
             ? Flexible(
                 flex: 1,
                 child: FindYourInspirationCardWidget(list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2,
-                    list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2, list[1], false, widget.tourist),
+                    list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2, list[1], false, widget.tourist,  i2),
               )
             : Container(),
 
@@ -179,7 +197,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
             ? Flexible(
                 flex: 1,
                 child: FindYourInspirationCardWidget(list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2,
-                    list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2, list[2], false, widget.tourist),
+                    list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2, list[2], false, widget.tourist,  i3),
               )
             : Container(),
       ],
@@ -204,16 +222,32 @@ class _FilterByCategoryState extends State<FilterByCategory> {
             l.remove(widget.categoryState);
             if (l.isNotEmpty) {
               subCategoryList.clear();
-              grid(l);
               l.forEach((element) {
-                if (element.parent != null && element.parent.id == widget.categoryState.id) {
+                if (element.parent != null && widget.categoryListIds.contains(element.parent.id)) {
                   subCategoryList.add(element);
                 }else{
-                  categoryList.add(element);
-                }
+                  //categoryList.add(element); ///TODO
+                  if(!widget.categoryListIds.contains(element.id)){
+                    bool found = false;
+                    categoryList.forEach((cL) {
+                      if(cL.name.trim() == element.name.trim())
+                        found = true;
+                    });
+
+                    if(!found){
+                      debugPrint('UI_U_filter_by_category => CATEGORY NAME: ${element.name}');
+                      categoryList.add(element);
+                      categoryListIds.putIfAbsent(element.name, () => [element.id]);
+                    }else{
+                      categoryListIds[element.name].add(element.id);
+                    }
+                  }
+                  }
+
               });
             }
           });
+          grid(categoryList);
         });
         /*categoryListState = store.state.categoryList;
         categoryList.addAll(categoryListState.categoryListState);
@@ -223,13 +257,13 @@ class _FilterByCategoryState extends State<FilterByCategory> {
       builder: (context, snapshot) {
         List<ServiceState> s = [];
 
-        if (_searchController.text.isEmpty) {
+        if(_searchController.text.isEmpty) {
           tmpServiceList.clear();
           serviceList.clear();
           s.addAll(snapshot.serviceList.serviceListState);
           s.forEach((element) {
             element.categoryId.forEach((element2) {
-              if (element2 == widget.categoryState.id) {
+              if(widget.categoryListIds != null && widget.categoryListIds.contains(element2)) {
                 tmpServiceList.add(element);
                 serviceList.add(element);
               }
@@ -412,7 +446,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                                 CategoryState category = subCategoryList.elementAt(index);
                                                 return Container(
                                                   margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 2),
-                                                  child: FindYourInspirationCardWidget(SizeConfig.screenWidth / 3 - 2, SizeConfig.screenWidth / 3 - 2, category, false, widget.tourist),
+                                                  child: FindYourInspirationCardWidget(SizeConfig.screenWidth / 3 - 2, SizeConfig.screenWidth / 3 - 2, category, false, widget.tourist, widget.categoryListIds),
                                                 );
                                               },
                                               childCount: subCategoryList.length,

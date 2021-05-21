@@ -680,306 +680,337 @@ class _TouristSessionState extends State<TouristSession> with SingleTickerProvid
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
     SizeConfig().init(context);
-    return WillPopScope(
-      onWillPop: () async => false,
-      child: Scaffold(
-          appBar: BuytimeAppbar(
-            background: BuytimeTheme.BackgroundCerulean,
-            width: media.width,
-            children: [
-              ///Back Button
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
-                    child: IconButton(
-                      icon: const Icon(
-                        Icons.keyboard_arrow_left,
-                        color: BuytimeTheme.SymbolWhite,
-                        size: 25.0,
-                      ),
-                      tooltip: AppLocalizations.of(context).comeBack,
-                      onPressed: () {
-                        //widget.fromConfirm != null ? Navigator.of(context).pop() : Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Landing()),);
-                        Future.delayed(Duration.zero, () {
-                          Navigator.of(context).pop();
-                        });
-                      },
-                    ),
-                  ),
-                ],
-              ),
+    return StoreConnector<AppState, AppState>(
+      converter: (store) => store.state,
+      builder: (context, snapshot) {
+        autoCompleteList = snapshot.autoCompleteListState.autoCompleteListState;
+        debugPrint('UI_U_Login => Auto complete List LENGTH: ${autoCompleteList.length}');
+        return GestureDetector(
+          onTap: () {
+            FocusScopeNode currentFocus = FocusScope.of(context);
 
-              ///Title
-              Container(
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 10.0),
-                  child: Text(
-                    AppLocalizations.of(context).startSession,
-                    textAlign: TextAlign.start,
-                    style: BuytimeTheme.appbarTitle,
+            if (!currentFocus.hasPrimaryFocus) {
+              currentFocus.unfocus();
+            }
+            //Overlay.of(context).insert(overlayEntry);
+            if (overlayEntry != null && isMenuOpen) {
+              overlayEntry.remove();
+              isMenuOpen = !isMenuOpen;
+            }
+          },
+          onPanDown: (d) {
+            FocusScopeNode currentFocus = FocusScope.of(context);
+
+            if (!currentFocus.hasPrimaryFocus) {
+              currentFocus.unfocus();
+            }
+            //Overlay.of(context).insert(overlayEntry);
+            if (overlayEntry != null && isMenuOpen) {
+              overlayEntry.remove();
+              isMenuOpen = !isMenuOpen;
+            }
+          },
+          child: Scaffold(
+            //resizeToAvoidBottomInset: false,
+              appBar: AppBar(
+                leading: IconButton(
+                  icon: Icon(
+                    Icons.keyboard_arrow_left,
+                    color: BuytimeTheme.UserPrimary,
                   ),
+                  onPressed: () {
+                    if (overlayEntry != null && isMenuOpen) {
+                      overlayEntry.remove();
+                      isMenuOpen = !isMenuOpen;
+                    }
+                    Navigator.of(context).pop();
+                  },
                 ),
+                backgroundColor: Colors.white,
+                elevation: 0,
+                brightness: Platform.isIOS ? Brightness.light : Brightness.dark,
               ),
+              body: Form(
+                  key: _formKey,
+                  child: SafeArea(
+                    child: SingleChildScrollView(
+                      child: Container(
+                        height: (SizeConfig.safeBlockVertical * 100) - 56,
+                        child: Column(mainAxisSize: MainAxisSize.min, children: [
+                          ///Logo & Email & Password & & Error message & Log in button
+                          Expanded(
+                            flex: 6,
+                            child: Container(
+                              //height: SizeConfig.safeBlockVertical * 75,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  ///Logo
+                                  Container(
+                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                                      /*boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black54.withOpacity(0.3),
+                                  spreadRadius: 2,
+                                  blurRadius: 6,
+                                  offset: Offset(0, 0), // changes position of shadow
+                                ),
+                              ],*/
+                                    ),
+                                    child: Image.asset(
+                                      'assets/img/brand/logo.png',
+                                      height: 96,
 
-              ///Empty Space
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
-                    child: IconButton(
-                      icon: const Icon(
-                        Icons.keyboard_arrow_left,
-                        color: BuytimeTheme.BackgroundCerulean,
-                        size: 25.0,
-                      ),
-                      onPressed: () {
-                        return;
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          body: Form(
-              key: _formKey,
-              child: SafeArea(
-                child: SingleChildScrollView(
-                  child: Container(
-                    height: (SizeConfig.safeBlockVertical * 100) - 56,
-                    child: Column(mainAxisSize: MainAxisSize.min, children: [
-                      ///Logo & Email & Password & & Error message & Log in button
-                      Expanded(
-                        flex: 8,
-                        child: Container(
-                          //height: SizeConfig.safeBlockVertical * 75,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              ///Email & Password & Error message
-                              Flexible(
-                                flex: 4,
-                                child: Container(
-                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 10, right: SizeConfig.safeBlockHorizontal * 10),
+                                      ///media.height * 0.12
+                                    ),
+                                  ),
 
-                                    ///8% - 8%
-                                    child: Column(
-                                      //mainAxisSize: MainAxisSize.min,
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      children: [
-                                        ///Log in text
-                                        Row(
+                                  ///Email & Password & Error message
+                                  Flexible(
+                                    flex: 3,
+                                    child: Container(
+                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 10, right: SizeConfig.safeBlockHorizontal * 10),
+
+                                        ///8% - 8%
+                                        child: Column(
+                                          //mainAxisSize: MainAxisSize.min,
                                           mainAxisAlignment: MainAxisAlignment.start,
                                           children: [
-                                            Container(
-                                              //width: 328,
-                                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 5),
-                                              child: Text(
-                                                AppLocalizations.of(context).pleaseLogin,
-                                                style: TextStyle(
-                                                  fontFamily: BuytimeTheme.FontFamily,
-                                                  color: BuytimeTheme.TextBlack,
-                                                  fontWeight: FontWeight.w400,
-                                                  fontSize: 16,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
+                                            ///Log in text
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.start,
+                                              children: [
+                                                Container(
+                                                  //width: 328,
+                                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 8),
+                                                  child: Text(
+                                                    AppLocalizations.of(context).pleaseLogin,
+                                                    style: TextStyle(
+                                                      fontFamily: BuytimeTheme.FontFamily,
+                                                      color: BuytimeTheme.TextBlack,
+                                                      fontWeight: FontWeight.w400,
+                                                      fontSize: 16,
 
-                                        ///Email address
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                          children: [
-                                            Flexible(
-                                                child: Container(
-                                              key: _key,
-                                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5),
+                                                      ///SizeConfig.safeBlockHorizontal * 3
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+
+                                            ///Email address
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                              children: [
+                                                Flexible(
+                                                    child: Container(
+                                                      key: _key,
+                                                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5),
+                                                      height: 55,
+
+                                                      ///SizeConfig.safeBlockHorizontal * 14
+                                                      //width: 2,
+                                                      child: TextFormField(
+                                                        //autofillHints: [AutofillHints.username],
+                                                        controller: _emailController,
+                                                        textAlign: TextAlign.start,
+                                                        keyboardType: TextInputType.emailAddress,
+                                                        textInputAction: TextInputAction.next,
+                                                        autofillHints: [AutofillHints.email],
+                                                        decoration: InputDecoration(
+                                                          enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                          focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                          errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                          labelText: AppLocalizations.of(context).emailAddress,
+                                                          //hintText: "email *",
+                                                          //hintStyle: TextStyle(color: Color(0xff666666)),
+                                                          labelStyle: TextStyle(
+                                                            fontFamily: BuytimeTheme.FontFamily,
+                                                            color: Color(0xff666666),
+                                                            fontWeight: FontWeight.w400,
+                                                          ),
+                                                        ),
+                                                        style: TextStyle(
+                                                          fontFamily: BuytimeTheme.FontFamily,
+                                                          color: Color(0xff666666),
+                                                          fontWeight: FontWeight.w800,
+                                                        ),
+                                                        validator: (String value) {
+                                                          setState(() {
+                                                            if (value.isNotEmpty && EmailValidator.validate(value)) {
+                                                              emailHasError = false;
+                                                            } else
+                                                              emailHasError = true;
+                                                          });
+                                                          return null;
+                                                        },
+                                                        onTap: autoCompleteList.isNotEmpty
+                                                            ? () async {
+                                                          if (isMenuOpen) {
+                                                            closeMenu();
+                                                          } else {
+                                                            openMenu();
+                                                          }
+                                                        }
+                                                            : null,
+                                                        onFieldSubmitted: (submit) {
+                                                          if (overlayEntry != null && isMenuOpen) {
+                                                            overlayEntry.remove();
+                                                            isMenuOpen = !isMenuOpen;
+                                                          }
+                                                        },
+                                                      ),
+                                                    )),
+                                                /*Container(
+                                                      //width: 10,
+                                                      //margin: EdgeInsets.only(left: 1),
+                                                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5),
+                                                      child: AutoCompleteMenu(
+                                                        items: autoCompleteList == null ? [] : autoCompleteList,
+                                                        iconColor: BuytimeTheme.TextWhite,
+                                                        backgroundColor: BuytimeTheme.BackgroundWhite,
+                                                        textColor: BuytimeTheme.TextBlack,
+                                                        overlayEntry: overlayEntry,
+                                                        onChange: (index) {
+                                                          print(index);
+                                                          setState(() {
+                                                            //countryNotValid();
+                                                          });
+                                                          _emailController.text = autoCompleteList.elementAt(index).email;
+                                                          _passwordController.text = autoCompleteList.elementAt(index).password;
+                                                        },
+                                                      ),
+                                                    )*/
+                                              ],
+                                            ),
+
+                                            ///Password
+                                            Container(
+                                              margin: EdgeInsets.only(top: SizeConfig.safeBlockHorizontal * 4),
                                               height: 55,
 
                                               ///SizeConfig.safeBlockHorizontal * 14
-                                              //width: 2,
+                                              //width: 328,
                                               child: TextFormField(
-                                                //autofillHints: [AutofillHints.username],
-                                                controller: _emailController,
+                                                controller: _passwordController,
                                                 textAlign: TextAlign.start,
-                                                keyboardType: TextInputType.emailAddress,
-                                                textInputAction: TextInputAction.next,
-                                                autofillHints: [AutofillHints.email],
+                                                obscureText: passwordVisible,
                                                 decoration: InputDecoration(
-                                                  enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                                  focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                                  errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                                  labelText: AppLocalizations.of(context).emailAddress,
-                                                  //hintText: "email *",
-                                                  //hintStyle: TextStyle(color: Color(0xff666666)),
-                                                  labelStyle: TextStyle(
-                                                    fontFamily: BuytimeTheme.FontFamily,
-                                                    color: Color(0xff666666),
-                                                    fontWeight: FontWeight.w400,
-                                                  ),
-                                                ),
+                                                    enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                    focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                    errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                    labelText: AppLocalizations.of(context).password,
+                                                    //hintText: "email *",
+                                                    //hintStyle: TextStyle(color: Color(0xff666666)),
+                                                    labelStyle: TextStyle(
+                                                      fontFamily: BuytimeTheme.FontFamily,
+                                                      color: Color(0xff666666),
+                                                      fontWeight: FontWeight.w400,
+                                                    ),
+                                                    suffixIcon: IconButton(
+                                                      icon: Icon(
+                                                        // Based on passwordVisible state choose the icon
+                                                        passwordVisible ? Icons.visibility : Icons.visibility_off,
+                                                        color: Color(0xff666666),
+                                                      ),
+                                                      onPressed: () {
+                                                        // Update the state i.e. toogle the state of passwordVisible variable
+                                                        setState(() {
+                                                          passwordVisible = !passwordVisible;
+                                                        });
+                                                      },
+                                                    )),
                                                 style: TextStyle(
                                                   fontFamily: BuytimeTheme.FontFamily,
                                                   color: Color(0xff666666),
-                                                  fontWeight: FontWeight.w800,
+                                                  fontWeight: FontWeight.bold,
                                                 ),
                                                 validator: (String value) {
                                                   setState(() {
-                                                    if (value.isNotEmpty && EmailValidator.validate(value)) {
-                                                      emailHasError = false;
+                                                    if (passwordValidator(value)) {
+                                                      passwordHasError = false;
                                                     } else
-                                                      emailHasError = true;
+                                                      passwordHasError = true;
                                                   });
                                                   return null;
                                                 },
-                                                onTap: autoCompleteList.isNotEmpty
-                                                    ? () async {
-                                                        if (isMenuOpen) {
-                                                          closeMenu();
-                                                        } else {
-                                                          openMenu();
-                                                        }
-                                                      }
-                                                    : null,
-                                                onFieldSubmitted: (submit) {
-                                                  if (overlayEntry != null && isMenuOpen) {
-                                                    overlayEntry.remove();
-                                                    isMenuOpen = !isMenuOpen;
-                                                  }
-                                                },
                                               ),
-                                            )),
-                                          ],
-                                        ),
-
-                                        ///Password
-                                        Container(
-                                          margin: EdgeInsets.only(top: SizeConfig.safeBlockHorizontal * 4),
-                                          height: 55,
-
-                                          ///SizeConfig.safeBlockHorizontal * 14
-                                          //width: 328,
-                                          child: TextFormField(
-                                            controller: _passwordController,
-                                            textAlign: TextAlign.start,
-                                            obscureText: passwordVisible,
-                                            decoration: InputDecoration(
-                                                enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                                focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                                errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                                labelText: AppLocalizations.of(context).password,
-                                                //hintText: "email *",
-                                                //hintStyle: TextStyle(color: Color(0xff666666)),
-                                                labelStyle: TextStyle(
-                                                  fontFamily: BuytimeTheme.FontFamily,
-                                                  color: Color(0xff666666),
-                                                  fontWeight: FontWeight.w400,
-                                                ),
-                                                suffixIcon: IconButton(
-                                                  icon: Icon(
-                                                    // Based on passwordVisible state choose the icon
-                                                    passwordVisible ? Icons.visibility : Icons.visibility_off,
-                                                    color: Color(0xff666666),
-                                                  ),
-                                                  onPressed: () {
-                                                    // Update the state i.e. toogle the state of passwordVisible variable
-                                                    setState(() {
-                                                      passwordVisible = !passwordVisible;
-                                                    });
-                                                  },
-                                                )),
-                                            style: TextStyle(
-                                              fontFamily: BuytimeTheme.FontFamily,
-                                              color: Color(0xff666666),
-                                              fontWeight: FontWeight.bold,
                                             ),
-                                            validator: (String value) {
-                                              setState(() {
-                                                if (passwordValidator(value)) {
-                                                  passwordHasError = false;
-                                                } else
-                                                  passwordHasError = true;
-                                              });
-                                              return null;
-                                            },
-                                          ),
-                                        ),
 
-                                        ///Error message
-                                        Flexible(
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.start,
-                                            children: [
-                                              Container(
-                                                width: SizeConfig.safeBlockHorizontal * 80,
-                                                //alignment: Alignment.centerLeft,
-                                                margin: EdgeInsets.only(top: 12.0),
-                                                child: Text(
-                                                  responseMessage,
-                                                  style: TextStyle(
-                                                      color: _success != null
-                                                          ? _success
+                                            ///Error message
+                                            Flexible(
+                                              child: Row(
+                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                children: [
+                                                  Container(
+                                                    width: SizeConfig.safeBlockHorizontal * 80,
+                                                    //alignment: Alignment.centerLeft,
+                                                    margin: EdgeInsets.only(top: 12.0),
+                                                    child: Text(
+                                                      responseMessage,
+                                                      style: TextStyle(
+                                                          color: _success != null
+                                                              ? _success
                                                               ? Colors.greenAccent
                                                               : Colors.redAccent
-                                                          : Colors.redAccent,
-                                                      fontWeight: FontWeight.bold,
-                                                      fontSize: 12),
-                                                ),
+                                                              : Colors.redAccent,
+                                                          fontWeight: FontWeight.bold,
+                                                          fontSize: 12),
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
-                                            ],
-                                          ),
-                                        ),
+                                            ),
 
-                                        ///Remeber Me & Forgot Password
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            ///Forgot Password
-                                            Container(
-                                                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
-                                                //margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 0.5),
-                                                alignment: Alignment.center,
-                                                child: Material(
-                                                  color: Colors.transparent,
-                                                  child: InkWell(
-                                                    onTap: () {
-                                                      Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(builder: (context) => ForgotPassword()),
-                                                      );
-                                                    },
-                                                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                                                    child: Container(
-                                                      //width: 328,
-                                                      width: 139,
-                                                      height: 28,
-                                                      padding: EdgeInsets.only(top: 5.0, bottom: 5.0, right: 5.0),
-                                                      child: FittedBox(
-                                                        child: Text(
-                                                          AppLocalizations.of(context).forgotPassword,
-                                                          style: TextStyle(
-                                                            fontFamily: BuytimeTheme.FontFamily,
-                                                            color: BuytimeTheme.ManagerPrimary,
-                                                            fontWeight: FontWeight.w400,
-                                                            fontSize: 16,
+                                            ///Remeber Me & Forgot Password
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                ///Forgot Password
+                                                Container(
+                                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
+                                                    //margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 0.5),
+                                                    alignment: Alignment.center,
+                                                    child: Material(
+                                                      color: Colors.transparent,
+                                                      child: InkWell(
+                                                        onTap: () {
+                                                          Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(builder: (context) => ForgotPassword()),
+                                                          );
+                                                        },
+                                                        borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                                        child: Container(
+                                                          //width: 328,
+                                                          width: 139,
+                                                          height: 28,
+                                                          padding: EdgeInsets.all(5.0),
+                                                          child: FittedBox(
+                                                            child: Text(
+                                                              AppLocalizations.of(context).forgotPassword,
+                                                              style: TextStyle(
+                                                                fontFamily: BuytimeTheme.FontFamily,
+                                                                color: BuytimeTheme.ManagerPrimary,
+                                                                fontWeight: FontWeight.w400,
+                                                                fontSize: 16,
 
-                                                            ///SizeConfig.safeBlockHorizontal * 3
+                                                                ///SizeConfig.safeBlockHorizontal * 3
+                                                              ),
+                                                            ),
                                                           ),
                                                         ),
                                                       ),
-                                                    ),
-                                                  ),
-                                                )),
+                                                    )),
 
-                                            ///Remeber Me
-                                            /*Container(
+                                                ///Remeber Me
+                                                /*Container(
                                                   margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
                                                   child: Row(
                                                     mainAxisAlignment: MainAxisAlignment.start,
@@ -1018,68 +1049,100 @@ class _TouristSessionState extends State<TouristSession> with SingleTickerProvid
                                                     ],
                                                   ),
                                                 ),*/
-                                          ],
-                                        ),
-                                      ],
-                                    )),
-                              ),
-
-                              ///Log in button
-                              Flexible(
-                                  flex: 1,
-                                  child: Container(
-                                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 2.5, left: SizeConfig.safeBlockHorizontal * 8, right: SizeConfig.safeBlockHorizontal * 8),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.end,
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        children: [
-                                          FloatingActionButton(
-                                            onPressed: () async {
-                                              if (_formKey.currentState.validate() && !_isRequestFlying) {
-                                                _signInWithEmailAndPassword();
-                                              }
-                                            },
-                                            shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(500.0)),
-                                            child: Icon(
-                                              Icons.chevron_right,
-                                              size: 30,
-                                              color: BuytimeTheme.SymbolGrey,
+                                              ],
                                             ),
-                                          )
-                                        ],
-                                      ))),
-                              Container(
-                                padding: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, bottom: SizeConfig.safeBlockVertical * 2),
-                                color: BuytimeTheme.BackgroundWhite,
-                                child: Column(mainAxisAlignment: MainAxisAlignment.center, mainAxisSize: MainAxisSize.min, children: [
-                                  BrandedButtonTourist("assets/img/google_logo.png", AppLocalizations.of(context).logInWithGoogle, initiateGoogleSignIn),
-                                  BrandedButtonTourist("assets/img/apple_logo.png", AppLocalizations.of(context).logInWithApple, initiateAppleSignIn),
-                                  //BrandedButton("assets/img/facebook_logo.png", AppLocalizations.of(context).signFacebook, initiateFacebookSignIn),
-                                ]),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
+                                          ],
+                                        )),
+                                  ),
 
-                      ///Google & Facebook & Apple Sign up buttons
-                      Expanded(
-                        flex: 2,
-                        child: Container(
-                          //height: SizeConfig.safeBlockVertical * 30,
-                          //height: 243, ///285
-                          padding: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, bottom: SizeConfig.safeBlockVertical * 2),
-                          color: BuytimeTheme.BackgroundWhite,
-                          child: Column(mainAxisAlignment: MainAxisAlignment.center, mainAxisSize: MainAxisSize.min, children: [
-                            BrandedButtonTourist("", AppLocalizations.of(context).register, routeToRegisterTourist),
-                            //BrandedButton("assets/img/facebook_logo.png", AppLocalizations.of(context).signFacebook, initiateFacebookSignIn),
-                          ]),
-                        ),
-                      )
-                    ]),
-                  ),
-                ),
-              ))),
+                                  ///Log in button
+                                  Flexible(
+                                      flex: 1,
+                                      child: Container(
+                                          margin: EdgeInsets.only(
+                                              top: SizeConfig.safeBlockVertical * 2.5,
+                                              bottom: SizeConfig.safeBlockVertical * 2.5,
+                                              left: SizeConfig.safeBlockHorizontal * 8,
+                                              right: SizeConfig.safeBlockHorizontal * 8),
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.end,
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            children: [
+                                              FloatingActionButton(
+                                                onPressed: () async {
+                                                  if (_formKey.currentState.validate() && !_isRequestFlying) {
+                                                    _signInWithEmailAndPassword();
+                                                  }
+                                                },
+                                                shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(500.0)),
+                                                child: Icon(
+                                                  Icons.chevron_right,
+                                                  size: 30,
+                                                  color: BuytimeTheme.SymbolGrey,
+                                                ),
+                                              )
+                                            ],
+                                          )))
+                                ],
+                              ),
+                            ),
+                          ),
+                          ///Google & Facebook & Apple Sign up buttons
+                          Expanded(
+                            flex: 2,
+                            child: Container(
+                              //height: SizeConfig.safeBlockVertical * 30,
+                              //height: 243, ///285
+                              padding: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, bottom: SizeConfig.safeBlockVertical * 2),
+                              color: BuytimeTheme.BackgroundCerulean,
+                              child: Column(mainAxisAlignment: MainAxisAlignment.center, mainAxisSize: MainAxisSize.min, children: [
+                                BrandedButton("assets/img/google_logo.png", AppLocalizations.of(context).logInWithGoogle, initiateGoogleSignIn),
+                                BrandedButton("assets/img/apple_logo.png", AppLocalizations.of(context).logInWithApple, initiateAppleSignIn),
+                                Container(
+                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
+                                    //margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 0.5),
+                                    alignment: Alignment.center,
+                                    child: Material(
+                                      color: Colors.transparent,
+                                      child: InkWell(
+                                        onTap: () {
+                                          Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(builder: (context) => TouristSessionRegister()),
+                                          );
+                                        },
+                                        borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                        child: Container(
+                                          //width: 328,
+                                          width: 80,
+                                          height: 28,
+                                          padding: EdgeInsets.all(5.0),
+                                          child: FittedBox(
+                                            child: Text(
+                                              AppLocalizations.of(context).register,
+                                              style: TextStyle(
+                                                fontFamily: BuytimeTheme.FontFamily,
+                                                color: BuytimeTheme.TextWhite,
+                                                fontWeight: FontWeight.w400,
+                                                fontSize: 16,
+
+                                                ///SizeConfig.safeBlockHorizontal * 3
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    )),
+                                //BrandedButton("assets/img/facebook_logo.png", AppLocalizations.of(context).signFacebook, initiateFacebookSignIn),
+                              ]),
+                            ),
+                          )
+                        ]),
+                      ),
+                    ),
+                  ))),
+        );
+      },
     );
   }
 }

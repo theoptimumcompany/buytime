@@ -10,9 +10,10 @@ class FindYourInspirationCardWidget extends StatefulWidget {
   double width;
   double heigth;
   CategoryState categoryState;
+  List<String> categoryListIds;
   bool fromBookingPage;
   bool tourist;
-  FindYourInspirationCardWidget(this.width, this.heigth,this.categoryState, this.fromBookingPage, this.tourist);
+  FindYourInspirationCardWidget(this.width, this.heigth,this.categoryState, this.fromBookingPage, this.tourist, this.categoryListIds);
 
   @override
   _FindYourInspirationCardWidgetState createState() => _FindYourInspirationCardWidgetState();
@@ -51,8 +52,8 @@ class _FindYourInspirationCardWidgetState extends State<FindYourInspirationCardW
             splashColor: Colors.black.withOpacity(.3),
             onTap: (){
               widget.fromBookingPage ?
-              Navigator.push(context, MaterialPageRoute(builder: (context) => FilterByCategory(fromBookingPage: true, categoryState: widget.categoryState, tourist: widget.tourist,))) :
-              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => FilterByCategory(fromBookingPage: false,categoryState: widget.categoryState, tourist: widget.tourist,)));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => FilterByCategory(fromBookingPage: true, categoryState: widget.categoryState, tourist: widget.tourist, categoryListIds: widget.categoryListIds,))) :
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => FilterByCategory(fromBookingPage: false,categoryState: widget.categoryState, tourist: widget.tourist, categoryListIds: widget.categoryListIds,)));
             },
             borderRadius: BorderRadius.all(Radius.circular(10)),
             child: Container(

@@ -1,5 +1,6 @@
 import 'package:Buytime/UI/user/cart/UI_U_ConfirmOrder.dart';
 import 'package:Buytime/UI/user/login/tourist_session/UI_U_tourist_session.dart';
+import 'package:Buytime/UI/user/login/tourist_session/UI_U_tourist_session_register.dart';
 import 'package:Buytime/reblox/model/order/order_entry.dart';
 import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
 import 'package:Buytime/reblox/model/role/role.dart';
@@ -416,7 +417,7 @@ class CartState extends State<Cart> {
                                               if (user == null) {
                                                 Navigator.push(
                                                   context,
-                                                  MaterialPageRoute(builder: (context) => TouristSession()),
+                                                  MaterialPageRoute(builder: (context) => TouristSessionRegister()),
                                                 );
                                               } else {
                                                 Navigator.push(

@@ -161,8 +161,9 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
               label: Text(item.name),
               selected: selectedCategoryList.any((element) => element.id == item.id),
               selectedColor: Theme.of(context).accentColor,
-              labelStyle: TextStyle(color: selectedCategoryList.any((element) => element.id == item.id) ? BuytimeTheme.TextBlack : BuytimeTheme.TextWhite),
-              onSelected: (selected) {
+              labelStyle: TextStyle(
+                  color: !StoreProvider.of<AppState>(context).state.user.worker ? selectedCategoryList.any((element) => element.id == item.id) ? BuytimeTheme.TextBlack : BuytimeTheme.TextWhite : BuytimeTheme.TextBlack),
+              onSelected: !StoreProvider.of<AppState>(context).state.user.worker ? (selected) {
                 setState(() {
                   selectedCategoryList.clear();
                   selectedCategoryList.add(item);
@@ -171,7 +172,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
 
                 ///Aggiorno lo store con la lista di categorie selezionate salvando id e rootId
                 StoreProvider.of<AppState>(context).dispatch(SetServiceSelectedCategories(selectedCategoryList));
-              },
+              } : null,
             ),
           ));
     });
@@ -311,7 +312,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                 Flexible(
                                   child: Utils.barTitle('${AppLocalizations.of(context).editSpace} ${nameController.text}'),
                                 ),
-                                Container(
+                                !snapshot.user.worker ? Container(
                                   child: IconButton(
                                       icon: Icon(Icons.check, color: Colors.white),
                                       onPressed: () {
@@ -342,6 +343,8 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                           StoreProvider.of<AppState>(context).dispatch(UpdateService(tmpService));
                                         }
                                       }),
+                                ) : SizedBox(
+                                  width: 50.0,
                                 ),
                               ],
                             ),
@@ -420,6 +423,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                     //width: SizeConfig.safeBlockHorizontal * 60,
                                                     // decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
                                                       child: TextFormField(
+                                                        enabled: !snapshot.user.worker,
                                                           controller: nameController,
                                                           validator: (value) => value.isEmpty ? AppLocalizations.of(context).serviceNameBlank : null,
                                                           /*onChanged: (value) {
@@ -435,9 +439,14 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                             //StoreProvider.of<AppState>(context).dispatch(SetServiceName(Utils.saveField(myLocale.languageCode, nameController.text, snapshot.serviceState.name)));
                                                             currentFocus.unfocus();
                                                           },
+                                                          style: TextStyle(
+                                                            fontFamily: BuytimeTheme.FontFamily,
+                                                            color: !snapshot.user.worker ? BuytimeTheme.TextBlack : BuytimeTheme.TextGrey
+                                                          ),
                                                           decoration: InputDecoration(
                                                             labelText: AppLocalizations.of(context).name,
                                                             enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                            border: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
                                                             focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
                                                             errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(8.0))),
                                                           ))
@@ -446,9 +455,9 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                 IconButton(
                                                   icon: Icon(
                                                     Icons.g_translate,
-                                                    color: BuytimeTheme.ManagerPrimary,
+                                                    color: !snapshot.user.worker ? BuytimeTheme.ManagerPrimary : BuytimeTheme.TextGrey,
                                                   ),
-                                                  onPressed: (){
+                                                  onPressed: !snapshot.user.worker ? (){
                                                     setState(() {
                                                       rippleTranslate = true;
                                                     });
@@ -465,7 +474,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                             });
                                                           }
                                                     });
-                                                  },
+                                                  } : null,
                                                 )
                                               ],
                                             ),
@@ -481,6 +490,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                     //width: SizeConfig.safeBlockHorizontal * 60,
                                                     // decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
                                                       child: TextFormField(
+                                                          enabled: !snapshot.user.worker,
                                                           keyboardType: TextInputType.multiline,
                                                           maxLines: null,
                                                           controller: descriptionController,
@@ -493,7 +503,10 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                       //_serviceName = value;
                                                       StoreProvider.of<AppState>(context).dispatch(SetServiceDescription(value + '-' + myLocale.languageCode));
                                                     }
-                                                  },*/
+                                                  },*/style: TextStyle(
+                                                          fontFamily: BuytimeTheme.FontFamily,
+                                                          color: !snapshot.user.worker ? BuytimeTheme.TextBlack : BuytimeTheme.TextGrey
+                                                      ),
                                                           onEditingComplete: (){
                                                             StoreProvider.of<AppState>(context).dispatch(SetServiceDescription(Utils.saveField(myLocale.languageCode, descriptionController.text, snapshot.serviceState.description)));
                                                             currentFocus.unfocus();
@@ -501,6 +514,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                           decoration: InputDecoration(
                                                             labelText: AppLocalizations.of(context).description,
                                                             enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                            border: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
                                                             focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
                                                             errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(8.0))),
 
@@ -510,9 +524,9 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                 IconButton(
                                                   icon: Icon(
                                                     Icons.g_translate,
-                                                    color: BuytimeTheme.ManagerPrimary,
+                                                    color: !snapshot.user.worker ? BuytimeTheme.ManagerPrimary : BuytimeTheme.TextGrey,
                                                   ),
-                                                  onPressed: (){
+                                                  onPressed: !snapshot.user.worker ? (){
                                                     setState(() {
                                                       rippleTranslate = true;
                                                     });
@@ -529,7 +543,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                         });
                                                       }
                                                     });
-                                                  },
+                                                  } : null,
                                                 )
                                               ],
                                             ),
@@ -538,7 +552,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                           snapshot.serviceState.switchSlots
                                               ? Container()
                                               : Padding(
-                                            padding: const EdgeInsets.only(bottom: 10.0),
+                                            padding: const EdgeInsets.only(bottom: 0.0,),
                                             child: Center(
                                               child: Container(
                                                 width: media.width * 0.9,
@@ -547,6 +561,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                 child: Padding(
                                                   padding: const EdgeInsets.only(top: 0.0, bottom: 5.0, left: 10.0, right: 10.0),
                                                   child: TextFormField(
+                                                    enabled: !snapshot.user.worker,
                                                     controller: priceController,
                                                     keyboardType: TextInputType.numberWithOptions(signed: true, decimal: true),
                                                     textInputAction: TextInputAction.done,
@@ -611,9 +626,14 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                       }
                                                       StoreProvider.of<AppState>(context).dispatch(SetServicePrice(_servicePrice));
                                                     },
+                                                    style: TextStyle(
+                                                        fontFamily: BuytimeTheme.FontFamily,
+                                                        color: !snapshot.user.worker ? BuytimeTheme.TextBlack : BuytimeTheme.TextGrey
+                                                    ),
                                                     decoration: InputDecoration(
                                                       labelText: AppLocalizations.of(context).price,
                                                       enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                      border: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
                                                       focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
                                                       errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(8.0))),
                                                     ),
@@ -624,7 +644,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                           ),
                                           ///Address
                                           Container(
-                                            margin: EdgeInsets.only(top: 2.0, bottom: 5.0, left: 32.0, right: 28.0),
+                                            margin: EdgeInsets.only(top: 10.0, bottom: 5.0, left: 32.0, right: 28.0),
                                             child: Row(
                                               mainAxisAlignment: MainAxisAlignment.center,
                                               children: [
@@ -665,9 +685,9 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                 IconButton(
                                                   icon: Icon(
                                                     Icons.add_location_rounded,
-                                                    color: BuytimeTheme.ManagerPrimary,
+                                                    color: !snapshot.user.worker ? BuytimeTheme.ManagerPrimary : BuytimeTheme.TextGrey,
                                                   ),
-                                                  onPressed: (){
+                                                  onPressed: !snapshot.user.worker ? (){
                                                     Utils.googleSearch(
                                                         context,
                                                             (place){
@@ -680,7 +700,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                           StoreProvider.of<AppState>(context).dispatch(SetServiceCoordinates(_serviceCoordinates));
                                                         }
                                                     );
-                                                  },
+                                                  } : null,
                                                 )
                                               ],
                                             ),
@@ -772,15 +792,14 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                                 height: 45,
                                                                 width: media.width * 0.55,
                                                                 child: TextFormField(
+                                                                  enabled: !snapshot.user.worker,
                                                                   controller: _tagServiceController,
                                                                   textAlign: TextAlign.start,
                                                                   decoration: InputDecoration(
-                                                                    enabledBorder:
-                                                                    OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                                                    focusedBorder:
-                                                                    OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                                                    errorBorder:
-                                                                    OutlineInputBorder(borderSide: BorderSide(color: BuytimeTheme.ErrorRed), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                                                    enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                                                    border: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                                                    focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                                                    errorBorder: OutlineInputBorder(borderSide: BorderSide(color: BuytimeTheme.ErrorRed), borderRadius: BorderRadius.all(Radius.circular(10.0))),
                                                                     labelText: AppLocalizations.of(context).addNewTag,
                                                                     labelStyle: TextStyle(
                                                                       fontSize: 14,
@@ -805,14 +824,14 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                                     size: 30,
                                                                     color: BuytimeTheme.TextGrey,
                                                                   ),
-                                                                  onPressed: () {
+                                                                  onPressed:!snapshot.user.worker ? () {
                                                                     setState(() {
                                                                       if (_tagServiceController.text.isNotEmpty) {
                                                                         snapshot.serviceState.tag.add(_tagServiceController.text);
                                                                         _tagServiceController.clear();
                                                                       }
                                                                     });
-                                                                  },
+                                                                  } : null,
                                                                 ),
                                                               ),
                                                             ],
@@ -833,11 +852,11 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                                       fontWeight: FontWeight.w500,
                                                                     ),
                                                                   ),
-                                                                  onDeleted: () {
+                                                                  onDeleted: !snapshot.user.worker ?() {
                                                                     setState(() {
                                                                       snapshot.serviceState.tag.remove(snapshot.serviceState.tag[index]);
                                                                     });
-                                                                  },
+                                                                  } : null,
                                                                 );
                                                               }),
                                                             ),
@@ -899,10 +918,11 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                       Switch(
                                                           activeColor: BuytimeTheme.ManagerPrimary,
                                                           value: snapshot.serviceState.switchAutoConfirm,
-                                                          onChanged: (value) {
+                                                          onChanged: !snapshot.user.worker ? (value) {
                                                             setState(() {
                                                               StoreProvider.of<AppState>(context).dispatch(SetServiceSwitchAutoConfirm(value));
                                                             });
+                                                          } : (value) {
                                                           }),
                                                       Expanded(
                                                         child: Text(
@@ -928,11 +948,13 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                   child: Row(
                                                     children: [
                                                       Switch(
+                                                          activeColor: BuytimeTheme.ManagerPrimary,
                                                           value: snapshot.serviceState.switchSlots,
-                                                          onChanged: (value) {
+                                                          onChanged: !snapshot.user.worker ?  (value) {
                                                             setState(() {
                                                               StoreProvider.of<AppState>(context).dispatch(SetServiceSwitchSlots(value));
                                                             });
+                                                          } : (value) {
                                                           }),
                                                       Expanded(
                                                         child: Text(
@@ -1017,7 +1039,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                       Container(
                                                           child: GestureDetector(
                                                             child: Icon(Icons.add, color: BuytimeTheme.SymbolGrey),
-                                                            onTap: () {
+                                                            onTap: !snapshot.user.worker ? () {
                                                               ///Svuoto lo stato dello slot
                                                               StoreProvider.of<AppState>(context).dispatch(SetServiceSlotToEmpty());
                                                               Navigator.push(
@@ -1028,7 +1050,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                                       editSlot: false,
                                                                     )),
                                                               );
-                                                            },
+                                                            } : null,
                                                           )),
                                                     ],
                                                   ),
@@ -1045,7 +1067,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                       itemBuilder: (context, index) {
                                                         return Dismissible(
                                                           key: UniqueKey(),
-                                                          direction: DismissDirection.endToStart,
+                                                          direction: !snapshot.user.worker ? DismissDirection.endToStart : DismissDirection.none,
                                                           background: Container(
                                                             color: Colors.red,
                                                             margin: EdgeInsets.symmetric(horizontal: 0),
@@ -1062,7 +1084,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                             });
                                                           },
                                                           child: GestureDetector(
-                                                            onTap: () {
+                                                            onTap: !snapshot.user.worker ? () {
                                                               StoreProvider.of<AppState>(context).dispatch(SetServiceSlot(snapshot.serviceState.serviceSlot[index]));
                                                               Navigator.push(
                                                                 context,
@@ -1073,7 +1095,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                                       indexSlot: index,
                                                                     )),
                                                               );
-                                                            },
+                                                            } : null,
                                                             child: Padding(
                                                               padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 0.0),
                                                               child: Column(

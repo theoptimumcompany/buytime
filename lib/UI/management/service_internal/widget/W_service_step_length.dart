@@ -41,7 +41,7 @@ class StepLengthState extends State<StepLength> {
       hour = StoreProvider.of<AppState>(context).state.serviceSlot.hour;
       minute = StoreProvider.of<AppState>(context).state.serviceSlot.minute;
       day = StoreProvider.of<AppState>(context).state.serviceSlot.day;
-      maxQuantity = StoreProvider.of<AppState>(context).state.serviceSlot.maxQuantity;
+      maxQuantity = StoreProvider.of<AppState>(context).state.serviceSlot.maxQuantity == 0 ? 1 : StoreProvider.of<AppState>(context).state.serviceSlot.maxQuantity;
       limitBooking = StoreProvider.of<AppState>(context).state.serviceSlot.limitBooking;
       hourController.text = hour.toString();
       minuteController.text = minute.toString();
@@ -182,7 +182,7 @@ class StepLengthState extends State<StepLength> {
   showPickerLimitBookings(BuildContext context) {
     Picker(
         adapter: NumberPickerAdapter(data: [
-          NumberPickerColumn(initValue: limitBooking, begin: 0, end: 999, jump: 1),
+          NumberPickerColumn(initValue: limitBooking, begin: 1, end: 999, jump: 1),
         ]),
         hideHeader: true,
         title: Text(AppLocalizations.of(context).pleaseSelectNumberOfMaxBookings,
@@ -209,7 +209,7 @@ class StepLengthState extends State<StepLength> {
   showPickerMaxQuantity(BuildContext context) {
     Picker(
         adapter: NumberPickerAdapter(data: [
-          NumberPickerColumn(initValue: maxQuantity, begin: 0, end: 60, jump: 1),
+          NumberPickerColumn(initValue: maxQuantity, begin: 1, end: 60, jump: 1),
         ]),
         hideHeader: true,
         title: Text(AppLocalizations.of(context).pleaseSelectNumberOfMaxCapacity,
