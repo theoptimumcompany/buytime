@@ -133,6 +133,14 @@ class SetBusinessAddress {
   String get address => _address;
 }
 
+class AddBusinessArea {
+  String _area;
+
+  AddBusinessArea(this._area);
+
+  String get area => _area;
+}
+
 class SetBusinessMunicipality {
   String _municipality;
 
@@ -199,33 +207,51 @@ class SetBusinessStreetNumber {
 
 class SetBusinessZIP {
   String _ZIP;
-
   SetBusinessZIP(this._ZIP);
-
   String get ZIP => _ZIP;
+}
+
+class SetBusinessZipPostal {
+  String _zipPostal;
+  SetBusinessZipPostal(this._zipPostal);
+  String get zipPostal => _zipPostal;
+}
+class SetBusinessCityTown {
+  String _cityTown;
+  SetBusinessCityTown(this._cityTown);
+  String get cityTown => _cityTown;
+}
+class SetBusinessStateTerritoryProvince {
+  String _stateTerritoryProvince;
+  SetBusinessStateTerritoryProvince(this._stateTerritoryProvince);
+  String get stateTerritoryProvince => _stateTerritoryProvince;
+}
+class SetBusinessAddressOptional {
+  String _addressOptional;
+  SetBusinessAddressOptional(this._addressOptional);
+  String get addressOptional => _addressOptional;
+}
+class SetBusinessCountry {
+  String _country;
+  SetBusinessCountry(this._country);
+  String get country => _country;
 }
 
 class SetBusinessStateProvince {
   String _state_province;
-
   SetBusinessStateProvince(this._state_province);
-
   String get state_province => _state_province;
 }
 
 class SetBusinessNation {
   String _nation;
-
   SetBusinessNation(this._nation);
-
   String get nation => _nation;
 }
 
 class SetBusinessDraft {
   bool _draft;
-
   SetBusinessDraft(this._draft);
-
   bool get draft => _draft;
 }
 
@@ -359,6 +385,26 @@ BusinessState businessReducer(BusinessState state, action) {
     businessState.ZIP = action.ZIP;
     return businessState;
   }
+  if (action is SetBusinessStateTerritoryProvince) {
+    businessState.stateTerritoryProvince = action.stateTerritoryProvince;
+    return businessState;
+  }
+  if (action is SetBusinessZipPostal) {
+    businessState.zipPostal = action.zipPostal;
+    return businessState;
+  }
+  if (action is SetBusinessCityTown) {
+    businessState.cityTown = action.cityTown;
+    return businessState;
+  }
+  if (action is SetBusinessCountry) {
+    businessState.country = action.country;
+    return businessState;
+  }
+  if (action is SetBusinessAddressOptional) {
+    businessState.addressOptional = action.addressOptional;
+    return businessState;
+  }
   if (action is SetBusinessStateProvince) {
     businessState.state_province = action.state_province;
     return businessState;
@@ -426,6 +472,10 @@ BusinessState businessReducer(BusinessState state, action) {
   }
   if (action is SetBusinessSalesman) {
     businessState.salesman = action.salesman;
+    return businessState;
+  }
+  if (action is AddBusinessArea) {
+    businessState.area.add(action.area);
     return businessState;
   }
   if (action is SetBusinessOwner) {

@@ -531,6 +531,10 @@
   "holdingError": "Hi ha hagut un problema amb la seva targeta; si us plau intenta amb un altre mitjà de pagament",
   "exploreNetwork": "Explora la xarxa",
   "startSession": "Iniciar sessió",
+  "country": "Country",
+  "cityTown": "City / Town",
+  "stateTerritoryProvince": "State / Territory / Province",
+  "zipPostal": "Zip code / Postal code",
   "numberOfPeople": "Number of people",
   "spot": "spot left"
 }

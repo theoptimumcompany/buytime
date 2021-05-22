@@ -1,4 +1,6 @@
 import 'package:Buytime/reblox/model/app_state.dart';
+import 'package:Buytime/reblox/model/area/area_list_state.dart';
+import 'package:Buytime/reblox/model/area/area_state.dart';
 import 'package:Buytime/reblox/model/autoComplete/auto_complete_list_state.dart';
 import 'package:Buytime/reblox/model/autoComplete/auto_complete_state.dart';
 import 'package:Buytime/reblox/model/business/business_list_state.dart';
@@ -37,6 +39,8 @@ import 'package:Buytime/reblox/model/statistics_state.dart';
 import 'package:Buytime/reblox/model/stripe/stripe_state.dart';
 import 'package:Buytime/reblox/model/user/user_state.dart';
 import 'package:Buytime/reblox/navigation/navigation_reducer.dart';
+import 'package:Buytime/reblox/reducer/area_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/area_reducer.dart';
 import 'package:Buytime/reblox/reducer/auto_complete_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/auto_complete_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_invite_reducer.dart';
@@ -87,6 +91,8 @@ class ErrorReset {}
 
 AppState appReducer(AppState state, dynamic action) {
   BusinessState businessState = businessReducer(state.business, action);
+  AreaState areaState = areaReducer(state.area, action);
+  AreaListState areaListState = areaListReducer(state.areaList, action);
   ExternalBusinessState externalBusinessState = externalBusinessReducer(state.externalBusiness, action);
   BookingState bookingState = bookingReducer(state.booking, action);
   OrderState orderState = orderReducer(state.order, action);
@@ -129,6 +135,8 @@ AppState appReducer(AppState state, dynamic action) {
   AppState newState = AppState.copyWith(
       //route: navigationReducer(state.route, action),
       business: businessState,
+      area: areaState,
+      areaList: areaListState,
       externalBusiness: externalBusinessState,
       booking: bookingState,
       order: orderState,

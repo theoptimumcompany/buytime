@@ -1,3 +1,4 @@
+import 'package:Buytime/reblox/model/area/area_state.dart';
 import 'package:Buytime/reblox/model/autoComplete/auto_complete_list_state.dart';
 import 'package:Buytime/reblox/model/autoComplete/auto_complete_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_list_state.dart';
@@ -40,6 +41,7 @@ import 'package:Buytime/reblox/model/statistics_state.dart';
 import 'package:Buytime/reblox/model/stripe/stripe_state.dart';
 import 'package:Buytime/reblox/model/user/user_state.dart';
 import 'package:flutter/foundation.dart';
+import 'area/area_list_state.dart';
 import 'category/tree/category_tree_state.dart';
 import 'order/order_detail_state.dart';
 
@@ -66,6 +68,8 @@ class AppRoutes {
 }
 
 class AppState {
+  AreaState area;
+  AreaListState areaList;
   BusinessState business;
   ExternalBusinessState externalBusiness;
   BookingState booking;
@@ -114,6 +118,8 @@ class AppState {
   SlotListSnippetState slotSnippetListState;
 
   AppState({
+    @required this.area,
+    @required this.areaList,
     @required this.business,
     @required this.externalBusiness,
     @required this.booking,
@@ -163,6 +169,8 @@ class AppState {
   });
 
   AppState.initialState() {
+    area = AreaState();
+    areaList = AreaListState();
     business = BusinessState();
     externalBusiness = ExternalBusinessState();
     booking = BookingState();
@@ -212,6 +220,8 @@ class AppState {
   }
 
   AppState.copyWith({
+      AreaState area,
+      AreaListState areaList,
       BusinessState business,
       ExternalBusinessState externalBusiness,
       BookingState booking,
@@ -260,6 +270,8 @@ class AppState {
     String previousError
       }) {
     this.business = business;
+    this.area = area;
+    this.areaList = areaList;
     this.externalBusiness = externalBusiness;
     this.booking = booking;
     this.order = order;

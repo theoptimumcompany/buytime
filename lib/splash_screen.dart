@@ -9,6 +9,7 @@ import 'package:Buytime/reblox/model/card/card_state.dart';
 import 'package:Buytime/reblox/model/snippet/device.dart';
 import 'package:Buytime/reblox/model/snippet/token.dart';
 import 'package:Buytime/reblox/model/statistics_state.dart';
+import 'package:Buytime/reblox/reducer/area_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/auto_complete_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/notification_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_list_reducer.dart';
@@ -90,6 +91,8 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
       if (!kIsWeb) {
         //TODO: TEST Funzionamento notifiche dopo upgrade pacchetto firebase_messaging
         firebaseMessaging.requestPermission();
+        StoreProvider.of<AppState>(context)..dispatch(AreaListRequest());
+
         FirebaseMessaging.onMessage.first.then((message) => () {
               print("onMessage: $message");
               var data = message.data['data'] ?? message;

@@ -531,6 +531,10 @@
   "holdingError": "There was a problem with your card, please try again with another payment method",
   "exploreNetwork": "Explore The Network",
   "startSession": "Start Session",
+  "country": "Country",
+  "cityTown": "City / Town",
+  "stateTerritoryProvince": "State / Territory / Province",
+  "zipPostal": "Zip code / Postal code",
   "numberOfPeople": "Number of people",
   "spot": "spot left"
 }

@@ -2,6 +2,7 @@ import 'package:Buytime/UI/management/service_internal/UI_M_service_list.dart';
 import 'package:Buytime/UI/management/service_internal/UI_M_service_slot.dart';
 import 'package:Buytime/UI/management/service_internal/widget/W_service_photo.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
+import 'package:Buytime/reblox/model/area/area_list_state.dart';
 import 'package:Buytime/reblox/model/category/tree/category_tree_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/model/snippet/parent.dart';
@@ -284,6 +285,10 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                 addressController.text = _serviceBusinessAddress;
             }
 
+            if (_serviceCoordinates == null || _serviceCoordinates.isEmpty) {
+              _serviceCoordinates = snapshot.business.coordinate;
+            }
+
 
             return GestureDetector(
               onTap: (){
@@ -340,6 +345,25 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                           debugPrint('UI_M_create_service => Service Business Address: ${tmpService.serviceBusinessAddress}');
                                           debugPrint('UI_M_create_service => Service Coordinates: ${tmpService.serviceCoordinates}');
                                           debugPrint('UI_M_create_service => Service Business Coordinates: ${tmpService.serviceBusinessCoordinates}');
+                                          /// set the area of the service
+                                          if (_serviceCoordinates != null && _serviceCoordinates.isNotEmpty) {
+                                            AreaListState areaListState = StoreProvider.of<AppState>(context).state.areaList;
+                                            if (areaListState != null && areaListState.areaList != null) {
+                                              for(int ij = 0; ij < areaListState.areaList.length; ij++) {
+                                                var distance = Utils.calculateDistanceBetweenPoints(areaListState.areaList[ij].coordinates, _serviceCoordinates);
+                                                debugPrint('UI_M_edit_service: area distance ' + distance.toString());
+                                                if (distance != null && distance < 100) {
+                                                  setState(() {
+                                                    if(areaListState.areaList[ij].areaId.isNotEmpty) {
+                                                       snapshot.serviceState.tag.add(areaListState.areaList[ij].areaId);
+                                                    }
+                                                  });
+                                                }
+                                              }
+                                            }
+                                          }
+
+
                                           StoreProvider.of<AppState>(context).dispatch(UpdateService(tmpService));
                                         }
                                       }),

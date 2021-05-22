@@ -122,10 +122,17 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
   ///Address Details
   TextEditingController _streetController = TextEditingController();
   TextEditingController _streetNumberController = TextEditingController();
-  TextEditingController _zipController = TextEditingController();
-  TextEditingController _municipalityController = TextEditingController();
-  TextEditingController _stateController = TextEditingController();
-  TextEditingController _nationController = TextEditingController();
+  // TextEditingController _zipController = TextEditingController();
+  // TextEditingController _municipalityController = TextEditingController();
+  // TextEditingController _stateController = TextEditingController();
+  // TextEditingController _nationController = TextEditingController();
+
+  TextEditingController _addressOptionalController = TextEditingController();
+  TextEditingController _zipPostalController = TextEditingController();
+  TextEditingController _cityTownController = TextEditingController();
+  TextEditingController _stateTerritoryProvinceController = TextEditingController();
+  TextEditingController _countryController = TextEditingController();
+
   TextEditingController _coordinateController = TextEditingController();
   ///Company Information
   TextEditingController _areaController = TextEditingController();
@@ -595,30 +602,30 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                                                   _coordinateController.text = '${place[1]}, ${place[2]}';
                                                                                   _streetController.clear();
                                                                                   _streetNumberController.clear();
-                                                                                  _zipController.clear();
-                                                                                  _municipalityController.clear();
-                                                                                  _stateController.clear();
-                                                                                  _nationController.clear();
+                                                                                  _zipPostalController.clear();
+                                                                                  _cityTownController.clear();
+                                                                                  _stateTerritoryProvinceController.clear();
+                                                                                  _countryController.clear();
                                                                                   place[3].forEach((element) {
                                                                                     if(element[0].contains('route') || element[0].contains('natural_feature') || element[0].contains('establishment'))
                                                                                       _streetController.text = element[1];
                                                                                     if(element[0].contains('street_number'))
                                                                                       _streetNumberController.text = element[1];
                                                                                     if(element[0].contains('postal_code'))
-                                                                                      _zipController.text = element[1];
+                                                                                      _zipPostalController.text = element[1];
                                                                                     if(element[0].contains('administrative_area_level_2') || element[0].contains('administrative_area_level_3'))
-                                                                                      _municipalityController.text = element[2];
+                                                                                      _cityTownController.text = element[2];
                                                                                     if(element[0].contains('administrative_area_level_1'))
-                                                                                      _stateController.text = element[1];
+                                                                                      _stateTerritoryProvinceController.text = element[1];
                                                                                     if(element[0].contains('country'))
-                                                                                      _nationController.text = element[2];
+                                                                                      _countryController.text = element[2];
                                                                                   });
                                                                                   StoreProvider.of<AppState>(context).dispatch(SetBusinessStreet(_streetController.text));
                                                                                   StoreProvider.of<AppState>(context).dispatch(SetBusinessStreetNumber(_streetNumberController.text));
-                                                                                  StoreProvider.of<AppState>(context).dispatch(SetBusinessZIP(_zipController.text));
-                                                                                  StoreProvider.of<AppState>(context).dispatch(SetBusinessMunicipality(_municipalityController.text));
-                                                                                  StoreProvider.of<AppState>(context).dispatch(SetBusinessStateProvince(_stateController.text));
-                                                                                  StoreProvider.of<AppState>(context).dispatch(SetBusinessNation(_nationController.text));
+                                                                                  StoreProvider.of<AppState>(context).dispatch(SetBusinessZipPostal(_zipPostalController.text));
+                                                                                  StoreProvider.of<AppState>(context).dispatch(SetBusinessCityTown(_cityTownController.text));
+                                                                                  StoreProvider.of<AppState>(context).dispatch(SetBusinessStateTerritoryProvince(_stateTerritoryProvinceController.text));
+                                                                                  StoreProvider.of<AppState>(context).dispatch(SetBusinessCountry(_countryController.text));
                                                                                   StoreProvider.of<AppState>(context).dispatch(SetBusinessCoordinate(_coordinateController.text));
                                                                                 }
                                                                             );
@@ -694,62 +701,58 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                                 ),
                                                                 ///Zip
                                                                 OptimumFormField(
-                                                                  controller: _zipController,
-                                                                  field: "zip",
+                                                                  controller: _zipPostalController,
+                                                                  field: "zipPostal",
                                                                   textInputType: TextInputType.number,
                                                                   minLength: 3,
                                                                   label: AppLocalizations.of(context).zip,
                                                                   globalFieldKey: _formKeyZipField,
-                                                                  validateEmail: true,
                                                                   typeOfValidate: "number",
                                                                   //initialFieldValue: snapshot.ZIP,
                                                                   onSaveOrChangedCallback: (value) {
-                                                                    StoreProvider.of<AppState>(context).dispatch(SetBusinessZIP(value));
+                                                                    StoreProvider.of<AppState>(context).dispatch(SetBusinessZipPostal(value));
                                                                   },
                                                                 ),
                                                                 ///Municipality
                                                                 OptimumFormField(
-                                                                  controller: _municipalityController,
-                                                                  field: "municipality",
+                                                                  controller: _cityTownController,
+                                                                  field: "cityTown",
                                                                   textInputType: TextInputType.text,
                                                                   minLength: 3,
-                                                                  label: AppLocalizations.of(context).municipality,
+                                                                  label: AppLocalizations.of(context).cityTown,
                                                                   globalFieldKey: _formKeyMunicipalityField,
-                                                                  validateEmail: true,
                                                                   typeOfValidate: "name",
                                                                   //initialFieldValue: snapshot.municipality,
                                                                   onSaveOrChangedCallback: (value) {
-                                                                    StoreProvider.of<AppState>(context).dispatch(SetBusinessMunicipality(value));
+                                                                    StoreProvider.of<AppState>(context).dispatch(SetBusinessCityTown(value));
                                                                   },
                                                                 ),
                                                                 ///State
                                                                 OptimumFormField(
-                                                                  controller: _stateController,
-                                                                  field: "state",
+                                                                  controller: _stateTerritoryProvinceController,
+                                                                  field: "stateTerritoryProvince",
                                                                   textInputType: TextInputType.text,
-                                                                  minLength: 2,
-                                                                  label: AppLocalizations.of(context).state,
+                                                                  minLength: 3,
+                                                                  label: AppLocalizations.of(context).stateTerritoryProvince,
                                                                   globalFieldKey: _formKeyStateField,
-                                                                  validateEmail: true,
                                                                   typeOfValidate: "name",
                                                                   //initialFieldValue: snapshot.state_province,
                                                                   onSaveOrChangedCallback: (value) {
-                                                                    StoreProvider.of<AppState>(context).dispatch(SetBusinessStateProvince(value));
+                                                                    StoreProvider.of<AppState>(context).dispatch(SetBusinessStateTerritoryProvince(value));
                                                                   },
                                                                 ),
                                                                 ///Nation
                                                                 OptimumFormField(
-                                                                  controller: _nationController,
-                                                                  field: "nation",
+                                                                  controller: _countryController,
+                                                                  field: "country",
                                                                   textInputType: TextInputType.text,
                                                                   minLength: 3,
-                                                                  label: AppLocalizations.of(context).nation,
+                                                                  label: AppLocalizations.of(context).country,
                                                                   globalFieldKey: _formKeyNationField,
-                                                                  validateEmail: true,
                                                                   typeOfValidate: "name",
                                                                   //initialFieldValue: snapshot.nation,
                                                                   onSaveOrChangedCallback: (value) {
-                                                                    StoreProvider.of<AppState>(context).dispatch(SetBusinessNation(value));
+                                                                    StoreProvider.of<AppState>(context).dispatch(SetBusinessCountry(value));
                                                                   },
                                                                 ),
                                                               ],

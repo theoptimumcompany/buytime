@@ -15,6 +15,8 @@ import 'package:Buytime/UI/user/login/UI_U_registration.dart';
 import 'package:Buytime/UI/user/booking/RUI_U_order_detail.dart';
 import 'package:Buytime/UI/user/service/UI_U_service_details.dart';
 import 'package:Buytime/UI/user/turist/UI_U_service_explorer.dart';
+import 'package:Buytime/reblox/model/area/area_list_state.dart';
+import 'package:Buytime/reblox/model/area/area_state.dart';
 import 'package:Buytime/reblox/model/autoComplete/auto_complete_list_state.dart';
 import 'package:Buytime/reblox/model/autoComplete/auto_complete_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_list_state.dart';
@@ -43,6 +45,7 @@ import 'package:Buytime/reblox/model/slot/slot_list_snippet_state.dart';
 import 'package:Buytime/reblox/model/snippet/service_list_snippet_list_state.dart';
 import 'package:Buytime/reblox/model/snippet/service_list_snippet_state.dart';
 import 'package:Buytime/reblox/model/statistics_state.dart';
+import 'package:Buytime/services/area_service_epic.dart';
 import 'package:Buytime/services/category_invite_service_epic.dart';
 import 'package:Buytime/services/email_service_epic.dart';
 import 'package:Buytime/services/external_business_imported_service_epic.dart';
@@ -97,6 +100,7 @@ void main(){
     BusinessRequestService(),
     BusinessRequestAndNavigateService(),
     BusinessUpdateService(),
+    AreaListRequestService(),
     BusinessCreateService(),
     BusinessListRequestService(),
     ExternalBusinessAndNavigateRequestService(),
@@ -198,6 +202,8 @@ void main(){
     categoryInvite: CategoryInviteState().toEmpty(),
     categoryTree: CategoryTree().toEmpty(),
     business: BusinessState().toEmpty(),
+    area: AreaState().toEmpty(),
+    areaList: AreaListState().toEmpty(),
     externalBusiness: ExternalBusinessState().toEmpty(),
     booking: BookingState().toEmpty(),
     order: OrderState().toEmpty(),

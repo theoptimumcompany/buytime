@@ -19,6 +19,18 @@ class ExternalBusinessState {
   String ZIP;
   String state_province;
   String nation;
+  @JsonKey(defaultValue: '')
+  String country;
+  @JsonKey(defaultValue: '')
+  String address;
+  @JsonKey(defaultValue: '')
+  String addressOptional;
+  @JsonKey(defaultValue: '')
+  String cityTown;
+  @JsonKey(defaultValue: '')
+  String stateTerritoryProvince;
+  @JsonKey(defaultValue: '')
+  String zipPostal;
   String coordinate;
   String profile;
   List<String> gallery;
@@ -56,6 +68,12 @@ class ExternalBusinessState {
     @required this.ZIP,
     @required this.state_province,
     @required this.nation,
+    @required this.country,
+    @required this.address,
+    @required this.addressOptional,
+    @required this.cityTown,
+    @required this.stateTerritoryProvince,
+    @required this.zipPostal,
     @required this.coordinate,
     @required this.profile,
     @required this.gallery,
@@ -92,6 +110,12 @@ class ExternalBusinessState {
       ZIP: "",
       state_province: "",
       nation: "",
+        country: "",
+        address: "",
+      addressOptional: "",
+        cityTown: "",
+        stateTerritoryProvince: "",
+        zipPostal: "",
       coordinate: "",
       municipality: "",
       profile: "",
@@ -130,6 +154,12 @@ class ExternalBusinessState {
     this.ZIP = state.ZIP;
     this.state_province = state.state_province;
     this.nation = state.nation;
+    this.country = state.country;
+    this.address = state.address;
+    this.addressOptional = state.addressOptional;
+    this.cityTown = state.cityTown;
+    this.stateTerritoryProvince = state.stateTerritoryProvince;
+    this.zipPostal = state.zipPostal;
     this.coordinate = state.coordinate;
     this.profile = state.profile;
     this.gallery = state.gallery;
@@ -166,6 +196,12 @@ class ExternalBusinessState {
     String ZIP,
     String state_province,
     String nation,
+    String country,
+    String address,
+    String addressOptional,
+    String cityTown,
+    String stateTerritoryProvince,
+    String zipPostal,
     String coordinate,
     String profile,
     List<String> gallery,
@@ -201,6 +237,12 @@ class ExternalBusinessState {
       ZIP: ZIP ?? this.ZIP,
       state_province: state_province ?? this.state_province,
       nation: nation ?? this.nation,
+        country: country ?? this.country,
+        address: address ?? this.address,
+      addressOptional: addressOptional ?? this.addressOptional,
+        cityTown: cityTown ?? this.cityTown,
+        stateTerritoryProvince: stateTerritoryProvince ?? this.stateTerritoryProvince,
+        zipPostal: zipPostal ?? this.zipPostal,
       coordinate: coordinate ?? this.coordinate,
       profile: profile ?? this.profile,
       gallery: gallery ?? this.gallery,
