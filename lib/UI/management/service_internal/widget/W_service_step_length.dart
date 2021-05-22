@@ -199,8 +199,8 @@ class StepLengthState extends State<StepLength> {
         },
         onConfirm: (Picker picker, List value) {
           setState(() {
-            limitBookingController.text = value[0].toString();
-            limitBooking = value[0];
+            limitBookingController.text = (value[0] + 1).toString();
+            limitBooking = (value[0] + 1);
             StoreProvider.of<AppState>(context).dispatch(SetServiceSlotLimitBooking(limitBooking));
           });
         }).showDialog(context);
@@ -226,8 +226,8 @@ class StepLengthState extends State<StepLength> {
         },
         onConfirm: (Picker picker, List value) {
           setState(() {
-            maxController.text = value[0].toString();
-            maxQuantity = value[0];
+            maxController.text = (value[0] + 1).toString();
+            maxQuantity = (value[0] + 1);
             StoreProvider.of<AppState>(context).dispatch(SetServiceSlotMaxQuantity(maxQuantity));
           });
         }).showDialog(context);
