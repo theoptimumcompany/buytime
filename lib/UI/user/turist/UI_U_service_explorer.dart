@@ -2,46 +2,29 @@ import 'package:Buytime/UI/user/booking/UI_U_all_bookings.dart';
 import 'package:Buytime/UI/user/booking/UI_U_notifications.dart';
 import 'package:Buytime/UI/user/booking/widget/user_service_card_widget.dart';
 import 'package:Buytime/UI/user/cart/UI_U_cart.dart';
-import 'package:Buytime/UI/user/login/UI_U_home.dart';
 import 'package:Buytime/UI/user/turist/widget/discover_card_widget.dart';
 import 'package:Buytime/UI/user/turist/widget/p_r_card_widget.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
+import 'package:Buytime/reblox/model/area/area_list_state.dart';
 import 'package:Buytime/reblox/model/category/category_state.dart';
 import 'package:Buytime/reblox/model/notification/notification_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
-import 'package:Buytime/reblox/reducer/booking_list_reducer.dart';
-import 'package:Buytime/reblox/reducer/booking_reducer.dart';
-import 'package:Buytime/reblox/reducer/business_list_reducer.dart';
-import 'package:Buytime/reblox/reducer/business_reducer.dart';
+import 'package:Buytime/reblox/reducer/area_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_list_reducer.dart';
-import 'package:Buytime/reblox/reducer/category_reducer.dart';
-import 'package:Buytime/reblox/reducer/category_tree_reducer.dart';
 import 'package:Buytime/reblox/reducer/notification_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
-import 'package:Buytime/reblox/reducer/pipeline_list_reducer.dart';
-import 'package:Buytime/reblox/reducer/pipeline_reducer.dart';
-import 'package:Buytime/reblox/reducer/service/service_list_reducer.dart';
-import 'package:Buytime/reblox/reducer/service/service_reducer.dart';
-import 'package:Buytime/reblox/reducer/service/service_slot_time_reducer.dart';
-import 'package:Buytime/reblox/reducer/stripe_payment_reducer.dart';
-import 'package:Buytime/reblox/reducer/user_reducer.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
 import 'package:Buytime/reusable/booking_page_service_list_item.dart';
 import 'package:Buytime/reusable/buytime_icons.dart';
-import 'package:Buytime/reusable/custom_bottom_button_widget.dart';
-import 'package:Buytime/reusable/material_design_icons.dart';
-import 'package:Buytime/reusable/menu/UI_M_business_list_drawer.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/utils/utils.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:location/location.dart' as loc;
 
 class ServiceExplorer extends StatefulWidget {
@@ -200,6 +183,7 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
   double distanceFromBusiness;
   double distanceFromCurrentPosition;
   bool gettingLocation = true;
+  
 
   _getCurrentLocation() {
     Geolocator
@@ -211,6 +195,8 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
         currentLat = _currentPosition.latitude;
         currentLng = _currentPosition.longitude;
       });
+      /// set current area in the store
+      StoreProvider.of<AppState>(context).dispatch(SetArea(AreaListState().getCurrentArea('$currentLat, $currentLng')));
     }).catchError((e) {
       print(e);
     });
