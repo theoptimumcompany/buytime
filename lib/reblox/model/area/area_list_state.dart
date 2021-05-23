@@ -36,21 +36,7 @@ class AreaListState {
     );
   }
 
-  getCurrentArea(String userCoordinate) {
-    AreaState areaFound;
-    if (userCoordinate != null && userCoordinate.isNotEmpty && userCoordinate != null && userCoordinate.isNotEmpty) {
-      if (areaList != null) {
-        for(int ij = 0; ij < areaList.length; ij++) {
-          var distance = Utils.calculateDistanceBetweenPoints(areaList[ij].coordinates, userCoordinate);
-          debugPrint('UI_M_edit_business: area distance ' + distance.toString());
-          if (distance != null && distance < 100) {
-            areaFound = areaList[ij];
-          }
-        }
-      }
-    }
-    return areaFound;
-  }
+
 
   factory AreaListState.fromJson(Map<String, dynamic> json) => _$AreaListStateFromJson(json);
   Map<String, dynamic> toJson() => _$AreaListStateToJson(this);

@@ -185,21 +185,17 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
   bool gettingLocation = true;
   
 
-  _getCurrentLocation() {
-    Geolocator
-        .getCurrentPosition(desiredAccuracy: LocationAccuracy.best, forceAndroidLocationManager: true)
-        .then((Position position) {
-      setState(() {
-        _currentPosition = position;
-        debugPrint('UI_U_order_details => FROM GEOLOCATOR: $_currentPosition');
-        currentLat = _currentPosition.latitude;
-        currentLng = _currentPosition.longitude;
-      });
-      /// set current area in the store
-      StoreProvider.of<AppState>(context).dispatch(SetArea(AreaListState().getCurrentArea('$currentLat, $currentLng')));
-    }).catchError((e) {
-      print(e);
+  _getCurrentLocation() async{
+    Position position  = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best, forceAndroidLocationManager: true);
+    setState(() {
+      _currentPosition = position;
+      debugPrint('UI_U_order_details => FROM GEOLOCATOR: $_currentPosition');
+      currentLat = _currentPosition.latitude;
+      currentLng = _currentPosition.longitude;
     });
+      /// set current area in the store
+    AreaListState areaListState = StoreProvider.of<AppState>(context).state.areaList;
+    StoreProvider.of<AppState>(context).dispatch(SetArea(Utils.getCurrentArea('$currentLat, $currentLng', areaListState)));
   }
 
   _getLocation() async{
@@ -239,7 +235,7 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
         distanceFromCurrentPosition = 0.0;
       });
     }
-    _getCurrentLocation();
+    await _getCurrentLocation();
   }
 
   @override
@@ -248,15 +244,16 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
     SizeConfig().init(context);
     return StoreConnector<AppState, AppState>(
       converter: (store) => store.state,
-      onInit: (store) {
+      onInit: (store) async {
         store.state.categoryList.categoryListState.clear();
         store.state.serviceList.serviceListState.clear();
+        await _getLocation();
+
         store.dispatch(AllRequestListCategory());
         store.dispatch(UserOrderListRequest());
         store.state.notificationListState.notificationListState.clear();
         store.dispatch(RequestNotificationList(store.state.user.uid, store.state.business.id_firestore));
         startRequest = true;
-        _getLocation();
       },
       builder: (context, snapshot) {
         if(_searchController.text.isEmpty){
