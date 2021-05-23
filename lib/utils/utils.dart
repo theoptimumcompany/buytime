@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:Buytime/reblox/enum/order_time_intervals.dart';
+import 'package:Buytime/reblox/model/area/area_list_state.dart';
+import 'package:Buytime/reblox/model/area/area_state.dart';
 import 'package:Buytime/reblox/model/notification/id_state.dart';
 import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
@@ -760,6 +762,21 @@ class Utils {
     return tmp;
   }
 
+  static AreaState getCurrentArea(String userCoordinate, AreaListState areaListState) {
+    AreaState areaFound = AreaState().toEmpty();
+    if (userCoordinate != null && userCoordinate.isNotEmpty) {
+      if (areaListState != null && areaListState.areaList != null) {
+        for(int ij = 0; ij < areaListState.areaList.length; ij++) {
+          var distance = Utils.calculateDistanceBetweenPoints(areaListState.areaList[ij].coordinates, userCoordinate);
+          debugPrint('UI_M_edit_business: area distance ' + distance.toString());
+          if (distance != null && distance < 100) {
+            areaFound = areaListState.areaList[ij];
+          }
+        }
+      }
+    }
+    return areaFound;
+  }
 
 }
 

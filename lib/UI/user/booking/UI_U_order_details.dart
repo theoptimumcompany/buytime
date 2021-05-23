@@ -3,8 +3,10 @@ import 'dart:io';
 import 'dart:math';
 import 'package:Buytime/UI/user/cart/UI_U_cart.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
+import 'package:Buytime/reblox/model/area/area_list_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
+import 'package:Buytime/reblox/reducer/area_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
 import 'package:Buytime/reusable/buytime_icons.dart';
@@ -136,6 +138,8 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
         currentLat = _currentPosition.latitude;
         currentLng = _currentPosition.longitude;
       });
+      AreaListState areaListState = StoreProvider.of<AppState>(context).state.areaList;
+      StoreProvider.of<AppState>(context).dispatch(SetArea(Utils.getCurrentArea('$currentLat, $currentLng', areaListState)));
     }).catchError((e) {
       print(e);
     });

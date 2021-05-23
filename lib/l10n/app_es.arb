@@ -536,5 +536,6 @@
   "stateTerritoryProvince": "State / Territory / Province",
   "zipPostal": "Zip code / Postal code",
   "numberOfPeople": "Número de personas",
+  "problemsGettingYourPosition": "There are some problems in getting your position, try again later",
   "spot": "sitios disponibles"
 }

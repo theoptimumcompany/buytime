@@ -36,6 +36,8 @@ class AreaListState {
     );
   }
 
+
+
   factory AreaListState.fromJson(Map<String, dynamic> json) => _$AreaListStateFromJson(json);
   Map<String, dynamic> toJson() => _$AreaListStateToJson(this);
 

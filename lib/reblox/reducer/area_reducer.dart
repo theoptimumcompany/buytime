@@ -10,7 +10,7 @@ class SetArea {
 }
 
 AreaState areaReducer(AreaState state, action) {
-  AreaState areaState = new AreaState.fromState(state);
+  AreaState areaState = state == null ? AreaState().toEmpty() : AreaState.fromState(state);
   if (action is SetArea) {
     areaState = action.areaState;
     return areaState;

@@ -107,14 +107,27 @@ class AllCategoryListRequestService implements EpicClass<AppState> {
 
         if(!tmpBusinessIdList.contains(businessListFromFirebase.docs[i].id)){
           CollectionReference servicesFirebase = FirebaseFirestore.instance.collection("service");
-          Query query = servicesFirebase.where("businessId", isEqualTo: businessListFromFirebase.docs[i].id).limit(20);
+          Query query;
+          if (store.state.area != null && store.state.area.areaId != null && store.state.area.areaId.isNotEmpty) {
+            query = servicesFirebase
+                .where("businessId", isEqualTo: businessListFromFirebase.docs[i].id)
+                .where("tag", arrayContains: store.state.area.areaId)
+                .limit(20);
+          } else {
+            query = servicesFirebase
+                .where("businessId", isEqualTo: businessListFromFirebase.docs[i].id)
+                .limit(20);
+          }
 
           /// 1 READ - ? DOC
           //   query = query.where("id_category", isEqualTo: categoryInviteState.id_category);
           //serviceStateList.clear();
+          // debugPrint("CATEGORY_SERVICE_EPIC - evaluating service with id =>" );
+
           await query.get().then((value) {
             snapshotDocs += value.docs.length;
             value.docs.forEach((element) {
+              // debugPrint("CATEGORY_SERVICE_EPIC - evaluating service with id =>" + element.data()['serviceId']);
               ServiceState serviceState = ServiceState.fromJson(element.data());
               serviceStateList.add(serviceState);
             });
