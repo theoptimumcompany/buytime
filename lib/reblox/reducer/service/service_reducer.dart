@@ -21,6 +21,14 @@ class ServiceRequest {
   ServiceState get serviceState => _serviceState;
 }
 
+class SetServiceServiceCrossSell {
+  bool _serviceCrossSell;
+
+  SetServiceServiceCrossSell(this._serviceCrossSell);
+
+  bool get serviceCrossSell => _serviceCrossSell;
+}
+
 class ServiceRequestByID {
   String _serviceId;
 
@@ -301,6 +309,10 @@ ServiceState serviceReducer(ServiceState state, action) {
   }
   if (action is SetServiceImage3) {
     serviceState.image3 = action.image;
+    return serviceState;
+  }
+  if (action is SetServiceServiceCrossSell) {
+    serviceState.serviceCrossSell = action.serviceCrossSell;
     return serviceState;
   }
   if (action is SetServiceDescription) {

@@ -32,7 +32,7 @@ class ServiceState {
   @JsonKey(defaultValue: false)
   bool serviceEdited = false;
   @JsonKey(defaultValue: true)
-  bool serviceExternallyVisible = true;
+  bool serviceCrossSell = true;
   String serviceBusinessAddress;
   String serviceBusinessCoordinates;
   String serviceAddress;
@@ -63,7 +63,7 @@ class ServiceState {
     this.spinnerVisibility,
     this.serviceCreated,
     this.serviceEdited,
-    this.serviceExternallyVisible,
+    this.serviceCrossSell,
     this.serviceBusinessAddress,
     this.serviceBusinessCoordinates,
     this.serviceAddress,
@@ -92,7 +92,7 @@ class ServiceState {
       spinnerVisibility: false,
       serviceCreated: false,
       serviceEdited: false,
-      serviceExternallyVisible: false,
+      serviceCrossSell: false,
       serviceBusinessAddress: '',
       serviceBusinessCoordinates: '',
       serviceAddress: '',
@@ -121,7 +121,7 @@ class ServiceState {
     this.spinnerVisibility = service.spinnerVisibility;
     this.serviceCreated = service.serviceCreated;
     this.serviceEdited = service.serviceEdited;
-    this.serviceExternallyVisible = service.serviceExternallyVisible;
+    this.serviceCrossSell = service.serviceCrossSell;
     this.serviceBusinessAddress = service.serviceBusinessAddress;
     this.serviceBusinessCoordinates = service.serviceBusinessCoordinates;
     this.serviceAddress = service.serviceAddress;
@@ -149,7 +149,7 @@ class ServiceState {
     bool spinnerVisibility,
     bool serviceCreated,
     bool serviceEdited,
-    bool serviceExternallyVisible,
+    bool serviceCrossSell,
     String serviceBusinessAddress,
     String serviceBusinessCoordinates,
     String serviceAddress,
@@ -176,7 +176,7 @@ class ServiceState {
       spinnerVisibility: spinnerVisibility ?? this.spinnerVisibility,
       serviceCreated: serviceCreated ?? this.serviceCreated,
       serviceEdited: serviceEdited ?? this.serviceEdited,
-      serviceExternallyVisible: serviceExternallyVisible ?? this.serviceExternallyVisible,
+      serviceCrossSell: serviceCrossSell ?? this.serviceCrossSell,
       serviceBusinessAddress: serviceBusinessAddress ?? this.serviceBusinessAddress,
       serviceBusinessCoordinates: serviceBusinessCoordinates ?? this.serviceBusinessCoordinates,
       serviceAddress: serviceAddress ?? this.serviceAddress,

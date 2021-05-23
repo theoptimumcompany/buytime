@@ -345,6 +345,8 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                           debugPrint('UI_M_create_service => Service Business Address: ${tmpService.serviceBusinessAddress}');
                                           debugPrint('UI_M_create_service => Service Coordinates: ${tmpService.serviceCoordinates}');
                                           debugPrint('UI_M_create_service => Service Business Coordinates: ${tmpService.serviceBusinessCoordinates}');
+                                          StoreProvider.of<AppState>(context).dispatch(SetServiceServiceCrossSell(snapshot.serviceState.serviceCrossSell));
+
                                           /// set the area of the service
                                           if (_serviceCoordinates != null && _serviceCoordinates.isNotEmpty) {
                                             AreaListState areaListState = StoreProvider.of<AppState>(context).state.areaList;
@@ -362,7 +364,6 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                               }
                                             }
                                           }
-
 
                                           StoreProvider.of<AppState>(context).dispatch(UpdateService(tmpService));
                                         }
@@ -963,6 +964,37 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                     ],
                                                   ),
                                                 ),
+                                              ),///Switch Cross Selling
+                                              Padding(
+                                                padding: const EdgeInsets.only(top: 10.0, bottom: 0.0, left: 20.0, right: 20.0),
+                                                child: Container(
+                                                  child: Row(
+                                                    children: [
+                                                      Switch(
+                                                          activeColor: BuytimeTheme.ManagerPrimary,
+                                                          value: snapshot.serviceState.serviceCrossSell,
+                                                          onChanged: !snapshot.user.worker ? (value) {
+                                                            setState(() {
+                                                              StoreProvider.of<AppState>(context).dispatch(SetServiceServiceCrossSell(value));
+                                                            });
+
+                                                          } : (value) {
+                                                          }),
+                                                      Expanded(
+                                                        child: Text(
+                                                          AppLocalizations.of(context).crossSell,
+                                                          textAlign: TextAlign.start,
+                                                          overflow: TextOverflow.clip,
+                                                          style: TextStyle(
+                                                            fontSize: media.height * 0.018,
+                                                            color: BuytimeTheme.TextGrey,
+                                                            fontWeight: FontWeight.w500,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
                                               ),
 
                                               ///Switch Service Bookable
@@ -1236,6 +1268,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                         icon: Icon(Icons.keyboard_arrow_left, color: Colors.white, size: 24),
                                         onPressed: () {
                                           Navigator.of(context).pop();
+
                                           //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_ServiceList()),);
                                           //Navigator.pushReplacement(context, EnterExitRoute(enterPage: UI_M_ServiceList(), exitPage: UI_EditService(), from: false));
                                         })),

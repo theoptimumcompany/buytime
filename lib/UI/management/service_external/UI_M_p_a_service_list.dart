@@ -259,68 +259,71 @@ class PAServiceListState extends State<PAServiceList> {
                                   }else{
                                     tmpDismiss = DismissDirection.endToStart;
                                   }
-                                  return Dismissible(
-                                    // Each Dismissible must contain a Key. Keys allow Flutter to
-                                    // uniquely identify widgets.
-                                    key: UniqueKey(),
-                                    // Provide a function that tells the app
-                                    // what to do after an item has been swiped away.
-                                    direction: tmpDismiss,
-                                    onDismissed: (direction) {
-                                      // Remove the item from the data source.
-                                      setState(() {
-                                        serviceList.removeAt(index);
-                                      });
-                                      debugPrint('UI_U_external_business_details => SX to BOOK');
-                                      ExternalServiceImportedState eSIS = ExternalServiceImportedState();
-                                      eSIS.internalBusinessId = snapshot.business.id_firestore;
-                                      eSIS.internalBusinessName = snapshot.business.name;
-                                      eSIS.externalBusinessId = widget.externalBusinessState.id_firestore;
-                                      eSIS.externalBusinessName = widget.externalBusinessState.name;
-                                      eSIS.externalServiceId = item.serviceId;
-                                      eSIS.importTimestamp = DateTime.now();
-                                      snapshot.serviceListSnippetListState.serviceListSnippetListState.forEach((sLSL) {
-                                        sLSL.businessSnippet.forEach((bS) {
-                                          bS.serviceList.forEach((sL) {
-                                            if(sL.serviceAbsolutePath.split('/').last == item.serviceId){
-                                              eSIS.externalCategoryName = bS.categoryName;
-                                            }
+                                  if (item.serviceCrossSell) { /// only show the item if the service is flagged as cross-sellable
+                                    return Dismissible(
+                                      // Each Dismissible must contain a Key. Keys allow Flutter to
+                                      // uniquely identify widgets.
+                                      key: UniqueKey(),
+                                      // Provide a function that tells the app
+                                      // what to do after an item has been swiped away.
+                                      direction: tmpDismiss,
+                                      onDismissed: (direction) {
+                                        // Remove the item from the data source.
+                                        setState(() {
+                                          serviceList.removeAt(index);
+                                        });
+                                        debugPrint('UI_U_external_business_details => SX to BOOK');
+                                        ExternalServiceImportedState eSIS = ExternalServiceImportedState();
+                                        eSIS.internalBusinessId = snapshot.business.id_firestore;
+                                        eSIS.internalBusinessName = snapshot.business.name;
+                                        eSIS.externalBusinessId = widget.externalBusinessState.id_firestore;
+                                        eSIS.externalBusinessName = widget.externalBusinessState.name;
+                                        eSIS.externalServiceId = item.serviceId;
+                                        eSIS.importTimestamp = DateTime.now();
+                                        snapshot.serviceListSnippetListState.serviceListSnippetListState.forEach((sLSL) {
+                                          sLSL.businessSnippet.forEach((bS) {
+                                            bS.serviceList.forEach((sL) {
+                                              if(sL.serviceAbsolutePath.split('/').last == item.serviceId){
+                                                eSIS.externalCategoryName = bS.categoryName;
+                                              }
+                                            });
                                           });
                                         });
-                                      });
-                                      StoreProvider.of<AppState>(context).dispatch(CreateExternalServiceImported(eSIS));
-                                      undoDeletion(index, item);
-                                    },
-                                    child: Column(
-                                      children: [
-                                        ExternalServiceItem(item, false, widget.serviceState, widget.title, widget.externalBusinessState),
-                                        Container(
-                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 30),
-                                          height: SizeConfig.safeBlockVertical * .2,
-                                          color: BuytimeTheme.DividerGrey,
-                                        )
-                                      ],
-                                    ),
-                                    background: Container(
-                                      color: BuytimeTheme.BackgroundWhite,
-                                      //margin: EdgeInsets.symmetric(horizontal: 15),
-                                      alignment: Alignment.centerRight,
-                                    ),
-                                    secondaryBackground: Container(
-                                      color: BuytimeTheme.ManagerPrimary,
-                                      //margin: EdgeInsets.symmetric(horizontal: 15),
-                                      alignment: Alignment.centerRight,
-                                      child: Container(
-                                        margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 2.5),
-                                        child: Icon(
-                                          Icons.add_circle_outline,
-                                          size: 24,
-                                          ///SizeConfig.safeBlockHorizontal * 7
-                                          color: BuytimeTheme.SymbolWhite,
+                                        StoreProvider.of<AppState>(context).dispatch(CreateExternalServiceImported(eSIS));
+                                        undoDeletion(index, item);
+                                      },
+                                      child: Column(
+                                        children: [
+                                          ExternalServiceItem(item, false, widget.serviceState, widget.title, widget.externalBusinessState),
+                                          Container(
+                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 30),
+                                            height: SizeConfig.safeBlockVertical * .2,
+                                            color: BuytimeTheme.DividerGrey,
+                                          )
+                                        ],
+                                      ),
+                                      background: Container(
+                                        color: BuytimeTheme.BackgroundWhite,
+                                        //margin: EdgeInsets.symmetric(horizontal: 15),
+                                        alignment: Alignment.centerRight,
+                                      ),
+                                      secondaryBackground: Container(
+                                        color: BuytimeTheme.ManagerPrimary,
+                                        //margin: EdgeInsets.symmetric(horizontal: 15),
+                                        alignment: Alignment.centerRight,
+                                        child: Container(
+                                          margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 2.5),
+                                          child: Icon(
+                                            Icons.add_circle_outline,
+                                            size: 24,
+                                            ///SizeConfig.safeBlockHorizontal * 7
+                                            color: BuytimeTheme.SymbolWhite,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  );
+                                    );
+                                  }
+                                  return Container();
                                 },
                                   childCount: serviceList.length,
                                 ),
