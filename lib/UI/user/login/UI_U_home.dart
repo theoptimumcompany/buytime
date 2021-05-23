@@ -137,14 +137,14 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       });
 
     /// Get User manual from assets folder
-    getFileFromAssets("assets/documents/tc.pdf", 'tc.pdf').then((f) {
+    getFileFromAssets("assets/documents/Buytime_t_c.pdf", 'Buytime_t_c.pdf').then((f) {
       setState(() {
         tcPdfPath = f.path;
         debugPrint('UI_U_Home - full path tc: ' + tcPdfPath);
       });
     });
 
-    getFileFromAssets("assets/documents/tos.pdf", 'tos.pdf').then((f) {
+    getFileFromAssets("assets/documents/Buytime_p_p.pdf", 'Buytime_p_p.pdf').then((f) {
       setState(() {
         tosPdfPath = f.path;
         debugPrint('UI_U_Home - full path tos: ' + tosPdfPath);
