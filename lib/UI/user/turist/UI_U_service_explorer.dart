@@ -186,7 +186,11 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
   
 
   _getCurrentLocation() async{
-    Position position  = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best, forceAndroidLocationManager: true);
+    Position position  = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.lowest,
+        forceAndroidLocationManager: true,
+        timeLimit: Duration(seconds: 30)
+    );
     setState(() {
       _currentPosition = position;
       debugPrint('UI_U_order_details => FROM GEOLOCATOR: $_currentPosition');
@@ -235,7 +239,11 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
         distanceFromCurrentPosition = 0.0;
       });
     }
-    await _getCurrentLocation();
+    try {
+      await _getCurrentLocation();
+    } catch (exception) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content:  Text(AppLocalizations.of(context).problemsGettingYourPosition)));
+    }
   }
 
   @override
@@ -247,13 +255,14 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
       onInit: (store) async {
         store.state.categoryList.categoryListState.clear();
         store.state.serviceList.serviceListState.clear();
+        startRequest = true;
+
         await _getLocation();
 
         store.dispatch(AllRequestListCategory());
         store.dispatch(UserOrderListRequest());
         store.state.notificationListState.notificationListState.clear();
         store.dispatch(RequestNotificationList(store.state.user.uid, store.state.business.id_firestore));
-        startRequest = true;
       },
       builder: (context, snapshot) {
         if(_searchController.text.isEmpty){

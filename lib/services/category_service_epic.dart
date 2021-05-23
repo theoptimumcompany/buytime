@@ -122,12 +122,12 @@ class AllCategoryListRequestService implements EpicClass<AppState> {
           /// 1 READ - ? DOC
           //   query = query.where("id_category", isEqualTo: categoryInviteState.id_category);
           //serviceStateList.clear();
-          debugPrint("CATEGORY_SERVICE_EPIC - evaluating service with id =>" );
+          // debugPrint("CATEGORY_SERVICE_EPIC - evaluating service with id =>" );
 
           await query.get().then((value) {
             snapshotDocs += value.docs.length;
             value.docs.forEach((element) {
-              debugPrint("CATEGORY_SERVICE_EPIC - evaluating service with id =>" + element.data()['serviceId']);
+              // debugPrint("CATEGORY_SERVICE_EPIC - evaluating service with id =>" + element.data()['serviceId']);
               ServiceState serviceState = ServiceState.fromJson(element.data());
               serviceStateList.add(serviceState);
             });
