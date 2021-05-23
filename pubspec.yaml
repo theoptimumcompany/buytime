@@ -178,8 +178,7 @@ flutter:
     - assets/icon.jpeg
     - assets/icon.png
     - assets/video/
-    - assets/documents/tc.pdf
-    - assets/documents/tos.pdf
+    - assets/documents/
     - assets/img/spinner/
     - assets/img/cc/
     - assets/json/

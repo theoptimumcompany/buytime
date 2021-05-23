@@ -394,6 +394,7 @@ ServiceState serviceReducer(ServiceState state, action) {
     return serviceState;
   }
   if (action is SetService) {
+    print("business_reducer: set service");
     serviceState = action.serviceState.copyWith();
     return serviceState;
   }

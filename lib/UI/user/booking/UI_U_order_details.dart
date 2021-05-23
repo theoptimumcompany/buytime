@@ -128,18 +128,6 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
     return granted;
   }
 
-  /// Check if gps service is enabled or not
-  Future _gpsService() async {
-    if (!(await Geolocator.isLocationServiceEnabled())) {
-      //_checkGps();
-      debugPrint('UI_U_order_details => GPS NOT AVAILABLE');
-      return null;
-    } else{
-      debugPrint('UI_U_order_details => GPS AVAILABLE');
-      return true;
-    }
-
-  }
   _getCurrentLocation() {
     Geolocator
         .getCurrentPosition(desiredAccuracy: LocationAccuracy.best, forceAndroidLocationManager: true)

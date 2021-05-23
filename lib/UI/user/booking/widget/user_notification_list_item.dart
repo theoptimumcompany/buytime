@@ -8,6 +8,7 @@ import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/reducer/notification_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_detail_reducer.dart';
+import 'package:Buytime/reblox/reducer/service/service_reducer.dart';
 import 'package:Buytime/reusable/buytime_icons.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
@@ -78,6 +79,7 @@ class _UserNotificationListItemState extends State<UserNotificationListItem> {
             child: InkWell(
               borderRadius: BorderRadius.all(Radius.circular(10)),
               onTap: () {
+                StoreProvider.of<AppState>(context).dispatch(SetService(widget.serviceState)); ///TODO
                 debugPrint('user_notification_list_item => onTap: ${widget.notificationState.notificationId} ${widget.notificationState.notificationId.isNotEmpty} ${widget.orderState.orderId.isNotEmpty} ');
                 if(widget.notificationState.notificationId != null && widget.notificationState.notificationId.isNotEmpty && widget.orderState.orderId.isNotEmpty){
                   widget.notificationState.opened = true;
@@ -85,6 +87,7 @@ class _UserNotificationListItemState extends State<UserNotificationListItem> {
                   debugPrint('user_notification_list_item => ORDER ID: ${widget.orderState.orderId}');
                   // Navigator.push(context, MaterialPageRoute(builder: (context) => OrderDetails(orderState: widget.orderState, tourist: widget.tourist)));
                   StoreProvider.of<AppState>(context).dispatch(SetOrderDetail(OrderDetailState.fromOrderState(widget.orderState)));
+
                   Navigator.push(context, MaterialPageRoute(builder: (context) => RUI_U_OrderDetail()));
                 }
               },
