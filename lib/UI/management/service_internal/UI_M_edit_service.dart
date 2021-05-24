@@ -268,8 +268,6 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
               priceController.text = format[0].toString() + "." + (int.parse(format[1]) < 10 ? format[1].toString() + "0" : format[1].toString());
             }
 
-
-
             if(addressController.text.isEmpty || _serviceAddress != _serviceBusinessAddress){
               if(snapshot.serviceState.serviceAddress != null && snapshot.serviceState.serviceAddress.isNotEmpty){
                 _serviceAddress = snapshot.serviceState.serviceAddress;
@@ -356,7 +354,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                 debugPrint('UI_M_edit_service: area distance ' + distance.toString());
                                                 if (distance != null && distance < 100) {
                                                   setState(() {
-                                                    if(areaListState.areaList[ij].areaId.isNotEmpty) {
+                                                    if(areaListState.areaList[ij].areaId.isNotEmpty && !snapshot.serviceState.tag.contains(areaListState.areaList[ij].areaId)) {
                                                        snapshot.serviceState.tag.add(areaListState.areaList[ij].areaId);
                                                     }
                                                   });

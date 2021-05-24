@@ -7,9 +7,11 @@ import 'package:Buytime/reblox/model/service/snippet/service_snippet_state.dart'
 class BusinessListRequest {
   String _userId;
   Role _role;
-  BusinessListRequest(this._userId, this._role);
+  int _limit;
+  BusinessListRequest(this._userId, this._role, this._limit);
   String get userId => _userId;
   Role get role => _role;
+  int get limit => _limit;
 }
 
 class BusinessServiceSnippetListRequest {

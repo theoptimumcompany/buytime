@@ -36,7 +36,6 @@ class RoomState extends State<Room> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) => fullName = StoreProvider.of<AppState>(context).state.user.name + StoreProvider.of<AppState>(context).state.user.surname);
-    room = '???';
   }
 
   List<String> tmpList = [];
@@ -61,11 +60,11 @@ class RoomState extends State<Room> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    ///Room Number Text
+                    ///Booking Code Text
                     Container(
                       margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
                       child: Text(
-                        AppLocalizations.of(context).roomNumberColon,
+                        AppLocalizations.of(context).bookingCode,
                         textAlign: TextAlign.start,
                         style: TextStyle(
                           letterSpacing: 0.25,
@@ -79,7 +78,7 @@ class RoomState extends State<Room> {
                       ),
                     ),
 
-                    ///Room Number Value
+                    ///Booking Code Value
                     Container(
                       margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 5),
                       child: Text(

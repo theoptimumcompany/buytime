@@ -654,8 +654,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                     text: AppLocalizations.of(context).tos,
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () {
-                                        debugPrint('UI_U_Home - ToS Clicked: ' + tosPdfPath);
-                                        Navigator.push(context, MaterialPageRoute(builder: (context) => TosTermsConditons(tosPdfPath)));
+                                        debugPrint('UI_U_Home - ToS Clicked: ' + tcPdfPath);
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => TosTermsConditons(tcPdfPath)));
                                       },
                                   ),
                                 ),
@@ -675,8 +675,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                     text: AppLocalizations.of(context).privacyPolicy,
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () {
-                                        debugPrint('UI_U_Home - Privacy Policy Clicked: ' + tcPdfPath);
-                                        Navigator.push(context, MaterialPageRoute(builder: (context) => TosTermsConditons(tcPdfPath)));
+                                        debugPrint('UI_U_Home - Privacy Policy Clicked: ' + tosPdfPath);
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => TosTermsConditons(tosPdfPath)));
                                       },
                                   ),
                                 ),

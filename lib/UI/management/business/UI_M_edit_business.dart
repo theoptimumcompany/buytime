@@ -1186,7 +1186,16 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
                                                                   print("buytime_salesman_edit: validate problems");
                                                                   return;
                                                                 }
+                                                                if (_validateInputs() == false ||
+                                                                    StoreProvider.of<AppState>(context).state.business.fileToUploadList == null ||
+                                                                    StoreProvider.of<AppState>(context).state.business.fileToUploadList.length < 4
+                                                                ) {
+                                                                  final snackBar = SnackBar(content: Text(AppLocalizations.of(context).pleaseFillAllFields));
+                                                                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
+                                                                  print("buytime_salesman_create: validate problems");
+                                                                  return;
+                                                                }
                                                                 setState(() {
                                                                   bookingRequest = 'send';
                                                                 });
@@ -1199,7 +1208,7 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
                                                                       debugPrint('UI_M_edit_business: area distance ' + distance.toString());
                                                                       if (distance != null && distance < 100) {
                                                                         setState(() {
-                                                                          if(areaListState.areaList[ij].areaId.isNotEmpty) {
+                                                                          if(areaListState.areaList[ij].areaId.isNotEmpty && !snapshot.tag.contains(areaListState.areaList[ij].areaId)) {
                                                                             snapshot.tag.add(areaListState.areaList[ij].areaId);
                                                                           }
                                                                         });

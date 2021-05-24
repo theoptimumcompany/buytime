@@ -53,7 +53,7 @@ class UI_M_BusinessListState extends State<UI_M_BusinessList> {
           print("Oninitbusinesslist");
           store.state.serviceListSnippetListState.serviceListSnippetListState.clear();
           store.state.businessList.businessListState.clear();
-          store.dispatch(BusinessListRequest(store.state.user.uid, store.state.user.getRole()));
+          store.dispatch(BusinessListRequest(store.state.user.uid, store.state.user.getRole(), 150));
           startRequest = true;
           },
         builder: (context, snapshot) {

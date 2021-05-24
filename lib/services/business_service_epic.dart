@@ -27,35 +27,39 @@ class BusinessListRequestService implements EpicClass<AppState> {
       businessStateList = [];
       QuerySnapshot businessListFromFirebase;
       int businessListFromFirebaseDocs = 0;
+      int limit = 20;
+      if (event.limit > 20) {
+        limit = event.limit;
+      }
       if (event.userId == "any") {
         businessListFromFirebase = await FirebaseFirestore.instance /// 1 read - ? DOC
             .collection("business")
             .where("draft", isEqualTo: false)
-            .limit(20)
+            .limit(limit)
             .get();
       } else {
         if (event.role == Role.manager || event.role == Role.worker) {
           businessListFromFirebase = await FirebaseFirestore.instance /// 1 READ - ? DOC
               .collection("business")
               .where("hasAccess", arrayContains: store.state.user.email)
-              .limit(20)
+              .limit(limit)
               .get();
         } else if (event.role == Role.owner) {
           businessListFromFirebase = await FirebaseFirestore.instance /// 1 READ - ? DOC
               .collection("business")
               .where("ownerId", isEqualTo: store.state.user.uid)
-              .limit(20)
+              .limit(limit)
               .get();
         } else if (event.role == Role.salesman) {
           businessListFromFirebase = await FirebaseFirestore.instance /// 1 READ - ? DOC
               .collection("business")
               .where("salesmanId", isEqualTo: store.state.user.uid)
-              .limit(20)
+              .limit(limit)
               .get();
         } else if (event.role == Role.admin) {
           businessListFromFirebase = await FirebaseFirestore.instance /// 1 READ - ? DOC
               .collection("business")
-              .limit(20)
+              .limit(limit)
               .get();
         }
       }
