@@ -813,10 +813,12 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                                   ),
                                                                   Switch(
                                                                       activeColor: BuytimeTheme.ManagerPrimary,
-                                                                      value: snapshot.hub, onChanged: (value) {
+                                                                      value: snapshot.hub, onChanged: StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin || StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman ? (value) {
                                                                     debugPrint('UI_M-create_business => HUB: $value');
                                                                     StoreProvider.of<AppState>(context).dispatch(SetHub(value));
                                                                     //snapshot.hub = value;
+                                                                  } : (value){
+
                                                                   }),
                                                                 ],
                                                               ),
