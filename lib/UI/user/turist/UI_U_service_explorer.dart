@@ -236,14 +236,23 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
     if(_locationData.latitude != null){
       setState(() {
         gettingLocation = false;
+        currentLat = _locationData.latitude;
+        currentLng = _locationData.longitude;
         distanceFromCurrentPosition = 0.0;
       });
-    }
-    try {
-      await _getCurrentLocation();
-    } catch (exception) {
+      /// set current area in the store
+      AreaListState areaListState = StoreProvider.of<AppState>(context).state.areaList;
+      StoreProvider.of<AppState>(context).dispatch(SetArea(Utils.getCurrentArea('$currentLat, $currentLng', areaListState)));
+    } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content:  Text(AppLocalizations.of(context).problemsGettingYourPosition)));
     }
+
+    /// When more accuracy or options are needed.
+    // try {
+    //   await _getCurrentLocation();
+    // } catch (exception) {
+    //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content:  Text(AppLocalizations.of(context).problemsGettingYourPosition)));
+    // }
   }
 
   @override
