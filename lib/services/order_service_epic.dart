@@ -2,6 +2,7 @@ import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/model/order/order_detail_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
+import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/model/statistics_state.dart';
 import 'package:Buytime/reblox/model/stripe/stripe_state.dart';
 import 'package:Buytime/reblox/navigation/navigation_reducer.dart';
@@ -458,6 +459,39 @@ class OrderCreateRoomPendingService implements EpicClass<AppState> {
   }
 }
 
+class SetOrderDetailAndNavigateService implements EpicClass<AppState> {
+  StatisticsState statisticsState;
+  OrderState orderState;
+  ServiceState serviceState;
+  bool error = true;
+  @override
+  Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
+    return actions.whereType<SetOrderDetailAndNavigate>().asyncMap((event) async {
+      /// cerco l'ordine e lo setto come order detail
+      var ordersStateData = await FirebaseFirestore.instance.collection("order").doc(event.idState.orderId).get();
+      orderState = OrderState.fromJson(ordersStateData.data());
+
+
+      /// cerco il serviceId e lo setto come service
+      var serviceStateData = await FirebaseFirestore.instance.collection("service").doc(event.idState.serviceId).get();
+      serviceState = ServiceState.fromJson(serviceStateData.data());
+      /// se tutto va bene faccio redirect a RUI_U_OrderDetail()
+
+      if (serviceState != null && serviceState.serviceId != null && orderState != null && orderState.orderId != null) {
+        error = false;
+      }
+
+
+//      return FirebaseFirestore.instance.collection('business').doc(store.state.business.id_firestore).collection('service').doc(serviceId).delete();
+    }).expand((element) {
+      var actionArray = [];
+      actionArray.add(UpdateStatistics(statisticsState));
+      actionArray.add(SetOrderDetail(OrderDetailState.fromOrderState(orderState)));
+      actionArray.add(NavigatePushAction(AppRoutes.orderDetailsRealtime));
+      return actionArray;
+    });
+  }
+}
 class OrderDeleteService implements EpicClass<AppState> {
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {

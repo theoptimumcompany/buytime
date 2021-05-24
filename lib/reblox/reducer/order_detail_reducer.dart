@@ -1,4 +1,5 @@
 import 'package:Buytime/reblox/model/business/snippet/order_business_snippet_state.dart';
+import 'package:Buytime/reblox/model/notification/id_state.dart';
 import 'package:Buytime/reblox/model/order/order_detail_state.dart';
 import 'package:Buytime/reblox/model/order/order_entry.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
@@ -39,6 +40,12 @@ class UpdateOrderDetailByManager{
   UpdateOrderDetailByManager(this._orderState, this._orderStatus);
   OrderDetailState get orderState => _orderState;
   OrderStatus get orderStatus => _orderStatus;
+}
+
+class SetOrderDetailAndNavigate{
+  IdState _idState;
+  SetOrderDetailAndNavigate(this._idState);
+  IdState get idState => _idState;
 }
 class UpdatedOrderDetail {
   OrderDetailState _orderState;

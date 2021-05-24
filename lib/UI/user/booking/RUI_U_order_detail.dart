@@ -219,6 +219,8 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
   Widget build(BuildContext context) {
     businessState  = StoreProvider.of<AppState>(context).state.business;
     serviceState = StoreProvider.of<AppState>(context).state.serviceState;
+    order = StoreProvider.of<AppState>(context).state.order;
+
     if(gettingLocation)
       _getLocation(StoreProvider.of<AppState>(context).state.business);
     //serviceState = ServiceState().toEmpty();

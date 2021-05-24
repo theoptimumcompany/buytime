@@ -41,7 +41,7 @@ class UI_U_BusinessListState extends State<UI_U_BusinessList> {
             converter: (store) => store.state,
             onInit: (store) {
               store.state.businessList.businessListState.clear();
-              store.dispatch(BusinessListRequest("any", store.state.user.getRole(), 150));
+              store.dispatch(BusinessListRequest("any", store.state.user.getRole(), 20));
             },
             builder: (context, snapshot) {
               return Scaffold(

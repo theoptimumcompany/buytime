@@ -38,6 +38,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stripe_payment/stripe_payment.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'UI/user/booking/RUI_U_notifications.dart';
+
 class SplashScreen extends StatefulWidget {
   @override
   _SplashScreenState createState() => _SplashScreenState();
@@ -177,7 +179,7 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
       backgroundColor: BuytimeTheme.SymbolLightGrey,
       //onTap: tapFlushbar(),
       onTap: (ciao) {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => Notifications(orderStateList: StoreProvider.of<AppState>(context).state.orderList.orderListState, tourist: false,)));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => RNotifications(orderStateList: StoreProvider.of<AppState>(context).state.orderList.orderListState, tourist: false,)));
       },
       /*mainButton: Container(
               margin: EdgeInsets.only(left: 5, right: 5),

@@ -1,3 +1,4 @@
+import 'package:Buytime/UI/user/booking/RUI_U_notifications.dart';
 import 'package:Buytime/UI/user/booking/UI_U_all_bookings.dart';
 import 'package:Buytime/UI/user/booking/UI_U_notifications.dart';
 import 'package:Buytime/UI/user/booking/widget/user_service_card_widget.dart';
@@ -414,7 +415,7 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                                             size: 30.0,
                                           ),
                                           onPressed: () async{
-                                            Navigator.push(context, MaterialPageRoute(builder: (context) => Notifications(orderStateList: orderList, tourist: true)));
+                                            Navigator.push(context, MaterialPageRoute(builder: (context) => RNotifications(orderStateList: orderList, tourist: true)));
                                           },
                                         ),
                                       ),

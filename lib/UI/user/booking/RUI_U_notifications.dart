@@ -5,36 +5,40 @@ import 'package:Buytime/reblox/model/notification/notification_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
+import 'package:Buytime/reblox/reducer/service/service_reducer.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
 import 'package:Buytime/reusable/buytime_icons.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class Notifications extends StatefulWidget {
+class RNotifications extends StatefulWidget {
   static String route = '/notifications';
   bool fromConfirm;
   List<OrderState> orderStateList;
   bool tourist;
-  Notifications({Key key, this.fromConfirm, this.orderStateList, this.tourist}) : super(key: key);
+  RNotifications({Key key, this.fromConfirm, this.orderStateList, this.tourist}) : super(key: key);
 
   @override
-  _NotificationsState createState() => _NotificationsState();
+  _RNotificationsState createState() => _RNotificationsState();
 }
 
-class _NotificationsState extends State<Notifications> {
+class _RNotificationsState extends State<RNotifications> {
 
   bool sameMonth = false;
   String searched = '';
   OrderState order = OrderState().toEmpty();
-
+  Stream<QuerySnapshot> _orderNotificationStream;
+  String userId;
   bool showAll = false;
-
+  List<NotificationState> notifications;
   bool startRequest = false;
   bool rippleLoading = false;
+  ScrollController _scrollController;
 
 
   //NotificationState tmpNotification1 = NotificationState(serviceName: 'Test I', serviceState: 'canceled');
@@ -43,9 +47,12 @@ class _NotificationsState extends State<Notifications> {
   @override
   void initState() {
     super.initState();
+    _scrollController = ScrollController();
     //notifications.add(tmpNotification1);
     //notifications.add(tmpNotification2);
   }
+
+
 
   String _selected = '';
   bool isManagerOrAbove = false;
@@ -56,13 +63,45 @@ class _NotificationsState extends State<Notifications> {
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
     SizeConfig().init(context);
-    return StoreConnector<AppState, AppState>(
-      converter: (store) => store.state,
-      onInit: (store) {
-          startRequest = true;
-      },
-      builder: (context, snapshot) {
-        List<NotificationState> notifications = snapshot.notificationListState.notificationListState;
+    userId = StoreProvider.of<AppState>(context).state.user.uid;
+    order = StoreProvider.of<AppState>(context).state.order;
+    if(userId != null && userId.isNotEmpty) {
+      if (notifications == null) {
+        /// first list
+        _orderNotificationStream = FirebaseFirestore.instance.collection('notification')
+            .where("userId", isEqualTo: userId)
+            .orderBy('timestamp', descending: true)
+            .limit(10)
+            .snapshots();
+      }
+      // else {
+      //
+      //   _orderNotificationStream = FirebaseFirestore.instance.collection('notification')
+      //       .where("userId", isEqualTo: userId)
+      //       .orderBy('timestamp', descending: true)
+      //       .startAfter()
+      //       .limit(10)
+      //       .snapshots();
+      // }
+    }
+
+
+
+
+    return
+      StreamBuilder<QuerySnapshot>(
+        stream: _orderNotificationStream,
+        builder: (context, AsyncSnapshot<QuerySnapshot> notificationSnapshot) {
+          if (notificationSnapshot.hasError) {
+            return Text('Something went wrong');
+          }
+
+          if (notificationSnapshot.connectionState == ConnectionState.waiting) {
+            return Text("Loading");
+          }
+          for (int j = 0; j < notificationSnapshot.data.docs.length; j++) {
+            notifications.add(NotificationState.fromJson(notificationSnapshot.data.docs[j].data()));
+          }
         /*if(notifications.isEmpty && startRequest){
           noActivity = true;
         }else{
@@ -80,7 +119,6 @@ class _NotificationsState extends State<Notifications> {
           startRequest = false;
         }*/
 
-        order = snapshot.order.itemList != null ? (snapshot.order.itemList.length > 0 ? snapshot.order : OrderState().toEmpty()) : OrderState().toEmpty();
         debugPrint('UI_U_BookingPage => CART COUNT: ${order.cartCounter}');
 
         return Stack(children: [
@@ -209,6 +247,7 @@ class _NotificationsState extends State<Notifications> {
                   ),
                   body: SafeArea(
                     child: SingleChildScrollView(
+
                       child: ConstrainedBox(
                           constraints: BoxConstraints(),
                           child: Container(
@@ -218,7 +257,7 @@ class _NotificationsState extends State<Notifications> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                ///Notifications
+                                ///RNotifications
                                 notifications.isNotEmpty ?
                                 Flexible(
                                   child: Container(
@@ -230,6 +269,16 @@ class _NotificationsState extends State<Notifications> {
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         CustomScrollView(
+                                          controller: _scrollController
+                                            ..addListener(() {
+                                              var triggerFetchMoreSize =
+                                                  0.9 * _scrollController.position.maxScrollExtent;
+                                              if (_scrollController.position.pixels >
+                                                  triggerFetchMoreSize) {
+                                                /// qui triggera evento di fine scroll
+                                                debugPrint('UI_U_notifications => fine scroll 90%');
+                                              }
+                                            }),
                                             shrinkWrap: true,
                                             physics: NeverScrollableScrollPhysics(),
                                             slivers: [
@@ -238,23 +287,22 @@ class _NotificationsState extends State<Notifications> {
                                                       (context, index) {
                                                     //MenuItemModel menuItem = menuItems.elementAt(index);
                                                       NotificationState notification = notifications.elementAt(index);
-                                                      OrderState orderState;
-                                                      ServiceState serviceState = ServiceState().toEmpty();
-                                                      widget.orderStateList.forEach((element) {
-                                                        if(notification.data.state != null && element.orderId == notification.data.state.orderId){
-                                                          debugPrint('UI_U_notification => ${element.orderId}');
-                                                          orderState = element;
-                                                        }
-                                                      });
-                                                      snapshot.serviceList.serviceListState.forEach((element) {
-                                                        if(notification.data.state != null && element.serviceId == notification.data.state.serviceId){
-                                                          //debugPrint('UI_U_notification => ${element.orderId}');
-                                                          serviceState = element;
-                                                        }
-                                                      });
-                                                      if (orderState != null) {
+                                                      StoreProvider.of<AppState>(context).dispatch(ServiceRequestByID(notification.data.state.serviceId));
+                                                      // widget.orderStateList.forEach((element) {
+                                                      //   if(notification.data.state != null && element.orderId == notification.data.state.orderId){
+                                                      //     debugPrint('UI_U_notification => ${element.orderId}');
+                                                      //     orderState = element;
+                                                      //   }
+                                                      // });
+                                                      // snapshot.serviceList.serviceListState.forEach((element) {
+                                                      //   if(notification.data.state != null && element.serviceId == notification.data.state.serviceId){
+                                                      //     //debugPrint('UI_U_notification => ${element.orderId}');
+                                                      //     serviceState = element;
+                                                      //   }
+                                                      // });
+                                                      // if (orderState != null) {
                                                         return UserNotificationListItem(notification, widget.tourist);
-                                                      }
+                                                      // }
                                                       return Container();
 
                                                     //debugPrint('booking_month_list: bookings booking status: ${booking.user.first.surname} ${booking.status}');

@@ -39,6 +39,8 @@ import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'RUI_U_notifications.dart';
+
 class BookingPage extends StatefulWidget {
   static String route = '/bookingPage';
   bool fromConfirm;
@@ -380,7 +382,7 @@ class _BookingPageState extends State<BookingPage> {
                                                 size: 30.0,
                                               ),
                                               onPressed: () async{
-                                                Navigator.push(context, MaterialPageRoute(builder: (context) => Notifications(orderStateList: orderList, tourist: false,)));
+                                                Navigator.push(context, MaterialPageRoute(builder: (context) => RNotifications(orderStateList: orderList, tourist: false,)));
                                               },
                                             ),
                                           ),
