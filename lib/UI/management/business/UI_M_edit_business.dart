@@ -859,16 +859,23 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
                                                               snapshot.hub != null ?
                                                               Switch(
                                                                   activeColor: BuytimeTheme.ManagerPrimary,
-                                                                  value: snapshot.hub, onChanged: (value) {
-                                                                debugPrint('UI_M-create_business => HUB: ${value}');
-                                                                StoreProvider.of<AppState>(context).dispatch(SetHub(value));
-                                                                //snapshot.hub = value;
-                                                              }) : Switch(
+                                                                  value: snapshot.hub,
+                                                                  onChanged:  StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin || StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman ?
+                                                                      (value) {
+                                                                      debugPrint('UI_M-create_business => HUB: ${value}');
+                                                                      StoreProvider.of<AppState>(context).dispatch(SetHub(value));
+                                                                      //snapshot.hub = value;
+                                                                    } : (value){
+
+                                                                  }) : Switch(
                                                                   activeColor: BuytimeTheme.ManagerPrimary,
-                                                                  value: false, onChanged: (value) {
+                                                                  value: false,
+                                                                  onChanged: StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin || StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman ? (value) {
                                                                 debugPrint('UI_M-create_business => HUB: $value');
                                                                 StoreProvider.of<AppState>(context).dispatch(SetHub(value));
-                                                              }),
+                                                              } : (value){
+
+                                                                  }),
                                                             ],
                                                           ),
                                                           ///Business Area

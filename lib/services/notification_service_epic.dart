@@ -67,7 +67,7 @@ class NotificationListRequestService implements EpicClass<AppState> {
       //notificationListState = NotificationListState().toEmpty();
       debugPrint("NOTIFICATION_SERVICE_EPIC - NotificationListRequestService => User ID: ${event.userId} ");
       DateTime currentTime = DateTime.now();
-      //currentTime = currentTime.subtract(Duration(days: 5));
+      currentTime = currentTime.subtract(Duration(days: 5));
       int time = int.parse(Timestamp.fromDate(currentTime).seconds.toString());
       // debugPrint("NOTIFICATION_SERVICE_EPIC - NotificationListRequestService => TIMESTAMP: $time");
 
