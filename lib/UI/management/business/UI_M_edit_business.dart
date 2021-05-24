@@ -638,11 +638,6 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
                                                                             StoreProvider.of<AppState>(context).dispatch(SetBusinessStateTerritoryProvince(_stateTerritoryProvinceController.text));
                                                                             StoreProvider.of<AppState>(context).dispatch(SetBusinessCountry(_countryController.text));
                                                                             StoreProvider.of<AppState>(context).dispatch(SetBusinessCoordinate(_coordinateController.text));
-
-
-
-
-
                                                                           }
                                                                       );
                                                                     },

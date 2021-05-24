@@ -294,7 +294,7 @@ class _BookingPageState extends State<BookingPage> {
             hasNotifications = false;
             notifications.forEach((element) {
               //debugPrint('UI_U_booking_page => ${element.timestamp}');
-              //debugPrint('UI_U_booking_page => ${element.notificationId} | ${element.opened}');
+              debugPrint('UI_U_booking_page => ${element.notificationId} | ${element.opened}');
               if(element.opened != null && !element.opened){
                 //debugPrint('UI_U_booking_page => ${element.notificationId} | ${element.data.state.orderId}');
                 hasNotifications = true;
