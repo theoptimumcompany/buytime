@@ -156,7 +156,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                         ),
                                         ///Tab value
                                         (() {
-                                              return buildTabsBeforeConfirmation();
+                                              return buildTabsBeforeConfirmation(snapshot.booking.booking_code);
                                       }())
                                       ],
                                     ),
@@ -188,9 +188,9 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
     );
   }
 
-  Widget buildTabsBeforeConfirmation() {
+  Widget buildTabsBeforeConfirmation(String bookingCode) {
     if (_controller.index == 0) {
-      return Room(tourist: widget.tourist);
+      return Room(tourist: widget.tourist, bookingCode: bookingCode);
     } else if (_controller.index == 1) {
       return Platform.isAndroid ? NativeGoogle() : NativeApple();
     } else if (_controller.index == 2) {

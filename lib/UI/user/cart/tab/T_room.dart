@@ -20,7 +20,8 @@ class Room extends StatefulWidget {
 
   bool tourist;
   bool reserve;
-  Room({Key key, this.reserve, this.tourist}) : super(key: key);
+  String bookingCode = '???';
+  Room({Key key, this.reserve, this.tourist, this.bookingCode}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => RoomState();
@@ -82,7 +83,7 @@ class RoomState extends State<Room> {
                     Container(
                       margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 5),
                       child: Text(
-                        room,
+                        asteriskChars(widget.bookingCode, 3),
                         textAlign: TextAlign.start,
                         style: TextStyle(
                           letterSpacing: 0.5,
@@ -189,5 +190,20 @@ class RoomState extends State<Room> {
         )
       ),
     );
+  }
+
+  String asteriskChars(String bookingCode, int asterisksToShowInFront) {
+    String result = bookingCode;
+    if ( bookingCode!= null && (bookingCode.length - asterisksToShowInFront) > 1) {
+      result = '';
+      int lastCharsToTake = bookingCode.length - asterisksToShowInFront;
+      String charsToShow = bookingCode.substring(lastCharsToTake, bookingCode.length);
+      for (int i = 0; i < asterisksToShowInFront; i++) {
+        result = result + '*';
+      }
+      result = result + charsToShow;
+    }
+    return result;
+
   }
 }
