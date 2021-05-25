@@ -119,10 +119,8 @@
 	<string>Can i use Contacts description please?</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Can i use the face id?</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>GPS</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>GPS</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Location Use</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Can I use the mic please?</string>
 	<key>NSMotionUsageDescription</key>
@@ -132,7 +130,7 @@
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>Can i use Speech please?</string>
 	<key>NSUserTrackingUsageDescription</key>
-	<string>Allow BT to track your activity. No third party or other companies involved. We care of your privacy! We do not sell or trade your data.</string>
+	<string>Allow track your activity. No third party or other companies involved. We care of your privacy! We do not sell or trade your data.</string>
 	<key>SKAdNetworkItems</key>
 	<array>
 		<dict>

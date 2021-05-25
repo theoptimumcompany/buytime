@@ -24,7 +24,7 @@ import 'package:Buytime/reusable/order/order_total.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/utils/utils.dart';
-import 'package:add_2_calendar/add_2_calendar.dart';
+//import 'package:add_2_calendar/add_2_calendar.dart';
 //import 'package:device_calendar/device_calendar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
