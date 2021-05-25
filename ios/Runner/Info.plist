@@ -99,38 +99,38 @@
 	<key>MinimumOSVersion</key>
 	<string>12.0</string>
 	<key>NFCReaderUsageDescription</key>
-	<string>Can I Use NFC?</string>
+	<string>This is required to connect with NFC enabled devices ( proximity sensor, for example to declare a location or to enable a payment )</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
 	<key>NSAppleMusicUsageDescription</key>
-	<string>Play using while you are hiking</string>
+	<string>This is required to import media ( like video ) from your library</string>
 	<key>NSBluetoothAlwaysUsageDescription</key>
-	<string>Can I always use Bluetooth?</string>
+	<string>This is required to connect with bluetooth enabled devices</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>
-	<string>Can I use Bluetooth?</string>
+	<string>This is required to connect with bluetooth enabled devices</string>
 	<key>NSCalendarsUsageDescription</key>
-	<string>Can i use calendar?</string>
+	<string>This is required to access to your calendar</string>
 	<key>NSCameraUsageDescription</key>
-	<string>Can I use the camera please?</string>
+	<string>This is required to allow the app to import media just taken using your phone camera</string>
 	<key>NSContactsUsageDescription</key>
-	<string>Can i use Contacts description please?</string>
+	<string>This allow you to share info of this app with your contacts. We are not accessing your contact list</string>
 	<key>NSFaceIDUsageDescription</key>
-	<string>Can i use the face id?</string>
+	<string>This is required to use Face Recognition and improve security (e.g., 3DS2 payment)</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Location Use</string>
+	<string>This is required to show your near-by services</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>Can I use the mic please?</string>
+	<string>This is required to allow the app to connect with your microphone (hence for you to talk via the app, like our speak with Eve concierge feature)</string>
 	<key>NSMotionUsageDescription</key>
-	<string>Can i use Motion please?</string>
+	<string>This is required to use accelerometer functionality such as compass</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Can I use the gallery please?</string>
+	<string>This is required to import pictures from your library</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
-	<string>Can i use Speech please?</string>
+	<string>This is required to allow you insert data using speech recognition</string>
 	<key>NSUserTrackingUsageDescription</key>
-	<string>Allow track your activity. No third party or other companies involved. We care of your privacy! We do not sell or trade your data.</string>
+	<string>This is required to allow the AI to create meaningful suggestions to improve your experience </string>
 	<key>SKAdNetworkItems</key>
 	<array>
 		<dict>
