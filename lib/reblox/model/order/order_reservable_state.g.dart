@@ -14,6 +14,7 @@ OrderReservableState _$OrderReservableStateFromJson(Map<String, dynamic> json) {
         ?.toList(),
     position: json['position'],
     date: Utils.getDate(json['date'] as Timestamp),
+    creationDate: Utils.getDate(json['creationDate'] as Timestamp),
     total: (json['total'] as num)?.toDouble(),
     tip: (json['tip'] as num)?.toDouble(),
     tax: (json['tax'] as num)?.toDouble(),
@@ -50,6 +51,7 @@ Map<String, dynamic> _$OrderReservableStateToJson(
     <String, dynamic>{
       'itemList': instance.itemList?.map((e) => e?.toJson())?.toList(),
       'date': Utils.setDate(instance.date),
+      'creationDate': Utils.setDate(instance.creationDate),
       'position': instance.position,
       'total': instance.total,
       'tip': instance.tip,

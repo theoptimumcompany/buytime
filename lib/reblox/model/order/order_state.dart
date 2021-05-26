@@ -37,7 +37,9 @@ enum AddCardStatus {
 class OrderState {
   List<OrderEntry> itemList;
   @JsonKey(fromJson: Utils.getDate, toJson: Utils.setDate)
-  DateTime date;
+  DateTime date; /// date in which the service will be used
+  @JsonKey(fromJson: Utils.getDate, toJson: Utils.setDate)
+  DateTime creationDate; /// date in which the service was created
   var position;
   double total = 0.0;
   double tip = 0.0;
@@ -66,6 +68,7 @@ class OrderState {
     @required this.itemList,
     this.position,
     this.date,
+    this.creationDate,
     this.total,
     this.tip,
     this.tax,
@@ -93,6 +96,7 @@ class OrderState {
   OrderState.fromState(OrderState state) {
     this.itemList = state.itemList;
     this.date = state.date;
+    this.creationDate = state.creationDate;
     this.position = state.position;
     this.total = state.total;
     this.tip = state.tip;
@@ -119,6 +123,7 @@ class OrderState {
   OrderState.fromReservableState(OrderReservableState state) {
     this.itemList = state.itemList;
     this.date = state.date;
+    this.creationDate = state.creationDate;
     this.position = state.position;
     this.total = state.total;
     this.tip = state.tip;
@@ -145,6 +150,7 @@ class OrderState {
   OrderState copyWith({
     List<OrderEntry> itemList,
     DateTime date,
+    DateTime creationDate,
     var position,
     double total,
     double tip,
@@ -171,6 +177,7 @@ class OrderState {
     return OrderState(
       itemList: itemList ?? this.itemList,
       date: date ?? this.date,
+      creationDate: creationDate ?? this.creationDate,
       position: position ?? this.position,
       total: total ?? this.total,
       tip: tip ?? this.tip,
@@ -199,6 +206,7 @@ class OrderState {
     return OrderState(
       position: "",
       date: DateTime.now(),
+      creationDate: DateTime.now(),
       itemList: [],
       total: 0.0,
       tip: 0.0,

@@ -142,7 +142,7 @@ class ManageCategoryState extends State<ManageCategory> with SingleTickerProvide
                           tooltip: AppLocalizations.of(context).createSubCategory,
                           onPressed: () {
                             StoreProvider.of<AppState>(context).dispatch(CategoryRequest(list[index]["nodeId"]));
-                            StoreProvider.of<AppState>(context).state.categoryTree.numberOfCategories < 50
+                            StoreProvider.of<AppState>(context).state.categoryTree.numberOfCategories < 100
                                 ? Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -191,7 +191,7 @@ class ManageCategoryState extends State<ManageCategory> with SingleTickerProvide
                             tooltip: AppLocalizations.of(context).createSubCategory,
                             onPressed: () {
                               StoreProvider.of<AppState>(context).dispatch(CategoryRequest(list[index]["nodeId"]));
-                              StoreProvider.of<AppState>(context).state.categoryTree.numberOfCategories < 50
+                              StoreProvider.of<AppState>(context).state.categoryTree.numberOfCategories < 100
                                   ? Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -356,7 +356,7 @@ class ManageCategoryState extends State<ManageCategory> with SingleTickerProvide
                           tooltip: AppLocalizations.of(context).createSubCategory,
                           onPressed: StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin || StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman ? () {
                             StoreProvider.of<AppState>(context).dispatch(CategoryRequest(list[index]["nodeId"]));
-                            StoreProvider.of<AppState>(context).state.categoryTree.numberOfCategories < 50
+                            StoreProvider.of<AppState>(context).state.categoryTree.numberOfCategories < 100
                                 ?
                             //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_CreateCategory(empty: false,)),)
                             Navigator.push(context, EnterExitRoute(enterPage: UI_M_CreateCategory(empty: false), exitPage: ManageCategory(), from: true))
@@ -486,7 +486,7 @@ class ManageCategoryState extends State<ManageCategory> with SingleTickerProvide
              // tooltip: AppLocalizations.of(context).createSubCategory,
               onTap: StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin || StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman ? () {
                 StoreProvider.of<AppState>(context).dispatch(CategoryRequest(list[index]["nodeId"]));
-                StoreProvider.of<AppState>(context).state.categoryTree.numberOfCategories < 50
+                StoreProvider.of<AppState>(context).state.categoryTree.numberOfCategories < 100
                     ?
                 //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_CreateCategory(empty: false,)),)
                 Navigator.push(context, EnterExitRoute(enterPage: UI_M_CreateCategory(empty: false), exitPage: ManageCategory(), from: true))
@@ -527,7 +527,7 @@ class ManageCategoryState extends State<ManageCategory> with SingleTickerProvide
           //tooltip: AppLocalizations.of(context).createSubCategory,
           onTap: StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin || StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman ? () {
             StoreProvider.of<AppState>(context).dispatch(CategoryRequest(list[index]["nodeId"]));
-            StoreProvider.of<AppState>(context).state.categoryTree.numberOfCategories < 50
+            StoreProvider.of<AppState>(context).state.categoryTree.numberOfCategories < 100
                 ?
             //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_CreateCategory(empty: false,)),)
             Navigator.pushReplacement(context, EnterExitRoute(enterPage: UI_M_CreateCategory(empty: false), exitPage: ManageCategory(), from: true))
@@ -686,7 +686,7 @@ class ManageCategoryState extends State<ManageCategory> with SingleTickerProvide
                     ),
                     tooltip: AppLocalizations.of(context).createCategory,
                     onPressed: () {
-                      snapshot.categoryTree.numberOfCategories < 50
+                      snapshot.categoryTree.numberOfCategories < 100
                           ? Navigator.push(context, EnterExitRoute(enterPage: UI_M_CreateCategory(empty: true), exitPage: ManageCategory(), from: true))
                           : showDialog(
                               context: context,
