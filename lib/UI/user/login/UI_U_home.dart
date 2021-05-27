@@ -41,7 +41,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   List backgroundVideoList = new List();
 
   int randomNumber = 0;
-  String _authStatus = 'Unknown';
+  //String _authStatus = 'Unknown';
 
   String tcPdfPath = '';
   String tosPdfPath = '';
