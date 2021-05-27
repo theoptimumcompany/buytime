@@ -121,6 +121,8 @@
 	<string>This is required to use Face Recognition and improve security (e.g., 3DS2 payment)</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>This is required to show your near-by services</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>This is required to show your near-by services</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>This is required to allow the app to connect with your microphone (hence for you to talk via the app, like our speak with Eve concierge feature)</string>
 	<key>NSMotionUsageDescription</key>
@@ -129,8 +131,6 @@
 	<string>This is required to import pictures from your library</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>This is required to allow you insert data using speech recognition</string>
-	<key>NSUserTrackingUsageDescription</key>
-	<string>This is required to allow the AI to create meaningful suggestions to improve your experience </string>
 	<key>SKAdNetworkItems</key>
 	<array>
 		<dict>

@@ -47,25 +47,25 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   String tosPdfPath = '';
   String urlPdf = '';
 
-  Future<void> initPlugin() async {
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
-      final TrackingStatus status = await AppTrackingTransparency.trackingAuthorizationStatus;
-      setState(() => _authStatus = '$status');
-      // If the system can show an authorization request dialog
-      if (status == TrackingStatus.notDetermined) {
-          final TrackingStatus status = await AppTrackingTransparency.requestTrackingAuthorization();
-          setState(() => _authStatus = '$status');
-
-      }
-    } on PlatformException {
-      setState(() => _authStatus = 'PlatformException was thrown');
-    }
-  }
+  // Future<void> initPlugin() async {
+  //   // Platform messages may fail, so we use a try/catch PlatformException.
+  //   try {
+  //     final TrackingStatus status = await AppTrackingTransparency.trackingAuthorizationStatus;
+  //     setState(() => _authStatus = '$status');
+  //     // If the system can show an authorization request dialog
+  //     if (status == TrackingStatus.notDetermined) {
+  //         final TrackingStatus status = await AppTrackingTransparency.requestTrackingAuthorization();
+  //         setState(() => _authStatus = '$status');
+  //
+  //     }
+  //   } on PlatformException {
+  //     setState(() => _authStatus = 'PlatformException was thrown');
+  //   }
+  // }
 
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) => initPlugin());
+   // WidgetsBinding.instance.addPostFrameCallback((_) => initPlugin());
 
     _animationController = AnimationController(vsync: this, duration: Duration(seconds: 5));
 
