@@ -577,6 +577,7 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
   }
 
   bool hasService = false;
+  bool canEditCategory = false;
   @override
   Widget build(BuildContext context) {
     var media = MediaQuery
@@ -585,6 +586,7 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
     return StoreConnector<AppState, AppState>(
         converter: (store) => store.state,
         builder: (context, snapshot) {
+          canEditCategory = canEdit(snapshot.category);
           if(snapshot.serviceListSnippetState.businessSnippet != null){
             snapshot.serviceListSnippetState.businessSnippet.forEach((element) {
               if(element.categoryAbsolutePath.split('/').last == snapshot.category.id){
@@ -657,7 +659,7 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                               ),
                               ///Title
                               Utils.barTitle(AppLocalizations.of(context).editSpace + ' ' + snapshot.category.name),
-                              canEdit(snapshot.category) ?
+                              canEditCategory ?
                               Padding(
                                 padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
                                 child: IconButton(
@@ -704,12 +706,12 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                             ],
                           ),
                           floatingActionButton: FloatingActionButton(
-                            onPressed: canEdit(snapshot.category) ? () {
+                            onPressed: canEditCategory ? () {
                               print("add worker/manager");
                               _modalAddPerson(context);
                             } : null,
                             child: Icon(Icons.add),
-                            backgroundColor: canEdit(snapshot.category) ? BuytimeTheme.Secondary : BuytimeTheme.TextMedium,
+                            backgroundColor: canEditCategory ? BuytimeTheme.Secondary : BuytimeTheme.TextMedium,
                           ),
                           body: SingleChildScrollView(
                             child: ConstrainedBox(
@@ -812,9 +814,9 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                                                   ],
                                                   decoration:
                                                   InputDecoration(
-                                                      enabled: canEdit(snapshot.category) ? true : false,
+                                                      enabled: canEditCategory ? true : false,
                                                       labelText: AppLocalizations.of(context).customTag, enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white))),
-                                                  onChanged: canEdit(snapshot.category) ? (value) {
+                                                  onChanged: canEditCategory ? (value) {
                                                     setState(() {
                                                       customTag = value;
                                                       setNewCategoryCustomTag(customTag);
@@ -940,7 +942,7 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                                                               //_selected = !_selected;
                                                             });
                                                           },
-                                                          onDeleted: canEdit(snapshot.category) ? () {
+                                                          onDeleted: canEditCategory ? () {
                                                             Manager managerToDelete = Manager(id: "", name: "", surname: "", mail:e.mail);
                                                             print("Mail di invito Manager da eliminare : " + e.mail);
                                                             CategoryInviteState categoryInviteState = CategoryInviteState().toEmpty();
@@ -1066,7 +1068,7 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                                                                 //_selected = !_selected;
                                                               });
                                                             },
-                                                            onDeleted: canEdit(snapshot.category) ? () {
+                                                            onDeleted: canEditCategory ? () {
                                                               Worker workerToDelete = Worker(id: "", name: "", surname: "", mail: e.mail);
                                                               print("Mail di invito Worker da eliminare : " + e.mail);
                                                               CategoryInviteState categoryInviteState = CategoryInviteState().toEmpty();

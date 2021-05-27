@@ -4,6 +4,7 @@ import 'package:Buytime/UI/management/business/widget/W_invite_user.dart';
 import 'package:Buytime/UI/management/category/widget/W_category_list_item.dart';
 import 'package:Buytime/UI/management/service_external/UI_M_external_service_list.dart';
 import 'package:Buytime/reblox/model/category/snippet/category_snippet_state.dart';
+import 'package:Buytime/reblox/model/role/role.dart';
 import 'package:Buytime/reblox/model/snippet/service_list_snippet_state.dart';
 import 'package:Buytime/reblox/reducer/external_business_imported_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/external_service_imported_list_reducer.dart';
@@ -141,17 +142,17 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
               print("UI_M_Business => Category: ${allC.categoryName} | Category services: ${allC.serviceList.length}");
               if(allC.categoryAbsolutePath.split('/').first == snapshot.business.id_firestore){
                 internalCategories.forEach((c) {
-                  print("UI_M_Business => Category: ${c.categoryName} | Category services: ${c.serviceList.length}");
+                  print("UI_M_Business => Category: INTERNAL | ${c.categoryName} | Category services: ${c.serviceList.length}");
                   if(allC.categoryAbsolutePath != c.categoryAbsolutePath && allC.categoryAbsolutePath.split('/').contains(c.categoryAbsolutePath.split('/').last)){
-                    print("UI_M_Business => Main category: ${c.categoryName}");
-                    print("UI_M_Business => Sub category: ${allC.categoryName}");
-                    print("UI_M_Business => Sub category service list length: ${allC.serviceList.length}");
-                    print("UI_M_Business => BEFORE | Main category service list length: ${c.serviceList.length}");
+                    print("UI_M_Business => INTERNAL | Main category: ${c.categoryName}");
+                    print("UI_M_Business => INTERNAL | Sub category: ${allC.categoryName}");
+                    print("UI_M_Business => INTERNAL | Sub category service list length: ${allC.serviceList.length}");
+                    print("UI_M_Business => INTERNAL | BEFORE | Main category service list length: ${c.serviceList.length}");
                     allC.serviceList.forEach((s) {
                       if(!c.serviceList.contains(s))
                         c.serviceList.add(s);
                     });
-                    print("UI_M_Business => AFTER | Main category service list length: ${c.serviceList.length}");
+                    print("UI_M_Business => INTERNAL | AFTER | Main category service list length: ${c.serviceList.length}");
                     c.serviceNumberInternal = c.serviceList.length;
                   }
                 });
@@ -159,17 +160,17 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
 
               if(allC.categoryAbsolutePath.split('/').first != snapshot.business.id_firestore){
                 externalCategories.forEach((c) {
-                  print("UI_M_Business => Category: ${c.categoryName} | Category services: ${c.serviceList.length}");
+                  print("UI_M_Business => Category: EXTERNAL | ${c.categoryName} | Category services: ${c.serviceList.length}");
                   if(allC.categoryAbsolutePath != c.categoryAbsolutePath && allC.categoryAbsolutePath.split('/').contains(c.categoryAbsolutePath.split('/').last)){
-                    print("UI_M_Business => Main category: ${c.categoryName}");
-                    print("UI_M_Business => Sub category: ${allC.categoryName}");
-                    print("UI_M_Business => Sub category service list length: ${allC.serviceList.length}");
-                    print("UI_M_Business => BEFORE | Main category service list length: ${c.serviceList.length}");
+                    print("UI_M_Business => EXTERNAL | Main category: ${c.categoryName}");
+                    print("UI_M_Business => EXTERNAL | Sub category: ${allC.categoryName}");
+                    print("UI_M_Business => EXTERNAL | Sub category service list length: ${allC.serviceList.length}");
+                    print("UI_M_Business => EXTERNAL | BEFORE | Main category service list length: ${c.serviceList.length}");
                     allC.serviceList.forEach((s) {
                       if(!c.serviceList.contains(s))
                         c.serviceList.add(s);
                     });
-                    print("UI_M_Business => AFTER | Main category service list length: ${c.serviceList.length}");
+                    print("UI_M_Business => EXTERNAL | AFTER | Main category service list length: ${c.serviceList.length}");
                     c.serviceNumberExternal = c.serviceList.length;
                   }
                 });
@@ -247,7 +248,9 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                 ///Title
                 //Utils.barTitle(AppLocalizations.of(context).dashboard),
                 Utils.barTitle('${snapshot.business.name} ${AppLocalizations.of(context).justDashboard}'),
-                !snapshot.user.manager && !snapshot.user.worker ? Padding(
+                StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin ||
+                    StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman ||
+                    StoreProvider.of<AppState>(context).state.user.getRole() == Role.owner ? Padding(
                     padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
                     child: InkWell(
                       borderRadius: BorderRadius.all(Radius.circular(5.0)),

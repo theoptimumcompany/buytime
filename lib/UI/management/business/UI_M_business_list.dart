@@ -3,6 +3,7 @@ import 'package:Buytime/UI/management/business/UI_M_manage_business.dart';
 import 'package:Buytime/UI/management/business/UI_M_business.dart';
 import 'package:Buytime/UI/management/category/UI_M_manage_category.dart';
 import 'package:Buytime/reblox/model/business/business_list_state.dart';
+import 'package:Buytime/reblox/model/role/role.dart';
 import 'package:Buytime/reblox/reducer/booking_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/service_list_snippet_list_reducer.dart';
 import 'package:Buytime/reusable/enterExitRoute.dart';
@@ -126,7 +127,9 @@ class UI_M_BusinessListState extends State<UI_M_BusinessList> {
                     ///Title
                     Utils.barTitle(AppLocalizations.of(context).businessManagement),
                     ///Add Icon
-                    !snapshot.user.manager && !snapshot.user.worker ? Padding(
+                    StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin ||
+                        StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman ||
+                        StoreProvider.of<AppState>(context).state.user.getRole() == Role.owner ? Padding(
                       padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
                       child: IconButton(
                         icon: const Icon(

@@ -15,6 +15,7 @@ import 'package:Buytime/reblox/model/service/snippet/service_snippet_state.dart'
 import 'package:Buytime/reblox/model/snippet/service_list_snippet_state.dart';
 import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
 import 'package:Buytime/reblox/reducer/category_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/category_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_tree_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/service_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/service_reducer.dart';
@@ -522,6 +523,11 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                                                           child: GestureDetector(
                                                             onTap: () {
                                                               debugPrint('UI_M_service_list => TAP SERVICE in Gesture');
+                                                              if(snapshot.category.categoryRootId != listOfServiceEachRoot[i][index].serviceAbsolutePath.split('/')[1]){
+                                                                debugPrint('UI_M_service_list => NOT SAME CATEGORY');
+                                                                StoreProvider.of<AppState>(context).dispatch(CategoryRequest(listOfServiceEachRoot[i][index].serviceAbsolutePath.split('/')[1]));
+                                                              }
+
                                                               //StoreProvider.of<AppState>(context).dispatch(SetService(listOfServiceEachRoot[i][index]));
                                                               //Navigator.push(context, MaterialPageRoute(builder: (context) => UI_EditService()),);
                                                               Navigator.push(context, EnterExitRoute(enterPage: UI_EditService(id(listOfServiceEachRoot[i][index].serviceAbsolutePath),listOfServiceEachRoot[i][index].serviceName), exitPage: UI_M_ServiceList(), from: true));

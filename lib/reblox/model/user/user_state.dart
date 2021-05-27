@@ -159,9 +159,9 @@ class UserState {
   getRole() {
     if (this == null) return Role.user;
     if (this.admin) return Role.admin;
-    if (this.manager) return Role.manager;
     if (this.salesman) return Role.salesman;
     if (this.owner) return Role.owner;
+    if (this.manager) return Role.manager;
     if (this.worker) return Role.worker;
     return Role.user;
   }

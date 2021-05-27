@@ -100,11 +100,14 @@ class WidgetServicePhotoState extends State<WidgetServicePhoto> {
 
     if (pickedFile != null) {
       var decodedImage = await decodeImageFromList(await pickedFile.readAsBytes());
+      final bytes = (await pickedFile.readAsBytes()).lengthInBytes;
+      final kb = bytes / 1024;
+      final mb = kb / 1024;
+      print('optimum_from_multi_photo WIDTH: ${decodedImage.width}');
+      print('optimum_from_multi_photo LENGTH: ${decodedImage.height}');
+      print('optimum_from_multi_photo SIZE: MB: $mb | KB: $kb');
 
-      print('optimum_from_multi_photo: ${decodedImage.width}');
-      print('optimum_from_multi_photo: ${decodedImage.height}');
-
-      if (decodedImage.width < 1000 && decodedImage.height < 1000) {
+      if (decodedImage.width < 1000 && decodedImage.height < 1000 && mb < 4) {
         debugPrint('optimum_from_multi_photo: no crop');
         setState(() {
           underReqSize = true;

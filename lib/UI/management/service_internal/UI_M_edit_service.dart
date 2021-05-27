@@ -4,6 +4,7 @@ import 'package:Buytime/UI/management/service_internal/widget/W_service_photo.da
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/area/area_list_state.dart';
 import 'package:Buytime/reblox/model/category/tree/category_tree_state.dart';
+import 'package:Buytime/reblox/model/role/role.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/model/snippet/parent.dart';
 import 'package:Buytime/reblox/reducer/category_tree_reducer.dart';
@@ -202,6 +203,28 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
   bool startRequest = false;
   bool noActivity = false;
 
+
+  bool canEdit(){
+    bool edit = false;
+    debugPrint('UI_M_edit_service => USER ROLE: ${StoreProvider.of<AppState>(context).state.user.getRole()}');
+    if(StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin ||
+        StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman ||
+        StoreProvider.of<AppState>(context).state.user.getRole() == Role.owner){
+      edit = true;
+      debugPrint('UI_M_edit_service => CAN EDIT ${Utils.enumToString(StoreProvider.of<AppState>(context).state.user.getRole())}');
+    }
+    StoreProvider.of<AppState>(context).state.category.manager.forEach((email) {
+      if(email.mail == StoreProvider.of<AppState>(context).state.user.email){
+        edit = true;
+        debugPrint('UI_M_edit_service => CAN EDIT MANAGER');
+      }
+    });
+
+    return edit;
+  }
+
+  bool canEditService = false;
+
   @override
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
@@ -230,6 +253,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
           },
           //onDidChange: (store) => validateReservableService(),
           builder: (context, snapshot) {
+            canEditService  = canEdit();
             List<String> flagsCharCode = [];
             List<String> languageCode = [];
             Locale myLocale = Localizations.localeOf(context);
@@ -315,7 +339,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                 Flexible(
                                   child: Utils.barTitle('${AppLocalizations.of(context).editSpace} ${nameController.text}'),
                                 ),
-                                !snapshot.user.worker ? Container(
+                                canEditService ? Container(
                                   child: IconButton(
                                       icon: Icon(Icons.check, color: Colors.white),
                                       onPressed: () {
@@ -343,6 +367,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                           debugPrint('UI_M_create_service => Service Business Address: ${tmpService.serviceBusinessAddress}');
                                           debugPrint('UI_M_create_service => Service Coordinates: ${tmpService.serviceCoordinates}');
                                           debugPrint('UI_M_create_service => Service Business Coordinates: ${tmpService.serviceBusinessCoordinates}');
+                                          debugPrint('UI_M_create_service => FILE TO UPLOAD LSIT: ${tmpService.fileToUploadList.length}');
                                           StoreProvider.of<AppState>(context).dispatch(SetServiceServiceCrossSell(snapshot.serviceState.serviceCrossSell));
 
                                           /// set the area of the service
@@ -446,7 +471,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                     //width: SizeConfig.safeBlockHorizontal * 60,
                                                     // decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
                                                       child: TextFormField(
-                                                        enabled: !snapshot.user.worker,
+                                                        enabled: canEditService,
                                                           controller: nameController,
                                                           validator: (value) => value.isEmpty ? AppLocalizations.of(context).serviceNameBlank : null,
                                                           /*onChanged: (value) {
@@ -464,7 +489,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                           },
                                                           style: TextStyle(
                                                             fontFamily: BuytimeTheme.FontFamily,
-                                                            color: !snapshot.user.worker ? BuytimeTheme.TextBlack : BuytimeTheme.TextGrey
+                                                            color: canEditService ? BuytimeTheme.TextBlack : BuytimeTheme.TextGrey
                                                           ),
                                                           decoration: InputDecoration(
                                                             labelText: AppLocalizations.of(context).name,
@@ -478,9 +503,9 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                 IconButton(
                                                   icon: Icon(
                                                     Icons.g_translate,
-                                                    color: !snapshot.user.worker ? BuytimeTheme.ManagerPrimary : BuytimeTheme.TextGrey,
+                                                    color: canEditService ? BuytimeTheme.ManagerPrimary : BuytimeTheme.TextGrey,
                                                   ),
-                                                  onPressed: !snapshot.user.worker ? (){
+                                                  onPressed: canEditService ? (){
                                                     setState(() {
                                                       rippleTranslate = true;
                                                     });
@@ -513,7 +538,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                     //width: SizeConfig.safeBlockHorizontal * 60,
                                                     // decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
                                                       child: TextFormField(
-                                                          enabled: !snapshot.user.worker,
+                                                          enabled: canEditService,
                                                           keyboardType: TextInputType.multiline,
                                                           maxLines: null,
                                                           controller: descriptionController,
@@ -528,7 +553,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                     }
                                                   },*/style: TextStyle(
                                                           fontFamily: BuytimeTheme.FontFamily,
-                                                          color: !snapshot.user.worker ? BuytimeTheme.TextBlack : BuytimeTheme.TextGrey
+                                                          color: canEditService ? BuytimeTheme.TextBlack : BuytimeTheme.TextGrey
                                                       ),
                                                           onEditingComplete: (){
                                                             StoreProvider.of<AppState>(context).dispatch(SetServiceDescription(Utils.saveField(myLocale.languageCode, descriptionController.text, snapshot.serviceState.description)));
@@ -547,9 +572,9 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                 IconButton(
                                                   icon: Icon(
                                                     Icons.g_translate,
-                                                    color: !snapshot.user.worker ? BuytimeTheme.ManagerPrimary : BuytimeTheme.TextGrey,
+                                                    color: canEditService ? BuytimeTheme.ManagerPrimary : BuytimeTheme.TextGrey,
                                                   ),
-                                                  onPressed: !snapshot.user.worker ? (){
+                                                  onPressed: canEditService ? (){
                                                     setState(() {
                                                       rippleTranslate = true;
                                                     });
@@ -584,7 +609,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                 child: Padding(
                                                   padding: const EdgeInsets.only(top: 0.0, bottom: 5.0, left: 10.0, right: 10.0),
                                                   child: TextFormField(
-                                                    enabled: !snapshot.user.worker,
+                                                    enabled: canEditService,
                                                     controller: priceController,
                                                     keyboardType: TextInputType.numberWithOptions(signed: true, decimal: true),
                                                     textInputAction: TextInputAction.done,
@@ -651,7 +676,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                     },
                                                     style: TextStyle(
                                                         fontFamily: BuytimeTheme.FontFamily,
-                                                        color: !snapshot.user.worker ? BuytimeTheme.TextBlack : BuytimeTheme.TextGrey
+                                                        color: canEditService ? BuytimeTheme.TextBlack : BuytimeTheme.TextGrey
                                                     ),
                                                     decoration: InputDecoration(
                                                       labelText: AppLocalizations.of(context).price,
@@ -708,9 +733,9 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                 IconButton(
                                                   icon: Icon(
                                                     Icons.add_location_rounded,
-                                                    color: !snapshot.user.worker ? BuytimeTheme.ManagerPrimary : BuytimeTheme.TextGrey,
+                                                    color: canEditService ? BuytimeTheme.ManagerPrimary : BuytimeTheme.TextGrey,
                                                   ),
-                                                  onPressed: !snapshot.user.worker ? (){
+                                                  onPressed: canEditService ? (){
                                                     Utils.googleSearch(
                                                         context,
                                                             (place){
@@ -815,7 +840,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                                 height: 45,
                                                                 width: media.width * 0.55,
                                                                 child: TextFormField(
-                                                                  enabled: !snapshot.user.worker,
+                                                                  enabled: canEditService,
                                                                   controller: _tagServiceController,
                                                                   textAlign: TextAlign.start,
                                                                   decoration: InputDecoration(
@@ -847,7 +872,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                                     size: 30,
                                                                     color: BuytimeTheme.TextGrey,
                                                                   ),
-                                                                  onPressed:!snapshot.user.worker ? () {
+                                                                  onPressed:canEditService ? () {
                                                                     setState(() {
                                                                       if (_tagServiceController.text.isNotEmpty) {
                                                                         snapshot.serviceState.tag.add(_tagServiceController.text);
@@ -875,7 +900,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                                       fontWeight: FontWeight.w500,
                                                                     ),
                                                                   ),
-                                                                  onDeleted: !snapshot.user.worker ?() {
+                                                                  onDeleted: canEditService ?() {
                                                                     setState(() {
                                                                       snapshot.serviceState.tag.remove(snapshot.serviceState.tag[index]);
                                                                     });
@@ -941,7 +966,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                       Switch(
                                                           activeColor: BuytimeTheme.ManagerPrimary,
                                                           value: snapshot.serviceState.switchAutoConfirm,
-                                                          onChanged: !snapshot.user.worker ? (value) {
+                                                          onChanged: canEditService ? (value) {
                                                             setState(() {
                                                               StoreProvider.of<AppState>(context).dispatch(SetServiceSwitchAutoConfirm(value));
                                                             });
@@ -971,7 +996,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                       Switch(
                                                           activeColor: BuytimeTheme.ManagerPrimary,
                                                           value: snapshot.serviceState.serviceCrossSell,
-                                                          onChanged: !snapshot.user.worker ? (value) {
+                                                          onChanged: canEditService ? (value) {
                                                             setState(() {
                                                               StoreProvider.of<AppState>(context).dispatch(SetServiceServiceCrossSell(value));
                                                             });
@@ -1004,7 +1029,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                       Switch(
                                                           activeColor: BuytimeTheme.ManagerPrimary,
                                                           value: snapshot.serviceState.switchSlots,
-                                                          onChanged: !snapshot.user.worker ?  (value) {
+                                                          onChanged: canEditService ?  (value) {
                                                             setState(() {
                                                               StoreProvider.of<AppState>(context).dispatch(SetServiceSwitchSlots(value));
                                                             });
@@ -1093,7 +1118,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                       Container(
                                                           child: GestureDetector(
                                                             child: Icon(Icons.add, color: BuytimeTheme.SymbolGrey),
-                                                            onTap: !snapshot.user.worker ? () {
+                                                            onTap: canEditService ? () {
                                                               ///Svuoto lo stato dello slot
                                                               StoreProvider.of<AppState>(context).dispatch(SetServiceSlotToEmpty());
                                                               Navigator.push(
@@ -1121,7 +1146,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                       itemBuilder: (context, index) {
                                                         return Dismissible(
                                                           key: UniqueKey(),
-                                                          direction: !snapshot.user.worker ? DismissDirection.endToStart : DismissDirection.none,
+                                                          direction: canEditService ? DismissDirection.endToStart : DismissDirection.none,
                                                           background: Container(
                                                             color: Colors.red,
                                                             margin: EdgeInsets.symmetric(horizontal: 0),
@@ -1138,7 +1163,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                             });
                                                           },
                                                           child: GestureDetector(
-                                                            onTap: !snapshot.user.worker ? () {
+                                                            onTap: canEditService ? () {
                                                               StoreProvider.of<AppState>(context).dispatch(SetServiceSlot(snapshot.serviceState.serviceSlot[index]));
                                                               Navigator.push(
                                                                 context,

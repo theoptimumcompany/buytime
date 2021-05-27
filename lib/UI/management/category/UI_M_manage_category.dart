@@ -745,7 +745,10 @@ class ManageCategoryState extends State<ManageCategory> with SingleTickerProvide
                       onNodeTap: (key) {
                         _treeViewController =
                             _treeViewController.copyWith(selectedKey: key);
-                        StoreProvider.of<AppState>(context).dispatch(CategoryRequest(key));
+                        if(snapshot.category.categoryRootId != key){
+                          debugPrint('UI_M_manage_category => NOT SAME CATEGORY');
+                          StoreProvider.of<AppState>(context).dispatch(CategoryRequest(key));
+                        }
                         Future.delayed(const Duration(milliseconds: 500), () {
                           //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_EditCategory()),);
                           Navigator.push(context, EnterExitRoute(enterPage: UI_M_EditCategory(), exitPage: ManageCategory(), from: true));
