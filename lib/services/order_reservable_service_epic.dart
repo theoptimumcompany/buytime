@@ -512,6 +512,7 @@ class CreateOrderReservableCardPendingService implements EpicClass<AppState> {
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<CreateOrderReservableCardPending>().asyncMap((event) async {
+      debugPrint('order_reservable_service => in epic, itemList: ' + event.orderReservableState.itemList.length.toString());
       for (int i = 0; i < event.orderReservableState.itemList.length; i++) {
         reservable = orderReservableInitialization(event, i);
         debugPrint('UI_U_ConfirmOrder => Date: ${reservable.date}');

@@ -21,6 +21,12 @@ class BusinessState {
   String nation; /// old
   String ZIP; /// old
   @JsonKey(defaultValue: '')
+  String phoneSalesman;
+  @JsonKey(defaultValue: '')
+  String salesmanName;
+  @JsonKey(defaultValue: '')
+  String phoneConcierge;
+  @JsonKey(defaultValue: '')
   String country;
   @JsonKey(defaultValue: '')
   String address;
@@ -69,6 +75,9 @@ class BusinessState {
     @required this.municipality,
     @required this.street_number,
     @required this.ZIP,
+    @required this.salesmanName,
+    @required this.phoneSalesman,
+    @required this.phoneConcierge,
     @required this.state_province,
     @required this.nation,
     @required this.country,
@@ -111,6 +120,9 @@ class BusinessState {
       street: "",
       street_number: "",
       ZIP: "",
+        salesmanName: "",
+        phoneSalesman: "",
+        phoneConcierge: "",
       state_province: "",
       nation: "",
         country: "",
@@ -155,6 +167,9 @@ class BusinessState {
     this.municipality = state.municipality;
     this.street_number = state.street_number;
     this.ZIP = state.ZIP;
+    this.salesmanName = state.salesmanName;
+    this.phoneSalesman = state.phoneSalesman;
+    this.phoneConcierge = state.phoneConcierge;
     this.state_province = state.state_province;
     this.nation = state.nation;
     this.country = state.country;
@@ -197,6 +212,9 @@ class BusinessState {
     this.municipality = state.municipality;
     this.street_number = state.street_number;
     this.ZIP = state.ZIP;
+    this.salesmanName = state.salesmanName;
+    this.phoneSalesman = state.phoneSalesman;
+    this.phoneConcierge = state.phoneConcierge;
     this.state_province = state.state_province;
     this.nation = state.nation;
     this.country = state.country;
@@ -239,6 +257,9 @@ class BusinessState {
     String municipality,
     String street_number,
     String ZIP,
+    String salesmanName,
+    String phoneSalesman,
+    String phoneConcierge,
     String state_province,
     String nation,
     String country,
@@ -280,6 +301,9 @@ class BusinessState {
       municipality: municipality ?? this.municipality,
       street_number: street_number ?? this.street_number,
       ZIP: ZIP ?? this.ZIP,
+      salesmanName: salesmanName ?? this.salesmanName,
+      phoneSalesman: phoneSalesman ?? this.phoneSalesman,
+      phoneConcierge: phoneConcierge ?? this.phoneConcierge,
       state_province: state_province ?? this.state_province,
       nation: nation ?? this.nation,
       country: country ?? this.country,

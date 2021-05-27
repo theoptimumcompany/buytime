@@ -178,6 +178,7 @@ void main(){
     CreateOrderReservableRoomAndPayService(),
     CreateOrderReservableRoomPendingService(),
     AddingReservableStripePaymentMethodRequest(),
+    CreateOrderReservableCardPendingService(),
     EmailCreateService(),
     ServiceListSnippetRequestService(),
     ServiceListSnippetListRequestService(),

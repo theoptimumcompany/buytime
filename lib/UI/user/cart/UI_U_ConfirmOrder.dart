@@ -635,7 +635,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
     if (widget.reserve != null && widget.reserve) {
       StoreProvider.of<AppState>(context).dispatch(CreatingOrder());
       /// Reservable payment process starts
-      debugPrint('UI_U_ConfirmOrder => order is reservable ' + snapshot.orderReservable.isOrderAutoConfirmable().toString());
+      debugPrint('UI_U_ConfirmOrder => order is isOrderAutoConfirmable ' + snapshot.orderReservable.isOrderAutoConfirmable().toString());
       if (snapshot.orderReservable.isOrderAutoConfirmable()) {
         if(Utils.getTimeInterval(orderReservableState) == OrderTimeInterval.directPayment) {
           StoreProvider.of<AppState>(context).dispatch(CreateOrderReservableCardAndPay(snapshot.orderReservable, last4, brand, country, selectedCardPaymentMethodId, PaymentType.card, context, snapshot.business.stripeCustomerId));
@@ -645,6 +645,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
           StoreProvider.of<AppState>(context).dispatch(CreateOrderReservableCardAndReminder(snapshot.orderReservable, last4, brand, country, selectedCardPaymentMethodId, PaymentType.card, context, snapshot.business.stripeCustomerId));
         }
       } else {
+        debugPrint('UI_U_ConfirmOrder => dispatching pending order creation');
         StoreProvider.of<AppState>(context).dispatch(CreateOrderReservableCardPending(snapshot.orderReservable, last4, brand, country, selectedCardPaymentMethodId, PaymentType.card, context, snapshot.business.stripeCustomerId));
       }
     } else {
