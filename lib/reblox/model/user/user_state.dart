@@ -25,6 +25,12 @@ class UserState {
   String photo;
   List<String> device;
   List<String> token;
+  @JsonKey(ignore: true)
+  List<String> managerAccessTo;
+  @JsonKey(ignore: true)
+  List<String> workerAccessTo;
+
+
   UserState({
     this.name,
     this.surname,
@@ -45,6 +51,8 @@ class UserState {
     this.photo,
     this.device,
     this.token,
+    this.managerAccessTo,
+    this.workerAccessTo,
   });
 
   UserState.fromState(UserState user) {
@@ -67,6 +75,8 @@ class UserState {
     this.photo = user.photo;
     this.device = user.device;
     this.token = user.token;
+    this.managerAccessTo = user.managerAccessTo;
+    this.workerAccessTo = user.workerAccessTo;
   }
 
   UserState toEmpty() {
@@ -89,6 +99,8 @@ class UserState {
       worker: false,
       photo: "",
       device: [""],
+      managerAccessTo: [""],
+      workerAccessTo: [""],
     );
   }
 
@@ -111,7 +123,10 @@ class UserState {
       bool worker,
       String photo,
       List<String> device,
-      String token}) {
+        List<String> token,
+        List<String> managerAccessTo,
+        List<String> workerAccessTo,
+      }) {
     return UserState(
       name: name ?? this.name,
       surname: surname ?? this.surname,
@@ -132,6 +147,8 @@ class UserState {
       photo: photo ?? this.photo,
       device: device ?? this.device,
       token: token ?? this.token,
+      managerAccessTo: managerAccessTo ?? this.managerAccessTo,
+      workerAccessTo: workerAccessTo ?? this.workerAccessTo,
     );
   }
 
@@ -154,6 +171,8 @@ class UserState {
         admin = false,
         device = [deviceId],
         token = serverToken,
+        managerAccessTo = [],
+        workerAccessTo = [],
         photo = user.photoURL;
 
   getRole() {

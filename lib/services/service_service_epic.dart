@@ -793,25 +793,35 @@ class ServiceUpdateService implements EpicClass<AppState> {
 }
 
 Future<ServiceState> uploadFiles(List<OptimumFileToUpload> fileToUploadList, ServiceState serviceState) async {
+  debugPrint('service_service_epic => FILE TO UPLOAD LENGTH: ${fileToUploadList.length}');
   for (int index = 0; index < fileToUploadList.length; index++) {
     String fileUrl = await uploadToFirebaseStorage(fileToUploadList[index]);
-    if (Uri.parse(fileUrl).toString().contains(serviceState.name + '_1')) {
+    debugPrint('service_service_epic => IMAGE: ${fileUrl.toString()}');
+    debugPrint('service_service_epic => URI PARSE: ${Uri.parse(fileUrl).toString()}');
+    if (Uri.decodeFull(fileUrl).contains(serviceState.name + '_1')) {
+      serviceState.image1 = fileUrl.toString();
+    } else if (Uri.decodeFull(fileUrl).contains(serviceState.name + '_2')) {
+      serviceState.image2 = fileUrl.toString();
+    } else if (Uri.decodeFull(fileUrl).contains(serviceState.name + '_3')) {
+      serviceState.image3 = fileUrl.toString();
+    }
+    /*if (Uri.parse(fileUrl).toString().contains(serviceState.name + '_1')) {
       serviceState.image1 = fileUrl.toString();
     } else if (Uri.parse(fileUrl).toString().contains(serviceState.name + '_2')) {
       serviceState.image2 = fileUrl.toString();
     } else if (Uri.parse(fileUrl).toString().contains(serviceState.name + '_3')) {
       serviceState.image3 = fileUrl.toString();
-    }
+    }*/
 
-    // await uploadToFirebaseStorage(fileToUploadList[index]).then((String fileUrl) {
-    //   if (Uri.decodeFull(fileUrl).contains(serviceState.name + '_1')) {
-    //     serviceState.image1 = fileUrl.toString();
-    //   } else if (Uri.decodeFull(fileUrl).contains(serviceState.name + '_2')) {
-    //     serviceState.image2 = fileUrl.toString();
-    //   } else if (Uri.decodeFull(fileUrl).contains(serviceState.name + '_3')) {
-    //     serviceState.image3 = fileUrl.toString();
-    //   }
-    // });
+    /*await uploadToFirebaseStorage(fileToUploadList[index]).then((String fileUrl) {
+      if (Uri.decodeFull(fileUrl).contains(serviceState.name + '_1')) {
+        serviceState.image1 = fileUrl.toString();
+      } else if (Uri.decodeFull(fileUrl).contains(serviceState.name + '_2')) {
+        serviceState.image2 = fileUrl.toString();
+      } else if (Uri.decodeFull(fileUrl).contains(serviceState.name + '_3')) {
+        serviceState.image3 = fileUrl.toString();
+      }
+    });*/
   }
   return serviceState;
 }

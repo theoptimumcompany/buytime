@@ -164,6 +164,20 @@ class SetUserDevice
   List<String> get device => _device;
 }
 
+class SetUserManagerAccessTo
+{
+  List<String> _managerAccessTo;
+  SetUserManagerAccessTo(this._managerAccessTo);
+  List<String> get managerAccessTo => _managerAccessTo;
+}
+
+class SetUserWorkerAccessTo
+{
+  List<String> _workerAccessTo;
+  SetUserWorkerAccessTo(this._workerAccessTo);
+  List<String> get workerAccessTo => _workerAccessTo;
+}
+
 class SetUserStateToEmpty {
   String _something;
   SetUserStateToEmpty();
@@ -239,6 +253,14 @@ UserState userReducer(UserState state, action) {
   }
   if (action is SetUserDevice) {
     userState.device = action.device;
+    return userState;
+  }
+  if (action is SetUserManagerAccessTo) {
+    userState.managerAccessTo = action.managerAccessTo;
+    return userState;
+  }
+  if (action is SetUserWorkerAccessTo) {
+    userState.workerAccessTo = action.workerAccessTo;
     return userState;
   }
   if (action is UserChanged) {

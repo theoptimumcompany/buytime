@@ -164,8 +164,8 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
               selected: selectedCategoryList.any((element) => element.id == item.id),
               selectedColor: Theme.of(context).accentColor,
               labelStyle: TextStyle(
-                  color: !StoreProvider.of<AppState>(context).state.user.worker ? selectedCategoryList.any((element) => element.id == item.id) ? BuytimeTheme.TextBlack : BuytimeTheme.TextWhite : BuytimeTheme.TextBlack),
-              onSelected: !StoreProvider.of<AppState>(context).state.user.worker ? (selected) {
+                  color: canEditService ? selectedCategoryList.any((element) => element.id == item.id) ? BuytimeTheme.TextBlack : BuytimeTheme.TextWhite : BuytimeTheme.TextBlack),
+              onSelected: canEditService ? (selected) {
                 setState(() {
                   selectedCategoryList.clear();
                   selectedCategoryList.add(item);
@@ -257,6 +257,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
             List<String> flagsCharCode = [];
             List<String> languageCode = [];
             Locale myLocale = Localizations.localeOf(context);
+            debugPrint('UI_M_edit_service => MY LOCALE: ${myLocale}');
             if(snapshot.serviceState.serviceId != null){
               validateReservableService(); //TODO Check
               ///Popolo le categorie
@@ -275,12 +276,12 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
               });
 
               if(snapshot.serviceState.name.isNotEmpty && nameController.text.isEmpty){
-                debugPrint('UI_M_create_service => Service Name: ${snapshot.serviceState.name}');
+                debugPrint('UI_M_edit_service => Service Name: ${snapshot.serviceState.name}');
                 //nameController.clear();
                 nameController.text = Utils.retriveField(myLocale.languageCode, snapshot.serviceState.name);
               }
               if(snapshot.serviceState.description.isNotEmpty && descriptionController.text.isEmpty){
-                debugPrint('UI_M_create_service => Service Description: ${snapshot.serviceState.description}');
+                debugPrint('UI_M_edit_service => Service Description: ${snapshot.serviceState.description}');
                 //descriptionController.clear();
                 descriptionController.text = Utils.retriveField(myLocale.languageCode, snapshot.serviceState.description);
               }

@@ -42,6 +42,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:http/http.dart' as http;
 
 class Landing extends StatefulWidget {
   static String route = '/landing';
@@ -140,6 +141,8 @@ class LandingState extends State<Landing> {
           cards.add(LandingCardWidget(/*AppLocalizations.of(context).enterBookingCode*/'', AppLocalizations.of(context).startYourJourney, 'assets/img/booking_code.png', null));
           cards.add(LandingCardWidget(/*AppLocalizations.of(context).aboutBuytime*/'', AppLocalizations.of(context).discoverOurNetwork, 'assets/img/beach_girl.png', null));
 
+
+
         },
         builder: (context, snapshot) {
           bookingList.clear();
@@ -152,7 +155,9 @@ class LandingState extends State<Landing> {
             debugPrint('UI_U_Landing => USER EMAIL: ${snapshot.user.email}');
             StoreProvider.of<AppState>(context).dispatch(UserBookingListRequest(snapshot.user.email, false));
 
+
             WidgetsBinding.instance.addPostFrameCallback((_) async {
+              //https://europe-west1-buytime-458a1.cloudfunctions.net/getCategoriesForManagerInBusiness
               Navigator.push(context, MaterialPageRoute(builder: (context) => UI_M_BusinessList()));
             });
           }else{

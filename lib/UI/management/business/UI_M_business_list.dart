@@ -21,6 +21,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:http/http.dart' as http;
 
 class UI_M_BusinessList extends StatefulWidget {
   static String route = '/businessList';
@@ -166,7 +167,7 @@ class UI_M_BusinessListState extends State<UI_M_BusinessList> {
                                   child: new OptimumBusinessCardMediumManager(
                                     businessState: businessListState[index],
                                     networkServices: networkServicesList[index] ?? 0,
-                                    onBusinessCardTap: (BusinessState businessState) {
+                                    onBusinessCardTap: (BusinessState businessState) async{
                                       StoreProvider.of<AppState>(context).dispatch(SetBusiness(businessListState[index]));
                                       //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_Business()),);
                                       Navigator.push(context, EnterExitRoute(enterPage: UI_M_Business(), exitPage: UI_M_BusinessList(), from: true));
