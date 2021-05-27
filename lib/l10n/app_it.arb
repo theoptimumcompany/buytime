@@ -538,5 +538,7 @@
   "numberOfPeople": "Numero di persone",
   "crossSell": "Allow other businesses to sell this service",
   "problemsGettingYourPosition": "There are some problems in getting your position, try again later",
-  "spot": "posti disponibili"
+  "spot": "posti disponibili",
+
+  "worker": "Worker"
 }

@@ -1,4 +1,6 @@
 
+import 'dart:convert';
+
 import 'package:Buytime/UI/management/business/UI_M_edit_business.dart';
 import 'package:Buytime/UI/management/business/widget/W_invite_user.dart';
 import 'package:Buytime/UI/management/category/widget/W_category_list_item.dart';
@@ -9,6 +11,7 @@ import 'package:Buytime/reblox/model/snippet/service_list_snippet_state.dart';
 import 'package:Buytime/reblox/reducer/external_business_imported_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/external_service_imported_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/service_list_snippet_reducer.dart';
+import 'package:Buytime/reblox/reducer/user_reducer.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
 import 'package:Buytime/UI/management/service_internal/UI_M_service_list.dart';
 import 'package:Buytime/UI/model/manager_model.dart';
@@ -27,6 +30,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:http/http.dart' as http;
 
 
 class UI_M_Business extends StatefulWidget {
@@ -109,6 +113,45 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
 
         //hotel = false;
         startRequest = true;
+
+        WidgetsBinding.instance.addPostFrameCallback((_) async {
+          //https://europe-west1-buytime-458a1.cloudfunctions.net/getCategoriesForManagerInBusiness
+          //https://europe-west1-buytime-458a1.cloudfunctions.net/getCategoriesForWorkerInBusiness
+          debugPrint('UI_M_business_list => BUSIENSS ID: ${store.state.business.id_firestore}');
+          var urlManager = Uri.https('europe-west1-buytime-458a1.cloudfunctions.net', '/getCategoriesForManagerInBusiness', {'businessId': '${store.state.business.id_firestore}', 'userEmail': '${store.state.user.email}'});
+          var urlWorker = Uri.https('europe-west1-buytime-458a1.cloudfunctions.net', '/getCategoriesForWorkerInBusiness', {'businessId': '${store.state.business.id_firestore}', 'userEmail': '${store.state.user.email}'});
+          final http.Response responseManager = await http.get(urlManager);
+          if(responseManager.statusCode == 200){
+            debugPrint('UI_M_business_list => RESPONSE MANAGER: ${responseManager.body}');
+            debugPrint('UI_M_business_list => RESPONSE FROM JSON MANAGER: ${jsonDecode(responseManager.body)}');
+            debugPrint('UI_M_business_list => RESPONSE JSON MANAGER: ${jsonDecode(responseManager.body)['accessTo']}');
+            //store.state.user.accessTo = jsonDecode(response.body)['accessTo'];
+            var tmpJson = jsonDecode(responseManager.body)['accessTo'];
+            List<String> accessList = [];
+            tmpJson.forEach((element) {
+              accessList.add(element.toString());
+            });
+            store.dispatch(SetUserManagerAccessTo(accessList));
+          }else{
+            debugPrint('UI_M_business_list => RESPONSE MANAGER: ${responseManager.body}');
+          }
+          final http.Response responseWorker = await http.get(urlWorker);
+          if(responseWorker.statusCode == 200){
+            debugPrint('UI_M_business_list => RESPONSE WORKER: ${responseWorker.body}');
+            debugPrint('UI_M_business_list => RESPONSE FROM JSON WORKER: ${jsonDecode(responseWorker.body)}');
+            debugPrint('UI_M_business_list => RESPONSE JSON WORKER: ${jsonDecode(responseWorker.body)['accessTo']}');
+            //store.state.user.accessTo = jsonDecode(response.body)['accessTo'];
+            var tmpJson = jsonDecode(responseWorker.body)['accessTo'];
+            List<String> accessList = [];
+            tmpJson.forEach((element) {
+              accessList.add(element.toString());
+            });
+            store.dispatch(SetUserWorkerAccessTo(accessList));
+          }else{
+            debugPrint('UI_M_business_list => RESPONSE WORKER: ${responseWorker.body}');
+          }
+        });
+
       },
       builder: (context, snapshot) {
 

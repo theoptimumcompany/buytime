@@ -95,6 +95,47 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
     return path.split('/').last;
   }
 
+  bool canAccess(String id){
+    bool access = false;
+    if(StoreProvider.of<AppState>(context).state.user.managerAccessTo != null){
+      StoreProvider.of<AppState>(context).state.user.managerAccessTo.forEach((element) {
+        if(element == id)
+          access = true;
+      });
+    }
+    debugPrint('UI_M_service_list => CAN MANAGER ACCESS THE SERVICE? $access');
+
+    if(!access && !StoreProvider.of<AppState>(context).state.user.manager && !StoreProvider.of<AppState>(context).state.user.worker){
+        access = true;
+    }
+    debugPrint('UI_M_service_list => CAN MANAGER|OTHERS ACCESS THE SERVICE? $access');
+
+    return access;
+  }
+
+  bool canWorkerAccess(String id){
+    bool access = false;
+    if(StoreProvider.of<AppState>(context).state.user.workerAccessTo != null){
+      StoreProvider.of<AppState>(context).state.user.workerAccessTo.forEach((element) {
+        if(element == id)
+          access = true;
+      });
+    }
+
+    debugPrint('UI_M_service_list => CAN WORKER ACCESS THE SERVICE? $access');
+
+    if(!access && !StoreProvider.of<AppState>(context).state.user.worker){
+      access = true;
+    }
+
+    debugPrint('UI_M_service_list => CAN WORKER|OTHERS ACCESS THE SERVICE? $access');
+
+    return access;
+  }
+
+  bool canWorkerAccessService = false;
+  bool canAccessService = false;
+
   @override
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
@@ -128,6 +169,7 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
           startRequest = true;
           noActivity = false;
           debugPrint('UI_M_service_list => no activity ON INIT: ${noActivity}');
+          debugPrint('UI_M_service_list => USER ACCESS LIST: ${store.state.user.managerAccessTo}');
         },
         //onWillChange: (store, storeNew) => setServiceLists(storeNew.categoryList.categoryListState, storeNew.serviceList.serviceListState),
         builder: (context, snapshot) {
@@ -285,6 +327,8 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                           shrinkWrap: true,
                           itemCount: categories.length,
                           itemBuilder: (context, i) {
+                            debugPrint('UI:M:service:list => CATEGORY ID: ${id(categories[i].categoryAbsolutePath)}');
+                            canAccessService = canAccess(id(categories[i].categoryAbsolutePath));
                             return Container(
                               //height: 56,
                               child: Column(
@@ -326,7 +370,7 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                                       color: Colors.transparent,
                                       child: InkWell(
                                         //borderRadius: BorderRadius.all(Radius.circular(10)),
-                                        onTap: !snapshot.user.worker ? () async {
+                                        onTap: canAccessService ? () async {
                                           StoreProvider.of<AppState>(context).dispatch(SetService(ServiceState().toEmpty()));
                                           //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_CreateService(categoryId: categoryRootList[i].id)),);
                                           Navigator.push(context, EnterExitRoute(enterPage: UI_CreateService(categoryId: id(categories[i].categoryAbsolutePath)), exitPage: UI_M_ServiceList(), from: true));
@@ -391,6 +435,7 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                                       physics: const NeverScrollableScrollPhysics(),
                                       itemCount: listOfServiceEachRoot.length > 0 ? listOfServiceEachRoot[i].length : 0,
                                       itemBuilder: (context, index) {
+                                        canWorkerAccessService = canWorkerAccess(id(id(categories[i].categoryAbsolutePath)));
                                         Widget iconVisibility;
                                         switch (listOfServiceEachRoot[i][index].serviceVisibility) {
                                           case 'Active':
@@ -493,7 +538,7 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                       children: [
                                                         GestureDetector(
-                                                          onTap: () {
+                                                          onTap: canWorkerAccessService ? () {
                                                             setState(() {
                                                               switch (listOfServiceEachRoot[i][index].serviceVisibility) {
                                                                 case 'Active':
@@ -512,7 +557,7 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                                                               ///Aggiorno Database
                                                               StoreProvider.of<AppState>(context).dispatch(SetServiceListVisibilityOnFirebase(id(listOfServiceEachRoot[i][index].serviceAbsolutePath), listOfServiceEachRoot[i][index].serviceVisibility));
                                                             });
-                                                          },
+                                                          } : null,
                                                           child: Padding(
                                                               padding: EdgeInsets.only(left: mediaWidth * 0.12, right: mediaWidth * 0.07),
                                                               child: Container(

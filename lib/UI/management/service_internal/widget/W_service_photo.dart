@@ -205,6 +205,8 @@ class WidgetServicePhotoState extends State<WidgetServicePhoto> {
 
   @override
   Widget build(BuildContext context) {
+    //debugPrint('REMOTE PATH: $remotePath');
+    //debugPrint('IMAGE: $image');
     return Column(
       children: [
         Column(
