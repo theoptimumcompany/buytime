@@ -30,6 +30,8 @@ class OptimumFormMultiPhoto extends StatefulWidget {
   final int minHeight;
   final String image;
   final CropAspectRatioPreset cropAspectRatioPreset;
+  bool isWide;
+  //bool req;
   //List<Role> roleAllowedArray = [Role.admin, Role.salesman, Role.owner];
   List<Role> roleAllowedArray;
 
@@ -44,7 +46,8 @@ class OptimumFormMultiPhoto extends StatefulWidget {
       @required this.minWidth,
       @required this.cropAspectRatioPreset,
       this.image,
-      this.roleAllowedArray
+      this.roleAllowedArray,
+        this.isWide
       });
 
   @override
@@ -59,7 +62,8 @@ class OptimumFormMultiPhoto extends StatefulWidget {
       minHeight: minHeight,
       cropAspectRatioPreset: cropAspectRatioPreset,
       image: image,
-    roleAllowedArray: roleAllowedArray
+    roleAllowedArray: roleAllowedArray,
+    isWide: isWide
   );
 }
 
@@ -76,9 +80,11 @@ class OptimumFormMultiPhotoState extends State<OptimumFormMultiPhoto> {
   final OnFilePickedCallback onFilePicked;
   //List<Role> roleAllowedArray = [Role.admin, Role.salesman, Role.owner];
   List<Role> roleAllowedArray;
+  bool isWide;
   var size;
   String image;
-  AssetImage assetImage = AssetImage('assets/img/image_placeholder.png');
+  AssetImage assetWide = AssetImage('assets/img/image_placeholder.png');
+  AssetImage assetSquare = AssetImage('assets/img/image_placeholder_square_upload.png');
 
   Image croppedImage;
 
@@ -88,7 +94,7 @@ class OptimumFormMultiPhotoState extends State<OptimumFormMultiPhoto> {
   bool underReqSize = false;
 
   OptimumFormMultiPhotoState(
-      {this.text, this.onFilePicked, this.remotePath, this.maxPhoto, this.maxWidth, this.minWidth, this.maxHeight, this.minHeight, this.cropAspectRatioPreset,  this.image, this.roleAllowedArray});
+      {this.text, this.onFilePicked, this.remotePath, this.maxPhoto, this.maxWidth, this.minWidth, this.maxHeight, this.minHeight, this.cropAspectRatioPreset,  this.image, this.roleAllowedArray, this.isWide});
 
   Future<PickedFile> getImage() async {
     var status = await Permission.camera.status;
@@ -226,15 +232,15 @@ class OptimumFormMultiPhotoState extends State<OptimumFormMultiPhoto> {
   Widget build(BuildContext context) {
     size = MediaQuery.of(context).size;
     return Padding(
-      padding: EdgeInsets.all(16.0),
+      padding: EdgeInsets.all(0.0),
       child: Column(
-        //crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Column(
-            //crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
+              /*Text(
                 text == null ? AppLocalizations.of(context).staticPlaceholder : text,
                 style: TextStyle(
                     fontFamily: BuytimeTheme.FontFamily,
@@ -242,7 +248,7 @@ class OptimumFormMultiPhotoState extends State<OptimumFormMultiPhoto> {
                     fontWeight: FontWeight.w400,
                     fontSize: 18 //SizeConfig.safeBlockHorizontal * 4
                 ),
-              ),
+              ),*/
               underReqSize ? Container(
                 margin: EdgeInsets.only(top: 10),
                 child: Text(
@@ -267,36 +273,32 @@ class OptimumFormMultiPhotoState extends State<OptimumFormMultiPhoto> {
             ],
           ),
           Container(
-            height: SizeConfig.blockSizeVertical * 15,
-            width: SizeConfig.blockSizeHorizontal * 50,
-            margin: EdgeInsets.only(top: 10.0),
-            child: Stack(
-              children: [
-                Positioned.fill(
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: GestureDetector(
-                      child: image != null ? CachedNetworkImage(
-                        imageUrl: image,
-                        imageBuilder: (context, imageProvider) => Container(
-                          //margin: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 5), ///5%
-                          decoration: BoxDecoration(
-                            //borderRadius: BorderRadius.all(Radius.circular(SizeConfig.blockSizeHorizontal * 5)), ///12.5%
-                              image: DecorationImage(image: imageProvider, fit: BoxFit.fitHeight)),
-                        ),
-                        placeholder: (context, url) => CircularProgressIndicator(
-                          //valueColor: new AlwaysStoppedAnimation<Color>(BuytimeTheme.ManagerPrimary),
-                        ),
-                        errorWidget: (context, url, error) => croppedImage == null ? Image(width: SizeConfig.blockSizeHorizontal * 50, image: assetImage) : croppedImage,
-                      ) : croppedImage == null ? Image(width: SizeConfig.blockSizeHorizontal * 50, image: assetImage) : croppedImage,
-                      onTap: roleAllowedArray.contains(StoreProvider.of<AppState>(context).state.user.getRole()) ? () {
-                        manageImage();
-                      } : null,
-                    ),
+            alignment: Alignment.centerLeft,
+              //height: SizeConfig.blockSizeVertical * 15,
+              height: 156,
+              width: widget.isWide ? 280 : 156,
+              //width: SizeConfig.blockSizeHorizontal * 50,
+              margin: EdgeInsets.only(top: 10.0),
+              child: GestureDetector(
+                child: image != null ? CachedNetworkImage(
+                  imageUrl: image,
+                  imageBuilder: (context, imageProvider) => Container(
+                    //height: 156,
+                    width: widget.isWide ? null : 156,
+                    //margin: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 5), ///5%
+                    decoration: BoxDecoration(
+                      //borderRadius: BorderRadius.all(Radius.circular(SizeConfig.blockSizeHorizontal * 5)), ///12.5%
+                        image: DecorationImage(image: imageProvider, fit: BoxFit.fitHeight)),
                   ),
-                ),
-              ],
-            ),
+                  placeholder: (context, url) => CircularProgressIndicator(
+                    //valueColor: new AlwaysStoppedAnimation<Color>(BuytimeTheme.ManagerPrimary),
+                  ),
+                  errorWidget: (context, url, error) => croppedImage == null ? Image(width: widget.isWide ? null : 156, image: widget.isWide ? assetWide : assetSquare) : croppedImage,
+                ) : croppedImage == null ? Image(width: widget.isWide ? null : 156, image: widget.isWide ? assetWide : assetSquare) : croppedImage,
+                onTap: roleAllowedArray.contains(StoreProvider.of<AppState>(context).state.user.getRole()) ? () {
+                  manageImage();
+                } : null,
+              )
           )
         ],
       ),

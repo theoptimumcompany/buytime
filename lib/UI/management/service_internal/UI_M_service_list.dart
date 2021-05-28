@@ -366,15 +366,15 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                                     thickness: 0.5,
                                   ),
                                   ///Static add service to category
-                                  Material(
+                                  canAccessService ? Material(
                                       color: Colors.transparent,
                                       child: InkWell(
                                         //borderRadius: BorderRadius.all(Radius.circular(10)),
-                                        onTap: canAccessService ? () async {
+                                        onTap: () async {
                                           StoreProvider.of<AppState>(context).dispatch(SetService(ServiceState().toEmpty()));
                                           //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_CreateService(categoryId: categoryRootList[i].id)),);
                                           Navigator.push(context, EnterExitRoute(enterPage: UI_CreateService(categoryId: id(categories[i].categoryAbsolutePath)), exitPage: UI_M_ServiceList(), from: true));
-                                        } : null,
+                                        },
                                         child: Container(
                                           height: 56,
                                           child: Row(
@@ -426,7 +426,7 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                                             ],
                                           ),
                                         ),
-                                      )),
+                                      )) : Container(),
                                   ///Service List
                                   Container(
                                     //height: listOfServiceEachRoot.length > 0 ? listOfServiceEachRoot[i].length * 44.00 : 50,
@@ -538,7 +538,7 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                       children: [
                                                         GestureDetector(
-                                                          onTap: canWorkerAccessService ? () {
+                                                          onTap: canWorkerAccessService && canAccessService ? () {
                                                             setState(() {
                                                               switch (listOfServiceEachRoot[i][index].serviceVisibility) {
                                                                 case 'Active':

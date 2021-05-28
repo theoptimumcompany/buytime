@@ -152,8 +152,8 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
           label: Text(item.name),
           selected: selectedCategoryList.any((element) => element.id == item.id),
           selectedColor: Theme.of(context).accentColor,
-          labelStyle: TextStyle(color: selectedCategoryList.any((element) => element.id == item.id) ? BuytimeTheme.TextBlack : BuytimeTheme.TextWhite),
-          onSelected: (selected) {
+          labelStyle: TextStyle(color: selectedCategoryList.any((element) => element.id == item.id) ? BuytimeTheme.TextBlack : canAccess(item.id) ? BuytimeTheme.TextWhite : BuytimeTheme.TextBlack),
+          onSelected: canAccess(item.id) ? (selected) {
             if (widget.categoryId != null && widget.categoryId != "" && item.parentRootId != widget.categoryId) {
               return null;
             } else {
@@ -166,7 +166,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
               ///Aggiorno lo store con la lista di categorie selezionate salvando id e rootId
               StoreProvider.of<AppState>(context).dispatch(SetServiceSelectedCategories(selectedCategoryList));
             }
-          },
+          } : null,
         ),
       ));
     });
@@ -175,6 +175,24 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
 
   String serviceName = '';
   String serviceDescription = '';
+
+  bool canAccess(String id){
+    bool access = false;
+    if(StoreProvider.of<AppState>(context).state.user.managerAccessTo != null){
+      StoreProvider.of<AppState>(context).state.user.managerAccessTo.forEach((element) {
+        if(element == id)
+          access = true;
+      });
+    }
+    debugPrint('UI_M_service_list => CAN MANAGER ACCESS THE SERVICE? $access');
+
+    if(!access && !StoreProvider.of<AppState>(context).state.user.manager && !StoreProvider.of<AppState>(context).state.user.worker){
+      access = true;
+    }
+    debugPrint('UI_M_service_list => CAN MANAGER|OTHERS ACCESS THE SERVICE? $access');
+
+    return access;
+  }
 
   @override
   Widget build(BuildContext context) {

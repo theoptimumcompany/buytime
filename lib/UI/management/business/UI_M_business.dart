@@ -602,10 +602,10 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                                         ),
                                       ),
                                       ///Manage External Services
-                                      InkWell(
-                                        onTap: () {
+                                      snapshot.user.getRole() == Role.admin ||  snapshot.user.getRole() == Role.salesman ||  snapshot.user.getRole() == Role.owner ? InkWell(
+                                        onTap: (){
                                           Navigator.push(context, EnterExitRoute(enterPage: ExternalServiceList(), exitPage: UI_M_Business(), from: true));
-                                        },
+                                        } ,
                                         borderRadius: BorderRadius.all(Radius.circular(5.0)),
                                         child: Container(
                                           padding: EdgeInsets.all(5.0),
@@ -614,7 +614,7 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                                             style: TextStyle(fontWeight: FontWeight.w600, fontFamily: BuytimeTheme.FontFamily, fontSize: 14, color: BuytimeTheme.ManagerPrimary),
                                           ),
                                         ),
-                                      ),
+                                      ) : Container(),
                                     ],
                                   )),
                               ///Categories list top part

@@ -173,6 +173,30 @@ class SetBusinessResponsiblePersonEmail {
   String get responsible_person_email => _responsible_person_email;
 }
 
+class SetBusinessSalesmanName {
+  String _salesman_name;
+
+  SetBusinessSalesmanName(this._salesman_name);
+
+  String get salesman_name => _salesman_name;
+}
+
+class SetBusinessSalesmanPhonenumber {
+  String _salesman_phonenumber;
+
+  SetBusinessSalesmanPhonenumber(this._salesman_phonenumber);
+
+  String get salesman_phonenumber => _salesman_phonenumber;
+}
+
+class SetBusinessConciergePhonenumber {
+  String _concierge_phonenumber;
+
+  SetBusinessConciergePhonenumber(this._concierge_phonenumber);
+
+  String get concierge_phonenumber => _concierge_phonenumber;
+}
+
 class SetBusinessEmail {
   String _email;
 
@@ -363,6 +387,18 @@ BusinessState businessReducer(BusinessState state, action) {
   }
   if (action is SetBusinessResponsiblePersonEmail) {
     businessState.responsible_person_email = action.responsible_person_email;
+    return businessState;
+  }
+  if (action is SetBusinessSalesmanName) {
+    businessState.salesmanName = action.salesman_name;
+    return businessState;
+  }
+  if (action is SetBusinessSalesmanPhonenumber) {
+    businessState.phoneSalesman = action.salesman_phonenumber;
+    return businessState;
+  }
+  if (action is SetBusinessConciergePhonenumber) {
+    businessState.phoneConcierge = action.concierge_phonenumber;
     return businessState;
   }
   if (action is SetBusinessEmail) {

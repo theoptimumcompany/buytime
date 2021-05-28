@@ -119,7 +119,7 @@ class OptimumFormFieldState extends State<OptimumFormField> {
                 keyboardType: widget.textInputType,
                 validator: validate,
                 decoration: InputDecoration(
-                  //helperText: widget.required ? '~ ' + AppLocalizations.of(context).required : null,
+                  helperText: widget.required && widget.controller.text.isEmpty ? '~ ' + AppLocalizations.of(context).required : null,
                   labelText: widget.label,
                   helperStyle: TextStyle(
                       color: BuytimeTheme.AccentRed

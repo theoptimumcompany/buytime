@@ -1,5 +1,6 @@
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/snippet/generic.dart';
+import 'package:Buytime/utils/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -63,8 +64,11 @@ class _OptimumChipState extends State<OptimumChip> {
     return StoreConnector<AppState, AppState>(
         converter: (store) => store.state,
         builder: (context, snapshot) {
-          return Wrap(
-            children: _buildChoiceList(),
+          return Container(
+            width: SizeConfig.safeBlockHorizontal * 80,
+            child: Wrap(
+              children: _buildChoiceList(),
+            ),
           );
         });
   }

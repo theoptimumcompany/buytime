@@ -540,5 +540,18 @@
   "problemsGettingYourPosition": "There are some problems in getting your position, try again later",
   "spot": "posti disponibili",
 
-  "worker": "Worker"
+  "worker": "Worker",
+  "salesmanName": "Salesman Name",
+  "salesmanPhonenumber": "Salesman Phone Number",
+  "conciergePhonenumber": "Concierge Phone Number",
+  "eco": "Eco",
+  "serviceCenter": "Service Center",
+  "membershipCenter": "Center(Membership)",
+  "bar": "Bar",
+  "bikeRenting": "Bike Renting",
+  "museum": "Museum",
+  "dAndSCenter": "Diving and Sailing Center",
+  "motorRental": "Motor Rental",
+  "tourOperator": "Tour Operator",
+  "wellness": "Wellness"
 }

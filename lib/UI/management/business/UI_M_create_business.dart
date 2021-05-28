@@ -95,6 +95,9 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
   final GlobalKey<FormState> _formKeyResponsablePersonNameField = GlobalKey<FormState>();
   final GlobalKey<FormState> _formKeyResponsablePersonSurnameField = GlobalKey<FormState>();
   final GlobalKey<FormState> _formKeyResponsablePersonEmailField = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKeySalesmanNameFieldEdit = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKeySalesmanPhonenumberFieldEdit = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKeyConciergePhonenumberFieldEdit = GlobalKey<FormState>();
   final GlobalKey<FormState> _formKeyEmailField = GlobalKey<FormState>();
   final GlobalKey<FormState> _formKeyVatField = GlobalKey<FormState>();
   final GlobalKey<FormState> _formKeyStreetField = GlobalKey<FormState>();
@@ -104,6 +107,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
   final GlobalKey<FormState> _formKeyStateField = GlobalKey<FormState>();
   final GlobalKey<FormState> _formKeyNationField = GlobalKey<FormState>();
   final GlobalKey<FormState> _formKeyCoordinateField = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKeyCoordinateFieldEdit = GlobalKey<FormState>();
   //final GlobalKey<FormState> _formKeyDescriptionField = GlobalKey<FormState>();
 
   bool isSelected = false;
@@ -114,6 +118,9 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
   TextEditingController _responsiblePersonNameController = TextEditingController();
   TextEditingController _responsiblePersonSurnameController = TextEditingController();
   TextEditingController _responsiblePersonEmailController = TextEditingController();
+  TextEditingController _salesmanNameController = TextEditingController();
+  TextEditingController _salesmanPhonenumberController = TextEditingController();
+  TextEditingController _conciergePhonenumberController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
   TextEditingController _vatController = TextEditingController();
   TextEditingController _tagController = TextEditingController();
@@ -155,6 +162,35 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
     return listOfWidget;
   }
   String bookingRequest = '';
+
+  List<GenericState> hubType = [];
+  List<GenericState> notHubType = [];
+  List<GenericState> businessType = [];
+
+
+  bool isHub = false;
+  bool required = false;
+
+  bool validate(BusinessState business){
+    if(business.name.isNotEmpty &&
+        business.responsible_person_name.isNotEmpty &&
+        business.phoneSalesman.isNotEmpty &&
+        business.phoneConcierge.isNotEmpty &&
+        business.email.isNotEmpty &&
+        business.VAT.isNotEmpty &&
+        business.business_type.isNotEmpty &&
+        business.businessAddress.isNotEmpty &&
+        business.coordinate.isNotEmpty &&
+        business.area.isNotEmpty &&
+        business.logo.isNotEmpty &&
+        business.wide.isNotEmpty &&
+        business.profile.isNotEmpty &&
+        business.gallery.isNotEmpty)
+      return false;
+
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
     this.context = context;
@@ -227,12 +263,57 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                         child: Flexible(
                                           child: StoreConnector<AppState, BusinessState>(
                                               converter: (store) => store.state.business,
-                                              onInit: (store) => store.dispatch(new SetBusinessToEmpty()),
+                                              onInit: (store) {
+                                                store.dispatch(new SetBusinessToEmpty());
+                                                //store.state.business.business_type = [GenericState(name: 'Bar')];
+                                                hubType = [
+                                                  GenericState(name: 'Hotel'),
+                                                  GenericState(name: 'Eco'),
+                                                  GenericState(name: 'Service Center'),
+                                                  GenericState(name: 'Center(Membership)')
+                                                ];
+
+                                                //hubType.sort((a,b) => a.name.compareTo(b.name));
+                                                notHubType = [
+                                                  GenericState(name: 'Bar'),
+                                                  GenericState(name: 'Bike Renting'),
+                                                  GenericState(name: 'Museum'),
+                                                  GenericState(name: 'Diving and Sailing Center'),
+                                                  GenericState(name: 'Motor Rental'),
+                                                  GenericState(name: 'Tour Operator'),
+                                                  GenericState(name: 'Wellness'),
+                                                ];
+                                              },
                                               builder: (context, snapshot) {
                                                 String businessName = snapshot.name != null ? snapshot.name : "";
                                                 tag = snapshot.tag;
                                                 if(snapshot.area.isEmpty)
                                                   snapshot.area = ['Reception'];
+                                                if(snapshot.hub != null && snapshot.business_type != null){
+                                                  if(snapshot.business_type.isNotEmpty)
+                                                    businessType = snapshot.business_type;
+                                                  if(isHub != snapshot.hub){
+                                                    snapshot.business_type.clear();
+                                                    businessType = [];
+                                                    //StoreProvider.of<AppState>(context).dispatch(SetBusinessType([]));
+                                                    if(snapshot.hub){
+                                                      debugPrint('UI_M_create_business => NOW IS HUB');
+                                                      //snapshot.business_type = [GenericState(name: 'Hotel')];
+                                                      businessType = [GenericState(name: 'Hotel')];
+                                                      //StoreProvider.of<AppState>(context).dispatch(SetBusinessType([GenericState(name: 'Hotel')]));
+                                                    }else{
+                                                      debugPrint('UI_M_create_business => NOW IS NOT A HUB');
+                                                      //snapshot.business_type = [GenericState(name: 'Bar')];
+                                                      businessType = [GenericState(name: 'Bar')];
+                                                      //StoreProvider.of<AppState>(context).dispatch(SetBusinessType([GenericState(name: 'Bar')]));
+                                                    }
+                                                    isHub = snapshot.hub;
+                                                  }
+                                                  debugPrint('UI_M_create_business => BUSINESS TYPE LENGTH: ${snapshot.business_type.length}');
+                                                  snapshot.business_type.forEach((element) {
+                                                    debugPrint('UI_M_create_business => BUSINESS TYPE: ${element.name}');
+                                                  });
+                                                }
                                                 return Column(
                                                   children: [
                                                     /*Padding(
@@ -281,7 +362,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                               ),
                                                               ///Business Name
                                                               OptimumFormField(
-                                                                required: true,
+                                                                required: required,
                                                                 controller: _businessNameController,
                                                                 field: "businessName",
                                                                 textInputType: TextInputType.text,
@@ -300,6 +381,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                               ),
                                                               ///Responsible Name
                                                               OptimumFormField(
+                                                                required: required,
                                                                 controller: _responsiblePersonNameController,
                                                                 field: "responsible_person_name",
                                                                 textInputType: TextInputType.text,
@@ -342,8 +424,141 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                                   StoreProvider.of<AppState>(context).dispatch(SetBusinessResponsiblePersonEmail(value));
                                                                 },
                                                               ),
+                                                              ///Salesman Name
+                                                              Container(
+                                                                  margin: EdgeInsets.only(bottom: 15, top: SizeConfig.safeBlockVertical * 0),
+                                                                  child: Form(
+                                                                    key: _formKeySalesmanNameFieldEdit,
+                                                                    child: TextFormField(
+                                                                      //enabled: false,
+                                                                      //focusNode: focusNode,
+                                                                      //initialValue: widget.initialFieldValue,
+                                                                      controller: _salesmanNameController,
+                                                                      onChanged: (value) {
+                                                                        StoreProvider.of<AppState>(context).dispatch(SetBusinessSalesmanName(value));
+                                                                      },
+                                                                      keyboardType: TextInputType.text,
+                                                                      validator: (String value) {
+                                                                        if(true && value.isNotEmpty) {
+                                                                          return "test " + AppLocalizations.of(context).required;
+                                                                        }
+                                                                        return null;
+                                                                      },
+                                                                      style: TextStyle(
+                                                                          fontFamily: BuytimeTheme.FontFamily,
+                                                                          color: BuytimeTheme.TextGrey
+                                                                      ),
+                                                                      decoration: InputDecoration(
+                                                                        labelText:  AppLocalizations.of(context).salesmanName,
+                                                                        errorStyle: TextStyle(
+                                                                            color: BuytimeTheme.AccentRed
+                                                                        ),
+                                                                        enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                                        border: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                                        focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                                        focusedErrorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                                        errorBorder: OutlineInputBorder(borderSide: BorderSide(color: BuytimeTheme.AccentRed), borderRadius: BorderRadius.all(Radius.circular(8.0))),),
+                                                                      onSaved: (value) {
+                                                                        StoreProvider.of<AppState>(context).dispatch(SetBusinessSalesmanName(value));
+                                                                      },
+                                                                    ),
+                                                                  )
+                                                              ),
+                                                              ///Salesman Phone Number
+                                                              Container(
+                                                                  margin: EdgeInsets.only(bottom: 10, top: SizeConfig.safeBlockVertical * 0),
+                                                                  child: Form(
+                                                                    key: _formKeySalesmanPhonenumberFieldEdit,
+                                                                    child: TextFormField(
+                                                                      //maxLength: 10,
+                                                                      //enabled: false,
+                                                                      //focusNode: focusNode,
+                                                                      //initialValue: widget.initialFieldValue,
+                                                                      controller: _salesmanPhonenumberController,
+                                                                      onChanged: (value) {
+                                                                        StoreProvider.of<AppState>(context).dispatch(SetBusinessSalesmanPhonenumber(value));
+                                                                      },
+                                                                      keyboardType: TextInputType.number,
+                                                                      //textInputAction: TextInputAction.,
+                                                                      validator: (String value) {
+                                                                        if(true && value.isNotEmpty) {
+                                                                          return "test " + AppLocalizations.of(context).required;
+                                                                        }
+                                                                        return null;
+                                                                      },
+                                                                      style: TextStyle(
+                                                                          fontFamily: BuytimeTheme.FontFamily,
+                                                                          color: BuytimeTheme.TextGrey
+                                                                      ),
+                                                                      decoration: InputDecoration(
+                                                                        //counter: Container(),
+                                                                        helperText: required && _salesmanPhonenumberController.text.isEmpty ? '~ ${AppLocalizations.of(context).required}' : null,
+                                                                        helperStyle: TextStyle(
+                                                                            color: BuytimeTheme.AccentRed
+                                                                        ),
+                                                                        labelText:  AppLocalizations.of(context).salesmanPhonenumber,
+                                                                        errorStyle: TextStyle(
+                                                                            color: BuytimeTheme.AccentRed
+                                                                        ),
+                                                                        enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                                        border: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                                        focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                                        focusedErrorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                                        errorBorder: OutlineInputBorder(borderSide: BorderSide(color: BuytimeTheme.AccentRed), borderRadius: BorderRadius.all(Radius.circular(8.0))),),
+                                                                      onSaved: (value) {
+                                                                        StoreProvider.of<AppState>(context).dispatch(SetBusinessSalesmanPhonenumber(value));
+                                                                      },
+                                                                    ),
+                                                                  )
+                                                              ),
+                                                              ///Concierge Phone Number
+                                                              Container(
+                                                                  margin: EdgeInsets.only(bottom: 15, top: SizeConfig.safeBlockVertical * 0),
+                                                                  child: Form(
+                                                                    key: _formKeyConciergePhonenumberFieldEdit,
+                                                                    child: TextFormField(
+                                                                      //maxLength: 10,
+                                                                      //enabled: false,
+                                                                      //focusNode: focusNode,
+                                                                      //initialValue: widget.initialFieldValue,
+                                                                      controller: _conciergePhonenumberController,
+                                                                      onChanged: (value) {
+                                                                        StoreProvider.of<AppState>(context).dispatch(SetBusinessConciergePhonenumber(value));
+                                                                      },
+                                                                      keyboardType: TextInputType.number,
+                                                                      validator: (String value) {
+                                                                        if(true && value.isNotEmpty) {
+                                                                          return "test " + AppLocalizations.of(context).required;
+                                                                        }
+                                                                        return null;
+                                                                      },
+                                                                      style: TextStyle(
+                                                                          fontFamily: BuytimeTheme.FontFamily,
+                                                                          color: BuytimeTheme.TextGrey
+                                                                      ),
+                                                                      decoration: InputDecoration(
+                                                                        helperText: required && _conciergePhonenumberController.text.isEmpty ? '~ ${AppLocalizations.of(context).required}' : null,
+                                                                        helperStyle: TextStyle(
+                                                                            color: BuytimeTheme.AccentRed
+                                                                        ),
+                                                                        labelText:  AppLocalizations.of(context).conciergePhonenumber,
+                                                                        errorStyle: TextStyle(
+                                                                            color: BuytimeTheme.AccentRed
+                                                                        ),
+                                                                        enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                                        border: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                                        focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                                        focusedErrorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                                        errorBorder: OutlineInputBorder(borderSide: BorderSide(color: BuytimeTheme.AccentRed), borderRadius: BorderRadius.all(Radius.circular(8.0))),),
+                                                                      onSaved: (value) {
+                                                                        StoreProvider.of<AppState>(context).dispatch(SetBusinessConciergePhonenumber(value));
+                                                                      },
+                                                                    ),
+                                                                  )
+                                                              ),
                                                               ///Email
                                                               OptimumFormField(
+                                                                required: required,
                                                                 controller: _emailController,
                                                                 field: "mail",
                                                                 textInputType: TextInputType.text,
@@ -359,6 +574,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                               ),
                                                               ///Vat
                                                               OptimumFormField(
+                                                                required: required,
                                                                 controller: _vatController,
                                                                 field: "vat",
                                                                 textInputType: TextInputType.number,
@@ -372,11 +588,384 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                                   StoreProvider.of<AppState>(context).dispatch(SetBusinessVAT(value));
                                                                 },
                                                               ),
+                                                              ///Type Of Business
+                                                              /*Padding(
+                                                              padding: const EdgeInsets.only(top: 10.0),
+                                                              child: Column(
+                                                                children: <Widget>[
+                                                                  Text(AppLocalizations.of(context).typeOfBusiness),
+                                                                  OptimumChip(
+                                                                    chipList: reportList,
+                                                                    selectedChoices: snapshot.business_type,
+                                                                    optimumChipListToDispatch: (List<GenericState> selectedChoices) {
+                                                                      StoreProvider.of<AppState>(context).dispatch(SetBusinessType(selectedChoices));
+                                                                    },
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),*/
+                                                              Row(
+                                                                children: [
+                                                                  Text(
+                                                                    'HUB',
+                                                                    style: TextStyle(
+                                                                        fontFamily: BuytimeTheme.FontFamily,
+                                                                        fontWeight: FontWeight.w600,
+                                                                        color: BuytimeTheme.TextGrey,
+                                                                        fontSize: 16
+                                                                    ),
+                                                                  ),
+                                                                  Switch(
+                                                                      activeColor: BuytimeTheme.ManagerPrimary,
+                                                                      value: snapshot.hub, onChanged: StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin || StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman ? (value) {
+                                                                    debugPrint('UI_M-create_business => HUB: $value');
+                                                                    setState(() {
+                                                                      //isHub = value;
+                                                                    });
+                                                                    StoreProvider.of<AppState>(context).dispatch(SetHub(value));
+                                                                    //snapshot.hub = value;
+                                                                  } : (value){
+
+                                                                  }),
+                                                                ],
+                                                              ),
+                                                              ///Business Type
+                                                              Row(
+                                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                                children: [
+                                                                  Column(
+                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                    children: <Widget>[
+                                                                      Row(
+                                                                        children: [
+                                                                          Text(
+                                                                            AppLocalizations.of(context).businessType,
+                                                                            style: TextStyle(
+                                                                                fontFamily: BuytimeTheme.FontFamily,
+                                                                                fontSize: 14,
+                                                                                fontWeight: FontWeight.w600
+                                                                            ),
+                                                                          ),
+                                                                          required && snapshot.business_type.isEmpty ?
+                                                                          Container(
+                                                                            margin: EdgeInsets.only(left: 5),
+                                                                            child: Text(
+                                                                              '~ ' + AppLocalizations.of(context).required,
+                                                                              style: TextStyle(
+                                                                                  fontFamily: BuytimeTheme.FontFamily,
+                                                                                  fontSize: 12,
+                                                                                  fontWeight: FontWeight.w500,
+                                                                                  color: BuytimeTheme.AccentRed
+                                                                              ),
+                                                                            ),
+                                                                          ) : Container(),
+                                                                        ],
+                                                                      ),
+                                                                      snapshot.hub ?
+                                                                      OptimumChip(
+                                                                        chipList: hubType,
+                                                                        selectedChoices: businessType,
+                                                                        optimumChipListToDispatch: (List<GenericState> selectedChoices) {
+                                                                          StoreProvider.of<AppState>(context).dispatch(SetBusinessType(selectedChoices));
+                                                                        },
+                                                                      ) : OptimumChip(
+                                                                        chipList: notHubType,
+                                                                        selectedChoices: businessType,
+                                                                        optimumChipListToDispatch: (List<GenericState> selectedChoices) {
+                                                                          StoreProvider.of<AppState>(context).dispatch(SetBusinessType(selectedChoices));
+                                                                        },
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        ///Address
+                                                        Step(
+                                                            title: Text(
+                                                              AppLocalizations.of(context).address,
+                                                              style: TextStyle(
+                                                                  fontFamily: BuytimeTheme.FontFamily,
+                                                                  fontWeight: FontWeight.w600
+                                                              ),
+                                                            ),
+                                                            isActive: currentStep == 1 ? true : false,
+                                                            state: currentStep == 1 ? StepState.editing : StepState.indexed,
+                                                            content: Column(
+                                                              children: <Widget>[
+                                                                ///Address
+                                                                Container(
+                                                                  margin: EdgeInsets.only(top: 2.0, bottom: 5.0),
+                                                                  child: Row(
+                                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                                    children: [
+                                                                      Flexible(
+                                                                        child: Container(
+                                                                            width: media.width * 0.9,
+                                                                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0),
+                                                                            //decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
+                                                                            child: TextFormField(
+                                                                              enabled: false,
+                                                                              readOnly: true,
+                                                                              keyboardType: TextInputType.multiline,
+                                                                              maxLines: null,
+                                                                              controller: _addressController,
+                                                                              //initialValue: _serviceAddress,
+                                                                              onChanged: (value) {
+                                                                                StoreProvider.of<AppState>(context).dispatch(SetBusinessAddress(_addressController.text));
+                                                                              },
+                                                                              style: TextStyle(
+                                                                                  fontFamily: BuytimeTheme.FontFamily,
+                                                                                  color: BuytimeTheme.TextGrey
+                                                                              ),
+                                                                              decoration: InputDecoration(
+                                                                                labelText: AppLocalizations.of(context).businessAddress,
+                                                                                helperText: required && _addressController.text.isEmpty ? '~ ' + AppLocalizations.of(context).required : null,
+                                                                                helperStyle: TextStyle(
+                                                                                    color: BuytimeTheme.AccentRed
+                                                                                ),
+                                                                                //hintText: AppLocalizations.of(context).addressOptional,
+                                                                                enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                                                border: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                                                focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                                                errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                                              ),
+                                                                            )
+                                                                        ),
+                                                                      ),
+                                                                      Container(
+                                                                        margin: EdgeInsets.only(bottom: 25.0),
+                                                                        child: IconButton(
+                                                                          icon: Icon(
+                                                                            Icons.add_location_rounded,
+                                                                            color: BuytimeTheme.ManagerPrimary,
+                                                                          ),
+                                                                          onPressed: (){
+                                                                            Utils.googleSearch(
+                                                                                context,
+                                                                                    (place){
+                                                                                  //_serviceAddress = store.state.business.street + ', ' + store.state.business.street_number + ', ' + store.state.business.ZIP + ', ' + store.state.business.state_province;
+                                                                                  ///Address
+                                                                                  _addressController.text = place[0];
+                                                                                  StoreProvider.of<AppState>(context).dispatch(SetBusinessAddress(_addressController.text));
+                                                                                  ///Address Details
+                                                                                  _coordinateController.text = '${place[1]}, ${place[2]}';
+                                                                                  _streetController.clear();
+                                                                                  _streetNumberController.clear();
+                                                                                  _zipPostalController.clear();
+                                                                                  _cityTownController.clear();
+                                                                                  _stateTerritoryProvinceController.clear();
+                                                                                  _countryController.clear();
+                                                                                  place[3].forEach((element) {
+                                                                                    if(element[0].contains('route') || element[0].contains('natural_feature') || element[0].contains('establishment'))
+                                                                                      _streetController.text = element[1];
+                                                                                    if(element[0].contains('street_number'))
+                                                                                      _streetNumberController.text = element[1];
+                                                                                    if(element[0].contains('postal_code'))
+                                                                                      _zipPostalController.text = element[1];
+                                                                                    if(element[0].contains('administrative_area_level_2') || element[0].contains('administrative_area_level_3'))
+                                                                                      _cityTownController.text = element[2];
+                                                                                    if(element[0].contains('administrative_area_level_1'))
+                                                                                      _stateTerritoryProvinceController.text = element[1];
+                                                                                    if(element[0].contains('country'))
+                                                                                      _countryController.text = element[2];
+                                                                                  });
+                                                                                  StoreProvider.of<AppState>(context).dispatch(SetBusinessStreet(_streetController.text));
+                                                                                  StoreProvider.of<AppState>(context).dispatch(SetBusinessStreetNumber(_streetNumberController.text));
+                                                                                  StoreProvider.of<AppState>(context).dispatch(SetBusinessZipPostal(_zipPostalController.text));
+                                                                                  StoreProvider.of<AppState>(context).dispatch(SetBusinessCityTown(_cityTownController.text));
+                                                                                  StoreProvider.of<AppState>(context).dispatch(SetBusinessStateTerritoryProvince(_stateTerritoryProvinceController.text));
+                                                                                  StoreProvider.of<AppState>(context).dispatch(SetBusinessCountry(_countryController.text));
+                                                                                  StoreProvider.of<AppState>(context).dispatch(SetBusinessCoordinate(_coordinateController.text));
+                                                                                }
+                                                                            );
+                                                                          },
+                                                                        ),
+                                                                      )
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                                ///Coordinate
+                                                                Container(
+                                                                    margin: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2, top: SizeConfig.safeBlockVertical * 1),
+                                                                    child: Form(
+                                                                      key: _formKeyCoordinateFieldEdit,
+                                                                      child: TextFormField(
+                                                                        enabled: false,
+                                                                        //focusNode: focusNode,
+                                                                        //initialValue: widget.initialFieldValue,
+                                                                        controller: _coordinateController,
+                                                                        onChanged: (value) {
+                                                                          StoreProvider.of<AppState>(context).dispatch(SetBusinessCoordinate(value));
+                                                                        },
+                                                                        keyboardType: TextInputType.text,
+                                                                        validator: (String value) {
+                                                                          if(true && value.isNotEmpty) {
+                                                                            return "test " + AppLocalizations.of(context).required;
+                                                                          }
+                                                                          return null;
+                                                                        },
+                                                                        style: TextStyle(
+                                                                            fontFamily: BuytimeTheme.FontFamily,
+                                                                            color: BuytimeTheme.TextGrey
+                                                                        ),
+                                                                        decoration: InputDecoration(
+                                                                          helperText: required && _coordinateController.text.isEmpty ? '~ ' + AppLocalizations.of(context).required : null,
+                                                                          helperStyle: TextStyle(
+                                                                              color: BuytimeTheme.AccentRed
+                                                                          ),
+                                                                          labelText:  AppLocalizations.of(context).coordinate,
+                                                                          errorStyle: TextStyle(
+                                                                              color: BuytimeTheme.AccentRed
+                                                                          ),
+                                                                          enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                                          border: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                                          focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                                          focusedErrorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                                          errorBorder: OutlineInputBorder(borderSide: BorderSide(color: BuytimeTheme.AccentRed), borderRadius: BorderRadius.all(Radius.circular(8.0))),),
+                                                                        onSaved: (value) {
+                                                                          StoreProvider.of<AppState>(context).dispatch(SetBusinessCoordinate(value));
+                                                                        },
+                                                                      ),
+                                                                    )
+                                                                ),
+                                                              ],
+                                                            )),
+                                                        ///Address Details
+                                                        Step(
+                                                            title: Text(
+                                                              AppLocalizations.of(context).invoiceDetails,
+                                                              style: TextStyle(
+                                                                  fontFamily: BuytimeTheme.FontFamily,
+                                                                  fontWeight: FontWeight.w600
+                                                              ),
+                                                            ),
+                                                            isActive: currentStep == 2 ? true : false,
+                                                            state: currentStep == 2 ? StepState.editing : StepState.indexed,
+                                                            content: Column(
+                                                              children: <Widget>[
+                                                                ///Street
+                                                                OptimumFormField(
+                                                                  controller: _streetController,
+                                                                  field: "street",
+                                                                  textInputType: TextInputType.text,
+                                                                  minLength: 3,
+                                                                  label: AppLocalizations.of(context).street,
+                                                                  globalFieldKey: _formKeyStreetField,
+                                                                  validateEmail: true,
+                                                                  typeOfValidate: "name",
+                                                                  //initialFieldValue: snapshot.street,
+                                                                  onSaveOrChangedCallback: (value) {
+                                                                    StoreProvider.of<AppState>(context).dispatch(SetBusinessStreet(value));
+                                                                  },
+                                                                ),
+                                                                ///Street numnber
+                                                                OptimumFormField(
+                                                                  controller: _streetNumberController,
+                                                                  field: "streetNumber",
+                                                                  textInputType: TextInputType.number,
+                                                                  minLength: 1,
+                                                                  label: AppLocalizations.of(context).streetNumber,
+                                                                  globalFieldKey: _formKeyStreetNumberField,
+                                                                  validateEmail: true,
+                                                                  typeOfValidate: "number",
+                                                                  //initialFieldValue: snapshot.street_number,
+                                                                  onSaveOrChangedCallback: (value) {
+                                                                    StoreProvider.of<AppState>(context).dispatch(SetBusinessStreetNumber(value));
+                                                                  },
+                                                                ),
+                                                                ///Zip
+                                                                OptimumFormField(
+                                                                  controller: _zipPostalController,
+                                                                  field: "zipPostal",
+                                                                  textInputType: TextInputType.number,
+                                                                  minLength: 3,
+                                                                  label: AppLocalizations.of(context).zip,
+                                                                  globalFieldKey: _formKeyZipField,
+                                                                  typeOfValidate: "number",
+                                                                  //initialFieldValue: snapshot.ZIP,
+                                                                  onSaveOrChangedCallback: (value) {
+                                                                    StoreProvider.of<AppState>(context).dispatch(SetBusinessZipPostal(value));
+                                                                  },
+                                                                ),
+                                                                ///Municipality
+                                                                OptimumFormField(
+                                                                  controller: _cityTownController,
+                                                                  field: "cityTown",
+                                                                  textInputType: TextInputType.text,
+                                                                  minLength: 3,
+                                                                  label: AppLocalizations.of(context).cityTown,
+                                                                  globalFieldKey: _formKeyMunicipalityField,
+                                                                  typeOfValidate: "name",
+                                                                  //initialFieldValue: snapshot.municipality,
+                                                                  onSaveOrChangedCallback: (value) {
+                                                                    StoreProvider.of<AppState>(context).dispatch(SetBusinessCityTown(value));
+                                                                  },
+                                                                ),
+                                                                ///State
+                                                                OptimumFormField(
+                                                                  controller: _stateTerritoryProvinceController,
+                                                                  field: "stateTerritoryProvince",
+                                                                  textInputType: TextInputType.text,
+                                                                  minLength: 3,
+                                                                  label: AppLocalizations.of(context).stateTerritoryProvince,
+                                                                  globalFieldKey: _formKeyStateField,
+                                                                  typeOfValidate: "name",
+                                                                  //initialFieldValue: snapshot.state_province,
+                                                                  onSaveOrChangedCallback: (value) {
+                                                                    StoreProvider.of<AppState>(context).dispatch(SetBusinessStateTerritoryProvince(value));
+                                                                  },
+                                                                ),
+                                                                ///Nation
+                                                                OptimumFormField(
+                                                                  controller: _countryController,
+                                                                  field: "country",
+                                                                  textInputType: TextInputType.text,
+                                                                  minLength: 3,
+                                                                  label: AppLocalizations.of(context).country,
+                                                                  globalFieldKey: _formKeyNationField,
+                                                                  typeOfValidate: "name",
+                                                                  //initialFieldValue: snapshot.nation,
+                                                                  onSaveOrChangedCallback: (value) {
+                                                                    StoreProvider.of<AppState>(context).dispatch(SetBusinessCountry(value));
+                                                                  },
+                                                                ),
+                                                              ],
+                                                            )),
+                                                        ///Company Information
+                                                        Step(
+                                                          title: Text(
+                                                            AppLocalizations.of(context).companyInformation,
+                                                            style: TextStyle(
+                                                                fontFamily: BuytimeTheme.FontFamily,
+                                                                fontWeight: FontWeight.w600
+                                                            ),
+                                                          ),
+                                                          isActive: currentStep == 3 ? true : false,
+                                                          state: currentStep == 3 ? StepState.editing : StepState.indexed,
+                                                          content: Column(
+                                                            children: <Widget>[
+                                                              ///Description
+                                                              /*OptimumFormField(
+                                                                  field: "description",
+                                                                  textInputType: TextInputType.text,
+                                                                  minLength: 3,
+                                                                  label: AppLocalizations.of(context).description + " *",
+                                                                  globalFieldKey: _formKeyDescriptionField,
+                                                                  validateEmail: true,
+                                                                  typeOfValidate: "multiline",
+                                                                  initialFieldValue: snapshot.description,
+                                                                  onSaveOrChangedCallback: (value) {
+                                                                    StoreProvider.of<AppState>(context).dispatch(SetBusinessDescription(value));
+                                                                  },
+                                                                ),*/
                                                               ///Tags
                                                               Container(
                                                                 // height: media.height * 0.266,
                                                                 width: double.infinity,
-                                                                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
+                                                                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
                                                                 decoration: BoxDecoration(
                                                                 ),
                                                                 child: Padding(
@@ -390,7 +979,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                                             child: Padding(
                                                                               padding: const EdgeInsets.only(left: 5.0, bottom: 10),
                                                                               child: Text(
-                                                                                AppLocalizations.of(context).businessType,
+                                                                                AppLocalizations.of(context).tag,
                                                                                 textAlign: TextAlign.start,
                                                                                 style: TextStyle(
                                                                                   color: BuytimeTheme.TextBlack,
@@ -526,301 +1115,6 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                                     ],
                                                                   ),
                                                                 ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                        ///Address
-                                                        Step(
-                                                            title: Text(
-                                                              AppLocalizations.of(context).address,
-                                                              style: TextStyle(
-                                                                  fontFamily: BuytimeTheme.FontFamily,
-                                                                  fontWeight: FontWeight.w600
-                                                              ),
-                                                            ),
-                                                            isActive: currentStep == 1 ? true : false,
-                                                            state: currentStep == 1 ? StepState.editing : StepState.indexed,
-                                                            content: Column(
-                                                              children: <Widget>[
-                                                                ///Address
-                                                                Container(
-                                                                  margin: EdgeInsets.only(top: 2.0, bottom: 5.0),
-                                                                  child: Row(
-                                                                    mainAxisAlignment: MainAxisAlignment.center,
-                                                                    children: [
-                                                                      Flexible(
-                                                                        child: Container(
-                                                                            width: media.width * 0.9,
-                                                                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0),
-                                                                            //decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
-                                                                            child: TextFormField(
-                                                                              enabled: false,
-                                                                              readOnly: true,
-                                                                              keyboardType: TextInputType.multiline,
-                                                                              maxLines: null,
-                                                                              controller: _addressController,
-                                                                              //initialValue: _serviceAddress,
-                                                                              onChanged: (value) {
-                                                                                StoreProvider.of<AppState>(context).dispatch(SetBusinessAddress(_addressController.text));
-                                                                              },
-                                                                              style: TextStyle(
-                                                                                  fontFamily: BuytimeTheme.FontFamily,
-                                                                                  color: BuytimeTheme.TextGrey
-                                                                              ),
-                                                                              decoration: InputDecoration(
-                                                                                labelText: AppLocalizations.of(context).businessAddress,
-                                                                                helperText: '~ ' + AppLocalizations.of(context).required,
-                                                                                helperStyle: TextStyle(
-                                                                                    color: BuytimeTheme.AccentRed
-                                                                                ),
-                                                                                //hintText: AppLocalizations.of(context).addressOptional,
-                                                                                enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                                                                border: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                                                                focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                                                                errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                                                              ),
-                                                                            )
-                                                                        ),
-                                                                      ),
-                                                                      Container(
-                                                                        margin: EdgeInsets.only(bottom: 25.0),
-                                                                        child: IconButton(
-                                                                          icon: Icon(
-                                                                            Icons.add_location_rounded,
-                                                                            color: BuytimeTheme.ManagerPrimary,
-                                                                          ),
-                                                                          onPressed: (){
-                                                                            Utils.googleSearch(
-                                                                                context,
-                                                                                    (place){
-                                                                                  //_serviceAddress = store.state.business.street + ', ' + store.state.business.street_number + ', ' + store.state.business.ZIP + ', ' + store.state.business.state_province;
-                                                                                  ///Address
-                                                                                  _addressController.text = place[0];
-                                                                                  StoreProvider.of<AppState>(context).dispatch(SetBusinessAddress(_addressController.text));
-                                                                                  ///Address Details
-                                                                                  _coordinateController.text = '${place[1]}, ${place[2]}';
-                                                                                  _streetController.clear();
-                                                                                  _streetNumberController.clear();
-                                                                                  _zipPostalController.clear();
-                                                                                  _cityTownController.clear();
-                                                                                  _stateTerritoryProvinceController.clear();
-                                                                                  _countryController.clear();
-                                                                                  place[3].forEach((element) {
-                                                                                    if(element[0].contains('route') || element[0].contains('natural_feature') || element[0].contains('establishment'))
-                                                                                      _streetController.text = element[1];
-                                                                                    if(element[0].contains('street_number'))
-                                                                                      _streetNumberController.text = element[1];
-                                                                                    if(element[0].contains('postal_code'))
-                                                                                      _zipPostalController.text = element[1];
-                                                                                    if(element[0].contains('administrative_area_level_2') || element[0].contains('administrative_area_level_3'))
-                                                                                      _cityTownController.text = element[2];
-                                                                                    if(element[0].contains('administrative_area_level_1'))
-                                                                                      _stateTerritoryProvinceController.text = element[1];
-                                                                                    if(element[0].contains('country'))
-                                                                                      _countryController.text = element[2];
-                                                                                  });
-                                                                                  StoreProvider.of<AppState>(context).dispatch(SetBusinessStreet(_streetController.text));
-                                                                                  StoreProvider.of<AppState>(context).dispatch(SetBusinessStreetNumber(_streetNumberController.text));
-                                                                                  StoreProvider.of<AppState>(context).dispatch(SetBusinessZipPostal(_zipPostalController.text));
-                                                                                  StoreProvider.of<AppState>(context).dispatch(SetBusinessCityTown(_cityTownController.text));
-                                                                                  StoreProvider.of<AppState>(context).dispatch(SetBusinessStateTerritoryProvince(_stateTerritoryProvinceController.text));
-                                                                                  StoreProvider.of<AppState>(context).dispatch(SetBusinessCountry(_countryController.text));
-                                                                                  StoreProvider.of<AppState>(context).dispatch(SetBusinessCoordinate(_coordinateController.text));
-                                                                                }
-                                                                            );
-                                                                          },
-                                                                        ),
-                                                                      )
-                                                                    ],
-                                                                  ),
-                                                                ),
-                                                                ///Coordinate
-                                                                Container(
-                                                                  margin: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 1, top: SizeConfig.safeBlockVertical * 1),
-                                                                  child: OptimumFormField(
-                                                                    required: true,
-                                                                    controller: _coordinateController,
-                                                                    field: "coordinate",
-                                                                    textInputType: TextInputType.number,
-                                                                    minLength: 3,
-                                                                    label: AppLocalizations.of(context).coordinate,
-                                                                    globalFieldKey: _formKeyCoordinateField,
-                                                                    validateEmail: true,
-                                                                    typeOfValidate: "name",
-                                                                    //initialFieldValue: snapshot.coordinate,
-                                                                    onSaveOrChangedCallback: (value) {
-                                                                      StoreProvider.of<AppState>(context).dispatch(SetBusinessCoordinate(value));
-                                                                    },
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            )),
-                                                        ///Address Details
-                                                        Step(
-                                                            title: Text(
-                                                              AppLocalizations.of(context).invoiceDetails,
-                                                              style: TextStyle(
-                                                                  fontFamily: BuytimeTheme.FontFamily,
-                                                                  fontWeight: FontWeight.w600
-                                                              ),
-                                                            ),
-                                                            isActive: currentStep == 2 ? true : false,
-                                                            state: currentStep == 2 ? StepState.editing : StepState.indexed,
-                                                            content: Column(
-                                                              children: <Widget>[
-                                                                ///Street
-                                                                OptimumFormField(
-                                                                  controller: _streetController,
-                                                                  field: "street",
-                                                                  textInputType: TextInputType.text,
-                                                                  minLength: 3,
-                                                                  label: AppLocalizations.of(context).street,
-                                                                  globalFieldKey: _formKeyStreetField,
-                                                                  validateEmail: true,
-                                                                  typeOfValidate: "name",
-                                                                  //initialFieldValue: snapshot.street,
-                                                                  onSaveOrChangedCallback: (value) {
-                                                                    StoreProvider.of<AppState>(context).dispatch(SetBusinessStreet(value));
-                                                                  },
-                                                                ),
-                                                                ///Street numnber
-                                                                OptimumFormField(
-                                                                  controller: _streetNumberController,
-                                                                  field: "streetNumber",
-                                                                  textInputType: TextInputType.number,
-                                                                  minLength: 1,
-                                                                  label: AppLocalizations.of(context).streetNumber,
-                                                                  globalFieldKey: _formKeyStreetNumberField,
-                                                                  validateEmail: true,
-                                                                  typeOfValidate: "number",
-                                                                  //initialFieldValue: snapshot.street_number,
-                                                                  onSaveOrChangedCallback: (value) {
-                                                                    StoreProvider.of<AppState>(context).dispatch(SetBusinessStreetNumber(value));
-                                                                  },
-                                                                ),
-                                                                ///Zip
-                                                                OptimumFormField(
-                                                                  controller: _zipPostalController,
-                                                                  field: "zipPostal",
-                                                                  textInputType: TextInputType.number,
-                                                                  minLength: 3,
-                                                                  label: AppLocalizations.of(context).zip,
-                                                                  globalFieldKey: _formKeyZipField,
-                                                                  typeOfValidate: "number",
-                                                                  //initialFieldValue: snapshot.ZIP,
-                                                                  onSaveOrChangedCallback: (value) {
-                                                                    StoreProvider.of<AppState>(context).dispatch(SetBusinessZipPostal(value));
-                                                                  },
-                                                                ),
-                                                                ///Municipality
-                                                                OptimumFormField(
-                                                                  controller: _cityTownController,
-                                                                  field: "cityTown",
-                                                                  textInputType: TextInputType.text,
-                                                                  minLength: 3,
-                                                                  label: AppLocalizations.of(context).cityTown,
-                                                                  globalFieldKey: _formKeyMunicipalityField,
-                                                                  typeOfValidate: "name",
-                                                                  //initialFieldValue: snapshot.municipality,
-                                                                  onSaveOrChangedCallback: (value) {
-                                                                    StoreProvider.of<AppState>(context).dispatch(SetBusinessCityTown(value));
-                                                                  },
-                                                                ),
-                                                                ///State
-                                                                OptimumFormField(
-                                                                  controller: _stateTerritoryProvinceController,
-                                                                  field: "stateTerritoryProvince",
-                                                                  textInputType: TextInputType.text,
-                                                                  minLength: 3,
-                                                                  label: AppLocalizations.of(context).stateTerritoryProvince,
-                                                                  globalFieldKey: _formKeyStateField,
-                                                                  typeOfValidate: "name",
-                                                                  //initialFieldValue: snapshot.state_province,
-                                                                  onSaveOrChangedCallback: (value) {
-                                                                    StoreProvider.of<AppState>(context).dispatch(SetBusinessStateTerritoryProvince(value));
-                                                                  },
-                                                                ),
-                                                                ///Nation
-                                                                OptimumFormField(
-                                                                  controller: _countryController,
-                                                                  field: "country",
-                                                                  textInputType: TextInputType.text,
-                                                                  minLength: 3,
-                                                                  label: AppLocalizations.of(context).country,
-                                                                  globalFieldKey: _formKeyNationField,
-                                                                  typeOfValidate: "name",
-                                                                  //initialFieldValue: snapshot.nation,
-                                                                  onSaveOrChangedCallback: (value) {
-                                                                    StoreProvider.of<AppState>(context).dispatch(SetBusinessCountry(value));
-                                                                  },
-                                                                ),
-                                                              ],
-                                                            )),
-                                                        ///Company Information
-                                                        Step(
-                                                          title: Text(
-                                                            AppLocalizations.of(context).companyInformation,
-                                                            style: TextStyle(
-                                                                fontFamily: BuytimeTheme.FontFamily,
-                                                                fontWeight: FontWeight.w600
-                                                            ),
-                                                          ),
-                                                          isActive: currentStep == 3 ? true : false,
-                                                          state: currentStep == 3 ? StepState.editing : StepState.indexed,
-                                                          content: Column(
-                                                            children: <Widget>[
-                                                              ///Description
-                                                              /*OptimumFormField(
-                                                                  field: "description",
-                                                                  textInputType: TextInputType.text,
-                                                                  minLength: 3,
-                                                                  label: AppLocalizations.of(context).description + " *",
-                                                                  globalFieldKey: _formKeyDescriptionField,
-                                                                  validateEmail: true,
-                                                                  typeOfValidate: "multiline",
-                                                                  initialFieldValue: snapshot.description,
-                                                                  onSaveOrChangedCallback: (value) {
-                                                                    StoreProvider.of<AppState>(context).dispatch(SetBusinessDescription(value));
-                                                                  },
-                                                                ),*/
-                                                              ///Type Of Business
-                                                              /*Padding(
-                                                              padding: const EdgeInsets.only(top: 10.0),
-                                                              child: Column(
-                                                                children: <Widget>[
-                                                                  Text(AppLocalizations.of(context).typeOfBusiness),
-                                                                  OptimumChip(
-                                                                    chipList: reportList,
-                                                                    selectedChoices: snapshot.business_type,
-                                                                    optimumChipListToDispatch: (List<GenericState> selectedChoices) {
-                                                                      StoreProvider.of<AppState>(context).dispatch(SetBusinessType(selectedChoices));
-                                                                    },
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                            ),*/
-                                                              Row(
-                                                                children: [
-                                                                  Text(
-                                                                    'HUB',
-                                                                    style: TextStyle(
-                                                                        fontFamily: BuytimeTheme.FontFamily,
-                                                                        fontWeight: FontWeight.w600,
-                                                                        color: BuytimeTheme.TextGrey,
-                                                                        fontSize: 16
-                                                                    ),
-                                                                  ),
-                                                                  Switch(
-                                                                      activeColor: BuytimeTheme.ManagerPrimary,
-                                                                      value: snapshot.hub, onChanged: StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin || StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman ? (value) {
-                                                                    debugPrint('UI_M-create_business => HUB: $value');
-                                                                    StoreProvider.of<AppState>(context).dispatch(SetHub(value));
-                                                                    //snapshot.hub = value;
-                                                                  } : (value){
-
-                                                                  }),
-                                                                ],
                                                               ),
                                                               ///Business Area
                                                               Container(
@@ -972,15 +1266,36 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                               ),
                                                               ///Business Logo
                                                               Container(
-                                                                child: Text(
-                                                                  '~ ' + AppLocalizations.of(context).imageRequired,
-                                                                  style: TextStyle(
-                                                                      color: BuytimeTheme.AccentRed
-                                                                  ),
+                                                                margin: EdgeInsets.only(top: 15, bottom: 5),
+                                                                child: Row(
+                                                                  children: [
+                                                                    Text(
+                                                                      '1. ${AppLocalizations.of(context).logo}',
+                                                                      style: TextStyle(
+                                                                          fontFamily: BuytimeTheme.FontFamily,
+                                                                          fontSize: 14,
+                                                                          fontWeight: FontWeight.w600
+                                                                      ),
+                                                                    ),
+                                                                    required && snapshot.logo.isEmpty ?
+                                                                    Container(
+                                                                      margin: EdgeInsets.only(left: 5),
+                                                                      child: Text(
+                                                                        '~ ' + AppLocalizations.of(context).required,
+                                                                        style: TextStyle(
+                                                                            fontFamily: BuytimeTheme.FontFamily,
+                                                                            fontSize: 12,
+                                                                            fontWeight: FontWeight.w500,
+                                                                            color: BuytimeTheme.AccentRed
+                                                                        ),
+                                                                      ),
+                                                                    ) : Container(),
+                                                                  ],
                                                                 ),
                                                               ),
                                                               OptimumFormMultiPhoto(
-                                                                text: AppLocalizations.of(context).logo,
+                                                                isWide: false,
+                                                                text: '',
                                                                 remotePath: "business/" + businessName + "/logo",
                                                                 maxHeight: 1000,
                                                                 maxPhoto: 1,
@@ -994,41 +1309,38 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                                   StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInBusiness(fileToUpload, fileToUpload.state, 0));
                                                                 },
                                                               ),
-                                                              Container(
-                                                                child: Text(
-                                                                    '~ ' + AppLocalizations.of(context).imageRequired,
-                                                                  style: TextStyle(
-                                                                      color: BuytimeTheme.AccentRed
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                              ///Business Wide
-                                                              OptimumFormMultiPhoto(
-                                                                text: AppLocalizations.of(context).wide,
-                                                                remotePath: "business/" + businessName + "/wide",
-                                                                maxHeight: 1000,
-                                                                maxPhoto: 1,
-                                                                maxWidth: 800,
-                                                                minHeight: 200,
-                                                                minWidth: 600,
-                                                                roleAllowedArray: [Role.admin, Role.salesman, Role.owner],
-                                                                cropAspectRatioPreset: CropAspectRatioPreset.ratio16x9,
-                                                                onFilePicked: (fileToUpload) {
-                                                                  fileToUpload.remoteFolder = "business/" + businessName + "/wide";
-                                                                  StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInBusiness(fileToUpload, fileToUpload.state, 1));
-                                                                },
-                                                              ),
-                                                              Container(
-                                                                child: Text(
-                                                                  '~ ' + AppLocalizations.of(context).imageRequired,
-                                                                  style: TextStyle(
-                                                                      color: BuytimeTheme.AccentRed
-                                                                  ),
-                                                                ),
-                                                              ),
                                                               ///Photo Profile
+                                                              Container(
+                                                                margin: EdgeInsets.only(top: 15, bottom: 5),
+                                                                child: Row(
+                                                                  children: [
+                                                                    Text(
+                                                                      '2. ${AppLocalizations.of(context).profile}',
+                                                                      style: TextStyle(
+                                                                          fontFamily: BuytimeTheme.FontFamily,
+                                                                          fontSize: 14,
+                                                                          fontWeight: FontWeight.w600
+                                                                      ),
+                                                                    ),
+                                                                    required && snapshot.profile.isEmpty ?
+                                                                    Container(
+                                                                      margin: EdgeInsets.only(left: 5),
+                                                                      child: Text(
+                                                                        '~ ' + AppLocalizations.of(context).required,
+                                                                        style: TextStyle(
+                                                                            fontFamily: BuytimeTheme.FontFamily,
+                                                                            fontSize: 12,
+                                                                            fontWeight: FontWeight.w500,
+                                                                            color: BuytimeTheme.AccentRed
+                                                                        ),
+                                                                      ),
+                                                                    ) : Container(),
+                                                                  ],
+                                                                ),
+                                                              ),
                                                               OptimumFormMultiPhoto(
-                                                                text: AppLocalizations.of(context).profile,
+                                                                isWide: false,
+                                                                text: '',
                                                                 remotePath: "business/" + businessName + "/profile",
                                                                 maxHeight: 1000,
                                                                 maxPhoto: 1,
@@ -1042,18 +1354,38 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                                   StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInBusiness(fileToUpload, fileToUpload.state, 2));
                                                                 },
                                                               ),
+                                                              ///Business Gallery
                                                               Container(
-                                                                child: Text(
-                                                                  '~ ' + AppLocalizations.of(context).imageRequired,
-                                                                  style: TextStyle(
-                                                                      color: BuytimeTheme.AccentRed
-                                                                  ),
+                                                                margin: EdgeInsets.only(top: 15, bottom: 5),
+                                                                child: Row(
+                                                                  children: [
+                                                                    Text(
+                                                                      '3.${AppLocalizations.of(context).gallery}',
+                                                                      style: TextStyle(
+                                                                          fontFamily: BuytimeTheme.FontFamily,
+                                                                          fontSize: 14,
+                                                                          fontWeight: FontWeight.w600
+                                                                      ),
+                                                                    ),
+                                                                    required && (snapshot.gallery != null && snapshot.gallery.first.isEmpty) ?
+                                                                    Container(
+                                                                      margin: EdgeInsets.only(left: 5),
+                                                                      child: Text(
+                                                                        '~ ' + AppLocalizations.of(context).required,
+                                                                        style: TextStyle(
+                                                                            fontFamily: BuytimeTheme.FontFamily,
+                                                                            fontSize: 12,
+                                                                            fontWeight: FontWeight.w500,
+                                                                            color: BuytimeTheme.AccentRed
+                                                                        ),
+                                                                      ),
+                                                                    ) : Container(),
+                                                                  ],
                                                                 ),
                                                               ),
-
-                                                              ///Business Gallery
                                                               OptimumFormMultiPhoto(
-                                                                text: AppLocalizations.of(context).gallery,
+                                                                isWide: false,
+                                                                text: '',
                                                                 remotePath: "business/" + businessName + "/gallery",
                                                                 maxHeight: 1000,
                                                                 maxPhoto: 1,
@@ -1065,6 +1397,51 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                                 onFilePicked: (fileToUpload) {
                                                                   fileToUpload.remoteFolder = "business/" + businessName + "/gallery";
                                                                   StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInBusiness(fileToUpload, fileToUpload.state, 3));
+                                                                },
+                                                              ),
+                                                              ///Business Wide
+                                                              Container(
+                                                                margin: EdgeInsets.only(top: 15, bottom: 5),
+                                                                child: Row(
+                                                                  children: [
+                                                                    Text(
+                                                                      '4.${AppLocalizations.of(context).wide}',
+                                                                      style: TextStyle(
+                                                                          fontFamily: BuytimeTheme.FontFamily,
+                                                                          fontSize: 14,
+                                                                          fontWeight: FontWeight.w600
+                                                                      ),
+                                                                    ),
+                                                                    required && snapshot.wide.isEmpty ?
+                                                                    Container(
+                                                                      margin: EdgeInsets.only(left: 5),
+                                                                      child: Text(
+                                                                        '~ ' + AppLocalizations.of(context).required,
+                                                                        style: TextStyle(
+                                                                            fontFamily: BuytimeTheme.FontFamily,
+                                                                            fontSize: 12,
+                                                                            fontWeight: FontWeight.w500,
+                                                                            color: BuytimeTheme.AccentRed
+                                                                        ),
+                                                                      ),
+                                                                    ) : Container(),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                              OptimumFormMultiPhoto(
+                                                                isWide: true,
+                                                                text: '',
+                                                                remotePath: "business/" + businessName + "/wide",
+                                                                maxHeight: 1000,
+                                                                maxPhoto: 1,
+                                                                maxWidth: 800,
+                                                                minHeight: 200,
+                                                                minWidth: 600,
+                                                                roleAllowedArray: [Role.admin, Role.salesman, Role.owner],
+                                                                cropAspectRatioPreset: CropAspectRatioPreset.ratio16x9,
+                                                                onFilePicked: (fileToUpload) {
+                                                                  fileToUpload.remoteFolder = "business/" + businessName + "/wide";
+                                                                  StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInBusiness(fileToUpload, fileToUpload.state, 1));
                                                                 },
                                                               ),
                                                             ],
@@ -1146,10 +1523,10 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                                     borderRadius: new BorderRadius.circular(5),
                                                                   ),
                                                                   onPressed: () {
-                                                                    if (_validateInputs() == false ||
-                                                                        StoreProvider.of<AppState>(context).state.business.fileToUploadList == null ||
-                                                                        StoreProvider.of<AppState>(context).state.business.fileToUploadList.length < 4
-                                                                    ) {
+                                                                    setState(() {
+                                                                      required = validate(snapshot);
+                                                                    });
+                                                                    if (required) {
                                                                       final snackBar = SnackBar(content: Text(AppLocalizations.of(context).pleaseFillAllFields));
                                                                       ScaffoldMessenger.of(context).showSnackBar(snackBar);
 

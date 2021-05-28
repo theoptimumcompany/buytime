@@ -317,13 +317,11 @@ class CartState extends State<Cart> {
                                                                   ),
                                                                 ),
                                                                 Radio(
+                                                                  toggleable: true,
                                                                   value: val,
-                                                                  groupValue: _locationController.text == val ? val : _locationController.text,
-                                                                  onChanged: (value) {
-                                                                    setState(() {
-                                                                      _locationController.text = value;
-                                                                    });
-                                                                  },
+                                                                  activeColor: BuytimeTheme.Secondary,
+                                                                  groupValue: _locationController.text,
+                                                                  onChanged: null,
                                                                 )
                                                               ],
                                                             ),
