@@ -172,20 +172,36 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
   bool required = false;
 
   bool validate(BusinessState business){
-    if(business.name.isNotEmpty &&
+    if(
+    business.name != null &&
+        business.name.isNotEmpty &&
+        business.responsible_person_name != null &&
         business.responsible_person_name.isNotEmpty &&
+        business.phoneSalesman != null &&
         business.phoneSalesman.isNotEmpty &&
+        business.phoneConcierge != null &&
         business.phoneConcierge.isNotEmpty &&
+        business.email != null &&
         business.email.isNotEmpty &&
+        business.VAT != null &&
         business.VAT.isNotEmpty &&
+        business.business_type != null &&
         business.business_type.isNotEmpty &&
+        business.businessAddress != null &&
         business.businessAddress.isNotEmpty &&
+        business.coordinate != null &&
         business.coordinate.isNotEmpty &&
+        business.area != null &&
         business.area.isNotEmpty &&
+        business.logo != null &&
         business.logo.isNotEmpty &&
+        business.wide != null &&
         business.wide.isNotEmpty &&
+        business.profile != null &&
         business.profile.isNotEmpty &&
-        business.gallery.isNotEmpty)
+        business.gallery != null &&
+        business.gallery.isNotEmpty
+    )
       return false;
 
     return true;
