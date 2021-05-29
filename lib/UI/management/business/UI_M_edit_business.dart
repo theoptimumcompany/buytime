@@ -294,6 +294,7 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
                                           child: StoreConnector<AppState, BusinessState>(
                                               converter: (store) => store.state.business,
                                               onInit: (store) {
+                                                isHub = store.state.business.hub;
                                                 hubType = [
                                                   GenericState(name: 'Hotel'),
                                                   GenericState(name: 'Eco'),
@@ -345,6 +346,12 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
                                                 if(snapshot.hub != null && snapshot.business_type != null){
                                                   if(snapshot.business_type.isNotEmpty)
                                                     businessType = snapshot.business_type;
+                                                  else
+                                                    debugPrint('UI_M_create_business => HAS BUSINESSS TYPE');
+                                                  debugPrint('UI_M_create_business => BEFORE BUSINESS TYPE LENGTH: ${snapshot.business_type.length}');
+                                                  snapshot.business_type.forEach((element) {
+                                                    debugPrint('UI_M_create_business => BEFORE BUSINESS TYPE: ${element.name}');
+                                                  });
                                                   if(isHub != snapshot.hub){
                                                     snapshot.business_type.clear();
                                                     businessType = [];
@@ -362,9 +369,9 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
                                                     }
                                                     isHub = snapshot.hub;
                                                   }
-                                                  debugPrint('UI_M_create_business => BUSINESS TYPE LENGTH: ${snapshot.business_type.length}');
+                                                  debugPrint('UI_M_create_business => AFTER BUSINESS TYPE LENGTH: ${snapshot.business_type.length}');
                                                   snapshot.business_type.forEach((element) {
-                                                    debugPrint('UI_M_create_business => BUSINESS TYPE: ${element.name}');
+                                                    debugPrint('UI_M_create_business => AFTER BUSINESS TYPE: ${element.name}');
                                                   });
                                                 }
                                                 return Stepper(
@@ -675,15 +682,18 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
                                                                         ),
                                                                       ),
                                                                       required && snapshot.business_type.isEmpty ?
-                                                                      Container(
-                                                                        margin: EdgeInsets.only(left: 5),
-                                                                        child: Text(
-                                                                          '~ ' + AppLocalizations.of(context).required,
-                                                                          style: TextStyle(
-                                                                              fontFamily: BuytimeTheme.FontFamily,
-                                                                              fontSize: 12,
-                                                                              fontWeight: FontWeight.w500,
-                                                                              color: BuytimeTheme.AccentRed
+                                                                      FittedBox(
+                                                                        fit: BoxFit.scaleDown,
+                                                                        child: Container(
+                                                                          margin: EdgeInsets.only(left: 5),
+                                                                          child: Text(
+                                                                            '~ ' + AppLocalizations.of(context).required,
+                                                                            style: TextStyle(
+                                                                                fontFamily: BuytimeTheme.FontFamily,
+                                                                                fontSize: 12,
+                                                                                fontWeight: FontWeight.w500,
+                                                                                color: BuytimeTheme.AccentRed
+                                                                            ),
                                                                           ),
                                                                         ),
                                                                       ) : Container(),
