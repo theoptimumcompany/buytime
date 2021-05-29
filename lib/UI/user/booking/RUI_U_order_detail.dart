@@ -544,7 +544,7 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
                                         ),
                                       ),
                                       ///Open until value
-                                      Container(
+                                      /*Container(
                                         margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
                                         child: FittedBox(
                                           fit: BoxFit.scaleDown,
@@ -560,7 +560,7 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
                                             ),
                                           ),
                                         ),
-                                      ),
+                                      ),*/
                                       ///Directions
                                       Container(
                                         margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),

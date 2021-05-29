@@ -542,7 +542,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                                     ),
                                   ),
                                   ///Open until value
-                                  Container(
+                                  /*Container(
                                     margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
                                     child: FittedBox(
                                       fit: BoxFit.scaleDown,
@@ -558,7 +558,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                                         ),
                                       ),
                                     ),
-                                  ),
+                                  ),*/
                                   ///Directions
                                   Container(
                                     margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),

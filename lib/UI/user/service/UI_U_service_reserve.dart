@@ -719,16 +719,18 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                           ),
                           ///First slot
                           noActivity ?
-                          Container(
-                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, bottom: SizeConfig.safeBlockVertical * 3, right: SizeConfig.safeBlockVertical * 5, left: SizeConfig.safeBlockVertical * 2),
-                            width: 179,
-                            height: 120,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                CircularProgressIndicator()
-                              ],
-                            ),
+                          Flexible(
+                              child: Container(
+                                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, bottom: SizeConfig.safeBlockVertical * 3, right: SizeConfig.safeBlockVertical * 5, left: SizeConfig.safeBlockVertical * 2),
+                                width: 179,
+                                height: 120,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    CircularProgressIndicator()
+                                  ],
+                                ),
+                              ),
                           ) :
                           Container(
                             margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, bottom: SizeConfig.safeBlockVertical * 3, right: SizeConfig.safeBlockVertical * 5, left: SizeConfig.safeBlockVertical * 2),

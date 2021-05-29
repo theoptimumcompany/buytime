@@ -457,7 +457,7 @@ class _ExternalServiceDetailsState extends State<ExternalServiceDetails> with Si
                                         ),
                                       ),
                                       ///Open until value
-                                      Container(
+                                      /*Container(
                                         margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
                                         child: FittedBox(
                                           fit: BoxFit.scaleDown,
@@ -473,7 +473,7 @@ class _ExternalServiceDetailsState extends State<ExternalServiceDetails> with Si
                                             ),
                                           ),
                                         ),
-                                      ),
+                                      ),*/
                                       ///Directions
                                       Container(
                                         margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),

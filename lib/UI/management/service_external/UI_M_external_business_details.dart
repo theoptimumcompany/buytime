@@ -693,7 +693,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                     ),
                                   ),
                                   ///Open until value
-                                  Container(
+                                  /*Container(
                                     margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
                                     child: FittedBox(
                                       fit: BoxFit.scaleDown,
@@ -709,7 +709,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                         ),
                                       ),
                                     ),
-                                  ),
+                                  ),*/
                                   ///Directions
                                   Container(
                                     margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
