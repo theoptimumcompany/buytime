@@ -542,12 +542,13 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                                     ),
                                   ),
                                   ///Open until value
-                                  Container(
+                                  /*Container(
                                     margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
                                     child: FittedBox(
                                       fit: BoxFit.scaleDown,
                                       child: Text(
-                                        AppLocalizations.of(context).openUntil + ' ...',
+                                        //AppLocalizations.of(context).openUntil + ' ...',
+                                        '',
                                         style: TextStyle(
                                             letterSpacing: 0.15,
                                             fontFamily: BuytimeTheme.FontFamily,
@@ -557,7 +558,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                                         ),
                                       ),
                                     ),
-                                  ),
+                                  ),*/
                                   ///Directions
                                   Container(
                                     margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
