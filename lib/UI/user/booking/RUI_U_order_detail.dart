@@ -522,7 +522,7 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
                                               child: FittedBox(
                                                 fit: BoxFit.scaleDown,
                                                 child: Text(
-                                                  businessState.street + ', ' + businessState.street_number + ', ' + businessState.ZIP + ', ' + businessState.state_province,
+                                                  serviceState.serviceAddress.isNotEmpty ? serviceState.serviceAddress : businessState.businessAddress,
                                                   style: TextStyle(
                                                       letterSpacing: 0.15,
                                                       fontFamily: BuytimeTheme.FontFamily,
