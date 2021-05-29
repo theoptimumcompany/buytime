@@ -646,7 +646,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                       children: [
                                         ///Address text
                                         Container(
-                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                           child: FittedBox(
                                             fit: BoxFit.scaleDown,
                                             child: Text(
@@ -663,7 +663,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                         ),
                                         ///Address value
                                         Container(
-                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
+                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
                                             child: Row(
                                               children: [
                                                 Flexible(
@@ -721,7 +721,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                     ),*/
                                     ///Directions
                                     Container(
-                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                       child: Row(
                                         children: [
                                           Icon(
