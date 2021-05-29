@@ -31,7 +31,7 @@ class _BookingMonthListState extends State<BookingMonthList> {
         Container(
           margin: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 5, top: SizeConfig.blockSizeVertical * 2, bottom: SizeConfig.blockSizeVertical * 2),
           child: Text(
-            DateFormat('MMM yyyy').format(widget.bookingList.first.start_date).toUpperCase(),
+            DateFormat('MMM yyyy',Localizations.localeOf(context).languageCode).format(widget.bookingList.first.start_date).toUpperCase(),
             style: TextStyle(
                 fontFamily: BuytimeTheme.FontFamily,
                 color: BuytimeTheme.ManagerPrimary,

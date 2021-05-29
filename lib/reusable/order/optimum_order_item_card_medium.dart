@@ -393,7 +393,7 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
                                ),
                                ///Date
                                Text(
-                                 '${DateFormat('dd/MM/yyyy').format(orderEntry.date)}',
+                                 '${DateFormat('dd/MM/yyyy',Localizations.localeOf(context).languageCode).format(orderEntry.date)}',
                                  overflow: TextOverflow.ellipsis,
                                  style: TextStyle(
                                      fontFamily: BuytimeTheme.FontFamily,

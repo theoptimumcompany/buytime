@@ -370,7 +370,7 @@ class _ActivityManagementItemDetailsState extends State<ActivityManagementItemDe
                                       children: [
                                         ///Date
                                         Text(
-                                          '${DateFormat('dd MMM').format(widget.orderEntry.date)}',
+                                          '${DateFormat('dd MMM',Localizations.localeOf(context).languageCode).format(widget.orderEntry.date)}',
                                           overflow: TextOverflow.ellipsis,
                                           style: TextStyle(
                                               fontFamily: BuytimeTheme.FontFamily,

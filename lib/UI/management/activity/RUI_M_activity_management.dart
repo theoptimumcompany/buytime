@@ -152,7 +152,7 @@ class _RActivityManagementState extends State<RActivityManagement> {
             alignment: Alignment.centerLeft,
             padding: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
             child: Text(
-                '${DateFormat('MMM yyyy').format(key).toUpperCase()}',
+                '${DateFormat('MMM yyyy',Localizations.localeOf(context).languageCode).format(key).toUpperCase()}',
                 style: TextStyle(
                   letterSpacing: 1.25,
                   fontFamily: BuytimeTheme.FontFamily,
@@ -192,9 +192,9 @@ class _RActivityManagementState extends State<RActivityManagement> {
                               alignment: Alignment.centerLeft,
                               padding: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
                               child: Text(
-                                  orderTime.isAtSameMomentAs(currentTime) ? '${AppLocalizations.of(context).today} ${DateFormat('MMM dd').format(orderTime).toUpperCase()}' :
-                                  orderTime.isAtSameMomentAs(currentTime.add(Duration(days: 1))) ? '${AppLocalizations.of(context).tomorrow} ${DateFormat('MMM dd').format(orderTime).toUpperCase()}' :
-                                  '${DateFormat('MMM dd').format(orderTime).toUpperCase()}',
+                                  orderTime.isAtSameMomentAs(currentTime) ? '${AppLocalizations.of(context).today} ${DateFormat('MMM dd',Localizations.localeOf(context).languageCode).format(orderTime).toUpperCase()}' :
+                                  orderTime.isAtSameMomentAs(currentTime.add(Duration(days: 1))) ? '${AppLocalizations.of(context).tomorrow} ${DateFormat('MMM dd',Localizations.localeOf(context).languageCode).format(orderTime).toUpperCase()}' :
+                                  '${DateFormat('MMM dd',Localizations.localeOf(context).languageCode).format(orderTime).toUpperCase()}',
                                   style: TextStyle(
                                     letterSpacing: 1.25,
                                     fontFamily: BuytimeTheme.FontFamily,
@@ -306,7 +306,7 @@ class _RActivityManagementState extends State<RActivityManagement> {
                   alignment: Alignment.centerLeft,
                   padding: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
                   child: Text(
-                      '${DateFormat('MMM yyyy').format(key)}',
+                      '${DateFormat('MMM yyyy',Localizations.localeOf(context).languageCode).format(key)}',
                       style: TextStyle(
                         letterSpacing: 1.25,
                         fontFamily: BuytimeTheme.FontFamily,
@@ -346,9 +346,9 @@ class _RActivityManagementState extends State<RActivityManagement> {
                         alignment: Alignment.centerLeft,
                         padding: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
                         child: Text(
-                            index == 0 ? '${AppLocalizations.of(context).today} ${DateFormat('MMM dd').format(value[index][0][0].date).toUpperCase()}' :
-                            index == 1 ? '${AppLocalizations.of(context).tomorrow} ${DateFormat('MMM dd').format(value[index][0][0].date).toUpperCase()}' :
-                            '${DateFormat('MMM dd').format(value[index][0][0].date).toUpperCase()}',
+                            index == 0 ? '${AppLocalizations.of(context).today} ${DateFormat('MMM dd',Localizations.localeOf(context).languageCode).format(value[index][0][0].date).toUpperCase()}' :
+                            index == 1 ? '${AppLocalizations.of(context).tomorrow} ${DateFormat('MMM dd',Localizations.localeOf(context).languageCode).format(value[index][0][0].date).toUpperCase()}' :
+                            '${DateFormat('MMM dd',Localizations.localeOf(context).languageCode).format(value[index][0][0].date).toUpperCase()}',
                             style: TextStyle(
                               letterSpacing: 1.25,
                               fontFamily: BuytimeTheme.FontFamily,
@@ -428,9 +428,9 @@ class _RActivityManagementState extends State<RActivityManagement> {
                     alignment: Alignment.centerLeft,
                     padding: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
                     child: Text(
-                        orderTime.isAtSameMomentAs(currentTime) ? '${AppLocalizations.of(context).today} ${DateFormat('MMM dd').format(orderTime).toUpperCase()}' :
-                        orderTime.isAtSameMomentAs(currentTime.add(Duration(days: 1))) ? '${AppLocalizations.of(context).tomorrow} ${DateFormat('MMM dd').format(orderTime).toUpperCase()}' :
-                        '${DateFormat('MMM dd').format(orderTime).toUpperCase()}',
+                        orderTime.isAtSameMomentAs(currentTime) ? '${AppLocalizations.of(context).today} ${DateFormat('MMM dd',Localizations.localeOf(context).languageCode).format(orderTime).toUpperCase()}' :
+                        orderTime.isAtSameMomentAs(currentTime.add(Duration(days: 1))) ? '${AppLocalizations.of(context).tomorrow} ${DateFormat('MMM dd',Localizations.localeOf(context).languageCode).format(orderTime).toUpperCase()}' :
+                        '${DateFormat('MMM dd',Localizations.localeOf(context).languageCode).format(orderTime).toUpperCase()}',
                         style: TextStyle(
                           letterSpacing: 1.25,
                           fontFamily: BuytimeTheme.FontFamily,
@@ -791,7 +791,7 @@ class _RActivityManagementState extends State<RActivityManagement> {
                                 Container(
                                   margin: EdgeInsets.only(left: 10),
                                   child: Text(
-                                    seeAll ? AppLocalizations.of(context).showAll : '${DateFormat('dd MMM').format(currentTime)} - ${DateFormat('dd MMM').format(sevenDaysFromNow)}',
+                                    seeAll ? AppLocalizations.of(context).showAll : '${DateFormat('dd MMM',Localizations.localeOf(context).languageCode).format(currentTime)} - ${DateFormat('dd MMM').format(sevenDaysFromNow)}',
                                     style: TextStyle(
                                         fontFamily: BuytimeTheme.FontFamily,
                                         fontSize: 16,
@@ -821,7 +821,7 @@ class _RActivityManagementState extends State<RActivityManagement> {
                                     child: Container(
                                       padding: EdgeInsets.all(5.0),
                                       child: Text(
-                                        !seeAll ? AppLocalizations.of(context).showAll : '${DateFormat('dd MMM').format(currentTime)} - ${DateFormat('dd MMM').format(sevenDaysFromNow)}',
+                                        !seeAll ? AppLocalizations.of(context).showAll : '${DateFormat('dd MMM',Localizations.localeOf(context).languageCode).format(currentTime)} - ${DateFormat('dd MMM').format(sevenDaysFromNow)}',
                                         style: TextStyle(
                                             letterSpacing: .25,
                                             fontFamily: BuytimeTheme.FontFamily,
@@ -1059,7 +1059,7 @@ class _RActivityManagementState extends State<RActivityManagement> {
                               Container(
                                 margin: EdgeInsets.only(left: 10),
                                 child: Text(
-                                  seeAll ? AppLocalizations.of(context).showAll : '${DateFormat('dd MMM').format(currentTime)} - ${DateFormat('dd MMM').format(sevenDaysFromNow)}',
+                                  seeAll ? AppLocalizations.of(context).showAll : '${DateFormat('dd MMM',Localizations.localeOf(context).languageCode).format(currentTime)} - ${DateFormat('dd MMM',Localizations.localeOf(context).languageCode).format(sevenDaysFromNow)}',
                                   style: TextStyle(
                                       fontFamily: BuytimeTheme.FontFamily,
                                       fontSize: 16,
@@ -1089,7 +1089,7 @@ class _RActivityManagementState extends State<RActivityManagement> {
                                   child: Container(
                                     padding: EdgeInsets.all(5.0),
                                     child: Text(
-                                      !seeAll ? AppLocalizations.of(context).showAll : '${DateFormat('dd MMM').format(currentTime)} - ${DateFormat('dd MMM').format(sevenDaysFromNow)}',
+                                      !seeAll ? AppLocalizations.of(context).showAll : '${DateFormat('dd MMM',Localizations.localeOf(context).languageCode).format(currentTime)} - ${DateFormat('dd MMM',Localizations.localeOf(context).languageCode).format(sevenDaysFromNow)}',
                                       style: TextStyle(
                                           letterSpacing: .25,
                                           fontFamily: BuytimeTheme.FontFamily,

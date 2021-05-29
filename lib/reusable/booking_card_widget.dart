@@ -170,7 +170,7 @@ class _BookingCardWidgetState extends State<BookingCardWidget> {
                           child:  FittedBox(
                             fit: BoxFit.scaleDown,
                             child: Text(
-                              '${DateFormat('dd MMMM').format(widget.bookingState.start_date)} - ${DateFormat('dd MMMM yyyy').format(widget.bookingState.end_date)}',
+                              '${DateFormat('dd MMMM',Localizations.localeOf(context).languageCode).format(widget.bookingState.start_date)} - ${DateFormat('dd MMMM yyyy').format(widget.bookingState.end_date)}',
                               style: TextStyle(
                                   fontFamily: BuytimeTheme.FontFamily,
                                   color: !closed ? BuytimeTheme.TextWhite : BuytimeTheme.TextWhite.withOpacity(.8),

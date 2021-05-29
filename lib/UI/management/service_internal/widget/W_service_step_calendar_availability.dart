@@ -73,9 +73,9 @@ class CalendarAvailabilityState extends State<CalendarAvailability> {
     }
     if (picked != null && picked.start != null && picked.end != null) {
       setState(() {
-        checkInController.text = DateFormat('dd/MM/yyyy').format(picked.start);
+        checkInController.text = DateFormat('dd/MM/yyyy',Localizations.localeOf(context).languageCode).format(picked.start);
         print(checkInController.text);
-        checkOutController.text = DateFormat('dd/MM/yyyy').format(picked.end);
+        checkOutController.text = DateFormat('dd/MM/yyyy',Localizations.localeOf(context).languageCode).format(picked.end);
         print(checkOutController.text);
         checkIn = picked.start;
         checkOut = picked.end;

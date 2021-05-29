@@ -33,9 +33,9 @@ class _UserServiceCardWidgetState extends State<UserServiceCardWidget> {
   void initState() {
     super.initState();
     //debugPrint('${widget.imageUrl}');
-    date = DateFormat('MMM dd').format(widget.orderState.date).toUpperCase();
-    currentDate = DateFormat('MMM dd').format(DateTime.now()).toUpperCase();
-    nextDate = DateFormat('MMM dd').format(DateTime.now().add(Duration(days: 1))).toUpperCase();
+    date = DateFormat('MMM dd',Localizations.localeOf(context).languageCode).format(widget.orderState.date).toUpperCase();
+    currentDate = DateFormat('MMM dd',Localizations.localeOf(context).languageCode).format(DateTime.now()).toUpperCase();
+    nextDate = DateFormat('MMM dd',Localizations.localeOf(context).languageCode).format(DateTime.now().add(Duration(days: 1))).toUpperCase();
     //currentDate == date ? AppLocalizations.of(context).today + date : index == 1 && nextDate == date ? AppLocalizations.of(context).tomorrow + date : '${DateFormat('EEEE').format(i).toUpperCase()}, $date'
   }
 
@@ -137,7 +137,7 @@ class _UserServiceCardWidgetState extends State<UserServiceCardWidget> {
                           child: FittedBox(
                             fit: BoxFit.scaleDown,
                             child: Text(
-                              currentDate == date ? AppLocalizations.of(context).todayLower + ', ${widget.orderState.itemList.first.time}' : nextDate == date ? AppLocalizations.of(context).tomorrowLower + ', ${widget.orderState.itemList.first.time}' : '${DateFormat('dd EEE').format(widget.orderState.date)},  ${widget.orderState.itemList.first.time}',
+                              currentDate == date ? AppLocalizations.of(context).todayLower + ', ${widget.orderState.itemList.first.time}' : nextDate == date ? AppLocalizations.of(context).tomorrowLower + ', ${widget.orderState.itemList.first.time}' : '${DateFormat('dd EEE',Localizations.localeOf(context).languageCode).format(widget.orderState.date)},  ${widget.orderState.itemList.first.time}',
                               style: TextStyle(
                                   fontFamily: BuytimeTheme.FontFamily,
                                   color: BuytimeTheme.TextWhite,

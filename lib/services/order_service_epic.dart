@@ -22,9 +22,9 @@ import 'package:rxdart/rxdart.dart';
 import 'package:uuid/uuid.dart';
 import 'order/util.dart';
 
-List<DateTime> getPeriod(DateTime dateTime){
+List<DateTime> getPeriod(DateTime dateTime, context){
   //String weekdayDate = DateFormat('E d M y').format(dateTime);
-  String weekday = DateFormat('E').format(dateTime);
+  String weekday = DateFormat('E',Localizations.localeOf(context).languageCode).format(dateTime);
 
   int unix = dateTime.millisecondsSinceEpoch;
 
