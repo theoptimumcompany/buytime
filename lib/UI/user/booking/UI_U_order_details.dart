@@ -499,7 +499,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                                       children: [
                                         ///Address text
                                         Container(
-                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                           child: FittedBox(
                                             fit: BoxFit.scaleDown,
                                             child: Text(
@@ -516,7 +516,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                                         ),
                                         ///Address value
                                         Container(
-                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
+                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
                                           child: FittedBox(
                                             fit: BoxFit.scaleDown,
                                             child: Text(
@@ -571,7 +571,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                                   ),*/
                                     ///Directions
                                     Container(
-                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                       child: Row(
                                         children: [
                                           Icon(
@@ -792,7 +792,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                             ),
                           ),
                         ) : Container(),
-                        ///Conditions
+                        /*///Conditions
                         widget.orderState.itemList.first.time != null  ?
                         Container(
                           margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
@@ -827,7 +827,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                               ),
                             ),
                           ),
-                        ) : Container(),
+                        ) : Container(),*/
                         ///Payment method
                         Container(
                           margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
