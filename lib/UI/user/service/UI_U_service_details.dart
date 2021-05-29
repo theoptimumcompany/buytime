@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 import 'package:Buytime/UI/user/cart/UI_U_cart.dart';
 import 'package:Buytime/UI/user/login/tourist_session/UI_U_tourist_session.dart';
+import 'package:Buytime/reblox/reducer/order_reservable_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/service_reducer.dart';
 import 'package:Buytime/UI/user/map/UI_U_map.dart';
 import 'package:Buytime/UI/user/service/UI_U_service_reserve.dart';
@@ -657,7 +658,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                               child: MaterialButton(
                                 onPressed: StoreProvider.of<AppState>(context).state.user.getRole() == Role.user
                                     ? () {
-                                        //StoreProvider.of<AppState>(context).dispatch(OrderReservableListRequest(widget.serviceState.serviceId));
+                                        StoreProvider.of<AppState>(context).dispatch(SetOrderReservableToEmpty('ok'));
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(builder: (context) => ServiceReserve(serviceState: serviceState, tourist: widget.tourist)),
