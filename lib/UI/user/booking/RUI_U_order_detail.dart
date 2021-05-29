@@ -489,45 +489,54 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
                               children: [
                                 Flexible(
                                   flex: 3,
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      ///Address text
-                                      Container(
-                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
-                                        child: FittedBox(
-                                          fit: BoxFit.scaleDown,
-                                          child: Text(
-                                            AppLocalizations.of(context).address.toUpperCase(),
-                                            style: TextStyle(
-                                                letterSpacing: 1.5,
-                                                fontFamily: BuytimeTheme.FontFamily,
-                                                color: BuytimeTheme.TextMedium,
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: 10 ///SizeConfig.safeBlockHorizontal * 4
+                                  child: Container(
+                                    height: 125,
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        ///Address
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            ///Address text
+                                            Container(
+                                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                              child: FittedBox(
+                                                fit: BoxFit.scaleDown,
+                                                child: Text(
+                                                  AppLocalizations.of(context).address.toUpperCase(),
+                                                  style: TextStyle(
+                                                      letterSpacing: 1.5,
+                                                      fontFamily: BuytimeTheme.FontFamily,
+                                                      color: BuytimeTheme.TextMedium,
+                                                      fontWeight: FontWeight.w500,
+                                                      fontSize: 10 ///SizeConfig.safeBlockHorizontal * 4
+                                                  ),
+                                                ),
+                                              ),
                                             ),
-                                          ),
-                                        ),
-                                      ),
-                                      ///Address value
-                                      Container(
-                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
-                                        child: FittedBox(
-                                          fit: BoxFit.scaleDown,
-                                          child: Text(
-                                            businessState.street + ', ' + businessState.street_number + ', ' + businessState.ZIP + ', ' + businessState.state_province,
-                                            style: TextStyle(
-                                                letterSpacing: 0.15,
-                                                fontFamily: BuytimeTheme.FontFamily,
-                                                color: BuytimeTheme.TextBlack,
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: 16 ///SizeConfig.safeBlockHorizontal * 4
+                                            ///Address value
+                                            Container(
+                                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
+                                              child: FittedBox(
+                                                fit: BoxFit.scaleDown,
+                                                child: Text(
+                                                  businessState.street + ', ' + businessState.street_number + ', ' + businessState.ZIP + ', ' + businessState.state_province,
+                                                  style: TextStyle(
+                                                      letterSpacing: 0.15,
+                                                      fontFamily: BuytimeTheme.FontFamily,
+                                                      color: BuytimeTheme.TextBlack,
+                                                      fontWeight: FontWeight.w500,
+                                                      fontSize: 16 ///SizeConfig.safeBlockHorizontal * 4
+                                                  ),
+                                                ),
+                                              ),
                                             ),
-                                          ),
+                                          ],
                                         ),
-                                      ),
-                                      ///Hour text
-                                      Container(
+                                        ///Hour text
+                                        /*Container(
                                         margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                         child: FittedBox(
                                           fit: BoxFit.scaleDown,
@@ -542,9 +551,9 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
                                             ),
                                           ),
                                         ),
-                                      ),
-                                      ///Open until value
-                                      /*Container(
+                                      ),*/
+                                        ///Open until value
+                                        /*Container(
                                         margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
                                         child: FittedBox(
                                           fit: BoxFit.scaleDown,
@@ -561,91 +570,92 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
                                           ),
                                         ),
                                       ),*/
-                                      ///Directions
-                                      Container(
-                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
-                                        child: Row(
-                                          children: [
-                                            Icon(
-                                              Icons.location_pin,
-                                              size: 14,
-                                              color: BuytimeTheme.SymbolGrey,
-                                            ),
-                                            ///Min
-                                            gettingLocation ? Container(
-                                              margin: EdgeInsets.only(left: 5, right: 2.5),
-                                              height: 12,
-                                              width: 12,
-                                              child: CircularProgressIndicator(
-                                                strokeWidth: 2,
-                                                //valueColor: new AlwaysStoppedAnimation<Color>(widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary),
+                                        ///Directions
+                                        Container(
+                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                          child: Row(
+                                            children: [
+                                              Icon(
+                                                Icons.location_pin,
+                                                size: 14,
+                                                color: BuytimeTheme.SymbolGrey,
                                               ),
-                                            ) :
-                                            Container(
-                                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 0.5, right: SizeConfig.safeBlockHorizontal * 1, top: SizeConfig.safeBlockVertical * 0),
-                                              child: FittedBox(
-                                                fit: BoxFit.scaleDown,
-                                                child: Text(
-                                                      (){
-                                                    if(distanceFromCurrentPosition != null){
-                                                      return distanceFromCurrentPosition.toString().split('.').first.startsWith('0') && distanceFromCurrentPosition.toString().split('.').first.length != 1?
-                                                      distanceFromCurrentPosition.toString().split('.').last.substring(0,3) + ' m' :
-                                                      distanceFromCurrentPosition.toStringAsFixed(1) + ' Km';
-                                                    }else{
-                                                      return distanceFromBusiness.toString().split('.').first.startsWith('0') && distanceFromBusiness.toString().split('.').first.length != 1?
-                                                      distanceFromBusiness.toString().split('.').last.substring(0,3) + ' m' :
-                                                      distanceFromBusiness.toStringAsFixed(1) + ' Km';
-                                                    }
-                                                  }(),
-                                                  style: TextStyle(
-                                                      letterSpacing: 0.25,
-                                                      fontFamily: BuytimeTheme.FontFamily,
-                                                      color: BuytimeTheme.TextMedium,
-                                                      fontWeight: FontWeight.w500,
-                                                      fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
+                                              ///Min
+                                              gettingLocation ? Container(
+                                                margin: EdgeInsets.only(left: 5, right: 2.5),
+                                                height: 12,
+                                                width: 12,
+                                                child: CircularProgressIndicator(
+                                                  strokeWidth: 2,
+                                                  //valueColor: new AlwaysStoppedAnimation<Color>(widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary),
+                                                ),
+                                              ) :
+                                              Container(
+                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 0.5, right: SizeConfig.safeBlockHorizontal * 1, top: SizeConfig.safeBlockVertical * 0),
+                                                child: FittedBox(
+                                                  fit: BoxFit.scaleDown,
+                                                  child: Text(
+                                                        (){
+                                                      if(distanceFromCurrentPosition != null){
+                                                        return distanceFromCurrentPosition.toString().split('.').first.startsWith('0') && distanceFromCurrentPosition.toString().split('.').first.length != 1?
+                                                        distanceFromCurrentPosition.toString().split('.').last.substring(0,3) + ' m' :
+                                                        distanceFromCurrentPosition.toStringAsFixed(1) + ' Km';
+                                                      }else{
+                                                        return distanceFromBusiness.toString().split('.').first.startsWith('0') && distanceFromBusiness.toString().split('.').first.length != 1?
+                                                        distanceFromBusiness.toString().split('.').last.substring(0,3) + ' m' :
+                                                        distanceFromBusiness.toStringAsFixed(1) + ' Km';
+                                                      }
+                                                    }(),
+                                                    style: TextStyle(
+                                                        letterSpacing: 0.25,
+                                                        fontFamily: BuytimeTheme.FontFamily,
+                                                        color: BuytimeTheme.TextMedium,
+                                                        fontWeight: FontWeight.w500,
+                                                        fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
+                                                    ),
                                                   ),
                                                 ),
                                               ),
-                                            ),
-                                            ///Directions
-                                            Container(
-                                                margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 2.5),
-                                                alignment: Alignment.center,
-                                                child: Material(
-                                                  color: Colors.transparent,
-                                                  child: InkWell(
-                                                      onTap: () {
-                                                        Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(builder: (context) => BuytimeMap(user: true,
-                                                              title: orderDetails.itemList.length > 1 ? orderDetails.business.name : orderDetails.itemList.first.name,
-                                                              businessState: businessState,
-                                                              serviceState: serviceState) ///TODO service address
-                                                          ),
-                                                        );
-                                                      },
-                                                      borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                                                      child: Container(
-                                                        padding: EdgeInsets.all(5.0),
-                                                        child: Text(
-                                                          AppLocalizations.of(context).directions,
-                                                          style: TextStyle(
-                                                              letterSpacing: SizeConfig.safeBlockHorizontal * .2,
-                                                              fontFamily: BuytimeTheme.FontFamily,
-                                                              color: BuytimeTheme.UserPrimary,
-                                                              fontWeight: FontWeight.w400,
-                                                              fontSize: 14
+                                              ///Directions
+                                              Container(
+                                                  margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 2.5),
+                                                  alignment: Alignment.center,
+                                                  child: Material(
+                                                    color: Colors.transparent,
+                                                    child: InkWell(
+                                                        onTap: () {
+                                                          Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(builder: (context) => BuytimeMap(user: true,
+                                                                title: orderDetails.itemList.length > 1 ? orderDetails.business.name : orderDetails.itemList.first.name,
+                                                                businessState: businessState,
+                                                                serviceState: serviceState) ///TODO service address
+                                                            ),
+                                                          );
+                                                        },
+                                                        borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                                        child: Container(
+                                                          padding: EdgeInsets.all(5.0),
+                                                          child: Text(
+                                                            AppLocalizations.of(context).directions,
+                                                            style: TextStyle(
+                                                                letterSpacing: SizeConfig.safeBlockHorizontal * .2,
+                                                                fontFamily: BuytimeTheme.FontFamily,
+                                                                color: BuytimeTheme.UserPrimary,
+                                                                fontWeight: FontWeight.w400,
+                                                                fontSize: 14
 
-                                                            ///SizeConfig.safeBlockHorizontal * 4
+                                                              ///SizeConfig.safeBlockHorizontal * 4
+                                                            ),
                                                           ),
-                                                        ),
-                                                      )),
-                                                ))
-                                          ],
-                                        ),
-                                      )
-                                    ],
-                                  ),
+                                                        )),
+                                                  ))
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  )
                                 ),
                                 ///Map
                                 Flexible(
@@ -663,7 +673,7 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
                                     },
                                     child: Container(
                                       width: 174,
-                                      height: 169,
+                                      height: 125,
                                       //margin: EdgeInsets.only(left:10.0, right: 10.0),
                                       child: CachedNetworkImage(
                                         imageUrl:  getShopLocationImage(businessState.coordinate),
