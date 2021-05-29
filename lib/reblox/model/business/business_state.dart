@@ -57,8 +57,8 @@ class BusinessState {
   @JsonKey(ignore: true)
   List<OptimumFileToUpload> fileToUploadList;
   List<String> tag;
-  @JsonKey(defaultValue: [''])
-  List<String> area;
+  @JsonKey(defaultValue: ['Reception'])
+  List<String> area = ['Reception'];
   @JsonKey(defaultValue: false)
   bool hub;
   String businessAddress;
