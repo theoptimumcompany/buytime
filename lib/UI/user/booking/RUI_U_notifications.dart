@@ -62,7 +62,7 @@ class _RNotificationsState extends State<RNotifications> {
   @override
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
-    notifications.clear();
+    notifications = [];
     SizeConfig().init(context);
     userId = StoreProvider.of<AppState>(context).state.user.uid;
     order = StoreProvider.of<AppState>(context).state.order;
