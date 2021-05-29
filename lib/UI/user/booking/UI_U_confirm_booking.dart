@@ -181,7 +181,7 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                                 Container(
                                   margin: EdgeInsets.only(top: 20),
                                   child: Text(
-                                    '${DateFormat('dd MMMM').format(bookingState.start_date)} - ${DateFormat('dd MMMM yyyy').format(bookingState.end_date)}' ?? '12 June - 18 June 2021',
+                                    '${DateFormat('dd MMMM',Localizations.localeOf(context).languageCode).format(bookingState.start_date)} - ${DateFormat('dd MMMM yyyy').format(bookingState.end_date)}' ?? '12 June - 18 June 2021',
                                     style: TextStyle(
                                         fontFamily: BuytimeTheme.FontFamily,
                                         color: BuytimeTheme.TextBlack,

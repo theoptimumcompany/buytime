@@ -82,8 +82,8 @@ class _BookingCreationState extends State<BookingCreation> {
     );
     if (picked != null && picked.start != null && picked.end != null) {
       print(picked);
-      _checkInController.text = DateFormat('dd/MM/yyyy').format(picked.start);
-      _checkOutController.text = DateFormat('dd/MM/yyyy').format(picked.end);
+      _checkInController.text = DateFormat('dd/MM/yyyy',Localizations.localeOf(context).languageCode).format(picked.start);
+      _checkOutController.text = DateFormat('dd/MM/yyyy',Localizations.localeOf(context).languageCode).format(picked.end);
       setState(() {
         /*checkIn = picked.start.toUtc();
         checkOut = picked.end.toUtc();*/

@@ -54,9 +54,9 @@ class _ExternalServiceItemState extends State<ExternalServiceItem> {
           debugPrint('W_external_service_item => SLOT WITHOUT DAYS');
           int tmpMin = element.hour * 60 + element.minute;
           if(tmpMin > 90)
-            duration = '${element.hour} h ${element.minute}${AppLocalizations.of(context).spaceMinSpace}';
+            duration = '${element.hour} h ${element.minute} ${AppLocalizations.of(context).spaceMinSpace}';
           else
-            duration = '$tmpMin${AppLocalizations.of(context).spaceMinSpace}';
+            duration = '$tmpMin ${AppLocalizations.of(context).spaceMinSpace}';
         }
       });
     }else{

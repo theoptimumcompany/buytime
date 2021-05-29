@@ -61,7 +61,7 @@ class _ActivityManagementState extends State<ActivityManagement> {
 
 
   void listUp(OrderState element, DateTime currentTime, DateTime orderTime, List<List> list){
-    orderMap.putIfAbsent(DateFormat('dd MM yyyy').format(orderTime), () => []);
+    orderMap.putIfAbsent(DateFormat('dd MM yyyy',Localizations.localeOf(context).languageCode).format(orderTime), () => []);
     if(element.selected.isNotEmpty){
       element.itemList.forEach((entry) {
         DateTime orderEntryTime = entry.date;
@@ -104,9 +104,9 @@ class _ActivityManagementState extends State<ActivityManagement> {
               alignment: Alignment.centerLeft,
               padding: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
               child: Text(
-                i == 0 ? '${AppLocalizations.of(context).today} ${DateFormat('MMM dd').format(list[i][0][0].date).toUpperCase()}' :
-                  i == 1 ? '${AppLocalizations.of(context).tomorrow} ${DateFormat('MMM dd').format(list[i][0][0].date).toUpperCase()}' :
-                  '${DateFormat('MMM dd').format(list[i][0][0].date).toUpperCase()}',
+                i == 0 ? '${AppLocalizations.of(context).today} ${DateFormat('MMM dd',Localizations.localeOf(context).languageCode).format(list[i][0][0].date).toUpperCase()}' :
+                  i == 1 ? '${AppLocalizations.of(context).tomorrow} ${DateFormat('MMM dd',Localizations.localeOf(context).languageCode).format(list[i][0][0].date).toUpperCase()}' :
+                  '${DateFormat('MMM dd',Localizations.localeOf(context).languageCode).format(list[i][0][0].date).toUpperCase()}',
                  style: TextStyle(
                     letterSpacing: 1.25,
                     fontFamily: BuytimeTheme.FontFamily,
@@ -363,19 +363,19 @@ class _ActivityManagementState extends State<ActivityManagement> {
         pendingList.forEach((pending) {
           DateTime pendingTime = pending[0].date;
           pendingTime = DateTime(pendingTime.year, pendingTime.month, pendingTime.day, 0, 0, 0, 0, 0);
-          orderMap[DateFormat('dd MM yyyy').format(pendingTime)].add(pending);
+          orderMap[DateFormat('dd MM yyyy',Localizations.localeOf(context).languageCode).format(pendingTime)].add(pending);
         });
 
         acceptedList.forEach((accepted) {
           DateTime acceptedTime = accepted[0].date;
           acceptedTime = new DateTime(acceptedTime.year, acceptedTime.month, acceptedTime.day, 0, 0, 0, 0, 0);
-          orderMap[DateFormat('dd MM yyyy').format(acceptedTime)].add(accepted);
+          orderMap[DateFormat('dd MM yyyy',Localizations.localeOf(context).languageCode).format(acceptedTime)].add(accepted);
         });
 
         canceledList.forEach((pending) {
           DateTime pendingTime = pending[0].date;
           pendingTime = DateTime(pendingTime.year, pendingTime.month, pendingTime.day, 0, 0, 0, 0, 0);
-          orderMap[DateFormat('dd MM yyyy').format(pendingTime)].add(pending);
+          orderMap[DateFormat('dd MM yyyy',Localizations.localeOf(context).languageCode).format(pendingTime)].add(pending);
         });
 
         orderMap.forEach((key, value) {
@@ -465,7 +465,7 @@ class _ActivityManagementState extends State<ActivityManagement> {
                               Container(
                                 margin: EdgeInsets.only(left: 10),
                                 child: Text(
-                                  seeAll ? AppLocalizations.of(context).allWeek : '$today, ${DateFormat('dd MMM').format(DateTime.now())}',
+                                  seeAll ? AppLocalizations.of(context).allWeek : '$today, ${DateFormat('dd MMM',Localizations.localeOf(context).languageCode).format(DateTime.now())}',
                                   style: TextStyle(
                                       fontFamily: BuytimeTheme.FontFamily,
                                       fontSize: 16,
@@ -495,7 +495,7 @@ class _ActivityManagementState extends State<ActivityManagement> {
                                   child: Container(
                                     padding: EdgeInsets.all(5.0),
                                     child: Text(
-                                      !seeAll ? AppLocalizations.of(context).seeAllWeek : '$today, ${DateFormat('dd MMM').format(DateTime.now())}',
+                                      !seeAll ? AppLocalizations.of(context).seeAllWeek : '$today, ${DateFormat('dd MMM',Localizations.localeOf(context).languageCode).format(DateTime.now())}',
                                       style: TextStyle(
                                           letterSpacing: .25,
                                           fontFamily: BuytimeTheme.FontFamily,
