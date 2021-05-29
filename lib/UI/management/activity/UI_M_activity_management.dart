@@ -61,7 +61,7 @@ class _ActivityManagementState extends State<ActivityManagement> {
 
 
   void listUp(OrderState element, DateTime currentTime, DateTime orderTime, List<List> list){
-    orderMap.putIfAbsent(DateFormat('dd MM yyyy',Localizations.localeOf(context).languageCode).format(orderTime), () => []);
+    orderMap.putIfAbsent(DateFormat('dd MM yyyy').format(orderTime), () => []);
     if(element.selected.isNotEmpty){
       element.itemList.forEach((entry) {
         DateTime orderEntryTime = entry.date;
@@ -363,19 +363,19 @@ class _ActivityManagementState extends State<ActivityManagement> {
         pendingList.forEach((pending) {
           DateTime pendingTime = pending[0].date;
           pendingTime = DateTime(pendingTime.year, pendingTime.month, pendingTime.day, 0, 0, 0, 0, 0);
-          orderMap[DateFormat('dd MM yyyy',Localizations.localeOf(context).languageCode).format(pendingTime)].add(pending);
+          orderMap[DateFormat('dd MM yyyy').format(pendingTime)].add(pending);
         });
 
         acceptedList.forEach((accepted) {
           DateTime acceptedTime = accepted[0].date;
           acceptedTime = new DateTime(acceptedTime.year, acceptedTime.month, acceptedTime.day, 0, 0, 0, 0, 0);
-          orderMap[DateFormat('dd MM yyyy',Localizations.localeOf(context).languageCode).format(acceptedTime)].add(accepted);
+          orderMap[DateFormat('dd MM yyyy').format(acceptedTime)].add(accepted);
         });
 
         canceledList.forEach((pending) {
           DateTime pendingTime = pending[0].date;
           pendingTime = DateTime(pendingTime.year, pendingTime.month, pendingTime.day, 0, 0, 0, 0, 0);
-          orderMap[DateFormat('dd MM yyyy',Localizations.localeOf(context).languageCode).format(pendingTime)].add(pending);
+          orderMap[DateFormat('dd MM yyyy').format(pendingTime)].add(pending);
         });
 
         orderMap.forEach((key, value) {

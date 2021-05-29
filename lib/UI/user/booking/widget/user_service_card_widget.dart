@@ -32,9 +32,9 @@ class _UserServiceCardWidgetState extends State<UserServiceCardWidget> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      date = DateFormat('MMM dd', Localizations.localeOf(context).languageCode).format(widget.orderState.date).toUpperCase();
-      currentDate = DateFormat('MMM dd', Localizations.localeOf(context).languageCode).format(DateTime.now()).toUpperCase();
-      nextDate = DateFormat('MMM dd', Localizations.localeOf(context).languageCode).format(DateTime.now().add(Duration(days: 1))).toUpperCase();
+      date = DateFormat('MMM dd').format(widget.orderState.date).toUpperCase();
+      currentDate = DateFormat('MMM dd').format(DateTime.now()).toUpperCase();
+      nextDate = DateFormat('MMM dd').format(DateTime.now().add(Duration(days: 1))).toUpperCase();
     });
   }
 

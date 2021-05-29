@@ -109,8 +109,8 @@ class _BookingDetailsState extends State<BookingDetails> {
       builder: (context, snapshot) {
         if (bookingState == null) bookingState = snapshot.booking;
 
-        _checkInController.text = DateFormat('dd/MM/yyyy',Localizations.localeOf(context).languageCode).format(bookingState.start_date);
-        _checkOutController.text = DateFormat('dd/MM/yyyy',Localizations.localeOf(context).languageCode).format(bookingState.end_date);
+        _checkInController.text = DateFormat('dd/MM/yyyy').format(bookingState.start_date);
+        _checkOutController.text = DateFormat('dd/MM/yyyy').format(bookingState.end_date);
 
         _numberOfGuestsController.text = bookingState.guest_number_booked_for.toString();
 

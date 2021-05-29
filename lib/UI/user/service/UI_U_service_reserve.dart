@@ -96,7 +96,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
 
   bool isValid(DateTime dateTime, EveryDay everyDay){
     //String weekdayDate = DateFormat('E d M y').format(dateTime);
-    String weekday = DateFormat('E',Localizations.localeOf(context).languageCode).format(dateTime);
+    String weekday = DateFormat('E').format(dateTime);
 
     if('Mon' == weekday) {
       return everyDay.everyDay[0];
@@ -209,15 +209,15 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
             for (int j = 0; j < mySlots.length; j++) {
               debugPrint('SQUARE TIME: ${mySlots[j].on}');
               if (mySlots[j].free != 0 /*&& mySlots[i].visibility*/) {
-                DateTime squareDateFormat = DateFormat("dd/MM/yyyy",Localizations.localeOf(context).languageCode).parse(mySlots[j].date).toUtc();
+                DateTime squareDateFormat = DateFormat("dd/MM/yyyy").parse(mySlots[j].date).toUtc();
                 //debugPrint('DATE: $squareDateFormat');
                 DateTime squareDate = squareDateFormat;
                 squareDate = new DateTime(squareDate.year, squareDate.month, squareDate.day, 0, 0, 0, 0, 0);
-                DateTime squareTime = DateFormat("dd/MM/yyyy",Localizations.localeOf(context).languageCode).parse(mySlots[j].date).toUtc();
+                DateTime squareTime = DateFormat("dd/MM/yyyy").parse(mySlots[j].date).toUtc();
                 squareTime = new DateTime(squareTime.year, squareTime.month, squareTime.day, int.parse(mySlots[j].on.split(':').first), int.parse(mySlots[j].on.split(':').last), 0, 0, 0);
                 //debugPrint('UI_U_ServiceReserve => SQUARE SLOT DATE: $squareDate - CURRENT DATE: ${startDate.add(Duration(days: i))} - SQUARE SLOT TIME: ${mySlots[j].on} - SQUARE TIME: $squareTime');
                 if(squareDate.isAtSameMomentAs(startDate.add(Duration(days: i))) && squareTime.isAfter(DateTime.now())){
-                  //debugPrint('UI_U_ServiceReserve => SQUARE SLOT DATE: $squareDate - CURRENT DATE: ${startDate.add(Duration(days: i))} - SQUARE SLOT TIME: ${mySlots[j].on} - SQUARE TIME: $squareTime');
+                  debugPrint('UI_U_ServiceReserve => SQUARE SLOT DATE: $squareDate - CURRENT DATE: ${startDate.add(Duration(days: i))} - SQUARE SLOT TIME: ${mySlots[j].on} - SQUARE TIME: $squareTime');
                   tmpSlots.last.add([j, slot, mySlots[j]]);
                 }
               }
@@ -308,7 +308,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
         DateTime currentTime = DateTime.now();
         currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0);
         widget.serviceState.serviceSlot.forEach((element) {
-          DateTime checkOut = DateFormat('dd/MM/yyyy',Localizations.localeOf(context).languageCode).parse(element.checkOut);
+          DateTime checkOut = DateFormat('dd/MM/yyyy').parse(element.checkOut);
           if(checkOut.isAtSameMomentAs(currentTime) || checkOut.isAfter(currentTime)){
             debugPrint('UI_U_ServiceReserve => VALID: ${element.checkIn}');
             tmpPrice = element.price;
@@ -352,8 +352,8 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
           for(int i = 0; i < tmpState.length; i++){
             //DateTime tmpStartDate = tmpState[i].slot.first.date;
             //DateTime tmpEndDate = tmpState[i].slot.last.date;
-            DateTime tmpStartDate = DateFormat('dd/MM/yyyy',Localizations.localeOf(context).languageCode).parse(widget.serviceState.serviceSlot[i].checkIn);
-            DateTime tmpEndDate = DateFormat('dd/MM/yyyy',Localizations.localeOf(context).languageCode).parse(widget.serviceState.serviceSlot[i].checkOut);
+            DateTime tmpStartDate = DateFormat('dd/MM/yyyy').parse(widget.serviceState.serviceSlot[i].checkIn);
+            DateTime tmpEndDate = DateFormat('dd/MM/yyyy').parse(widget.serviceState.serviceSlot[i].checkOut);
             debugPrint('UI_U_service_reserve => START DATE: $tmpStartDate | END DATE: $tmpEndDate');
             if(dates.isEmpty){
               dates = getDaysInBeteween(tmpStartDate, tmpEndDate, snapshot.booking.start_date,  snapshot.booking.end_date, tmpState[i].slot, widget.serviceState.serviceSlot[i]);
@@ -753,7 +753,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                   child: FittedBox(
                                     fit: BoxFit.scaleDown,
                                     child: Text(
-                                      DateFormat('MMM dd',Localizations.localeOf(context).languageCode).format(DateTime.now()).toUpperCase() == DateFormat('MMM dd',Localizations.localeOf(context).languageCode).format(dates[0]).toUpperCase() ? AppLocalizations.of(context).today.replaceFirst(',', '').toUpperCase() : '${DateFormat('EEEE',Localizations.localeOf(context).languageCode).format(dates[0])}',
+                                      DateFormat('MMM dd').format(DateTime.now()).toUpperCase() == DateFormat('MMM dd').format(dates[0]).toUpperCase() ? AppLocalizations.of(context).today.replaceFirst(',', '').toUpperCase() : '${DateFormat('EEEE',Localizations.localeOf(context).languageCode).format(dates[0])}',
                                       style: TextStyle(
                                         //letterSpacing: 1.25,
                                           fontFamily: BuytimeTheme.FontFamily,
@@ -900,9 +900,9 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                     //MenuItemModel menuItem = menuItems.elementAt(index);
                                     //final item = (index != snapshot.itemList.length ? snapshot.itemList[index] : null);
                                     DateTime i = dates.elementAt(index);
-                                    String date = DateFormat('MMM dd',Localizations.localeOf(context).languageCode).format(i).toUpperCase();
-                                    String currentDate = DateFormat('MMM dd',Localizations.localeOf(context).languageCode).format(DateTime.now()).toUpperCase();
-                                    String nextDate = DateFormat('MMM dd',Localizations.localeOf(context).languageCode).format(DateTime.now().add(Duration(days: 1))).toUpperCase();
+                                    String date = DateFormat('MMM dd').format(i).toUpperCase();
+                                    String currentDate = DateFormat('MMM dd').format(DateTime.now()).toUpperCase();
+                                    String nextDate = DateFormat('MMM dd').format(DateTime.now().add(Duration(days: 1))).toUpperCase();
                                     List<bool> select = picked.elementAt(index);
                                     return Column(
                                       children: [

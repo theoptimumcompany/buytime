@@ -152,7 +152,7 @@ class _RActivityManagementState extends State<RActivityManagement> {
             alignment: Alignment.centerLeft,
             padding: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
             child: Text(
-                '${DateFormat('MMM yyyy',Localizations.localeOf(context).languageCode).format(key).toUpperCase()}',
+                '${DateFormat('MMM yyyy').format(key).toUpperCase()}',
                 style: TextStyle(
                   letterSpacing: 1.25,
                   fontFamily: BuytimeTheme.FontFamily,
@@ -194,7 +194,7 @@ class _RActivityManagementState extends State<RActivityManagement> {
                               child: Text(
                                   orderTime.isAtSameMomentAs(currentTime) ? '${AppLocalizations.of(context).today} ${DateFormat('MMM dd',Localizations.localeOf(context).languageCode).format(orderTime).toUpperCase()}' :
                                   orderTime.isAtSameMomentAs(currentTime.add(Duration(days: 1))) ? '${AppLocalizations.of(context).tomorrow} ${DateFormat('MMM dd',Localizations.localeOf(context).languageCode).format(orderTime).toUpperCase()}' :
-                                  '${DateFormat('MMM dd',Localizations.localeOf(context).languageCode).format(orderTime).toUpperCase()}',
+                                  '${DateFormat('MMM dd').format(orderTime).toUpperCase()}',
                                   style: TextStyle(
                                     letterSpacing: 1.25,
                                     fontFamily: BuytimeTheme.FontFamily,
@@ -306,7 +306,7 @@ class _RActivityManagementState extends State<RActivityManagement> {
                   alignment: Alignment.centerLeft,
                   padding: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
                   child: Text(
-                      '${DateFormat('MMM yyyy',Localizations.localeOf(context).languageCode).format(key)}',
+                      '${DateFormat('MMM yyyy').format(key)}',
                       style: TextStyle(
                         letterSpacing: 1.25,
                         fontFamily: BuytimeTheme.FontFamily,

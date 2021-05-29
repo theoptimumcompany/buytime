@@ -97,7 +97,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
           DateTime currentTime = DateTime.now();
           currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0);
           widget.serviceState.serviceSlot.forEach((element) {
-            DateTime checkOut = DateFormat('dd/MM/yyyy',Localizations.localeOf(context).languageCode).parse(element.checkOut);
+            DateTime checkOut = DateFormat('dd/MM/yyyy').parse(element.checkOut);
             if (checkOut.isAtSameMomentAs(currentTime) || checkOut.isAfter(currentTime)) {
               debugPrint('UI_U_ServiceDetails => VALID: ${element.checkIn}');
               tmpPrice = element.price;

@@ -45,7 +45,7 @@ class _OptimumOrderHistoryItemCardMediumState extends State<OptimumOrderHistoryI
 
     // Timestamp stamp = order.date;
     // DateTime date = stamp.toDate();
-    String formattedDate = DateFormat('dd/MM/yyyy kk:mm',Localizations.localeOf(context).languageCode).format(order.date);
+    String formattedDate = DateFormat('dd/MM/yyyy kk:mm').format(order.date);
 
     return Container(
       key: key,

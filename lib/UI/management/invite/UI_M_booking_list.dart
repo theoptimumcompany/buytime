@@ -87,17 +87,17 @@ class _BookingListState extends State<BookingList> {
         //debugPrint('UI_M_BookingList: snapshot: ${snapshot.bookingList.bookingListState.length}');
         bookingList = snapshot.bookingList.bookingListState;
 
-        bookingList.sort((a,b) => DateFormat('MM',Localizations.localeOf(context).languageCode).format(a.start_date).compareTo(DateFormat('MM').format(b.start_date)));
+        bookingList.sort((a,b) => DateFormat('MM').format(a.start_date).compareTo(DateFormat('MM').format(b.start_date)));
         //DateFormat('dd/MM').format(widget.booking.start_date)
         bookingList.forEach((element) {
           //debugPrint('UI_M_BookingList: snapshot booking Date Time: ${element.start_date} - ${element.end_date} | ${element.start_date.isUtc} - ${element.end_date.isUtc} | ${element.start_date.timeZoneName} - ${element.end_date.timeZoneName} | ${element.start_date.timeZoneOffset} - ${element.end_date.timeZoneOffset}');
           //debugPrint('UI_M_BookingList: snapshot booking status: ${element.user.first.surname} ${element.status}');
           if(element.status != 'closed'){
-            bookingMap.putIfAbsent(DateFormat('MMM yyyy',Localizations.localeOf(context).languageCode).format(element.start_date), () => []);
-            bookingMap[DateFormat('MMM yyyy',Localizations.localeOf(context).languageCode).format(element.start_date)].add(element);
+            bookingMap.putIfAbsent(DateFormat('MMM yyyy').format(element.start_date), () => []);
+            bookingMap[DateFormat('MMM yyyy').format(element.start_date)].add(element);
           }else{
-            checkedOutBookingMap.putIfAbsent(DateFormat('MMM yyyy',Localizations.localeOf(context).languageCode).format(element.start_date), () => []);
-            checkedOutBookingMap[DateFormat('MMM yyyy',Localizations.localeOf(context).languageCode).format(element.start_date)].add(element);
+            checkedOutBookingMap.putIfAbsent(DateFormat('MMM yyyy').format(element.start_date), () => []);
+            checkedOutBookingMap[DateFormat('MMM yyyy').format(element.start_date)].add(element);
           }
 
         });
@@ -106,7 +106,7 @@ class _BookingListState extends State<BookingList> {
           /*value.forEach((element) {
             debugPrint('UI_M_BookingList: value booking status: ${element.user.first.surname} ${element.status}');
           });*/
-          value.sort((a,b) => DateFormat('dd',Localizations.localeOf(context).languageCode).format(a.start_date).compareTo(DateFormat('dd').format(b.start_date)));
+          value.sort((a,b) => DateFormat('dd').format(a.start_date).compareTo(DateFormat('dd').format(b.start_date)));
           //value.sort((a,b) => DateFormat('dd').format(a.end_date).compareTo(DateFormat('dd').format(b.end_date)));
           activeBookingList.add(value);
         });

@@ -24,7 +24,7 @@ import 'order/util.dart';
 
 List<DateTime> getPeriod(DateTime dateTime, context){
   //String weekdayDate = DateFormat('E d M y').format(dateTime);
-  String weekday = DateFormat('E',Localizations.localeOf(context).languageCode).format(dateTime);
+  String weekday = DateFormat('E').format(dateTime);
 
   int unix = dateTime.millisecondsSinceEpoch;
 
