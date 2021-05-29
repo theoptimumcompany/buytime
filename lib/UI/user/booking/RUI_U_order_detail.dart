@@ -549,7 +549,8 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
                                         child: FittedBox(
                                           fit: BoxFit.scaleDown,
                                           child: Text(
-                                            AppLocalizations.of(context).openUntil + ' ...',
+                                            //AppLocalizations.of(context).openUntil + ' ...',
+                                            '',
                                             style: TextStyle(
                                                 letterSpacing: 0.15,
                                                 fontFamily: BuytimeTheme.FontFamily,

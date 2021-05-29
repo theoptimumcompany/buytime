@@ -698,7 +698,8 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                     child: FittedBox(
                                       fit: BoxFit.scaleDown,
                                       child: Text(
-                                        AppLocalizations.of(context).openUntil + ' ...',
+                                        //AppLocalizations.of(context).openUntil + ' ...',
+                                        '',
                                         style: TextStyle(
                                             letterSpacing: 0.15,
                                             fontFamily: BuytimeTheme.FontFamily,

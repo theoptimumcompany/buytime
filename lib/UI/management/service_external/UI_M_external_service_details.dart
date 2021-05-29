@@ -462,7 +462,8 @@ class _ExternalServiceDetailsState extends State<ExternalServiceDetails> with Si
                                         child: FittedBox(
                                           fit: BoxFit.scaleDown,
                                           child: Text(
-                                            AppLocalizations.of(context).openUntil + ' ...',
+                                            //AppLocalizations.of(context).openUntil + ' ...',
+                                            '',
                                             style: TextStyle(
                                                 letterSpacing: 0.15,
                                                 fontFamily: BuytimeTheme.FontFamily,
