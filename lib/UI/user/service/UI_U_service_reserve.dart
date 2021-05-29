@@ -460,7 +460,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
               if(tmpMin > 90)
                 firstSlot = '${slots[0][0][1].hour} h ${slots[0][0][1].minute} ${AppLocalizations.of(context).spaceMinSpace}';
               else
-                firstSlot = '$tmpMin${AppLocalizations.of(context).spaceMinSpace}';
+                firstSlot = '$tmpMin ${AppLocalizations.of(context).spaceMinSpace}';
             }
 
           }
