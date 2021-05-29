@@ -207,7 +207,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
             days.add(startDate.add(Duration(days: i)));
             tmpSlots.add([]);
             for (int j = 0; j < mySlots.length; j++) {
-              //debugPrint('SQUARE TIME: $mySlots');
+              debugPrint('SQUARE TIME: ${mySlots[j].on}');
               if (mySlots[j].free != 0 /*&& mySlots[i].visibility*/) {
                 DateTime squareDateFormat = DateFormat("dd/MM/yyyy",Localizations.localeOf(context).languageCode).parse(mySlots[j].date).toUtc();
                 //debugPrint('DATE: $squareDateFormat');
