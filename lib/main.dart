@@ -119,6 +119,7 @@ void main(){
     UserRequestService(),
     UserEditDevice(),
     UserEditToken(),
+
     CategoryRequestService(),
     CategoryInviteCreateService(),
     CategoryInviteDeleteService(),
