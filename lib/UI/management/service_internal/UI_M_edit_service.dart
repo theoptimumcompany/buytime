@@ -368,7 +368,6 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                           debugPrint('UI_M_create_service => Service Business Address: ${tmpService.serviceBusinessAddress}');
                                           debugPrint('UI_M_create_service => Service Coordinates: ${tmpService.serviceCoordinates}');
                                           debugPrint('UI_M_create_service => Service Business Coordinates: ${tmpService.serviceBusinessCoordinates}');
-                                          debugPrint('UI_M_create_service => FILE TO UPLOAD LSIT: ${tmpService.fileToUploadList.length}');
                                           StoreProvider.of<AppState>(context).dispatch(SetServiceServiceCrossSell(snapshot.serviceState.serviceCrossSell));
 
                                           /// set the area of the service

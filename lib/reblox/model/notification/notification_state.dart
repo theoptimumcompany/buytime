@@ -1,7 +1,4 @@
-import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
-import 'package:Buytime/reblox/model/notification/id_state.dart';
 import 'package:Buytime/reblox/model/notification/notification_data.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:json_annotation/json_annotation.dart';
 part 'notification_state.g.dart';
 
