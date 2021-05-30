@@ -576,7 +576,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                         FadeTransition(
                             opacity: _animation3,
                             child: Container(
-                                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
+                                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3),
                                 alignment: Alignment.center,
                                 child: Material(
                                   color: Colors.transparent,
