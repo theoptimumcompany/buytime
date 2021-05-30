@@ -255,9 +255,9 @@ List<OrderState> splitOrdersForBusinesses(OrderState orderState) {
   for(int i = 0; i < orderState.itemList.length; i++ ) {
     if (businessIdList.contains(orderState.itemList[i].id_business)) {
       /// aggiungere l'item di nuovo nell'ordine con lo stesso id
-      for (int i = 0; i < orderStateList.length; i++) {
-        if (orderStateList[i].businessId == orderState.itemList[i].id_business) {
-          orderStateList[i].itemList.add(orderState.itemList[i]);
+      for (int j = 0; j < orderStateList.length; j++) {
+        if (orderStateList[j].businessId == orderState.itemList[i].id_business) {
+          orderStateList[j].itemList.add(orderState.itemList[i]);
         }
       }
     } else {
