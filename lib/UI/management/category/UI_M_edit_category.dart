@@ -720,7 +720,7 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                                 padding: EdgeInsets.only(top: 10.0),
                                 child: Column(
                                   children: <Widget>[
-                                    ///Caterogry Image
+                                    ///Category Image
                                     OptimumFormMultiPhoto(
                                       text: AppLocalizations.of(context).categoryImage,
                                       remotePath: "business/" + businessName + "/category",

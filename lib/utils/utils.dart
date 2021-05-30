@@ -56,6 +56,11 @@ class Utils {
     return result;
   }
 
+  static String capitalize(String stringa) {
+    return "${stringa[0].toUpperCase()}${stringa.substring(1)}";
+  }
+
+
   ///Get date
   static getDate(Timestamp date){
     if(date == null)

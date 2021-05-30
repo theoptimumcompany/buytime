@@ -101,7 +101,10 @@ class _RNotificationsState extends State<RNotifications> {
             return Text("Loading");
           }
           for (int j = 0; j < notificationSnapshot.data.docs.length; j++) {
-            notifications.add(NotificationState.fromJson(notificationSnapshot.data.docs[j].data()));
+            String idNotification = notificationSnapshot.data.docs[j].id;
+            NotificationState notificationState = NotificationState.fromJson(notificationSnapshot.data.docs[j].data());
+            notificationState.notificationId = idNotification;
+            notifications.add(notificationState);
           }
         /*if(notifications.isEmpty && startRequest){
           noActivity = true;
