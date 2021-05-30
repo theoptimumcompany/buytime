@@ -366,7 +366,7 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                                     thickness: 0.5,
                                   ),
                                   ///Static add service to category
-                                  canAccessService ? Material(
+                                  canAccessService || canAccess(id(categories[i].categoryAbsolutePath))? Material(
                                       color: Colors.transparent,
                                       child: InkWell(
                                         //borderRadius: BorderRadius.all(Radius.circular(10)),
