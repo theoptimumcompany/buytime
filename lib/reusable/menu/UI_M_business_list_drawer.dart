@@ -127,7 +127,7 @@ class _UI_M_BusinessListDrawerState extends State<UI_M_BusinessListDrawer> {
                         child: Padding(
                           padding: const EdgeInsets.only(top: 5.0),
                           child: Text(
-                              snapshot.user.admin?
+                              snapshot.user.admin ?
                                   AppLocalizations.of(context).admin :
                               snapshot.user.salesman ?
                               AppLocalizations.of(context).salesman :
@@ -135,7 +135,7 @@ class _UI_M_BusinessListDrawerState extends State<UI_M_BusinessListDrawer> {
                                 ?  AppLocalizations.of(context).owner
                                 : snapshot.user.manager
                                     ?  AppLocalizations.of(context).manager
-                                    : snapshot.user.worker
+                                    : AppLocalizations.of(context).worker
                             ,
                             overflow: TextOverflow.ellipsis,
                             textAlign: TextAlign.start,

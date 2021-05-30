@@ -279,7 +279,10 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                       },
                     ),
                     Utils.barTitle(AppLocalizations.of(context).serviceList),
-                    categories.isNotEmpty && !snapshot.user.worker ? IconButton(
+                    categories.isNotEmpty && (StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin ||
+                        StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman ||
+                        StoreProvider.of<AppState>(context).state.user.getRole() == Role.owner ||
+                        StoreProvider.of<AppState>(context).state.user.getRole() == Role.manager) ? IconButton(
                       icon: Icon(Icons.add, color: BuytimeTheme.SymbolWhite),
                       onPressed: () {
                         StoreProvider.of<AppState>(context).dispatch(SetService(ServiceState().toEmpty()));
