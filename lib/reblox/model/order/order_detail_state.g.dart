@@ -41,6 +41,7 @@ OrderDetailState _$OrderDetailStateFromJson(Map<String, dynamic> json) {
     cardType: json['cardType'] as String,
     cardLast4Digit: json['cardLast4Digit'] as String,
     location: json['location'] as String,
+    openUntil: json['openUntil'] as String ?? '--:--',
   );
 }
 
@@ -67,4 +68,5 @@ Map<String, dynamic> _$OrderDetailStateToJson(OrderDetailState instance) =>
       'cardType': instance.cardType,
       'cardLast4Digit': instance.cardLast4Digit,
       'location': instance.location,
+      'openUntil': instance.openUntil,
     };
