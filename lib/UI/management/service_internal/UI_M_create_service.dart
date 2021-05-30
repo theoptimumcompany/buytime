@@ -2,6 +2,7 @@ import 'package:Buytime/UI/management/service_internal/UI_M_service_list.dart';
 import 'package:Buytime/UI/management/service_internal/widget/W_service_photo.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/category/tree/category_tree_state.dart';
+import 'package:Buytime/reblox/model/role/role.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/model/snippet/parent.dart';
 import 'package:Buytime/reblox/model/snippet/service_list_snippet_state.dart';
@@ -175,6 +176,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
 
   String serviceName = '';
   String serviceDescription = '';
+  String serviceAddress = '';
 
   bool canAccess(String id){
     bool access = false;
@@ -186,7 +188,9 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
     }
     debugPrint('UI_M_service_list => CAN MANAGER ACCESS THE SERVICE? $access');
 
-    if(!access && !StoreProvider.of<AppState>(context).state.user.manager && !StoreProvider.of<AppState>(context).state.user.worker){
+    if(!access &&  (StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin ||
+        StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman ||
+        StoreProvider.of<AppState>(context).state.user.getRole() == Role.owner)){
       access = true;
     }
     debugPrint('UI_M_service_list => CAN MANAGER|OTHERS ACCESS THE SERVICE? $access');
@@ -378,6 +382,9 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                                   controller: nameController,
                                                   validator: (value) => value.isEmpty ? AppLocalizations.of(context).serviceNameBlank : null,
                                                   onChanged: (value) {
+                                                    setState(() {
+                                                      serviceName = value;
+                                                    });
                                                     //StoreProvider.of<AppState>(context).dispatch(SetServiceName(Utils.saveField(myLocale.languageCode, nameController.text, snapshot.serviceState.name)));
                                                   },
                                                   onSaved: (value) {
@@ -401,9 +408,9 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                         IconButton(
                                           icon: Icon(
                                             Icons.g_translate,
-                                            color: BuytimeTheme.ManagerPrimary,
+                                            color: serviceName.isNotEmpty ? BuytimeTheme.ManagerPrimary : BuytimeTheme.TextGrey,
                                           ),
-                                          onPressed: (){
+                                          onPressed: serviceName.isNotEmpty ? (){
                                             setState(() {
                                               rippleTranslate = true;
                                             });
@@ -420,7 +427,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                                 });
                                               }
                                             });
-                                          },
+                                          } : null,
                                         )
                                       ],
                                     ),
@@ -440,6 +447,11 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                                   maxLines: null,
                                                   controller: descriptionController,
                                                   validator: (value) => value.isEmpty ? AppLocalizations.of(context).serviceNameBlank : null,
+                                                  onChanged: (value) {
+                                                    setState(() {
+                                                      serviceDescription = value;
+                                                    });
+                                                  },
                                                   /*onChanged: (value) {
                                                     StoreProvider.of<AppState>(context).dispatch(SetServiceDescription(value + '-' + myLocale.languageCode));
                                                   },
@@ -465,9 +477,9 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                         IconButton(
                                           icon: Icon(
                                             Icons.g_translate,
-                                            color: BuytimeTheme.ManagerPrimary,
+                                            color: serviceDescription.isNotEmpty ? BuytimeTheme.ManagerPrimary : BuytimeTheme.TextGrey,
                                           ),
-                                          onPressed: (){
+                                          onPressed: serviceDescription.isNotEmpty ? (){
                                             setState(() {
                                               rippleTranslate = true;
                                             });
@@ -484,7 +496,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                                 });
                                               }
                                             });
-                                          },
+                                          } : null,
                                         )
                                       ],
                                     ),

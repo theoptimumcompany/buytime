@@ -82,14 +82,14 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
   String whichDate(DateTime orderDate){
     if(orderDetails.itemList.first.time != null){
       return currentDate == date ?
-      AppLocalizations.of(context).todayLower + ' ${DateFormat('dd EEE').format(orderDate)}, ${orderDetails.itemList.first.time} h' :
-      nextDate == date ? AppLocalizations.of(context).tomorrowLower + ' ${DateFormat('dd EEE').format(orderDate)}, ${orderDetails.itemList.first.time} h' :
-      '${DateFormat('dd EEE').format(orderDate)},  ${orderDetails.itemList.first.time} h';
+      AppLocalizations.of(context).todayLower + ' ${DateFormat('dd EEE',Localizations.localeOf(context).languageCode).format(orderDate)}, ${orderDetails.itemList.first.time}' :
+      nextDate == date ? AppLocalizations.of(context).tomorrowLower + ' ${DateFormat('dd EEE',Localizations.localeOf(context).languageCode).format(orderDate)}, ${orderDetails.itemList.first.time}' :
+      '${DateFormat('dd EEE',Localizations.localeOf(context).languageCode).format(orderDate)},  ${orderDetails.itemList.first.time}';
     }else{
       return currentDate == date ?
-      AppLocalizations.of(context).todayLower + ' ${DateFormat('dd EEE').format(orderDate)}, ${DateFormat('HH:mm').format(orderDetails.date)} h' :
-      nextDate == date ? AppLocalizations.of(context).tomorrowLower + ' ${DateFormat('dd EEE').format(orderDate)}, ${DateFormat('HH:mm').format(orderDetails.date)} h' :
-      '${DateFormat('dd EEE').format(orderDate)},  ${DateFormat('HH:mm').format(orderDetails.date)} h';
+      AppLocalizations.of(context).todayLower + ' ${DateFormat('dd EEE',Localizations.localeOf(context).languageCode).format(orderDate)}, ${DateFormat('HH:mm',Localizations.localeOf(context).languageCode).format(orderDetails.date)}' :
+      nextDate == date ? AppLocalizations.of(context).tomorrowLower + ' ${DateFormat('dd EEE',Localizations.localeOf(context).languageCode).format(orderDate)}, ${DateFormat('HH:mm',Localizations.localeOf(context).languageCode).format(orderDetails.date)}' :
+      '${DateFormat('dd EEE',Localizations.localeOf(context).languageCode).format(orderDate)},  ${DateFormat('HH:mm',Localizations.localeOf(context).languageCode).format(orderDetails.date)}';
     }
 
   }
@@ -553,13 +553,13 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
                                         ),
                                       ),*/
                                         ///Open until value
-                                        /*Container(
-                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
+                                        Container(
+                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
                                         child: FittedBox(
                                           fit: BoxFit.scaleDown,
                                           child: Text(
-                                            //AppLocalizations.of(context).openUntil + ' ...',
-                                            '',
+                                            ///Orario fine giornata
+                                            '${AppLocalizations.of(context).openUntil} ${orderDetails.openUntil}',
                                             style: TextStyle(
                                                 letterSpacing: 0.15,
                                                 fontFamily: BuytimeTheme.FontFamily,
@@ -569,7 +569,7 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
                                             ),
                                           ),
                                         ),
-                                      ),*/
+                                      ),
                                         ///Directions
                                         Container(
                                           margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),

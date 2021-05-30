@@ -10,6 +10,7 @@ import 'package:Buytime/reblox/model/business/snippet/order_business_snippet_sta
 import 'package:Buytime/reblox/model/category/category_state.dart';
 import 'package:Buytime/reblox/model/category/snippet/category_snippet_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
+import 'package:Buytime/reblox/model/role/role.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/model/service/snippet/service_snippet_state.dart';
 import 'package:Buytime/reblox/model/snippet/service_list_snippet_state.dart';
@@ -105,7 +106,9 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
     }
     debugPrint('UI_M_service_list => CAN MANAGER ACCESS THE SERVICE? $access');
 
-    if(!access && !StoreProvider.of<AppState>(context).state.user.manager && !StoreProvider.of<AppState>(context).state.user.worker){
+    if(!access &&  (StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin ||
+        StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman ||
+        StoreProvider.of<AppState>(context).state.user.getRole() == Role.owner)){
         access = true;
     }
     debugPrint('UI_M_service_list => CAN MANAGER|OTHERS ACCESS THE SERVICE? $access');
@@ -366,7 +369,7 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                                     thickness: 0.5,
                                   ),
                                   ///Static add service to category
-                                  canAccessService ? Material(
+                                  canAccessService || canAccess(id(categories[i].categoryAbsolutePath))? Material(
                                       color: Colors.transparent,
                                       child: InkWell(
                                         //borderRadius: BorderRadius.all(Radius.circular(10)),

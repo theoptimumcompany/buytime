@@ -779,7 +779,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                               child: FittedBox(
                                                 fit: BoxFit.scaleDown,
                                                 child: Text(
-                                                  DateFormat('MMM dd').format(DateTime.now()).toUpperCase() == DateFormat('MMM dd').format(dates[0]).toUpperCase() ? AppLocalizations.of(context).today.replaceFirst(',', '').toUpperCase() : '${DateFormat('EEEE').format(dates[0])}',
+                                                  DateFormat('MMM dd').format(DateTime.now()).toUpperCase() == DateFormat('MMM dd').format(dates[0]).toUpperCase() ? AppLocalizations.of(context).today.replaceFirst(',', '').toUpperCase() : Utils.capitalize(DateFormat('EEEE',Localizations.localeOf(context).languageCode).format(dates[0])),
                                                   style: TextStyle(
                                                       //letterSpacing: 1.25,
                                                       fontFamily: BuytimeTheme.FontFamily,

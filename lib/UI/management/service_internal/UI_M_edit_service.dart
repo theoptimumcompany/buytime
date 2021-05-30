@@ -225,6 +225,11 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
 
   bool canEditService = false;
 
+  String serviceName = '';
+  String serviceDescription = '';
+  String serviceAddress = '';
+
+  bool firstTime = false;
   @override
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
@@ -275,15 +280,20 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                 languageCode.add(element.languageCode);
               });
 
-              if(snapshot.serviceState.name.isNotEmpty && nameController.text.isEmpty){
-                debugPrint('UI_M_edit_service => Service Name: ${snapshot.serviceState.name}');
-                //nameController.clear();
-                nameController.text = Utils.retriveField(myLocale.languageCode, snapshot.serviceState.name);
-              }
-              if(snapshot.serviceState.description.isNotEmpty && descriptionController.text.isEmpty){
-                debugPrint('UI_M_edit_service => Service Description: ${snapshot.serviceState.description}');
-                //descriptionController.clear();
-                descriptionController.text = Utils.retriveField(myLocale.languageCode, snapshot.serviceState.description);
+              if(!firstTime){
+                if(snapshot.serviceState.name.isNotEmpty && nameController.text.isEmpty){
+                  serviceName = Utils.retriveField(myLocale.languageCode, snapshot.serviceState.name);
+                  debugPrint('UI_M_edit_service => Service Name: ${snapshot.serviceState.name}');
+                  //nameController.clear();
+                  nameController.text = Utils.retriveField(myLocale.languageCode, snapshot.serviceState.name);
+                }
+                if(snapshot.serviceState.description.isNotEmpty && descriptionController.text.isEmpty){
+                  serviceDescription = Utils.retriveField(myLocale.languageCode, snapshot.serviceState.description);
+                  debugPrint('UI_M_edit_service => Service Description: ${snapshot.serviceState.description}');
+                  //descriptionController.clear();
+                  descriptionController.text = Utils.retriveField(myLocale.languageCode, snapshot.serviceState.description);
+                }
+                firstTime = true;
               }
             }
             if(snapshot.serviceState.price != null && priceController.text.isEmpty){
@@ -474,6 +484,12 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                         enabled: canEditService,
                                                           controller: nameController,
                                                           validator: (value) => value.isEmpty ? AppLocalizations.of(context).serviceNameBlank : null,
+                                                          onChanged: (value) {
+                                                            setState(() {
+                                                              serviceName = value;
+                                                            });
+                                                            //StoreProvider.of<AppState>(context).dispatch(SetServiceName(value + '-' + myLocale.languageCode));
+                                                          },
                                                           /*onChanged: (value) {
                                                     StoreProvider.of<AppState>(context).dispatch(SetServiceName(value + '-' + myLocale.languageCode));
                                                   },
@@ -503,9 +519,9 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                 IconButton(
                                                   icon: Icon(
                                                     Icons.g_translate,
-                                                    color: canEditService ? BuytimeTheme.ManagerPrimary : BuytimeTheme.TextGrey,
+                                                    color: canEditService && serviceName.isNotEmpty ? BuytimeTheme.ManagerPrimary : BuytimeTheme.TextGrey,
                                                   ),
-                                                  onPressed: canEditService ? (){
+                                                  onPressed: canEditService && serviceName.isNotEmpty ? (){
                                                     setState(() {
                                                       rippleTranslate = true;
                                                     });
@@ -543,6 +559,12 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                           maxLines: null,
                                                           controller: descriptionController,
                                                           validator: (value) => value.isEmpty ? AppLocalizations.of(context).serviceNameBlank : null,
+                                                          onChanged: (value) {
+                                                            setState(() {
+                                                              serviceDescription = value;
+                                                            });
+                                                            //StoreProvider.of<AppState>(context).dispatch(SetServiceDescription(value + '-' + myLocale.languageCode));
+                                                          },
                                                           /*onChanged: (value) {
                                                     StoreProvider.of<AppState>(context).dispatch(SetServiceDescription(value + '-' + myLocale.languageCode));
                                                   },
@@ -572,9 +594,9 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                 IconButton(
                                                   icon: Icon(
                                                     Icons.g_translate,
-                                                    color: canEditService ? BuytimeTheme.ManagerPrimary : BuytimeTheme.TextGrey,
+                                                    color: canEditService && serviceDescription.isNotEmpty ? BuytimeTheme.ManagerPrimary : BuytimeTheme.TextGrey,
                                                   ),
-                                                  onPressed: canEditService ? (){
+                                                  onPressed: canEditService && serviceDescription.isNotEmpty ? (){
                                                     setState(() {
                                                       rippleTranslate = true;
                                                     });

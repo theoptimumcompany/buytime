@@ -89,14 +89,14 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
   String whichDate(DateTime orderDate){
     if(widget.orderState.itemList.first.time != null){
       return currentDate == date ?
-      AppLocalizations.of(context).todayLower + ' ${DateFormat('dd EEE',Localizations.localeOf(context).languageCode).format(orderDate)}, ${widget.orderState.itemList.first.time} h' :
-      nextDate == date ? AppLocalizations.of(context).tomorrowLower + ' ${DateFormat('dd EEE',Localizations.localeOf(context).languageCode).format(orderDate)}, ${widget.orderState.itemList.first.time} h' :
-      '${DateFormat('dd EEE',Localizations.localeOf(context).languageCode).format(orderDate)},  ${widget.orderState.itemList.first.time} h';
+      AppLocalizations.of(context).todayLower + ' ${DateFormat('dd EEE',Localizations.localeOf(context).languageCode).format(orderDate)}, ${widget.orderState.itemList.first.time}' :
+      nextDate == date ? AppLocalizations.of(context).tomorrowLower + ' ${DateFormat('dd EEE',Localizations.localeOf(context).languageCode).format(orderDate)}, ${widget.orderState.itemList.first.time}' :
+      '${DateFormat('dd EEE',Localizations.localeOf(context).languageCode).format(orderDate)},  ${widget.orderState.itemList.first.time}';
     }else{
       return currentDate == date ?
-      AppLocalizations.of(context).todayLower + ' ${DateFormat('dd EEE',Localizations.localeOf(context).languageCode).format(orderDate)}, ${DateFormat('HH:mm',Localizations.localeOf(context).languageCode).format(widget.orderState.date)} h' :
-      nextDate == date ? AppLocalizations.of(context).tomorrowLower + ' ${DateFormat('dd EEE',Localizations.localeOf(context).languageCode).format(orderDate)}, ${DateFormat('HH:mm',Localizations.localeOf(context).languageCode).format(widget.orderState.date)} h' :
-      '${DateFormat('dd EEE',Localizations.localeOf(context).languageCode).format(orderDate)},  ${DateFormat('HH:mm',Localizations.localeOf(context).languageCode).format(widget.orderState.date)} h';
+      AppLocalizations.of(context).todayLower + ' ${DateFormat('dd EEE',Localizations.localeOf(context).languageCode).format(orderDate)}, ${DateFormat('HH:mm',Localizations.localeOf(context).languageCode).format(widget.orderState.date)}' :
+      nextDate == date ? AppLocalizations.of(context).tomorrowLower + ' ${DateFormat('dd EEE',Localizations.localeOf(context).languageCode).format(orderDate)}, ${DateFormat('HH:mm',Localizations.localeOf(context).languageCode).format(widget.orderState.date)}' :
+      '${DateFormat('dd EEE',Localizations.localeOf(context).languageCode).format(orderDate)},  ${DateFormat('HH:mm',Localizations.localeOf(context).languageCode).format(widget.orderState.date)}';
     }
 
   }

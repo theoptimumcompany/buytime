@@ -56,6 +56,11 @@ class Utils {
     return result;
   }
 
+  static String capitalize(String stringa) {
+    return "${stringa[0].toUpperCase()}${stringa.substring(1)}";
+  }
+
+
   ///Get date
   static getDate(Timestamp date){
     if(date == null)
@@ -270,7 +275,7 @@ class Utils {
     bool fieldIsEqual = true;
     bool translating = true;
 
-    if(field == 'Name')
+    if(field == AppLocalizations.of(context).name)
       isName = true;
 
     if(isName){
@@ -317,19 +322,23 @@ class Utils {
           )
       ),
       builder: (BuildContext context) {
-        return SafeArea(
-          child: Container(
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(10),
-                    topLeft: Radius.circular(10)
-                )
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                ///Current language
-                /*Container(
+        return SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom),
+            child: SafeArea(
+              child: Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(10),
+                        topLeft: Radius.circular(10)
+                    )
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    ///Current language
+                    /*Container(
                   margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 6, top: SizeConfig.safeBlockVertical * 2, bottom: SizeConfig.safeBlockVertical * .5),
                   alignment: Alignment.topLeft,
                   child: Text(
@@ -342,172 +351,174 @@ class Utils {
                     ),
                   ),
                 ),*/
-                ///Current
-                Container(
-                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 6, right: SizeConfig.safeBlockHorizontal * 6, top: SizeConfig.safeBlockVertical * 5, bottom: SizeConfig.safeBlockVertical * 1),
-                  child: TextFormField(
-                    enabled: false,
-                    //initialValue: _serviceName,
-                      controller: controllers.elementAt(myIndex),
-                      validator: (value) => value.isEmpty ? AppLocalizations.of(context).serviceNameBlank : null,
-                      onChanged: (value) {
-                        //StoreProvider.of<AppState>(context).dispatch(SetServiceName(value));
-                      },
-                      onSaved: (value) {
-                        /*if (validateAndSave()) {
+                    ///Current
+                    Container(
+                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 6, right: SizeConfig.safeBlockHorizontal * 6, top: SizeConfig.safeBlockVertical * 5, bottom: SizeConfig.safeBlockVertical * 1),
+                      child: TextFormField(
+                          enabled: false,
+                          //initialValue: _serviceName,
+                          controller: controllers.elementAt(myIndex),
+                          validator: (value) => value.isEmpty ? AppLocalizations.of(context).serviceNameBlank : null,
+                          onChanged: (value) {
+                            //StoreProvider.of<AppState>(context).dispatch(SetServiceName(value));
+                          },
+                          onSaved: (value) {
+                            /*if (validateAndSave()) {
                                       //_serviceName = value;
                                       StoreProvider.of<AppState>(context).dispatch(SetServiceName(value));
                                     }*/
-                      },
-                      onEditingComplete: ()async{
-                        for(int i = 0; i < controllers.length; i++){
-                          if(i != myIndex)
-                            controllers[i].clear();
-                        }
-                        controllers = await googleTranslate(language, myLocale, controllers, flags, myIndex);
-                      },
-                      style: TextStyle(
-                        color: BuytimeTheme.TextGrey,
-                        fontFamily: BuytimeTheme.FontFamily
-                      ),
-                      decoration: InputDecoration(
-                          //labelText: field,
-                          enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                          border: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                          focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                          errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                          suffixIcon: Container(
-                            padding: EdgeInsets.only(top: 8),
-                            child: Text(
-                              '${Emoji.byChar(myLocaleCharCode)}',
-                              style: TextStyle(
-                                  fontSize: 24
-                              ),
-                            ),
-                          )
-                      )),
-                ),
-                ///Translated in:
-                Container(
-                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 6, top: SizeConfig.safeBlockVertical * 2, bottom: SizeConfig.safeBlockVertical * 1),
-                  alignment: Alignment.topLeft,
-                  child: Text(
-                    AppLocalizations.of(context).translatedIn,
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                        fontFamily: BuytimeTheme.FontFamily,
-                        color: BuytimeTheme.TextBlack
+                          },
+                          onEditingComplete: ()async{
+                            for(int i = 0; i < controllers.length; i++){
+                              if(i != myIndex)
+                                controllers[i].clear();
+                            }
+                            controllers = await googleTranslate(language, myLocale, controllers, flags, myIndex);
+                          },
+                          style: TextStyle(
+                              color: BuytimeTheme.TextGrey,
+                              fontFamily: BuytimeTheme.FontFamily
+                          ),
+                          decoration: InputDecoration(
+                            //labelText: field,
+                              enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                              border: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                              focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                              errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                              suffixIcon: Container(
+                                padding: EdgeInsets.only(top: 8),
+                                child: Text(
+                                  '${Emoji.byChar(myLocaleCharCode)}',
+                                  style: TextStyle(
+                                      fontSize: 24
+                                  ),
+                                ),
+                              )
+                          )),
                     ),
-                  ),
-                ),
-                Flexible(
-                  child: Container(
-                    margin: EdgeInsets.only(bottom: 10),
-                    child: CustomScrollView(shrinkWrap: true, slivers: [
-                      SliverList(
-                        delegate: SliverChildBuilderDelegate((context, index) {
-                          String flag = flags.elementAt(index);
-                          if(myLocaleCharCode != flag)
-                            return Container(
-                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 6, right: SizeConfig.safeBlockHorizontal * 6, top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1),
-                              child: TextFormField(
-                                //initialValue: _serviceName,
-                                  controller: controllers.elementAt(index),
-                                  validator: (value) => value.isEmpty ? AppLocalizations.of(context).serviceNameBlank : null,
-                                  onChanged: (value) {
-                                    //StoreProvider.of<AppState>(context).dispatch(SetServiceName(value));
-                                  },
-                                  onSaved: (value) {
-                                    /*if (validateAndSave()) {
-                                      //_serviceName = value;
-                                      StoreProvider.of<AppState>(context).dispatch(SetServiceName(value));
-                                    }*/
-                                  },
-                                  decoration: InputDecoration(
-                                      labelText: field,
-                                      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                      focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                      errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                      suffixIcon: Container(
-                                        padding: EdgeInsets.only(top: 8),
-                                        child: Text(
-                                          '${Emoji.byChar(flag)}',
-                                          style: TextStyle(
-                                              fontSize: 24
-                                          ),
-                                        ),
-                                      )
-                                  )),
-                            );
-                          else
-                            return Container();
-                        },
-                          childCount: flags.length,
-                        ),
-                      ),
-                    ]),
-                  ),
-                ),
-                ///Save button
-                Container(
-                  margin: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2),
-                  width: 198,
-                  height: 44,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(5)),
-                      border: Border.all(
-                          color: BuytimeTheme.SymbolLightGrey
-                      )
-                  ),
-                  child: MaterialButton(
-                    elevation: 0,
-                    hoverElevation: 0,
-                    focusElevation: 0,
-                    highlightElevation: 0,
-                    onPressed:(){
-                      node.unfocus();
-                      String serviceField = '';
-                      for(int i = 0; i < controllers.length; i++) {
-                        if (controllers[i].text.isNotEmpty) {
-                          serviceField += controllers[i].text + '~\$~' + language[i].toString() + '|';
-                        }
-                      }
-                      if(serviceField.isNotEmpty){
-                        serviceField = serviceField.substring(0, serviceField.length - 1);
-                      }
-                      debugPrint('MultiLingualTranslate => $serviceField');
-                      if(field == 'Name')
-                        StoreProvider.of<AppState>(context).dispatch(SetServiceName(serviceField));
-                      else
-                        StoreProvider.of<AppState>(context).dispatch(SetServiceDescription(serviceField));
-                      //nextPage();
-                      Navigator.of(context).pop();
-                    },
-                    textColor: BuytimeTheme.TextWhite,
-                    color: BuytimeTheme.ManagerPrimary,
-                    //disabledColor: AppTheme.BackgroundGrey,
-                    //padding: EdgeInsets.all(media.width * 0.03),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: new BorderRadius.circular(5),
-                    ),
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
+                    ///Translated in:
+                    Container(
+                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 6, top: SizeConfig.safeBlockVertical * 2, bottom: SizeConfig.safeBlockVertical * 1),
+                      alignment: Alignment.topLeft,
                       child: Text(
-                        '${AppLocalizations.of(context).accept.toUpperCase()}',
+                        AppLocalizations.of(context).translatedIn,
                         style: TextStyle(
-                            letterSpacing: 1.25,
                             fontSize: 16,
-                            ///16 | SizeConfig.safeBlockHorizontal * 4.5
+                            fontWeight: FontWeight.w500,
                             fontFamily: BuytimeTheme.FontFamily,
-                            fontWeight: FontWeight.w600,
-                            color: BuytimeTheme.TextWhite
+                            color: BuytimeTheme.TextBlack
                         ),
                       ),
                     ),
-                  ),
-                )
-              ],
+                    Flexible(
+                      child: Container(
+                        margin: EdgeInsets.only(bottom: 10),
+                        child: CustomScrollView(shrinkWrap: true, slivers: [
+                          SliverList(
+                            delegate: SliverChildBuilderDelegate((context, index) {
+                              String flag = flags.elementAt(index);
+                              if(myLocaleCharCode != flag)
+                                return Container(
+                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 6, right: SizeConfig.safeBlockHorizontal * 6, top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1),
+                                  child: TextFormField(
+                                    //initialValue: _serviceName,
+                                      controller: controllers.elementAt(index),
+                                      validator: (value) => value.isEmpty ? AppLocalizations.of(context).serviceNameBlank : null,
+                                      onChanged: (value) {
+                                        //StoreProvider.of<AppState>(context).dispatch(SetServiceName(value));
+                                      },
+                                      onSaved: (value) {
+                                        /*if (validateAndSave()) {
+                                      //_serviceName = value;
+                                      StoreProvider.of<AppState>(context).dispatch(SetServiceName(value));
+                                    }*/
+                                      },
+                                      decoration: InputDecoration(
+                                          labelText: field,
+                                          enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                          focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                          errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                          suffixIcon: Container(
+                                            padding: EdgeInsets.only(top: 8),
+                                            child: Text(
+                                              '${Emoji.byChar(flag)}',
+                                              style: TextStyle(
+                                                  fontSize: 24
+                                              ),
+                                            ),
+                                          )
+                                      )),
+                                );
+                              else
+                                return Container();
+                            },
+                              childCount: flags.length,
+                            ),
+                          ),
+                        ]),
+                      ),
+                    ),
+                    ///Save button
+                    Container(
+                      margin: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2),
+                      width: 198,
+                      height: 44,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(5)),
+                          border: Border.all(
+                              color: BuytimeTheme.SymbolLightGrey
+                          )
+                      ),
+                      child: MaterialButton(
+                        elevation: 0,
+                        hoverElevation: 0,
+                        focusElevation: 0,
+                        highlightElevation: 0,
+                        onPressed:(){
+                          node.unfocus();
+                          String serviceField = '';
+                          for(int i = 0; i < controllers.length; i++) {
+                            if (controllers[i].text.isNotEmpty) {
+                              serviceField += controllers[i].text + '~\$~' + language[i].toString() + '|';
+                            }
+                          }
+                          if(serviceField.isNotEmpty){
+                            serviceField = serviceField.substring(0, serviceField.length - 1);
+                          }
+                          debugPrint('MultiLingualTranslate => $serviceField');
+                          if(isName)
+                            StoreProvider.of<AppState>(context).dispatch(SetServiceName(serviceField));
+                          else
+                            StoreProvider.of<AppState>(context).dispatch(SetServiceDescription(serviceField));
+                          //nextPage();
+                          Navigator.of(context).pop();
+                        },
+                        textColor: BuytimeTheme.TextWhite,
+                        color: BuytimeTheme.ManagerPrimary,
+                        //disabledColor: AppTheme.BackgroundGrey,
+                        //padding: EdgeInsets.all(media.width * 0.03),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: new BorderRadius.circular(5),
+                        ),
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            '${AppLocalizations.of(context).accept.toUpperCase()}',
+                            style: TextStyle(
+                                letterSpacing: 1.25,
+                                fontSize: 16,
+                                ///16 | SizeConfig.safeBlockHorizontal * 4.5
+                                fontFamily: BuytimeTheme.FontFamily,
+                                fontWeight: FontWeight.w600,
+                                color: BuytimeTheme.TextWhite
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
             ),
           ),
         );
@@ -580,72 +591,76 @@ class Utils {
         FocusScopeNode currentFocus = FocusScope.of(context);
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setState /*You can rename this!*/){
-            return SafeArea(
-              child: Container(
-                margin: EdgeInsets.only(right: 20, left: 20, top: 20),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    TextFormField(
-                        controller: addressController,
-                        decoration: InputDecoration(
-                          labelText: AppLocalizations.of(context).address,
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: BuytimeTheme.ManagerPrimary,
-                              width: 1.0,
+            return SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).viewInsets.bottom),
+                child: SafeArea(
+                  child: Container(
+                    margin: EdgeInsets.only(right: 20, left: 20, top: 20),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        TextFormField(
+                            controller: addressController,
+                            decoration: InputDecoration(
+                              labelText: AppLocalizations.of(context).address,
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: BuytimeTheme.ManagerPrimary,
+                                  width: 1.0,
+                                ),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: BuytimeTheme.SymbolLightGrey,
+                                  width: 1.0,
+                                ),
+                              ),border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: BuytimeTheme.SymbolLightGrey,
+                                width: 1.0,
+                              ),
                             ),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: BuytimeTheme.SymbolLightGrey,
-                              width: 1.0,
                             ),
-                          ),border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: BuytimeTheme.SymbolLightGrey,
-                            width: 1.0,
-                          ),
-                        ),
-                        ),
-                        onEditingComplete: () async{
-                          currentFocus.unfocus();
-                          debugPrint('Google Place API Call');
-                          if (addressController.text.isNotEmpty){
-                            debugPrint('Search not empty');
-                            List<List<String>> tmpPredictions = await autoCompleteSearch(addressController.text);
-                            setState((){
-                              predictions.clear();
-                              predictions = tmpPredictions;
-                            });
-                          } else {
-                            debugPrint('Search empty');
-                            if (predictions.length > 0) {
-                              predictions = [];
+                            onEditingComplete: () async{
+                              currentFocus.unfocus();
+                              debugPrint('Google Place API Call');
+                              if (addressController.text.isNotEmpty){
+                                debugPrint('Search not empty');
+                                List<List<String>> tmpPredictions = await autoCompleteSearch(addressController.text);
+                                setState((){
+                                  predictions.clear();
+                                  predictions = tmpPredictions;
+                                });
+                              } else {
+                                debugPrint('Search empty');
+                                if (predictions.length > 0) {
+                                  predictions = [];
+                                }
+                              }
                             }
-                          }
-                        }
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    addressController.text.isNotEmpty && predictions.isNotEmpty ?
-                    Flexible(
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: predictions.length,
-                        itemBuilder: (context, index) {
-                          debugPrint('data found');
-                          return ListTile(
-                            leading: Icon(
-                              Icons.place,
-                              color: BuytimeTheme.ManagerPrimary,
-                            ),
-                            title: Text(predictions[index][0]),
-                            onTap: ()async{
-                              debugPrint(predictions[index][1]);
-                              getDetails(predictions[index][1], context);
-                              /*Navigator.push(
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        addressController.text.isNotEmpty && predictions.isNotEmpty ?
+                        Flexible(
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: predictions.length,
+                            itemBuilder: (context, index) {
+                              debugPrint('data found');
+                              return ListTile(
+                                leading: Icon(
+                                  Icons.place,
+                                  color: BuytimeTheme.ManagerPrimary,
+                                ),
+                                title: Text(predictions[index][0]),
+                                onTap: ()async{
+                                  debugPrint(predictions[index][1]);
+                                  getDetails(predictions[index][1], context);
+                                  /*Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => DetailsPage(
@@ -654,16 +669,18 @@ class Utils {
                                 ),
                               ),
                             );*/
+                                },
+                              );
                             },
-                          );
-                        },
-                      ),
-                    ) : Container(),
-                    /*Container(
+                          ),
+                        ) : Container(),
+                        /*Container(
                   margin: EdgeInsets.only(top: 10, bottom: 10),
                   child: Image.asset("assets/powered_by_google.png"),
                 ),*/
-                  ],
+                      ],
+                    ),
+                  ),
                 ),
               ),
             );

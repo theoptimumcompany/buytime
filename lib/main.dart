@@ -119,7 +119,7 @@ void main(){
     UserRequestService(),
     UserEditDevice(),
     UserEditToken(),
-
+    SetOrderDetailAndNavigateService(),
     CategoryRequestService(),
     CategoryInviteCreateService(),
     CategoryInviteDeleteService(),
