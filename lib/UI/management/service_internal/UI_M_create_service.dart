@@ -2,6 +2,7 @@ import 'package:Buytime/UI/management/service_internal/UI_M_service_list.dart';
 import 'package:Buytime/UI/management/service_internal/widget/W_service_photo.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/category/tree/category_tree_state.dart';
+import 'package:Buytime/reblox/model/role/role.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/model/snippet/parent.dart';
 import 'package:Buytime/reblox/model/snippet/service_list_snippet_state.dart';
@@ -186,7 +187,9 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
     }
     debugPrint('UI_M_service_list => CAN MANAGER ACCESS THE SERVICE? $access');
 
-    if(!access && !StoreProvider.of<AppState>(context).state.user.manager && !StoreProvider.of<AppState>(context).state.user.worker){
+    if(!access &&  (StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin ||
+        StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman ||
+        StoreProvider.of<AppState>(context).state.user.getRole() == Role.owner)){
       access = true;
     }
     debugPrint('UI_M_service_list => CAN MANAGER|OTHERS ACCESS THE SERVICE? $access');
