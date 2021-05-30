@@ -127,6 +127,8 @@ class _UI_M_BusinessListDrawerState extends State<UI_M_BusinessListDrawer> {
                         child: Padding(
                           padding: const EdgeInsets.only(top: 5.0),
                           child: Text(
+                              snapshot.user.admin?
+                                  AppLocalizations.of(context).admin :
                               snapshot.user.salesman ?
                               AppLocalizations.of(context).salesman :
                             snapshot.user.owner
@@ -134,9 +136,7 @@ class _UI_M_BusinessListDrawerState extends State<UI_M_BusinessListDrawer> {
                                 : snapshot.user.manager
                                     ?  AppLocalizations.of(context).manager
                                     : snapshot.user.worker
-                                        ?
-                            AppLocalizations.of(context).worker
-                                        :  AppLocalizations.of(context).admin,
+                            ,
                             overflow: TextOverflow.ellipsis,
                             textAlign: TextAlign.start,
                             style: TextStyle(fontWeight: FontWeight.w300, fontSize: 12, fontFamily: BuytimeTheme.FontFamily, letterSpacing: 0.25, color: BuytimeTheme.TextMedium),
