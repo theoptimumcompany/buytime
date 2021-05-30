@@ -176,6 +176,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
 
   String serviceName = '';
   String serviceDescription = '';
+  String serviceAddress = '';
 
   bool canAccess(String id){
     bool access = false;
@@ -381,6 +382,9 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                                   controller: nameController,
                                                   validator: (value) => value.isEmpty ? AppLocalizations.of(context).serviceNameBlank : null,
                                                   onChanged: (value) {
+                                                    setState(() {
+                                                      serviceName = value;
+                                                    });
                                                     //StoreProvider.of<AppState>(context).dispatch(SetServiceName(Utils.saveField(myLocale.languageCode, nameController.text, snapshot.serviceState.name)));
                                                   },
                                                   onSaved: (value) {
@@ -404,9 +408,9 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                         IconButton(
                                           icon: Icon(
                                             Icons.g_translate,
-                                            color: BuytimeTheme.ManagerPrimary,
+                                            color: serviceName.isNotEmpty ? BuytimeTheme.ManagerPrimary : BuytimeTheme.TextGrey,
                                           ),
-                                          onPressed: (){
+                                          onPressed: serviceName.isNotEmpty ? (){
                                             setState(() {
                                               rippleTranslate = true;
                                             });
@@ -423,7 +427,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                                 });
                                               }
                                             });
-                                          },
+                                          } : null,
                                         )
                                       ],
                                     ),
@@ -443,6 +447,11 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                                   maxLines: null,
                                                   controller: descriptionController,
                                                   validator: (value) => value.isEmpty ? AppLocalizations.of(context).serviceNameBlank : null,
+                                                  onChanged: (value) {
+                                                    setState(() {
+                                                      serviceDescription = value;
+                                                    });
+                                                  },
                                                   /*onChanged: (value) {
                                                     StoreProvider.of<AppState>(context).dispatch(SetServiceDescription(value + '-' + myLocale.languageCode));
                                                   },
@@ -468,9 +477,9 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                         IconButton(
                                           icon: Icon(
                                             Icons.g_translate,
-                                            color: BuytimeTheme.ManagerPrimary,
+                                            color: serviceDescription.isNotEmpty ? BuytimeTheme.ManagerPrimary : BuytimeTheme.TextGrey,
                                           ),
-                                          onPressed: (){
+                                          onPressed: serviceDescription.isNotEmpty ? (){
                                             setState(() {
                                               rippleTranslate = true;
                                             });
@@ -487,7 +496,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                                 });
                                               }
                                             });
-                                          },
+                                          } : null,
                                         )
                                       ],
                                     ),

@@ -94,7 +94,6 @@ dependencies:
   location: ^4.1.1
   plugin_platform_interface: ^2.0.0
   sliver_tools: ^0.2.2
-  keyboard_avoider: ^0.1.2
 
 
 dependency_overrides:

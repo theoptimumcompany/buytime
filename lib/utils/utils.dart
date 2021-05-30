@@ -18,7 +18,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:google_place/google_place.dart';
-import 'package:keyboard_avoider/keyboard_avoider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart'as http;
 
@@ -276,7 +275,7 @@ class Utils {
     bool fieldIsEqual = true;
     bool translating = true;
 
-    if(field == 'Name')
+    if(field == AppLocalizations.of(context).name)
       isName = true;
 
     if(isName){
@@ -323,10 +322,12 @@ class Utils {
           )
       ),
       builder: (BuildContext context) {
-        return SafeArea(
-          child: Wrap(
-            children: [
-              Container(
+        return SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom),
+            child: SafeArea(
+              child: Container(
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.only(
                         topRight: Radius.circular(10),
@@ -485,7 +486,7 @@ class Utils {
                             serviceField = serviceField.substring(0, serviceField.length - 1);
                           }
                           debugPrint('MultiLingualTranslate => $serviceField');
-                          if(field == 'Name')
+                          if(isName)
                             StoreProvider.of<AppState>(context).dispatch(SetServiceName(serviceField));
                           else
                             StoreProvider.of<AppState>(context).dispatch(SetServiceDescription(serviceField));
@@ -517,8 +518,8 @@ class Utils {
                     )
                   ],
                 ),
-              )
-            ],
+              ),
+            ),
           ),
         );
 
@@ -590,10 +591,12 @@ class Utils {
         FocusScopeNode currentFocus = FocusScope.of(context);
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setState /*You can rename this!*/){
-            return SafeArea(
-              child: Wrap(
-                children: [
-                  Container(
+            return SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).viewInsets.bottom),
+                child: SafeArea(
+                  child: Container(
                     margin: EdgeInsets.only(right: 20, left: 20, top: 20),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
@@ -677,8 +680,8 @@ class Utils {
                 ),*/
                       ],
                     ),
-                  )
-                ],
+                  ),
+                ),
               ),
             );
           },
