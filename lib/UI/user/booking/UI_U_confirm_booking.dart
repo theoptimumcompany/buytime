@@ -13,6 +13,7 @@ import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart';
 
 
@@ -31,6 +32,8 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
 
   BookingState bookingState;
 
+  ///Storage
+  final storage = new FlutterSecureStorage();
 
   @override
   void initState() {
@@ -79,6 +82,7 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                 color: Colors.white,
               ),
               onPressed: () async{
+                await storage.write(key: 'bookingCode', value: '');
                 Navigator.of(context).pop();
               },
             ),
@@ -204,7 +208,7 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                                       hoverElevation: 0,
                                       focusElevation: 0,
                                       highlightElevation: 0,
-                                      onPressed: () {
+                                      onPressed: () async {
                                         /*showDialog(
                                           context: context,
                                           builder: (context) {
@@ -238,7 +242,7 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                                                 )
                                             );
                                           });*/
-
+                                        await storage.write(key: 'bookingCode', value: '');
                                         bookingState.status = Utils.enumToString(BookingStatus.opened);
                                         StoreProvider.of<AppState>(context).dispatch(UpdateBookingOnConfirm(bookingState));
                                         //StoreProvider.of<AppState>(context).dispatch(BusinessAndNavigateOnConfirmRequest(bookingState.business_id));
@@ -285,7 +289,8 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                                       hoverElevation: 0,
                                       focusElevation: 0,
                                       highlightElevation: 0,
-                                      onPressed: () {
+                                      onPressed: () async {
+                                        await storage.write(key: 'bookingCode', value: '');
                                         Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => Landing()), (Route<dynamic> route) => false);
                                         //Navigator.of(context).pushNamedAndRemoveUntil(Landing.route, (Route<dynamic> route) => false);
                                       },

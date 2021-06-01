@@ -1,6 +1,6 @@
 import 'package:Buytime/UI/management/business/UI_M_business_list.dart';
 import 'package:Buytime/UI/user/booking/UI_U_all_bookings.dart';
-import 'package:Buytime/UI/user/booking/UI_U_notifications.dart';
+import 'package:Buytime/UI/user/booking/RUI_notification_bell.dart';
 import 'package:Buytime/UI/user/booking/widget/user_service_card_widget.dart';
 import 'package:Buytime/UI/user/cart/UI_U_cart.dart';
 import 'package:Buytime/UI/user/landing/UI_U_landing.dart';
@@ -30,6 +30,7 @@ import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/utils/utils.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:emojis/emojis.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -212,7 +213,7 @@ class _BookingPageState extends State<BookingPage> {
       onInit: (store) {
         store.dispatch(UserOrderListRequest());
         store.state.notificationListState.notificationListState.clear();
-        store.dispatch(RequestNotificationList(store.state.user.uid, store.state.business.id_firestore));
+        //store.dispatch(RequestNotificationList(store.state.user.uid, store.state.business.id_firestore));
         startRequest = true;
         rippleLoading = true;
       },
@@ -369,6 +370,9 @@ class _BookingPageState extends State<BookingPage> {
                             children: [
                               ///Notification
                               Flexible(
+                                  child: RNotificationBell(orderList: orderList, userId: snapshot.user.uid)
+                              ),
+                              /*Flexible(
                                   child: Container(
                                     child: Stack(
                                       children: [
@@ -405,7 +409,8 @@ class _BookingPageState extends State<BookingPage> {
                                         ) : Container(),
                                       ],
                                     ),
-                                  )),
+                                  )
+                              ),*/
                               ///Cart
                               Flexible(
                                   child:
@@ -459,7 +464,7 @@ class _BookingPageState extends State<BookingPage> {
                                         order.cartCounter > 0
                                             ? Positioned.fill(
                                           bottom: 20,
-                                          left: 7,
+                                          left: 3,
                                           child: Align(
                                             alignment: Alignment.center,
                                             child: Text(
@@ -1339,3 +1344,4 @@ class _BookingPageState extends State<BookingPage> {
     );
   }
 }
+

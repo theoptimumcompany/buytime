@@ -469,7 +469,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
           ///Location
           widget.reserve != null && !widget.reserve && !widget.tourist  ?
           Container(
-              margin: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical *2, top: SizeConfig.safeBlockVertical * 2),
+              margin: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical *2, top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 3),
               width: media.width,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -478,7 +478,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                   Expanded(
                     flex: 1,
                     child: Container(
-                      alignment: Alignment.center,
+                      alignment: Alignment.centerLeft,
                       child: Text(
                         AppLocalizations.of(context).location,
                         style: TextStyle(

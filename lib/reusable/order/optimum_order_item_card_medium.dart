@@ -155,11 +155,9 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
             ///Non reservable
         Row(
           children: [
-            SizedBox(
-              width: mediaSize.width * 0.045,
-            ),
             Expanded(
               child: Container(
+                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3, right: SizeConfig.safeBlockHorizontal * 3),
                 decoration: BoxDecoration(
                   border: Border(
                     bottom: BorderSide(width: 1.0, color: Color.fromRGBO(33, 33, 33, 0.1)),
@@ -256,7 +254,7 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
                         Column(
                           children: [
                             Container(
-                              margin: EdgeInsets.all(SizeConfig.safeBlockVertical * 1),
+                              //margin: EdgeInsets.only(right: SizeConfig.safeBlockVertical * 3),
                               child: Text(
                                 price(),
                                 overflow: TextOverflow.ellipsis,
@@ -281,6 +279,12 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
         ) :
             ///Reservable
        Container(
+         margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3, right: SizeConfig.safeBlockHorizontal * 3),
+         decoration: BoxDecoration(
+           border: Border(
+             bottom: BorderSide(width: 1.0, color: Color.fromRGBO(33, 33, 33, 0.1)),
+           ),
+         ),
          child: Row(
            mainAxisAlignment: MainAxisAlignment.spaceBetween,
            children: [
@@ -288,13 +292,9 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
              Expanded(
                flex: 1,
                child: Container(
-                 margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
-                 alignment: Alignment.center,
+                 alignment: Alignment.centerLeft,
                  decoration: BoxDecoration(
                    //color: Colors.blue,
-                   border: Border(
-                     bottom: BorderSide(width: 1.0, color: Color.fromRGBO(33, 33, 33, 0.1)),
-                   ),
                  ),
                  child: Column(
                    mainAxisAlignment: MainAxisAlignment.center,
@@ -358,13 +358,11 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
              Expanded(
                flex: 1,
                child: Container(
-                 margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
+                 //margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
                  alignment: Alignment.center,
                  decoration: BoxDecoration(
                    //color: Colors.blue,
-                   border: Border(
-                     bottom: BorderSide(width: 1.0, color: Color.fromRGBO(33, 33, 33, 0.1)),
-                   ),
+
                  ),
                  child: Column(
                    mainAxisAlignment: MainAxisAlignment.center,
@@ -427,12 +425,10 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
              Expanded(
                flex: 1,
                child: Container(
-                 alignment: Alignment.center,
+                 alignment: Alignment.centerRight,
                  decoration: BoxDecoration(
                    //color: Colors.blue,
-                   border: Border(
-                     bottom: BorderSide(width: 1.0, color: Color.fromRGBO(33, 33, 33, 0.1)),
-                   ),
+
                  ),
                  child: Text(
                    '${orderEntry.minutes}',

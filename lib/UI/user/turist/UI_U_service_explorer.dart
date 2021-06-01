@@ -1,4 +1,5 @@
 import 'package:Buytime/UI/user/booking/RUI_U_notifications.dart';
+import 'package:Buytime/UI/user/booking/RUI_notification_bell.dart';
 import 'package:Buytime/UI/user/booking/UI_U_all_bookings.dart';
 import 'package:Buytime/UI/user/booking/UI_U_notifications.dart';
 import 'package:Buytime/UI/user/booking/widget/user_service_card_widget.dart';
@@ -402,43 +403,8 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                         children: [
                           ///Notification
                           Flexible(
-                              child: Container(
-                                child: Stack(
-                                  children: [
-                                    Positioned.fill(
-                                      child: Align(
-                                        alignment: Alignment.center,
-                                        child: IconButton(
-                                          icon: Icon(
-                                            Icons.notifications_none_outlined,
-                                            color: BuytimeTheme.TextWhite,
-                                            size: 30.0,
-                                          ),
-                                          onPressed: () async{
-                                            Navigator.push(context, MaterialPageRoute(builder: (context) => RNotifications(orderStateList: orderList, tourist: true)));
-                                          },
-                                        ),
-                                      ),
-                                    ),
-                                    hasNotifications ?
-                                    Positioned.fill(
-                                      bottom: 20,
-                                      left: 15,
-                                      child: Align(
-                                        alignment: Alignment.center,
-                                        child: Container(
-                                          width: 15,
-                                          height: 15,
-                                          decoration: BoxDecoration(
-                                              color: BuytimeTheme.AccentRed,
-                                              borderRadius: BorderRadius.all(Radius.circular(7.5))
-                                          ),
-                                        ),
-                                      ),
-                                    ) : Container(),
-                                  ],
-                                ),
-                              )),
+                              child: RNotificationBell(orderList: orderList, userId: snapshot.user.uid)
+                          ),
                           ///Cart
                           Flexible(
                               child:
@@ -492,7 +458,7 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                                     order.cartCounter > 0
                                         ? Positioned.fill(
                                       bottom: 20,
-                                      left: 7,
+                                      left: 3,
                                       child: Align(
                                         alignment: Alignment.center,
                                         child: Text(

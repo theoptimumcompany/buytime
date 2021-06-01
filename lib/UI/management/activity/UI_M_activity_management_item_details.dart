@@ -134,7 +134,6 @@ class _ActivityManagementItemDetailsState extends State<ActivityManagementItemDe
           child: Scaffold(
             drawerEnableOpenDragGesture: false,
             key: _drawerKey,
-
             ///Appbar
             appBar: BuytimeAppbar(
               children: [
@@ -167,7 +166,12 @@ class _ActivityManagementItemDetailsState extends State<ActivityManagementItemDe
                     child: Text(
                       '${widget.orderState.user.name} ${widget.orderState.user.surname ?? ''}',
                       textAlign: TextAlign.start,
-                      style: BuytimeTheme.appbarTitle,
+                      style: TextStyle(
+                        fontFamily: BuytimeTheme.FontFamily,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500,
+                        color: BuytimeTheme.TextWhite
+                      ),
                     ),
                   ),
                 ),
@@ -425,7 +429,7 @@ class _ActivityManagementItemDetailsState extends State<ActivityManagementItemDe
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
                                         Text(
-                                          '${widget.orderEntry.minutes}${AppLocalizations.of(context).spaceMin}.',
+                                          '${widget.orderEntry.minutes}.',
                                           overflow: TextOverflow.ellipsis,
                                           style: TextStyle(
                                               fontFamily: BuytimeTheme.FontFamily,
@@ -522,9 +526,9 @@ class _ActivityManagementItemDetailsState extends State<ActivityManagementItemDe
                       widget.orderState.progress != Utils.enumToString(OrderStatus.canceled) && widget.orderState.progress != Utils.enumToString(OrderStatus.declined) ?
                       ///Decline
                       Container(
-                          width: 158, ///SizeConfig.safeBlockHorizontal * 40
+                          width: 198, ///SizeConfig.safeBlockHorizontal * 40
                           height: 44,
-                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, bottom: SizeConfig.safeBlockVertical * 2, right: SizeConfig.safeBlockHorizontal * 0),
+                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, bottom: SizeConfig.safeBlockVertical * 3, right: SizeConfig.safeBlockHorizontal * 0),
                           decoration: BoxDecoration(
                               borderRadius: new BorderRadius.circular(5),
 
@@ -564,9 +568,9 @@ class _ActivityManagementItemDetailsState extends State<ActivityManagementItemDe
                       ///Accept
                       widget.orderState.progress == Utils.enumToString(OrderStatus.canceled) || widget.orderState.progress == Utils.enumToString(OrderStatus.declined) ?
                       Container(
-                          width: 158, ///SizeConfig.safeBlockHorizontal * 40
+                          width: 198, ///SizeConfig.safeBlockHorizontal * 40
                           height: 44,
-                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, bottom: SizeConfig.safeBlockVertical * 2),
+                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, bottom: SizeConfig.safeBlockVertical * 3),
                           child: MaterialButton(
                             elevation: 0,
                             hoverElevation: 0,
@@ -595,9 +599,9 @@ class _ActivityManagementItemDetailsState extends State<ActivityManagementItemDe
                       ) :
                       widget.orderState.progress != Utils.enumToString(OrderStatus.accepted) ?
                       Container(
-                          width: 158, ///SizeConfig.safeBlockHorizontal * 40
+                          width: 198, ///SizeConfig.safeBlockHorizontal * 40
                           height: 44,
-                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, bottom: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 5),
+                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, bottom: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 1),
                           child: MaterialButton(
                             elevation: 0,
                             hoverElevation: 0,

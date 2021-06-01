@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:core';
 import 'package:Buytime/UI/management/activity/RUI_M_activity_management.dart';
 import 'package:Buytime/UI/management/activity/UI_M_activity_management.dart';
@@ -13,11 +14,16 @@ import 'package:Buytime/reblox/reducer/booking_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/booking_reducer.dart';
 import 'package:Buytime/reblox/reducer/business_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/business_reducer.dart';
+import 'package:Buytime/reblox/reducer/category_invite_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_tree_reducer.dart';
+import 'package:Buytime/reblox/reducer/external_business_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/order_detail_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
+import 'package:Buytime/reblox/reducer/order_reservable_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/order_reservable_reducer.dart';
 import 'package:Buytime/reblox/reducer/pipeline_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/pipeline_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/service_list_reducer.dart';
@@ -38,6 +44,7 @@ import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -60,13 +67,23 @@ class LandingState extends State<Landing> {
   bool requestingBookings = false;
 
   List<BookingState> bookingList = [];
+  String bookingCode = '';
+  ///Storage
+  final storage = new FlutterSecureStorage();
+
+  bookingCodeFound() async{
+    bookingCode = await storage.read(key: 'bookingCode') ?? '';
+    debugPrint('UI_U_landing: DEEP LINK EMPTY | BOOKING CODE: $bookingCode');
+    if(bookingCode.isNotEmpty)
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => InviteGuestForm(id: bookingCode, fromLanding: true,)));
+  }
 
   @override
   void initState() {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      initDynamicLinks();
+      //initDynamicLinks();
       debugPrint('UI_U_Landing => initState()');
     });
 
@@ -74,22 +91,25 @@ class LandingState extends State<Landing> {
 
   void initDynamicLinks() async {
     print("Dentro initial dynamic");
+    Uri deepLinkOnClik;
     FirebaseDynamicLinks.instance.onLink(onSuccess: (PendingDynamicLinkData dynamicLink) async {
-      final Uri deepLink = dynamicLink?.link;
-
-      if (deepLink != null) {
-        if (deepLink.queryParameters.containsKey('booking')) {
-          String id = deepLink.queryParameters['booking'];
+      deepLinkOnClik = dynamicLink?.link;
+      debugPrint('UI_U_landing: DEEPLINK: $deepLinkOnClik');
+      if (deepLinkOnClik != null) {
+        if (deepLinkOnClik.queryParameters.containsKey('booking')) {
+          String id = deepLinkOnClik.queryParameters['booking'];
           debugPrint('UI_U_landing: booking: $id');
+          await storage.write(key: 'bookingCode', value: id);
           setState(() {
             onBookingCode = true;
           });
-          Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => InviteGuestForm(id: id, fromLanding: false,)), (Route<dynamic> route) => false);
-          //Navigator.of(context).push(MaterialPageRoute(builder: (context) => InviteGuestForm(id: id, fromLanding: true,)));
+          //StoreProvider.of<AppState>(context).dispatch(BookingRequestResponse(BookingState(booking_code: id)));
+          //Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => InviteGuestForm(id: id, fromLanding: false,)), (Route<dynamic> route) => false);
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) => InviteGuestForm(id: id, fromLanding: true,)));
         }
-        else if (deepLink.queryParameters.containsKey('categoryInvite')) {
-          String businessId = deepLink.queryParameters['businessId'];
-          debugPrint('UI_U_landing: businessId: $businessId');
+        else if (deepLinkOnClik.queryParameters.containsKey('categoryInvite')) {
+          String businessId = deepLinkOnClik.queryParameters['categoryInvite'];
+          debugPrint('UI_U_landing: categoryInvite: $businessId');
           //StoreProvider.of<AppState>(context).dispatch(BusinessRequestAndNavigate(businessId));
           StoreProvider.of<AppState>(context).dispatch(UserBookingListRequest(StoreProvider.of<AppState>(context).state.user.email, false));
 
@@ -127,6 +147,13 @@ class LandingState extends State<Landing> {
     }
   }
 
+
+  @override
+  void dispose() {
+
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
@@ -137,12 +164,13 @@ class LandingState extends State<Landing> {
         converter: (store) => store.state,
         distinct: true,
         onInit: (store){
+          bookingCodeFound();
+          initDynamicLinks();
+          //debugPrint('UI_U_Landing => Booking code: ${store.state.booking.booking_code}');
+          debugPrint('UI_U_Landing => onInit()');
           debugPrint('UI_U_Landing => store on init()');
           cards.add(LandingCardWidget(/*AppLocalizations.of(context).enterBookingCode*/'', AppLocalizations.of(context).startYourJourney, 'assets/img/booking_code.png', null));
           cards.add(LandingCardWidget(/*AppLocalizations.of(context).aboutBuytime*/'', AppLocalizations.of(context).discoverOurNetwork, 'assets/img/beach_girl.png', null));
-
-
-
         },
         builder: (context, snapshot) {
           bookingList.clear();
@@ -158,9 +186,11 @@ class LandingState extends State<Landing> {
 
             WidgetsBinding.instance.addPostFrameCallback((_) async {
               //https://europe-west1-buytime-458a1.cloudfunctions.net/getCategoriesForManagerInBusiness
-              Navigator.push(context, MaterialPageRoute(builder: (context) => UI_M_BusinessList()));
+              if(bookingCode.isEmpty)
+                Navigator.push(context, MaterialPageRoute(builder: (context) => UI_M_BusinessList()));
             });
-          }else{
+          }
+          else{
             if(bookingList.isEmpty && snapshot.user.email.isNotEmpty && !onBookingCode && !requestingBookings && !isManagerOrAbove){
               rippleLoading = true;
               requestingBookings = true;
@@ -195,15 +225,19 @@ class LandingState extends State<Landing> {
                   //bookingStatus = 'Upcoming';
                   debugPrint('UI_U_Landing => Upcoming booking found!');
                   WidgetsBinding.instance.addPostFrameCallback((_) async {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => MyBookings(fromLanding: true,)));
+                    if(bookingCode.isEmpty)
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => MyBookings(fromLanding: true,)));
                   });
                 } else{
                   //bookingStatus = 'Active';
                   secondRippleLoading = true;
                   debugPrint('UI_U_Landing => Active booking found!');
-                  StoreProvider.of<AppState>(context).dispatch(BookingRequestResponse(bookingList.first));
                   //Navigator.push(context, MaterialPageRoute(builder: (context) => BookingPage()));
-                  StoreProvider.of<AppState>(context).dispatch(BusinessServiceListAndNavigateRequest(bookingList.first.business_id));
+                  if(bookingCode.isEmpty){
+                    StoreProvider.of<AppState>(context).dispatch(BookingRequestResponse(bookingList.first));
+                    StoreProvider.of<AppState>(context).dispatch(BusinessServiceListAndNavigateRequest(bookingList.first.business_id));
+                  }else
+                    secondRippleLoading = false;
                 }
               }
             }
@@ -491,36 +525,47 @@ class LandingState extends State<Landing> {
                                         child: InkWell(
                                             onTap: () async {
                                               SharedPreferences prefs = await SharedPreferences.getInstance();
-
+                                              await storage.write(key: 'bookingCode', value: '');
                                               await prefs.setBool('easy_check_in', false);
                                               await prefs.setBool('star_explanation', false);
 
                                               FirebaseAuth.instance.signOut().then((_) {
+
                                                 googleSignIn.signOut();
                                                 //Resetto il carrello
                                                 //cartCounter = 0;
                                                 //Svuotare lo Store sul Logout
-                                                StoreProvider.of<AppState>(context).dispatch(SetCategoryToEmpty());
-                                                StoreProvider.of<AppState>(context).dispatch(SetCategoryListToEmpty());
-                                                StoreProvider.of<AppState>(context).dispatch(SetCategoryTreeToEmpty());
-                                                StoreProvider.of<AppState>(context).dispatch(SetOrderToEmpty(""));
-                                                StoreProvider.of<AppState>(context).dispatch(SetOrderListToEmpty());
-                                                StoreProvider.of<AppState>(context).dispatch(SetBookingListToEmpty());
-                                                StoreProvider.of<AppState>(context).dispatch(SetBookingToEmpty(''));
-                                                StoreProvider.of<AppState>(context).dispatch(SetBusinessToEmpty());
-                                                StoreProvider.of<AppState>(context).dispatch(SetBusinessListToEmpty());
                                                 StoreProvider.of<AppState>(context).dispatch(SetServiceToEmpty());
+                                                StoreProvider.of<AppState>(context).dispatch(SetBookingToEmpty(''));
+                                                StoreProvider.of<AppState>(context).dispatch(SetBookingListToEmpty());
+                                                StoreProvider.of<AppState>(context).dispatch(SetBusinessListToEmpty());
+                                                StoreProvider.of<AppState>(context).dispatch(SetCategoryListToEmpty());
+                                                StoreProvider.of<AppState>(context).dispatch(SetCategoryToEmpty());
+                                                StoreProvider.of<AppState>(context).dispatch(SetBusinessToEmpty());
+                                                StoreProvider.of<AppState>(context).dispatch(SetCategoryTreeToEmpty());
+                                                StoreProvider.of<AppState>(context).dispatch(SetOrderListToEmpty());
+                                                StoreProvider.of<AppState>(context).dispatch(SetOrderToEmpty(''));
+                                                StoreProvider.of<AppState>(context).dispatch(SetPipelineListToEmpty());
+                                                StoreProvider.of<AppState>(context).dispatch(SetPipelineToEmpty());
                                                 StoreProvider.of<AppState>(context).dispatch(SetServiceListToEmpty());
                                                 StoreProvider.of<AppState>(context).dispatch(SetServiceSlotToEmpty());
-                                                StoreProvider.of<AppState>(context).dispatch(SetPipelineToEmpty());
-                                                StoreProvider.of<AppState>(context).dispatch(SetPipelineListToEmpty());
                                                 StoreProvider.of<AppState>(context).dispatch(SetStripeToEmpty());
                                                 StoreProvider.of<AppState>(context).dispatch(SetUserStateToEmpty());
+                                                StoreProvider.of<AppState>(context).dispatch(SetOrderReservableToEmpty(''));
+                                                StoreProvider.of<AppState>(context).dispatch(SetCategoryInviteToEmpty());
+                                                StoreProvider.of<AppState>(context).dispatch(SetExternalBusinessListToEmpty());
+                                                StoreProvider.of<AppState>(context).dispatch(SetOrderDetailToEmpty(''));
+                                                StoreProvider.of<AppState>(context).dispatch(SetOrderReservableListToEmpty());
                                                 //Torno al Login
                                                 drawerSelection = DrawerSelection.BusinessList;
-                                                //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()),);
+
+                                                //Navigator.of(context).pushNamedAndRemoveUntil(Home.route, (Route<dynamic> route) => false);
+                                                //Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Home()), (Route<dynamic> route) => false);
+                                                //Navigator.replace(context, (Route<dynamic> route) => Landing.route)
+
                                                 Navigator.of(context).pushReplacementNamed(Home.route);
                                               });
+
                                             },
                                             child: CustomBottomButtonWidget(
                                                 Container(

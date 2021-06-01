@@ -20,6 +20,7 @@ class OrderTotal extends StatelessWidget {
     SizeConfig().init(context);
     return Container(
       width: media.width,
+      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3, right: SizeConfig.safeBlockHorizontal * 3),
       height: SizeConfig.safeBlockVertical * 10,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -29,7 +30,7 @@ class OrderTotal extends StatelessWidget {
           Expanded(
             flex: 1,
             child: Container(
-              alignment: Alignment.center,
+              alignment: Alignment.centerLeft,
               child: Text(
                 AppLocalizations.of(context).total,
                 style: TextStyle(
@@ -63,7 +64,7 @@ class OrderTotal extends StatelessWidget {
           Expanded(
               flex: 1,
               child: Container(
-                alignment: Alignment.center,
+                alignment: Alignment.centerRight,
                 //margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 8),
                 child: Text(
                   AppLocalizations.of(context).tax + (orderState.total != null ? (orderState.total * 0.25).toStringAsFixed(2) : "0"),

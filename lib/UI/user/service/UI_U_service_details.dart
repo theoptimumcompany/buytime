@@ -175,96 +175,84 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                   ),
 
                   ///Title
-                  Container(
-                    width: SizeConfig.safeBlockHorizontal * 60,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 10.0),
-                      child: FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: Text(
-                          Utils.retriveField(Localizations.localeOf(context).languageCode, widget.serviceState.name),
-                          textAlign: TextAlign.start,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                          style: BuytimeTheme.appbarTitle,
-                        ),
-                      ),
-                    ),
+                  Text(
+                    Utils.retriveField(Localizations.localeOf(context).languageCode, widget.serviceState.name),
+                    textAlign: TextAlign.start,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    style: BuytimeTheme.appbarTitle,
                   ),
 
                   ///Cart
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 10.0),
-                    child: Container(
-                      width: 50,
-                      height: 50,
-                      child: Stack(
-                        children: [
-                          Positioned.fill(
-                            child: Align(
-                              alignment: Alignment.center,
-                              child: IconButton(
-                                icon: Icon(
-                                  BuytimeIcons.shopping_cart,
-                                  color: BuytimeTheme.TextWhite,
-                                  size: 24.0,
-                                ),
-                                onPressed: () {
-                                  if (order.cartCounter > 0) {
-                                    // dispatch the order
-                                    StoreProvider.of<AppState>(context).dispatch(SetOrder(order));
-                                    // go to the cart page
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => Cart(
-                                                tourist: widget.tourist,
-                                              )),
-                                    );
-                                  } else {
-                                    showDialog(
-                                        context: context,
-                                        builder: (_) => new AlertDialog(
-                                              title: new Text(AppLocalizations.of(context).warning),
-                                              content: new Text(AppLocalizations.of(context).emptyCart),
-                                              actions: <Widget>[
-                                                MaterialButton(
-                                                  elevation: 0,
-                                                  hoverElevation: 0,
-                                                  focusElevation: 0,
-                                                  highlightElevation: 0,
-                                                  child: Text(AppLocalizations.of(context).ok),
-                                                  onPressed: () {
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                )
-                                              ],
-                                            ));
-                                  }
-                                },
+                  Container(
+                    width: 50,
+                    height: 50,
+                    child: Stack(
+                      children: [
+                        Positioned.fill(
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: IconButton(
+                              icon: Icon(
+                                BuytimeIcons.shopping_cart,
+                                color: BuytimeTheme.TextWhite,
+                                size: 24.0,
+                              ),
+                              onPressed: () {
+                                if (order.cartCounter > 0) {
+                                  // dispatch the order
+                                  StoreProvider.of<AppState>(context).dispatch(SetOrder(order));
+                                  // go to the cart page
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => Cart(
+                                          tourist: widget.tourist,
+                                        )),
+                                  );
+                                } else {
+                                  showDialog(
+                                      context: context,
+                                      builder: (_) => new AlertDialog(
+                                        title: new Text(AppLocalizations.of(context).warning),
+                                        content: new Text(AppLocalizations.of(context).emptyCart),
+                                        actions: <Widget>[
+                                          MaterialButton(
+                                            elevation: 0,
+                                            hoverElevation: 0,
+                                            focusElevation: 0,
+                                            highlightElevation: 0,
+                                            child: Text(AppLocalizations.of(context).ok),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                          )
+                                        ],
+                                      ));
+                                }
+                              },
+                            ),
+                          ),
+                        ),
+                        order.cartCounter > 0
+                            ? Positioned.fill(
+                          top: 5,
+                          left: 2.5,
+                          child: Align(
+                            alignment: Alignment.topCenter,
+                            child: Text(
+                              '${order.cartCounter}',
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                fontSize: SizeConfig.safeBlockHorizontal * 3,
+                                color: BuytimeTheme.TextWhite,
+                                fontWeight: FontWeight.w400,
                               ),
                             ),
                           ),
-                          order.cartCounter > 0
-                              ? Positioned.fill(
-                                  top: 5,
-                                  left: 2.5,
-                                  child: Align(
-                                    alignment: Alignment.topCenter,
-                                    child: Text(
-                                      '${order.cartCounter}',
-                                      textAlign: TextAlign.start,
-                                      style: TextStyle(
-                                        fontSize: SizeConfig.safeBlockHorizontal * 3,
-                                        color: BuytimeTheme.TextWhite,
-                                        fontWeight: FontWeight.w400,
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              : Container(),
-                        ],
-                      ),
+                        )
+                            : Container(),
+                      ],
                     ),
                   )
                 ],
@@ -284,7 +272,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                           children: [
                             ///Background Image
                             Container(
-                                height: SizeConfig.safeBlockVertical * 55,
+                                height: 348,
                                 //width: double.infinity,
                                 child: images.isNotEmpty
                                     ? Carousel(
@@ -315,7 +303,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                                         //borderRadius: BorderRadius.all(Radius.circular(SizeConfig.blockSizeHorizontal * 5)), ///12.5%
                                                         image: DecorationImage(
                                                       image: imageProvider,
-                                                      fit: BoxFit.fill,
+                                                      fit: BoxFit.cover,
                                                     )),
                                                   ),
                                                   placeholder: (context, url) => Container(
@@ -528,9 +516,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                           ],
                         ),
                       ),
-                      !serviceState.switchSlots
-                          ?
-
+                      !serviceState.switchSlots ?
                           ///Add a cart & Buy
                           Row(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -538,10 +524,9 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                 ///Add to card
                                 Container(
                                     width: 158,
-
                                     ///SizeConfig.safeBlockHorizontal * 40
                                     height: 44,
-                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, bottom: SizeConfig.safeBlockVertical * 2, right: SizeConfig.safeBlockHorizontal * 2.5),
+                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, bottom: 29, right: SizeConfig.safeBlockHorizontal * 2.5),
                                     decoration: BoxDecoration(borderRadius: new BorderRadius.circular(5), border: Border.all(color: StoreProvider.of<AppState>(context).state.user.getRole() == Role.user ? (widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary) : BuytimeTheme.SymbolGrey)),
                                     child: MaterialButton(
                                       elevation: 0,
@@ -572,9 +557,13 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                       shape: RoundedRectangleBorder(
                                         borderRadius: new BorderRadius.circular(5),
                                       ),
-                                      child: Text(
-                                        AppLocalizations.of(context).addToCart,
-                                        style: TextStyle(fontSize: 14, fontFamily: BuytimeTheme.FontFamily, fontWeight: FontWeight.w500, letterSpacing: 1.25),
+                                      child: Container(
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          AppLocalizations.of(context).addToCart,
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(fontSize: 14, fontFamily: BuytimeTheme.FontFamily, fontWeight: FontWeight.w500, letterSpacing: 1.25, ),
+                                        ),
                                       ),
                                     )),
 
@@ -584,7 +573,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
 
                                     ///SizeConfig.safeBlockHorizontal * 40
                                     height: 44,
-                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, bottom: SizeConfig.safeBlockVertical * 2),
+                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, bottom: 29),
                                     child: MaterialButton(
                                       elevation: 0,
                                       hoverElevation: 0,
@@ -648,7 +637,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
 
                               ///SizeConfig.safeBlockHorizontal * 40
                               height: 44,
-                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, bottom: SizeConfig.safeBlockVertical * 2, right: SizeConfig.safeBlockHorizontal * 0),
+                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, bottom: 29, right: SizeConfig.safeBlockHorizontal * 0),
                               decoration: BoxDecoration(
                                 borderRadius: new BorderRadius.circular(5),
                                 /*border: Border.all(

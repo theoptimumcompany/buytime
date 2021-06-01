@@ -253,7 +253,7 @@ class _NotificationsState extends State<Notifications> {
                                                         }
                                                       });
                                                       if (orderState != null) {
-                                                        return UserNotificationListItem(notification, widget.tourist);
+                                                        return UserNotificationListItem(notification, serviceState, widget.tourist);
                                                       }
                                                       return Container();
 
