@@ -102,7 +102,7 @@ class CartState extends State<Cart> {
             converter: (store) => store.state,
             onInit: (store) {
               tmp = store.state.serviceState;
-              if(!widget.tourist){
+              if (!widget.tourist) {
                 _locationController.text = store.state.business.area?.first;
                 store.state.order.location = store.state.business.area?.first;
               }
@@ -261,84 +261,87 @@ class CartState extends State<Cart> {
                                             ),
 
                                             ///Location TExt
-                                            !widget.tourist ?
-                                            Container(
-                                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
-                                              child: Text(
-                                                AppLocalizations.of(context).whereDoYouWantToRecive,
-                                                style: TextStyle(fontFamily: BuytimeTheme.FontFamily, fontWeight: FontWeight.w600, fontSize: 14),
-                                              ),
-                                            ) : Container(),
+                                            !widget.tourist
+                                                ? Container(
+                                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
+                                                    child: Text(
+                                                      AppLocalizations.of(context).whereDoYouWantToRecive,
+                                                      style: TextStyle(fontFamily: BuytimeTheme.FontFamily, fontWeight: FontWeight.w600, fontSize: 14),
+                                                    ),
+                                                  )
+                                                : Container(),
 
                                             ///Location
-                                            !widget.tourist ?
-                                            Container(
-                                                width: 335.0,
-                                                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
-                                                decoration: BoxDecoration(border: Border.all(color: BuytimeTheme.SymbolLightGrey), borderRadius: BorderRadius.all(Radius.circular(5))),
-                                                child: DropdownButtonHideUnderline(
-                                                  child: ButtonTheme(
-                                                    alignedDropdown: true,
-                                                    child: DropdownButton(
-                                                      hint: Container(
-                                                        child: Padding(
-                                                          padding: const EdgeInsets.only(left: 10.0),
-                                                          child: Text(
-                                                            _locationController.text,
-                                                            textAlign: TextAlign.start,
-                                                            style: TextStyle(
-                                                              fontSize: 16,
-                                                              color: BuytimeTheme.TextMedium,
-                                                              fontWeight: FontWeight.w400,
+                                            !widget.tourist
+                                                ? Container(
+                                                    width: 335.0,
+                                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
+                                                    decoration: BoxDecoration(border: Border.all(color: BuytimeTheme.SymbolLightGrey), borderRadius: BorderRadius.all(Radius.circular(5))),
+                                                    child: DropdownButtonHideUnderline(
+                                                      child: ButtonTheme(
+                                                        alignedDropdown: true,
+                                                        child: DropdownButton(
+                                                          hint: Container(
+                                                            child: Padding(
+                                                              padding: const EdgeInsets.only(left: 10.0),
+                                                              child: Text(
+                                                                _locationController.text,
+                                                                textAlign: TextAlign.start,
+                                                                style: TextStyle(
+                                                                  fontSize: 16,
+                                                                  color: BuytimeTheme.TextMedium,
+                                                                  fontWeight: FontWeight.w400,
+                                                                ),
+                                                              ),
                                                             ),
                                                           ),
-                                                        ),
-                                                      ),
-                                                      //value: _locationController.text,
-                                                      items: StoreProvider.of<AppState>(context).state.business.area?.map(
-                                                        (val) {
-                                                          return DropdownMenuItem<String>(
-                                                            value: val,
-                                                            child: Row(
-                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                              children: [
-                                                                Container(
-                                                                  child: Padding(
-                                                                    padding: const EdgeInsets.only(left: 10.0),
-                                                                    child: Text(
-                                                                      val,
-                                                                      textAlign: TextAlign.start,
-                                                                      style: TextStyle(
-                                                                        fontSize: 16,
-                                                                        color: BuytimeTheme.TextMedium,
-                                                                        fontWeight: FontWeight.w400,
+                                                          //value: _locationController.text,
+                                                          items: StoreProvider.of<AppState>(context).state.business.area?.map(
+                                                            (val) {
+                                                              return DropdownMenuItem<String>(
+                                                                value: val,
+                                                                child: Row(
+                                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                  children: [
+                                                                    Container(
+                                                                      child: Padding(
+                                                                        padding: const EdgeInsets.only(left: 10.0),
+                                                                        child: Text(
+                                                                          val,
+                                                                          textAlign: TextAlign.start,
+                                                                          style: TextStyle(
+                                                                            fontSize: 16,
+                                                                            color: BuytimeTheme.TextMedium,
+                                                                            fontWeight: FontWeight.w400,
+                                                                          ),
+                                                                        ),
                                                                       ),
                                                                     ),
-                                                                  ),
+                                                                    _locationController.text == val ? Icon(Icons.radio_button_checked, color: BuytimeTheme.SymbolGrey,) : Icon(Icons.radio_button_off, color: BuytimeTheme.SymbolGrey,),
+                                                                    // Radio(
+                                                                    //   toggleable: true,
+                                                                    //   value: val,
+                                                                    //   activeColor: BuytimeTheme.Secondary,
+                                                                    //   groupValue: _locationController.text,
+                                                                    //   onChanged: null,
+                                                                    // )
+                                                                  ],
                                                                 ),
-                                                                Radio(
-                                                                  toggleable: true,
-                                                                  value: val,
-                                                                  activeColor: BuytimeTheme.Secondary,
-                                                                  groupValue: _locationController.text,
-                                                                  onChanged: null,
-                                                                )
-                                                              ],
-                                                            ),
-                                                          );
-                                                        },
-                                                      )?.toList(),
-                                                      onChanged: (value) {
-                                                        setState(() {
-                                                          _locationController.text = value;
-                                                          orderState.location = value;
-                                                          StoreProvider.of<AppState>(context).dispatch(UpdateOrder(orderState));
-                                                        });
-                                                      },
-                                                      style: Theme.of(context).textTheme.title,
-                                                    ),
-                                                  ),
-                                                )) : Container(),
+                                                              );
+                                                            },
+                                                          )?.toList(),
+                                                          onChanged: (value) {
+                                                            setState(() {
+                                                              _locationController.text = value;
+                                                              orderState.location = value;
+                                                              StoreProvider.of<AppState>(context).dispatch(UpdateOrder(orderState));
+                                                            });
+                                                          },
+                                                          style: Theme.of(context).textTheme.title,
+                                                        ),
+                                                      ),
+                                                    ))
+                                                : Container(),
                                           ],
                                         );
                                       }),
