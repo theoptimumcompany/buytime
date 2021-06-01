@@ -268,9 +268,9 @@ class _UI_M_BusinessListDrawerState extends State<UI_M_BusinessListDrawer> {
                         child: ListTile(
                           leading: Icon(Icons.call, color: BuytimeTheme.TextMedium, size: 24),
                           onTap: () async{
-                            /*String url = StoreProvider.of<AppState>(context).state.business.phoneConcierge.isNotEmpty ?
-                            StoreProvider.of<AppState>(context).state.business.phoneConcierge : BuytimeConfig.FlaviosNumber.trim();*/
-                            String url = BuytimeConfig.FlaviosNumber.trim();
+                            String url = StoreProvider.of<AppState>(context).state.business.phoneConcierge.isNotEmpty ?
+                            StoreProvider.of<AppState>(context).state.business.phoneConcierge : BuytimeConfig.FlaviosNumber.trim();
+                            //String url = BuytimeConfig.FlaviosNumber.trim();
                             debugPrint('Restaurant phonenumber: ' + url);
                             if (await canLaunch('tel:$url')) {
                               await launch('tel:$url');
