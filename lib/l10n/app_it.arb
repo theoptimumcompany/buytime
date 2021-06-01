@@ -553,5 +553,6 @@
   "dAndSCenter": "Diving and Sailing Center",
   "motorRental": "Motor Rental",
   "tourOperator": "Tour Operator",
-  "wellness": "Wellness"
+  "wellness": "Wellness",
+  "noAddress": "This service has not an address"
 }

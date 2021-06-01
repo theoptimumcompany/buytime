@@ -46,14 +46,17 @@ class _BookingCardWidgetState extends State<BookingCardWidget> {
     currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0);
 
     DateTime endTime = DateTime.now();
+    DateTime startTime = DateTime.now();
     //DateTime startTime = DateTime.now();
+    //debugPrint('booing_card_widget => CURRENT TIME: $currentTime | START DATE: ${widget.bookingState.start_date}');
     endTime = new DateTime(widget.bookingState.end_date.year, widget.bookingState.end_date.month, widget.bookingState.end_date.day, 0, 0, 0, 0, 0);
+    startTime = new DateTime(widget.bookingState.start_date.year, widget.bookingState.start_date.month, widget.bookingState.start_date.day, 0, 0, 0, 0, 0);
     if(endTime.isBefore(currentTime)){
       bookingStatus = 'Closed';
       closed = true;
-    }else if(widget.bookingState.start_date.isAtSameMomentAs(currentTime))
+    }else if(startTime.isAtSameMomentAs(currentTime))
       bookingStatus = 'Active';
-    else if(widget.bookingState.start_date.isAfter(currentTime))
+    else if(startTime.isAfter(currentTime))
       bookingStatus = 'Upcoming';
     else
       bookingStatus = 'Active';
@@ -170,7 +173,7 @@ class _BookingCardWidgetState extends State<BookingCardWidget> {
                           child:  FittedBox(
                             fit: BoxFit.scaleDown,
                             child: Text(
-                              '${DateFormat('dd MMMM',Localizations.localeOf(context).languageCode).format(widget.bookingState.start_date)} - ${DateFormat('dd MMMM yyyy').format(widget.bookingState.end_date)}',
+                              '${DateFormat('dd MMMM',Localizations.localeOf(context).languageCode).format(widget.bookingState.start_date)} - ${DateFormat('dd MMMM yyyy', Localizations.localeOf(context).languageCode).format(widget.bookingState.end_date)}',
                               style: TextStyle(
                                   fontFamily: BuytimeTheme.FontFamily,
                                   color: !closed ? BuytimeTheme.TextWhite : BuytimeTheme.TextWhite.withOpacity(.8),

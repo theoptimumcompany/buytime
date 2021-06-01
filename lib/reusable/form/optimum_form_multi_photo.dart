@@ -176,7 +176,22 @@ class OptimumFormMultiPhotoState extends State<OptimumFormMultiPhoto> {
     print("optimum_form_multi_photo: pick image");
     // call the image picker
     getImage().then((result) {
-      if (result != null) onFilePicked(OptimumFileToUpload(fileType: path.extension(result.path), localPath: result.path, remoteFolder: remotePath, remoteName: path.basename(result.path), state: state));
+      if (result != null){
+        print("optimum_form_multi_photo: fileType: ${path.extension(result.path)}");
+        print("optimum_form_multi_photo: localPath: ${result.path}");
+        print("optimum_form_multi_photo: remoteFolder: $remotePath");
+        print("optimum_form_multi_photo: remoteName: ${path.basename(result.path)}");
+        if(remotePath.endsWith('/logo'))
+          StoreProvider.of<AppState>(context).state.business.logo = result.path;
+        else if(remotePath.endsWith('/profile'))
+          StoreProvider.of<AppState>(context).state.business.profile = result.path;
+        else if(remotePath.endsWith('/gallery'))
+          StoreProvider.of<AppState>(context).state.business.gallery[0] = result.path;
+        else
+          StoreProvider.of<AppState>(context).state.business.wide = result.path;
+
+        onFilePicked(OptimumFileToUpload(fileType: path.extension(result.path), localPath: result.path, remoteFolder: remotePath, remoteName: path.basename(result.path), state: state));
+      }
     });
   }
 

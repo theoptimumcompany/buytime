@@ -100,7 +100,7 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
               //StoreProvider.of<AppState>(context).dispatch(new OrderRequest(orderId)); //TODO statistics
               StoreProvider.of<AppState>(context).state.notificationListState.notificationListState.clear();
               StoreProvider.of<AppState>(context)..dispatch(UserOrderListRequest());
-              StoreProvider.of<AppState>(context).dispatch(RequestNotificationList(StoreProvider.of<AppState>(context).state.user.uid, StoreProvider.of<AppState>(context).state.business.id_firestore));
+              //StoreProvider.of<AppState>(context).dispatch(RequestNotificationList(StoreProvider.of<AppState>(context).state.user.uid, StoreProvider.of<AppState>(context).state.business.id_firestore));
               notifyFlushbar('OMF: ' + notification.title);
               /*Navigator.push(
                 context,
@@ -120,7 +120,7 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
             //String messages = AppLocalizations.of(context).sendEmail;
             StoreProvider.of<AppState>(context).state.notificationListState.notificationListState.clear();
             StoreProvider.of<AppState>(context)..dispatch(UserOrderListRequest());
-            StoreProvider.of<AppState>(context).dispatch(RequestNotificationList(StoreProvider.of<AppState>(context).state.user.uid, StoreProvider.of<AppState>(context).state.business.id_firestore));
+            //StoreProvider.of<AppState>(context).dispatch(RequestNotificationList(StoreProvider.of<AppState>(context).state.user.uid, StoreProvider.of<AppState>(context).state.business.id_firestore));
             notifyFlushbar('OM: ' + notification.title);
             /*Navigator.push(
               context,
@@ -135,7 +135,7 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
           //StoreProvider.of<AppState>(context).dispatch(new OrderRequest(orderId)); //TODO statistics
           StoreProvider.of<AppState>(context).state.notificationListState.notificationListState.clear();
           StoreProvider.of<AppState>(context)..dispatch(UserOrderListRequest());
-          StoreProvider.of<AppState>(context).dispatch(RequestNotificationList(StoreProvider.of<AppState>(context).state.user.uid, StoreProvider.of<AppState>(context).state.business.id_firestore));
+          //StoreProvider.of<AppState>(context).dispatch(RequestNotificationList(StoreProvider.of<AppState>(context).state.user.uid, StoreProvider.of<AppState>(context).state.business.id_firestore));
           notifyFlushbar('OMOA: ' + notification.title);
           /*Navigator.push(
             context,

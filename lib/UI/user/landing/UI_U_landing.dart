@@ -40,6 +40,7 @@ import 'package:Buytime/utils/theme/buytime_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:animations/animations.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -91,24 +92,29 @@ class LandingState extends State<Landing> {
 
   void initDynamicLinks() async {
     print("Dentro initial dynamic");
-    Uri deepLinkOnClik;
+    Uri deepLink;
     FirebaseDynamicLinks.instance.onLink(onSuccess: (PendingDynamicLinkData dynamicLink) async {
-      deepLinkOnClik = dynamicLink?.link;
-      debugPrint('UI_U_landing: DEEPLINK: $deepLinkOnClik');
-      if (deepLinkOnClik != null) {
-        if (deepLinkOnClik.queryParameters.containsKey('booking')) {
-          String id = deepLinkOnClik.queryParameters['booking'];
-          debugPrint('UI_U_landing: booking: $id');
+      deepLink = null;
+      deepLink = dynamicLink?.link;
+      debugPrint('UI_U_landing: DEEPLINK onLink: $deepLink');
+      if (deepLink != null) {
+        if (deepLink.queryParameters.containsKey('booking')) {
+          String id = deepLink.queryParameters['booking'];
+          debugPrint('UI_U_landing: booking onLink: $id');
           await storage.write(key: 'bookingCode', value: id);
           setState(() {
             onBookingCode = true;
           });
           //StoreProvider.of<AppState>(context).dispatch(BookingRequestResponse(BookingState(booking_code: id)));
           //Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => InviteGuestForm(id: id, fromLanding: false,)), (Route<dynamic> route) => false);
-          Navigator.of(context).push(MaterialPageRoute(builder: (context) => InviteGuestForm(id: id, fromLanding: true,)));
+          if(FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty){
+            debugPrint('UI_U_landing: USER Is LOGGED in onLink');
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => InviteGuestForm(id: id, fromLanding: true,)));
+          }else
+            debugPrint('UI_U_landing: USER NOT LOGGED in onLink');
         }
-        else if (deepLinkOnClik.queryParameters.containsKey('categoryInvite')) {
-          String businessId = deepLinkOnClik.queryParameters['categoryInvite'];
+        else if (deepLink.queryParameters.containsKey('categoryInvite')) {
+          String businessId = deepLink.queryParameters['categoryInvite'];
           debugPrint('UI_U_landing: categoryInvite: $businessId');
           //StoreProvider.of<AppState>(context).dispatch(BusinessRequestAndNavigate(businessId));
           StoreProvider.of<AppState>(context).dispatch(UserBookingListRequest(StoreProvider.of<AppState>(context).state.user.email, false));
@@ -121,20 +127,26 @@ class LandingState extends State<Landing> {
       print(e.message);
     });
 
-    await Future.delayed(Duration(seconds: 2)); // TODO: vi spezzo le gambine.
+    await Future.delayed(Duration(seconds: 2)); // TODO: vi spezzo le gambine. AHAHAHAH Riccaa attentoooo.
 
     ///Serve un delay che altrimenti getInitialLink torna NULL
     final PendingDynamicLinkData data = await FirebaseDynamicLinks.instance.getInitialLink();
-    final Uri deepLink = data?.link;
-
+    deepLink = null;
+    deepLink = data?.link;
+    debugPrint('UI_U_landing: DEEPLINK getInitialLink: $deepLink');
     if (deepLink != null) {
       if (deepLink.queryParameters.containsKey('booking')) {
         String id = deepLink.queryParameters['booking'];
-        debugPrint('UI_U_landing: booking: $id');
+        debugPrint('UI_U_landing: booking getInitialLink: $id');
+        await storage.write(key: 'bookingCode', value: id);
         setState(() {
           onBookingCode = true;
         });
-        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => InviteGuestForm(id: id, fromLanding: false)), ModalRoute.withName('/landing'));
+        if(FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty){
+          debugPrint('UI_U_landing: USER IS LOGGED in getInitialLink');
+          Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => InviteGuestForm(id: id, fromLanding: false)), ModalRoute.withName('/landing'));
+        }else
+          debugPrint('UI_U_landing: USER NOT LOGGED in getInitialLink');
       }
       else if (deepLink.queryParameters.containsKey('categoryInvite')) {
         String id = deepLink.queryParameters['categoryInvite'];

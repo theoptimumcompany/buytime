@@ -18,11 +18,14 @@ class DashboardCard extends StatefulWidget {
   Icon icon;
   String count;
   String type;
-  DashboardCard({Key key, this.background, this.icon, this.count, this.type}) : super(key: key);
+  bool filter;
+  OnFilterActive filterActive;
+  DashboardCard({Key key, this.background, this.icon, this.count, this.type, this.filter, this.filterActive}) : super(key: key);
 
   @override
   _DashboardCardState createState() => _DashboardCardState();
 }
+typedef OnFilterActive = void Function(bool filter);
 
 class _DashboardCardState extends State<DashboardCard> {
 
@@ -49,7 +52,9 @@ class _DashboardCardState extends State<DashboardCard> {
         color: Colors.transparent,
         child: InkWell(
           splashColor: Colors.black.withOpacity(.3),
-          onTap: (){},
+          onTap: (){
+            widget.filterActive(!widget.filter);
+          },
           borderRadius: BorderRadius.all(Radius.circular(5.0)),
           child: Container(
             height: 100, ///SizeConfig.safeBlockVertical * 25

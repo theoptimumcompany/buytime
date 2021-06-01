@@ -249,6 +249,8 @@ class _RNotificationsState extends State<RNotifications> {
                               notificationState.notificationId = idNotification;
                               notifications.add(notificationState);
                             }
+
+                            notifications.sort((b,a) => a.timestamp.compareTo(b.timestamp));
                             /*if(notifications.isEmpty && startRequest){
           noActivity = true;
         }else{

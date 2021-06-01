@@ -102,7 +102,9 @@ class _DashboardListItemState extends State<DashboardListItem> {
                         Container(
                           child: Text(
                               widget.orderState.selected == null || widget.orderState.selected.isEmpty ?
-                              '${AppLocalizations.of(context).currency} ${widget.orderState.total.toStringAsFixed(2)}' :
+                              widget.orderState.itemList.length > 1 ?
+                              '${AppLocalizations.of(context).multipleOrders} - ${AppLocalizations.of(context).currency} ${widget.orderState.total.toStringAsFixed(2)}' :
+                              '${Utils.retriveField(Localizations.localeOf(context).languageCode, widget.orderState.itemList.first.name)} - ${AppLocalizations.of(context).currency} ${widget.orderState.total.toStringAsFixed(2)}' :
                               '${Utils.retriveField(Localizations.localeOf(context).languageCode, widget.orderEntry.name)} - € ${widget.orderEntry.price.toStringAsFixed(2)}',
                             style: TextStyle(
                                 fontFamily: BuytimeTheme.FontFamily,

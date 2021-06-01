@@ -134,7 +134,7 @@ class _RActivityManagementState extends State<RActivityManagement> {
   List<Widget> _list(DateTime key, List<List<List>> list) {
 
     DateTime currentTime = DateTime.now();
-    currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0).toUtc();
+    currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0);
 
     List<Widget> widgetList = [];
     widgetList..add(
@@ -167,7 +167,7 @@ class _RActivityManagementState extends State<RActivityManagement> {
     for(int i = 0; i < list.length; i++){
       if(list[i].isNotEmpty){
         DateTime orderTime = list[i][0][0].date;
-        orderTime = new DateTime(orderTime.year, orderTime.month, orderTime.day, 0, 0, 0, 0, 0).toUtc();
+        orderTime = new DateTime(orderTime.year, orderTime.month, orderTime.day, 0, 0, 0, 0, 0);
         widgetList..add(
           SliverClip(
             child: MultiSliver(
@@ -403,74 +403,96 @@ class _RActivityManagementState extends State<RActivityManagement> {
 
   List<Widget> _weekSliverList(List<List<List>> list) {
     DateTime currentTime = DateTime.now();
-    currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0).toUtc();
+    currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0);
     List<Widget> widgetList = [];
     for (int i = 0; i < list.length; i++){
       if(list[i] != null && list[i].isNotEmpty){
         DateTime orderTime = list[i][0][0].date;
-        orderTime = new DateTime(orderTime.year, orderTime.month, orderTime.day, 0, 0, 0, 0, 0).toUtc();
+        orderTime = new DateTime(orderTime.year, orderTime.month, orderTime.day, 0, 0, 0, 0, 0);
         widgetList
-          ..add(
-              SliverPersistentHeader(
-                  pinned: true,
-                  floating: false,
-                  delegate: CustomSliverAppBarDelegate(minHeight: 24, maxHeight: 24, child:
-                  Container(
-                    height: 24,
-                    decoration: BoxDecoration(
-                        color: BuytimeTheme.ManagerPrimary,
-                        border: Border(
-                            top: BorderSide(
-                                color: BuytimeTheme.BackgroundWhite
-                            )
-                        )
-                    ),
-                    alignment: Alignment.centerLeft,
-                    padding: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
-                    child: Text(
-                        orderTime.isAtSameMomentAs(currentTime) ? '${AppLocalizations.of(context).today} ${DateFormat('MMM dd',Localizations.localeOf(context).languageCode).format(orderTime).toUpperCase()}' :
-                        orderTime.isAtSameMomentAs(currentTime.add(Duration(days: 1))) ? '${AppLocalizations.of(context).tomorrow} ${DateFormat('MMM dd',Localizations.localeOf(context).languageCode).format(orderTime).toUpperCase()}' :
-                        '${DateFormat('MMM dd',Localizations.localeOf(context).languageCode).format(orderTime).toUpperCase()}',
-                        style: TextStyle(
-                          letterSpacing: 1.25,
-                          fontFamily: BuytimeTheme.FontFamily,
-                          color: BuytimeTheme.TextWhite,
-                          fontSize: 14, /// SizeConfig.safeBlockHorizontal * 4
-                          fontWeight: FontWeight.w500,
-                        )
-                    ),
-                  )
-                  )))
-          ..add(SliverList(
-            //itemExtent: 50.0,
-            delegate:
-            SliverChildBuilderDelegate((BuildContext context, int index) {
-              debugPrint('UI_M_activity_management => LIST SIZE: ${list[i].length}');
-              OrderState order = list[i].elementAt(index)[0];
-              OrderEntry entry = list[i].elementAt(index)[1];
-              /// when the manager clicks on the button we  block all the buttons (for this order) until the response rebuilds the list
-              /// or the entry?
-              bool managerHasChosenAction = false;
-              return Container(
-                alignment: Alignment.center,
-                //color: Colors.lightBlue[100 * (index % 9)],
-                child: Column(
+          ..add(SliverClip(
+                child: MultiSliver(
+                  pushPinnedChildren: true,
                   children: [
-                    ///Order Info
-                    DashboardListItem(order, entry),
-                    ///Actions
-                    buildActivityButtons(order, context, managerHasChosenAction),
-                    ///Divider
-                    Container(
-                      //margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 30),
-                      height: 2,
-                      color: BuytimeTheme.DividerGrey,
-                    )
+                    SliverStack(
+                        insetOnOverlap: true,
+                        children: [
+                          MultiSliver(
+                            children: [
+                              SliverPinnedHeader(
+                                child: Container(
+                                  height: 24,
+                                  decoration: BoxDecoration(
+                                      color: BuytimeTheme.ManagerPrimary,
+                                      border: Border(
+                                          top: BorderSide(
+                                              color: BuytimeTheme.BackgroundWhite
+                                          )
+                                      )
+                                  ),
+                                  alignment: Alignment.centerLeft,
+                                  padding: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
+                                  child: Text(
+                                      orderTime.isAtSameMomentAs(currentTime) ? '${AppLocalizations.of(context).today} ${DateFormat('MMM dd',Localizations.localeOf(context).languageCode).format(orderTime).toUpperCase()}' :
+                                      orderTime.isAtSameMomentAs(currentTime.add(Duration(days: 1))) ? '${AppLocalizations.of(context).tomorrow} ${DateFormat('MMM dd',Localizations.localeOf(context).languageCode).format(orderTime).toUpperCase()}' :
+                                      '${DateFormat('MMM dd').format(orderTime).toUpperCase()}',
+                                      style: TextStyle(
+                                        letterSpacing: 1.25,
+                                        fontFamily: BuytimeTheme.FontFamily,
+                                        color: BuytimeTheme.TextWhite,
+                                        fontSize: 14, /// SizeConfig.safeBlockHorizontal * 4
+                                        fontWeight: FontWeight.w500,
+                                      )
+                                  ),
+                                ),
+                              ),
+                              SliverClip(
+                                child: MultiSliver(
+                                  children: <Widget>[
+                                    SliverAnimatedPaintExtent(
+                                      duration: const Duration(milliseconds: 300),
+                                      curve: Curves.easeOut,
+                                      child: SliverList(
+                                        delegate: SliverChildBuilderDelegate((context, index) {
+                                          //debugPrint('UI_M_activity_management => LIST SIZE: ${list[i].length}');
+                                          OrderState order = list[i].elementAt(index)[0];
+                                          OrderEntry entry = list[i].elementAt(index)[1];
+                                          /// when the manager clicks on the button we  block all the buttons (for this order) until the response rebuilds the list
+                                          /// or the entry?
+                                          bool managerHasChosenAction = false;
+                                          return Container(
+                                            alignment: Alignment.center,
+                                            //color: Colors.lightBlue[100 * (index % 9)],
+                                            child: Column(
+                                              children: [
+                                                ///Order Info
+                                                DashboardListItem(order, entry),
+                                                ///Actions
+                                                buildActivityButtons(order, context, managerHasChosenAction),
+                                                ///Divider
+                                                Container(
+                                                  //margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 30),
+                                                  height: 2,
+                                                  color: BuytimeTheme.DividerGrey,
+                                                )
+                                              ],
+                                            ),
+                                          );
+                                        },
+                                          childCount: list[i].length,
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              )
+                            ],
+                          )
+                        ]
+                    ),
                   ],
                 ),
-              );
-            }, childCount: list[i].length),
-          ));
+              ));
       }
     }
 
@@ -661,6 +683,9 @@ class _RActivityManagementState extends State<RActivityManagement> {
   ),
   )*/
 
+  bool filterPending = false;
+  bool filterAccepted = false;
+
 
   @override
   Widget build(BuildContext context) {
@@ -672,7 +697,7 @@ class _RActivityManagementState extends State<RActivityManagement> {
       businessIdList.add(businessStateList[i].id_firestore);
     }
     DateTime currentTime = DateTime.now();
-    currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0).toUtc();
+    currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0);
     //DateTime sevenDaysFromNow = new DateTime(currentTime.year, currentTime.month, currentTime.day + 7, 0, 0, 0, 0, 0).toUtc();
     DateTime sevenDaysFromNow =  currentTime.add(Duration(days: 7));
     debugPrint('RUI_M_activity_management => CURRENT TIME: $currentTime | SEVEN DAYS IN: $sevenDaysFromNow');
@@ -697,346 +722,191 @@ class _RActivityManagementState extends State<RActivityManagement> {
 
     ///Init sizeConfig
     SizeConfig().init(context);
-    return StreamBuilder<QuerySnapshot>(
-      stream: _orderListRealtime,
-      // )
-      // StoreConnector<AppState, AppState>(
-      //   converter: (store) => store.state,
-      //   onInit: (store) {
-      //     store.state.orderList.orderListState.clear();
-      //     store.dispatch(OrderListRequest(store.state.business.id_firestore));
-      //     startRequest = true;
-      //   },
-      builder: (context,AsyncSnapshot<QuerySnapshot>  snapshot) {
-        String today = '${AppLocalizations.of(context).today.substring(0,1)}${AppLocalizations.of(context).today.substring(1,AppLocalizations.of(context).today.length-2).toLowerCase()}';
-        // print("UI_M_activity_management : Request: $startRequest - Number of orders is " + snapshot.orderList.orderListState.length.toString());
-
-        // print("UI_M_activity_management : No activity: $noActivity");
-        ///Current time
-        // DateTime currentTime = DateTime.now();
-        // currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0);
-
-        /// Firebase realtime checks
-        if (snapshot.hasError) {
-          return Text('Something went wrong');
-        }
-
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return WillPopScope(
-            onWillPop: () async => false,
-            child: Scaffold(
-              drawerEnableOpenDragGesture: false,
-              key: _drawerKey,
-              ///Appbar
-              appBar: BuytimeAppbar(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
-                        child: IconButton(
-                          icon: const Icon(
-                            Icons.menu,
-                            color: Colors.white,
-                            size: 30.0,
-                          ),
-                          tooltip: AppLocalizations.of(context).openMenu,
-                          onPressed: () {
-                            _drawerKey.currentState.openDrawer();
-                          },
-                        ),
-                      ),
-                    ],
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        drawerEnableOpenDragGesture: false,
+        key: _drawerKey,
+        ///Appbar
+        appBar: BuytimeAppbar(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
+                  child: IconButton(
+                    icon: const Icon(
+                      Icons.menu,
+                      color: Colors.white,
+                      size: 30.0,
+                    ),
+                    tooltip: AppLocalizations.of(context).openMenu,
+                    onPressed: () {
+                      _drawerKey.currentState.openDrawer();
+                    },
                   ),
-                  ///Title
-                  Container(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 20.0),
-                      child: Text(
-                        AppLocalizations.of(context).activityManagement,
-                        textAlign: TextAlign.start,
-                        style: BuytimeTheme.appbarTitle,
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 56.0,
-                  )
-                ],
-              ),
-              drawer: UI_M_BusinessListDrawer(),
-              body: ConstrainedBox(
-                constraints: BoxConstraints(),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    ///Today & show week
-                    Container(
-                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          ///Calendar icon & Date
-                          Container(
-                            child: Row(
-                              children: [
-                                ///Calendar Icon
-                                Icon(
-                                  BuytimeIcons.calendar,
-                                  size: 22,
-                                ),
-                                ///Date
-                                Container(
-                                  margin: EdgeInsets.only(left: 10),
-                                  child: Text(
-                                    seeAll ? AppLocalizations.of(context).showAll : '${DateFormat('dd MMM',Localizations.localeOf(context).languageCode).format(currentTime)} - ${DateFormat('dd MMM').format(sevenDaysFromNow)}',
-                                    style: TextStyle(
-                                        fontFamily: BuytimeTheme.FontFamily,
-                                        fontSize: 16,
-                                        letterSpacing: 0.18,
-                                        fontWeight: FontWeight.w400
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                          ///See all week
-                          Container(
-                            //margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 0.5),
-                              alignment: Alignment.center,
-                              child: Material(
-                                color: Colors.transparent,
-                                child: InkWell(
-                                    onTap: () {
-                                      //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ServiceList()),);
-                                      //Navigator.of(context).pop();
-                                      setState(() {
-                                        seeAll = !seeAll;
-                                      });
-                                    },
-                                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                                    child: Container(
-                                      padding: EdgeInsets.all(5.0),
-                                      child: Text(
-                                        !seeAll ? AppLocalizations.of(context).showAll : '${DateFormat('dd MMM',Localizations.localeOf(context).languageCode).format(currentTime)} - ${DateFormat('dd MMM').format(sevenDaysFromNow)}',
-                                        style: TextStyle(
-                                            letterSpacing: .25,
-                                            fontFamily: BuytimeTheme.FontFamily,
-                                            color: BuytimeTheme.TextMalibu,
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: 16
-
-                                          ///SizeConfig.safeBlockHorizontal * 4
-                                        ),
-                                      ),
-                                    )),
-                              ))
-                        ],
-                      ),
-                    ),
-                    ///Dashboard
-                    Container(
-                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 5),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          ///Pending card
-                          DashboardCard(
-                            background: Color(0xff003B5F),
-                            icon: Icon(
-                              BuytimeIcons.pending_clock,
-                              color: BuytimeTheme.SymbolWhite,
-                              size: 22,
-                            ),
-                            count: '${pendingList.length}',
-                            type: '${AppLocalizations.of(context).pending}',
-                          ),
-                          ///Accepted card
-                          DashboardCard(
-                            background: Color(0xff4C95C2),
-                            icon: Icon(
-                              BuytimeIcons.accepted_clock,
-                              color: BuytimeTheme.SymbolWhite,
-                              size: 22,
-                            ),
-                            count: '${acceptedList.length}',
-                            type: '${AppLocalizations.of(context).accepted}',
-                          )
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          CircularProgressIndicator()
-                        ],
-                      ),
-                    )
-                  ],
+                ),
+              ],
+            ),
+            ///Title
+            Container(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 20.0),
+                child: Text(
+                  AppLocalizations.of(context).activityManagement,
+                  textAlign: TextAlign.start,
+                  style: BuytimeTheme.appbarTitle,
                 ),
               ),
             ),
-          );
-        }
+            SizedBox(
+              width: 56.0,
+            )
+          ],
+        ),
+        drawer: UI_M_BusinessListDrawer(),
+        body: ConstrainedBox(
+          constraints: BoxConstraints(),
+          child: StreamBuilder<QuerySnapshot>(
+            stream: _orderListRealtime,
+            // )
+            // StoreConnector<AppState, AppState>(
+            //   converter: (store) => store.state,
+            //   onInit: (store) {
+            //     store.state.orderList.orderListState.clear();
+            //     store.dispatch(OrderListRequest(store.state.business.id_firestore));
+            //     startRequest = true;
+            //   },
+            builder: (context,AsyncSnapshot<QuerySnapshot>  snapshot) {
+              String today = '${AppLocalizations.of(context).today.substring(0,1)}${AppLocalizations.of(context).today.substring(1,AppLocalizations.of(context).today.length-2).toLowerCase()}';
+              // print("UI_M_activity_management : Request: $startRequest - Number of orders is " + snapshot.orderList.orderListState.length.toString());
 
-        if (snapshot.connectionState == ConnectionState.active) {
-          debugPrint('Coonection Stablished');
-        }
-        pendingList.clear();
-        acceptedList.clear();
-        canceledList.clear();
-        orderList.clear();
-        orderMap.clear();
-        allMap.clear();
-        allOrderList.clear();
-        weekOrderList.clear();
-        List<OrderState> tmp = [];
-        //debugPrint('ORDER MAP LENGTH: ${orderMap.length}');
+              // print("UI_M_activity_management : No activity: $noActivity");
+              ///Current time
+              // DateTime currentTime = DateTime.now();
+              // currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0);
 
-        for (int j = 0; j < snapshot.data.docs.length; j++) {
-          tmp.add(OrderState.fromJson(snapshot.data.docs[j].data()));
-        }
+              /// Firebase realtime checks
+              if (snapshot.hasError) {
+                return Text('Something went wrong');
+              }
 
-        if(tmp.isEmpty && startRequest){
-          noActivity = true;
-        }else{
-          if(tmp.isNotEmpty && tmp.first.businessId == null)
-            tmp.removeLast();
-          debugPrint('CHECK 1');
-          noActivity = false;
-          startRequest = false;
-        }
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return CircularProgressIndicator();
+              }
 
-        tmp.forEach((element) {
-          //debugPrint('CHECK 1');
-          DateTime orderTime = element.date;
-          orderTime = new DateTime(orderTime.year, orderTime.month, orderTime.day, 0, 0, 0, 0, 0);
+              if (snapshot.connectionState == ConnectionState.active) {
+                debugPrint('Coonection Stablished');
+              }
+              pendingList.clear();
+              acceptedList.clear();
+              canceledList.clear();
+              orderList.clear();
+              orderMap.clear();
+              allMap.clear();
+              allOrderList.clear();
+              weekOrderList.clear();
+              List<OrderState> tmp = [];
+              //debugPrint('ORDER MAP LENGTH: ${orderMap.length}');
 
-          if(element.progress == Utils.enumToString(OrderStatus.canceled) || element.progress == Utils.enumToString(OrderStatus.declined)){
-            listUp(element, currentTime, sevenDaysFromNow, orderTime, canceledList);
-            //pendingList.add(element);
-          }else if(element.progress == Utils.enumToString(OrderStatus.pending) || element.progress == Utils.enumToString(OrderStatus.unpaid)){
-            listUp(element, currentTime, sevenDaysFromNow, orderTime, pendingList);
-            //acceptedList.add(element);
-          }else{
-            listUp(element, currentTime, sevenDaysFromNow, orderTime, acceptedList);
-            //acceptedList.add(element);
-          }
-        });
+              for (int j = 0; j < snapshot.data.docs.length; j++) {
+                tmp.add(OrderState.fromJson(snapshot.data.docs[j].data()));
+              }
+
+              if(tmp.isEmpty && startRequest){
+                noActivity = true;
+              }else{
+                if(tmp.isNotEmpty && tmp.first.businessId == null)
+                  tmp.removeLast();
+                debugPrint('CHECK 1');
+                noActivity = false;
+                startRequest = false;
+              }
+
+              tmp.forEach((element) {
+                //debugPrint('CHECK 1');
+                DateTime orderTime = element.date;
+                orderTime = new DateTime(orderTime.year, orderTime.month, orderTime.day, 0, 0, 0, 0, 0);
+
+                if(element.progress == Utils.enumToString(OrderStatus.canceled) || element.progress == Utils.enumToString(OrderStatus.declined)){
+                  listUp(element, currentTime, sevenDaysFromNow, orderTime, canceledList);
+                  //pendingList.add(element);
+                }else if(element.progress == Utils.enumToString(OrderStatus.pending) || element.progress == Utils.enumToString(OrderStatus.unpaid)){
+                  listUp(element, currentTime, sevenDaysFromNow, orderTime, pendingList);
+                  //acceptedList.add(element);
+                }else{
+                  listUp(element, currentTime, sevenDaysFromNow, orderTime, acceptedList);
+                  //acceptedList.add(element);
+                }
+              });
 
 
-        pendingList.forEach((pending) {
-          //debugPrint('CHECK PENDING');
-          DateTime pendingTime = pending[0].date;
-          pendingTime = DateTime(pendingTime.year, pendingTime.month, pendingTime.day, 0, 0, 0, 0, 0);
-          //orderMap[DateFormat('dd MM yyyy').format(pendingTime)].add(pending);
-          orderMap[pendingTime].add(pending);
-        });
+              pendingList.forEach((pending) {
+                //debugPrint('CHECK PENDING');
+                DateTime pendingTime = pending[0].date;
+                pendingTime = DateTime(pendingTime.year, pendingTime.month, pendingTime.day, 0, 0, 0, 0, 0);
+                //orderMap[DateFormat('dd MM yyyy').format(pendingTime)].add(pending);
+                if(!filterAccepted || filterPending)
+                  orderMap[pendingTime].add(pending);
+              });
 
-        acceptedList.forEach((accepted) {
-          //debugPrint('CHECK ACCEPTED');
-          DateTime acceptedTime = accepted[0].date;
-          acceptedTime = new DateTime(acceptedTime.year, acceptedTime.month, acceptedTime.day, 0, 0, 0, 0, 0);
-          //orderMap[DateFormat('dd MM yyyy').format(acceptedTime)].add(accepted);
-          orderMap[acceptedTime].add(accepted);
-        });
+              acceptedList.forEach((accepted) {
+                //debugPrint('CHECK ACCEPTED');
+                DateTime acceptedTime = accepted[0].date;
+                acceptedTime = new DateTime(acceptedTime.year, acceptedTime.month, acceptedTime.day, 0, 0, 0, 0, 0);
+                //orderMap[DateFormat('dd MM yyyy').format(acceptedTime)].add(accepted);
+                if(!filterPending || filterAccepted)
+                  orderMap[acceptedTime].add(accepted);
+              });
 
-        canceledList.forEach((pending) {
-          //debugPrint('CHECK CANCELED');
-          DateTime pendingTime = pending[0].date;
-          pendingTime = DateTime(pendingTime.year, pendingTime.month, pendingTime.day, 0, 0, 0, 0, 0);
-          // orderMap[DateFormat('dd MM yyyy').format(pendingTime)].add(pending);
-          orderMap[pendingTime].add(pending);
-        });
+              canceledList.forEach((pending) {
+                //debugPrint('CHECK CANCELED');
+                DateTime pendingTime = pending[0].date;
+                pendingTime = DateTime(pendingTime.year, pendingTime.month, pendingTime.day, 0, 0, 0, 0, 0);
+                // orderMap[DateFormat('dd MM yyyy').format(pendingTime)].add(pending);
+                if(!filterPending && !filterAccepted)
+                  orderMap[pendingTime].add(pending);
+              });
 
-        orderMap.forEach((key, value) {
-          //debugPrint('RUI_M_activity_management: KEY: $key');
-          //debugPrint('RUI_M_activity_management: VALUE LENGTH: ${value.length}');
-          //DateTime keyTime =  DateFormat("dd/MM/yyyy").parse(key).toUtc();
+              orderMap.forEach((key, value) {
+                //debugPrint('RUI_M_activity_management: KEY: $key');
+                //debugPrint('RUI_M_activity_management: VALUE LENGTH: ${value.length}');
+                //DateTime keyTime =  DateFormat("dd/MM/yyyy").parse(key).toUtc();
 
-          /*value.forEach((element) {
+                /*value.forEach((element) {
             debugPrint('UI_M_BookingList: value booking status: ${element.user.first.surname} ${element.status}');
           });*/
-          //value.sort((a,b) => DateFormat('dd').format(a[0].start_date).compareTo(DateFormat('dd').format(b[0].start_date)));
-          //value.sort((a,b) => DateFormat('dd').format(a[0].end_date).compareTo(DateFormat('dd').format(b[0].end_date)));
+                //value.sort((a,b) => DateFormat('dd').format(a[0].start_date).compareTo(DateFormat('dd').format(b[0].start_date)));
+                //value.sort((a,b) => DateFormat('dd').format(a[0].end_date).compareTo(DateFormat('dd').format(b[0].end_date)));
 
-          if(seeAll){
-            DateTime tmp = key;
-            tmp = DateTime(key.year, key.month, 1, 0,0,0,0,0);
-            allMap.putIfAbsent(tmp, () => []);
-            //debugPrint('RUI_M_activity_management: VALUE LENGTH: ${value.length}');
-            if(allMap.containsKey(tmp)){
-              //debugPrint('RUI_M_activity_management: KEY: $key');
-              allMap[tmp].add(value);
-              /*if(key.isAtSameMomentAs(currentTime) || (key.isAfter(currentTime) && key.isBefore(sevenDaysFromNow)) ){
+                if(seeAll){
+                  DateTime tmp = key;
+                  tmp = DateTime(key.year, key.month, 1, 0,0,0,0,0);
+                  allMap.putIfAbsent(tmp, () => []);
+                  //debugPrint('RUI_M_activity_management: VALUE LENGTH: ${value.length}');
+                  if(allMap.containsKey(tmp)){
+                    //debugPrint('RUI_M_activity_management: KEY: $key');
+                    allMap[tmp].add(value);
+                    /*if(key.isAtSameMomentAs(currentTime) || (key.isAfter(currentTime) && key.isBefore(sevenDaysFromNow)) ){
               debugPrint('RUI_M_activity_management: KEY TIME: $key | CURRENT TIME: $currentTime | SEVEN DAYS FROM NOW: $sevenDaysFromNow');
               debugPrint('RUI_M_activity_management: VALUE LENGTH: ${allMap[tmp].last.length}');
               weekOrderList.add(value);
             }*/
-            }
-          }else{
-            weekOrderList.add(value);
-          }
+                  }
+                }else{
+                  weekOrderList.add(value);
+                }
 
-          allOrderList.add(value);
-        });
+                allOrderList.add(value);
+              });
 
-        orderList.addAll(pendingList);
-        orderList.addAll(acceptedList);
-        orderList.addAll(canceledList);
+              orderList.addAll(pendingList);
+              orderList.addAll(acceptedList);
+              orderList.addAll(canceledList);
 
-        //List<CategoryState> categoryRootList = snapshot.categoryList.categoryListState;
-        return WillPopScope(
-          onWillPop: () async => false,
-          child: Scaffold(
-            drawerEnableOpenDragGesture: false,
-            key: _drawerKey,
-            ///Appbar
-            appBar: BuytimeAppbar(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
-                      child: IconButton(
-                        icon: const Icon(
-                          Icons.menu,
-                          color: Colors.white,
-                          size: 30.0,
-                        ),
-                        tooltip: AppLocalizations.of(context).openMenu,
-                        onPressed: () {
-                          _drawerKey.currentState.openDrawer();
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-                ///Title
-                Container(
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 20.0),
-                    child: Text(
-                      AppLocalizations.of(context).activityManagement,
-                      textAlign: TextAlign.start,
-                      style: BuytimeTheme.appbarTitle,
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  width: 56.0,
-                )
-              ],
-            ),
-            drawer: UI_M_BusinessListDrawer(),
-            body: ConstrainedBox(
-              constraints: BoxConstraints(),
-              child: Column(
+              //List<CategoryState> categoryRootList = snapshot.categoryList.categoryListState;
+              return Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -1112,26 +982,61 @@ class _RActivityManagementState extends State<RActivityManagement> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         ///Pending card
-                        DashboardCard(
-                          background: Color(0xff003B5F),
-                          icon: Icon(
-                            BuytimeIcons.pending_clock,
-                            color: BuytimeTheme.SymbolWhite,
-                            size: 22,
-                          ),
-                          count: '${pendingList.length}',
-                          type: '${AppLocalizations.of(context).pending}',
+                        Column(
+                          children: [
+                            ///Card
+                            DashboardCard(
+                              background: Color(0xff003B5F),
+                              icon: Icon(
+                                BuytimeIcons.pending_clock,
+                                color: BuytimeTheme.SymbolWhite,
+                                size: 22,
+                              ),
+                              count: '${pendingList.length}',
+                              type: '${AppLocalizations.of(context).pending}',
+                              filter: filterPending,
+                              filterActive: (value){
+                                setState(() {
+                                  filterPending = value;
+                                  debugPrint('RUI_M_activity_management => FILTER PENDING IS $filterPending');
+                                });
+                              },
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
+                              height: 2,
+                              width: 125,
+                              color: filterPending ? Color(0xff003B5F) : BuytimeTheme.TextWhite,
+                            )
+                          ],
                         ),
                         ///Accepted card
-                        DashboardCard(
-                          background: Color(0xff4C95C2),
-                          icon: Icon(
-                            BuytimeIcons.accepted_clock,
-                            color: BuytimeTheme.SymbolWhite,
-                            size: 22,
-                          ),
-                          count: '${acceptedList.length}',
-                          type: '${AppLocalizations.of(context).accepted}',
+                        Column(
+                          children: [
+                            DashboardCard(
+                              background: Color(0xff4C95C2),
+                              icon: Icon(
+                                BuytimeIcons.accepted_clock,
+                                color: BuytimeTheme.SymbolWhite,
+                                size: 22,
+                              ),
+                              count: '${acceptedList.length}',
+                              type: '${AppLocalizations.of(context).accepted}',
+                              filter: filterAccepted,
+                              filterActive: (value){
+                                setState(() {
+                                  filterAccepted = value;
+                                  debugPrint('RUI_M_activity_management => FILTER ACCEPTED IS $filterAccepted');
+                                });
+                              },
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
+                              height: 2,
+                              width: 125,
+                              color: filterAccepted ? Color(0xff4C95C2) : BuytimeTheme.TextWhite,
+                            )
+                          ],
                         )
                       ],
                     ),
@@ -1207,11 +1112,11 @@ class _RActivityManagementState extends State<RActivityManagement> {
                     ),
                   )
                 ],
-              ),
-            ),
+              );
+            },
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 }

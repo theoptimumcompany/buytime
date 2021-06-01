@@ -45,10 +45,16 @@ class _UserNotificationListItemState extends State<UserNotificationListItem> {
     DateTime notificationTime = DateTime.now();
     if(widget.notificationState.timestamp != null)
       notificationTime = DateTime.fromMillisecondsSinceEpoch(widget.notificationState.timestamp);
+    debugPrint('user_notification_list_item => NOTIFICATION TIME: $notificationTime');
+
     DateTime currentTime = DateTime.now();
-    Duration tmpDuration = notificationTime.difference(currentTime);
+    Duration tmpDuration;
+    if(currentTime.isAfter(notificationTime))
+      tmpDuration = currentTime.difference(notificationTime);
+    else
+      tmpDuration = notificationTime.difference(currentTime);
+
     if(tmpDuration.inDays != 0){
-      debugPrint('user_notification_list_item => DAYS: ${tmpDuration.inDays}');
       days = tmpDuration.inDays.toString();
     }else if(tmpDuration.inHours != 0){
       //debugPrint('user_notification_list_item => HOURS: ${tmpDuration.inHours}');

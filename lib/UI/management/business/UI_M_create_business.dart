@@ -1322,6 +1322,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                                 cropAspectRatioPreset: CropAspectRatioPreset.square,
                                                                 onFilePicked: (fileToUpload) {
                                                                   fileToUpload.remoteFolder = "business/" + businessName + "/logo";
+
                                                                   StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInBusiness(fileToUpload, fileToUpload.state, 0));
                                                                 },
                                                               ),
@@ -1367,6 +1368,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                                 cropAspectRatioPreset: CropAspectRatioPreset.square,
                                                                 onFilePicked: (fileToUpload) {
                                                                   fileToUpload.remoteFolder = "business/" + businessName + "/profile";
+
                                                                   StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInBusiness(fileToUpload, fileToUpload.state, 2));
                                                                 },
                                                               ),
@@ -1412,6 +1414,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                                 cropAspectRatioPreset: CropAspectRatioPreset.square,
                                                                 onFilePicked: (fileToUpload) {
                                                                   fileToUpload.remoteFolder = "business/" + businessName + "/gallery";
+
                                                                   StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInBusiness(fileToUpload, fileToUpload.state, 3));
                                                                 },
                                                               ),
@@ -1457,6 +1460,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                                 cropAspectRatioPreset: CropAspectRatioPreset.ratio16x9,
                                                                 onFilePicked: (fileToUpload) {
                                                                   fileToUpload.remoteFolder = "business/" + businessName + "/wide";
+
                                                                   StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInBusiness(fileToUpload, fileToUpload.state, 1));
                                                                 },
                                                               ),

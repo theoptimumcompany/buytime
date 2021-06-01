@@ -340,8 +340,8 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
                                                 print("BusinessName : " + businessName);
                                                 if(snapshot.area != null && snapshot.area.isEmpty)
                                                   snapshot.area = ['Reception'];
-                                                else
-                                                  snapshot.area = ['Reception'];
+                                                //else
+                                                  //snapshot.area = ['Reception'];
 
                                                 if(snapshot.hub != null && snapshot.business_type != null){
                                                   if(snapshot.business_type.isNotEmpty)

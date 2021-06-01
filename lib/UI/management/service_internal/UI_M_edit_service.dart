@@ -531,7 +531,8 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                     Utils.multiLingualTranslate(
                                                         context, flagsCharCode, languageCode,
                                                         AppLocalizations.of(context).name, newField,
-                                                        currentFocus, (value){
+                                                        currentFocus,
+                                                            (value){
                                                           if(!value){
                                                             setState(() {
                                                               rippleTranslate = false;
