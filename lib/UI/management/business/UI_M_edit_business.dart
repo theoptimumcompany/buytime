@@ -475,7 +475,7 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
                                                                   },
                                                                   style: TextStyle(
                                                                       fontFamily: BuytimeTheme.FontFamily,
-                                                                      color: BuytimeTheme.TextGrey
+                                                                      color: BuytimeTheme.TextBlack
                                                                   ),
                                                                   decoration: InputDecoration(
                                                                     labelText:  AppLocalizations.of(context).salesmanName,
@@ -516,7 +516,7 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
                                                                   },
                                                                   style: TextStyle(
                                                                       fontFamily: BuytimeTheme.FontFamily,
-                                                                      color: BuytimeTheme.TextGrey
+                                                                      color: BuytimeTheme.TextBlack
                                                                   ),
                                                                   decoration: InputDecoration(
                                                                     helperText: required && _salesmanPhonenumberController.text.isEmpty ? '~ ${AppLocalizations.of(context).required}' : null,
@@ -562,7 +562,7 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
                                                                   },
                                                                   style: TextStyle(
                                                                       fontFamily: BuytimeTheme.FontFamily,
-                                                                      color: BuytimeTheme.TextGrey
+                                                                      color: BuytimeTheme.TextBlack
                                                                   ),
                                                                   decoration: InputDecoration(
                                                                     helperText: required && _conciergePhonenumberController.text.isEmpty ? '~ ${AppLocalizations.of(context).required}' : null,

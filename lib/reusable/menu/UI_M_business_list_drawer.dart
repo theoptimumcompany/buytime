@@ -24,6 +24,7 @@ import 'package:Buytime/reblox/reducer/service/service_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/service_slot_time_reducer.dart';
 import 'package:Buytime/reblox/reducer/stripe_payment_reducer.dart';
 import 'package:Buytime/reblox/reducer/user_reducer.dart';
+import 'package:Buytime/utils/theme/buytime_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -33,6 +34,7 @@ import 'package:Buytime/UI/user/login/UI_U_home.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../utils/globals.dart';
 
@@ -223,6 +225,70 @@ class _UI_M_BusinessListDrawerState extends State<UI_M_BusinessListDrawer> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
+                      ///Customer service
+                      Container(
+                        decoration: BoxDecoration(
+                            border: Border(
+                                top: BorderSide(color: BuytimeTheme.DividerGrey),
+                                //bottom: BorderSide(color: BuytimeTheme.DividerGrey)
+                            )
+                        ),
+                        child: ListTile(
+                          leading: Icon(Icons.call, color: BuytimeTheme.TextMedium, size: 24),
+                          onTap: () async{
+                            /*String url = StoreProvider.of<AppState>(context).state.business.phoneConcierge.isNotEmpty ?
+                            StoreProvider.of<AppState>(context).state.business.phoneConcierge : BuytimeConfig.FlaviosNumber.trim();*/
+                            String url = BuytimeConfig.FlaviosNumber.trim();
+                            debugPrint('Restaurant phonenumber: ' + url);
+                            if (await canLaunch('tel:$url')) {
+                            await launch('tel:$url');
+                            } else {
+                            throw 'Could not launch $url';
+                            }
+                          },
+                          title: Text(
+                              AppLocalizations.of(context).speakWithCustomerService,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 14,
+                                fontFamily: BuytimeTheme.FontFamily,
+                                letterSpacing: 0.1,
+                                color: BuytimeTheme.TextMedium,
+                              )),
+                        ),
+                      ),
+                      ///Speak with
+                      Container(
+                        decoration: BoxDecoration(
+                            border: Border(
+                              top: BorderSide(color: BuytimeTheme.DividerGrey),
+                              //bottom: BorderSide(color: BuytimeTheme.DividerGrey)
+                            )
+                        ),
+                        child: ListTile(
+                          leading: Icon(Icons.call, color: BuytimeTheme.TextMedium, size: 24),
+                          onTap: () async{
+                            /*String url = StoreProvider.of<AppState>(context).state.business.phoneConcierge.isNotEmpty ?
+                            StoreProvider.of<AppState>(context).state.business.phoneConcierge : BuytimeConfig.FlaviosNumber.trim();*/
+                            String url = BuytimeConfig.FlaviosNumber.trim();
+                            debugPrint('Restaurant phonenumber: ' + url);
+                            if (await canLaunch('tel:$url')) {
+                              await launch('tel:$url');
+                            } else {
+                              throw 'Could not launch $url';
+                            }
+                          },
+                          title: Text(
+                              '${AppLocalizations.of(context).speakWith} ...',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 14,
+                                fontFamily: BuytimeTheme.FontFamily,
+                                letterSpacing: 0.1,
+                                color: BuytimeTheme.TextMedium,
+                              )),
+                        ),
+                      ),
                       ///Client mode
                       Container(
                         decoration: BoxDecoration(border: Border(top: BorderSide(color: BuytimeTheme.DividerGrey), bottom: BorderSide(color: BuytimeTheme.DividerGrey))),

@@ -462,7 +462,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                                       },
                                                                       style: TextStyle(
                                                                           fontFamily: BuytimeTheme.FontFamily,
-                                                                          color: BuytimeTheme.TextGrey
+                                                                          color: BuytimeTheme.TextBlack
                                                                       ),
                                                                       decoration: InputDecoration(
                                                                         labelText:  AppLocalizations.of(context).salesmanName,
@@ -495,7 +495,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                                         StoreProvider.of<AppState>(context).dispatch(SetBusinessSalesmanPhonenumber(value));
                                                                       },
                                                                       keyboardType: TextInputType.number,
-                                                                      //textInputAction: TextInputAction.,
+                                                                      textInputAction: TextInputAction.done,
                                                                       validator: (String value) {
                                                                         if(true && value.isNotEmpty) {
                                                                           return "test " + AppLocalizations.of(context).required;
@@ -504,7 +504,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                                       },
                                                                       style: TextStyle(
                                                                           fontFamily: BuytimeTheme.FontFamily,
-                                                                          color: BuytimeTheme.TextGrey
+                                                                          color: BuytimeTheme.TextBlack
                                                                       ),
                                                                       decoration: InputDecoration(
                                                                         //counter: Container(),
@@ -550,7 +550,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                                       },
                                                                       style: TextStyle(
                                                                           fontFamily: BuytimeTheme.FontFamily,
-                                                                          color: BuytimeTheme.TextGrey
+                                                                          color: BuytimeTheme.TextBlack
                                                                       ),
                                                                       decoration: InputDecoration(
                                                                         helperText: required && _conciergePhonenumberController.text.isEmpty ? '~ ${AppLocalizations.of(context).required}' : null,
