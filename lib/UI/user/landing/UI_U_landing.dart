@@ -69,6 +69,7 @@ class LandingState extends State<Landing> {
 
   List<BookingState> bookingList = [];
   String bookingCode = '';
+  String categoryCode = '';
   ///Storage
   final storage = new FlutterSecureStorage();
 
@@ -77,6 +78,16 @@ class LandingState extends State<Landing> {
     debugPrint('UI_U_landing: DEEP LINK EMPTY | BOOKING CODE: $bookingCode');
     if(bookingCode.isNotEmpty)
       Navigator.of(context).push(MaterialPageRoute(builder: (context) => InviteGuestForm(id: bookingCode, fromLanding: true,)));
+
+  }
+
+  categoryInviteFound() async{
+    categoryCode = await storage.read(key: 'categoryInvite') ?? '';
+    debugPrint('UI_U_landing: DEEP LINK EMPTY | CATEGORY INVITE: $categoryCode');
+    if(categoryCode.isNotEmpty){
+      StoreProvider.of<AppState>(context).dispatch(UserBookingListRequest(StoreProvider.of<AppState>(context).state.user.email, false));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => UI_M_BusinessList()));
+    }
   }
 
   @override
@@ -85,6 +96,7 @@ class LandingState extends State<Landing> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       //initDynamicLinks();
+
       debugPrint('UI_U_Landing => initState()');
     });
 
@@ -114,12 +126,17 @@ class LandingState extends State<Landing> {
             debugPrint('UI_U_landing: USER NOT LOGGED in onLink');
         }
         else if (deepLink.queryParameters.containsKey('categoryInvite')) {
-          String businessId = deepLink.queryParameters['categoryInvite'];
-          debugPrint('UI_U_landing: categoryInvite: $businessId');
+          String categoryInvite = deepLink.queryParameters['categoryInvite'];
+          debugPrint('UI_U_landing: categoryInvite: $categoryInvite');
+          await storage.write(key: 'categoryInvite', value: categoryInvite);
           //StoreProvider.of<AppState>(context).dispatch(BusinessRequestAndNavigate(businessId));
-          StoreProvider.of<AppState>(context).dispatch(UserBookingListRequest(StoreProvider.of<AppState>(context).state.user.email, false));
+          if(FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty){
+            debugPrint('UI_U_landing: USER Is LOGGED in onLink');
+            StoreProvider.of<AppState>(context).dispatch(UserBookingListRequest(StoreProvider.of<AppState>(context).state.user.email, false));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => UI_M_BusinessList()));
+          }else
+            debugPrint('UI_U_landing: USER NOT LOGGED in onLink');
 
-          Navigator.push(context, MaterialPageRoute(builder: (context) => UI_M_BusinessList()));
         }
       }
     }, onError: (OnLinkErrorException e) async {
@@ -149,12 +166,17 @@ class LandingState extends State<Landing> {
           debugPrint('UI_U_landing: USER NOT LOGGED in getInitialLink');
       }
       else if (deepLink.queryParameters.containsKey('categoryInvite')) {
-        String id = deepLink.queryParameters['categoryInvite'];
-        debugPrint('UI_U_landing: categoryInvite: $id');
+        String categoryInvite = deepLink.queryParameters['categoryInvite'];
+        debugPrint('UI_U_landing: categoryInvite: $categoryInvite');
+        await storage.write(key: 'categoryInvite', value: categoryInvite);
         //Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => InviteGuestForm(id: id, fromLanding: false)), (Route<dynamic> route) => false);
-        StoreProvider.of<AppState>(context).dispatch(UserBookingListRequest(StoreProvider.of<AppState>(context).state.user.email, false));
+        if(FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty){
+          debugPrint('UI_U_landing: USER Is LOGGED in onLink');
+          StoreProvider.of<AppState>(context).dispatch(UserBookingListRequest(StoreProvider.of<AppState>(context).state.user.email, false));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => UI_M_BusinessList()));
+        }else
+          debugPrint('UI_U_landing: USER NOT LOGGED in onLink');
 
-        Navigator.push(context, MaterialPageRoute(builder: (context) => UI_M_BusinessList()));
       }
     }
   }
@@ -193,10 +215,12 @@ class LandingState extends State<Landing> {
             snapshot.bookingList.bookingListState.clear();
             requestingBookings = true;
             debugPrint('UI_U_Landing => USER EMAIL: ${snapshot.user.email}');
+            //categoryInviteFound();
             StoreProvider.of<AppState>(context).dispatch(UserBookingListRequest(snapshot.user.email, false));
 
 
             WidgetsBinding.instance.addPostFrameCallback((_) async {
+
               //https://europe-west1-buytime-458a1.cloudfunctions.net/getCategoriesForManagerInBusiness
               if(bookingCode.isEmpty)
                 Navigator.push(context, MaterialPageRoute(builder: (context) => UI_M_BusinessList()));

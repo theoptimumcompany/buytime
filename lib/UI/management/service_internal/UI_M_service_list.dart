@@ -127,7 +127,7 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
 
     debugPrint('UI_M_service_list => CAN WORKER ACCESS THE SERVICE? $access');
 
-    if(!access && !StoreProvider.of<AppState>(context).state.user.worker){
+    if(!access && canAccess(id)){
       access = true;
     }
 
@@ -544,7 +544,7 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                       children: [
                                                         GestureDetector(
-                                                          onTap: canWorkerAccessService && canAccessService ? () {
+                                                          onTap: canWorkerAccessService ? () {
                                                             setState(() {
                                                               switch (listOfServiceEachRoot[i][index].serviceVisibility) {
                                                                 case 'Active':

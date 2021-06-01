@@ -242,7 +242,7 @@ class OptimumFormMultiPhotoState extends State<OptimumFormMultiPhoto> {
                 alignment: Alignment.centerLeft,
                 //height: SizeConfig.blockSizeVertical * 15,
                 height: 156,
-                width: widget.isWide ? 280 : 156,
+                //width: widget.isWide ? 280 : null,
                 //width: SizeConfig.blockSizeHorizontal * 50,
                 margin: EdgeInsets.only(top: 10.0),
                 child: GestureDetector(
@@ -250,8 +250,9 @@ class OptimumFormMultiPhotoState extends State<OptimumFormMultiPhoto> {
                       ? CachedNetworkImage(
                           imageUrl: image,
                           imageBuilder: (context, imageProvider) => Container(
+                            alignment: Alignment.centerLeft,
                             //height: 156,
-                            width: widget.isWide ? null : 156,
+                            width: widget.isWide ? 280 : 156,
                             //margin: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 5), ///5%
                             decoration: BoxDecoration(
                                 //borderRadius: BorderRadius.all(Radius.circular(SizeConfig.blockSizeHorizontal * 5)), ///12.5%
@@ -260,10 +261,10 @@ class OptimumFormMultiPhotoState extends State<OptimumFormMultiPhoto> {
                           placeholder: (context, url) => CircularProgressIndicator(
                               //valueColor: new AlwaysStoppedAnimation<Color>(BuytimeTheme.ManagerPrimary),
                               ),
-                          errorWidget: (context, url, error) => croppedImage == null ? Image(width: widget.isWide ? null : 156, image: widget.isWide ? assetWide : assetSquare) : croppedImage,
+                          errorWidget: (context, url, error) => croppedImage == null ? Image(width: widget.isWide ? 280 : null, image: widget.isWide ? assetWide : assetSquare) : croppedImage,
                         )
                       : croppedImage == null
-                          ? Image(width: widget.isWide ? null : 156, image: widget.isWide ? assetWide : assetSquare)
+                          ? Image(width: widget.isWide ? 280 : null, image: widget.isWide ? assetWide : assetSquare)
                           : croppedImage,
                   onTap: roleAllowedArray.contains(StoreProvider.of<AppState>(context).state.user.getRole())
                       ? () {

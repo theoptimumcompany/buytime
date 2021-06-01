@@ -21,6 +21,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
 class UI_M_BusinessList extends StatefulWidget {
@@ -37,9 +38,17 @@ class UI_M_BusinessListState extends State<UI_M_BusinessList> {
   bool startRequest = false;
   bool noActivity = false;
   bool generated = false;
+
+  ///Storage
+  final storage = new FlutterSecureStorage();
+  emptyCategoryInvite() async{
+    await storage.write(key: 'categoryInvite', value: '');
+  }
+
   @override
   void initState() {
     super.initState();
+    emptyCategoryInvite();
   }
 
   List<int> networkServicesList = [];
