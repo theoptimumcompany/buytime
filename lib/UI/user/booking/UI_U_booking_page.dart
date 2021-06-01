@@ -27,6 +27,7 @@ import 'package:Buytime/reusable/buytime_icons.dart';
 import 'package:Buytime/reusable/custom_bottom_button_widget.dart';
 import 'package:Buytime/reusable/find_your_inspiration_card_widget.dart';
 import 'package:Buytime/utils/size_config.dart';
+import 'package:Buytime/utils/theme/buytime_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/utils/utils.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -1128,7 +1129,8 @@ class _BookingPageState extends State<BookingPage> {
                                                       child: InkWell(
                                                         borderRadius: BorderRadius.all(Radius.circular(10)),
                                                         onTap: () async {
-                                                          String url = businessState.phone_number;
+                                                          String url = StoreProvider.of<AppState>(context).state.business.phoneConcierge.isNotEmpty ?
+                                                          StoreProvider.of<AppState>(context).state.business.phoneConcierge : BuytimeConfig.FlaviosNumber.trim();
                                                           debugPrint('Restaurant phonenumber: ' + url);
                                                           if (await canLaunch('tel:$url')) {
                                                             await launch('tel:$url');
@@ -1149,7 +1151,7 @@ class _BookingPageState extends State<BookingPage> {
                                                                 children: [
                                                                   Container(
                                                                     child: Text(
-                                                                      '${AppLocalizations.of(context).speakWith} ${businessState.responsible_person_name}',
+                                                                      '${AppLocalizations.of(context).speakWith} ${AppLocalizations.of(context).yourConcierge}',
                                                                       style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w400, fontSize: 16
 
                                                                         ///SizeConfig.safeBlockHorizontal * 4
