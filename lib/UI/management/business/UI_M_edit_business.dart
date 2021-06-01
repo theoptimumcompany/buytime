@@ -90,8 +90,8 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
     if(
         business.name != null &&
         business.name.isNotEmpty &&
-        business.responsible_person_name != null &&
-        business.responsible_person_name.isNotEmpty &&
+        //business.responsible_person_name != null &&
+        //business.responsible_person_name.isNotEmpty &&
         business.phoneSalesman != null &&
         business.phoneSalesman.isNotEmpty &&
         business.phoneConcierge != null &&
