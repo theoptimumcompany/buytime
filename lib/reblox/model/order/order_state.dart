@@ -9,7 +9,7 @@ import 'package:Buytime/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
+import 'package:flutter/material.dart';
 part 'order_state.g.dart';
 
 enum OrderStatus {
@@ -238,29 +238,38 @@ class OrderState {
     );
   }
 
-  addItem(ServiceState itemToAdd, String idOwner) {
+  addItem(ServiceState itemToAdd, String idOwner, BuildContext context) {
     bool added = false;
-    itemList.forEach((element) {
-      if (!added && element.id == itemToAdd.serviceId) {
-        element.number++;
-        added = true;
+      itemList.forEach((element) {
+        if (!added && element.id == itemToAdd.serviceId) {
+          element.number++;
+          added = true;
+        }
+      });
+      if (!added) {
+        itemList.add(OrderEntry(
+            number: 1,
+            name: itemToAdd.name,
+            description: itemToAdd.description,
+            price: itemToAdd.price,
+            thumbnail: itemToAdd.image1,
+            id: itemToAdd.serviceId,
+            id_business: itemToAdd.businessId,
+            id_category: itemToAdd.categoryId != null ? itemToAdd.categoryId[0] : '',
+            id_owner: idOwner,
+            switchAutoConfirm: itemToAdd.switchAutoConfirm
+        ));
       }
-    });
-    if (!added) {
-      itemList.add(OrderEntry(
-          number: 1,
-          name: itemToAdd.name,
-          description: itemToAdd.description,
-          price: itemToAdd.price,
-          thumbnail: itemToAdd.image1,
-          id: itemToAdd.serviceId,
-          id_business: itemToAdd.businessId,
-          id_category: itemToAdd.categoryId != null ? itemToAdd.categoryId[0] : '',
-          id_owner: idOwner,
-          switchAutoConfirm: itemToAdd.switchAutoConfirm
-      ));
+      this.total += itemToAdd.price;
+  }
+
+  addingFromAnotherBusiness(String businessId) {
+    for(int i = 0; i < itemList.length; i++ ) {
+      if (itemList[i].id_business != businessId) {
+        return true;
+      }
     }
-    this.total += itemToAdd.price;
+    return false;
   }
 
   addReserveItem(ServiceState itemToAdd, String idOwner, String time, String minutes, DateTime date, dynamic price) {

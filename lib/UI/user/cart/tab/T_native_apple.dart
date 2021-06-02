@@ -38,7 +38,7 @@ class NativeAppleState extends State<NativeApple> {
                     children: [
                       Flexible(
                         child: Container(
-                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
+                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 5),
                           padding: EdgeInsets.all(20.0),
                           child: Text(
                             AppLocalizations.of(context).payWithApplePay,

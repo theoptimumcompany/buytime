@@ -24,6 +24,7 @@ class NativeGoogleState extends State<NativeGoogle> {
     var media = MediaQuery.of(context).size;
     return Flexible(
       child: Container(
+        margin: EdgeInsets.only(top: SizeConfig.safeBlockHorizontal * 5),
         color: BuytimeTheme.BackgroundWhite,
         child: Column(
           mainAxisSize: MainAxisSize.min,

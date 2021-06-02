@@ -6,7 +6,6 @@ import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/model/statistics_state.dart';
 import 'package:Buytime/reblox/model/stripe/stripe_state.dart';
 import 'package:Buytime/reblox/navigation/navigation_reducer.dart';
-import 'package:Buytime/reblox/reducer/category_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_detail_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
@@ -200,16 +199,16 @@ class OrderCreateNativeAndPayService implements EpicClass<AppState> {
   String state = '';
   String paymentResult = '';
   OrderState orderState;
-  List<OrderState> ordersToCreate;
+
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<CreateOrderNativeAndPay>().asyncMap((event) async {
       /// check if services are from different business
-      ordersToCreate = splitOrdersForBusinesses(event.orderState);
+      // List<OrderState> ordersToCreate = splitOrdersForBusinesses(event.orderState);
       /// create an order for each business
-      for (int i = 0; i < ordersToCreate.length; i++) {
+
         /// add needed data to the order state
-        orderState = configureOrder(ordersToCreate[i], store);
+      orderState = configureOrder(event.orderState, store);
         if (event.paymentMethod != null) {
           /// This is a time based id, meaning that even if 2 users are going to generate a document at the same moment in time
           /// there are really low chances that the rest of the id is also colliding.
@@ -232,24 +231,19 @@ class OrderCreateNativeAndPayService implements EpicClass<AppState> {
           paymentResult = await stripePaymentService.processPaymentAsDirectCharge(orderState.orderId, event.businessStripeAccount);
         }
         statisticsComputation();
-      }
     }).expand((element) {
       var actionArray = [];
       actionArray.add(CreatedOrder());
       actionArray.add(UpdateStatistics(statisticsState));
       actionArray.add(SetOrderOrderId(orderState.orderId));
-      if (ordersToCreate.length > 1) {
-        actionArray.add(NavigatePushAction(AppRoutes.bookingPage));
-      } else {
         actionArray.add(SetOrderDetail(OrderDetailState.fromOrderState(orderState)));
         actionArray.add(NavigatePushAction(AppRoutes.orderDetailsRealtime));
-      }
       return actionArray;
     });
   }
 }
 
-List<OrderState> splitOrdersForBusinesses(OrderState orderState) {
+List<OrderState> splitOrdersForBusinesses(OrderState orderState, String startingBusinessId) {
   List<OrderState> orderStateList = [];
   List<String> businessIdList = [];
   for(int i = 0; i < orderState.itemList.length; i++ ) {
@@ -257,23 +251,25 @@ List<OrderState> splitOrdersForBusinesses(OrderState orderState) {
       /// aggiungere l'item di nuovo nell'ordine con lo stesso id
       for (int j = 0; j < orderStateList.length; j++) {
         if (orderStateList[j].businessId == orderState.itemList[i].id_business) {
+          orderStateList[j].total += orderState.itemList[i].price;
           orderStateList[j].itemList.add(orderState.itemList[i]);
         }
       }
     } else {
       /// create a new order in the list with the new association
-      initializeOrderToBeSplitted(orderState, i, orderStateList, businessIdList);
+      String cashbackId = startingBusinessId == orderState.itemList[i].id_business ? '' : startingBusinessId;
+      initializeOrderToBeSplitted(orderState, i, orderStateList, businessIdList, cashbackId);
     }
   }
   return orderStateList;
 }
 
-void initializeOrderToBeSplitted(OrderState orderState, int index, List<OrderState> orderStateList, List<String> businessIdList) {
+void initializeOrderToBeSplitted(OrderState orderState, int index, List<OrderState> orderStateList, List<String> businessIdList, String startingBusinessId) {
   OrderState newOrderState = OrderState.fromState(orderState);
   newOrderState.itemList = [orderState.itemList[index]];
   newOrderState.total = orderState.itemList[index].price;
   newOrderState.businessId = orderState.itemList[index].id_business;
-  newOrderState.businessIdForGiveback = orderState.businessId;
+  newOrderState.businessIdForGiveback = startingBusinessId;
   orderStateList.add(newOrderState);
   businessIdList.add(orderState.itemList[index].id_business);
 }
@@ -289,37 +285,37 @@ class OrderCreateCardAndPayService implements EpicClass<AppState> {
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<CreateOrderCardAndPay>().asyncMap((event) async {
-      /// add needed data to the order state
+        /// add needed data to the order state
       orderState = configureOrder(event.orderState, store);
-      if (event.selectedCardPaymentMethodId != null && store.state.booking != null && store.state.booking.booking_id != null) {
-        /// This is a time based id, meaning that even if 2 users are going to generate a document at the same moment in time
-        /// there are really low chances that the rest of the id is also colliding.
-        String timeBasedId = Uuid().v1();
-        orderState.orderId = timeBasedId;
+        if (event.selectedCardPaymentMethodId != null && store.state.booking != null && store.state.booking.booking_id != null) {
+          /// This is a time based id, meaning that even if 2 users are going to generate a document at the same moment in time
+          /// there are really low chances that the rest of the id is also colliding.
+          String timeBasedId = Uuid().v1();
+          orderState.orderId = timeBasedId;
 
-        /// send document to orders collection
-        var addedOrder = await FirebaseFirestore.instance.collection("order").doc(timeBasedId).set(orderState.toJson());
+          /// send document to orders collection
+          var addedOrder = await FirebaseFirestore.instance.collection("order").doc(timeBasedId).set(orderState.toJson());
 
-        /// add the payment method to the order sub collection on firebase
-        var addedPaymentMethod = await FirebaseFirestore.instance.collection("order/" + orderState.orderId + "/orderPaymentMethod").add({
-          'paymentMethodId': event.selectedCardPaymentMethodId,
-          'last4': event.last4 ?? '',
-          'brand': event.brand ?? '',
-          'type': Utils.enumToString(event.paymentType),
-          'country': event.country ?? 'US',
-          'booking_id': store.state.booking.booking_id
-        });
-        StripePaymentService stripePaymentService = StripePaymentService();
-        paymentResult = await stripePaymentService.processPaymentAsDirectCharge(orderState.orderId, event.businessStripeAccount);
-      }
-      statisticsComputation();
+          /// add the payment method to the order sub collection on firebase
+          var addedPaymentMethod = await FirebaseFirestore.instance.collection("order/" + orderState.orderId + "/orderPaymentMethod").add({
+            'paymentMethodId': event.selectedCardPaymentMethodId,
+            'last4': event.last4 ?? '',
+            'brand': event.brand ?? '',
+            'type': Utils.enumToString(event.paymentType),
+            'country': event.country ?? 'US',
+            'booking_id': store.state.booking.booking_id
+          });
+          StripePaymentService stripePaymentService = StripePaymentService();
+          paymentResult = await stripePaymentService.processPaymentAsDirectCharge(orderState.orderId, event.businessStripeAccount);
+        }
+        statisticsComputation();
     }).expand((element) {
       var actionArray = [];
       actionArray.add(CreatedOrder());
       actionArray.add(UpdateStatistics(statisticsState));
       actionArray.add(SetOrderOrderId(orderState.orderId));
-      actionArray.add(SetOrderDetail(OrderDetailState.fromOrderState(orderState)));
-      actionArray.add(NavigatePushAction(AppRoutes.orderDetailsRealtime));
+        actionArray.add(SetOrderDetail(OrderDetailState.fromOrderState(orderState)));
+        actionArray.add(NavigatePushAction(AppRoutes.orderDetailsRealtime));
       return actionArray;
     });
   }
@@ -377,20 +373,14 @@ class OrderCreateNativePendingService implements EpicClass<AppState> {
   String state = '';
   String paymentResult = '';
   OrderState orderState;
-  List<OrderState> ordersToCreate;
 
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<CreateOrderNativePending>().asyncMap((event) async {
       debugPrint('CreateOrderPending start');
-      /// check if services are from different business
-      ordersToCreate = splitOrdersForBusinesses(event.orderState);
-      /// create an order for each business
-      for (int i = 0; i < ordersToCreate.length; i++) {
-        /// add needed data to the order state
-        orderState = configureOrder(ordersToCreate[i], store);
 
         /// add needed data to the order state
+        orderState = configureOrder(event.orderState, store);
         orderState.cardType = Utils.enumToString(PaymentType.room);
         orderState.progress = Utils.enumToString(OrderStatus.pending);
 
@@ -412,18 +402,13 @@ class OrderCreateNativePendingService implements EpicClass<AppState> {
         });
         statisticsComputation();
         debugPrint('CreateOrderPending done');
-      }
     }).expand((element) {
       var actionArray = [];
       actionArray.add(CreatedOrder());
       actionArray.add(UpdateStatistics(statisticsState));
       actionArray.add(SetOrderOrderId(orderState.orderId));
-      if (ordersToCreate.length > 1) {
-        actionArray.add(NavigatePushAction(AppRoutes.bookingPage));
-      } else {
         actionArray.add(SetOrderDetail(OrderDetailState.fromOrderState(orderState)));
         actionArray.add(NavigatePushAction(AppRoutes.orderDetailsRealtime));
-      }
       return actionArray;
     });
   }
@@ -442,17 +427,17 @@ class OrderCreateCardPendingService implements EpicClass<AppState> {
     return actions.whereType<CreateOrderCardPending>().asyncMap((event) async {
       debugPrint('CreateOrderPending start');
 
-      /// add needed data to the order state
-      orderState = configureOrder(event.orderState, store);
-      orderState.cardType = Utils.enumToString(PaymentType.card);
-      orderState.progress = Utils.enumToString(OrderStatus.pending);
+        /// add needed data to the order state
+        orderState = configureOrder(event.orderState, store);
+        orderState.cardType = Utils.enumToString(PaymentType.card);
+        orderState.progress = Utils.enumToString(OrderStatus.pending);
 
-      /// send document to orders collection
-      /// This is a time based id, meaning that even if 2 users are going to generate a document at the same moment in time
-      /// there are really low chances that the rest of the id is also colliding.
-      String timeBasedId = Uuid().v1();
-      orderState.orderId = timeBasedId;
-      var addedOrder = await FirebaseFirestore.instance.collection("order").doc(timeBasedId).set(orderState.toJson());
+        /// send document to orders collection
+        /// This is a time based id, meaning that even if 2 users are going to generate a document at the same moment in time
+        /// there are really low chances that the rest of the id is also colliding.
+        String timeBasedId = Uuid().v1();
+        orderState.orderId = timeBasedId;
+        var addedOrder = await FirebaseFirestore.instance.collection("order").doc(timeBasedId).set(orderState.toJson());
 
       /// add the payment method to the order sub collection on firebase
       var addedPaymentMethod = await FirebaseFirestore.instance.collection("order/" + orderState.orderId + "/orderPaymentMethod").add({
@@ -505,7 +490,6 @@ class OrderCreateRoomPendingService implements EpicClass<AppState> {
       var addedOrder = await FirebaseFirestore.instance.collection("order").doc(timeBasedId).set(orderState.toJson());
 
       /// add the payment method to the order sub collection on firebase
-
       var addedPaymentMethod = await FirebaseFirestore.instance.collection("order/" + orderState.orderId + "/orderPaymentMethod").add({
         'paymentMethodId': '',
         'last4': '',

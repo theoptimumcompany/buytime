@@ -186,12 +186,14 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                   ),
 
                   ///Title
-                  Text(
-                    Utils.retriveField(Localizations.localeOf(context).languageCode, widget.serviceState.name),
-                    textAlign: TextAlign.start,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                    style: BuytimeTheme.appbarTitle,
+                  Flexible(
+                    child: Text(
+                      Utils.retriveField(Localizations.localeOf(context).languageCode, widget.serviceState.name),
+                      textAlign: TextAlign.start,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                      style: BuytimeTheme.appbarTitle,
+                    ),
                   ),
 
                   ///Cart
@@ -635,7 +637,30 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                   }
                                   order.user.name = snapshot.user.name;
                                   order.user.id = snapshot.user.uid;
-                                  order.addItem(widget.serviceState, snapshot.business.ownerId);
+                                              if (!order.addingFromAnotherBusiness(widget.serviceState.businessId)) {
+                                                order.addItem(widget.serviceState, snapshot.business.ownerId, context);
+                                              } else {
+                                                /// TODO ask if they want the cart to be flushed empty
+                                                showDialog(
+                                                    context: context,
+                                                    builder: (_) => new AlertDialog(
+                                                      title: new Text(AppLocalizations.of(context).warning),
+                                                      content: new Text(AppLocalizations.of(context).emptyCart),
+                                                      actions: <Widget>[
+                                                        MaterialButton(
+                                                          elevation: 0,
+                                                          hoverElevation: 0,
+                                                          focusElevation: 0,
+                                                          highlightElevation: 0,
+                                                          child: Text(AppLocalizations.of(context).ok),
+                                                          onPressed: () {
+                                                            Navigator.of(context).pop();
+                                                          },
+                                                        )
+                                                      ],
+                                                    )
+                                                );
+                                              }
                                   order.cartCounter++;
                                   //StoreProvider.of<AppState>(context).dispatch(SetOrderCartCounter(order.cartCounter));
                                   StoreProvider.of<AppState>(context).dispatch(SetOrder(order));
@@ -681,7 +706,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                   }
                                   order.user.name = snapshot.user.name;
                                   order.user.id = snapshot.user.uid;
-                                  order.addItem(widget.serviceState, snapshot.business.ownerId);
+                                              order.addItem(widget.serviceState, snapshot.business.ownerId, context);
                                   order.cartCounter++;
                                   //StoreProvider.of<AppState>(context).dispatch(SetOrderCartCounter(order.cartCounter));
                                   StoreProvider.of<AppState>(context).dispatch(SetOrder(order));

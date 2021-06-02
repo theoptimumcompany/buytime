@@ -85,6 +85,7 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
     super.initState();
 
 
+
     Firebase.initializeApp().then((value) {
       final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
       if (!kIsWeb) {

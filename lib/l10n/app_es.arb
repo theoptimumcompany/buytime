@@ -557,5 +557,6 @@
   "noAddress": "This service has not an address",
   "speakWithCustomerService": "Speak with customer service",
   "yourConcierge": "your Concierge",
+  "paymentMethodNotAvailable": "This payment method is not available for this order.",
   "warningNoSlotReservable": "There are not available services to reserve."
 }

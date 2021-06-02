@@ -129,7 +129,7 @@ class ServiceListState extends State<ServiceList> {
                                                         order.business.id = snapshot.business.id_firestore;
                                                         order.user.name = snapshot.user.name;
                                                         order.user.id = snapshot.user.uid;
-                                                        order.addItem(serviceList[index], snapshot.business.ownerId);
+                                                        order.addItem(serviceList[index], snapshot.business.ownerId, context);
                                                         order.cartCounter++;
                                                         //StoreProvider.of<AppState>(context).dispatch(SetOrderCartCounter(order.cartCounter));
                                                         StoreProvider.of<AppState>(context).dispatch(SetOrder(order));

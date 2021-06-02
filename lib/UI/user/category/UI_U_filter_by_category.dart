@@ -679,7 +679,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                                             order.business.id = snapshot.business.id_firestore;
                                                             order.user.name = snapshot.user.name;
                                                             order.user.id = snapshot.user.uid;
-                                                            order.addItem(service, snapshot.business.ownerId);
+                                                            order.addItem(service, snapshot.business.ownerId, context);
                                                             order.cartCounter++;
                                                             //StoreProvider.of<AppState>(context).dispatch(SetOrderCartCounter(order.cartCounter));
                                                             StoreProvider.of<AppState>(context).dispatch(SetOrder(order));

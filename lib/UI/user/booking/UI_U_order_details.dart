@@ -520,7 +520,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                                           child: FittedBox(
                                             fit: BoxFit.scaleDown,
                                             child: Text(
-                                              snapshot.serviceState.serviceAddress.isNotEmpty ? snapshot.serviceState.serviceAddress : snapshot.business.businessAddress,
+                                              snapshot.serviceState.serviceAddress != null && snapshot.serviceState.serviceAddress.isNotEmpty ? snapshot.serviceState.serviceAddress : snapshot.business.businessAddress,
                                               //snapshot.business.street + ', ' + snapshot.business.street_number + ', ' + snapshot.business.ZIP + ', ' + snapshot.business.state_province,
                                               style: TextStyle(
                                                   letterSpacing: 0.15,

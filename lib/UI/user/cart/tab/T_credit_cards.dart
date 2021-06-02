@@ -22,6 +22,7 @@ class CreditCards extends StatelessWidget {
   Widget build(BuildContext context) {
     return Flexible(
       child: Container(
+        margin: EdgeInsets.only(top: SizeConfig.safeBlockHorizontal * 5),
         color: BuytimeTheme.BackgroundWhite,
         child: Column(
           mainAxisSize: MainAxisSize.min,

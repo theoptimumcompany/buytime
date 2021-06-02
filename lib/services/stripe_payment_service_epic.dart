@@ -27,6 +27,7 @@ import 'package:stripe_payment/stripe_payment.dart' as StripeRecommended;
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
+import 'package:Buytime/utils/utils.dart';
 
 String stripeTestKey = "pk_test_51HS20eHr13hxRBpCZl1V0CKFQ7XzJbku7UipKLLIcuNGh3rp4QVsEDCThtV0l2AQ3jMtLsDN2zdC0fQ4JAK6yCOp003FIf3Wjz";
 // String stripeKey = "pk_live_51HS20eHr13hxRBpCLHzfi0SXeqw8Efu911cWdYEE96BAV0zSOesvE83OiqqzRucKIxgCcKHUvTCJGY6cXRtkDVCm003CmGXYzy";
@@ -256,7 +257,7 @@ class StripePaymentService {
     /// Apple items initialization
     for(int i= 0; i < orderState.itemList.length; i++) {
       items.add(StripeRecommended.ApplePayItem(
-        label: orderState.itemList[i].name,
+        label: Utils.retriveField("en", orderState.itemList[i].name),
         amount: orderState.itemList[i].toString(),
       ));
     }
@@ -292,9 +293,16 @@ class StripePaymentService {
     for (int i = 0; i < orderState.itemList.length; i++) {
       OrderEntry orderEntry = orderState.itemList[i];
       String totalItemPrice = (orderEntry.price * orderEntry.number).toString();
-      StripeRecommended.ApplePayItem item = StripeRecommended.ApplePayItem(label: orderEntry.name, amount: totalItemPrice);
+      StripeRecommended.ApplePayItem item = StripeRecommended.ApplePayItem(label: Utils.retriveField("en", orderEntry.name), amount: totalItemPrice);
       items.add(item);
     }
+    OrderEntry orderEntry = OrderEntry(number: 1, name: '', description: '', price: orderState.total, thumbnail: '', id: '', id_business: '', id_owner: '', id_category: '');
+    String totalItemPrice = (orderEntry.price * orderEntry.number).toString();
+    StripeRecommended.ApplePayItem item = StripeRecommended.ApplePayItem(label: Utils.retriveField("en", orderEntry.name), amount: totalItemPrice);
+    items.add(item);
+    /// add total item???
+
+
     //step 1: add card
     var token = await StripeRecommended.StripePayment.paymentRequestWithNativePay(
       androidPayOptions: StripeRecommended.AndroidPayPaymentRequest(
