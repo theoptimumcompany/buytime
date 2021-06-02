@@ -1396,6 +1396,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                                         if (element.idSquareSlot == mySSS.uid) {
                                                                                           element.orderCapacity = selectedSquareSlotList[index].elementAt(i)[0];
                                                                                           element.price = tmpService.price * selectedSquareSlotList[index].elementAt(i)[0];
+                                                                                          element.number -= 1;
                                                                                         }
                                                                                         order.total += element.price;
                                                                                       });
@@ -1447,6 +1448,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                                         if (element.idSquareSlot == mySSS.uid) {
                                                                                           element.orderCapacity = selectedSquareSlotList[index].elementAt(i)[0];
                                                                                           element.price = tmpService.price * selectedSquareSlotList[index].elementAt(i)[0];
+                                                                                          element.number += 1;
                                                                                         }
                                                                                         order.total += element.price;
                                                                                       });
