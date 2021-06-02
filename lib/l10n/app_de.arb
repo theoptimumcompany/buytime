@@ -556,5 +556,6 @@
   "wellness": "Wellness",
   "noAddress": "This service has not an address",
   "speakWithCustomerService": "Speak with customer service",
-  "yourConcierge": "your Concierge"
+  "yourConcierge": "your Concierge",
+  "warningNoSlotReservable": "There are not available services to reserve."
 }

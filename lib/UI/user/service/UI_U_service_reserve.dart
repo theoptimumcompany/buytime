@@ -1571,9 +1571,9 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                             } else {
                                               showDialog(
                                                   context: context,
-                                                  builder: (_) => new AlertDialog(
-                                                        title: new Text(AppLocalizations.of(context).warning),
-                                                        content: new Text(AppLocalizations.of(context).emptyCart),
+                                                  builder: (_) => AlertDialog(
+                                                        title: Text(AppLocalizations.of(context).warning),
+                                                        content: Text(AppLocalizations.of(context).warningNoSlotReservable),
                                                         actions: <Widget>[
                                                           MaterialButton(
                                                             elevation: 0,

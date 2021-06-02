@@ -81,7 +81,8 @@ class UserEditDevice implements EpicClass<AppState> {
       List<String> idField = [event.device.id];
 
       DocumentReference docUser = FirebaseFirestore.instance.collection('user').doc(event.device.user_uid); /// 1 READ - 1 DOC
-      docUser.update(<String, dynamic>{event.device.name: FieldValue.arrayUnion(idField),}); ///1 WRITE
+     // docUser.update(<String, dynamic>{event.device.name: FieldValue.arrayUnion(idField),}); ///1 WRITE
+      docUser.update(<String, dynamic>{event.device.name: idField,}); ///1 WRITE
 
       statisticsState = store.state.statistics;
       int reads = statisticsState.userEditDeviceRead;
@@ -111,7 +112,8 @@ class UserEditToken implements EpicClass<AppState> {
       List<String> idField = [event.token.id];
 
       DocumentReference docUser = FirebaseFirestore.instance.collection('user').doc(event.token.user_uid); /// 1 READ - 1 DOC
-      docUser.update(<String, dynamic>{event.token.name: FieldValue.arrayUnion(idField),}); /// 1 WRITE
+    //  docUser.update(<String, dynamic>{event.token.name: FieldValue.arrayUnion(idField),}); /// 1 WRITE
+      docUser.update(<String, dynamic>{event.token.name: idField,}); /// 1 WRITE
 
       statisticsState = store.state.statistics;
       int reads = statisticsState.userEditTokenRead;
