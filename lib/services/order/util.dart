@@ -61,6 +61,10 @@ OrderReservableState configureOrderReservable(OrderReservableState orderStateFro
   orderState.user.name = store.state.user.name;
   orderState.userId = store.state.user.uid;
 
+  ///TODO: Maneggiare sotre per tirare fuori orario chiusura della giornata
+  orderState.openUntil = "20:00";
+
+
   if(isExternal){
     orderState.businessId = externalBusinessState.id_firestore;
     orderState.business.thumbnail = externalBusinessState.wide;
