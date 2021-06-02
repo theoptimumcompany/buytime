@@ -75,6 +75,8 @@ OrderReservableState configureOrderReservable(OrderReservableState orderStateFro
       orderState.cardLast4Digit = element.stripeState.stripeCard.last4;
     }
   });
+  /// set the creation date
+  orderState.creationDate = DateTime.now().toUtc();
   return orderState;
 }
 

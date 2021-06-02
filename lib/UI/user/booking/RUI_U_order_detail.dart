@@ -574,7 +574,8 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
                                         ),
                                         ///Directions
                                         Container(
-                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                          padding: EdgeInsets.only(bottom: SizeConfig.safeBlockHorizontal * 1),
+                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
                                           child: Row(
                                             children: [
                                               Icon(
