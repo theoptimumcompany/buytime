@@ -706,14 +706,14 @@ class _RActivityManagementState extends State<RActivityManagement> {
       _orderListRealtime = FirebaseFirestore.instance.collection('order')
           .where("businessId", whereIn: businessIdList.sublist(0, 10))
           .orderBy('date', descending: false)
-      //.where("date", isGreaterThanOrEqualTo: currentTime)
+          .where("date", isGreaterThanOrEqualTo: currentTime)
       //.where("date", isLessThanOrEqualTo: sevenDaysFromNow)
           .snapshots();
     }else{
       _orderListRealtime = FirebaseFirestore.instance.collection('order')
           .where("businessId", whereIn: businessIdList)
           .orderBy('date', descending: false)
-      //.where("date", isGreaterThanOrEqualTo: currentTime)
+          .where("date", isGreaterThanOrEqualTo: currentTime)
       //.where("date", isLessThanOrEqualTo: sevenDaysFromNow)
           .snapshots();
     }

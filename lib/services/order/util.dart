@@ -89,7 +89,7 @@ OrderReservableState orderReservableInitialization(dynamic event, int i) {
   tmpDate = DateTime(tmpDate.year, tmpDate.month, tmpDate.day, DateTime.now().hour,  DateTime.now().minute,  DateTime.now().second, DateTime.now().millisecond, DateTime.now().microsecond);
   return OrderReservableState(
     position: event.orderReservableState.position,
-    date: tmpDate,
+    date: event.orderReservableState.itemList[i].date,
     itemList: [event.orderReservableState.itemList[i]],
     total: event.orderReservableState.itemList[i].price,
     tip: event.orderReservableState.tip,
