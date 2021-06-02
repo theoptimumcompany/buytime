@@ -95,6 +95,7 @@ class _BookingListState extends State<BookingList> {
                       return CircularProgressIndicator();
                     }
                     //OrderState orderState = OrderState.fromJson(orderSnapshot.data.data());
+                    bookingList.clear();
                     bookingMap.clear();
                     activeBookingList.clear();
                     checkedOutBookingMap.clear();
