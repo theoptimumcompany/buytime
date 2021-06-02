@@ -189,477 +189,474 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
-        body: SafeArea(
-          top: false,
-          child: Center(
-              child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              ///Background video & Logo & Buytime text & Slogan
-              Expanded(
-                  flex: 4,
-                  child: Stack(
-                    children: [
-                      ///Background video
-                      Positioned.fill(
-                        child: Align(
-                            alignment: Alignment.center,
-                            child: _controller.value.isInitialized
-                                ? SizedBox.expand(
-                                    child: FittedBox(
-                                      // If your background video doesn't look right, try changing the BoxFit property.
-                                      // BoxFit.fill created the look I was going for.
-                                      fit: BoxFit.cover,
-                                      child: SizedBox(
-                                        width: _controller.value.size?.width ?? 0,
-                                        height: _controller.value.size?.height ?? 0,
-                                        child: VideoPlayer(
-                                          _controller,
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                : Container()),
-                      ),
-
-                      ///Opacity layer
-                      Positioned.fill(
-                        child: Align(
+        body: Center(
+            child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            ///Background video & Logo & Buytime text & Slogan
+            Expanded(
+                flex: 4,
+                child: Stack(
+                  children: [
+                    ///Background video
+                    Positioned.fill(
+                      child: Align(
                           alignment: Alignment.center,
-                          child: Container(
-                            color: Color(0xff1b4c72).withOpacity(0.5),
-                            width: double.infinity,
-                            height: double.infinity,
-                          ),
-                        ),
-                      ),
-
-                      ///Logo & Buytime text
-                      Positioned.fill(
-                        child: Align(
-                          alignment: Alignment.topCenter,
-                          child: Column(
-                            children: [
-                              ///Logo
-                              Container(
-                                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 10),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.all(Radius.circular(20)),
-                                  /*boxShadow: [
-                                        BoxShadow(
-                                          color: BuytimeTheme.BackgroundBlack.withOpacity(0.3),
-                                          spreadRadius: 7,
-                                          blurRadius: 3,
-                                          offset: Offset(0, 3), // changes position of shadow
-                                        ),
-                                      ],*/
-                                ),
-                                child: Image.asset(
-                                  'assets/img/brand/logo.png',
-                                  height: 96,
-
-                                  ///media.height * 0.12
-                                ),
-                              ),
-                              SizedBox(
-                                height: media.height * .05,
-                              ),
-
-                              ///Buytime text
-                              Container(
-                                  // width: media.width * .8,
-                                  child: Wrap(
-                                children: [
-                                  FadeTransition(
-                                    opacity: _animation,
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                                      child: Text(
-                                        AppLocalizations.of(context).buytime,
-                                        style: BuytimeTheme.whiteTitle,
-                                        textAlign: TextAlign.center,
+                          child: _controller.value.isInitialized
+                              ? SizedBox.expand(
+                                  child: FittedBox(
+                                    // If your background video doesn't look right, try changing the BoxFit property.
+                                    // BoxFit.fill created the look I was going for.
+                                    fit: BoxFit.cover,
+                                    child: SizedBox(
+                                      width: _controller.value.size?.width ?? 0,
+                                      height: _controller.value.size?.height ?? 0,
+                                      child: VideoPlayer(
+                                        _controller,
                                       ),
                                     ),
-                                  )
-                                ],
-                              )),
-                            ],
-                          ),
+                                  ),
+                                )
+                              : Container()),
+                    ),
+
+                    ///Opacity layer
+                    Positioned.fill(
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Container(
+                          color: Color(0xff1b4c72).withOpacity(0.5),
+                          width: double.infinity,
+                          height: double.infinity,
                         ),
                       ),
+                    ),
 
-                      ///Slogan
-                      Positioned.fill(
-                        bottom: SizeConfig.safeBlockVertical * 12.5,
-                        child: Align(
-                          alignment: Alignment.bottomCenter,
-                          child: Container(
-                              // width: media.width * .6,
-                              child: Wrap(children: [
-                            FadeTransition(
-                              opacity: _animation2,
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 40.0),
+                    ///Logo & Buytime text
+                    Positioned.fill(
+                      child: Align(
+                        alignment: Alignment.topCenter,
+                        child: Column(
+                          children: [
+                            ///Logo
+                            Container(
+                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 10),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.all(Radius.circular(20)),
+                                /*boxShadow: [
+                                      BoxShadow(
+                                        color: BuytimeTheme.BackgroundBlack.withOpacity(0.3),
+                                        spreadRadius: 7,
+                                        blurRadius: 3,
+                                        offset: Offset(0, 3), // changes position of shadow
+                                      ),
+                                    ],*/
+                              ),
+                              child: Image.asset(
+                                'assets/img/brand/logo.png',
+                                height: 96,
+
+                                ///media.height * 0.12
+                              ),
+                            ),
+                            SizedBox(
+                              height: media.height * .05,
+                            ),
+
+                            ///Buytime text
+                            Container(
+                                // width: media.width * .8,
+                                child: Wrap(
+                              children: [
+                                FadeTransition(
+                                  opacity: _animation,
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                                    child: Text(
+                                      AppLocalizations.of(context).buytime,
+                                      style: BuytimeTheme.whiteTitle,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                )
+                              ],
+                            )),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    ///Slogan
+                    Positioned.fill(
+                      bottom: SizeConfig.safeBlockVertical * 12.5,
+                      child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Container(
+                            // width: media.width * .6,
+                            child: Wrap(children: [
+                          FadeTransition(
+                            opacity: _animation2,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 40.0),
+                              child: Text(
+                                AppLocalizations.of(context).joinHotel,
+                                style: BuytimeTheme.whiteSubtitle,
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ),
+                        ])),
+                      ),
+                    )
+                  ],
+                )),
+
+            ///Sign up & Sign in & ToS % Privacy policy
+            Expanded(
+              flex: 2,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  /*SizeConfig.screenHeight < 537 ?
+                      Column(
+                        children: [
+                          ///Sign up
+                          Container(
+                              width: 247, ///media.width * .6 | 247 | izeConfig.safeBlockHorizontal * 57
+                              height: 50, ///50 | SizeConfig.safeBlockVertical * 6.5
+                              margin: EdgeInsets.only(top: 48, bottom: 24), ///SizeConfig.safeBlockVertical * 5 | SizeConfig.safeBlockVertical * 2
+                              child: FadeTransition(
+                                opacity: _animation3,
+                                child: MaterialButton(
+                                elevation: 0,
+                                hoverElevation: 0,
+                                focusElevation: 0,
+                                highlightElevation: 0,
+                                  onPressed: () {
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => Registration()),);
+                                  },
+                                  textColor: BuytimeTheme.TextWhite,
+                                  color: BuytimeTheme.ButtonMalibu,
+                                  padding: EdgeInsets.all(media.width * 0.03),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: new BorderRadius.circular(5),
+                                  ),
+                                  child: Text(
+                                    AppLocalizations.of(context).startStay,
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontFamily: 'Roboto',
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                              )),
+                          ///Sign in
+                          Container(
+                              width: 247, ///media.width * .6 | 247 | izeConfig.safeBlockHorizontal * 57
+                              height: 50, ///50 | SizeConfig.safeBlockVertical * 6.5
+                              child: FadeTransition(
+                                opacity: _animation3,
+                                child: MaterialButton(
+                                elevation: 0,
+                                hoverElevation: 0,
+                                focusElevation: 0,
+                                highlightElevation: 0,
+                                  */
+                  /*onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => BusinessData()),
+                                  );
+                                },*/
+                  /*
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => Login()),
+                                    );
+                                  },
+                                  textColor: BuytimeTheme.UserPrimary.withOpacity(0.3),
+                                  color: Colors.white,
+                                  padding: EdgeInsets.all(media.width * 0.03),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: new BorderRadius.circular(5),
+                                  ),
+                                  child: Text(
+                                    AppLocalizations.of(context).logBack,
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontFamily: 'Roboto',
+                                        fontWeight: FontWeight.w500,
+                                        color: BuytimeTheme.ButtonMalibu
+                                    ),
+                                  ),
+                                ),
+                              )),
+                        ],
+                      ) :
+                      Column(
+                        children: [
+                          ///Sign up
+                          Container(
+                              width: 247, ///media.width * .6 | 247 | izeConfig.safeBlockHorizontal * 57
+                              height: 50, ///50 | SizeConfig.safeBlockVertical * 6.5
+                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 5, bottom: SizeConfig.safeBlockVertical * 2),
+                              child: FadeTransition(
+                                opacity: _animation3,
+                                child: MaterialButton(
+                                elevation: 0,
+                                hoverElevation: 0,
+                                focusElevation: 0,
+                                highlightElevation: 0,
+                                  onPressed: () {
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => Registration()),);
+                                  },
+                                  textColor: BuytimeTheme.TextWhite,
+                                  color: BuytimeTheme.ButtonMalibu,
+                                  padding: EdgeInsets.all(media.width * 0.03),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: new BorderRadius.circular(5),
+                                  ),
+                                  child: Text(
+                                    AppLocalizations.of(context).startStay,
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontFamily: 'Roboto',
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                              )),
+                          ///Sign in
+                          Container(
+                              width: 247, ///media.width * .6 | 247 | izeConfig.safeBlockHorizontal * 57
+                              height: 50, ///50 | SizeConfig.safeBlockVertical * 6.5
+                              child: FadeTransition(
+                                opacity: _animation3,
+                                child: MaterialButton(
+                                elevation: 0,
+                                hoverElevation: 0,
+                                focusElevation: 0,
+                                highlightElevation: 0,
+                                  */
+                  /*onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => BusinessData()),
+                                  );
+                                },*/
+                  /*
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => Login()),
+                                    );
+                                  },
+                                  textColor: BuytimeTheme.UserPrimary.withOpacity(0.3),
+                                  color: Colors.white,
+                                  padding: EdgeInsets.all(media.width * 0.03),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: new BorderRadius.circular(5),
+                                  ),
+                                  child: Text(
+                                    AppLocalizations.of(context).logBack,
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontFamily: 'Roboto',
+                                        fontWeight: FontWeight.w500,
+                                        color: BuytimeTheme.ButtonMalibu
+                                    ),
+                                  ),
+                                ),
+                              )),
+                        ],
+                      ),*/
+                  Column(
+                    children: [
+                      ///Register
+                      Container(
+                          width: 247,
+
+                          /// media.width * .6 | 247 | SizeConfig.safeBlockHorizontal * 68
+                          height: 50,
+
+                          /// 50 | SizeConfig.safeBlockVertical * 8.5
+                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 4),
+
+                          /// 48 | SizeConfig.safeBlockVertical * 5 | 24 | SizeConfig.safeBlockVertical * 2
+                          child: FadeTransition(
+                            opacity: _animation3,
+                            child: MaterialButton(
+                              elevation: 0,
+                              hoverElevation: 0,
+                              focusElevation: 0,
+                              highlightElevation: 0,
+                              onPressed: () {
+                                //Navigator.push(context, MaterialPageRoute(builder: (context) => Registration()),);
+                                Navigator.of(context).pushNamed(Registration.route);
+                              },
+                              textColor: BuytimeTheme.TextWhite,
+                              color: BuytimeTheme.ButtonMalibu,
+                              //padding: EdgeInsets.all(media.width * 0.03),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: new BorderRadius.circular(5),
+                              ),
+                              child: FittedBox(
+                                fit: BoxFit.scaleDown,
                                 child: Text(
-                                  AppLocalizations.of(context).joinHotel,
-                                  style: BuytimeTheme.whiteSubtitle,
-                                  textAlign: TextAlign.center,
+                                  AppLocalizations.of(context).register.toUpperCase(),
+                                  style: TextStyle(
+                                    letterSpacing: 1.25,
+                                    fontSize: 14,
+
+                                    ///16 | SizeConfig.safeBlockHorizontal * 4.5
+                                    fontFamily: BuytimeTheme.FontFamily,
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
                               ),
                             ),
-                          ])),
-                        ),
-                      )
-                    ],
-                  )),
+                          )),
 
-              ///Sign up & Sign in & ToS % Privacy policy
-              Expanded(
-                flex: 2,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    /*SizeConfig.screenHeight < 537 ?
-                        Column(
-                          children: [
-                            ///Sign up
-                            Container(
-                                width: 247, ///media.width * .6 | 247 | izeConfig.safeBlockHorizontal * 57
-                                height: 50, ///50 | SizeConfig.safeBlockVertical * 6.5
-                                margin: EdgeInsets.only(top: 48, bottom: 24), ///SizeConfig.safeBlockVertical * 5 | SizeConfig.safeBlockVertical * 2
-                                child: FadeTransition(
-                                  opacity: _animation3,
-                                  child: MaterialButton(
-                                  elevation: 0,
-                                  hoverElevation: 0,
-                                  focusElevation: 0,
-                                  highlightElevation: 0,
-                                    onPressed: () {
-                                      Navigator.push(context, MaterialPageRoute(builder: (context) => Registration()),);
-                                    },
-                                    textColor: BuytimeTheme.TextWhite,
-                                    color: BuytimeTheme.ButtonMalibu,
-                                    padding: EdgeInsets.all(media.width * 0.03),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: new BorderRadius.circular(5),
-                                    ),
-                                    child: Text(
-                                      AppLocalizations.of(context).startStay,
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        fontFamily: 'Roboto',
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ),
-                                )),
-                            ///Sign in
-                            Container(
-                                width: 247, ///media.width * .6 | 247 | izeConfig.safeBlockHorizontal * 57
-                                height: 50, ///50 | SizeConfig.safeBlockVertical * 6.5
-                                child: FadeTransition(
-                                  opacity: _animation3,
-                                  child: MaterialButton(
-                                  elevation: 0,
-                                  hoverElevation: 0,
-                                  focusElevation: 0,
-                                  highlightElevation: 0,
-                                    */
-                    /*onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => BusinessData()),
-                                    );
-                                  },*/
-                    /*
-                                    onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(builder: (context) => Login()),
-                                      );
-                                    },
-                                    textColor: BuytimeTheme.UserPrimary.withOpacity(0.3),
-                                    color: Colors.white,
-                                    padding: EdgeInsets.all(media.width * 0.03),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: new BorderRadius.circular(5),
-                                    ),
-                                    child: Text(
-                                      AppLocalizations.of(context).logBack,
-                                      style: TextStyle(
-                                          fontSize: 18,
-                                          fontFamily: 'Roboto',
-                                          fontWeight: FontWeight.w500,
-                                          color: BuytimeTheme.ButtonMalibu
-                                      ),
-                                    ),
-                                  ),
-                                )),
-                          ],
-                        ) :
-                        Column(
-                          children: [
-                            ///Sign up
-                            Container(
-                                width: 247, ///media.width * .6 | 247 | izeConfig.safeBlockHorizontal * 57
-                                height: 50, ///50 | SizeConfig.safeBlockVertical * 6.5
-                                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 5, bottom: SizeConfig.safeBlockVertical * 2),
-                                child: FadeTransition(
-                                  opacity: _animation3,
-                                  child: MaterialButton(
-                                  elevation: 0,
-                                  hoverElevation: 0,
-                                  focusElevation: 0,
-                                  highlightElevation: 0,
-                                    onPressed: () {
-                                      Navigator.push(context, MaterialPageRoute(builder: (context) => Registration()),);
-                                    },
-                                    textColor: BuytimeTheme.TextWhite,
-                                    color: BuytimeTheme.ButtonMalibu,
-                                    padding: EdgeInsets.all(media.width * 0.03),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: new BorderRadius.circular(5),
-                                    ),
-                                    child: Text(
-                                      AppLocalizations.of(context).startStay,
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        fontFamily: 'Roboto',
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ),
-                                )),
-                            ///Sign in
-                            Container(
-                                width: 247, ///media.width * .6 | 247 | izeConfig.safeBlockHorizontal * 57
-                                height: 50, ///50 | SizeConfig.safeBlockVertical * 6.5
-                                child: FadeTransition(
-                                  opacity: _animation3,
-                                  child: MaterialButton(
-                                  elevation: 0,
-                                  hoverElevation: 0,
-                                  focusElevation: 0,
-                                  highlightElevation: 0,
-                                    */
-                    /*onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => BusinessData()),
-                                    );
-                                  },*/
-                    /*
-                                    onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(builder: (context) => Login()),
-                                      );
-                                    },
-                                    textColor: BuytimeTheme.UserPrimary.withOpacity(0.3),
-                                    color: Colors.white,
-                                    padding: EdgeInsets.all(media.width * 0.03),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: new BorderRadius.circular(5),
-                                    ),
-                                    child: Text(
-                                      AppLocalizations.of(context).logBack,
-                                      style: TextStyle(
-                                          fontSize: 18,
-                                          fontFamily: 'Roboto',
-                                          fontWeight: FontWeight.w500,
-                                          color: BuytimeTheme.ButtonMalibu
-                                      ),
-                                    ),
-                                  ),
-                                )),
-                          ],
-                        ),*/
-                    Column(
-                      children: [
-                        ///Register
-                        Container(
+                      ///Login
+                      FadeTransition(
+                        opacity: _animation3,
+                        child: Container(
                             width: 247,
 
                             /// media.width * .6 | 247 | SizeConfig.safeBlockHorizontal * 68
                             height: 50,
 
                             /// 50 | SizeConfig.safeBlockVertical * 8.5
-                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 6),
+                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
+                            decoration: BoxDecoration(borderRadius: new BorderRadius.circular(5), border: Border.all(color: BuytimeTheme.SymbolLightGrey)),
+                            child: MaterialButton(
+                              elevation: 0,
+                              hoverElevation: 0,
+                              focusElevation: 0,
+                              highlightElevation: 0,
+                              /*onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => BusinessData()),
+                                  );
+                                },*/
+                              onPressed: () {
+                                //Navigator.push(context, MaterialPageRoute(builder: (context) => Login()),;
+                                Navigator.of(context).pushNamed(Login.route);
+                              },
+                              textColor: BuytimeTheme.UserPrimary.withOpacity(0.3),
+                              color: Colors.white,
+                              //padding: EdgeInsets.all(media.width * 0.03),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: new BorderRadius.circular(5),
+                              ),
+                              child: Text(
+                                AppLocalizations.of(context).logIn.toUpperCase(),
+                                style: TextStyle(
+                                    letterSpacing: 1.25,
+                                    fontSize: 14,
 
-                            /// 48 | SizeConfig.safeBlockVertical * 5 | 24 | SizeConfig.safeBlockVertical * 2
-                            child: FadeTransition(
-                              opacity: _animation3,
-                              child: MaterialButton(
-                                elevation: 0,
-                                hoverElevation: 0,
-                                focusElevation: 0,
-                                highlightElevation: 0,
-                                onPressed: () {
-                                  //Navigator.push(context, MaterialPageRoute(builder: (context) => Registration()),);
-                                  Navigator.of(context).pushNamed(Registration.route);
-                                },
-                                textColor: BuytimeTheme.TextWhite,
-                                color: BuytimeTheme.ButtonMalibu,
-                                //padding: EdgeInsets.all(media.width * 0.03),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: new BorderRadius.circular(5),
-                                ),
-                                child: FittedBox(
-                                  fit: BoxFit.scaleDown,
-                                  child: Text(
-                                    AppLocalizations.of(context).register.toUpperCase(),
-                                    style: TextStyle(
-                                      letterSpacing: 1.25,
-                                      fontSize: 14,
-
-                                      ///16 | SizeConfig.safeBlockHorizontal * 4.5
-                                      fontFamily: BuytimeTheme.FontFamily,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ),
+                                    ///18 | SizeConfig.safeBlockHorizontal * 5
+                                    fontFamily: BuytimeTheme.FontFamily,
+                                    fontWeight: FontWeight.w500,
+                                    color: BuytimeTheme.ButtonMalibu),
                               ),
                             )),
+                      ),
 
-                        ///Login
-                        FadeTransition(
+                      ///Free Access (Tourist)
+                      FadeTransition(
                           opacity: _animation3,
                           child: Container(
-                              width: 247,
+                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3),
+                              alignment: Alignment.center,
+                              child: Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                    onTap: () {
+                                      Navigator.of(context).pushNamed(ServiceExplorer.route);
+                                    },
+                                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                    child: Container(
+                                      padding: EdgeInsets.all(5.0),
+                                      child: Text(
+                                        AppLocalizations.of(context).exploreNetwork,
+                                        style: TextStyle(letterSpacing: 1.25, fontSize: 14, fontFamily: BuytimeTheme.FontFamily, fontWeight: FontWeight.w500, color: BuytimeTheme.TextMalibu),
+                                      ),
+                                    )),
+                              )))
+                    ],
+                  ),
 
-                              /// media.width * .6 | 247 | SizeConfig.safeBlockHorizontal * 68
-                              height: 50,
-
-                              /// 50 | SizeConfig.safeBlockVertical * 8.5
-                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
-                              decoration: BoxDecoration(borderRadius: new BorderRadius.circular(5), border: Border.all(color: BuytimeTheme.SymbolLightGrey)),
-                              child: MaterialButton(
-                                elevation: 0,
-                                hoverElevation: 0,
-                                focusElevation: 0,
-                                highlightElevation: 0,
-                                /*onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => BusinessData()),
-                                    );
-                                  },*/
-                                onPressed: () {
-                                  //Navigator.push(context, MaterialPageRoute(builder: (context) => Login()),;
-                                  Navigator.of(context).pushNamed(Login.route);
-                                },
-                                textColor: BuytimeTheme.UserPrimary.withOpacity(0.3),
-                                color: Colors.white,
-                                //padding: EdgeInsets.all(media.width * 0.03),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: new BorderRadius.circular(5),
-                                ),
+                  ///ToS & Privacy Policy
+                  FadeTransition(
+                    opacity: _animation3,
+                    child: Container(
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Container(
+                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0.0, bottom: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 10, right: SizeConfig.safeBlockHorizontal * 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              ///By signing ...
+                              Container(
                                 child: Text(
-                                  AppLocalizations.of(context).logIn.toUpperCase(),
-                                  style: TextStyle(
-                                      letterSpacing: 1.25,
-                                      fontSize: 14,
-
-                                      ///18 | SizeConfig.safeBlockHorizontal * 5
-                                      fontFamily: BuytimeTheme.FontFamily,
-                                      fontWeight: FontWeight.w500,
-                                      color: BuytimeTheme.ButtonMalibu),
+                                  "${AppLocalizations.of(context).bySigningUpYourAgreeToOur} ",
+                                  style: TextStyle(color: Colors.grey, fontSize: 14, fontWeight: FontWeight.w400),
                                 ),
-                              )),
-                        ),
+                              ),
 
-                        ///Free Access (Tourist)
-                        FadeTransition(
-                            opacity: _animation3,
-                            child: Container(
-                                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3),
-                                alignment: Alignment.center,
-                                child: Material(
-                                  color: Colors.transparent,
-                                  child: InkWell(
-                                      onTap: () {
-                                        Navigator.of(context).pushNamed(ServiceExplorer.route);
-                                      },
-                                      borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                                      child: Container(
-                                        padding: EdgeInsets.all(5.0),
-                                        child: Text(
-                                          AppLocalizations.of(context).exploreNetwork,
-                                          style: TextStyle(letterSpacing: 1.25, fontSize: 14, fontFamily: BuytimeTheme.FontFamily, fontWeight: FontWeight.w500, color: BuytimeTheme.TextMalibu),
-                                        ),
-                                      )),
-                                )))
-                      ],
-                    ),
-
-                    ///ToS & Privacy Policy
-                    FadeTransition(
-                      opacity: _animation3,
-                      child: Container(
-                        child: FittedBox(
-                          fit: BoxFit.scaleDown,
-                          child: Container(
-                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1.5, bottom: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 10, right: SizeConfig.safeBlockHorizontal * 10),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                ///By signing ...
-                                Container(
-                                  child: Text(
-                                    "${AppLocalizations.of(context).bySigningUpYourAgreeToOur} ",
-                                    style: TextStyle(color: Colors.grey, fontSize: 14, fontWeight: FontWeight.w400),
-                                  ),
+                              ///Tod
+                              RichText(
+                                text: TextSpan(
+                                  style: TextStyle(color: BuytimeTheme.userPrimarySwatch[300], fontSize: 14, fontWeight: FontWeight.w400),
+                                  text: AppLocalizations.of(context).tos,
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () {
+                                      debugPrint('UI_U_Home - ToS Clicked: ' + tcPdfPath);
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => TosTermsConditons(tcPdfPath)));
+                                    },
                                 ),
+                              ),
 
-                                ///Tod
-                                RichText(
-                                  text: TextSpan(
-                                    style: TextStyle(color: BuytimeTheme.userPrimarySwatch[300], fontSize: 14, fontWeight: FontWeight.w400),
-                                    text: AppLocalizations.of(context).tos,
-                                    recognizer: TapGestureRecognizer()
-                                      ..onTap = () {
-                                        debugPrint('UI_U_Home - ToS Clicked: ' + tcPdfPath);
-                                        Navigator.push(context, MaterialPageRoute(builder: (context) => TosTermsConditons(tcPdfPath)));
-                                      },
-                                  ),
+                              ///And
+                              Container(
+                                child: Text(
+                                  " ${AppLocalizations.of(context).and} ",
+                                  style: TextStyle(color: Colors.grey, fontSize: 14, fontWeight: FontWeight.w400),
                                 ),
+                              ),
 
-                                ///And
-                                Container(
-                                  child: Text(
-                                    " ${AppLocalizations.of(context).and} ",
-                                    style: TextStyle(color: Colors.grey, fontSize: 14, fontWeight: FontWeight.w400),
-                                  ),
+                              ///Privacy Policies
+                              RichText(
+                                text: TextSpan(
+                                  style: TextStyle(color: BuytimeTheme.userPrimarySwatch[300], fontSize: 14, fontWeight: FontWeight.w400),
+                                  text: AppLocalizations.of(context).privacyPolicy,
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () {
+                                      debugPrint('UI_U_Home - Privacy Policy Clicked: ' + tosPdfPath);
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => TosTermsConditons(tosPdfPath)));
+                                    },
                                 ),
-
-                                ///Privacy Policies
-                                RichText(
-                                  text: TextSpan(
-                                    style: TextStyle(color: BuytimeTheme.userPrimarySwatch[300], fontSize: 14, fontWeight: FontWeight.w400),
-                                    text: AppLocalizations.of(context).privacyPolicy,
-                                    recognizer: TapGestureRecognizer()
-                                      ..onTap = () {
-                                        debugPrint('UI_U_Home - Privacy Policy Clicked: ' + tosPdfPath);
-                                        Navigator.push(context, MaterialPageRoute(builder: (context) => TosTermsConditons(tosPdfPath)));
-                                      },
-                                  ),
-                                ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
-                    )
-                  ],
-                ),
+                    ),
+                  )
+                ],
               ),
-            ],
-          )),
-        ),
+            ),
+          ],
+        )),
         /* )*/
       ),
     );

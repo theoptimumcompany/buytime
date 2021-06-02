@@ -28,7 +28,7 @@ class BrandedButton extends StatelessWidget {
             width: 247,
             height: 50,
             //margin: EdgeInsets.only(top: SizeConfig.screenHeight < 537 ? 1.0 : 5.0, bottom: SizeConfig.screenHeight < 537 ? 1.0 : 5.0, left: SizeConfig.safeBlockHorizontal * 0, right: SizeConfig.safeBlockHorizontal * 0),
-            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, bottom:SizeConfig.safeBlockVertical * 0, left: SizeConfig.safeBlockHorizontal * 0, right: SizeConfig.safeBlockHorizontal * 0),
+            //margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, bottom:SizeConfig.safeBlockVertical * 0, left: SizeConfig.safeBlockHorizontal * 0, right: SizeConfig.safeBlockHorizontal * 0),
             child: MaterialButton(
               elevation: 0,
               hoverElevation: 0,
@@ -42,33 +42,35 @@ class BrandedButton extends StatelessWidget {
               disabledColor: Colors.white.withOpacity(.3),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   ///Brand logo
-                  Expanded(
-                    flex: 1,
-                    child: Image(
-                      image: AssetImage(
-                          this.brandImage
+                  Container(
+                    width: 30,
+                    height: 30,
+                    child: Padding(
+                      padding: const EdgeInsets.all(6.0),
+                      child: Image(
+                        image: AssetImage(
+                            this.brandImage,
+                        ),
+                        height: 18,
+                        width: 18,
                       ),
-                      height: 26,
                     ),
                   ),
                   ///Button text
-                  Expanded(
-                    flex: 4,
-                    child: Padding(
-                      padding:
-                      const EdgeInsets.only(left: 10),
-                      child: Text(
-                        this.buttonText,
-                        style: TextStyle(
-                            fontSize: 14,
-                            letterSpacing: 1.25,
-                            color: BuytimeTheme.TextBlack,
-                            fontWeight: FontWeight.w500,
-                            fontFamily: BuytimeTheme.FontFamily
-                        ),
+                  Padding(
+                    padding:
+                    const EdgeInsets.only(left: 5),
+                    child: Text(
+                      this.buttonText,
+                      style: TextStyle(
+                          fontSize: 14,
+                          //letterSpacing: 1.25,
+                          color: BuytimeTheme.TextBlack,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: BuytimeTheme.FontFamily
                       ),
                     ),
                   )

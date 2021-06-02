@@ -659,7 +659,7 @@ class _TouristSessionRegisterState extends State<TouristSessionRegister> with Si
             leading: IconButton(
               icon: Icon(
                 Icons.keyboard_arrow_left,
-                color: BuytimeTheme.UserPrimary,
+                color: BuytimeTheme.SymbolBlack,
               ),
               onPressed: () {
                 Navigator.of(context).pop();
@@ -671,94 +671,134 @@ class _TouristSessionRegisterState extends State<TouristSessionRegister> with Si
           ),
           body: Form(
               key: _formKey,
-              child: SafeArea(
-                child: SingleChildScrollView(
-                  child: Container(
-                    height: (SizeConfig.safeBlockVertical * 100) - 56,
-                    //constraints: BoxConstraints(minHeight: (SizeConfig.safeBlockVertical * 100) - 56),
-                    child: Column(mainAxisSize: MainAxisSize.min, children: [
-                      ///Logo & Email & Password & & Error message & Sign up button
-                      Expanded(
-                        flex: 6,
-                        child: Container(
-                          //height: SizeConfig.safeBlockVertical * 75,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              ///Logo
-                              Container(
-                                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.all(Radius.circular(20)),
-                                  /*boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black54.withOpacity(0.3),
-                                  spreadRadius: 2,
-                                  blurRadius: 6,
-                                  offset: Offset(0, 0), // changes position of shadow
-                                ),
-                              ],*/
-                                ),
-                                child: Image.asset(
-                                  'assets/img/brand/logo.png',
-                                  height: 96,
-
-                                  ///media.height * 0.12
-                                ),
+              child: SingleChildScrollView(
+                child: Container(
+                  height: SizeConfig.safeBlockVertical * 98,
+                  //constraints: BoxConstraints(minHeight: (SizeConfig.safeBlockVertical * 100) - 56),
+                  child: Column(mainAxisSize: MainAxisSize.min, children: [
+                    ///Logo & Email & Password & & Error message & Sign up button
+                    Expanded(
+                      flex: 4,
+                      child: Container(
+                        //height: SizeConfig.safeBlockVertical * 75,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            ///Logo
+                            Container(
+                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.all(Radius.circular(20)),
+                                /*boxShadow: [
+                              BoxShadow(
+                                color: Colors.black54.withOpacity(0.3),
+                                spreadRadius: 2,
+                                blurRadius: 6,
+                                offset: Offset(0, 0), // changes position of shadow
                               ),
+                            ],*/
+                              ),
+                              child: Image.asset(
+                                'assets/img/brand/logo.png',
+                                height: 96,
 
-                              ///Email & Password & Error message
-                              Flexible(
-                                flex: 3,
-                                child: Container(
-                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 10, right: SizeConfig.safeBlockHorizontal * 10),
+                                ///media.height * 0.12
+                              ),
+                            ),
 
-                                    ///8% - 8%
-                                    child: Column(
-                                      //mainAxisSize: MainAxisSize.min,
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      children: [
-                                        ///Sign up text
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          children: [
-                                            Container(
-                                              //width: 328,
-                                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 8),
-                                              child: Text(
-                                                AppLocalizations.of(context).pleaseRegister,
-                                                style: TextStyle(
-                                                  fontFamily: BuytimeTheme.FontFamily,
-                                                  color: BuytimeTheme.TextBlack,
-                                                  fontWeight: FontWeight.w400,
-                                                  fontSize: 16,
+                            ///Email & Password & Error message
+                            Flexible(
+                              flex: 3,
+                              child: Container(
+                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 10, right: SizeConfig.safeBlockHorizontal * 10),
 
-                                                  ///SizeConfig.safeBlockHorizontal * 3
-                                                ),
+                                  ///8% - 8%
+                                  child: Column(
+                                    //mainAxisSize: MainAxisSize.min,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      ///Sign up text
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            //width: 328,
+                                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 5),
+                                            child: Text(
+                                              AppLocalizations.of(context).pleaseRegister,
+                                              style: TextStyle(
+                                                fontFamily: BuytimeTheme.FontFamily,
+                                                color: BuytimeTheme.TextBlack,
+                                                fontWeight: FontWeight.w400,
+                                                fontSize: 16,
+
+                                                ///SizeConfig.safeBlockHorizontal * 3
                                               ),
                                             ),
-                                          ],
+                                          ),
+                                        ],
+                                      ),
+
+                                      ///Email address
+                                      Container(
+                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5),
+                                        height: 55,
+
+                                        ///SizeConfig.safeBlockHorizontal * 14
+                                        //width: 328,
+                                        child: TextFormField(
+                                          controller: _emailController,
+                                          textAlign: TextAlign.start,
+                                          keyboardType: TextInputType.emailAddress,
+                                          autofillHints: [AutofillHints.email],
+                                          decoration: InputDecoration(
+                                            enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                            focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                            errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                            labelText: AppLocalizations.of(context).emailAddress,
+                                            //hintText: "email *",
+                                            //hintStyle: TextStyle(color: Color(0xff666666)),
+                                            labelStyle: TextStyle(
+                                              fontFamily: BuytimeTheme.FontFamily,
+                                              color: Color(0xff666666),
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
+                                          style: TextStyle(
+                                            fontFamily: BuytimeTheme.FontFamily,
+                                            color: Color(0xff666666),
+                                            fontWeight: FontWeight.w800,
+                                          ),
+                                          validator: (String value) {
+                                            setState(() {
+                                              if (value.isNotEmpty && EmailValidator.validate(value)) {
+                                                emailHasError = false;
+                                              } else
+                                                emailHasError = true;
+                                            });
+                                            return null;
+                                          },
                                         ),
+                                      ),
 
-                                        ///Email address
-                                        Container(
-                                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5),
-                                          height: 55,
+                                      ///Password
+                                      Container(
+                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockHorizontal * 4),
+                                        height: 55,
 
-                                          ///SizeConfig.safeBlockHorizontal * 14
-                                          //width: 328,
-                                          child: TextFormField(
-                                            controller: _emailController,
-                                            textAlign: TextAlign.start,
-                                            keyboardType: TextInputType.emailAddress,
-                                            autofillHints: [AutofillHints.email],
-                                            decoration: InputDecoration(
+                                        ///SizeConfig.safeBlockHorizontal * 14
+                                        //width: 328,
+                                        child: TextFormField(
+                                          controller: _passwordController,
+                                          textAlign: TextAlign.start,
+                                          obscureText: passwordVisible,
+                                          decoration: InputDecoration(
                                               enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
                                               focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
                                               errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                              labelText: AppLocalizations.of(context).emailAddress,
+                                              labelText: AppLocalizations.of(context).password,
                                               //hintText: "email *",
                                               //hintStyle: TextStyle(color: Color(0xff666666)),
                                               labelStyle: TextStyle(
@@ -766,238 +806,199 @@ class _TouristSessionRegisterState extends State<TouristSessionRegister> with Si
                                                 color: Color(0xff666666),
                                                 fontWeight: FontWeight.w400,
                                               ),
-                                            ),
-                                            style: TextStyle(
-                                              fontFamily: BuytimeTheme.FontFamily,
-                                              color: Color(0xff666666),
-                                              fontWeight: FontWeight.w800,
-                                            ),
-                                            validator: (String value) {
-                                              setState(() {
-                                                if (value.isNotEmpty && EmailValidator.validate(value)) {
-                                                  emailHasError = false;
-                                                } else
-                                                  emailHasError = true;
-                                              });
-                                              return null;
-                                            },
-                                          ),
-                                        ),
-
-                                        ///Password
-                                        Container(
-                                          margin: EdgeInsets.only(top: SizeConfig.safeBlockHorizontal * 4),
-                                          height: 55,
-
-                                          ///SizeConfig.safeBlockHorizontal * 14
-                                          //width: 328,
-                                          child: TextFormField(
-                                            controller: _passwordController,
-                                            textAlign: TextAlign.start,
-                                            obscureText: passwordVisible,
-                                            decoration: InputDecoration(
-                                                enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                                focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                                errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                                labelText: AppLocalizations.of(context).password,
-                                                //hintText: "email *",
-                                                //hintStyle: TextStyle(color: Color(0xff666666)),
-                                                labelStyle: TextStyle(
-                                                  fontFamily: BuytimeTheme.FontFamily,
+                                              suffixIcon: IconButton(
+                                                icon: Icon(
+                                                  // Based on passwordVisible state choose the icon
+                                                  passwordVisible ? Icons.visibility : Icons.visibility_off,
                                                   color: Color(0xff666666),
-                                                  fontWeight: FontWeight.w400,
                                                 ),
-                                                suffixIcon: IconButton(
-                                                  icon: Icon(
-                                                    // Based on passwordVisible state choose the icon
-                                                    passwordVisible ? Icons.visibility : Icons.visibility_off,
-                                                    color: Color(0xff666666),
-                                                  ),
-                                                  onPressed: () {
-                                                    // Update the state i.e. toogle the state of passwordVisible variable
-                                                    setState(() {
-                                                      passwordVisible = !passwordVisible;
-                                                    });
-                                                  },
-                                                )),
-                                            style: TextStyle(
-                                              fontFamily: BuytimeTheme.FontFamily,
-                                              color: Color(0xff666666),
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                            validator: (String value) {
-                                              setState(() {
-                                                if (passwordValidator(value)) {
-                                                  passwordHasError = false;
-                                                } else
-                                                  passwordHasError = true;
-                                              });
-                                              return null;
-                                            },
+                                                onPressed: () {
+                                                  // Update the state i.e. toogle the state of passwordVisible variable
+                                                  setState(() {
+                                                    passwordVisible = !passwordVisible;
+                                                  });
+                                                },
+                                              )),
+                                          style: TextStyle(
+                                            fontFamily: BuytimeTheme.FontFamily,
+                                            color: Color(0xff666666),
+                                            fontWeight: FontWeight.bold,
                                           ),
+                                          validator: (String value) {
+                                            setState(() {
+                                              if (passwordValidator(value)) {
+                                                passwordHasError = false;
+                                              } else
+                                                passwordHasError = true;
+                                            });
+                                            return null;
+                                          },
                                         ),
+                                      ),
 
-                                        ///Error message
-                                        Flexible(
+                                      ///Error message
+                                      Flexible(
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          children: [
+                                            Container(
+                                              width: SizeConfig.safeBlockHorizontal * 80,
+                                              //alignment: Alignment.centerLeft,
+                                              margin: EdgeInsets.only(top: 12.0),
+                                              child: Text(
+                                                responseMessage,
+                                                style: TextStyle(
+                                                    color: _success != null
+                                                        ? _success
+                                                        ? Colors.greenAccent
+                                                        : Colors.redAccent
+                                                        : Colors.redAccent,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 12),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      ///Remeber Me
+                                      /*Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        ///Remeber Me
+                                        Container(
+                                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
                                           child: Row(
                                             mainAxisAlignment: MainAxisAlignment.start,
                                             children: [
-                                              Container(
-                                                width: SizeConfig.safeBlockHorizontal * 80,
-                                                //alignment: Alignment.centerLeft,
-                                                margin: EdgeInsets.only(top: 12.0),
-                                                child: Text(
-                                                  responseMessage,
-                                                  style: TextStyle(
-                                                      color: _success != null
-                                                          ? _success
-                                                          ? Colors.greenAccent
-                                                          : Colors.redAccent
-                                                          : Colors.redAccent,
-                                                      fontWeight: FontWeight.bold,
-                                                      fontSize: 12),
+                                              SizedBox(
+                                                width: 15,
+                                                height: 15,
+                                                child: Checkbox(
+                                                  checkColor: BuytimeTheme.TextWhite,
+                                                  activeColor: BuytimeTheme.TextGrey,
+                                                  value: remeberMe,
+                                                  onChanged: (bool value) {
+                                                    setState(() {
+                                                      remeberMe = value;
+                                                    });
+                                                  },
                                                 ),
                                               ),
+                                              Container(
+                                                //padding: EdgeInsets.all(5.0),
+                                                margin: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 3),
+                                                width: 100,
+                                                height: 28,
+                                                child: FittedBox(
+                                                  fit: BoxFit.scaleDown,
+                                                  child: Text(
+                                                    AppLocalizations.of(context).saveCredentials,
+                                                    style: TextStyle(
+                                                        letterSpacing: 1.25, fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextGrey, fontWeight: FontWeight.w500, fontSize: 16
+
+                                                      ///SizeConfig.safeBlockHorizontal * 4
+                                                    ),
+                                                  ),
+                                                ),
+                                              )
                                             ],
                                           ),
                                         ),
-                                        ///Remeber Me
-                                        /*Row(
-                                        mainAxisAlignment: MainAxisAlignment.end,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          ///Remeber Me
-                                          Container(
-                                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
-                                            child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.start,
-                                              children: [
-                                                SizedBox(
-                                                  width: 15,
-                                                  height: 15,
-                                                  child: Checkbox(
-                                                    checkColor: BuytimeTheme.TextWhite,
-                                                    activeColor: BuytimeTheme.TextGrey,
-                                                    value: remeberMe,
-                                                    onChanged: (bool value) {
-                                                      setState(() {
-                                                        remeberMe = value;
-                                                      });
-                                                    },
-                                                  ),
-                                                ),
-                                                Container(
-                                                  //padding: EdgeInsets.all(5.0),
-                                                  margin: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 3),
-                                                  width: 100,
-                                                  height: 28,
-                                                  child: FittedBox(
-                                                    fit: BoxFit.scaleDown,
-                                                    child: Text(
-                                                      AppLocalizations.of(context).saveCredentials,
-                                                      style: TextStyle(
-                                                          letterSpacing: 1.25, fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextGrey, fontWeight: FontWeight.w500, fontSize: 16
-
-                                                        ///SizeConfig.safeBlockHorizontal * 4
-                                                      ),
-                                                    ),
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),*/
-
                                       ],
-                                    )),
-                              ),
+                                    ),*/
 
-                              ///Register button
-                              Flexible(
-                                  flex: 1,
-                                  child: Container(
-                                      margin: EdgeInsets.only(
-                                          top: SizeConfig.safeBlockVertical * 2.5,
-                                          bottom: SizeConfig.safeBlockVertical * 2.5,
-                                          left: SizeConfig.safeBlockHorizontal * 8,
-                                          right: SizeConfig.safeBlockHorizontal * 8),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.end,
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        children: [
-                                          FloatingActionButton(
-                                            onPressed: () async {
-                                              if (_formKey.currentState.validate() && !_isRequestFlying) {
-                                                _register();
-                                                checkFormValidation();
-                                              }
-                                            },
-                                            shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(500.0)),
-                                            child: Icon(
-                                              Icons.chevron_right,
-                                              size: 30,
-                                              color: BuytimeTheme.SymbolGrey,
-                                            ),
-                                          )
-                                        ],
-                                      )))
-                            ],
-                          ),
+                                    ],
+                                  )),
+                            ),
+
+                            ///Register button
+                            Flexible(
+                                flex: 1,
+                                child: Container(
+                                    margin: EdgeInsets.only(
+                                      //  top: SizeConfig.safeBlockVertical * 2.5,
+                                        bottom: SizeConfig.safeBlockVertical * 2.5,
+                                        left: SizeConfig.safeBlockHorizontal * 8,
+                                        right: SizeConfig.safeBlockHorizontal * 8),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        FloatingActionButton(
+                                          onPressed: () async {
+                                            if (_formKey.currentState.validate() && !_isRequestFlying) {
+                                              _register();
+                                              checkFormValidation();
+                                            }
+                                          },
+                                          shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(500.0)),
+                                          child: Icon(
+                                            Icons.chevron_right,
+                                            size: 30,
+                                            color: BuytimeTheme.SymbolGrey,
+                                          ),
+                                        )
+                                      ],
+                                    )))
+                          ],
                         ),
                       ),
-                      ///Google & Facebook & Apple Sign up buttons
-                      Expanded(
-                        flex: 2,
-                        child: Container(
-                          //height: SizeConfig.safeBlockVertical * 30,
-                          //height: 243, ///285
-                          padding: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, bottom: SizeConfig.safeBlockVertical * 2),
-                          color: BuytimeTheme.BackgroundCerulean,
-                          child: Column(mainAxisAlignment: MainAxisAlignment.center, mainAxisSize: MainAxisSize.min, children: [
-                            BrandedButton("assets/img/google_logo.png", AppLocalizations.of(context).logInWithGoogle, initiateGoogleSignIn),
-                            BrandedButton("assets/img/apple_logo.png", AppLocalizations.of(context).logInWithApple, initiateAppleSignIn),
-                            Container(
-                                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
-                                //margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 0.5),
-                                alignment: Alignment.center,
-                                child: Material(
-                                  color: Colors.transparent,
-                                  child: InkWell(
-                                    onTap: () {
-                                      Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(builder: (context) => TouristSession()),
-                                      );
-                                    },
-                                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                                    child: Container(
-                                      //width: 328,
-                                      width: 80,
-                                      height: 28,
-                                      padding: EdgeInsets.all(5.0),
-                                      child: FittedBox(
-                                        child: Text(
-                                          AppLocalizations.of(context).logIn,
-                                          style: TextStyle(
-                                            fontFamily: BuytimeTheme.FontFamily,
-                                            color: BuytimeTheme.TextWhite,
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: 16,
+                    ),
+                    ///Google & Facebook & Apple Sign up buttons
+                    Expanded(
+                      flex: 2,
+                      child: Container(
+                        //height: SizeConfig.safeBlockVertical * 30,
+                        //height: 243, ///285
+                        padding: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, bottom: SizeConfig.safeBlockVertical * 2),
+                        color: BuytimeTheme.BackgroundCerulean,
+                        child: Column(mainAxisAlignment: MainAxisAlignment.center, mainAxisSize: MainAxisSize.min, children: [
+                          BrandedButton("assets/img/google_logo.png", AppLocalizations.of(context).logInWithGoogle, initiateGoogleSignIn),
+                          Padding(
+                            padding: EdgeInsets.only(top: 24.0, bottom: SizeConfig.safeBlockVertical * 3),
+                            child: BrandedButton("assets/img/apple_logo.png", AppLocalizations.of(context).logInWithApple, initiateAppleSignIn),
+                          ),
+                          Container(
+                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
+                              //margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 0.5),
+                              alignment: Alignment.center,
+                              child: Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  onTap: () {
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => TouristSession()),
+                                    );
+                                  },
+                                  borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                  child: Container(
+                                    //width: 328,
+                                    width: 80,
+                                    height: 28,
+                                    padding: EdgeInsets.all(5.0),
+                                    child: FittedBox(
+                                      child: Text(
+                                        AppLocalizations.of(context).logIn,
+                                        style: TextStyle(
+                                          fontFamily: BuytimeTheme.FontFamily,
+                                          color: BuytimeTheme.TextWhite,
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 16,
 
-                                            ///SizeConfig.safeBlockHorizontal * 3
-                                          ),
+                                          ///SizeConfig.safeBlockHorizontal * 3
                                         ),
                                       ),
                                     ),
                                   ),
-                                )),
-                            //BrandedButton("assets/img/facebook_logo.png", AppLocalizations.of(context).signFacebook, initiateFacebookSignIn),
-                          ]),
-                        ),
-                      )
-                    ]),
-                  ),
+                                ),
+                              )),
+                          //BrandedButton("assets/img/facebook_logo.png", AppLocalizations.of(context).signFacebook, initiateFacebookSignIn),
+                        ]),
+                      ),
+                    )
+                  ]),
                 ),
               )
           )
