@@ -525,108 +525,118 @@ class _ActivityManagementItemDetailsState extends State<ActivityManagementItemDe
                     children: [
                       widget.orderState.progress != Utils.enumToString(OrderStatus.canceled) && widget.orderState.progress != Utils.enumToString(OrderStatus.declined) ?
                       ///Decline
-                      Container(
-                          width: 198, ///SizeConfig.safeBlockHorizontal * 40
-                          height: 44,
-                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, bottom: SizeConfig.safeBlockVertical * 3, right: SizeConfig.safeBlockHorizontal * 0),
-                          decoration: BoxDecoration(
-                              borderRadius: new BorderRadius.circular(5),
+                      Flexible(
+                        flex : 1,
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 10.0),
+                          child: Container(
+                              width: SizeConfig.safeBlockHorizontal * 40,
+                              height: 44,
+                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, bottom: SizeConfig.safeBlockVertical * 3, right: SizeConfig.safeBlockHorizontal * 0),
+                              decoration: BoxDecoration(
+                                  borderRadius: new BorderRadius.circular(5),
 
-                          ),
-                          child: MaterialButton(
-                            elevation: 0,
-                            hoverElevation: 0,
-                            focusElevation: 0,
-                            highlightElevation: 0,
-                            onPressed: () {
-                              if(widget.orderState.progress == Utils.enumToString(OrderStatus.paid)){
-                                //StoreProvider.of<AppState>(context).dispatch(SetOrderProgress(Utils.enumToString(OrderStatus.canceled)));
-                                onCancel(widget.orderState);
-                              }else{
-                                //StoreProvider.of<AppState>(context).dispatch(SetOrderProgress(Utils.enumToString(OrderStatus.declined)));
-                                widget.orderState.progress = Utils.enumToString(OrderStatus.pending);
-                                StoreProvider.of<AppState>(context).dispatch(UpdateOrderByManager(widget.orderState, OrderStatus.pending));
-                              }
-                            },
-                            textColor: BuytimeTheme.TextWhite,
-                            color: BuytimeTheme.ManagerPrimary,
-                            padding: EdgeInsets.all(15),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: new BorderRadius.circular(5),
-                            ),
-                            child: Text(
-                                widget.orderState.progress == Utils.enumToString(OrderStatus.paid) ? AppLocalizations.of(context).cancel.toUpperCase() : AppLocalizations.of(context).decline.toUpperCase(),
-                              style: TextStyle(
-                                  fontSize: 14,
-                                  fontFamily: BuytimeTheme.FontFamily,
-                                  fontWeight: FontWeight.w500,
-                                  letterSpacing: 1.25
                               ),
-                            ),
-                          )
+                              child: MaterialButton(
+                                elevation: 0,
+                                hoverElevation: 0,
+                                focusElevation: 0,
+                                highlightElevation: 0,
+                                onPressed: () {
+                                  if(widget.orderState.progress == Utils.enumToString(OrderStatus.paid)){
+                                    //StoreProvider.of<AppState>(context).dispatch(SetOrderProgress(Utils.enumToString(OrderStatus.canceled)));
+                                    onCancel(widget.orderState);
+                                  }else{
+                                    //StoreProvider.of<AppState>(context).dispatch(SetOrderProgress(Utils.enumToString(OrderStatus.declined)));
+                                    widget.orderState.progress = Utils.enumToString(OrderStatus.pending);
+                                    StoreProvider.of<AppState>(context).dispatch(UpdateOrderByManager(widget.orderState, OrderStatus.pending));
+                                  }
+                                },
+                                textColor: BuytimeTheme.TextWhite,
+                                color: BuytimeTheme.ManagerPrimary,
+                                padding: EdgeInsets.all(15),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: new BorderRadius.circular(5),
+                                ),
+                                child: Text(
+                                    widget.orderState.progress == Utils.enumToString(OrderStatus.paid) ? AppLocalizations.of(context).cancel.toUpperCase() : AppLocalizations.of(context).decline.toUpperCase(),
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      fontFamily: BuytimeTheme.FontFamily,
+                                      fontWeight: FontWeight.w500,
+                                      letterSpacing: 1.25
+                                  ),
+                                ),
+                              )
+                          ),
+                        ),
                       ) : Container(),
                       ///Accept
                       widget.orderState.progress == Utils.enumToString(OrderStatus.canceled) || widget.orderState.progress == Utils.enumToString(OrderStatus.declined) ?
-                      Container(
-                          width: 198, ///SizeConfig.safeBlockHorizontal * 40
-                          height: 44,
-                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, bottom: SizeConfig.safeBlockVertical * 3),
-                          child: MaterialButton(
-                            elevation: 0,
-                            hoverElevation: 0,
-                            focusElevation: 0,
-                            highlightElevation: 0,
-                            onPressed: () {
-                              widget.orderState.progress = Utils.enumToString(OrderStatus.pending);
-                              StoreProvider.of<AppState>(context).dispatch(UpdateOrderByManager(widget.orderState, OrderStatus.pending));
-                            },
-                            textColor: BuytimeTheme.TextWhite,
-                            color: BuytimeTheme.ManagerPrimary,
-                            padding: EdgeInsets.all(15),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: new BorderRadius.circular(5),
-                            ),
-                            child: Text(
-                              AppLocalizations.of(context).reOpen.toUpperCase(),
-                              style: TextStyle(
-                                  fontSize: 14,
-                                  fontFamily: BuytimeTheme.FontFamily,
-                                  fontWeight: FontWeight.w500,
-                                  letterSpacing: 1.25
+                      Flexible(
+                        child: Container(
+                           width: SizeConfig.safeBlockHorizontal * 40,
+                            height: 44,
+                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, bottom: SizeConfig.safeBlockVertical * 3),
+                            child: MaterialButton(
+                              elevation: 0,
+                              hoverElevation: 0,
+                              focusElevation: 0,
+                              highlightElevation: 0,
+                              onPressed: () {
+                                widget.orderState.progress = Utils.enumToString(OrderStatus.pending);
+                                StoreProvider.of<AppState>(context).dispatch(UpdateOrderByManager(widget.orderState, OrderStatus.pending));
+                              },
+                              textColor: BuytimeTheme.TextWhite,
+                              color: BuytimeTheme.ManagerPrimary,
+                              padding: EdgeInsets.all(15),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: new BorderRadius.circular(5),
                               ),
-                            ),
-                          )
+                              child: Text(
+                                AppLocalizations.of(context).reOpen.toUpperCase(),
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    fontFamily: BuytimeTheme.FontFamily,
+                                    fontWeight: FontWeight.w500,
+                                    letterSpacing: 1.25
+                                ),
+                              ),
+                            )
+                        ),
                       ) :
                       widget.orderState.progress != Utils.enumToString(OrderStatus.accepted) ?
-                      Container(
-                          width: 198, ///SizeConfig.safeBlockHorizontal * 40
-                          height: 44,
-                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, bottom: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 1),
-                          child: MaterialButton(
-                            elevation: 0,
-                            hoverElevation: 0,
-                            focusElevation: 0,
-                            highlightElevation: 0,
-                            onPressed: () {
-                              widget.orderState.progress = Utils.enumToString(OrderStatus.accepted);
-                              StoreProvider.of<AppState>(context).dispatch(UpdateOrderByManager(widget.orderState, OrderStatus.accepted));
-                            },
-                            textColor: BuytimeTheme.TextWhite,
-                            color: BuytimeTheme.ManagerPrimary,
-                            padding: EdgeInsets.all(15),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: new BorderRadius.circular(5),
-                            ),
-                            child: Text(
-                              AppLocalizations.of(context).accept.toUpperCase(),
-                              style: TextStyle(
-                                  fontSize: 14,
-                                  fontFamily: BuytimeTheme.FontFamily,
-                                  fontWeight: FontWeight.w500,
-                                  letterSpacing: 1.25
+                      Flexible(
+                        child: Container(
+                            width: SizeConfig.safeBlockHorizontal * 40,
+                            height: 44,
+                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, bottom: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 1),
+                            child: MaterialButton(
+                              elevation: 0,
+                              hoverElevation: 0,
+                              focusElevation: 0,
+                              highlightElevation: 0,
+                              onPressed: () {
+                                widget.orderState.progress = Utils.enumToString(OrderStatus.accepted);
+                                StoreProvider.of<AppState>(context).dispatch(UpdateOrderByManager(widget.orderState, OrderStatus.accepted));
+                              },
+                              textColor: BuytimeTheme.TextWhite,
+                              color: BuytimeTheme.ManagerPrimary,
+                              padding: EdgeInsets.all(15),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: new BorderRadius.circular(5),
                               ),
-                            ),
-                          )
+                              child: Text(
+                                AppLocalizations.of(context).accept.toUpperCase(),
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    fontFamily: BuytimeTheme.FontFamily,
+                                    fontWeight: FontWeight.w500,
+                                    letterSpacing: 1.25
+                                ),
+                              ),
+                            )
+                        ),
                       ) :
                       Container(),
                     ],

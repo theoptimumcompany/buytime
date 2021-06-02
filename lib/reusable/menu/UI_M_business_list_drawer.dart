@@ -39,7 +39,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../utils/globals.dart';
 
 final GoogleSignIn googleSignIn = new GoogleSignIn();
-enum DrawerSelection { BusinessList, ActivityManagement }
+enum DrawerSelection { BusinessList, NotificationCenter, ActivityManagement }
 
 class UI_M_BusinessListDrawer extends StatefulWidget {
   UI_M_BusinessListDrawer({
@@ -189,7 +189,35 @@ class _UI_M_BusinessListDrawerState extends State<UI_M_BusinessListDrawer> {
                   },
                 ),
               ),
-
+              ///Notification Center
+              Container(
+                decoration: BoxDecoration(border: Border(bottom: BorderSide(color: BuytimeTheme.DividerGrey))),
+                child: ListTile(
+                  selected: drawerSelection == DrawerSelection.NotificationCenter,
+                  //selectedTileColor: Color.fromRGBO(32, 124, 195, 0.3),
+                  autofocus: false,
+                  title: Text(
+                    AppLocalizations.of(context).notificationCenter,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 14,
+                      fontFamily: BuytimeTheme.FontFamily,
+                      letterSpacing: 0.1,
+                      color: drawerSelection == DrawerSelection.NotificationCenter ? BuytimeTheme.ManagerPrimary : BuytimeTheme.TextBlack,
+                    ),
+                  ),
+                  //leading: Icon(Icons.list),
+                  onTap: () {
+                    //Navigator.pop(context);
+                    setState(() {
+                      drawerSelection = DrawerSelection.NotificationCenter;
+                     // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ));
+                    });
+                  },
+                ),
+              ),
               ///Activity Management
               Container(
                 decoration: BoxDecoration(border: Border(bottom: BorderSide(color: BuytimeTheme.DividerGrey))),

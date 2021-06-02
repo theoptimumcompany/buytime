@@ -619,7 +619,7 @@ class _RActivityManagementState extends State<RActivityManagement> {
                     onTap: () {
                       if (!managerHasChosenAction) {
                         // order.progress = Utils.enumToString(OrderStatus.canceled);
-                        StoreProvider.of<AppState>(context).dispatch(UpdateOrderByManager(order, OrderStatus.canceled));
+                        onCancel(order);
                         managerHasChosenAction = true;
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content:  Text(AppLocalizations.of(context).networkRequestStillInProgress)));

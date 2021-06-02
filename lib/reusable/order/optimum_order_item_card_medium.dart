@@ -324,7 +324,7 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
                                ),
                                ///Price
                                Text(
-                                 '${AppLocalizations.of(context).euroSpace} ${orderEntry.price.toStringAsFixed(2)}',
+                                 '${orderEntry.number} x ${AppLocalizations.of(context).euroSpace} ${(orderEntry.price/orderEntry.number).toStringAsFixed(2)} = ${AppLocalizations.of(context).euroSpace} ${orderEntry.price.toStringAsFixed(2)}',
                                  overflow: TextOverflow.ellipsis,
                                  style: TextStyle(
                                      fontFamily: BuytimeTheme.FontFamily,
