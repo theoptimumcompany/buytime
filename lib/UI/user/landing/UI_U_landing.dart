@@ -562,9 +562,6 @@ class LandingState extends State<Landing> {
                                             onTap: () async {
                                               SharedPreferences prefs = await SharedPreferences.getInstance();
                                               await storage.write(key: 'bookingCode', value: '');
-                                              await prefs.setBool('easy_check_in', false);
-                                              await prefs.setBool('star_explanation', false);
-
                                               FirebaseAuth.instance.signOut().then((_) {
 
                                                 googleSignIn.signOut();
