@@ -123,7 +123,6 @@ class _UserServiceCardWidgetState extends State<UserServiceCardWidget> {
                             child: Text(
                               Utils.retriveField(Localizations.localeOf(context).languageCode, widget.orderState.itemList[0].name),
                               style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextWhite, fontWeight: FontWeight.w500, fontSize: 14
-
                                   ///SizeConfig.safeBlockHorizontal * 4
                                   ),
                             ),
