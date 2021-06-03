@@ -1,4 +1,5 @@
 import 'package:Buytime/UI/management/business/UI_M_business_list.dart';
+import 'package:Buytime/UI/user/booking/RUI_U_all_bookings.dart';
 import 'package:Buytime/UI/user/booking/UI_U_all_bookings.dart';
 import 'package:Buytime/UI/user/booking/RUI_notification_bell.dart';
 import 'package:Buytime/UI/user/booking/widget/user_service_card_widget.dart';
@@ -63,6 +64,7 @@ class _BookingPageState extends State<BookingPage> {
   CategoryListState categoryListState;
   List<CategoryState> categoryList = [];
   List<OrderState> userOrderList = [];
+  List<OrderState> allUserOrderList = [];
   List<OrderState> orderList = [];
 
   List<CategoryState> row1 = [];
@@ -209,6 +211,16 @@ class _BookingPageState extends State<BookingPage> {
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
     SizeConfig().init(context);
+    DateTime currentTime = DateTime.now();
+    currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0).toUtc();
+    final Stream<QuerySnapshot> _orderStream =  FirebaseFirestore.instance
+        .collection("order")
+        .where("businessId", isEqualTo: StoreProvider.of<AppState>(context).state.business.id_firestore)
+        .where("userId", isEqualTo: StoreProvider.of<AppState>(context).state.user.uid)
+        //.where("itemList[0][time]", isNotEqualTo: null)
+        .where("date", isGreaterThanOrEqualTo: currentTime)
+        .limit(50)
+        .snapshots(includeMetadataChanges: true);
     return StoreConnector<AppState, AppState>(
       converter: (store) => store.state,
       onInit: (store) {
@@ -220,16 +232,7 @@ class _BookingPageState extends State<BookingPage> {
       },
       builder: (context, snapshot) {
         debugPrint('UI_U_BookingPage => Order List LENGTH: ${snapshot.orderList.orderListState.length}');
-        orderList.clear();
-        userOrderList.clear();
-        DateTime currentTime = DateTime.now();
-        currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0).toUtc();
-        snapshot.orderList.orderListState.forEach((element) {
-          if((element.progress == Utils.enumToString(OrderStatus.paid) || element.progress == Utils.enumToString(OrderStatus.pending) || element.progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout) || element.progress == Utils.enumToString(OrderStatus.holding) || element.progress == Utils.enumToString(OrderStatus.accepted)) && (element.date.isAtSameMomentAs(currentTime) || element.date.isAfter(currentTime)) && element.itemList.first.time != null)
-            userOrderList.add(element);
-        });
-        orderList.addAll(snapshot.orderList.orderListState);
-        userOrderList.sort((a,b) => a.date.isBefore(b.date) ? -1 : a.date.isAtSameMomentAs(b.date) ? 0 : 1);
+        //currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0).toUtc();
 
         /*bookingState = snapshot.booking;
         businessState = snapshot.business;
@@ -707,92 +710,119 @@ class _BookingPageState extends State<BookingPage> {
                                           ),
                                         ),
                                         ///My bookings & View all
-                                        userOrderList.isNotEmpty ? Column(
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                              children: [
-                                                ///My bookings
-                                                Container(
-                                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 1),
-                                                  child: Text(
-                                                    AppLocalizations.of(context).myReservation,
-                                                    style: TextStyle(
-                                                      //letterSpacing: SizeConfig.safeBlockVertical * .4,
-                                                        fontFamily: BuytimeTheme.FontFamily,
-                                                        color: BuytimeTheme.TextBlack,
-                                                        fontWeight: FontWeight.w400,
-                                                        fontSize: 18
+                                        StreamBuilder<QuerySnapshot>(
+                                            stream: _orderStream,
+                                            builder: (context, AsyncSnapshot<QuerySnapshot> orderSnapshot) {
+                                              userOrderList.clear();
+                                              orderList.clear();
+                                              if (orderSnapshot.hasError || orderSnapshot.connectionState == ConnectionState.waiting) {
+                                                return CircularProgressIndicator();
+                                              }
+                                              DateTime currentTime = DateTime.now();
+                                              orderSnapshot.data.docs.forEach((element) {
+                                                //allUserOrderList.add(element);
+                                                OrderState order = OrderState.fromJson(element.data());
+                                                if((order.progress == Utils.enumToString(OrderStatus.paid) ||
+                                                    order.progress == Utils.enumToString(OrderStatus.pending) ||
+                                                    order.progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout) ||
+                                                    order.progress == Utils.enumToString(OrderStatus.holding) ||
+                                                    order.progress == Utils.enumToString(OrderStatus.accepted)) &&
+                                                    (order.itemList.first.date.isAtSameMomentAs(currentTime) || order.itemList.first.date.isAfter(currentTime)) && order.itemList.first.time != null)
+                                                  userOrderList.add(order);
+                                                orderList.add(order);
+                                              });
+                                              //debugPrint('asdsd');
+                                              userOrderList.sort((a,b) => a.itemList.first.date.isBefore(b.itemList.first.date) ? -1 : a.itemList.first.date.isAtSameMomentAs(b.itemList.first.date) ? 0 : 1);
+                                              orderList.sort((a,b) => a.date.isBefore(b.date) ? -1 : a.date.isAtSameMomentAs(b.date) ? 0 : 1);
+                                              return userOrderList.isNotEmpty ? Column(
+                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                    children: [
+                                                      ///My bookings
+                                                      Container(
+                                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 1),
+                                                        child: Text(
+                                                          AppLocalizations.of(context).myReservation,
+                                                          style: TextStyle(
+                                                            //letterSpacing: SizeConfig.safeBlockVertical * .4,
+                                                              fontFamily: BuytimeTheme.FontFamily,
+                                                              color: BuytimeTheme.TextBlack,
+                                                              fontWeight: FontWeight.w400,
+                                                              fontSize: 18
 
-                                                      ///SizeConfig.safeBlockHorizontal * 4
-                                                    ),
+                                                            ///SizeConfig.safeBlockHorizontal * 4
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      ///View All
+                                                      Container(
+                                                          margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 2.5),
+                                                          alignment: Alignment.center,
+                                                          child: Material(
+                                                            color: Colors.transparent,
+                                                            child: InkWell(
+                                                                onTap: () {
+                                                                  //Navigator.push(context, MaterialPageRoute(builder: (context) => RAllBookings(tourist: false,)),);
+                                                                  Navigator.push(context, MaterialPageRoute(builder: (context) => AllBookings(orderStateList: orderList, tourist: false,)),);
+                                                                },
+                                                                borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                                                child: Container(
+                                                                  padding: EdgeInsets.all(5.0),
+                                                                  child: Text(
+                                                                    AppLocalizations.of(context).viewAll,
+                                                                    style: TextStyle(
+                                                                        letterSpacing: SizeConfig.safeBlockHorizontal * .2,
+                                                                        fontFamily: BuytimeTheme.FontFamily,
+                                                                        color: BuytimeTheme.UserPrimary,
+                                                                        fontWeight: FontWeight.w400,
+                                                                        fontSize: 16
+
+                                                                      ///SizeConfig.safeBlockHorizontal * 4
+                                                                    ),
+                                                                  ),
+                                                                )),
+                                                          ))
+                                                    ],
                                                   ),
-                                                ),
-                                                ///View All
-                                                Container(
-                                                    margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 2.5),
-                                                    alignment: Alignment.center,
-                                                    child: Material(
-                                                      color: Colors.transparent,
-                                                      child: InkWell(
-                                                          onTap: () {
-                                                            Navigator.push(context, MaterialPageRoute(builder: (context) => AllBookings(orderStateList: orderList, tourist: false,)),);
+                                                  ///List
+                                                  Container(
+                                                    height: 120,
+                                                    width: double.infinity,
+                                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
+                                                    child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
+                                                      SliverList(
+                                                        delegate: SliverChildBuilderDelegate(
+                                                              (context, index) {
+                                                            //MenuItemModel menuItem = menuItems.elementAt(index);
+                                                            OrderState order = userOrderList.elementAt(index);
+                                                            ServiceState service = ServiceState().toEmpty();
+                                                            StoreProvider.of<AppState>(context).state.notificationListState.notificationListState.forEach((element) {
+                                                              if(element.notificationId != null && element.notificationId.isNotEmpty && order.orderId.isNotEmpty && order.orderId == element.data.state.orderId){
+                                                                snapshot.serviceList.serviceListState.forEach((s) {
+                                                                  if(element.data.state.serviceId == s.serviceId)
+                                                                    service = s;
+                                                                });
+                                                              }
+                                                            });
+                                                            return Container(
+                                                              width: 151,
+                                                              height: 100,
+                                                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1, right: SizeConfig.safeBlockHorizontal * 1),
+                                                              child: UserServiceCardWidget(userOrderList.elementAt(index), false, service),
+                                                            );
                                                           },
-                                                          borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                                                          child: Container(
-                                                            padding: EdgeInsets.all(5.0),
-                                                            child: Text(
-                                                              AppLocalizations.of(context).viewAll,
-                                                              style: TextStyle(
-                                                                  letterSpacing: SizeConfig.safeBlockHorizontal * .2,
-                                                                  fontFamily: BuytimeTheme.FontFamily,
-                                                                  color: BuytimeTheme.UserPrimary,
-                                                                  fontWeight: FontWeight.w400,
-                                                                  fontSize: 16
-
-                                                                ///SizeConfig.safeBlockHorizontal * 4
-                                                              ),
-                                                            ),
-                                                          )),
-                                                    ))
-                                              ],
-                                            ),
-                                            ///List
-                                            Container(
-                                              height: 120,
-                                              width: double.infinity,
-                                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
-                                              child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
-                                                SliverList(
-                                                  delegate: SliverChildBuilderDelegate(
-                                                        (context, index) {
-                                                      //MenuItemModel menuItem = menuItems.elementAt(index);
-                                                      OrderState order = userOrderList.elementAt(index);
-                                                      ServiceState service = ServiceState().toEmpty();
-                                                      StoreProvider.of<AppState>(context).state.notificationListState.notificationListState.forEach((element) {
-                                                        if(element.notificationId != null && element.notificationId.isNotEmpty && order.orderId.isNotEmpty && order.orderId == element.data.state.orderId){
-                                                          snapshot.serviceList.serviceListState.forEach((s) {
-                                                            if(element.data.state.serviceId == s.serviceId)
-                                                              service = s;
-                                                          });
-                                                        }
-                                                      });
-                                                      return Container(
-                                                        width: 151,
-                                                        height: 100,
-                                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1, right: SizeConfig.safeBlockHorizontal * 1),
-                                                        child: UserServiceCardWidget(order, false, service),
-                                                      );
-                                                    },
-                                                    childCount: userOrderList.length,
+                                                          childCount: userOrderList.length,
+                                                        ),
+                                                      ),
+                                                    ]),
                                                   ),
-                                                ),
-                                              ]),
-                                            ),
-                                          ],
-                                        ): Container()
+                                                ],
+                                              ): Container();
+                                            }
+                                        ),
                                       ],
                                     ),
                                   ),

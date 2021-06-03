@@ -336,6 +336,10 @@ OrderReservableState orderReservableReducer(OrderReservableState state, action) 
     orderReservableState.cartCounter = action.cartCounter;
     return orderReservableState;
   }
+  if (action is CreatedOrderReservable) {
+    orderReservableState = OrderReservableState().toEmpty();
+    return orderReservableState;
+  }
   if (action is SetOrderReservableToEmpty) {
     orderReservableState = OrderReservableState().toEmpty();
     return orderReservableState;

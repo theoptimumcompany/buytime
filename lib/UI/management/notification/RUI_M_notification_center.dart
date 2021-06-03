@@ -70,7 +70,7 @@ class _RNotificationCenterState extends State<RNotificationCenter> {
         _orderNotificationStream = FirebaseFirestore.instance.collection('notification')
             .where("userId", isEqualTo: userId)
             .orderBy('timestamp', descending: true)
-            .limit(10)
+            .limit(20)
             .snapshots();
       }
       // else {

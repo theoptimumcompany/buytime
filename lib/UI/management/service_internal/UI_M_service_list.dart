@@ -466,7 +466,7 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                                                 absorbing: false,
                                                 child: Dismissible(
                                                   key: UniqueKey(),
-                                                  direction: !snapshot.user.worker ? DismissDirection.endToStart : DismissDirection.none,
+                                                  direction:  canAccessService || canAccess(id(categories[i].categoryAbsolutePath)) ? DismissDirection.endToStart : DismissDirection.none,
                                                   background: Container(
                                                     height: 56,
                                                     color: Colors.red,

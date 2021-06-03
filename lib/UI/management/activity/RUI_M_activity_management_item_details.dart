@@ -306,6 +306,46 @@ class _RActivityManagementItemDetailsState extends State<RActivityManagementItem
                                   )
                                 ],
                               ),
+                              ///Order status
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Flexible(
+                                    child: Container(
+                                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * .5, bottom: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 2.5),
+                                      child: Text(
+                                        '${AppLocalizations.of(context).orderStatus}',
+                                        //'${orderState.itemList.first.description}',
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 2,
+                                        style: TextStyle(
+                                            fontFamily: BuytimeTheme.FontFamily,
+                                            fontWeight: FontWeight.w500,
+                                            color: BuytimeTheme.TextBlack,
+                                            fontSize: 16 /// mediaSize.height * 0.024
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Flexible(
+                                    child: Container(
+                                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * .5, bottom: SizeConfig.safeBlockVertical * 1, right: SizeConfig.safeBlockHorizontal * 2.5),
+                                      child: Text(
+                                        ' ${Utils.translateOrderStatus(context, orderState.progress)}',
+                                        //'${orderState.itemList.first.description}',
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 2,
+                                        style: TextStyle(
+                                            fontFamily: BuytimeTheme.FontFamily,
+                                            fontWeight: FontWeight.w600,
+                                            color: BuytimeTheme.TextBlack,
+                                            fontSize: 16 /// mediaSize.height * 0.024
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
                               orderState.itemList.first == null ?
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -690,7 +730,7 @@ class _RActivityManagementItemDetailsState extends State<RActivityManagementItem
                           ),
                         ) : Container(),
                         /// Decline
-                        orderState.progress == Utils.enumToString(OrderStatus.pending)?
+                        orderState.progress == Utils.enumToString(OrderStatus.pending) || orderState.progress == Utils.enumToString(OrderStatus.holding) || orderState.progress == Utils.enumToString(OrderStatus.accepted)?
                         Flexible(
                           flex : 1,
                           child: Padding(
