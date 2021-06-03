@@ -1,3 +1,4 @@
+import 'package:Buytime/UI/management/activity/RUI_M_activity_management_item_details.dart';
 import 'package:Buytime/UI/user/booking/RUI_U_order_detail.dart';
 import 'package:Buytime/UI/user/booking/UI_U_order_details.dart';
 import 'package:Buytime/UI/user/service/UI_U_service_reserve.dart';
@@ -21,18 +22,17 @@ import 'package:intl/intl.dart';
 import 'package:share/share.dart';
 import 'package:Buytime/UI/user/service/UI_U_service_details.dart';
 
-class UserNotificationListItem extends StatefulWidget {
+class ManagerNotificationListItem extends StatefulWidget {
 
   NotificationState notificationState;
   ServiceState serviceState;
-  bool tourist;
-  UserNotificationListItem(this.notificationState, this.serviceState, this.tourist);
+  ManagerNotificationListItem(this.notificationState, this.serviceState);
 
   @override
-  _UserNotificationListItemState createState() => _UserNotificationListItemState();
+  _ManagerNotificationListItemState createState() => _ManagerNotificationListItemState();
 }
 
-class _UserNotificationListItemState extends State<UserNotificationListItem> {
+class _ManagerNotificationListItemState extends State<ManagerNotificationListItem> {
 
   String days = '';
   String hours = '';
@@ -91,7 +91,8 @@ class _UserNotificationListItemState extends State<UserNotificationListItem> {
                 ){
                   widget.notificationState.opened = true;
                   StoreProvider.of<AppState>(context).dispatch(UpdateNotification(widget.notificationState));
-                  StoreProvider.of<AppState>(context).dispatch(SetOrderDetailAndNavigate(widget.notificationState.data.state));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => RActivityManagementItemDetails(orderId: widget.notificationState.data.state.orderId,)));
+                  //StoreProvider.of<AppState>(context).dispatch(SetOrderDetailAndNavigate(widget.notificationState.data.state));
                   // Navigator.push(context, MaterialPageRoute(builder: (context) => RUI_U_OrderDetail()));
                 }
               },

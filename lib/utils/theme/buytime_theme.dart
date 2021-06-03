@@ -90,7 +90,7 @@ class BuytimeTheme {
       fontFamily: FontFamily,
       fontSize: 20,
       fontWeight: FontWeight.w500,
-      letterSpacing: 0.15,
+      //letterSpacing: 0.15,
       color: TextWhite
   );
 
