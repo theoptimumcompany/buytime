@@ -32,7 +32,7 @@ class _UserServiceCardWidgetState extends State<UserServiceCardWidget> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      date = DateFormat('MMM dd').format(widget.orderState.date).toUpperCase();
+      date = DateFormat('MMM dd').format(widget.orderState.itemList.first.date).toUpperCase();
       currentDate = DateFormat('MMM dd').format(DateTime.now()).toUpperCase();
       nextDate = DateFormat('MMM dd').format(DateTime.now().add(Duration(days: 1))).toUpperCase();
     });
@@ -134,9 +134,9 @@ class _UserServiceCardWidgetState extends State<UserServiceCardWidget> {
                           child: FittedBox(
                             fit: BoxFit.scaleDown,
                             child: Text(
-                              currentDate == date
+                              DateFormat('MMM dd').format(DateTime.now()).toUpperCase() == DateFormat('MMM dd').format(widget.orderState.itemList.first.date).toUpperCase()
                                   ? AppLocalizations.of(context).todayLower + ', ${widget.orderState.itemList.first.time}'
-                                  : nextDate == date
+                                  : DateFormat('MMM dd').format(DateTime.now().add(Duration(days: 1))).toUpperCase() == DateFormat('MMM dd').format(widget.orderState.itemList.first.date).toUpperCase()
                                       ? AppLocalizations.of(context).tomorrowLower + ', ${widget.orderState.itemList.first.time}'
                                       : '${DateFormat('dd EEE', Localizations.localeOf(context).languageCode).format(widget.orderState.date)},  ${widget.orderState.itemList.first.time}',
                               style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextWhite, fontWeight: FontWeight.w500, fontSize: 12
