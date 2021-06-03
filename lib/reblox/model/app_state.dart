@@ -35,6 +35,8 @@ import 'package:Buytime/reblox/model/service/service_slot_time_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/model/service/snippet/service_snippet_state.dart';
 import 'package:Buytime/reblox/model/slot/slot_list_snippet_state.dart';
+import 'package:Buytime/reblox/model/snippet/reservations_orders_list_snippet_list_state.dart';
+import 'package:Buytime/reblox/model/snippet/reservations_orders_list_snippet_state.dart';
 import 'package:Buytime/reblox/model/snippet/service_list_snippet_list_state.dart';
 import 'package:Buytime/reblox/model/snippet/service_list_snippet_state.dart';
 import 'package:Buytime/reblox/model/statistics_state.dart';
@@ -116,6 +118,8 @@ class AppState {
   ExternalServiceImportedState externalServiceImportedState;
   ExternalServiceImportedListState externalServiceImportedListState;
   SlotListSnippetState slotSnippetListState;
+  ReservationsOrdersListSnippetState reservationsOrdersListSnippetState;
+  ReservationsOrdersListSnippetListState reservationsOrdersListSnippetListState;
 
   AppState({
     @required this.area,
@@ -155,6 +159,8 @@ class AppState {
     this.templateDataState,
     this.serviceListSnippetState,
     this.serviceListSnippetListState,
+    this.reservationsOrdersListSnippetListState,
+    this.reservationsOrdersListSnippetState,
     this.businessSnippetState,
     this.orderBusinessSnippetState,
     this.categorySnippetState,
@@ -205,6 +211,8 @@ class AppState {
     templateDataState = TemplateDataState();
     serviceListSnippetState = ServiceListSnippetState();
     serviceListSnippetListState = ServiceListSnippetListState();
+    reservationsOrdersListSnippetState = ReservationsOrdersListSnippetState();
+    reservationsOrdersListSnippetListState = ReservationsOrdersListSnippetListState();
     businessSnippetState = BusinessSnippetState();
     orderBusinessSnippetState = OrderBusinessSnippetState();
     categorySnippetState = CategorySnippetState();
@@ -257,6 +265,8 @@ class AppState {
         TemplateDataState templateDataState,
     ServiceListSnippetState serviceListSnippetState,
     ServiceListSnippetListState serviceListSnippetListState,
+    ReservationsOrdersListSnippetState reservationsOrdersListSnippetState,
+    ReservationsOrdersListSnippetListState reservationsOrdersListSnippetListState,
     BusinessSnippetState businessSnippetState,
     OrderBusinessSnippetState orderBusinessSnippetState,
     CategorySnippetState categorySnippetState,
@@ -306,6 +316,8 @@ class AppState {
     this.templateDataState = templateDataState;
     this.serviceListSnippetState = serviceListSnippetState;
     this.serviceListSnippetListState = serviceListSnippetListState;
+    this.reservationsOrdersListSnippetState = reservationsOrdersListSnippetState;
+    this.reservationsOrdersListSnippetListState = reservationsOrdersListSnippetListState;
     this.businessSnippetState = businessSnippetState;
     this.orderBusinessSnippetState = orderBusinessSnippetState;
     this.categorySnippetState = categorySnippetState;

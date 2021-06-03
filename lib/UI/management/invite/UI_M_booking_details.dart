@@ -1,4 +1,5 @@
 import 'dart:core';
+import 'package:Buytime/UI/management/invite/UI_M_RoomPaymentList.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/model/email/email_state.dart';
@@ -51,6 +52,7 @@ class _BookingDetailsState extends State<BookingDetails> {
   BookingState bookingState;
   bool view;
   EmailState emailState;
+
   @override
   void initState() {
     super.initState();
@@ -118,10 +120,10 @@ class _BookingDetailsState extends State<BookingDetails> {
 
         debugPrint('UI_M_BookingDetails => BOOKING CODE: ${bookingState.booking_code}');
         //emailState = snapshot.emailState;
-        if(snapshot.emailState.sent != null && snapshot.emailState.sent){
+        if (snapshot.emailState.sent != null && snapshot.emailState.sent) {
           debugPrint('UI_M_BookingDetails => EMAIL SENT');
           snapshot.emailState.sent = null;
-        }else{
+        } else {
           debugPrint('UI_M_BookingDetails => EMAIL NOT SENT');
         }
 
@@ -165,7 +167,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                   child: ConstrainedBox(
                       constraints: BoxConstraints(),
                       child: Container(
-                        height: (SizeConfig.safeBlockVertical * 100) - 60,
+                        height: (SizeConfig.safeBlockVertical * 100) - 20,
                         child: Form(
                           key: _formKey,
                           child: Column(
@@ -190,7 +192,7 @@ class _BookingDetailsState extends State<BookingDetails> {
 
                               ///Booking Code & Email & Name & Surname & Check In & Check Out & Number Of Guests
                               Container(
-                                height: SizeConfig.safeBlockVertical * 50,
+                                height: SizeConfig.safeBlockVertical * 58,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -386,33 +388,82 @@ class _BookingDetailsState extends State<BookingDetails> {
                                         )),
 
                                     ///Number of guests
-                                    Expanded(
+                                    Container(
+                                        //width: 327,
+                                        height: 56,
+                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
+                                        child: TextFormField(
+                                          enabled: false,
+                                          controller: _numberOfGuestsController,
+                                          textAlign: TextAlign.start,
+                                          decoration: InputDecoration(
+                                            isDense: true,
+                                            filled: true,
+                                            fillColor: BuytimeTheme.DividerGrey,
+                                            enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                            focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                            errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                            labelText: AppLocalizations.of(context).numberOfGuest,
+                                            //hintText: "email *",
+                                            //hintStyle: TextStyle(color: Color(0xff666666)),
+                                            labelStyle: TextStyle(
+                                              fontFamily: BuytimeTheme.FontFamily,
+                                              color: Color(0xff666666),
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
+                                          style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextMedium, fontWeight: FontWeight.w600, fontSize: 16),
+                                        )),
+
+                                    ///Order List
+                                    GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(builder: (context) => UI_M_RoomPaymentList(bookingState.booking_id)),
+                                        );
+                                      },
                                       child: Container(
-                                          //width: 327,
-                                          height: 56,
-                                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
-                                          child: TextFormField(
-                                            enabled: false,
-                                            controller: _numberOfGuestsController,
-                                            textAlign: TextAlign.start,
-                                            decoration: InputDecoration(
-                                              isDense: true,
-                                              filled: true,
-                                              fillColor: BuytimeTheme.DividerGrey,
-                                              enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                              focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                              errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                              labelText: AppLocalizations.of(context).numberOfGuest,
-                                              //hintText: "email *",
-                                              //hintStyle: TextStyle(color: Color(0xff666666)),
-                                              labelStyle: TextStyle(
+                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(5),
+                                          color: Colors.white,
+                                          boxShadow: [
+                                            BoxShadow(color: BuytimeTheme.SymbolLightGrey, spreadRadius: 0.5),
+                                          ],
+                                        ),
+                                        height: 56,
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 15.0),
+                                              child: Icon(
+                                                Icons.replay,
+                                                size: 24,
+                                                color: BuytimeTheme.SymbolGrey,
+                                              ),
+                                            ),
+                                            Text(
+                                              AppLocalizations.of(context).reservationsAndOrdersPlaced,
+                                              style: TextStyle(
                                                 fontFamily: BuytimeTheme.FontFamily,
-                                                color: Color(0xff666666),
+                                                color: BuytimeTheme.TextBlack,
+                                                fontSize: 16,
                                                 fontWeight: FontWeight.w400,
                                               ),
                                             ),
-                                            style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextMedium, fontWeight: FontWeight.w600, fontSize: 16),
-                                          )),
+                                            Padding(
+                                              padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 15.0),
+                                              child: Icon(
+                                                Icons.chevron_right,
+                                                size: 24,
+                                                color: BuytimeTheme.SymbolGrey,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
                                     )
                                   ],
                                 ),
@@ -459,54 +510,54 @@ class _BookingDetailsState extends State<BookingDetails> {
                                           focusElevation: 0,
                                           highlightElevation: 0,
                                           disabledColor: BuytimeTheme.SymbolGrey,
-                                          onPressed: snapshot.emailState.sent == null || snapshot.emailState.sent ? () async {
-                                            final RenderBox box = context.findRenderObject();
-                                            //Uri link = await createDynamicLink(bookingState.booking_code);
-                                            bookingState.status = Utils.enumToString(BookingStatus.sent);
-                                            StoreProvider.of<AppState>(context).dispatch(UpdateBooking(bookingState)); //TODO: Create the booking status update epic
+                                          onPressed: snapshot.emailState.sent == null || snapshot.emailState.sent
+                                              ? () async {
+                                                  final RenderBox box = context.findRenderObject();
+                                                  //Uri link = await createDynamicLink(bookingState.booking_code);
+                                                  bookingState.status = Utils.enumToString(BookingStatus.sent);
+                                                  StoreProvider.of<AppState>(context).dispatch(UpdateBooking(bookingState)); //TODO: Create the booking status update epic
 
-                                            EmailState emailState = EmailState();
-                                            TemplateState templateState = TemplateState();
-                                            TemplateDataState templateDataState = TemplateDataState();
-                                            emailState.to = widget.bookingState != null ? widget.bookingState.user.first.email :snapshot.booking.user.first.email;
-                                            templateState.name = 'welcome';
-                                            templateDataState.name = widget.bookingState != null ? widget.bookingState.user.first.name + ' ' + widget.bookingState.user.first.surname :
-                                                                      snapshot.booking.user.first.name  + ' ' + snapshot.booking.user.first.surname;
-                                            templateDataState.link = link;
-                                            templateState.data = templateDataState;
-                                            emailState.template = templateState;
-                                            emailState.sent = false;
-                                            //StoreProvider.of<AppState>(context).dispatch(SentEmail(emailState));
-                                            StoreProvider.of<AppState>(context).dispatch(SendEmail(emailState));
-                                            Flushbar(
-                                              padding: EdgeInsets.all(SizeConfig.safeBlockVertical * 2),
-                                              margin: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2, left: SizeConfig.blockSizeHorizontal * 20, right: SizeConfig.blockSizeHorizontal * 20), ///2% - 20% - 20%
-                                              borderRadius: BorderRadius.all(Radius.circular(8)),
-                                              backgroundColor: BuytimeTheme.SymbolGrey,
-                                              boxShadows: [
-                                                BoxShadow(
-                                                  color: Colors.black45,
-                                                  offset: Offset(3, 3),
-                                                  blurRadius: 3,
-                                                ),
-                                              ],
-                                              // All of the previous Flushbars could be dismissed by swiping down
-                                              // now we want to swipe to the sides
-                                              //dismissDirection: FlushbarDismissDirection.HORIZONTAL,
-                                              // The default curve is Curves.easeOut
-                                              duration:  Duration(seconds: 2),
-                                              forwardAnimationCurve: Curves.fastLinearToSlowEaseIn,
-                                              messageText: Text(
-                                                AppLocalizations.of(context).sendEmail,
-                                                style: TextStyle(
-                                                    color: BuytimeTheme.TextWhite,
-                                                    fontWeight: FontWeight.bold
-                                                ),
-                                                textAlign: TextAlign.center,
-                                              ),
-                                            )..show(context);
-                                            //Share.share(AppLocalizations.of(context).checkYourBuytimeApp + link, subject: AppLocalizations.of(context).takeYourTime, sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
-                                          } : null,
+                                                  EmailState emailState = EmailState();
+                                                  TemplateState templateState = TemplateState();
+                                                  TemplateDataState templateDataState = TemplateDataState();
+                                                  emailState.to = widget.bookingState != null ? widget.bookingState.user.first.email : snapshot.booking.user.first.email;
+                                                  templateState.name = 'welcome';
+                                                  templateDataState.name = widget.bookingState != null ? widget.bookingState.user.first.name + ' ' + widget.bookingState.user.first.surname : snapshot.booking.user.first.name + ' ' + snapshot.booking.user.first.surname;
+                                                  templateDataState.link = link;
+                                                  templateState.data = templateDataState;
+                                                  emailState.template = templateState;
+                                                  emailState.sent = false;
+                                                  //StoreProvider.of<AppState>(context).dispatch(SentEmail(emailState));
+                                                  StoreProvider.of<AppState>(context).dispatch(SendEmail(emailState));
+                                                  Flushbar(
+                                                    padding: EdgeInsets.all(SizeConfig.safeBlockVertical * 2),
+                                                    margin: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2, left: SizeConfig.blockSizeHorizontal * 20, right: SizeConfig.blockSizeHorizontal * 20),
+
+                                                    ///2% - 20% - 20%
+                                                    borderRadius: BorderRadius.all(Radius.circular(8)),
+                                                    backgroundColor: BuytimeTheme.SymbolGrey,
+                                                    boxShadows: [
+                                                      BoxShadow(
+                                                        color: Colors.black45,
+                                                        offset: Offset(3, 3),
+                                                        blurRadius: 3,
+                                                      ),
+                                                    ],
+                                                    // All of the previous Flushbars could be dismissed by swiping down
+                                                    // now we want to swipe to the sides
+                                                    //dismissDirection: FlushbarDismissDirection.HORIZONTAL,
+                                                    // The default curve is Curves.easeOut
+                                                    duration: Duration(seconds: 2),
+                                                    forwardAnimationCurve: Curves.fastLinearToSlowEaseIn,
+                                                    messageText: Text(
+                                                      AppLocalizations.of(context).sendEmail,
+                                                      style: TextStyle(color: BuytimeTheme.TextWhite, fontWeight: FontWeight.bold),
+                                                      textAlign: TextAlign.center,
+                                                    ),
+                                                  )..show(context);
+                                                  //Share.share(AppLocalizations.of(context).checkYourBuytimeApp + link, subject: AppLocalizations.of(context).takeYourTime, sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
+                                                }
+                                              : null,
                                           textColor: snapshot.emailState.sent != null && !snapshot.emailState.sent ? BuytimeTheme.TextWhite : BuytimeTheme.TextDark,
                                           color: BuytimeTheme.Secondary,
                                           padding: EdgeInsets.all(media.width * 0.03),
@@ -532,6 +583,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                                   children: [
                                     Container(
                                         width: 180,
+
                                         ///media.width * .5
                                         height: 44,
                                         margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 2.5),
@@ -545,7 +597,9 @@ class _BookingDetailsState extends State<BookingDetails> {
                                             Clipboard.setData(ClipboardData(text: link));
                                             Flushbar(
                                               padding: EdgeInsets.all(SizeConfig.safeBlockVertical * 2),
-                                              margin: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2, left: SizeConfig.blockSizeHorizontal * 20, right: SizeConfig.blockSizeHorizontal * 20), ///2% - 20% - 20%
+                                              margin: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2, left: SizeConfig.blockSizeHorizontal * 20, right: SizeConfig.blockSizeHorizontal * 20),
+
+                                              ///2% - 20% - 20%
                                               borderRadius: BorderRadius.all(Radius.circular(8)),
                                               backgroundColor: BuytimeTheme.SymbolGrey,
                                               boxShadows: [
@@ -559,14 +613,11 @@ class _BookingDetailsState extends State<BookingDetails> {
                                               // now we want to swipe to the sides
                                               //dismissDirection: FlushbarDismissDirection.HORIZONTAL,
                                               // The default curve is Curves.easeOut
-                                              duration:  Duration(seconds: 2),
+                                              duration: Duration(seconds: 2),
                                               forwardAnimationCurve: Curves.fastLinearToSlowEaseIn,
                                               messageText: Text(
                                                 AppLocalizations.of(context).copiedToClipboard,
-                                                style: TextStyle(
-                                                    color: BuytimeTheme.TextWhite,
-                                                    fontWeight: FontWeight.bold
-                                                ),
+                                                style: TextStyle(color: BuytimeTheme.TextWhite, fontWeight: FontWeight.bold),
                                                 textAlign: TextAlign.center,
                                               ),
                                             )..show(context);

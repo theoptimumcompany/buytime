@@ -1,4 +1,3 @@
-
 import 'package:Buytime/UI/management/business/UI_M_business.dart';
 import 'package:Buytime/UI/management/business/UI_M_business_list.dart';
 import 'package:Buytime/UI/management/category/UI_M_manage_category.dart';
@@ -42,6 +41,8 @@ import 'package:Buytime/reblox/model/service/external_service_imported_list_stat
 import 'package:Buytime/reblox/model/service/external_service_imported_state.dart';
 import 'package:Buytime/reblox/model/service/service_slot_time_state.dart';
 import 'package:Buytime/reblox/model/slot/slot_list_snippet_state.dart';
+import 'package:Buytime/reblox/model/snippet/reservations_orders_list_snippet_list_state.dart';
+import 'package:Buytime/reblox/model/snippet/reservations_orders_list_snippet_state.dart';
 import 'package:Buytime/reblox/model/snippet/service_list_snippet_list_state.dart';
 import 'package:Buytime/reblox/model/snippet/service_list_snippet_state.dart';
 import 'package:Buytime/reblox/model/statistics_state.dart';
@@ -53,6 +54,7 @@ import 'package:Buytime/services/external_business_service_epic.dart';
 import 'package:Buytime/services/external_service_imported_service_epic.dart';
 import 'package:Buytime/services/notification_service_epic.dart';
 import 'package:Buytime/services/order_reservable_service_epic.dart';
+import 'package:Buytime/services/reservations_orders_service_epic.dart';
 import 'package:Buytime/services/slot_service_epic.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/UI/user/login/UI_U_home.dart';
@@ -91,9 +93,7 @@ import 'package:Buytime/reblox/navigation/navigation_middleware.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-
-void main(){
-
+void main() {
   final epics = combineEpics<AppState>([
     BusinessAndNavigateRequestService(),
     BusinessAndNavigateOnConfirmRequestService(),
@@ -182,6 +182,8 @@ void main(){
     AddingReservableStripePaymentMethodRequest(),
     CreateOrderReservableCardPendingService(),
     EmailCreateService(),
+    // ReservationsAndOrdersListSnippetRequestService(),
+    // ReservationsAndOrdersListSnippetListRequestService(),
     ServiceListSnippetRequestService(),
     ServiceListSnippetListRequestService(),
     ExternalServiceImportedCreateService(),
@@ -201,50 +203,51 @@ void main(){
     SlotListSnippetRequestService()
   ]);
   final _initialState = AppState(
-    category: CategoryState().toEmpty(),
-    categoryInvite: CategoryInviteState().toEmpty(),
-    categoryTree: CategoryTree().toEmpty(),
-    business: BusinessState().toEmpty(),
-    area: AreaState().toEmpty(),
-    areaList: AreaListState().toEmpty(),
-    externalBusiness: ExternalBusinessState().toEmpty(),
-    booking: BookingState().toEmpty(),
-    order: OrderState().toEmpty(),
-    orderDetail: OrderDetailState().toEmpty(),
-    orderReservable: OrderReservableState().toEmpty(),
-    orderList: OrderListState().toEmpty(),
-    orderReservableList: OrderReservableListState().toEmpty(),
-    stripe: StripeState().toEmpty(),
-    businessList: BusinessListState().toEmpty(),
-    externalBusinessList: ExternalBusinessListState().toEmpty(),
-    bookingList: BookingListState().toEmpty(),
-    categoryList: CategoryListState().toEmpty(),
-    serviceList: ServiceListState().toEmpty(),
-    serviceSlot: ServiceSlot().toEmpty(),
-    pipelineList: PipelineList().toEmpty(),
-    user: UserState().toEmpty(),
-    serviceState: ServiceState().toEmpty(),
-    pipeline: Pipeline().toEmpty(),
-    statistics: StatisticsState().toEmpty(),
-    cardState: CardState().toEmpty(),
-    cardListState: CardListState().toEmpty(),
-    autoCompleteState: AutoCompleteState().toEmpty(),
-    autoCompleteListState: AutoCompleteListState().toEmpty(),
-    notificationState: NotificationState().toEmpty(),
-    notificationListState: NotificationListState().toEmpty(),
-    emailState: EmailState().toEmpty(),
-    templateState: TemplateState().toEmpty(),
-    templateDataState: TemplateDataState().toEmpty(),
-    serviceListSnippetState: ServiceListSnippetState().toEmpty(),
-    serviceListSnippetListState: ServiceListSnippetListState().toEmpty(),
-    externalBusinessImportedState: ExternalBusinessImportedState().toEmpty(),
-    externalBusinessImportedListState: ExternalBusinessImportedListState().toEmpty(),
+      category: CategoryState().toEmpty(),
+      categoryInvite: CategoryInviteState().toEmpty(),
+      categoryTree: CategoryTree().toEmpty(),
+      business: BusinessState().toEmpty(),
+      area: AreaState().toEmpty(),
+      areaList: AreaListState().toEmpty(),
+      externalBusiness: ExternalBusinessState().toEmpty(),
+      booking: BookingState().toEmpty(),
+      order: OrderState().toEmpty(),
+      orderDetail: OrderDetailState().toEmpty(),
+      orderReservable: OrderReservableState().toEmpty(),
+      orderList: OrderListState().toEmpty(),
+      orderReservableList: OrderReservableListState().toEmpty(),
+      stripe: StripeState().toEmpty(),
+      businessList: BusinessListState().toEmpty(),
+      externalBusinessList: ExternalBusinessListState().toEmpty(),
+      bookingList: BookingListState().toEmpty(),
+      categoryList: CategoryListState().toEmpty(),
+      serviceList: ServiceListState().toEmpty(),
+      serviceSlot: ServiceSlot().toEmpty(),
+      pipelineList: PipelineList().toEmpty(),
+      user: UserState().toEmpty(),
+      serviceState: ServiceState().toEmpty(),
+      pipeline: Pipeline().toEmpty(),
+      statistics: StatisticsState().toEmpty(),
+      cardState: CardState().toEmpty(),
+      cardListState: CardListState().toEmpty(),
+      autoCompleteState: AutoCompleteState().toEmpty(),
+      autoCompleteListState: AutoCompleteListState().toEmpty(),
+      notificationState: NotificationState().toEmpty(),
+      notificationListState: NotificationListState().toEmpty(),
+      emailState: EmailState().toEmpty(),
+      templateState: TemplateState().toEmpty(),
+      templateDataState: TemplateDataState().toEmpty(),
+      serviceListSnippetState: ServiceListSnippetState().toEmpty(),
+      serviceListSnippetListState: ServiceListSnippetListState().toEmpty(),
+      reservationsOrdersListSnippetState: ReservationsOrdersListSnippetState().toEmpty(),
+      reservationsOrdersListSnippetListState: ReservationsOrdersListSnippetListState().toEmpty(),
+      externalBusinessImportedState: ExternalBusinessImportedState().toEmpty(),
+      externalBusinessImportedListState: ExternalBusinessImportedListState().toEmpty(),
       externalServiceImportedState: ExternalServiceImportedState().toEmpty(),
-    externalServiceImportedListState: ExternalServiceImportedListState().toEmpty(),
-    businessSnippetState: BusinessSnippetState().toEmpty(),
-    orderBusinessSnippetState: OrderBusinessSnippetState().toEmpty(),
-    slotSnippetListState: SlotListSnippetState().toEmpty()
-  );
+      externalServiceImportedListState: ExternalServiceImportedListState().toEmpty(),
+      businessSnippetState: BusinessSnippetState().toEmpty(),
+      orderBusinessSnippetState: OrderBusinessSnippetState().toEmpty(),
+      slotSnippetListState: SlotListSnippetState().toEmpty());
   final store = new Store<AppState>(
     appReducer,
     initialState: _initialState,
@@ -258,7 +261,6 @@ void main(){
   runApp(Buytime(store: store));
   //log();
 }
-
 
 class Buytime extends StatelessWidget {
   final Store<AppState> store;
@@ -314,12 +316,7 @@ class Buytime extends StatelessWidget {
     return StoreProvider<AppState>(
       store: store,
       child: MaterialApp(
-        localizationsDelegates: [
-          AppLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate
-        ],
+        localizationsDelegates: [AppLocalizations.delegate, GlobalMaterialLocalizations.delegate, GlobalWidgetsLocalizations.delegate, GlobalCupertinoLocalizations.delegate],
         supportedLocales: [
           //const Locale('ca', ''),
           const Locale('en', ''),
@@ -335,10 +332,11 @@ class Buytime extends StatelessWidget {
         title: 'Buytime',
         debugShowCheckedModeBanner: false,
         theme: BuytimeTheme().userTheme,
-        home: SplashScreen()/*LogConsoleOnShake(
+        home: SplashScreen() /*LogConsoleOnShake(
           dark: true,
           child: SplashScreen(),
-        )*/,
+        )*/
+        ,
         routes: <String, WidgetBuilder>{
           // Set routes for using the Navigator.
           /*'/home': (BuildContext context) => Home(),
@@ -357,12 +355,10 @@ class Buytime extends StatelessWidget {
 final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
 
 class MainRoute<T> extends MaterialPageRoute<T> {
-  MainRoute(Widget widget, {RouteSettings settings})
-      : super(builder: (_) => RouteAwareWidget(child: widget), settings: settings);
+  MainRoute(Widget widget, {RouteSettings settings}) : super(builder: (_) => RouteAwareWidget(child: widget), settings: settings);
 
   @override
-  Widget buildTransitions(
-      BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
+  Widget buildTransitions(BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
     // Fades between routes. (If you don't want any animation,
     // just return child.)
     return FadeTransition(opacity: animation, child: child);
@@ -370,12 +366,10 @@ class MainRoute<T> extends MaterialPageRoute<T> {
 }
 
 class FabRoute<T> extends MaterialPageRoute<T> {
-  FabRoute(Widget widget, {RouteSettings settings})
-      : super(builder: (_) => RouteAwareWidget(child: widget), settings: settings);
+  FabRoute(Widget widget, {RouteSettings settings}) : super(builder: (_) => RouteAwareWidget(child: widget), settings: settings);
 
   @override
-  Widget buildTransitions(
-      BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
+  Widget buildTransitions(BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
     return SlideTransition(
         position: new Tween<Offset>(
           begin: const Offset(0.0, 1.0),
@@ -386,36 +380,25 @@ class FabRoute<T> extends MaterialPageRoute<T> {
 }
 
 class SlideInExitRoute<T> extends MaterialPageRoute<T> {
-  SlideInExitRoute(Widget widget, {RouteSettings settings})
-      : super(builder: (_) => RouteAwareWidget(child: widget), settings: settings);
+  SlideInExitRoute(Widget widget, {RouteSettings settings}) : super(builder: (_) => RouteAwareWidget(child: widget), settings: settings);
 
   @override
-  Widget buildTransitions(
-      BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
+  Widget buildTransitions(BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
     return SlideTransition(
-      position: Tween(
-          begin: Offset(-1.0, 0.0),
-          end: Offset(0.0, 0.0))
-          .animate(animation),
+      position: Tween(begin: Offset(-1.0, 0.0), end: Offset(0.0, 0.0)).animate(animation),
       child: child,
     );
   }
 }
+
 class SlideInEnterRoute<T> extends MaterialPageRoute<T> {
-  SlideInEnterRoute(Widget widget, {RouteSettings settings})
-      : super(builder: (_) => RouteAwareWidget(child: widget), settings: settings);
+  SlideInEnterRoute(Widget widget, {RouteSettings settings}) : super(builder: (_) => RouteAwareWidget(child: widget), settings: settings);
 
   @override
-  Widget buildTransitions(
-      BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
+  Widget buildTransitions(BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
     return SlideTransition(
-      position: Tween(
-          begin: Offset(1.0, 0.0),
-          end: Offset(0.0, 0.0))
-          .animate(animation),
+      position: Tween(begin: Offset(1.0, 0.0), end: Offset(0.0, 0.0)).animate(animation),
       child: child,
     );
   }
 }
-
-
