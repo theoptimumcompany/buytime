@@ -66,7 +66,8 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
       result = imageUrl.substring(0, imageUrl.lastIndexOf('.'));
       result += "_1000x1000" + extension;
     } else {
-      result = "https://firebasestorage.googleapis.com/v0/b/buytime-458a1.appspot.com/o/general%2Fimage_placeholder_200x200.png?alt=media&token=d40ccab1-7fb5-4290-91c6-634871b7a4f3";
+      result =
+          "https://firebasestorage.googleapis.com/v0/b/buytime-458a1.appspot.com/o/general%2Fimage_placeholder_200x200.png?alt=media&token=d40ccab1-7fb5-4290-91c6-634871b7a4f3";
     }
     return result;
   }
@@ -74,6 +75,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
   bool isExternal = false;
   ExternalBusinessState externalBusinessState;
   String address = '';
+
   @override
   Widget build(BuildContext context) {
     // the media containing information on width and height
@@ -84,9 +86,9 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
     return StoreConnector<AppState, AppState>(
       converter: (store) => store.state,
       onInit: (store) {
-        if(widget.serviceState.serviceAddress != null && widget.serviceState.serviceAddress.isNotEmpty)
+        if (widget.serviceState.serviceAddress != null && widget.serviceState.serviceAddress.isNotEmpty)
           address = widget.serviceState.serviceAddress;
-        else if(widget.serviceState.serviceBusinessAddress != null && widget.serviceState.serviceBusinessAddress.isNotEmpty)
+        else if (widget.serviceState.serviceBusinessAddress != null && widget.serviceState.serviceBusinessAddress.isNotEmpty)
           address = widget.serviceState.serviceBusinessAddress;
         else
           address = '${AppLocalizations.of(context).noAddress}.';
@@ -113,38 +115,51 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                 if (element.day != 0) {
                   debugPrint('UI_U_ServiceDetails => SLOT WITH DAYS');
                   if (element.day > 1)
-                    price = AppLocalizations.of(context).startingFromCurrency + ' ${element.price.toStringAsFixed(0)} / ${element.day} ${AppLocalizations.of(context).days}';
+                    price = AppLocalizations.of(context).startingFromCurrency +
+                        ' ${element.price.toStringAsFixed(0)} / ${element.day} ${AppLocalizations.of(context).days}';
                   else
-                    price = AppLocalizations.of(context).startingFromCurrency + ' ${element.price.toStringAsFixed(0)} / ${element.day} ${AppLocalizations.of(context).day}';
+                    price = AppLocalizations.of(context).startingFromCurrency +
+                        ' ${element.price.toStringAsFixed(0)} / ${element.day} ${AppLocalizations.of(context).day}';
                 } else {
                   debugPrint('UI_U_ServiceDetails => SLOT WITHOUT DAYS');
                   int tmpMin = element.hour * 60 + element.minute;
                   if (tmpMin > 90)
-                    price = AppLocalizations.of(context).startingFromCurrency + ' ${element.price.toStringAsFixed(0)} / ${element.hour} h ${element.minute} ${AppLocalizations.of(context).spaceMinSpace}';
+                    price = AppLocalizations.of(context).startingFromCurrency +
+                        ' ${element.price.toStringAsFixed(0)} / ${element.hour} h ${element.minute} ${AppLocalizations.of(context).spaceMinSpace}';
                   else
-                    price = AppLocalizations.of(context).startingFromCurrency + ' ${element.price.toStringAsFixed(0)} / $tmpMin ${AppLocalizations.of(context).spaceMinSpace}';
+                    price = AppLocalizations.of(context).startingFromCurrency +
+                        ' ${element.price.toStringAsFixed(0)} / $tmpMin ${AppLocalizations.of(context).spaceMinSpace}';
                 }
               }
             }
           });
         } else {
-          price = serviceState.price != null ? '${AppLocalizations.of(context).currencySpace} ' + serviceState.price.toString() + AppLocalizations.of(context).slashOneUnit : AppLocalizations.of(context).currencyNoPrice + AppLocalizations.of(context).hour;
+          price = serviceState.price != null
+              ? '${AppLocalizations.of(context).currencySpace} ' + serviceState.price.toString() + AppLocalizations.of(context).slashOneUnit
+              : AppLocalizations.of(context).currencyNoPrice + AppLocalizations.of(context).hour;
         }
 
         store.state.externalBusinessList.externalBusinessListState.forEach((eBL) {
           if (eBL.id_firestore == widget.serviceState.businessId) {
             isExternal = true;
             externalBusinessState = eBL;
-            if(externalBusinessState.businessAddress != null && externalBusinessState.businessAddress.isNotEmpty)
+            if (externalBusinessState.businessAddress != null && externalBusinessState.businessAddress.isNotEmpty)
               address = externalBusinessState.businessAddress;
             else
-              address = externalBusinessState.street + ', ' + externalBusinessState.street_number + ', ' + externalBusinessState.ZIP + ', ' + externalBusinessState.state_province;
+              address = externalBusinessState.street +
+                  ', ' +
+                  externalBusinessState.street_number +
+                  ', ' +
+                  externalBusinessState.ZIP +
+                  ', ' +
+                  externalBusinessState.state_province;
           }
         });
       },
       builder: (context, snapshot) {
         debugPrint('UI_U_ServiceDetails => SNAPSHOT CART COUNT: ${snapshot.order}');
-        order = snapshot.order.itemList != null ? (snapshot.order.itemList.length > 0 ? snapshot.order : OrderState().toEmpty()) : OrderState().toEmpty();
+        order =
+            snapshot.order.itemList != null ? (snapshot.order.itemList.length > 0 ? snapshot.order : OrderState().toEmpty()) : OrderState().toEmpty();
         debugPrint('UI_U_ServiceDetails => CART COUNT: ${order.cartCounter}');
         return GestureDetector(
           onTap: () {
@@ -220,28 +235,28 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => Cart(
-                                          tourist: widget.tourist,
-                                        )),
+                                              tourist: widget.tourist,
+                                            )),
                                   );
                                 } else {
                                   showDialog(
                                       context: context,
                                       builder: (_) => new AlertDialog(
-                                        title: new Text(AppLocalizations.of(context).warning),
-                                        content: new Text(AppLocalizations.of(context).emptyCart),
-                                        actions: <Widget>[
-                                          MaterialButton(
-                                            elevation: 0,
-                                            hoverElevation: 0,
-                                            focusElevation: 0,
-                                            highlightElevation: 0,
-                                            child: Text(AppLocalizations.of(context).ok),
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                          )
-                                        ],
-                                      ));
+                                            title: new Text(AppLocalizations.of(context).warning),
+                                            content: new Text(AppLocalizations.of(context).emptyCart),
+                                            actions: <Widget>[
+                                              MaterialButton(
+                                                elevation: 0,
+                                                hoverElevation: 0,
+                                                focusElevation: 0,
+                                                highlightElevation: 0,
+                                                child: Text(AppLocalizations.of(context).ok),
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                              )
+                                            ],
+                                          ));
                                 }
                               },
                             ),
@@ -249,21 +264,21 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                         ),
                         order.cartCounter > 0
                             ? Positioned.fill(
-                          top: 5,
-                          left: 2.5,
-                          child: Align(
-                            alignment: Alignment.topCenter,
-                            child: Text(
-                              '${order.cartCounter}',
-                              textAlign: TextAlign.start,
-                              style: TextStyle(
-                                fontSize: SizeConfig.safeBlockHorizontal * 3,
-                                color: BuytimeTheme.TextWhite,
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                          ),
-                        )
+                                top: 5,
+                                left: 2.5,
+                                child: Align(
+                                  alignment: Alignment.topCenter,
+                                  child: Text(
+                                    '${order.cartCounter}',
+                                    textAlign: TextAlign.start,
+                                    style: TextStyle(
+                                      fontSize: SizeConfig.safeBlockHorizontal * 3,
+                                      color: BuytimeTheme.TextWhite,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                ),
+                              )
                             : Container(),
                       ],
                     ),
@@ -273,8 +288,8 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
               body: SafeArea(
                 child: ConstrainedBox(
                   constraints: BoxConstraints(
-                    //minHeight: (SizeConfig.safeBlockVertical * 100) - 60
-                  ),
+                      //minHeight: (SizeConfig.safeBlockVertical * 100) - 60
+                      ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
@@ -289,85 +304,86 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                 //width: double.infinity,
                                 child: images.isNotEmpty
                                     ? Carousel(
-                                  boxFit: BoxFit.cover,
-                                  autoplay: false,
-                                  animationCurve: Curves.bounceIn,
-                                  //animationDuration: Duration(milliseconds: 1000),
-                                  dotSize: images.length > 1 ? SizeConfig.blockSizeVertical * 1 : SizeConfig.blockSizeVertical * 0,
+                                        boxFit: BoxFit.cover,
+                                        autoplay: false,
+                                        animationCurve: Curves.bounceIn,
+                                        //animationDuration: Duration(milliseconds: 1000),
+                                        dotSize: images.length > 1 ? SizeConfig.blockSizeVertical * 1 : SizeConfig.blockSizeVertical * 0,
 
-                                  ///1%
-                                  dotIncreasedColor: BuytimeTheme.UserPrimary,
-                                  dotColor: BuytimeTheme.BackgroundWhite,
-                                  dotBgColor: Colors.transparent,
-                                  dotPosition: DotPosition.bottomCenter,
-                                  dotVerticalPadding: 10.0,
-                                  showIndicator: true,
-                                  indicatorBgPadding: 7.0,
+                                        ///1%
+                                        dotIncreasedColor: BuytimeTheme.UserPrimary,
+                                        dotColor: BuytimeTheme.BackgroundWhite,
+                                        dotBgColor: Colors.transparent,
+                                        dotPosition: DotPosition.bottomCenter,
+                                        dotVerticalPadding: 10.0,
+                                        showIndicator: true,
+                                        indicatorBgPadding: 7.0,
 
-                                  ///User images
-                                  images: images
-                                      .map((e) => CachedNetworkImage(
-                                    imageUrl: version200(e),
-                                    imageBuilder: (context, imageProvider) => Container(
-                                      //margin: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 5), ///5%
-                                      height: SizeConfig.safeBlockVertical * 55,
-                                      width: double.infinity,
-                                      decoration: BoxDecoration(
-                                        //borderRadius: BorderRadius.all(Radius.circular(SizeConfig.blockSizeHorizontal * 5)), ///12.5%
-                                          image: DecorationImage(
-                                            image: imageProvider,
-                                            fit: BoxFit.cover,
-                                          )),
-                                    ),
-                                    placeholder: (context, url) => Container(
-                                      height: SizeConfig.safeBlockVertical * 55,
-                                      width: double.infinity,
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Container(
-                                            //padding: EdgeInsets.only(top: 80, bottom: 80, left: 50, right: 50),
-                                            child: CircularProgressIndicator(
-                                              //valueColor: new AlwaysStoppedAnimation<Color>(BuytimeTheme.ManagerPrimary),
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                    errorWidget: (context, url, error) => Icon(Icons.error),
-                                  ))
-                                      .toList(),
-                                )
+                                        ///User images
+                                        images: images
+                                            .map((e) => CachedNetworkImage(
+                                                  imageUrl: version200(e),
+                                                  imageBuilder: (context, imageProvider) => Container(
+                                                    //margin: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 5), ///5%
+                                                    height: SizeConfig.safeBlockVertical * 55,
+                                                    width: double.infinity,
+                                                    decoration: BoxDecoration(
+                                                        //borderRadius: BorderRadius.all(Radius.circular(SizeConfig.blockSizeHorizontal * 5)), ///12.5%
+                                                        image: DecorationImage(
+                                                      image: imageProvider,
+                                                      fit: BoxFit.cover,
+                                                    )),
+                                                  ),
+                                                  placeholder: (context, url) => Container(
+                                                    height: SizeConfig.safeBlockVertical * 55,
+                                                    width: double.infinity,
+                                                    child: Row(
+                                                      mainAxisAlignment: MainAxisAlignment.center,
+                                                      children: [
+                                                        Container(
+                                                          //padding: EdgeInsets.only(top: 80, bottom: 80, left: 50, right: 50),
+                                                          child: CircularProgressIndicator(
+                                                              //valueColor: new AlwaysStoppedAnimation<Color>(BuytimeTheme.ManagerPrimary),
+                                                              ),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  errorWidget: (context, url, error) => Icon(Icons.error),
+                                                ))
+                                            .toList(),
+                                      )
                                     : CachedNetworkImage(
-                                  imageUrl: 'https://firebasestorage.googleapis.com/v0/b/buytime-458a1.appspot.com/o/general%2Fimage_placeholder_200x200_1000x1000.png?alt=media&token=082a1896-32d8-4750-b7cc-141f00bc060c',
-                                  imageBuilder: (context, imageProvider) => Container(
-                                    //margin: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 5), ///5%
-                                    height: SizeConfig.safeBlockVertical * 55,
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                      //borderRadius: BorderRadius.all(Radius.circular(SizeConfig.blockSizeHorizontal * 5)), ///12.5%
-                                        image: DecorationImage(
-                                          image: imageProvider,
-                                          fit: BoxFit.fill,
-                                        )),
-                                  ),
-                                  placeholder: (context, url) => Container(
-                                    height: SizeConfig.safeBlockVertical * 55,
-                                    width: double.infinity,
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                          //padding: EdgeInsets.only(top: 80, bottom: 80, left: 50, right: 50),
-                                          child: CircularProgressIndicator(
-                                            //valueColor: new AlwaysStoppedAnimation<Color>(BuytimeTheme.ManagerPrimary),
+                                        imageUrl:
+                                            'https://firebasestorage.googleapis.com/v0/b/buytime-458a1.appspot.com/o/general%2Fimage_placeholder_200x200_1000x1000.png?alt=media&token=082a1896-32d8-4750-b7cc-141f00bc060c',
+                                        imageBuilder: (context, imageProvider) => Container(
+                                          //margin: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 5), ///5%
+                                          height: SizeConfig.safeBlockVertical * 55,
+                                          width: double.infinity,
+                                          decoration: BoxDecoration(
+                                              //borderRadius: BorderRadius.all(Radius.circular(SizeConfig.blockSizeHorizontal * 5)), ///12.5%
+                                              image: DecorationImage(
+                                            image: imageProvider,
+                                            fit: BoxFit.fill,
+                                          )),
+                                        ),
+                                        placeholder: (context, url) => Container(
+                                          height: SizeConfig.safeBlockVertical * 55,
+                                          width: double.infinity,
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              Container(
+                                                //padding: EdgeInsets.only(top: 80, bottom: 80, left: 50, right: 50),
+                                                child: CircularProgressIndicator(
+                                                    //valueColor: new AlwaysStoppedAnimation<Color>(BuytimeTheme.ManagerPrimary),
+                                                    ),
+                                              )
+                                            ],
                                           ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                  errorWidget: (context, url, error) => Icon(Icons.error),
-                                )),
+                                        ),
+                                        errorWidget: (context, url, error) => Icon(Icons.error),
+                                      )),
 
                             ///Service Name & The rest
                             Column(
@@ -379,11 +395,14 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                 Container(
                                   margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2.5),
                                   child: Text(
-                                    serviceState.name != null ? Utils.retriveField(Localizations.localeOf(context).languageCode, serviceState.name) : AppLocalizations.of(context).serviceName,
-                                    style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w700, fontSize: 18
+                                    serviceState.name != null
+                                        ? Utils.retriveField(Localizations.localeOf(context).languageCode, serviceState.name)
+                                        : AppLocalizations.of(context).serviceName,
+                                    style: TextStyle(
+                                        fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w700, fontSize: 18
 
-                                      ///SizeConfig.safeBlockHorizontal * 4
-                                    ),
+                                        ///SizeConfig.safeBlockHorizontal * 4
+                                        ),
                                   ),
                                 ),
                                 /*///Service Name Text
@@ -403,45 +422,62 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                   margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
                                   child: Text(
                                     price,
-                                    style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary, fontWeight: FontWeight.w400, fontSize: 14
+                                    style: TextStyle(
+                                        fontFamily: BuytimeTheme.FontFamily,
+                                        color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 14
 
-                                      ///SizeConfig.safeBlockHorizontal * 4
-                                    ),
+                                        ///SizeConfig.safeBlockHorizontal * 4
+                                        ),
                                   ),
                                 ),
-                                widget.tourist ?
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    ///Address value
-                                    Container(
-                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
-                                      child: FittedBox(
-                                        fit: BoxFit.scaleDown,
-                                        child: Text(
-                                          address,
-                                          style: TextStyle(letterSpacing: 0.15, fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w500, fontSize: 16
-
-                                            ///SizeConfig.safeBlockHorizontal * 4
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    address.endsWith('.') ?
-                                    Container() :
-                                    ///Directions
-                                    Container(
-                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 0.5),
-                                      child: Row(
+                                widget.tourist
+                                    ? Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          Icon(
-                                            Icons.location_pin,
-                                            size: 14,
-                                            color: BuytimeTheme.SymbolGrey,
-                                          ),
+                                          ///Address value
+                                          Container(
+                                            margin: EdgeInsets.only(
+                                                left: SizeConfig.safeBlockHorizontal * 5,
+                                                right: SizeConfig.safeBlockHorizontal * 5,
+                                                top: SizeConfig.safeBlockVertical * 1),
+                                            child: FittedBox(
+                                              fit: BoxFit.scaleDown,
+                                              child: Text(
+                                                address,
+                                                style: TextStyle(
+                                                    letterSpacing: 0.15,
+                                                    fontFamily: BuytimeTheme.FontFamily,
+                                                    color: BuytimeTheme.TextBlack,
+                                                    fontWeight: FontWeight.w500,
+                                                    fontSize: 16
 
-                                          ///Min
-                                          /*Container(
+                                                    ///SizeConfig.safeBlockHorizontal * 4
+                                                    ),
+                                              ),
+                                            ),
+                                          ),
+                                          address.endsWith('.')
+                                              ? Container()
+                                              :
+
+                                              ///Directions
+                                              Container(
+                                                  margin: EdgeInsets.only(
+                                                      left: SizeConfig.safeBlockHorizontal * 5,
+                                                      right: SizeConfig.safeBlockHorizontal * 5,
+                                                      top: SizeConfig.safeBlockVertical * 0.5),
+                                                  child: Row(
+                                                    children: [
+                                                      Icon(
+                                                        Icons.location_pin,
+                                                        size: 14,
+                                                        color: BuytimeTheme.SymbolGrey,
+                                                      ),
+
+                                                      ///Min
+                                                      /*Container(
                                             margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 1.5, right: SizeConfig.safeBlockHorizontal * 1, top: SizeConfig.safeBlockVertical * 0),
                                             child: FittedBox(
                                               fit: BoxFit.scaleDown,
@@ -455,73 +491,90 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                             ),
                                           ),*/
 
-                                          ///Directions
-                                          Container(
-                                              margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 2.5),
-                                              alignment: Alignment.center,
-                                              child: Material(
-                                                color: Colors.transparent,
-                                                child: InkWell(
-                                                    onTap: () {
-                                                      Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                            builder: (context) => BuytimeMap(
-                                                              user: true,
-                                                              title: widget.serviceState.name,
-                                                              businessState: BusinessState.fromExternalState(externalBusinessState),
-                                                              serviceState: widget.serviceState,
-                                                            )),
-                                                      );
-                                                    },
-                                                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                                                    child: Container(
-                                                      padding: EdgeInsets.all(5.0),
-                                                      child: Text(
-                                                        AppLocalizations.of(context).directions,
-                                                        style: TextStyle(letterSpacing: SizeConfig.safeBlockHorizontal * .2, fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.UserPrimary, fontWeight: FontWeight.w400, fontSize: 14
+                                                      ///Directions
+                                                      Container(
+                                                          margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 2.5),
+                                                          alignment: Alignment.center,
+                                                          child: Material(
+                                                            color: Colors.transparent,
+                                                            child: InkWell(
+                                                                onTap: () {
+                                                                  Navigator.push(
+                                                                    context,
+                                                                    MaterialPageRoute(
+                                                                        builder: (context) => BuytimeMap(
+                                                                              user: true,
+                                                                              title: widget.serviceState.name,
+                                                                              businessState: BusinessState.fromExternalState(externalBusinessState),
+                                                                              serviceState: widget.serviceState,
+                                                                            )),
+                                                                  );
+                                                                },
+                                                                borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                                                child: Container(
+                                                                  padding: EdgeInsets.all(5.0),
+                                                                  child: Text(
+                                                                    AppLocalizations.of(context).directions,
+                                                                    style: TextStyle(
+                                                                        letterSpacing: SizeConfig.safeBlockHorizontal * .2,
+                                                                        fontFamily: BuytimeTheme.FontFamily,
+                                                                        color: BuytimeTheme.UserPrimary,
+                                                                        fontWeight: FontWeight.w400,
+                                                                        fontSize: 14
 
-                                                          ///SizeConfig.safeBlockHorizontal * 4
-                                                        ),
-                                                      ),
-                                                    )),
-                                              ))
+                                                                        ///SizeConfig.safeBlockHorizontal * 4
+                                                                        ),
+                                                                  ),
+                                                                )),
+                                                          ))
+                                                    ],
+                                                  ),
+                                                )
                                         ],
-                                      ),
-                                    )
-                                  ],
-                                ) : isExternal ?
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    ///Address value
-                                    Container(
-                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
-                                      child: FittedBox(
-                                        fit: BoxFit.scaleDown,
-                                        child: Text(
-                                          address,
-                                          style: TextStyle(letterSpacing: 0.15, fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w500, fontSize: 16
+                                      )
+                                    : isExternal
+                                        ? Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              ///Address value
+                                              Container(
+                                                margin: EdgeInsets.only(
+                                                    left: SizeConfig.safeBlockHorizontal * 5,
+                                                    right: SizeConfig.safeBlockHorizontal * 5,
+                                                    top: SizeConfig.safeBlockVertical * 1),
+                                                child: FittedBox(
+                                                  fit: BoxFit.scaleDown,
+                                                  child: Text(
+                                                    address,
+                                                    style: TextStyle(
+                                                        letterSpacing: 0.15,
+                                                        fontFamily: BuytimeTheme.FontFamily,
+                                                        color: BuytimeTheme.TextBlack,
+                                                        fontWeight: FontWeight.w500,
+                                                        fontSize: 16
 
-                                            ///SizeConfig.safeBlockHorizontal * 4
-                                          ),
-                                        ),
-                                      ),
-                                    ),
+                                                        ///SizeConfig.safeBlockHorizontal * 4
+                                                        ),
+                                                  ),
+                                                ),
+                                              ),
 
-                                    ///Directions
-                                    Container(
-                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 0.5),
-                                      child: Row(
-                                        children: [
-                                          Icon(
-                                            Icons.location_pin,
-                                            size: 14,
-                                            color: BuytimeTheme.SymbolGrey,
-                                          ),
+                                              ///Directions
+                                              Container(
+                                                margin: EdgeInsets.only(
+                                                    left: SizeConfig.safeBlockHorizontal * 5,
+                                                    right: SizeConfig.safeBlockHorizontal * 5,
+                                                    top: SizeConfig.safeBlockVertical * 0.5),
+                                                child: Row(
+                                                  children: [
+                                                    Icon(
+                                                      Icons.location_pin,
+                                                      size: 14,
+                                                      color: BuytimeTheme.SymbolGrey,
+                                                    ),
 
-                                          ///Min
-                                          /*Container(
+                                                    ///Min
+                                                    /*Container(
                                             margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 1.5, right: SizeConfig.safeBlockHorizontal * 1, top: SizeConfig.safeBlockVertical * 0),
                                             child: FittedBox(
                                               fit: BoxFit.scaleDown,
@@ -535,48 +588,58 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                             ),
                                           ),*/
 
-                                          ///Directions
-                                          Container(
-                                              margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 2.5),
-                                              alignment: Alignment.center,
-                                              child: Material(
-                                                color: Colors.transparent,
-                                                child: InkWell(
-                                                    onTap: () {
-                                                      Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                            builder: (context) => BuytimeMap(
-                                                              user: true,
-                                                              title: widget.serviceState.name,
-                                                              businessState: BusinessState.fromExternalState(externalBusinessState),
-                                                              serviceState: widget.serviceState,
-                                                            )),
-                                                      );
-                                                    },
-                                                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                                                    child: Container(
-                                                      padding: EdgeInsets.all(5.0),
-                                                      child: Text(
-                                                        AppLocalizations.of(context).directions,
-                                                        style: TextStyle(letterSpacing: SizeConfig.safeBlockHorizontal * .2, fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.UserPrimary, fontWeight: FontWeight.w400, fontSize: 14
+                                                    ///Directions
+                                                    Container(
+                                                        margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 2.5),
+                                                        alignment: Alignment.center,
+                                                        child: Material(
+                                                          color: Colors.transparent,
+                                                          child: InkWell(
+                                                              onTap: () {
+                                                                Navigator.push(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                      builder: (context) => BuytimeMap(
+                                                                            user: true,
+                                                                            title: widget.serviceState.name,
+                                                                            businessState: BusinessState.fromExternalState(externalBusinessState),
+                                                                            serviceState: widget.serviceState,
+                                                                          )),
+                                                                );
+                                                              },
+                                                              borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                                              child: Container(
+                                                                padding: EdgeInsets.all(5.0),
+                                                                child: Text(
+                                                                  AppLocalizations.of(context).directions,
+                                                                  style: TextStyle(
+                                                                      letterSpacing: SizeConfig.safeBlockHorizontal * .2,
+                                                                      fontFamily: BuytimeTheme.FontFamily,
+                                                                      color: BuytimeTheme.UserPrimary,
+                                                                      fontWeight: FontWeight.w400,
+                                                                      fontSize: 14
 
-                                                          ///SizeConfig.safeBlockHorizontal * 4
-                                                        ),
-                                                      ),
-                                                    )),
-                                              ))
-                                        ],
-                                      ),
-                                    )
-                                  ],
-                                )
-                                    : Container(),
+                                                                      ///SizeConfig.safeBlockHorizontal * 4
+                                                                      ),
+                                                                ),
+                                                              )),
+                                                        ))
+                                                  ],
+                                                ),
+                                              )
+                                            ],
+                                          )
+                                        : Container(),
+
                                 ///Description
                                 Flexible(
                                   child: Container(
                                     width: double.infinity,
-                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, bottom: SizeConfig.safeBlockVertical * 1, top: SizeConfig.safeBlockVertical * 2),
+                                    margin: EdgeInsets.only(
+                                        left: SizeConfig.safeBlockHorizontal * 5,
+                                        right: SizeConfig.safeBlockHorizontal * 5,
+                                        bottom: SizeConfig.safeBlockVertical * 1,
+                                        top: SizeConfig.safeBlockVertical * 2),
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
@@ -584,20 +647,30 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                           margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3),
                                           child: Text(
                                             AppLocalizations.of(context).serviceDescription,
-                                            style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w600, fontSize: 18
+                                            style: TextStyle(
+                                                fontFamily: BuytimeTheme.FontFamily,
+                                                color: BuytimeTheme.TextBlack,
+                                                fontWeight: FontWeight.w600,
+                                                fontSize: 18
 
-                                              ///SizeConfig.safeBlockHorizontal * 5
-                                            ),
+                                                ///SizeConfig.safeBlockHorizontal * 5
+                                                ),
                                           ),
                                         ),
                                         Container(
                                           margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 2),
                                           child: Text(
-                                            serviceState.description.isNotEmpty ? Utils.retriveField(Localizations.localeOf(context).languageCode, widget.serviceState.description) : AppLocalizations.of(context).loreIpsum,
-                                            style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w400, fontSize: 16
+                                            serviceState.description.isNotEmpty
+                                                ? Utils.retriveField(Localizations.localeOf(context).languageCode, widget.serviceState.description)
+                                                : AppLocalizations.of(context).loreIpsum,
+                                            style: TextStyle(
+                                                fontFamily: BuytimeTheme.FontFamily,
+                                                color: BuytimeTheme.TextBlack,
+                                                fontWeight: FontWeight.w400,
+                                                fontSize: 16
 
-                                              ///SizeConfig.safeBlockHorizontal * 4
-                                            ),
+                                                ///SizeConfig.safeBlockHorizontal * 4
+                                                ),
                                           ),
                                         )
                                       ],
@@ -609,44 +682,64 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                           ],
                         ),
                       ),
-                      !serviceState.switchSlots ?
-                      ///Add a cart & Buy
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          ///Add to card
-                          Container(
-                              width: 158,
-                              ///SizeConfig.safeBlockHorizontal * 40
-                              height: 44,
-                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, bottom: 29, right: SizeConfig.safeBlockHorizontal * 2.5),
-                              decoration: BoxDecoration(borderRadius: new BorderRadius.circular(5), border: Border.all(color: StoreProvider.of<AppState>(context).state.user.getRole() == Role.user ? (widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary) : BuytimeTheme.SymbolGrey)),
-                              child: MaterialButton(
-                                elevation: 0,
-                                hoverElevation: 0,
-                                focusElevation: 0,
-                                highlightElevation: 0,
-                                onPressed: StoreProvider.of<AppState>(context).state.user.getRole() == Role.user
-                                    ? () {
-                                  if (isExternal) {
-                                    order.business.name = externalBusinessState.name;
-                                    order.business.id = externalBusinessState.id_firestore;
-                                  } else {
-                                    order.business.name = snapshot.business.name;
-                                    order.business.id = snapshot.business.id_firestore;
-                                  }
-                                  order.user.name = snapshot.user.name;
-                                  order.user.id = snapshot.user.uid;
+                      !serviceState.switchSlots
+                          ?
+
+                          ///Add a cart & Buy
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                ///Add to card
+                                Container(
+                                    width: 158,
+
+                                    ///SizeConfig.safeBlockHorizontal * 40
+                                    height: 44,
+                                    margin: EdgeInsets.only(
+                                        top: SizeConfig.safeBlockVertical * 2, bottom: 29, right: SizeConfig.safeBlockHorizontal * 2.5),
+                                    decoration: BoxDecoration(
+                                        borderRadius: new BorderRadius.circular(5),
+                                        border: Border.all(
+                                            color: StoreProvider.of<AppState>(context).state.user.getRole() == Role.user
+                                                ? (widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary)
+                                                : BuytimeTheme.SymbolGrey)),
+                                    child: MaterialButton(
+                                      elevation: 0,
+                                      hoverElevation: 0,
+                                      focusElevation: 0,
+                                      highlightElevation: 0,
+                                      onPressed: StoreProvider.of<AppState>(context).state.user.getRole() == Role.user
+                                          ? () {
+                                              if (isExternal) {
+                                                order.business.name = externalBusinessState.name;
+                                                order.business.id = externalBusinessState.id_firestore;
+                                              } else {
+                                                order.business.name = snapshot.business.name;
+                                                order.business.id = snapshot.business.id_firestore;
+                                              }
+                                              order.user.name = snapshot.user.name;
+                                              order.user.id = snapshot.user.uid;
                                               if (!order.addingFromAnotherBusiness(widget.serviceState.businessId)) {
                                                 order.addItem(widget.serviceState, snapshot.business.ownerId, context);
+                                                order.cartCounter++;
+                                                StoreProvider.of<AppState>(context).dispatch(SetOrder(order));
                                               } else {
                                                 /// TODO ask if they want the cart to be flushed empty
                                                 showDialog(
                                                     context: context,
-                                                    builder: (_) => new AlertDialog(
-                                                      title: new Text(AppLocalizations.of(context).warning),
-                                                      content: new Text(AppLocalizations.of(context).emptyCart),
-                                                      actions: <Widget>[
+                                                    builder: (_) => AlertDialog(
+                                                      title: Text(AppLocalizations.of(context).doYouWantToPerformAnotherOrder),
+                                                      content: Text(AppLocalizations.of(context).youAreAboutToPerformAnotherOrder),
+                                                      actions: <Widget>[MaterialButton(
+                                                        elevation: 0,
+                                                        hoverElevation: 0,
+                                                        focusElevation: 0,
+                                                        highlightElevation: 0,
+                                                        child: Text(AppLocalizations.of(context).cancel),
+                                                        onPressed: () {
+                                                          Navigator.of(context).pop();
+                                                        },
+                                                      ),
                                                         MaterialButton(
                                                           elevation: 0,
                                                           hoverElevation: 0,
@@ -654,82 +747,194 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                                           highlightElevation: 0,
                                                           child: Text(AppLocalizations.of(context).ok),
                                                           onPressed: () {
+                                                            /// svuotare il carrello
+                                                            // StoreProvider.of<AppState>(context).dispatch(());
+                                                            /// fare la nuova add
+                                                            for (int i = 0; i < order.itemList.length; i++) {
+                                                              order.removeItem(order.itemList[i]);
+                                                            }
+                                                            order.itemList = [];
+                                                            order.cartCounter = 0;
+                                                            order.addItem(widget.serviceState, snapshot.business.ownerId, context);
+                                                            order.cartCounter = 1;
                                                             Navigator.of(context).pop();
                                                           },
                                                         )
                                                       ],
-                                                    )
-                                                );
+                                                    ));
                                               }
-                                  order.cartCounter++;
-                                  //StoreProvider.of<AppState>(context).dispatch(SetOrderCartCounter(order.cartCounter));
-                                  StoreProvider.of<AppState>(context).dispatch(SetOrder(order));
-                                }
-                                    : null,
-                                textColor: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
-                                disabledTextColor: BuytimeTheme.SymbolGrey,
-                                color: BuytimeTheme.BackgroundWhite,
-                                //padding: EdgeInsets.all(15),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: new BorderRadius.circular(5),
-                                ),
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  child: Text(
-                                    AppLocalizations.of(context).addToCart,
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(fontSize: 14, fontFamily: BuytimeTheme.FontFamily, fontWeight: FontWeight.w500, letterSpacing: 1.25, ),
-                                  ),
-                                ),
-                              )),
+                                              // order.cartCounter++;
+                                              // //StoreProvider.of<AppState>(context).dispatch(SetOrderCartCounter(order.cartCounter));
+                                              // StoreProvider.of<AppState>(context).dispatch(SetOrder(order));
+                                            }
+                                          : null,
+                                      textColor: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+                                      disabledTextColor: BuytimeTheme.SymbolGrey,
+                                      color: BuytimeTheme.BackgroundWhite,
+                                      //padding: EdgeInsets.all(15),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: new BorderRadius.circular(5),
+                                      ),
+                                      child: Container(
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          AppLocalizations.of(context).addToCart,
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            fontFamily: BuytimeTheme.FontFamily,
+                                            fontWeight: FontWeight.w500,
+                                            letterSpacing: 1.25,
+                                          ),
+                                        ),
+                                      ),
+                                    )),
 
-                          ///Buy
+                                ///Buy
+                                Container(
+                                    width: 158,
+
+                                    ///SizeConfig.safeBlockHorizontal * 40
+                                    height: 44,
+                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, bottom: 29),
+                                    child: MaterialButton(
+                                      elevation: 0,
+                                      hoverElevation: 0,
+                                      focusElevation: 0,
+                                      highlightElevation: 0,
+                                      onPressed: StoreProvider.of<AppState>(context).state.user.getRole() == Role.user
+                                          ? () {
+                                              if (isExternal) {
+                                                order.business.name = externalBusinessState.name;
+                                                order.business.id = externalBusinessState.id_firestore;
+                                              } else {
+                                                order.business.name = snapshot.business.name;
+                                                order.business.id = snapshot.business.id_firestore;
+                                              }
+                                              order.user.name = snapshot.user.name;
+                                              order.user.id = snapshot.user.uid;
+                                              // order.addItem(widget.serviceState, snapshot.business.ownerId, context);
+                                              if (!order.addingFromAnotherBusiness(widget.serviceState.businessId)) {
+                                                order.addItem(widget.serviceState, snapshot.business.ownerId, context);
+                                                order.cartCounter++;
+                                                StoreProvider.of<AppState>(context).dispatch(SetOrder(order));
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) => Cart(
+                                                        tourist: widget.tourist,
+                                                      )),
+                                                );
+                                              } else {
+                                                /// TODO ask if they want the cart to be flushed empty
+                                                showDialog(
+                                                    context: context,
+                                                    builder: (_) => AlertDialog(
+                                                      title: Text(AppLocalizations.of(context).doYouWantToPerformAnotherOrder),
+                                                      content: Text(AppLocalizations.of(context).youAreAboutToPerformAnotherOrder),
+                                                      actions: <Widget>[MaterialButton(
+                                                        elevation: 0,
+                                                        hoverElevation: 0,
+                                                        focusElevation: 0,
+                                                        highlightElevation: 0,
+                                                        child: Text(AppLocalizations.of(context).cancel),
+                                                        onPressed: () {
+                                                          Navigator.of(context).pop();
+                                                        },
+                                                      ),
+                                                        MaterialButton(
+                                                          elevation: 0,
+                                                          hoverElevation: 0,
+                                                          focusElevation: 0,
+                                                          highlightElevation: 0,
+                                                          child: Text(AppLocalizations.of(context).ok),
+                                                          onPressed: () {
+                                                            /// svuotare il carrello
+                                                            // StoreProvider.of<AppState>(context).dispatch(());
+                                                            /// fare la nuova add
+                                                            for (int i = 0; i < order.itemList.length; i++) {
+                                                              order.removeItem(order.itemList[i]);
+                                                            }
+                                                            order.itemList = [];
+                                                            order.cartCounter = 0;
+                                                            order.addItem(widget.serviceState, snapshot.business.ownerId, context);
+                                                            order.cartCounter = 1;
+                                                            Navigator.of(context).pop();
+                                                            Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                  builder: (context) => Cart(
+                                                                    tourist: widget.tourist,
+                                                                  )),
+                                                            );
+                                                          },
+                                                        )
+                                                      ],
+                                                    ));
+                                              }
+                                              // order.cartCounter++;
+                                              // //StoreProvider.of<AppState>(context).dispatch(SetOrderCartCounter(order.cartCounter));
+                                              // StoreProvider.of<AppState>(context).dispatch(SetOrder(order));
+                                              //StoreProvider.of<AppState>(context).dispatch(SetOrder(order));
+
+                                              /* Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => ConfirmOrder(reserve: false, tourist: widget.tourist,)),
+                                  );*/
+
+                                              ///Discriminare se è un tuista o un utente loggato a premere BUY
+                                              ///Controllare se c'è utente loggato con firebase
+                                              //     if (auth.FirebaseAuth != null && auth.FirebaseAuth.instance != null && auth.FirebaseAuth.instance.currentUser != null)
+
+
+                                            }
+                                          : null,
+                                      textColor: BuytimeTheme.TextWhite,
+                                      disabledTextColor: BuytimeTheme.TextWhite,
+                                      color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+                                      disabledColor: BuytimeTheme.SymbolGrey,
+                                      //padding: EdgeInsets.all(15),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: new BorderRadius.circular(5),
+                                      ),
+                                      child: Text(
+                                        AppLocalizations.of(context).buyUpper,
+                                        style: TextStyle(
+                                            fontSize: 14, fontFamily: BuytimeTheme.FontFamily, fontWeight: FontWeight.w800, letterSpacing: 1.25),
+                                      ),
+                                    )),
+                              ],
+                            )
+                          :
+
+                          ///Reserve
                           Container(
                               width: 158,
 
                               ///SizeConfig.safeBlockHorizontal * 40
                               height: 44,
-                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, bottom: 29),
+                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, bottom: 29, right: SizeConfig.safeBlockHorizontal * 0),
+                              decoration: BoxDecoration(
+                                borderRadius: new BorderRadius.circular(5),
+                                /*border: Border.all(
+                                color: BuytimeTheme.UserPrimary
+                            )*/
+                              ),
                               child: MaterialButton(
+                                onPressed: StoreProvider.of<AppState>(context).state.user.getRole() == Role.user
+                                    ? () {
+                                        StoreProvider.of<AppState>(context).dispatch(SetOrderReservableToEmpty('ok'));
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => ServiceReserve(serviceState: serviceState, tourist: widget.tourist)),
+                                        );
+                                      }
+                                    : null,
                                 elevation: 0,
                                 hoverElevation: 0,
                                 focusElevation: 0,
                                 highlightElevation: 0,
-                                onPressed: StoreProvider.of<AppState>(context).state.user.getRole() == Role.user
-                                    ? () {
-                                  if (isExternal) {
-                                    order.business.name = externalBusinessState.name;
-                                    order.business.id = externalBusinessState.id_firestore;
-                                  } else {
-                                    order.business.name = snapshot.business.name;
-                                    order.business.id = snapshot.business.id_firestore;
-                                  }
-                                  order.user.name = snapshot.user.name;
-                                  order.user.id = snapshot.user.uid;
-                                              order.addItem(widget.serviceState, snapshot.business.ownerId, context);
-                                  order.cartCounter++;
-                                  //StoreProvider.of<AppState>(context).dispatch(SetOrderCartCounter(order.cartCounter));
-                                  StoreProvider.of<AppState>(context).dispatch(SetOrder(order));
-                                  //StoreProvider.of<AppState>(context).dispatch(SetOrder(order));
-
-                                  /* Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => ConfirmOrder(reserve: false, tourist: widget.tourist,)),
-                                  );*/
-
-                                  ///Discriminare se è un tuista o un utente loggato a premere BUY
-                                  ///Controllare se c'è utente loggato con firebase
-                                  //     if (auth.FirebaseAuth != null && auth.FirebaseAuth.instance != null && auth.FirebaseAuth.instance.currentUser != null)
-
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => Cart(
-                                          tourist: widget.tourist,
-                                        )),
-                                  );
-                                }
-                                    : null,
                                 textColor: BuytimeTheme.TextWhite,
                                 disabledTextColor: BuytimeTheme.TextWhite,
                                 color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
@@ -738,57 +943,14 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                 shape: RoundedRectangleBorder(
                                   borderRadius: new BorderRadius.circular(5),
                                 ),
-                                child: Text(
-                                  AppLocalizations.of(context).buyUpper,
-                                  style: TextStyle(fontSize: 14, fontFamily: BuytimeTheme.FontFamily, fontWeight: FontWeight.w800, letterSpacing: 1.25),
-                                ),
-                              )),
-                        ],
-                      )
-                          :
-
-                      ///Reserve
-                      Container(
-                        width: 158,
-
-                        ///SizeConfig.safeBlockHorizontal * 40
-                        height: 44,
-                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, bottom: 29, right: SizeConfig.safeBlockHorizontal * 0),
-                        decoration: BoxDecoration(
-                          borderRadius: new BorderRadius.circular(5),
-                          /*border: Border.all(
-                                color: BuytimeTheme.UserPrimary
-                            )*/
-                        ),
-                        child: MaterialButton(
-                          onPressed: StoreProvider.of<AppState>(context).state.user.getRole() == Role.user
-                              ? () {
-                            StoreProvider.of<AppState>(context).dispatch(SetOrderReservableToEmpty('ok'));
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => ServiceReserve(serviceState: serviceState, tourist: widget.tourist)),
-                            );
-                          }
-                              : null,
-                          elevation: 0,
-                          hoverElevation: 0,
-                          focusElevation: 0,
-                          highlightElevation: 0,
-                          textColor: BuytimeTheme.TextWhite,
-                          disabledTextColor: BuytimeTheme.TextWhite,
-                          color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
-                          disabledColor: BuytimeTheme.SymbolGrey,
-                          //padding: EdgeInsets.all(15),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(5),
-                          ),
-                          child: Container(
-                              child: Text(
-                                AppLocalizations.of(context).reserveUpper,
-                                style: TextStyle(fontSize: 14, fontFamily: BuytimeTheme.FontFamily, fontWeight: FontWeight.w800, letterSpacing: 1.25),
-                              )),
-                        ),
-                      ),
+                                child: Container(
+                                    child: Text(
+                                  AppLocalizations.of(context).reserveUpper,
+                                  style:
+                                      TextStyle(fontSize: 14, fontFamily: BuytimeTheme.FontFamily, fontWeight: FontWeight.w800, letterSpacing: 1.25),
+                                )),
+                              ),
+                            ),
                     ],
                   ),
                 ),

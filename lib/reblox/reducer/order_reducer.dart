@@ -7,6 +7,16 @@ import 'package:flutter/widgets.dart';
 import 'package:stripe_payment/stripe_payment.dart' as StripeRecommended;
 import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
 
+class RefundOrderByUser {
+  String _orderStateId;
+  RefundOrderByUser(this._orderStateId);
+  String get orderStateId => _orderStateId;
+}
+
+class RefundedRequestDone {
+  RefundedRequestDone();
+}
+
 class SetOrder {
   OrderState _orderState;
   SetOrder(this._orderState);
@@ -291,6 +301,10 @@ OrderState orderReducer(OrderState state, action) {
   }
   if (action is DeletingStripePaymentMethod) {
     orderState.addCardProgress = Utils.enumToString(AddCardStatus.inProgress);
+    return orderState;
+  }
+  if (action is RefundedRequestDone) {
+    orderState.progress = Utils.enumToString(OrderStatus.canceled);
     return orderState;
   }
   if (action is DeletedStripePaymentMethod) {

@@ -129,10 +129,53 @@ class ServiceListState extends State<ServiceList> {
                                                         order.business.id = snapshot.business.id_firestore;
                                                         order.user.name = snapshot.user.name;
                                                         order.user.id = snapshot.user.uid;
-                                                        order.addItem(serviceList[index], snapshot.business.ownerId, context);
-                                                        order.cartCounter++;
-                                                        //StoreProvider.of<AppState>(context).dispatch(SetOrderCartCounter(order.cartCounter));
-                                                        StoreProvider.of<AppState>(context).dispatch(SetOrder(order));
+                                                        // order.addItem(serviceList[index], snapshot.business.ownerId, context);
+                                                        if (!order.addingFromAnotherBusiness(serviceList[index].businessId)) {
+                                                          order.addItem(serviceList[index], snapshot.business.ownerId, context);
+                                                          order.cartCounter++;
+                                                          StoreProvider.of<AppState>(context).dispatch(SetOrder(order));
+                                                        } else {
+                                                          showDialog(
+                                                              context: context,
+                                                              builder: (_) => AlertDialog(
+                                                                title: Text(AppLocalizations.of(context).doYouWantToPerformAnotherOrder),
+                                                                content: Text(AppLocalizations.of(context).youAreAboutToPerformAnotherOrder),
+                                                                actions: <Widget>[MaterialButton(
+                                                                  elevation: 0,
+                                                                  hoverElevation: 0,
+                                                                  focusElevation: 0,
+                                                                  highlightElevation: 0,
+                                                                  child: Text(AppLocalizations.of(context).cancel),
+                                                                  onPressed: () {
+                                                                    Navigator.of(context).pop();
+                                                                  },
+                                                                ),
+                                                                  MaterialButton(
+                                                                    elevation: 0,
+                                                                    hoverElevation: 0,
+                                                                    focusElevation: 0,
+                                                                    highlightElevation: 0,
+                                                                    child: Text(AppLocalizations.of(context).ok),
+                                                                    onPressed: () {
+                                                                      /// svuotare il carrello
+                                                                      // StoreProvider.of<AppState>(context).dispatch(());
+                                                                      /// fare la nuova add
+                                                                      for (int i = 0; i < order.itemList.length; i++) {
+                                                                        order.removeItem(order.itemList[i]);
+                                                                      }
+                                                                      order.itemList = [];
+                                                                      order.cartCounter = 0;
+                                                                      order.addItem(serviceList[index], snapshot.business.ownerId, context);
+                                                                      order.cartCounter = 1;
+                                                                      Navigator.of(context).pop();
+                                                                    },
+                                                                  )
+                                                                ],
+                                                              ));
+                                                        }
+                                                        // order.cartCounter++;
+                                                        // //StoreProvider.of<AppState>(context).dispatch(SetOrderCartCounter(order.cartCounter));
+                                                        // StoreProvider.of<AppState>(context).dispatch(SetOrder(order));
                                                       },
                                                     )
                                                   ],

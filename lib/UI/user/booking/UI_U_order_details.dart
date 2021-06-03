@@ -52,6 +52,8 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
   List<String> cc = ['v','mc','e'];
   double lat = 0.0;
   double lng = 0.0;
+  bool refundAsked = false;
+
   @override
   void initState() {
     super.initState();
@@ -229,7 +231,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
   Widget build(BuildContext context) {
     // the media containing information on width and height
     var media = MediaQuery.of(context).size;
-
+    refundAsked = false;
     SizeConfig().init(context);
 
     return StoreConnector<AppState, AppState>(
@@ -1025,6 +1027,31 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                             ),
                           ),
                         ),
+                        widget.orderState.progress == Utils.enumToString(OrderStatus.paid) ? Container(
+                            margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 2.5),
+                            alignment: Alignment.center,
+                            child: Material(
+                              color: Colors.transparent,
+                              child: InkWell(
+                                  onTap: refundAsked ? null: () {
+                                    refundAsked = true;
+                                    StoreProvider.of<AppState>(context).dispatch(RefundOrderByUser(widget.orderState.orderId));
+                                  },
+                                  borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                  child: Container(
+                                    padding: EdgeInsets.all(5.0),
+                                    child: Text(
+                                      AppLocalizations.of(context).askForRefund,
+                                      style: TextStyle(
+                                          letterSpacing: SizeConfig.safeBlockHorizontal * .2,
+                                          fontFamily: BuytimeTheme.FontFamily,
+                                          color: refundAsked ? BuytimeTheme.TextGrey : BuytimeTheme.UserPrimary,
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 16
+                                      ),
+                                    ),
+                                  )),
+                            )) : Container(),
                       ],
                     ),
                   ),
