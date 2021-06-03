@@ -110,7 +110,7 @@ class CartState extends State<Cart> {
             },
             builder: (context, snapshot) {
               orderState = snapshot.order;
-              if(orderState.itemList.first.id_business != snapshot.business.id_firestore){
+              if(orderState != null && orderState.itemList.isNotEmpty && orderState.itemList.first.id_business != snapshot.business.id_firestore){
                 debugPrint('UI_U_cart => ORDER BUSINESS ID: ${orderState.itemList.first.id_business} | BUSIENSS ID: ${snapshot.business.id_firestore}');
                 isExternal = true;
               }

@@ -251,7 +251,12 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
             if(store.state.business.businessAddress != null && store.state.business.businessAddress.isNotEmpty)
               _serviceBusinessAddress = store.state.business.businessAddress;
             else
-              _serviceBusinessAddress = store.state.business.street + ', ' + store.state.business.street_number + ', ' + store.state.business.ZIP + ', ' + store.state.business.state_province;
+              _serviceBusinessAddress = '${store.state.business.street.isNotEmpty ? store.state.business.street : ''}'
+                  '${store.state.business.street_number.isNotEmpty ? ', ' + store.state.business.street_number : ''}'
+                  '${store.state.business.ZIP.isNotEmpty ? ', ' + store.state.business.ZIP : ''}'
+                  '${store.state.business.state_province.isNotEmpty ? ', ' + store.state.business.state_province : ''}';
+
+            debugPrint('UI_M_edit_service => SERVICE BUSINESS ADDRESS: $_serviceBusinessAddress');
             _serviceBusinessCoordinates = store.state.business.coordinate;
             //addressController.text = _serviceAddress;
             startRequest = true;
@@ -307,7 +312,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
               if(snapshot.serviceState.serviceAddress != null && snapshot.serviceState.serviceAddress.isNotEmpty){
                 _serviceAddress = snapshot.serviceState.serviceAddress;
               }else if(snapshot.serviceState.serviceBusinessAddress != null && snapshot.serviceState.serviceBusinessAddress.isNotEmpty){
-                _serviceBusinessAddress = snapshot.serviceState.serviceBusinessAddress;
+                  _serviceBusinessAddress = snapshot.serviceState.serviceBusinessAddress;
               }else{
                 addressController.text = _serviceBusinessAddress;
               }

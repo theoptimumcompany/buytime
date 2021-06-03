@@ -19,7 +19,9 @@ class RNotificationBell extends StatelessWidget {
     return StreamBuilder<DocumentSnapshot>(
         stream: FirebaseFirestore.instance.collection('user').doc(userId).collection('userNotification').doc('userNotificationDoc').snapshots(includeMetadataChanges: true),
         builder: (context, AsyncSnapshot<DocumentSnapshot> userNotificationSnapshot) {
-          return  Container(
+          if(userNotificationSnapshot.hasError)
+            return Container();
+          return Container(
             child: Stack(
               children: [
                 Positioned.fill(

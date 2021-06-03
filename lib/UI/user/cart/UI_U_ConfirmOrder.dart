@@ -68,6 +68,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
 
   bool waitingForUser = true;
   bool isExternal = false;
+  bool cardOrder = false;
   @override
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
@@ -91,7 +92,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                   snapshot.booking != null &&
                       snapshot.booking.booking_id != null &&
                       snapshot.booking.booking_id.isNotEmpty &&
-                      (snapshot.orderReservable.itemList[0].id_business != snapshot.booking.business_id)) {
+                      (snapshot.orderReservable != null && snapshot.orderReservable.itemList.isNotEmpty && snapshot.orderReservable.itemList[0].id_business != snapshot.booking.business_id)) {
                 disableRoomPayment = true;
               } else {
                 disableRoomPayment = false;
@@ -102,7 +103,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                   snapshot.booking != null &&
                       snapshot.booking.business_id != null &&
                       snapshot.booking.business_id.isNotEmpty &&
-                      (snapshot.order.itemList[0].id_business != snapshot.booking.business_id)) {
+                      (snapshot.order != null && snapshot.order.itemList.isNotEmpty && snapshot.order.itemList[0].id_business != snapshot.booking.business_id)) {
                 disableRoomPayment = true;
               } else {
                 disableRoomPayment = false;
@@ -126,7 +127,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                 }
               });
             }
-            if(orderState.itemList.first.id_business != snapshot.business.id_firestore){
+            if(orderState != null && orderState.itemList.isNotEmpty && orderState.itemList.first.id_business != snapshot.business.id_firestore){
               debugPrint('UI_U_cart => ORDER BUSINESS ID: ${orderState.itemList.first.id_business} | BUSIENSS ID: ${snapshot.business.id_firestore}');
               isExternal = true;
             }
@@ -198,7 +199,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                       )),
                 ),
               ),
-              snapshot.order.addCardProgress == Utils.enumToString(AddCardStatus.inProgress) ? spinnerConfirmOrder() : Container(),
+              snapshot.order.addCardProgress == Utils.enumToString(AddCardStatus.inProgress) || cardOrder ? spinnerConfirmOrder() : Container(),
               snapshot.lastError != null && snapshot.lastError.isNotEmpty
                   ? ShowErrorDialogToDismiss(
                       buttonText: AppLocalizations.of(context).ok,
@@ -658,6 +659,9 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
   }
 
   void confirmationCard(BuildContext context, AppState snapshot, String last4, String brand, String country, String selectedCardPaymentMethodId) {
+    setState(() {
+      cardOrder = true;
+    });
     if (widget.reserve != null && widget.reserve) {
       StoreProvider.of<AppState>(context).dispatch(CreatingOrder());
 

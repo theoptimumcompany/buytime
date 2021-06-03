@@ -259,7 +259,8 @@ OrderState orderReducer(OrderState state, action) {
     return orderState;
   }
   if (action is CreatedOrder) {
-    orderState.progress = Utils.enumToString(OrderStatus.unpaid);
+    //orderState.progress = Utils.enumToString(OrderStatus.unpaid);
+    orderState = OrderState().toEmpty();
     return orderState;
   }
   if (action is SetOrderCartCounter) {

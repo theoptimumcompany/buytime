@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:ui' as ui;
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/file/optimum_file_to_upload.dart';
+import 'package:Buytime/reblox/model/role/role.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/utils/utils.dart';
@@ -203,6 +204,25 @@ class WidgetServicePhotoState extends State<WidgetServicePhoto> {
     });
   }
 
+  bool canEdit(){
+    bool edit = false;
+    debugPrint('UI_M_edit_service => USER ROLE: ${StoreProvider.of<AppState>(context).state.user.getRole()}');
+    if(StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin ||
+        StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman ||
+        StoreProvider.of<AppState>(context).state.user.getRole() == Role.owner){
+      edit = true;
+      debugPrint('UI_M_edit_service => CAN EDIT ${Utils.enumToString(StoreProvider.of<AppState>(context).state.user.getRole())}');
+    }
+    StoreProvider.of<AppState>(context).state.category.manager.forEach((email) {
+      if(email.mail == StoreProvider.of<AppState>(context).state.user.email){
+        edit = true;
+        debugPrint('UI_M_edit_service => CAN EDIT MANAGER');
+      }
+    });
+
+    return edit;
+  }
+
   @override
   Widget build(BuildContext context) {
     //debugPrint('REMOTE PATH: $remotePath');
@@ -241,7 +261,7 @@ class WidgetServicePhotoState extends State<WidgetServicePhoto> {
               ),
               errorWidget: (context, url, error) => croppedImage == null ? Image(width: SizeConfig.blockSizeHorizontal * 100, image: assetImage) : croppedImage,
             ) : Image(width: SizeConfig.blockSizeHorizontal * 100, image: assetImage)),
-            onTap: !StoreProvider.of<AppState>(context).state.user.worker ? () {
+            onTap: canEdit() ? () {
               manageImage();
             } : null,
           ),

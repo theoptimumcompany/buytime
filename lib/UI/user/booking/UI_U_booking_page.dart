@@ -1,4 +1,5 @@
 import 'package:Buytime/UI/management/business/UI_M_business_list.dart';
+import 'package:Buytime/UI/user/booking/RUI_U_all_bookings.dart';
 import 'package:Buytime/UI/user/booking/UI_U_all_bookings.dart';
 import 'package:Buytime/UI/user/booking/RUI_notification_bell.dart';
 import 'package:Buytime/UI/user/booking/widget/user_service_card_widget.dart';
@@ -63,6 +64,7 @@ class _BookingPageState extends State<BookingPage> {
   CategoryListState categoryListState;
   List<CategoryState> categoryList = [];
   List<OrderState> userOrderList = [];
+  List<OrderState> allUserOrderList = [];
   List<OrderState> orderList = [];
 
   List<CategoryState> row1 = [];
@@ -223,13 +225,20 @@ class _BookingPageState extends State<BookingPage> {
         orderList.clear();
         userOrderList.clear();
         DateTime currentTime = DateTime.now();
-        currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0).toUtc();
+        //currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0).toUtc();
         snapshot.orderList.orderListState.forEach((element) {
-          if((element.progress == Utils.enumToString(OrderStatus.paid) || element.progress == Utils.enumToString(OrderStatus.pending) || element.progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout) || element.progress == Utils.enumToString(OrderStatus.holding) || element.progress == Utils.enumToString(OrderStatus.accepted)) && (element.date.isAtSameMomentAs(currentTime) || element.date.isAfter(currentTime)) && element.itemList.first.time != null)
+          //allUserOrderList.add(element);
+          if((element.progress == Utils.enumToString(OrderStatus.paid) ||
+              element.progress == Utils.enumToString(OrderStatus.pending) ||
+              element.progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout) ||
+              element.progress == Utils.enumToString(OrderStatus.holding) ||
+              element.progress == Utils.enumToString(OrderStatus.accepted)) &&
+              (element.itemList.first.date.isAtSameMomentAs(currentTime) || element.itemList.first.date.isAfter(currentTime)) && element.itemList.first.time != null)
             userOrderList.add(element);
         });
         orderList.addAll(snapshot.orderList.orderListState);
-        userOrderList.sort((a,b) => a.date.isBefore(b.date) ? -1 : a.date.isAtSameMomentAs(b.date) ? 0 : 1);
+        userOrderList.sort((a,b) => a.itemList.first.date.isBefore(b.date) ? -1 : a.itemList.first.date.isAtSameMomentAs(b.itemList.first.date) ? 0 : 1);
+        orderList.sort((a,b) => a.date.isBefore(b.date) ? -1 : a.date.isAtSameMomentAs(b.date) ? 0 : 1);
 
         /*bookingState = snapshot.booking;
         businessState = snapshot.business;
@@ -738,7 +747,7 @@ class _BookingPageState extends State<BookingPage> {
                                                       color: Colors.transparent,
                                                       child: InkWell(
                                                           onTap: () {
-                                                            Navigator.push(context, MaterialPageRoute(builder: (context) => AllBookings(orderStateList: orderList, tourist: false,)),);
+                                                            Navigator.push(context, MaterialPageRoute(builder: (context) => RAllBookings(tourist: false,)),);
                                                           },
                                                           borderRadius: BorderRadius.all(Radius.circular(5.0)),
                                                           child: Container(

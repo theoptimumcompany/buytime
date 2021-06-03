@@ -750,7 +750,7 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
                             child: FittedBox(
                               fit: BoxFit.scaleDown,
                               child: Text(
-                                orderDetails.itemList.first.time != null ? whichDate(orderDetails.itemList.first.date) : "test",
+                                orderDetails.itemList.first.time != null ? whichDate(orderDetails.itemList.first.date) : whichDate(orderDetails.date),
                                 style: TextStyle(
                                     fontFamily: BuytimeTheme.FontFamily,
                                     color: BuytimeTheme.TextBlack,
@@ -856,6 +856,7 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
+                                orderDetails.cardType != null && !orderDetails.cardType.contains('room') ?
                                 Container(
                                   height: 30,
                                   width: 50,
@@ -867,22 +868,26 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
                                           )
                                       )
                                   ),
-                                ),
+                                ) : Container(),
                                 ///Card Name
-                                Text(
-                                  orderDetails.cardType != null && orderDetails.cardType.isNotEmpty?
-                                  orderDetails.cardType.substring(0,1).toUpperCase() + orderDetails.cardType.substring(1, orderDetails.cardType.length) + '  ' :
-                                  'Sample  ',
-                                  style: TextStyle(
-                                      fontSize: 14,
-                                      fontFamily: BuytimeTheme.FontFamily,
-                                      fontWeight: FontWeight.w600,
-                                      color: BuytimeTheme.TextBlack
+                                Container(
+                                  margin: EdgeInsets.only(top: orderDetails.cardType != null && !orderDetails.cardType.contains('room') ? 0 : 8),
+                                  child: Text(
+                                    orderDetails.cardType != null && orderDetails.cardType.isNotEmpty ?
+                                    orderDetails.cardType.substring(0,1).toUpperCase() + orderDetails.cardType.substring(1, orderDetails.cardType.length) + '  ' :
+                                    'Sample  ',
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontFamily: BuytimeTheme.FontFamily,
+                                        fontWeight: FontWeight.w600,
+                                        color: BuytimeTheme.TextBlack
+                                    ),
                                   ),
                                 ),
                                 ///Ending **** ....
+                                orderDetails.cardType != null && !orderDetails.cardType.contains('room') ?
                                 Text(
-                                  orderDetails.cardType != null && orderDetails.cardLast4Digit != null  ?
+                                  orderDetails.cardLast4Digit != null  ?
                                   '**** ' + orderDetails.cardLast4Digit :
                                   '**** 0000',
                                   style: TextStyle(
@@ -891,7 +896,7 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
                                       fontWeight: FontWeight.w600,
                                       color: BuytimeTheme.TextBlack
                                   ),
-                                ),
+                                ) : Container(),
                               ],
                             ),
                           ),

@@ -38,6 +38,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
   String _serviceName = "";
   double _servicePrice = 0.0;
   String _serviceDescription = "";
+  String _serviceBusinessAddress = "";
   String _serviceAddress = "";
   String _serviceCoordinates = "";
   final ImagePicker imagePicker = ImagePicker();
@@ -215,11 +216,14 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
           onInit: (store) {
             store.dispatch(CategoryTreeRequest());
             if(store.state.business.businessAddress != null && store.state.business.businessAddress.isNotEmpty)
-              _serviceAddress = store.state.business.businessAddress;
+              _serviceBusinessAddress = store.state.business.businessAddress;
             else
-              _serviceAddress = store.state.business.street + ', ' + store.state.business.street_number + ', ' + store.state.business.ZIP + ', ' + store.state.business.state_province;
+              _serviceBusinessAddress = '${store.state.business.street.isNotEmpty ? store.state.business.street : ''}'
+                  '${store.state.business.street_number.isNotEmpty ? ', ' + store.state.business.street_number : ''}'
+                  '${store.state.business.ZIP.isNotEmpty ? ', ' + store.state.business.ZIP : ''}'
+                  '${store.state.business.state_province.isNotEmpty ? ', ' + store.state.business.state_province : ''}';
             _serviceCoordinates = store.state.business.coordinate;
-            addressController.text = _serviceAddress;
+            addressController.text = _serviceBusinessAddress;
           },
           builder: (context, snapshot) {
             List<String> flagsCharCode = [];
@@ -297,6 +301,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                       tmpService.name = Utils.saveField(myLocale.languageCode, nameController.text, snapshot.serviceState.name);
                                       tmpService.description = Utils.saveField(myLocale.languageCode, descriptionController.text, snapshot.serviceState.description);
                                       tmpService.serviceAddress = addressController.text;
+                                      tmpService.serviceBusinessAddress = _serviceBusinessAddress;
                                       debugPrint('UI_M_create_service => Service Name: ${tmpService.name}');
                                       debugPrint('UI_M_create_service => Service Description: ${tmpService.description}');
                                       debugPrint('UI_M_create_service => Service Address: ${tmpService.serviceBusinessAddress}');
@@ -605,12 +610,12 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                                 controller: addressController,
                                                 //initialValue: _serviceAddress,
                                                 onChanged: (value) {
-                                                  _serviceAddress = value;
-                                                  _serviceAddress = value;
-                                                  StoreProvider.of<AppState>(context).dispatch(SetServiceAddress(_serviceAddress));
+                                                  _serviceBusinessAddress = value;
+                                                  _serviceBusinessAddress = value;
+                                                  StoreProvider.of<AppState>(context).dispatch(SetServiceAddress(_serviceBusinessAddress));
                                                 },
                                                 onSaved: (value) {
-                                                  _serviceAddress = value;
+                                                  _serviceBusinessAddress = value;
                                                 },
                                                 style: TextStyle(
                                                     fontFamily: BuytimeTheme.FontFamily,

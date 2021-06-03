@@ -403,7 +403,7 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                         children: [
                           ///Notification
                           Flexible(
-                              child: RNotificationBell(orderList: orderList, userId: snapshot.user.uid)
+                              child: snapshot.user.uid != null && snapshot.user.uid.isNotEmpty ? RNotificationBell(orderList: orderList, userId: snapshot.user.uid) : Container()
                           ),
                           ///Cart
                           Flexible(
