@@ -141,8 +141,9 @@ class _ManagerNotificationListItemState extends State<ManagerNotificationListIte
                                         child: Container(
                                           margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 0, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 0),
                                           child:  Text(
-                                            Utils.retriveField(Localizations.localeOf(context).languageCode,  widget.serviceState.name)
-                                                + ' ' + widget.notificationState.title.split(' ').last,
+                                              widget.notificationState.serviceName != null && widget.notificationState.serviceName.isNotEmpty ?
+                                            '${Utils.retriveField(Localizations.localeOf(context).languageCode,  widget.notificationState.serviceName)} ${widget.notificationState.title.split(' ').last}' :
+                                              '*** ${widget.notificationState.title.split(' ').last}',
                                             maxLines: 2,
                                             style: TextStyle(
                                                 letterSpacing: 1.5,

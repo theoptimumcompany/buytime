@@ -12,6 +12,7 @@ class NotificationState {
   int timestamp;
   bool opened;
   String notificationId;
+  String serviceName;
 
 
   NotificationState({
@@ -22,6 +23,7 @@ class NotificationState {
     this.timestamp,
     this.opened,
     this.notificationId,
+    this.serviceName,
   });
 
   NotificationState toEmpty() {
@@ -33,6 +35,7 @@ class NotificationState {
       timestamp: 0,
       opened: false,
       notificationId: '',
+      serviceName: '',
     );
   }
 
@@ -44,6 +47,7 @@ class NotificationState {
     this.timestamp = state.timestamp;
     this.opened = state.opened;
     this.notificationId = state.notificationId;
+    this.serviceName = state.serviceName;
   }
 
   NotificationState copyWith({
@@ -53,7 +57,8 @@ class NotificationState {
     NotificationData data,
     int timestamp,
     bool opened,
-    String notificationId
+    String notificationId,
+    String serviceName
   }) {
     return NotificationState(
       body: body ?? this.body,
@@ -63,6 +68,7 @@ class NotificationState {
       timestamp: timestamp ?? this.timestamp,
       opened: opened ?? this.opened,
       notificationId: notificationId ?? this.notificationId,
+      serviceName: serviceName ?? this.serviceName,
     );
   }
 

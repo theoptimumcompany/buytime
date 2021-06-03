@@ -172,6 +172,7 @@ class _RNotificationCenterState extends State<RNotificationCenter> {
                               debugPrint('RUI_U_notifications => NOTIFICATION ID: $idNotification');
                               NotificationState notificationState = NotificationState.fromJson(notificationSnapshot.data.docs[j].data());
                               notificationState.notificationId = idNotification;
+                              debugPrint('RUI_U_notifications => SERVICE NAME: ${notificationState.serviceName}');
                               notifications.add(notificationState);
                             }
 

@@ -694,7 +694,7 @@ class _RActivityManagementItemDetailsState extends State<RActivityManagementItem
                         Flexible(
                           flex : 1,
                           child: Padding(
-                            padding: const EdgeInsets.only(right: 10.0),
+                            padding: const EdgeInsets.only(right: 0.0),
                             child: Container(
                                 width: SizeConfig.safeBlockHorizontal * 40,
                                 height: 44,
@@ -739,7 +739,7 @@ class _RActivityManagementItemDetailsState extends State<RActivityManagementItem
                         Flexible(
                           flex : 1,
                           child: Padding(
-                            padding: const EdgeInsets.only(right: 10.0),
+                            padding: const EdgeInsets.only(right: 0.0),
                             child: Container(
                                 width: SizeConfig.safeBlockHorizontal * 40,
                                 height: 44,

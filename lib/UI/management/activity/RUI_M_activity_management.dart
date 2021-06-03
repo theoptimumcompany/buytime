@@ -575,7 +575,7 @@ class _RActivityManagementState extends State<RActivityManagement> {
           /// Decline
           order.progress == Utils.enumToString(OrderStatus.pending)?
           Container(
-              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 1.5, bottom: SizeConfig.safeBlockVertical * .5, top: SizeConfig.safeBlockVertical * .25),
+              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 1.5, right: SizeConfig.safeBlockHorizontal * 1.5, bottom: SizeConfig.safeBlockVertical * .5, top: SizeConfig.safeBlockVertical * .25),
               alignment: Alignment.center,
               child: Material(
                 color: Colors.transparent,
