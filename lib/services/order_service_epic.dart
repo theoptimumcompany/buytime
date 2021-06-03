@@ -158,6 +158,29 @@ class OrderRequestService implements EpicClass<AppState> {
         ]);
   }
 }
+class OrderRefundByUserService implements EpicClass<AppState> {
+
+  @override
+  Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
+    return actions.whereType<RefundOrderByUser>().asyncMap((event) async {
+      print("ORDER_SERVICE_EPIC - OrderRefundByUserService => ORDER ID: ${event.orderStateId}");
+      String orderId = event.orderStateId;
+      /// awaited promise
+      await FirebaseFirestore.instance
+          .collection("order")
+          .doc(orderId)
+          .update({
+            'progress': 'canceled'
+            })
+          .then((value) {
+         print("ORDER_SERVICE_EPIC - OrderRefundByUserService, successfully set order to canceled");
+      }).catchError((error) {
+        /// TODO send error
+        print("ORDER_SERVICE_EPIC - OrderRefundByUserService, error in setting the order to canceled");
+      });
+    }).expand((element) => [RefundedRequestDone()]);
+  }
+}
 
 class OrderUpdateByManagerService implements EpicClass<AppState> {
   OrderState orderState;

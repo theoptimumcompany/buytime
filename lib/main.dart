@@ -170,6 +170,7 @@ void main(){
     OrderCreateNativePendingService(),
     OrderCreateRoomPendingService(),
     CreateOrderReservableCardAndPayService(),
+    OrderRefundByUserService(),
     CreateOrderReservableCardAndHoldService(),
     CreateOrderReservableCardAndReminderService(),
     CreateOrderReservableNativeAndPayService(),

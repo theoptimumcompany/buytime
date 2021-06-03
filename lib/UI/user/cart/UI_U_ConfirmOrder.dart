@@ -165,8 +165,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                         preferredSize: Size.fromHeight(kToolbarHeight),
                                         child: Container(
                                           decoration: BoxDecoration(
-                                            color:
-                                                widget.tourist != null && widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+                                            color: widget.tourist != null && widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
                                             boxShadow: [
                                               BoxShadow(
                                                 color: Colors.black87.withOpacity(.3),
@@ -214,14 +213,14 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
 
   Widget buildTabsBeforeConfirmation(String bookingCode) {
     if (_controller.index == 0) {
+      return CreditCards(tourist: widget.tourist != null && widget.tourist);
+    } else if (_controller.index == 1) {
+      return Platform.isAndroid ? NativeGoogle() : NativeApple();
+    } else if (_controller.index == 2) {
       if (disableRoomPayment) {
         return RoomDisabled();
       }
       return Room(tourist: widget.tourist, bookingCode: bookingCode);
-    } else if (_controller.index == 1) {
-      return Platform.isAndroid ? NativeGoogle() : NativeApple();
-    } else if (_controller.index == 2) {
-      return CreditCards(tourist: widget.tourist != null && widget.tourist);
     }
     return Container();
   }
@@ -362,16 +361,20 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                   hoverElevation: 0,
                   focusElevation: 0,
                   highlightElevation: 0,
-                  onPressed: _selectedIndex == 0 && !disableRoomPayment ? () {
-                    debugPrint("UI_U_ConfirmOrder confirmation ROOM");
-                    confirmationRoom(context, snapshot);
-                  } : _selectedIndex == 1 ? (){
+                  onPressed: () {
+                    if (_selectedIndex == 0) {
+                      debugPrint("UI_U_ConfirmOrder  confirmation CREDIT CARD");
+                      confirmationCard(context, snapshot, last4, brand, country, selectedCardPaymentMethodId);
+                    } else if (_selectedIndex == 1) {
                     debugPrint("UI_U_ConfirmOrder confirmation NATIVE");
                     confirmationNative(context, snapshot);
-                  } : selected && _selectedIndex == 2 ? (){
-                    debugPrint("UI_U_ConfirmOrder  confirmation CREDIT CARD");
-                    confirmationCard(context, snapshot, last4, brand, country, selectedCardPaymentMethodId);
-                  } : null,
+                    } else if (selected && _selectedIndex == 2) {
+                      debugPrint("UI_U_ConfirmOrder confirmation ROOM");
+                      confirmationRoom(context, snapshot);
+                    } else {
+                      return null;
+                    }
+                  },
                   textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
                   color: widget.tourist != null && widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
                   disabledColor: BuytimeTheme.SymbolLightGrey,
@@ -419,9 +422,9 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
       indicatorPadding: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2, right: SizeConfig.safeBlockHorizontal * 2),
       controller: _controller,
       tabs: [
-              Tab(
-                text: AppLocalizations.of(context).roomSimple,
-              ),
+        Tab(
+          text: AppLocalizations.of(context).creditCardSimple,
+        ),
               Tab(
                   icon: Platform.isAndroid
                       ? Text(AppLocalizations.of(context).googlePay)
@@ -429,8 +432,9 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                           FontAwesome5Brands.apple_pay,
                           size: 40.0,
                         )),
+
               Tab(
-                text: AppLocalizations.of(context).creditCardSimple,
+                text: AppLocalizations.of(context).roomSimple,
               ),
             ],
     );

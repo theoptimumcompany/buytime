@@ -6,6 +6,7 @@ import 'package:Buytime/reblox/model/order/order_detail_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
+import 'package:Buytime/services/order_service_epic.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:flutter/widgets.dart';
@@ -51,6 +52,7 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
   double lng = 0.0;
   BusinessState businessState;
   bool tourist;
+  bool refundAsked = false;
   OrderDetailState orderDetails;
   ServiceState serviceState;
 
@@ -247,6 +249,7 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
     if(orderDetails.orderId != null && orderDetails.orderId.isNotEmpty) {
       _orderStream = FirebaseFirestore.instance.collection('order').doc(orderDetails.orderId).snapshots();
     }
+    refundAsked = false;
       return GestureDetector(
         onTap: (){
           FocusScopeNode currentFocus = FocusScope.of(context);
@@ -917,6 +920,7 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
                               ),
                             ),
                           ),
+
                           orderDetails.itemList.first.time == null  ?
                           orderDetails.itemList.length > 1 ?
                           ((){
@@ -1034,9 +1038,33 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
                               ),
                             ),
                           ),
+                          orderDetails.progress == Utils.enumToString(OrderStatus.paid) ? Container(
+                              margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 2.5),
+                              alignment: Alignment.center,
+                              child: Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                    onTap: refundAsked ? null: () {
+                                      refundAsked = true;
+                                      StoreProvider.of<AppState>(context).dispatch(RefundOrderByUser(orderDetails.orderId));
+                                    },
+                                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                    child: Container(
+                                      padding: EdgeInsets.all(5.0),
+                                      child: Text(
+                                        AppLocalizations.of(context).askForRefund,
+                                        style: TextStyle(
+                                            letterSpacing: SizeConfig.safeBlockHorizontal * .2,
+                                            fontFamily: BuytimeTheme.FontFamily,
+                                            color: refundAsked ? BuytimeTheme.TextGrey : BuytimeTheme.UserPrimary,
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 16
+                                        ),
+                                      ),
+                                    )),
+                              )) : Container(),
                         ],
                       );
-
                       OrderState orderState = OrderState.fromJson(orderSnapshot.data.data());
                       order = orderState.itemList != null ? (orderState.itemList.length > 0 ? orderState : OrderState().toEmpty()) : OrderState().toEmpty();
                       debugPrint('UI_U_ServiceDetails => CART COUNT: ${order.cartCounter}');
