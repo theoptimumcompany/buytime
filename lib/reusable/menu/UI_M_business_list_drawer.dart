@@ -1,6 +1,7 @@
 import 'package:Buytime/UI/management/activity/RUI_M_activity_management.dart';
 import 'package:Buytime/UI/management/activity/UI_M_activity_management.dart';
 import 'package:Buytime/UI/management/business/UI_M_business_list.dart';
+import 'package:Buytime/UI/management/notification/RUI_M_notification_center.dart';
 import 'package:Buytime/UI/user/landing/UI_U_landing.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/reducer/booking_list_reducer.dart';
@@ -213,7 +214,7 @@ class _UI_M_BusinessListDrawerState extends State<UI_M_BusinessListDrawer> {
                     //Navigator.pop(context);
                     setState(() {
                       drawerSelection = DrawerSelection.NotificationCenter;
-                     // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ));
+                     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => RNotificationCenter()));
                     });
                   },
                 ),

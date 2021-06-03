@@ -1,3 +1,4 @@
+import 'package:Buytime/UI/management/activity/RUI_M_activity_management_item_details.dart';
 import 'package:Buytime/UI/management/activity/UI_M_activity_management_item_details.dart';
 import 'package:Buytime/UI/management/invite/UI_M_booking_details.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
@@ -45,7 +46,8 @@ class _DashboardListItemState extends State<DashboardListItem> {
         child: InkWell(
           splashColor: Colors.black.withOpacity(.3),
           onTap: (){
-            Navigator.push(context, MaterialPageRoute(builder: (context) => ActivityManagementItemDetails(orderState: widget.orderState, orderEntry: widget.orderEntry,)),);
+            debugPrint('W_dashboard_list_item => ORDER ID: ${widget.orderState.orderId}');
+            Navigator.push(context, MaterialPageRoute(builder: (context) => RActivityManagementItemDetails(orderId: widget.orderState.orderId)),);
           },
           //borderRadius: BorderRadius.all(Radius.circular(10)),
           child: Row(

@@ -67,7 +67,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
   }
 
   bool waitingForUser = true;
-
+  bool isExternal = false;
   @override
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
@@ -126,7 +126,10 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                 }
               });
             }
-
+            if(orderState.itemList.first.id_business != snapshot.business.id_firestore){
+              debugPrint('UI_U_cart => ORDER BUSINESS ID: ${orderState.itemList.first.id_business} | BUSIENSS ID: ${snapshot.business.id_firestore}');
+              isExternal = true;
+            }
             return Stack(children: [
               Positioned.fill(
                 child: Align(
@@ -362,8 +365,8 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                       debugPrint("UI_U_ConfirmOrder  confirmation CREDIT CARD");
                       confirmationCard(context, snapshot, last4, brand, country, selectedCardPaymentMethodId);
                     } else if (_selectedIndex == 1) {
-                      debugPrint("UI_U_ConfirmOrder confirmation NATIVE");
-                      confirmationNative(context, snapshot);
+                    debugPrint("UI_U_ConfirmOrder confirmation NATIVE");
+                    confirmationNative(context, snapshot);
                     } else if (selected && _selectedIndex == 2) {
                       debugPrint("UI_U_ConfirmOrder confirmation ROOM");
                       confirmationRoom(context, snapshot);
@@ -441,7 +444,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
       child: Column(
         children: [
           ///Top Text
-          Container(
+          /*Container(
             margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 4),
             child: Padding(
               padding: const EdgeInsets.only(left: 0.0),
@@ -449,7 +452,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    AppLocalizations.of(context).serviceNameSecondLine,
+                    AppLocalizations.of(context).order,
                     textAlign: TextAlign.start,
                     style: TextStyle(
                       fontFamily: BuytimeTheme.FontFamily,
@@ -463,7 +466,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                 ],
               ),
             ),
-          ),
+          ),*/
 
           ///Total Price
           Container(
@@ -486,7 +489,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
           ),
 
           ///Location
-          widget.reserve != null && !widget.reserve && !widget.tourist
+          widget.reserve != null && !widget.reserve && !widget.tourist && !isExternal
               ? Container(
                   margin: EdgeInsets.only(
                       bottom: SizeConfig.safeBlockVertical * 2, top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 3),
@@ -541,7 +544,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
               : Container(),
 
           ///Divider
-          widget.reserve != null && !widget.reserve && !widget.tourist
+          widget.reserve != null && !widget.reserve && !widget.tourist && !isExternal
               ? Container(
                   margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 10, right: SizeConfig.safeBlockHorizontal * 10),
                   color: BuytimeTheme.BackgroundLightGrey,
@@ -580,6 +583,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
     );
   }
 
+  ///App bar
   BuytimeAppbar buildBuytimeAppbar(Size media, BuildContext context) {
     return BuytimeAppbar(
       background: widget.tourist != null && widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
@@ -625,6 +629,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
     );
   }
 
+  ///Loading spinner
   Positioned spinnerConfirmOrder() {
     return Positioned.fill(
       child: Align(

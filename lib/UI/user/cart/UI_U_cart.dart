@@ -90,6 +90,7 @@ class CartState extends State<Cart> {
 
   ServiceState tmp;
 
+  bool isExternal = false;
   @override
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
@@ -109,7 +110,10 @@ class CartState extends State<Cart> {
             },
             builder: (context, snapshot) {
               orderState = snapshot.order;
-
+              if(orderState.itemList.first.id_business != snapshot.business.id_firestore){
+                debugPrint('UI_U_cart => ORDER BUSINESS ID: ${orderState.itemList.first.id_business} | BUSIENSS ID: ${snapshot.business.id_firestore}');
+                isExternal = true;
+              }
               return Scaffold(
                   resizeToAvoidBottomInset: false,
                   appBar: BuytimeAppbar(
@@ -261,7 +265,7 @@ class CartState extends State<Cart> {
                                             ),
 
                                             ///Location TExt
-                                            !widget.tourist
+                                            !widget.tourist && !isExternal
                                                 ? Container(
                                                     margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
                                                     child: Text(
@@ -272,7 +276,7 @@ class CartState extends State<Cart> {
                                                 : Container(),
 
                                             ///Location
-                                            !widget.tourist
+                                            !widget.tourist && !isExternal
                                                 ? Container(
                                                     width: 335.0,
                                                     margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),

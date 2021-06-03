@@ -17,6 +17,7 @@ NotificationState _$NotificationStateFromJson(Map<String, dynamic> json) {
     timestamp: json['timestamp'] as int,
     opened: json['opened'] as bool,
     notificationId: json['notificationId'] as String,
+    serviceName: json['serviceName'] as String,
   );
 }
 
@@ -29,4 +30,5 @@ Map<String, dynamic> _$NotificationStateToJson(NotificationState instance) =>
       'timestamp': instance.timestamp,
       'opened': instance.opened,
       'notificationId': instance.notificationId,
+      'serviceName': instance.serviceName,
     };

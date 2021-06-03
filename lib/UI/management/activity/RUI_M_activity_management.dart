@@ -571,12 +571,11 @@ class _RActivityManagementState extends State<RActivityManagement> {
                         ),
                       ),
                     )),
-              )) :
-          Container(),
+              )) : Container(),
           /// Decline
           order.progress == Utils.enumToString(OrderStatus.pending)?
           Container(
-              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 1.5, bottom: SizeConfig.safeBlockVertical * .5, top: SizeConfig.safeBlockVertical * .25),
+              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 1.5, right: SizeConfig.safeBlockHorizontal * 1.5, bottom: SizeConfig.safeBlockVertical * .5, top: SizeConfig.safeBlockVertical * .25),
               alignment: Alignment.center,
               child: Material(
                 color: Colors.transparent,
@@ -605,8 +604,7 @@ class _RActivityManagementState extends State<RActivityManagement> {
                         ),
                       ),
                     )),
-              )) :
-          Container(),
+              )) : Container(),
           ///Cancel the order, in this case it has been paid but for some reason it cannot be provided. The user has to be refunded.
           ///a canceled order cannot be reopened
           order.progress ==  Utils.enumToString(OrderStatus.paid) || order.progress ==  Utils.enumToString(OrderStatus.toBePaidAtCheckout) ?
@@ -640,8 +638,7 @@ class _RActivityManagementState extends State<RActivityManagement> {
                         ),
                       ),
                     )),
-              )) :
-          Container()
+              )) : Container()
         ],
       ),
     );

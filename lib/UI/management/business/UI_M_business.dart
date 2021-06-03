@@ -88,6 +88,9 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
   bool noActivity = false;
   bool generated = false;
 
+  bool isManagerComplete = false;
+  bool isWorkerComplete = false;
+
   @override
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
@@ -131,6 +134,8 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
             tmpJson.forEach((element) {
               accessList.add(element.toString());
             });
+            //noActivity = false;
+            isManagerComplete = true;
             store.dispatch(SetUserManagerAccessTo(accessList));
           }else{
             debugPrint('UI_M_business_list => RESPONSE MANAGER: ${responseManager.body}');
@@ -146,6 +151,8 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
             tmpJson.forEach((element) {
               accessList.add(element.toString());
             });
+            //noActivity = false;
+            isWorkerComplete = true;
             store.dispatch(SetUserWorkerAccessTo(accessList));
           }else{
             debugPrint('UI_M_business_list => RESPONSE WORKER: ${responseWorker.body}');
@@ -258,7 +265,8 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
 
             generated = true;
           }
-          noActivity = false;
+          if(isManagerComplete && isWorkerComplete)
+            noActivity = false;
           startRequest = false;
         }
         return WillPopScope(
