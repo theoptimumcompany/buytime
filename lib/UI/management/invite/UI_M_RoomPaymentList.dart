@@ -1,13 +1,10 @@
-import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/snippet/reservations_orders_list_snippet_list_state.dart';
 import 'package:Buytime/reblox/model/snippet/reservations_orders_list_snippet_state.dart';
-import 'package:Buytime/reblox/reducer/reservations_orders_list_snippet_list_reducer.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:Buytime/utils/utils.dart';
 
@@ -119,11 +116,10 @@ class UI_M_RoomPaymentListState extends State<UI_M_RoomPaymentList> {
                                           child: Text(
                                               AppLocalizations.of(context).total,
                                               style: TextStyle(fontWeight: FontWeight.w700, fontFamily: BuytimeTheme.FontFamily, fontSize: 24, color: BuytimeTheme.TextBlack)
-
                                           ))),
                                       Expanded(flex: 3, child: Center(
                                           child: Text(
-                                              total.toString(),
+                                              total.toStringAsFixed(2).toString(),
                                               style: TextStyle(fontWeight: FontWeight.w700, fontFamily: BuytimeTheme.FontFamily, fontSize: 24, color: BuytimeTheme.TextBlack)
                                           )))
                                     ],

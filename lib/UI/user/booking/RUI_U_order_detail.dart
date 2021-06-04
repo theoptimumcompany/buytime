@@ -32,11 +32,10 @@ import 'package:location/location.dart' as loc;
 import 'package:permission_handler/permission_handler.dart';
 
 class RUI_U_OrderDetail extends StatefulWidget {
-  static String route = '/orderDetails';
-  RUI_U_OrderDetail();
+  String route = '/bookingPage';
+  RUI_U_OrderDetail(this.route);
   @override
   createState() => _RUI_U_OrderDetailState();
-
 }
 
 class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTickerProviderStateMixin {
@@ -279,10 +278,13 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
                         ),
                         tooltip: AppLocalizations.of(context).comeBack,
                         onPressed: () {
-                          //widget.fromConfirm != null ? Navigator.of(context).pop() : Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Landing()),);
-                          Future.delayed(Duration(seconds: 1), () {
-                            Navigator.of(context).popUntil(ModalRoute.withName('/bookingPage'));
-                          });
+                          if (widget.route == '/bookingRoomPaymentList') {
+                            Navigator.of(context).pop();
+                          } else {
+                            Future.delayed(Duration(seconds: 1), () {
+                              Navigator.of(context).popUntil(ModalRoute.withName(widget.route));
+                            });
+                          }
                         },
                       ),
                     ),

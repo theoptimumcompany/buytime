@@ -144,6 +144,7 @@ void main() {
     StripeCardListRequestService(),
     StripeCardListRequestAndNavigateService(),
     StripeDetachPaymentMethodRequest(),
+    SetOrderDetailAndNavigateRoomService(),
     CheckStripeCustomerService(),
     ServiceUpdateService(),
     ServiceRequestService(),
@@ -296,7 +297,9 @@ class Buytime extends StatelessWidget {
       case AppRoutes.confirmOrder:
         return FabRoute(ConfirmOrder(), settings: settings);
       case AppRoutes.orderDetailsRealtime:
-        return FabRoute(RUI_U_OrderDetail(), settings: settings);
+        return FabRoute(RUI_U_OrderDetail('/bookingPage'), settings: settings);
+      case AppRoutes.orderDetailsRealtimeToRoom:
+        return FabRoute(RUI_U_OrderDetail('/bookingRoomPaymentList'), settings: settings);
       case AppRoutes.bookingList:
         return FabRoute(BookingList(), settings: settings);
       case AppRoutes.serviceDetails:

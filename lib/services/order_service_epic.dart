@@ -601,7 +601,7 @@ class SetOrderDetailAndNavigateRoomService implements EpicClass<AppState> {
       var actionArray = [];
       actionArray.add(UpdateStatistics(statisticsState));
       actionArray.add(SetOrderDetail(OrderDetailState.fromOrderState(orderState)));
-      actionArray.add(NavigatePushAction(AppRoutes.orderDetailsRealtime));
+      actionArray.add(NavigatePushAction(AppRoutes.orderDetailsRealtimeToRoom));
       return actionArray;
     });
   }

@@ -35,6 +35,7 @@ class _OrderRoomServiceListItemState extends State<OrderRoomServiceListItem> {
             child: InkWell(
               borderRadius: BorderRadius.all(Radius.circular(10)),
               onTap: () async {
+                debugPrint("orderId, serviceId " + widget.orderState.orderId  + " " + widget.orderState.itemList.first.id);
                 StoreProvider.of<AppState>(context).dispatch(SetOrderDetailAndNavigateRoom(widget.orderState.orderId, widget.orderState.itemList.first.id));
               },
               child: Container(

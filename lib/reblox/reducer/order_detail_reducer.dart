@@ -51,7 +51,7 @@ class SetOrderDetailAndNavigate{
 class SetOrderDetailAndNavigateRoom{
   String _serviceId;
   String _orderId;
-  SetOrderDetailAndNavigateRoom(this._serviceId, this._orderId);
+  SetOrderDetailAndNavigateRoom( this._orderId, this._serviceId);
   String get serviceId => _serviceId;
   String get orderId => _orderId;
 }
