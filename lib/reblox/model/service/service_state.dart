@@ -17,6 +17,7 @@ class ServiceState {
   String description;
   String visibility;
   double price;
+  int vat;
   int timesSold;
   List<String> tag;
   @JsonKey(defaultValue: false)
@@ -54,6 +55,7 @@ class ServiceState {
     this.description,
     this.visibility,
     this.price,
+    this.vat,
     this.fileToUploadList,
     this.timesSold,
     this.tag,
@@ -83,6 +85,7 @@ class ServiceState {
       description: "",
       visibility: 'Invisible',
       price: 0.00,
+      vat: 22,
       fileToUploadList: [],
       timesSold: 0,
       tag: [],
@@ -112,6 +115,7 @@ class ServiceState {
     this.description = service.description;
     this.visibility = service.visibility;
     this.price = service.price;
+    this.vat = service.vat;
     this.fileToUploadList = service.fileToUploadList;
     this.timesSold = service.timesSold;
     this.tag = service.tag;
@@ -140,6 +144,7 @@ class ServiceState {
     String description,
     String visibility,
     double price,
+    int vat,
     List<OptimumFileToUpload> fileToUploadList,
     int timesSold,
     List<String> tag,
@@ -167,6 +172,7 @@ class ServiceState {
       description: description ?? this.description,
       visibility: visibility ?? this.visibility,
       price: price ?? this.price,
+      vat: vat ?? this.vat,
       fileToUploadList: fileToUploadList ?? this.fileToUploadList,
       timesSold: timesSold ?? this.timesSold,
       tag: tag ?? this.tag,

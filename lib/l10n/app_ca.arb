@@ -565,5 +565,8 @@
   "paymentMethodNotAvailable": "This payment method is not available for this order.",
   "orderStatus": "Order status:",
   "reservationsAndOrdersPlaced": "Reservations and orders placed",
-  "reservationsAndOrders": "Reservations and Orders"
+  "reservationsAndOrders": "Reservations and Orders",
+  "serviceVATBlank": "VAT field is blank",
+  "notValidVAT": "Not a valid VAT",
+  "serviceVAT": "VAT"
 }
