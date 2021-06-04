@@ -280,7 +280,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
               setCategoryList();
 
               AppLocalizations.supportedLocales.forEach((element) {
-                //debugPrint('UI_M_create_service => Locale: ${element}');
+                debugPrint('UI_M_create_service => Locale: ${element}');
                 String flag = '';
                 if (element.languageCode == 'en')
                   flag = 'gb'.toUpperCase().replaceAllMapped(RegExp(r'[A-Z]'), (match) => String.fromCharCode(match.group(0).codeUnitAt(0) + 127397));

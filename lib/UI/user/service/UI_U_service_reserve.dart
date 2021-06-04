@@ -1475,7 +1475,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                               Container(
                                                                 margin: EdgeInsets.only(top: 5),
                                                                 child: Text(
-                                                                  '${mySSS.free} ${AppLocalizations.of(context).spot}',
+                                                                  '${AppLocalizations.of(context).still} ${mySSS.free} ${AppLocalizations.of(context).spot}',
                                                                   style: TextStyle(fontFamily: BuytimeTheme.FontFamily, fontSize: 16, fontWeight: FontWeight.w600),
                                                                 ),
                                                               )

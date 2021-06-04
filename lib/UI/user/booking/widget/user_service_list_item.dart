@@ -1,3 +1,4 @@
+import 'package:Buytime/UI/user/booking/RUI_U_order_detail.dart';
 import 'package:Buytime/UI/user/booking/UI_U_order_details.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
@@ -35,7 +36,8 @@ class _UserServiceListItemState extends State<UserServiceListItem> {
             child: InkWell(
               borderRadius: BorderRadius.all(Radius.circular(10)),
               onTap: () async {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => OrderDetails(orderState: widget.orderState, tourist: widget.tourist, serviceState: widget.serviceState,)));
+                //Navigator.push(context, MaterialPageRoute(builder: (context) => OrderDetails(orderState: widget.orderState, tourist: widget.tourist, serviceState: widget.serviceState,)));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => RUI_U_OrderDetail()));
               },
               child: Container(
                 height: 91,  ///SizeConfig.safeBlockVertical * 15

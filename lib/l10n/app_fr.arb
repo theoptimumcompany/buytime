@@ -538,7 +538,7 @@
   "numberOfPeople": "Number of people",
   "crossSell": "Allow other businesses to sell this service",
   "problemsGettingYourPosition": "There are some problems in getting your position, try again later",
-  "spot": "spot left",
+  "spot": "places available",
 
   "worker": "Worker",
   "salesmanName": "Salesman Name",
@@ -566,6 +566,7 @@
   "reservationsAndOrdersPlaced": "Reservations and orders placed",
   "reservationsAndOrders": "Reservations and Orders",
   "orderStatus": "Order status:",
+  "still": "Still",
   "serviceVATBlank": "VAT field is blank",
   "notValidVAT": "Not a valid VAT",
   "serviceVAT": "VAT"
