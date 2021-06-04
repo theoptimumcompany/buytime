@@ -538,7 +538,7 @@
   "numberOfPeople": "Number of people",
   "crossSell": "Allow other businesses to sell this service",
   "problemsGettingYourPosition": "There are some problems in getting your position, try again later",
-  "spot": "spot left",
+  "spot": "places available",
 
   "worker": "Worker",
   "salesmanName": "Salesman Name",
@@ -563,5 +563,6 @@
   "doYouWantToPerformAnotherOrder": "Do you want to perform another order?",
   "youAreAboutToPerformAnotherOrder": "You are about to perform an order in another business, if you proceed your cart will be emptied.",
   "paymentMethodNotAvailable": "This payment method is not available for this order.",
-  "orderStatus": "Order status:"
+  "orderStatus": "Order status:",
+  "still": "Still"
 }

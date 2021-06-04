@@ -182,6 +182,7 @@ flutter:
     - assets/documents/
     - assets/img/spinner/
     - assets/img/cc/
+    - assets/img/flags/
     - assets/json/
     - assets/img/animation/
 
