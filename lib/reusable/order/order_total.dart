@@ -1,8 +1,10 @@
+import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 
 class OrderTotal extends StatelessWidget {
    OrderTotal({
@@ -67,7 +69,11 @@ class OrderTotal extends StatelessWidget {
                 alignment: Alignment.centerRight,
                 //margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 8),
                 child: Text(
-                  AppLocalizations.of(context).tax + (orderState.total != null ? (orderState.total * 0.25).toStringAsFixed(2) : "0"),
+                  //AppLocalizations.of(context).tax + (orderState.total != null ? (orderState.total * 0.25).toStringAsFixed(2) : "0"),
+                  AppLocalizations.of(context).tax + (orderState.total != null ?
+                  (orderState.total *
+                      (StoreProvider.of<AppState>(context).state.serviceState.vat != null && StoreProvider.of<AppState>(context).state.serviceState.vat != 0 ?
+                      StoreProvider.of<AppState>(context).state.serviceState.vat/100 : 0.22)).toStringAsFixed(2) : "0"),
                   style: TextStyle(
                       fontFamily: BuytimeTheme.FontFamily,
                       fontWeight: FontWeight.w500,

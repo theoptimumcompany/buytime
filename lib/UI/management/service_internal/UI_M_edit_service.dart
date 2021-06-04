@@ -385,6 +385,10 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                     tmpService.serviceBusinessAddress = _serviceBusinessAddress;
                                                     tmpService.serviceCoordinates = _serviceCoordinates;
                                                     tmpService.serviceBusinessCoordinates = _serviceBusinessCoordinates;
+                                                    if(_serviceVAT == 0)
+                                                      tmpService.vat = 22;
+                                                    else
+                                                      tmpService.vat = _serviceVAT;
                                                     debugPrint('UI_M_edit_service => Service Name: ${tmpService.name}');
                                                     debugPrint('UI_M_edit_service => Service Description: ${tmpService.description}');
                                                     debugPrint('UI_M_create_service => Service Address: ${tmpService.serviceAddress}');

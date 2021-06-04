@@ -37,7 +37,7 @@ class _UserServiceListItemState extends State<UserServiceListItem> {
               borderRadius: BorderRadius.all(Radius.circular(10)),
               onTap: () async {
                 //Navigator.push(context, MaterialPageRoute(builder: (context) => OrderDetails(orderState: widget.orderState, tourist: widget.tourist, serviceState: widget.serviceState,)));
-                Navigator.push(context, MaterialPageRoute(builder: (context) => RUI_U_OrderDetail()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => RUI_U_OrderDetail('')));
               },
               child: Container(
                 height: 91,  ///SizeConfig.safeBlockVertical * 15

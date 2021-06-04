@@ -37,6 +37,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
   final GlobalKey<FormState> _keyCreateServiceForm = GlobalKey<FormState>();
   String _serviceName = "";
   double _servicePrice = 0.0;
+  int _serviceVAT = 22;
   String _serviceDescription = "";
   String _serviceBusinessAddress = "";
   String _serviceAddress = "";
@@ -54,6 +55,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
   TextEditingController nameController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   TextEditingController priceController = TextEditingController();
+  TextEditingController vatController = TextEditingController();
   TextEditingController addressController = TextEditingController();
 
   bool validateAndSave() {
@@ -141,6 +143,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
   void initState() {
     super.initState();
     selectedCategoryList = [];
+    vatController.text = _serviceVAT.toString();
     // WidgetsBinding.instance
     //     .addPostFrameCallback((_) => addDefaultCategory());
   }
@@ -302,6 +305,11 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                       tmpService.description = Utils.saveField(myLocale.languageCode, descriptionController.text, snapshot.serviceState.description);
                                       tmpService.serviceAddress = addressController.text;
                                       tmpService.serviceBusinessAddress = _serviceBusinessAddress;
+                                      if(_serviceVAT == 0)
+                                        tmpService.vat = 22;
+                                      else
+                                        tmpService.vat = _serviceVAT;
+                                      tmpService.price = _servicePrice;
                                       debugPrint('UI_M_create_service => Service Name: ${tmpService.name}');
                                       debugPrint('UI_M_create_service => Service Description: ${tmpService.description}');
                                       debugPrint('UI_M_create_service => Service Address: ${tmpService.serviceBusinessAddress}');
@@ -506,90 +514,136 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                       ],
                                     ),
                                   ),
-                                  ///Price
-                                  Padding(
-                                    padding: const EdgeInsets.only(bottom: 5.0),
-                                    child: Center(
-                                      child: Container(
-                                        width: media.width * 0.9,
-                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
-                                        //decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(top: 0.0, bottom: 0.0, left: 10.0, right: 10.0),
-                                          child: TextFormField(
-                                            //initialValue: _servicePrice.toString(),
-                                            controller: priceController,
-                                            keyboardType: TextInputType.numberWithOptions(decimal: true),
-                                            inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^(\d+)?\.?\d{0,2}'))],
-                                            validator: (value) => value.isEmpty
-                                                ? AppLocalizations.of(context).servicePriceBlank
-                                                : validatePrice(value)
-                                                ? null
-                                                : AppLocalizations.of(context).notValidPrice,
-                                            onTap: (){
-                                              setState(() {
-                                                priceController.clear();
-                                              });
-                                            },
-                                            onChanged: (value) {
-                                              if (value == "") {
-                                                setState(() {
-                                                  _servicePrice = 0.0;
-                                                  value = "0.0";
-                                                });
-                                              } else {
-                                                if (value.contains(".")) {
-                                                  List<String> priceString = value.split(".");
-                                                  if (priceString[1].length == 1) {
-                                                    value += "0";
+                                  snapshot.serviceState.switchSlots != null && snapshot.serviceState.switchSlots
+                                      ? Container()
+                                      : Container(
+                                    margin: EdgeInsets.only(top: 10.0, bottom: 5.0, left: 32.0, right: 32.0),
+                                    child: Row(
+                                      children: [
+                                        ///Price
+                                        Flexible(
+                                          flex: 3,
+                                          child: Container(
+                                            //width: media.width * 0.9,
+                                            //decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
+                                            child: Padding(
+                                              padding: EdgeInsets.only(top: 0.0, bottom: 0.0, left: 0.0, right: 0.0),
+                                              child: TextFormField(
+                                                //enabled: canEditService,
+                                                controller: priceController,
+                                                keyboardType: TextInputType.numberWithOptions(signed: true, decimal: true),
+                                                textInputAction: TextInputAction.done,
+                                                inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^(\d+)?\.?\d{0,2}'))],
+                                                validator: (value) => value.isEmpty
+                                                    ? AppLocalizations.of(context).servicePriceBlank
+                                                    : validatePrice(value)
+                                                    ? null
+                                                    : AppLocalizations.of(context).notValidPrice,
+                                                onChanged: (value) {
+                                                  if (value == "") {
+                                                    setState(() {
+                                                      _servicePrice = 0.0;
+                                                      value = "0.0";
+                                                    });
+                                                  } else {
+                                                    if (value.contains(".")) {
+                                                      List<String> priceString = value.split(".");
+                                                      if (priceString[1].length == 1) {
+                                                        value += "0";
+                                                      } else if (priceString[1].length == 0) {
+                                                        value += "00";
+                                                      }
+                                                    } else {
+                                                      value += ".00";
+                                                    }
+                                                    setState(() {
+                                                      _servicePrice = double.parse(value);
+                                                    });
                                                   }
-                                                  else if(priceString[1].length == 0){
-                                                    value += "00";
-                                                  }
-                                                } else {
-                                                  value += ".00";
-                                                }
-                                                setState(() {
-                                                  _servicePrice = double.parse(value);
-                                                });
-                                              }
-                                              StoreProvider.of<AppState>(context).dispatch(SetServicePrice(_servicePrice));
-                                            },
-                                            onFieldSubmitted: (value) {
-                                              if (value == "") {
-                                                setState(() {
-                                                  _servicePrice = 0.0;
-                                                  value = "0.0";
-                                                  priceController.text = value;
-                                                });
-                                              } else {
-                                                if (value.contains(".")) {
-                                                  List<String> priceString = value.split(".");
-                                                  if (priceString[1].length == 1) {
-                                                    value += "0";
-                                                  }
-                                                  else if(priceString[1].length == 0){
-                                                    value += "00";
-                                                  }
-                                                } else {
-                                                  value += ".00";
-                                                }
-                                                setState(() {
-                                                  _servicePrice = double.parse(value);
-                                                  priceController.text = value;
-                                                });
-                                              }
-                                              StoreProvider.of<AppState>(context).dispatch(SetServicePrice(_servicePrice));
-                                            },
-                                            decoration: InputDecoration(
-                                              labelText: AppLocalizations.of(context).price,
-                                              enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                              focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                              errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                },
+                                                onEditingComplete: () {
+                                                  StoreProvider.of<AppState>(context).dispatch(SetServicePrice(_servicePrice));
+                                                  currentFocus.unfocus();
+                                                },
+                                                style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack),
+                                                decoration: InputDecoration(
+                                                  labelText: AppLocalizations.of(context).price,
+                                                  enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                  border: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                  focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                  errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                ),
+                                              ),
                                             ),
                                           ),
                                         ),
-                                      ),
+
+                                        ///VAT
+                                        Flexible(
+                                          flex: 2,
+                                          child: Container(
+                                            //decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
+                                            child: Padding(
+                                              padding: EdgeInsets.only(top: 0.0, bottom: 0.0, left: 3.0, right: 42.0),
+                                              child: TextFormField(
+                                                //maxLength: 2,
+                                                //enabled: canEditService,
+                                                controller: vatController,
+                                                keyboardType: TextInputType.number,
+                                                textInputAction: TextInputAction.done,
+                                                inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(2)],
+
+                                                ///Controllo sotto il 30%
+                                                validator: (value) => value.isEmpty
+                                                    ? AppLocalizations.of(context).serviceVATBlank
+                                                    : validatePrice(value)
+                                                    ? null
+                                                    : AppLocalizations.of(context).notValidVAT,
+                                                onChanged: (value) {
+                                                  if (value == "") {
+                                                    // setState(() {
+                                                    //   _serviceVAT = 22;
+                                                    //   value = "22";
+                                                    // });
+                                                  } else {
+                                                    if (int.parse(value) > 25) {
+                                                      setState(() {
+                                                        _serviceVAT = 25;
+                                                        vatController.text = '25';
+                                                        vatController.selection = TextSelection.fromPosition(TextPosition(offset: vatController.text.length));
+                                                      });
+                                                    } else {
+                                                      setState(() {
+                                                        _serviceVAT = int.parse(value);
+                                                        vatController.text = value;
+                                                        vatController.selection = TextSelection.fromPosition(TextPosition(offset: vatController.text.length));
+                                                      });
+                                                    }
+                                                  }
+                                                },
+                                                onFieldSubmitted: (value) {
+                                                  StoreProvider.of<AppState>(context).dispatch(SetServiceVAT(_serviceVAT));
+                                                  currentFocus.unfocus();
+                                                },
+                                                onEditingComplete: () {
+                                                  StoreProvider.of<AppState>(context).dispatch(SetServiceVAT(_serviceVAT));
+                                                  currentFocus.unfocus();
+                                                },
+                                                style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack),
+                                                decoration: InputDecoration(
+                                                  suffixText: '%',
+                                                  suffixStyle: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextGrey,fontSize: 16),
+                                                  labelText: AppLocalizations.of(context).serviceVAT,
+                                                  enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                  border: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                  focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                  errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                   ///Address
