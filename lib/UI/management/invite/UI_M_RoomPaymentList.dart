@@ -1,4 +1,5 @@
 import 'package:Buytime/reblox/model/app_state.dart';
+import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/snippet/reservations_orders_list_snippet_list_state.dart';
 import 'package:Buytime/reblox/model/snippet/reservations_orders_list_snippet_state.dart';
 import 'package:Buytime/reblox/reducer/reservations_orders_list_snippet_list_reducer.dart';
@@ -8,6 +9,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:Buytime/utils/utils.dart';
+
+import 'order_room_service_list_item.dart';
+
 
 class UI_M_RoomPaymentList extends StatefulWidget {
   static String route = '/roomPaymentList';
@@ -22,6 +27,7 @@ class UI_M_RoomPaymentList extends StatefulWidget {
 class UI_M_RoomPaymentListState extends State<UI_M_RoomPaymentList> {
   List<dynamic> reservationAndOrderList;
   bool noActivity = false;
+  double total = 0;
 
   @override
   void initState() {
@@ -86,6 +92,15 @@ class UI_M_RoomPaymentListState extends State<UI_M_RoomPaymentList> {
               ReservationsOrdersListSnippetListState reservationsOrdersListSnippetListState = ReservationsOrdersListSnippetListState.fromJson(reservationsOrdersListSnapshot.data.data());
               print(reservationsOrdersListSnippetListState.reservationsOrdersListSnippetListState.length);
               reservationAndOrderList = reservationsOrdersListSnippetListState.reservationsOrdersListSnippetListState;
+              /// update the total.
+              total = 0;
+              for (int i = 0; i < reservationAndOrderList.length; i++) {
+                OrderState orderState = reservationsOrdersListSnippetListState.reservationsOrdersListSnippetListState[i].order;
+                debugPrint("ordersList price" + orderState.total.toString());
+                if(orderState.progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout)) {
+                  total += orderState.total;
+                }
+              }
               return ConstrainedBox(
                 constraints: BoxConstraints(),
                 child: Column(
@@ -97,8 +112,21 @@ class UI_M_RoomPaymentListState extends State<UI_M_RoomPaymentList> {
                               children: [
                                 Container(
                                   margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
+                                  padding: EdgeInsets.all(SizeConfig.safeBlockHorizontal * 8),
                                   child: Row(
-                                    children: [Expanded(flex: 2, child: Text("TOTALE")), Expanded(flex: 3, child: Text("TOTALE"))],
+                                    children: [
+                                      Expanded(flex: 2, child: Center(
+                                          child: Text(
+                                              AppLocalizations.of(context).total,
+                                              style: TextStyle(fontWeight: FontWeight.w700, fontFamily: BuytimeTheme.FontFamily, fontSize: 24, color: BuytimeTheme.TextBlack)
+
+                                          ))),
+                                      Expanded(flex: 3, child: Center(
+                                          child: Text(
+                                              total.toString(),
+                                              style: TextStyle(fontWeight: FontWeight.w700, fontFamily: BuytimeTheme.FontFamily, fontSize: 24, color: BuytimeTheme.TextBlack)
+                                          )))
+                                    ],
                                   ),
                                 ),
                                 Flexible(
@@ -107,8 +135,12 @@ class UI_M_RoomPaymentListState extends State<UI_M_RoomPaymentList> {
                                       delegate: SliverChildBuilderDelegate(
                                         (context, index) {
                                           ReservationsOrdersListSnippetState reservationsOrdersListSnippetState = reservationAndOrderList.elementAt(index);
+
                                           ///TODO: Item Reservation/Order CategoryListItemWidget
-                                          return Text(reservationsOrdersListSnippetState.orderId);
+                                          return
+                                            OrderRoomServiceListItem(reservationsOrdersListSnippetState.order, false);
+
+                                            Text(reservationsOrdersListSnippetState.orderId);
                                           // return InkWell(
                                           //   onTap: () {
                                           //     debugPrint('Category Item: ${categoryItem.name.toUpperCase()} Clicked!');
@@ -122,18 +154,18 @@ class UI_M_RoomPaymentListState extends State<UI_M_RoomPaymentList> {
                                     ),
                                   ]),
                                 ),
-                                Flexible(
-                                  child: ListView.builder(
-                                      scrollDirection: Axis.vertical,
-                                      shrinkWrap: true,
-                                      itemCount: reservationAndOrderList.length,
-                                      itemBuilder: (BuildContext ctxt, int index) {
-                                        return Container(
-                                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
-                                          child: Text("Prova"),
-                                        );
-                                      }),
-                                ),
+                                // Flexible(
+                                //   child: ListView.builder(
+                                //       scrollDirection: Axis.vertical,
+                                //       shrinkWrap: true,
+                                //       itemCount: reservationAndOrderList.length,
+                                //       itemBuilder: (BuildContext ctxt, int index) {
+                                //         return Container(
+                                //           margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
+                                //           child: Text("Prova"),
+                                //         );
+                                //       }),
+                                // ),
                               ],
                             ),
                           )

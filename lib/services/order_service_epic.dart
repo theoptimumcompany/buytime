@@ -574,6 +574,39 @@ class SetOrderDetailAndNavigateService implements EpicClass<AppState> {
   }
 }
 
+class SetOrderDetailAndNavigateRoomService implements EpicClass<AppState> {
+  StatisticsState statisticsState;
+  OrderState orderState;
+  ServiceState serviceState;
+  bool error = true;
+
+  @override
+  Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
+    return actions.whereType<SetOrderDetailAndNavigateRoom>().asyncMap((event) async {
+      /// cerco l'ordine e lo setto come order detail
+      var ordersStateData = await FirebaseFirestore.instance.collection("order").doc(event.orderId).get();
+      orderState = OrderState.fromJson(ordersStateData.data());
+
+      /// cerco il serviceId e lo setto come service
+      var serviceStateData = await FirebaseFirestore.instance.collection("service").doc(event.serviceId).get();
+      serviceState = ServiceState.fromJson(serviceStateData.data());
+
+      /// se tutto va bene faccio redirect a RUI_U_OrderDetail()
+      if (serviceState != null && serviceState.serviceId != null && orderState != null && orderState.orderId != null) {
+        error = false;
+      }
+
+//      return FirebaseFirestore.instance.collection('business').doc(store.state.business.id_firestore).collection('service').doc(serviceId).delete();
+    }).expand((element) {
+      var actionArray = [];
+      actionArray.add(UpdateStatistics(statisticsState));
+      actionArray.add(SetOrderDetail(OrderDetailState.fromOrderState(orderState)));
+      actionArray.add(NavigatePushAction(AppRoutes.orderDetailsRealtime));
+      return actionArray;
+    });
+  }
+}
+
 class OrderDeleteService implements EpicClass<AppState> {
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
