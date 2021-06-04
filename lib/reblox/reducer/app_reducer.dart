@@ -33,6 +33,8 @@ import 'package:Buytime/reblox/model/service/service_list_state.dart';
 import 'package:Buytime/reblox/model/service/service_slot_time_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/model/slot/slot_list_snippet_state.dart';
+import 'package:Buytime/reblox/model/snippet/reservations_orders_list_snippet_list_state.dart';
+import 'package:Buytime/reblox/model/snippet/reservations_orders_list_snippet_state.dart';
 import 'package:Buytime/reblox/model/snippet/service_list_snippet_list_state.dart';
 import 'package:Buytime/reblox/model/snippet/service_list_snippet_state.dart';
 import 'package:Buytime/reblox/model/statistics_state.dart';
@@ -58,6 +60,8 @@ import 'package:Buytime/reblox/reducer/order_reservable_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reservable_reducer.dart';
 import 'package:Buytime/reblox/reducer/pipeline_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/pipeline_reducer.dart';
+import 'package:Buytime/reblox/reducer/reservations_orders_list_snippet_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/reservations_orders_list_snippet_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/card_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/card_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/service_list_reducer.dart';
@@ -131,6 +135,8 @@ AppState appReducer(AppState state, dynamic action) {
   ExternalServiceImportedState externalServiceImportedState = externalServiceImportedReducer(state.externalServiceImportedState, action);
   ExternalServiceImportedListState externalServiceImportedListState = externalServiceImportedListReducer(state.externalServiceImportedListState, action);
   SlotListSnippetState slotSnippetListState = slotListSnippetReducer(state.slotSnippetListState, action);
+  ReservationsOrdersListSnippetState reservationsOrdersListSnippetState = reservationsOrdersListSnippetReducer(state.reservationsOrdersListSnippetState, action);
+  ReservationsOrdersListSnippetListState reservationsOrdersListSnippetListState = reservationsOrdersListSnippetListReducer(state.reservationsOrdersListSnippetListState, action);
 
   AppState newState = AppState.copyWith(
       //route: navigationReducer(state.route, action),
@@ -171,6 +177,8 @@ AppState appReducer(AppState state, dynamic action) {
       previousError: previousError,
       serviceListSnippetState: serviceListSnippetState,
       serviceListSnippetListState: serviceListSnippetListState,
+      reservationsOrdersListSnippetState: reservationsOrdersListSnippetState,
+      reservationsOrdersListSnippetListState: reservationsOrdersListSnippetListState,
       externalBusinessImportedState: externalBusinessImportedState,
       externalBusinessImportedListState: externalBusinessImportedListState,
     externalServiceImportedState: externalServiceImportedState,

@@ -564,5 +564,7 @@
   "youAreAboutToPerformAnotherOrder": "You are about to perform an order in another business, if you proceed your cart will be emptied.",
   "paymentMethodNotAvailable": "This payment method is not available for this order.",
   "orderStatus": "Order status:",
+  "reservationsAndOrdersPlaced": "Reservations and orders placed",
+  "reservationsAndOrders": "Reservations and Orders",
   "still": "Still"
 }

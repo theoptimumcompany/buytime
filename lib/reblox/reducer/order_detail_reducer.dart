@@ -47,6 +47,14 @@ class SetOrderDetailAndNavigate{
   SetOrderDetailAndNavigate(this._idState);
   IdState get idState => _idState;
 }
+
+class SetOrderDetailAndNavigateRoom{
+  String _serviceId;
+  String _orderId;
+  SetOrderDetailAndNavigateRoom(this._serviceId, this._orderId);
+  String get serviceId => _serviceId;
+  String get orderId => _orderId;
+}
 class UpdatedOrderDetail {
   OrderDetailState _orderState;
   UpdatedOrderDetail(this._orderState);
