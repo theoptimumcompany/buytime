@@ -248,6 +248,10 @@ class Utils {
     Locale myLocale = Localizations.localeOf(context);
     debugPrint('UI_M_create_service => My locale: ${myLocale.languageCode}');
 
+    language.forEach((element) {
+      debugPrint('UI_M_create_service => locale: $element');
+    });
+
     //FocusScopeNode node = FocusScope.of(context);
     String myLocaleCharCode = '';
     if(myLocale.languageCode == 'en')
@@ -357,6 +361,8 @@ class Utils {
                       child: TextFormField(
                           enabled: false,
                           //initialValue: _serviceName,
+                          keyboardType: TextInputType.multiline,
+                          maxLines: null,
                           controller: controllers.elementAt(myIndex),
                           validator: (value) => value.isEmpty ? AppLocalizations.of(context).serviceNameBlank : null,
                           onChanged: (value) {
@@ -386,15 +392,16 @@ class Utils {
                               focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
                               errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(8.0))),
                               suffixIcon: Container(
-                                padding: EdgeInsets.only(top: 8),
-                                child: Text(
-                                  '${Emoji.byChar(myLocaleCharCode)}',
-                                  style: TextStyle(
-                                      fontSize: 24
-                                  ),
+                                height: 20,
+                                width: 20,
+                                alignment: Alignment.centerRight,
+                                padding: EdgeInsets.only(top: 8, right: 8),
+                                child: Image(
+                                  image: AssetImage('assets/img/flags/$myLocale.png'),
                                 ),
                               )
-                          )),
+                          )
+                      ),
                     ),
                     ///Translated in:
                     Container(
@@ -423,6 +430,8 @@ class Utils {
                                   child: TextFormField(
                                     //initialValue: _serviceName,
                                       controller: controllers.elementAt(index),
+                                      keyboardType: TextInputType.multiline,
+                                      maxLines: null,
                                       validator: (value) => value.isEmpty ? AppLocalizations.of(context).serviceNameBlank : null,
                                       onChanged: (value) {
                                         //StoreProvider.of<AppState>(context).dispatch(SetServiceName(value));
@@ -439,12 +448,12 @@ class Utils {
                                           focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
                                           errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(8.0))),
                                           suffixIcon: Container(
-                                            padding: EdgeInsets.only(top: 8),
-                                            child: Text(
-                                              '${Emoji.byChar(flag)}',
-                                              style: TextStyle(
-                                                  fontSize: 24
-                                              ),
+                                            height: 20,
+                                            width: 20,
+                                            alignment: Alignment.centerRight,
+                                            padding: EdgeInsets.only(top: 8, right: 8),
+                                            child: Image(
+                                              image: AssetImage('assets/img/flags/${language.elementAt(index)}.png'),
                                             ),
                                           )
                                       )),

@@ -201,10 +201,10 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
               snapshot.order.addCardProgress == Utils.enumToString(AddCardStatus.inProgress) || cardOrder ? spinnerConfirmOrder() : Container(),
               snapshot.lastError != null && snapshot.lastError.isNotEmpty
                   ? ShowErrorDialogToDismiss(
-                      buttonText: AppLocalizations.of(context).ok,
-                      content: snapshot.lastError,
-                      title: AppLocalizations.of(context).error,
-                    )
+                buttonText: AppLocalizations.of(context).ok,
+                content: snapshot.lastError,
+                title: AppLocalizations.of(context).error,
+              )
                   : Container()
             ]);
           }),
@@ -305,36 +305,36 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
   MaterialButton buildBackButton(BuildContext context, Size media) {
     return !widget.tourist
         ? MaterialButton(
-            elevation: 0,
-            hoverElevation: 0,
-            focusElevation: 0,
-            highlightElevation: 0,
-            onPressed: () {
-              /// empty order state and go back
-              StoreProvider.of<AppState>(context).dispatch(SetOrder(OrderState().toEmpty()));
-              Navigator.of(context).popUntil(ModalRoute.withName('/bookingPage'));
-            },
-            textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
-            color: widget.tourist != null && widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
-            disabledColor: BuytimeTheme.SymbolLightGrey,
-            padding: EdgeInsets.all(media.width * 0.03),
-            shape: RoundedRectangleBorder(
-              borderRadius: new BorderRadius.circular(5),
-            ),
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Text(
-                AppLocalizations.of(context).backToHome,
-                style: TextStyle(
-                  letterSpacing: 1.25,
-                  fontSize: 14,
-                  fontFamily: BuytimeTheme.FontFamily,
-                  fontWeight: FontWeight.w500,
-                  color: BuytimeTheme.TextWhite,
-                ),
-              ),
-            ),
-          )
+      elevation: 0,
+      hoverElevation: 0,
+      focusElevation: 0,
+      highlightElevation: 0,
+      onPressed: () {
+        /// empty order state and go back
+        StoreProvider.of<AppState>(context).dispatch(SetOrder(OrderState().toEmpty()));
+        Navigator.of(context).popUntil(ModalRoute.withName('/bookingPage'));
+      },
+      textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
+      color: widget.tourist != null && widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+      disabledColor: BuytimeTheme.SymbolLightGrey,
+      padding: EdgeInsets.all(media.width * 0.03),
+      shape: RoundedRectangleBorder(
+        borderRadius: new BorderRadius.circular(5),
+      ),
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Text(
+          AppLocalizations.of(context).backToHome,
+          style: TextStyle(
+            letterSpacing: 1.25,
+            fontSize: 14,
+            fontFamily: BuytimeTheme.FontFamily,
+            fontWeight: FontWeight.w500,
+            color: BuytimeTheme.TextWhite,
+          ),
+        ),
+      ),
+    )
         : Container();
   }
 
@@ -352,8 +352,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
             ///Confirm button
             Container(
                 margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5, bottom: SizeConfig.safeBlockVertical * 4),
-                width: 158,
-
+                width: 158 ,
                 ///media.width * .4
                 height: 44,
                 child: MaterialButton(
@@ -361,33 +360,32 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                   hoverElevation: 0,
                   focusElevation: 0,
                   highlightElevation: 0,
-                  onPressed: () {
-                    if (_selectedIndex == 0) {
-                      debugPrint("UI_U_ConfirmOrder  confirmation CREDIT CARD");
-                      confirmationCard(context, snapshot, last4, brand, country, selectedCardPaymentMethodId);
-                    } else if (_selectedIndex == 1) {
+                  onPressed: selected && _selectedIndex == 0 ? () { ///L'avevo messo apposto, non so come ma era ritornata comera prima, se non va bene messo cosi ditemelo, comera messo prima il bottono non rimaneva bloccavta
+                    ///finche non selezionavi la carta
+                    debugPrint("UI_U_ConfirmOrder  confirmation CREDIT CARD");
+                    confirmationCard(context, snapshot, last4, brand, country, selectedCardPaymentMethodId);
+                  } : _selectedIndex == 1 ? (){
                     debugPrint("UI_U_ConfirmOrder confirmation NATIVE");
                     confirmationNative(context, snapshot);
-                    } else if (selected && _selectedIndex == 2) {
-                      debugPrint("UI_U_ConfirmOrder confirmation ROOM");
-                      confirmationRoom(context, snapshot);
-                    } else {
-                      return null;
-                    }
-                  },
+                  } :  _selectedIndex == 2 ? (){
+                    debugPrint("UI_U_ConfirmOrder confirmation ROOM");
+                    confirmationRoom(context, snapshot);
+                  } : null,
                   textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
                   color: widget.tourist != null && widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
                   disabledColor: BuytimeTheme.SymbolLightGrey,
-                  padding: EdgeInsets.all(media.width * 0.03),
+                  //padding: EdgeInsets.all(media.width * 0.03),
                   shape: RoundedRectangleBorder(
                     borderRadius: new BorderRadius.circular(5),
                   ),
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
+                  child: Container(
+                    alignment: Alignment.center,
+                    height: 44,
                     child: Text(
                       !(widget.reserve != null && widget.reserve)
                           ? AppLocalizations.of(context).confirmUpper
-                          : '${AppLocalizations.of(context).completeBooking.toString().toUpperCase()}',
+                          : '${AppLocalizations.of(context).completeBooking.toUpperCase()}',
+                      textAlign: TextAlign.center,
                       style: TextStyle(
                         letterSpacing: 1.25,
                         fontSize: 14,
@@ -404,6 +402,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
     );
   }
 
+  ///Tab bar
   TabBar buildTabBar(BuildContext context) {
     return TabBar(
       indicatorWeight: SizeConfig.safeBlockHorizontal * 1,
@@ -417,35 +416,36 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
           fontWeight: FontWeight.w600,
           fontSize: 14
 
-          ///SizeConfig.safeBlockHorizontal * 4
-          ),
+        ///SizeConfig.safeBlockHorizontal * 4
+      ),
       indicatorPadding: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2, right: SizeConfig.safeBlockHorizontal * 2),
       controller: _controller,
       tabs: [
         Tab(
           text: AppLocalizations.of(context).creditCardSimple,
         ),
-              Tab(
-                  icon: Platform.isAndroid
-                      ? Text(AppLocalizations.of(context).googlePay)
-                      : Icon(
-                          FontAwesome5Brands.apple_pay,
-                          size: 40.0,
-                        )),
+        Tab(
+            icon: Platform.isAndroid
+                ? Text(AppLocalizations.of(context).googlePay)
+                : Icon(
+              FontAwesome5Brands.apple_pay,
+              size: 40.0,
+            )),
 
-              Tab(
-                text: AppLocalizations.of(context).roomSimple,
-              ),
-            ],
+        Tab(
+          text: AppLocalizations.of(context).roomSimple,
+        ),
+      ],
     );
   }
 
+  ///Recap
   Container buildOrderRecap(BuildContext context, AppState snapshot, Size media) {
     return Container(
       child: Column(
         children: [
           ///Top Text
-          /*Container(
+          Container(
             margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 4),
             child: Padding(
               padding: const EdgeInsets.only(left: 0.0),
@@ -453,12 +453,20 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    AppLocalizations.of(context).order,
+                        () {
+                      if (widget.reserve != null && widget.reserve) {
+                        // print("UI_U_ConfirmOrder => " + snapshot.orderReservable.itemList.length.toString());
+                        return snapshot.orderReservable.itemList.length > 1 ? AppLocalizations.of(context).multipleOrders :  snapshot.orderReservable != null && snapshot.orderReservable.itemList.isNotEmpty ? Utils.retriveField(Localizations.localeOf(context).languageCode, snapshot.orderReservable.itemList.first.name) : 'test';
+                      } else {
+                        // print("UI_U_ConfirmOrder => " + snapshot.order.itemList.length.toString());
+                        return snapshot.order.itemList.length > 1 ? AppLocalizations.of(context).multipleOrders :  snapshot.order != null && snapshot.order.itemList.isNotEmpty ? Utils.retriveField(Localizations.localeOf(context).languageCode, snapshot.order.itemList.first.name) : 'test';
+                      }
+                    }(),
                     textAlign: TextAlign.start,
                     style: TextStyle(
                       fontFamily: BuytimeTheme.FontFamily,
                       color: BuytimeTheme.TextBlack,
-                      fontSize: 14,
+                      fontSize: 16,
 
                       /// SizeConfig.safeBlockHorizontal * 4
                       fontWeight: FontWeight.w600,
@@ -467,20 +475,20 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                 ],
               ),
             ),
-          ),*/
+          ),
 
           ///Total Price
           Container(
-              //color: Colors.black87,
+            //color: Colors.black87,
               child: () {
-            if (widget.reserve != null && widget.reserve) {
-              // print("UI_U_ConfirmOrder => " + snapshot.orderReservable.itemList.length.toString());
-              return OrderTotal(media: media, orderState: OrderState.fromReservableState(snapshot.orderReservable));
-            } else {
-              // print("UI_U_ConfirmOrder => " + snapshot.order.itemList.length.toString());
-              return OrderTotal(media: media, orderState: snapshot.order);
-            }
-          }()),
+                if (widget.reserve != null && widget.reserve) {
+                  // print("UI_U_ConfirmOrder => " + snapshot.orderReservable.itemList.length.toString());
+                  return OrderTotal(media: media, orderState: OrderState.fromReservableState(snapshot.orderReservable));
+                } else {
+                  // print("UI_U_ConfirmOrder => " + snapshot.order.itemList.length.toString());
+                  return OrderTotal(media: media, orderState: snapshot.order);
+                }
+              }()),
 
           ///Divider
           Container(
@@ -492,65 +500,65 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
           ///Location
           widget.reserve != null && !widget.reserve && !widget.tourist && !isExternal
               ? Container(
-                  margin: EdgeInsets.only(
-                      bottom: SizeConfig.safeBlockVertical * 2, top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 3),
-                  width: media.width,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ///Location text
-                      Expanded(
-                        flex: 1,
-                        child: Container(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            AppLocalizations.of(context).location,
-                            style: TextStyle(
-                                fontFamily: BuytimeTheme.FontFamily,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 16,
+              margin: EdgeInsets.only(
+                  bottom: SizeConfig.safeBlockVertical * 2, top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 3),
+              width: media.width,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ///Location text
+                  Expanded(
+                    flex: 1,
+                    child: Container(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        AppLocalizations.of(context).location,
+                        style: TextStyle(
+                            fontFamily: BuytimeTheme.FontFamily,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 16,
 
-                                ///SizeConfig.safeBlockHorizontal * 4
-                                color: BuytimeTheme.TextMedium,
-                                letterSpacing: 0.25),
-                          ),
+                            ///SizeConfig.safeBlockHorizontal * 4
+                            color: BuytimeTheme.TextMedium,
+                            letterSpacing: 0.25),
+                      ),
+                    ),
+                  ),
+
+                  ///Total Value
+                  Expanded(
+                      flex: 1,
+                      child: Container(
+                        alignment: Alignment.center,
+                        //margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 20),
+                        child: Text(
+                          snapshot.order.location ?? '',
+                          style: TextStyle(
+                              fontFamily: BuytimeTheme.FontFamily,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 18,
+
+                              ///SizeConfig.safeBlockHorizontal * 7,
+                              color: BuytimeTheme.TextBlack),
                         ),
-                      ),
+                      )),
 
-                      ///Total Value
-                      Expanded(
-                          flex: 1,
-                          child: Container(
-                            alignment: Alignment.center,
-                            //margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 20),
-                            child: Text(
-                              snapshot.order.location ?? '',
-                              style: TextStyle(
-                                  fontFamily: BuytimeTheme.FontFamily,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 18,
-
-                                  ///SizeConfig.safeBlockHorizontal * 7,
-                                  color: BuytimeTheme.TextBlack),
-                            ),
-                          )),
-
-                      ///Tax
-                      Expanded(
-                        flex: 1,
-                        child: Container(),
-                      ),
-                    ],
-                  ))
+                  ///Tax
+                  Expanded(
+                    flex: 1,
+                    child: Container(),
+                  ),
+                ],
+              ))
               : Container(),
 
           ///Divider
           widget.reserve != null && !widget.reserve && !widget.tourist && !isExternal
               ? Container(
-                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 10, right: SizeConfig.safeBlockHorizontal * 10),
-                  color: BuytimeTheme.BackgroundLightGrey,
-                  height: SizeConfig.safeBlockVertical * .2,
-                )
+            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 10, right: SizeConfig.safeBlockHorizontal * 10),
+            color: BuytimeTheme.BackgroundLightGrey,
+            height: SizeConfig.safeBlockVertical * .2,
+          )
               : Container(),
 
           ///Please Charge ...

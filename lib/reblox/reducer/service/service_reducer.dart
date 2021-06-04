@@ -236,6 +236,14 @@ class SetServicePrice {
   double get price => _price;
 }
 
+class SetServiceVAT {
+  int _vat;
+
+  SetServiceVAT(this._vat);
+
+  int get vat => _vat;
+}
+
 class SetServiceSelectedCategories {
   List<Parent> _selectedCategories;
 
@@ -341,6 +349,10 @@ ServiceState serviceReducer(ServiceState state, action) {
   }
   if (action is SetServicePrice) {
     serviceState.price = action.price;
+    return serviceState;
+  }
+  if (action is SetServiceVAT) {
+    serviceState.vat = action.vat;
     return serviceState;
   }
   if (action is SetServiceSwitchSlots) {

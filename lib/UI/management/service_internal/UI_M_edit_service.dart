@@ -28,7 +28,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 class UI_EditService extends StatefulWidget {
   String serviceId;
   String serviceName;
+
   UI_EditService(this.serviceId, this.serviceName);
+
   State<StatefulWidget> createState() => UI_EditServiceState();
 }
 
@@ -36,6 +38,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
   final GlobalKey<FormState> _keyEditServiceForm = GlobalKey<FormState>();
   String _serviceName = "";
   double _servicePrice = 0.0;
+  int _serviceVAT = 22;
   String _serviceDescription = "";
   String _serviceAddress = "";
   String _serviceBusinessAddress = "";
@@ -55,14 +58,13 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
   TextEditingController descriptionController = TextEditingController();
   TextEditingController _tagServiceController = TextEditingController();
   TextEditingController priceController = TextEditingController();
+  TextEditingController vatController = TextEditingController();
   TextEditingController addressController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-
-    });
+    WidgetsBinding.instance.addPostFrameCallback((_) {});
   }
 
   bool validateAndSave() {
@@ -154,29 +156,34 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
   _buildChoiceList() {
     List<Widget> choices = [];
     categoryList.forEach((item) {
-      choices.add(
-          Container(
-            margin: EdgeInsets.only(right: SizeConfig.safeBlockVertical * 1, top: SizeConfig.safeBlockVertical * .5, bottom: SizeConfig.safeBlockVertical * .5),
-            height: 32,
-            padding: const EdgeInsets.all(0.0),
-            child: ChoiceChip(
-              label: Text(item.name),
-              selected: selectedCategoryList.any((element) => element.id == item.id),
-              selectedColor: Theme.of(context).accentColor,
-              labelStyle: TextStyle(
-                  color: canEditService ? selectedCategoryList.any((element) => element.id == item.id) ? BuytimeTheme.TextBlack : BuytimeTheme.TextWhite : BuytimeTheme.TextBlack),
-              onSelected: canEditService ? (selected) {
-                setState(() {
-                  selectedCategoryList.clear();
-                  selectedCategoryList.add(item);
-                  validateChosenCategories();
-                });
+      choices.add(Container(
+        margin: EdgeInsets.only(right: SizeConfig.safeBlockVertical * 1, top: SizeConfig.safeBlockVertical * .5, bottom: SizeConfig.safeBlockVertical * .5),
+        height: 32,
+        padding: const EdgeInsets.all(0.0),
+        child: ChoiceChip(
+          label: Text(item.name),
+          selected: selectedCategoryList.any((element) => element.id == item.id),
+          selectedColor: Theme.of(context).accentColor,
+          labelStyle: TextStyle(
+              color: canEditService
+                  ? selectedCategoryList.any((element) => element.id == item.id)
+                      ? BuytimeTheme.TextBlack
+                      : BuytimeTheme.TextWhite
+                  : BuytimeTheme.TextBlack),
+          onSelected: canEditService
+              ? (selected) {
+                  setState(() {
+                    selectedCategoryList.clear();
+                    selectedCategoryList.add(item);
+                    validateChosenCategories();
+                  });
 
-                ///Aggiorno lo store con la lista di categorie selezionate salvando id e rootId
-                StoreProvider.of<AppState>(context).dispatch(SetServiceSelectedCategories(selectedCategoryList));
-              } : null,
-            ),
-          ));
+                  ///Aggiorno lo store con la lista di categorie selezionate salvando id e rootId
+                  StoreProvider.of<AppState>(context).dispatch(SetServiceSelectedCategories(selectedCategoryList));
+                }
+              : null,
+        ),
+      ));
     });
     return choices;
   }
@@ -200,21 +207,19 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
     }
     return text;
   }
+
   bool startRequest = false;
   bool noActivity = false;
 
-
-  bool canEdit(){
+  bool canEdit() {
     bool edit = false;
     debugPrint('UI_M_edit_service => USER ROLE: ${StoreProvider.of<AppState>(context).state.user.getRole()}');
-    if(StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin ||
-        StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman ||
-        StoreProvider.of<AppState>(context).state.user.getRole() == Role.owner){
+    if (StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin || StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman || StoreProvider.of<AppState>(context).state.user.getRole() == Role.owner) {
       edit = true;
       debugPrint('UI_M_edit_service => CAN EDIT ${Utils.enumToString(StoreProvider.of<AppState>(context).state.user.getRole())}');
     }
     StoreProvider.of<AppState>(context).state.category.manager.forEach((email) {
-      if(email.mail == StoreProvider.of<AppState>(context).state.user.email){
+      if (email.mail == StoreProvider.of<AppState>(context).state.user.email) {
         edit = true;
         debugPrint('UI_M_edit_service => CAN EDIT MANAGER');
       }
@@ -230,6 +235,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
   String serviceAddress = '';
 
   bool firstTime = false;
+
   @override
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
@@ -244,11 +250,11 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
       },
       child: StoreConnector<AppState, AppState>(
           converter: (store) => store.state,
-          onInit: (store){
+          onInit: (store) {
             store.state.serviceState = ServiceState();
             store.dispatch(CategoryTreeRequest());
             store.dispatch(ServiceRequestByID(widget.serviceId));
-            if(store.state.business.businessAddress != null && store.state.business.businessAddress.isNotEmpty)
+            if (store.state.business.businessAddress != null && store.state.business.businessAddress.isNotEmpty)
               _serviceBusinessAddress = store.state.business.businessAddress;
             else
               _serviceBusinessAddress = '${store.state.business.street.isNotEmpty ? store.state.business.street : ''}'
@@ -263,20 +269,20 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
           },
           //onDidChange: (store) => validateReservableService(),
           builder: (context, snapshot) {
-            canEditService  = canEdit();
+            canEditService = canEdit();
             List<String> flagsCharCode = [];
             List<String> languageCode = [];
             Locale myLocale = Localizations.localeOf(context);
             debugPrint('UI_M_edit_service => MY LOCALE: ${myLocale}');
-            if(snapshot.serviceState.serviceId != null){
+            if (snapshot.serviceState.serviceId != null) {
               validateReservableService(); //TODO Check
               ///Popolo le categorie
               setCategoryList();
 
               AppLocalizations.supportedLocales.forEach((element) {
-                //debugPrint('UI_M_create_service => Locale: ${element}');
+                debugPrint('UI_M_create_service => Locale: ${element}');
                 String flag = '';
-                if(element.languageCode == 'en')
+                if (element.languageCode == 'en')
                   flag = 'gb'.toUpperCase().replaceAllMapped(RegExp(r'[A-Z]'), (match) => String.fromCharCode(match.group(0).codeUnitAt(0) + 127397));
                 else
                   flag = element.languageCode.toUpperCase().replaceAllMapped(RegExp(r'[A-Z]'), (match) => String.fromCharCode(match.group(0).codeUnitAt(0) + 127397));
@@ -285,14 +291,14 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                 languageCode.add(element.languageCode);
               });
 
-              if(!firstTime){
-                if(snapshot.serviceState.name.isNotEmpty && nameController.text.isEmpty){
+              if (!firstTime) {
+                if (snapshot.serviceState.name.isNotEmpty && nameController.text.isEmpty) {
                   serviceName = Utils.retriveField(myLocale.languageCode, snapshot.serviceState.name);
                   debugPrint('UI_M_edit_service => Service Name: ${snapshot.serviceState.name}');
                   //nameController.clear();
                   nameController.text = Utils.retriveField(myLocale.languageCode, snapshot.serviceState.name);
                 }
-                if(snapshot.serviceState.description.isNotEmpty && descriptionController.text.isEmpty){
+                if (snapshot.serviceState.description.isNotEmpty && descriptionController.text.isEmpty) {
                   serviceDescription = Utils.retriveField(myLocale.languageCode, snapshot.serviceState.description);
                   debugPrint('UI_M_edit_service => Service Description: ${snapshot.serviceState.description}');
                   //descriptionController.clear();
@@ -301,23 +307,28 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                 firstTime = true;
               }
             }
-            if(snapshot.serviceState.price != null && priceController.text.isEmpty){
+            if (snapshot.serviceState.price != null && priceController.text.isEmpty) {
               _servicePrice = StoreProvider.of<AppState>(context).state.serviceState.price;
               List<String> format = [];
               format = _servicePrice.toString().split(".");
               priceController.text = format[0].toString() + "." + (int.parse(format[1]) < 10 ? format[1].toString() + "0" : format[1].toString());
             }
 
-            if(addressController.text.isEmpty || _serviceAddress != _serviceBusinessAddress){
-              if(snapshot.serviceState.serviceAddress != null && snapshot.serviceState.serviceAddress.isNotEmpty){
+            if (snapshot.serviceState.vat != null && vatController.text.isEmpty) {
+              _serviceVAT = StoreProvider.of<AppState>(context).state.serviceState.vat;
+              vatController.text = _serviceVAT.toString();
+            }
+
+            if (addressController.text.isEmpty || _serviceAddress != _serviceBusinessAddress) {
+              if (snapshot.serviceState.serviceAddress != null && snapshot.serviceState.serviceAddress.isNotEmpty) {
                 _serviceAddress = snapshot.serviceState.serviceAddress;
-              }else if(snapshot.serviceState.serviceBusinessAddress != null && snapshot.serviceState.serviceBusinessAddress.isNotEmpty){
-                  _serviceBusinessAddress = snapshot.serviceState.serviceBusinessAddress;
-              }else{
+              } else if (snapshot.serviceState.serviceBusinessAddress != null && snapshot.serviceState.serviceBusinessAddress.isNotEmpty) {
+                _serviceBusinessAddress = snapshot.serviceState.serviceBusinessAddress;
+              } else {
                 addressController.text = _serviceBusinessAddress;
               }
 
-              if(_serviceAddress.isNotEmpty)
+              if (_serviceAddress.isNotEmpty)
                 addressController.text = _serviceAddress;
               else
                 addressController.text = _serviceBusinessAddress;
@@ -327,175 +338,174 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
               _serviceCoordinates = snapshot.business.coordinate;
             }
 
-
             return GestureDetector(
-              onTap: (){
-
+              onTap: () {
                 if (!currentFocus.hasPrimaryFocus) {
                   currentFocus.unfocus();
                 }
               },
               child: Stack(children: [
-                snapshot.serviceState.serviceId != null ?
-                Positioned.fill(
-                    child: Align(
-                        alignment: Alignment.topCenter,
-                        child: Scaffold(
-                            appBar: BuytimeAppbar(
-                              width: media.width,
-                              children: [
-                                Container(
-                                    child: IconButton(
-                                        icon: Icon(Icons.keyboard_arrow_left, color: Colors.white, size: 24),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                          //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_ServiceList()),);
-                                          //Navigator.pushReplacement(context, EnterExitRoute(enterPage: UI_M_ServiceList(), exitPage: UI_EditService(), from: false));
-                                        })),
-                                Flexible(
-                                  child: Utils.barTitle('${AppLocalizations.of(context).editSpace} ${nameController.text}'),
-                                ),
-                                canEditService ? Container(
-                                  child: IconButton(
-                                      icon: Icon(Icons.check, color: Colors.white),
-                                      onPressed: () {
-                                        setState(() {
-                                          submit = true;
-                                        });
-                                        if(nameController.text.isNotEmpty)
-                                          StoreProvider.of<AppState>(context).dispatch(SetServiceName(Utils.saveField(myLocale.languageCode, nameController.text, snapshot.serviceState.name)));
-                                        if(descriptionController.text.isNotEmpty)
-                                          StoreProvider.of<AppState>(context).dispatch(SetServiceDescription(Utils.saveField(myLocale.languageCode, descriptionController.text, snapshot.serviceState.description)));
-                                        if (validateReservableService() && validateChosenCategories() && validateAndSave() && validatePrice(_servicePrice.toString())) {
-                                          setState(() {
-                                            rippleLoading = true;
-                                          });
-                                          ServiceState tmpService = ServiceState.fromState(snapshot.serviceState);
-                                          tmpService.name = Utils.saveField(myLocale.languageCode, nameController.text, snapshot.serviceState.name);
-                                          tmpService.description = Utils.saveField(myLocale.languageCode, descriptionController.text, snapshot.serviceState.description);
-                                          tmpService.serviceAddress = addressController.text;
-                                          tmpService.serviceBusinessAddress = _serviceBusinessAddress;
-                                          tmpService.serviceCoordinates = _serviceCoordinates;
-                                          tmpService.serviceBusinessCoordinates = _serviceBusinessCoordinates;
-                                          debugPrint('UI_M_edit_service => Service Name: ${tmpService.name}');
-                                          debugPrint('UI_M_edit_service => Service Description: ${tmpService.description}');
-                                          debugPrint('UI_M_create_service => Service Address: ${tmpService.serviceAddress}');
-                                          debugPrint('UI_M_create_service => Service Business Address: ${tmpService.serviceBusinessAddress}');
-                                          debugPrint('UI_M_create_service => Service Coordinates: ${tmpService.serviceCoordinates}');
-                                          debugPrint('UI_M_create_service => Service Business Coordinates: ${tmpService.serviceBusinessCoordinates}');
-                                          StoreProvider.of<AppState>(context).dispatch(SetServiceServiceCrossSell(snapshot.serviceState.serviceCrossSell));
-
-                                          /// set the area of the service
-                                          if (_serviceCoordinates != null && _serviceCoordinates.isNotEmpty) {
-                                            AreaListState areaListState = StoreProvider.of<AppState>(context).state.areaList;
-                                            if (areaListState != null && areaListState.areaList != null) {
-                                              for(int ij = 0; ij < areaListState.areaList.length; ij++) {
-                                                var distance = Utils.calculateDistanceBetweenPoints(areaListState.areaList[ij].coordinates, _serviceCoordinates);
-                                                debugPrint('UI_M_edit_service: area distance ' + distance.toString());
-                                                if (distance != null && distance < 100) {
+                snapshot.serviceState.serviceId != null
+                    ? Positioned.fill(
+                        child: Align(
+                            alignment: Alignment.topCenter,
+                            child: Scaffold(
+                                appBar: BuytimeAppbar(
+                                  width: media.width,
+                                  children: [
+                                    Container(
+                                        child: IconButton(
+                                            icon: Icon(Icons.keyboard_arrow_left, color: Colors.white, size: 24),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                              //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_ServiceList()),);
+                                              //Navigator.pushReplacement(context, EnterExitRoute(enterPage: UI_M_ServiceList(), exitPage: UI_EditService(), from: false));
+                                            })),
+                                    Flexible(
+                                      child: Utils.barTitle('${AppLocalizations.of(context).editSpace} ${nameController.text}'),
+                                    ),
+                                    canEditService
+                                        ? Container(
+                                            child: IconButton(
+                                                icon: Icon(Icons.check, color: Colors.white),
+                                                onPressed: () {
                                                   setState(() {
-                                                    if(areaListState.areaList[ij].areaId.isNotEmpty && !snapshot.serviceState.tag.contains(areaListState.areaList[ij].areaId)) {
-                                                       snapshot.serviceState.tag.add(areaListState.areaList[ij].areaId);
-                                                    }
+                                                    submit = true;
                                                   });
-                                                }
-                                              }
-                                            }
-                                          }
+                                                  if (nameController.text.isNotEmpty) StoreProvider.of<AppState>(context).dispatch(SetServiceName(Utils.saveField(myLocale.languageCode, nameController.text, snapshot.serviceState.name)));
+                                                  if (descriptionController.text.isNotEmpty) StoreProvider.of<AppState>(context).dispatch(SetServiceDescription(Utils.saveField(myLocale.languageCode, descriptionController.text, snapshot.serviceState.description)));
+                                                  if (validateReservableService() && validateChosenCategories() && validateAndSave() && validatePrice(_servicePrice.toString())) {
+                                                    setState(() {
+                                                      rippleLoading = true;
+                                                    });
+                                                    ServiceState tmpService = ServiceState.fromState(snapshot.serviceState);
+                                                    tmpService.name = Utils.saveField(myLocale.languageCode, nameController.text, snapshot.serviceState.name);
+                                                    tmpService.description = Utils.saveField(myLocale.languageCode, descriptionController.text, snapshot.serviceState.description);
+                                                    tmpService.serviceAddress = addressController.text;
+                                                    tmpService.serviceBusinessAddress = _serviceBusinessAddress;
+                                                    tmpService.serviceCoordinates = _serviceCoordinates;
+                                                    tmpService.serviceBusinessCoordinates = _serviceBusinessCoordinates;
+                                                    debugPrint('UI_M_edit_service => Service Name: ${tmpService.name}');
+                                                    debugPrint('UI_M_edit_service => Service Description: ${tmpService.description}');
+                                                    debugPrint('UI_M_create_service => Service Address: ${tmpService.serviceAddress}');
+                                                    debugPrint('UI_M_create_service => Service Business Address: ${tmpService.serviceBusinessAddress}');
+                                                    debugPrint('UI_M_create_service => Service Coordinates: ${tmpService.serviceCoordinates}');
+                                                    debugPrint('UI_M_create_service => Service Business Coordinates: ${tmpService.serviceBusinessCoordinates}');
+                                                    StoreProvider.of<AppState>(context).dispatch(SetServiceServiceCrossSell(snapshot.serviceState.serviceCrossSell));
 
-                                          StoreProvider.of<AppState>(context).dispatch(UpdateService(tmpService));
-                                        }
-                                      }),
-                                ) : SizedBox(
-                                  width: 50.0,
+                                                    /// set the area of the service
+                                                    if (_serviceCoordinates != null && _serviceCoordinates.isNotEmpty) {
+                                                      AreaListState areaListState = StoreProvider.of<AppState>(context).state.areaList;
+                                                      if (areaListState != null && areaListState.areaList != null) {
+                                                        for (int ij = 0; ij < areaListState.areaList.length; ij++) {
+                                                          var distance = Utils.calculateDistanceBetweenPoints(areaListState.areaList[ij].coordinates, _serviceCoordinates);
+                                                          debugPrint('UI_M_edit_service: area distance ' + distance.toString());
+                                                          if (distance != null && distance < 100) {
+                                                            setState(() {
+                                                              if (areaListState.areaList[ij].areaId.isNotEmpty && !snapshot.serviceState.tag.contains(areaListState.areaList[ij].areaId)) {
+                                                                snapshot.serviceState.tag.add(areaListState.areaList[ij].areaId);
+                                                              }
+                                                            });
+                                                          }
+                                                        }
+                                                      }
+                                                    }
+
+                                                    StoreProvider.of<AppState>(context).dispatch(UpdateService(tmpService));
+                                                  }
+                                                }),
+                                          )
+                                        : SizedBox(
+                                            width: 50.0,
+                                          ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                            body: SafeArea(
-                              child: Center(
-                                child: SingleChildScrollView(
-                                  child: ConstrainedBox(
-                                    constraints: BoxConstraints(),
-                                    child: Form(
-                                      key: _keyEditServiceForm,
-                                      child: Column(
-                                        children: <Widget>[
-                                          ///Image
-                                          Padding(
-                                            padding: const EdgeInsets.only(bottom: 25.0),
-                                            child: Container(
-                                              child: Row(
-                                                children: [
-                                                  Expanded(
-                                                    flex: 2,
-                                                    child: Container(
-                                                      child: WidgetServicePhoto(
-                                                        remotePath: "service/" + (snapshot.business.name != null ? snapshot.business.name + "/" : "") + snapshot.serviceState.name + "_1",
-                                                        maxPhoto: 1,
-                                                        image: snapshot.serviceState.image1,
-                                                        cropAspectRatioPreset: CropAspectRatioPreset.square,
-                                                        onFilePicked: (fileToUpload) {
-                                                          print("UI_create_service - callback upload image 1!");
-                                                          StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInService(fileToUpload));
-                                                        },
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Expanded(
-                                                    flex: 1,
-                                                    child: Column(
-                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                      children: [
-                                                        Container(
+                                body: SafeArea(
+                                  child: Center(
+                                    child: SingleChildScrollView(
+                                      child: ConstrainedBox(
+                                        constraints: BoxConstraints(),
+                                        child: Form(
+                                          key: _keyEditServiceForm,
+                                          child: Column(
+                                            children: <Widget>[
+                                              ///Image
+                                              Padding(
+                                                padding: const EdgeInsets.only(bottom: 25.0),
+                                                child: Container(
+                                                  child: Row(
+                                                    children: [
+                                                      Expanded(
+                                                        flex: 2,
+                                                        child: Container(
                                                           child: WidgetServicePhoto(
-                                                            remotePath: "service/" + (snapshot.business.name != null ? snapshot.business.name + "/" : "") + snapshot.serviceState.name + "_2",
+                                                            remotePath: "service/" + (snapshot.business.name != null ? snapshot.business.name + "/" : "") + snapshot.serviceState.name + "_1",
                                                             maxPhoto: 1,
+                                                            image: snapshot.serviceState.image1,
                                                             cropAspectRatioPreset: CropAspectRatioPreset.square,
-                                                            image: snapshot.serviceState.image2,
                                                             onFilePicked: (fileToUpload) {
-                                                              print("UI_create_service -  callback upload image 2!");
+                                                              print("UI_create_service - callback upload image 1!");
                                                               StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInService(fileToUpload));
                                                             },
                                                           ),
                                                         ),
-                                                        WidgetServicePhoto(
-                                                          remotePath: "service/" + (snapshot.business.name != null ? snapshot.business.name + "/" : "") + snapshot.serviceState.name + "_3",
-                                                          maxPhoto: 1,
-                                                          cropAspectRatioPreset: CropAspectRatioPreset.square,
-                                                          image: snapshot.serviceState.image3,
-                                                          onFilePicked: (fileToUpload) {
-                                                            print("UI_create_service -  callback upload image 3!");
-                                                            StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInService(fileToUpload));
-                                                          },
+                                                      ),
+                                                      Expanded(
+                                                        flex: 1,
+                                                        child: Column(
+                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                          children: [
+                                                            Container(
+                                                              child: WidgetServicePhoto(
+                                                                remotePath: "service/" + (snapshot.business.name != null ? snapshot.business.name + "/" : "") + snapshot.serviceState.name + "_2",
+                                                                maxPhoto: 1,
+                                                                cropAspectRatioPreset: CropAspectRatioPreset.square,
+                                                                image: snapshot.serviceState.image2,
+                                                                onFilePicked: (fileToUpload) {
+                                                                  print("UI_create_service -  callback upload image 2!");
+                                                                  StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInService(fileToUpload));
+                                                                },
+                                                              ),
+                                                            ),
+                                                            WidgetServicePhoto(
+                                                              remotePath: "service/" + (snapshot.business.name != null ? snapshot.business.name + "/" : "") + snapshot.serviceState.name + "_3",
+                                                              maxPhoto: 1,
+                                                              cropAspectRatioPreset: CropAspectRatioPreset.square,
+                                                              image: snapshot.serviceState.image3,
+                                                              onFilePicked: (fileToUpload) {
+                                                                print("UI_create_service -  callback upload image 3!");
+                                                                StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInService(fileToUpload));
+                                                              },
+                                                            ),
+                                                          ],
                                                         ),
-                                                      ],
-                                                    ),
-                                                  )
-                                                ],
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
                                               ),
-                                            ),
-                                          ),
-                                          ///Name
-                                          Container(
-                                            margin: EdgeInsets.only(top: 40.0, bottom: 5.0, left: 32.0, right: 28.0),
-                                            child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              children: [
-                                                Flexible(
-                                                  child: Container(
-                                                    //width: SizeConfig.safeBlockHorizontal * 60,
-                                                    // decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
-                                                      child: TextFormField(
-                                                        enabled: canEditService,
-                                                          controller: nameController,
-                                                          validator: (value) => value.isEmpty ? AppLocalizations.of(context).serviceNameBlank : null,
-                                                          onChanged: (value) {
-                                                            setState(() {
-                                                              serviceName = value;
-                                                            });
-                                                            //StoreProvider.of<AppState>(context).dispatch(SetServiceName(value + '-' + myLocale.languageCode));
-                                                          },
-                                                          /*onChanged: (value) {
+
+                                              ///Name
+                                              Container(
+                                                margin: EdgeInsets.only(top: 40.0, bottom: 5.0, left: 32.0, right: 28.0),
+                                                child: Row(
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  children: [
+                                                    Flexible(
+                                                      child: Container(
+                                                          //width: SizeConfig.safeBlockHorizontal * 60,
+                                                          // decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
+                                                          child: TextFormField(
+                                                              enabled: canEditService,
+                                                              controller: nameController,
+                                                              validator: (value) => value.isEmpty ? AppLocalizations.of(context).serviceNameBlank : null,
+                                                              onChanged: (value) {
+                                                                setState(() {
+                                                                  serviceName = value;
+                                                                });
+                                                                //StoreProvider.of<AppState>(context).dispatch(SetServiceName(value + '-' + myLocale.languageCode));
+                                                              },
+                                                              /*onChanged: (value) {
                                                     StoreProvider.of<AppState>(context).dispatch(SetServiceName(value + '-' + myLocale.languageCode));
                                                   },
                                                   onSaved: (value) {
@@ -504,74 +514,69 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                       StoreProvider.of<AppState>(context).dispatch(SetServiceName(value + '-' + myLocale.languageCode));
                                                     }
                                                   },*/
-                                                          onEditingComplete: (){
-                                                            //StoreProvider.of<AppState>(context).dispatch(SetServiceName(Utils.saveField(myLocale.languageCode, nameController.text, snapshot.serviceState.name)));
-                                                            currentFocus.unfocus();
-                                                          },
-                                                          style: TextStyle(
-                                                            fontFamily: BuytimeTheme.FontFamily,
-                                                            color: canEditService ? BuytimeTheme.TextBlack : BuytimeTheme.TextGrey
-                                                          ),
-                                                          decoration: InputDecoration(
-                                                            labelText: AppLocalizations.of(context).name,
-                                                            enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                                            border: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                                            focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                                            errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                                          ))
-                                                  ),
+                                                              onEditingComplete: () {
+                                                                //StoreProvider.of<AppState>(context).dispatch(SetServiceName(Utils.saveField(myLocale.languageCode, nameController.text, snapshot.serviceState.name)));
+                                                                currentFocus.unfocus();
+                                                              },
+                                                              style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: canEditService ? BuytimeTheme.TextBlack : BuytimeTheme.TextGrey),
+                                                              decoration: InputDecoration(
+                                                                labelText: AppLocalizations.of(context).name,
+                                                                enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                                border: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                                focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                                errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                              ))),
+                                                    ),
+                                                    IconButton(
+                                                      icon: Icon(
+                                                        Icons.g_translate,
+                                                        color: canEditService && serviceName.isNotEmpty ? BuytimeTheme.ManagerPrimary : BuytimeTheme.TextGrey,
+                                                      ),
+                                                      onPressed: canEditService && serviceName.isNotEmpty
+                                                          ? () {
+                                                              setState(() {
+                                                                rippleTranslate = true;
+                                                              });
+                                                              currentFocus.unfocus();
+                                                              //StoreProvider.of<AppState>(context).dispatch(SetServiceName(Utils.saveField(myLocale.languageCode, nameController.text, snapshot.serviceState.name)));
+                                                              String newField = Utils.saveField(myLocale.languageCode, nameController.text, snapshot.serviceState.name);
+                                                              Utils.multiLingualTranslate(context, flagsCharCode, languageCode, AppLocalizations.of(context).name, newField, currentFocus, (value) {
+                                                                if (!value) {
+                                                                  setState(() {
+                                                                    rippleTranslate = false;
+                                                                  });
+                                                                }
+                                                              });
+                                                            }
+                                                          : null,
+                                                    )
+                                                  ],
                                                 ),
-                                                IconButton(
-                                                  icon: Icon(
-                                                    Icons.g_translate,
-                                                    color: canEditService && serviceName.isNotEmpty ? BuytimeTheme.ManagerPrimary : BuytimeTheme.TextGrey,
-                                                  ),
-                                                  onPressed: canEditService && serviceName.isNotEmpty ? (){
-                                                    setState(() {
-                                                      rippleTranslate = true;
-                                                    });
-                                                    currentFocus.unfocus();
-                                                    //StoreProvider.of<AppState>(context).dispatch(SetServiceName(Utils.saveField(myLocale.languageCode, nameController.text, snapshot.serviceState.name)));
-                                                    String newField = Utils.saveField(myLocale.languageCode, nameController.text, snapshot.serviceState.name);
-                                                    Utils.multiLingualTranslate(
-                                                        context, flagsCharCode, languageCode,
-                                                        AppLocalizations.of(context).name, newField,
-                                                        currentFocus,
-                                                            (value){
-                                                          if(!value){
-                                                            setState(() {
-                                                              rippleTranslate = false;
-                                                            });
-                                                          }
-                                                    });
-                                                  } : null,
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                          ///Description
-                                          Container(
-                                            margin: EdgeInsets.only(top: 10.0, bottom: 5.0, left: 32.0, right: 28.0),
-                                            child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              children: [
-                                                Flexible(
-                                                  child: Container(
-                                                    //width: SizeConfig.safeBlockHorizontal * 60,
-                                                    // decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
-                                                      child: TextFormField(
-                                                          enabled: canEditService,
-                                                          keyboardType: TextInputType.multiline,
-                                                          maxLines: null,
-                                                          controller: descriptionController,
-                                                          validator: (value) => value.isEmpty ? AppLocalizations.of(context).serviceNameBlank : null,
-                                                          onChanged: (value) {
-                                                            setState(() {
-                                                              serviceDescription = value;
-                                                            });
-                                                            //StoreProvider.of<AppState>(context).dispatch(SetServiceDescription(value + '-' + myLocale.languageCode));
-                                                          },
-                                                          /*onChanged: (value) {
+                                              ),
+
+                                              ///Description
+                                              Container(
+                                                margin: EdgeInsets.only(top: 10.0, bottom: 5.0, left: 32.0, right: 28.0),
+                                                child: Row(
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  children: [
+                                                    Flexible(
+                                                      child: Container(
+                                                          //width: SizeConfig.safeBlockHorizontal * 60,
+                                                          // decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
+                                                          child: TextFormField(
+                                                              enabled: canEditService,
+                                                              keyboardType: TextInputType.multiline,
+                                                              maxLines: null,
+                                                              controller: descriptionController,
+                                                              validator: (value) => value.isEmpty ? AppLocalizations.of(context).serviceNameBlank : null,
+                                                              onChanged: (value) {
+                                                                setState(() {
+                                                                  serviceDescription = value;
+                                                                });
+                                                                //StoreProvider.of<AppState>(context).dispatch(SetServiceDescription(value + '-' + myLocale.languageCode));
+                                                              },
+                                                              /*onChanged: (value) {
                                                     StoreProvider.of<AppState>(context).dispatch(SetServiceDescription(value + '-' + myLocale.languageCode));
                                                   },
                                                   onSaved: (value) {
@@ -579,833 +584,875 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                       //_serviceName = value;
                                                       StoreProvider.of<AppState>(context).dispatch(SetServiceDescription(value + '-' + myLocale.languageCode));
                                                     }
-                                                  },*/style: TextStyle(
-                                                          fontFamily: BuytimeTheme.FontFamily,
-                                                          color: canEditService ? BuytimeTheme.TextBlack : BuytimeTheme.TextGrey
-                                                      ),
-                                                          onEditingComplete: (){
-                                                            StoreProvider.of<AppState>(context).dispatch(SetServiceDescription(Utils.saveField(myLocale.languageCode, descriptionController.text, snapshot.serviceState.description)));
-                                                            currentFocus.unfocus();
-                                                          },
-                                                          decoration: InputDecoration(
-                                                            labelText: AppLocalizations.of(context).description,
-                                                            enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                                            border: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                                            focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                                            errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(8.0))),
-
-                                                          ))
-                                                  ),
-                                                ),
-                                                IconButton(
-                                                  icon: Icon(
-                                                    Icons.g_translate,
-                                                    color: canEditService && serviceDescription.isNotEmpty ? BuytimeTheme.ManagerPrimary : BuytimeTheme.TextGrey,
-                                                  ),
-                                                  onPressed: canEditService && serviceDescription.isNotEmpty ? (){
-                                                    setState(() {
-                                                      rippleTranslate = true;
-                                                    });
-                                                    currentFocus.unfocus();
-                                                    StoreProvider.of<AppState>(context).dispatch(SetServiceDescription(Utils.saveField(myLocale.languageCode, descriptionController.text, snapshot.serviceState.description)));
-                                                    String newField = Utils.saveField(myLocale.languageCode, descriptionController.text, snapshot.serviceState.description);
-                                                    Utils.multiLingualTranslate(
-                                                        context, flagsCharCode, languageCode,
-                                                        AppLocalizations.of(context).description, newField,
-                                                        currentFocus, (value){
-                                                      if(!value){
-                                                        setState(() {
-                                                          rippleTranslate = false;
-                                                        });
-                                                      }
-                                                    });
-                                                  } : null,
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                          ///Prtice
-                                          snapshot.serviceState.switchSlots
-                                              ? Container()
-                                              : Padding(
-                                            padding: const EdgeInsets.only(bottom: 0.0,),
-                                            child: Center(
-                                              child: Container(
-                                                width: media.width * 0.9,
-                                                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
-                                                //decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
-                                                child: Padding(
-                                                  padding: const EdgeInsets.only(top: 0.0, bottom: 5.0, left: 10.0, right: 10.0),
-                                                  child: TextFormField(
-                                                    enabled: canEditService,
-                                                    controller: priceController,
-                                                    keyboardType: TextInputType.numberWithOptions(signed: true, decimal: true),
-                                                    textInputAction: TextInputAction.done,
-                                                    inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^(\d+)?\.?\d{0,2}'))],
-                                                    onTap: (){
-                                                      setState(() {
-                                                        priceController.clear();
-                                                      });
-                                                    },
-                                                    validator: (value) => value.isEmpty
-                                                        ? AppLocalizations.of(context).servicePriceBlank
-                                                        : validatePrice(value)
-                                                        ? null
-                                                        : AppLocalizations.of(context).notValidPrice,
-                                                    onChanged: (value) {
-                                                      if (value == "") {
-                                                        setState(() {
-                                                          _servicePrice = 0.0;
-                                                          value = "0.0";
-                                                        });
-                                                      } else {
-                                                        if (value.contains(".")) {
-                                                          List<String> priceString = value.split(".");
-                                                          if (priceString[1].length == 1) {
-                                                            value += "0";
-                                                          }
-                                                          else if(priceString[1].length == 0){
-                                                            value += "00";
-                                                          }
-                                                        } else {
-                                                          value += ".00";
-                                                        }
-                                                        setState(() {
-                                                          _servicePrice = double.parse(value);
-                                                        });
-                                                      }
-                                                      StoreProvider.of<AppState>(context).dispatch(SetServicePrice(_servicePrice));
-                                                    },
-                                                    onFieldSubmitted: (value) {
-                                                      if (value == "") {
-                                                        setState(() {
-                                                          _servicePrice = 0.0;
-                                                          value = "0.0";
-                                                          priceController.text = value;
-                                                        });
-                                                      } else {
-                                                        if (value.contains(".")) {
-                                                          List<String> priceString = value.split(".");
-                                                          if (priceString[1].length == 1) {
-                                                            value += "0";
-                                                          }
-                                                          else if(priceString[1].length == 0){
-                                                            value += "00";
-                                                          }
-                                                        } else {
-                                                          value += ".00";
-                                                        }
-                                                        setState(() {
-                                                          _servicePrice = double.parse(value);
-                                                          priceController.text = value;
-                                                        });
-                                                      }
-                                                      StoreProvider.of<AppState>(context).dispatch(SetServicePrice(_servicePrice));
-                                                    },
-                                                    style: TextStyle(
-                                                        fontFamily: BuytimeTheme.FontFamily,
-                                                        color: canEditService ? BuytimeTheme.TextBlack : BuytimeTheme.TextGrey
+                                                  },*/
+                                                              style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: canEditService ? BuytimeTheme.TextBlack : BuytimeTheme.TextGrey),
+                                                              onEditingComplete: () {
+                                                                StoreProvider.of<AppState>(context).dispatch(SetServiceDescription(Utils.saveField(myLocale.languageCode, descriptionController.text, snapshot.serviceState.description)));
+                                                                currentFocus.unfocus();
+                                                              },
+                                                              decoration: InputDecoration(
+                                                                labelText: AppLocalizations.of(context).description,
+                                                                enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                                border: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                                focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                                errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                              ))),
                                                     ),
-                                                    decoration: InputDecoration(
-                                                      labelText: AppLocalizations.of(context).price,
-                                                      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                                      border: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                                      focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                                      errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          ///Address
-                                          Container(
-                                            margin: EdgeInsets.only(top: 10.0, bottom: 5.0, left: 32.0, right: 28.0),
-                                            child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              children: [
-                                                Flexible(
-                                                  child: Container(
-                                                    width: media.width * 0.9,
-                                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0),
-                                                    //decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
-                                                    child: TextFormField(
-                                                      enabled: false,
-                                                      readOnly: true,
-                                                      keyboardType: TextInputType.multiline,
-                                                      maxLines: null,
-                                                      controller: addressController,
-                                                      //initialValue: _serviceAddress,
-                                                      onChanged: (value) {
-                                                        _serviceAddress = value;
-                                                        StoreProvider.of<AppState>(context).dispatch(SetServiceAddress(_serviceAddress));
-                                                      },
-                                                      onSaved: (value) {
-                                                        _serviceAddress = value;
-                                                      },
-                                                      style: TextStyle(
-                                                        fontFamily: BuytimeTheme.FontFamily,
-                                                        color: BuytimeTheme.TextGrey
+                                                    IconButton(
+                                                      icon: Icon(
+                                                        Icons.g_translate,
+                                                        color: canEditService && serviceDescription.isNotEmpty ? BuytimeTheme.ManagerPrimary : BuytimeTheme.TextGrey,
                                                       ),
-                                                      decoration: InputDecoration(
-                                                        labelText: AppLocalizations.of(context).addressOptional,
-                                                        //hintText: AppLocalizations.of(context).addressOptional,
-                                                        enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                                        border: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                                        focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                                        errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                                      ),
+                                                      onPressed: canEditService && serviceDescription.isNotEmpty
+                                                          ? () {
+                                                              setState(() {
+                                                                rippleTranslate = true;
+                                                              });
+                                                              currentFocus.unfocus();
+                                                              StoreProvider.of<AppState>(context).dispatch(SetServiceDescription(Utils.saveField(myLocale.languageCode, descriptionController.text, snapshot.serviceState.description)));
+                                                              String newField = Utils.saveField(myLocale.languageCode, descriptionController.text, snapshot.serviceState.description);
+                                                              Utils.multiLingualTranslate(context, flagsCharCode, languageCode, AppLocalizations.of(context).description, newField, currentFocus, (value) {
+                                                                if (!value) {
+                                                                  setState(() {
+                                                                    rippleTranslate = false;
+                                                                  });
+                                                                }
+                                                              });
+                                                            }
+                                                          : null,
                                                     )
-                                                  ),
-                                                ),
-                                                IconButton(
-                                                  icon: Icon(
-                                                    Icons.add_location_rounded,
-                                                    color: canEditService ? BuytimeTheme.ManagerPrimary : BuytimeTheme.TextGrey,
-                                                  ),
-                                                  onPressed: canEditService ? (){
-                                                    Utils.googleSearch(
-                                                        context,
-                                                            (place){
-                                                          //_serviceAddress = store.state.business.street + ', ' + store.state.business.street_number + ', ' + store.state.business.ZIP + ', ' + store.state.business.state_province;
-                                                          addressController.text = place[0];
-                                                          setState(() {
-                                                            _serviceCoordinates = '${place[1]}, ${place[2]}';
-                                                          });
-                                                          StoreProvider.of<AppState>(context).dispatch(SetServiceAddress(addressController.text));
-                                                          StoreProvider.of<AppState>(context).dispatch(SetServiceCoordinates(_serviceCoordinates));
-                                                        }
-                                                    );
-                                                  } : null,
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                          ///Categproes
-                                          Padding(
-                                            padding: const EdgeInsets.only(left: 20.0, top: 10.0),
-                                            child: Container(
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Container(
-                                                    margin: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2),
-                                                    child: Text(
-                                                      AppLocalizations.of(context).selectCategories,
-                                                      textAlign: TextAlign.start,
-                                                      style: TextStyle(
-                                                        fontSize: media.height * 0.02,
-                                                        color: BuytimeTheme.TextBlack,
-                                                        fontWeight: FontWeight.w500,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Container(
-                                                      width: media.width * 0.9,
-                                                      child: Wrap(
-                                                        children: _buildChoiceList(),
-                                                      )),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          ///Error message Empty CategoryList
-                                          errorCategoryListEmpty
-                                              ? Padding(
-                                            padding: const EdgeInsets.only(left: 30.0, bottom: 10),
-                                            child: Container(
-                                                child: Row(
-                                                  children: [
-                                                    Text(
-                                                      AppLocalizations.of(context).notZeroCategory,
-                                                      style: TextStyle(
-                                                        fontSize: media.height * 0.018,
-                                                        color: BuytimeTheme.ErrorRed,
-                                                        fontWeight: FontWeight.w500,
-                                                      ),
-                                                    ),
                                                   ],
-                                                )),
-                                          )
-                                              : Container(),
-
-                                          ///Divider under category selection
-                                          Container(
-                                            child: Divider(
-                                              indent: 0.0,
-                                              color: BuytimeTheme.DividerGrey,
-                                              thickness: 5.0,
-                                            ),
-                                          ),
-
-                                          ///Tag Block
-                                          Padding(
-                                            padding: const EdgeInsets.only(left: 30.0, top: 5.0, bottom: 10.0, right: 30.0),
-                                            child: Container(
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    AppLocalizations.of(context).tag,
-                                                    textAlign: TextAlign.start,
-                                                    style: TextStyle(
-                                                      fontSize: media.height * 0.02,
-                                                      color: BuytimeTheme.TextBlack,
-                                                      fontWeight: FontWeight.w500,
-                                                    ),
-                                                  ),
-
-                                                  ///Tags
-                                                  Padding(
-                                                    padding: const EdgeInsets.only(top: 5.0),
-                                                    child: Container(
-                                                      child: Column(
+                                                ),
+                                              ),
+                                              snapshot.serviceState.switchSlots
+                                                  ? Container()
+                                                  : Container(
+                                                      margin: EdgeInsets.only(top: 10.0, bottom: 5.0, left: 32.0, right: 32.0),
+                                                      child: Row(
                                                         children: [
-                                                          Row(
-                                                            children: [
-                                                              ///Add Tag field & Add Tag Button
-                                                              Container(
-                                                                height: 45,
-                                                                width: media.width * 0.55,
+                                                          ///Price
+                                                          Flexible(
+                                                            flex: 3,
+                                                            child: Container(
+                                                              //width: media.width * 0.9,
+                                                              //decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
+                                                              child: Padding(
+                                                                padding: EdgeInsets.only(top: 0.0, bottom: 0.0, left: 0.0, right: 0.0),
                                                                 child: TextFormField(
                                                                   enabled: canEditService,
-                                                                  controller: _tagServiceController,
-                                                                  textAlign: TextAlign.start,
-                                                                  decoration: InputDecoration(
-                                                                    enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                                                    border: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                                                    focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                                                    errorBorder: OutlineInputBorder(borderSide: BorderSide(color: BuytimeTheme.ErrorRed), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                                                    labelText: AppLocalizations.of(context).addNewTag,
-                                                                    labelStyle: TextStyle(
-                                                                      fontSize: 14,
-                                                                      fontFamily: BuytimeTheme.FontFamily,
-                                                                      color: BuytimeTheme.TextGrey,
-                                                                      fontWeight: FontWeight.w400,
-                                                                    ),
-                                                                  ),
-                                                                  style: TextStyle(
-                                                                    fontFamily: BuytimeTheme.FontFamily,
-                                                                    color: BuytimeTheme.TextGrey,
-                                                                    fontWeight: FontWeight.w800,
-                                                                  ),
-                                                                ),
-                                                              ),
-
-                                                              ///Add tag button
-                                                              Container(
-                                                                child: IconButton(
-                                                                  icon: Icon(
-                                                                    Icons.add_circle_rounded,
-                                                                    size: 30,
-                                                                    color: BuytimeTheme.TextGrey,
-                                                                  ),
-                                                                  onPressed:canEditService ? () {
-                                                                    setState(() {
-                                                                      if (_tagServiceController.text.isNotEmpty) {
-                                                                        snapshot.serviceState.tag.add(_tagServiceController.text);
-                                                                        _tagServiceController.clear();
+                                                                  controller: priceController,
+                                                                  keyboardType: TextInputType.numberWithOptions(signed: true, decimal: true),
+                                                                  textInputAction: TextInputAction.done,
+                                                                  inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^(\d+)?\.?\d{0,2}'))],
+                                                                  validator: (value) => value.isEmpty
+                                                                      ? AppLocalizations.of(context).servicePriceBlank
+                                                                      : validatePrice(value)
+                                                                          ? null
+                                                                          : AppLocalizations.of(context).notValidPrice,
+                                                                  onChanged: (value) {
+                                                                    if (value == "") {
+                                                                      setState(() {
+                                                                        _servicePrice = 0.0;
+                                                                        value = "0.0";
+                                                                      });
+                                                                    } else {
+                                                                      if (value.contains(".")) {
+                                                                        List<String> priceString = value.split(".");
+                                                                        if (priceString[1].length == 1) {
+                                                                          value += "0";
+                                                                        } else if (priceString[1].length == 0) {
+                                                                          value += "00";
+                                                                        }
+                                                                      } else {
+                                                                        value += ".00";
                                                                       }
-                                                                    });
-                                                                  } : null,
+                                                                      setState(() {
+                                                                        _servicePrice = double.parse(value);
+                                                                      });
+                                                                    }
+                                                                  },
+                                                                  onEditingComplete: () {
+                                                                    StoreProvider.of<AppState>(context).dispatch(SetServicePrice(_servicePrice));
+                                                                    currentFocus.unfocus();
+                                                                  },
+                                                                  style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: canEditService ? BuytimeTheme.TextBlack : BuytimeTheme.TextGrey),
+                                                                  decoration: InputDecoration(
+                                                                    labelText: AppLocalizations.of(context).price,
+                                                                    enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                                    border: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                                    focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                                    errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                                  ),
                                                                 ),
                                                               ),
-                                                            ],
-                                                          ),
-                                                          (snapshot.serviceState.tag.length > 0 && snapshot.serviceState.tag != null)
-                                                              ? Align(
-                                                            alignment: Alignment.topLeft,
-                                                            child: Wrap(
-                                                              spacing: 3.0,
-                                                              runSpacing: 3.0,
-                                                              children: List<Widget>.generate(snapshot.serviceState.tag.length, (int index) {
-                                                                return InputChip(
-                                                                  selected: false,
-                                                                  label: Text(
-                                                                    snapshot.serviceState.tag[index],
-                                                                    style: TextStyle(
-                                                                      fontSize: 13.0,
-                                                                      fontWeight: FontWeight.w500,
-                                                                    ),
-                                                                  ),
-                                                                  onDeleted: canEditService ?() {
-                                                                    setState(() {
-                                                                      snapshot.serviceState.tag.remove(snapshot.serviceState.tag[index]);
-                                                                    });
-                                                                  } : null,
-                                                                );
-                                                              }),
                                                             ),
-                                                          )
-                                                              : Container()
+                                                          ),
+
+                                                          ///VAT
+                                                          Flexible(
+                                                            flex: 2,
+                                                            child: Container(
+                                                              //decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
+                                                              child: Padding(
+                                                                padding: EdgeInsets.only(top: 0.0, bottom: 0.0, left: 3.0, right: 42.0),
+                                                                child: TextFormField(
+                                                                  //maxLength: 2,
+                                                                  enabled: canEditService,
+                                                                  controller: vatController,
+                                                                  keyboardType: TextInputType.number,
+                                                                  textInputAction: TextInputAction.done,
+                                                                  inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(2)],
+
+                                                                  ///Controllo sotto il 30%
+                                                                  validator: (value) => value.isEmpty
+                                                                      ? AppLocalizations.of(context).serviceVATBlank
+                                                                      : validatePrice(value)
+                                                                          ? null
+                                                                          : AppLocalizations.of(context).notValidVAT,
+                                                                  onChanged: (value) {
+                                                                    if (value == "") {
+                                                                      // setState(() {
+                                                                      //   _serviceVAT = 22;
+                                                                      //   value = "22";
+                                                                      // });
+                                                                    } else {
+                                                                      if (int.parse(value) > 25) {
+                                                                        setState(() {
+                                                                          _serviceVAT = 25;
+                                                                          vatController.text = '25';
+                                                                          vatController.selection = TextSelection.fromPosition(TextPosition(offset: vatController.text.length));
+                                                                        });
+                                                                      } else {
+                                                                        setState(() {
+                                                                          _serviceVAT = int.parse(value);
+                                                                          vatController.text = value;
+                                                                          vatController.selection = TextSelection.fromPosition(TextPosition(offset: vatController.text.length));
+                                                                        });
+                                                                      }
+                                                                    }
+                                                                  },
+                                                                  onFieldSubmitted: (value) {
+                                                                    StoreProvider.of<AppState>(context).dispatch(SetServiceVAT(_serviceVAT));
+                                                                    currentFocus.unfocus();
+                                                                  },
+                                                                  onEditingComplete: () {
+                                                                    StoreProvider.of<AppState>(context).dispatch(SetServiceVAT(_serviceVAT));
+                                                                    currentFocus.unfocus();
+                                                                  },
+                                                                  style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: canEditService ? BuytimeTheme.TextBlack : BuytimeTheme.TextGrey),
+                                                                  decoration: InputDecoration(
+                                                                    suffixText: '%',
+                                                                    suffixStyle: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextGrey,fontSize: 16),
+                                                                    labelText: AppLocalizations.of(context).serviceVAT,
+                                                                    enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                                    border: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                                    focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                                    errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
                                                         ],
                                                       ),
                                                     ),
-                                                  ),
-                                                  Container(
-                                                      width: media.width * 0.9,
-                                                      child: Wrap(
-                                                        children: [Container()],
-                                                      )),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
 
-                                          Padding(
-                                            padding: const EdgeInsets.only(top: 10.0),
-                                            child: Container(
-                                              child: Divider(
-                                                indent: 0.0,
-                                                color: BuytimeTheme.DividerGrey,
-                                                thickness: 20.0,
-                                              ),
-                                            ),
-                                          ),
-                                          Column(
-                                            children: [
-                                              Padding(
-                                                padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 30.0),
+                                              ///Address
+                                              Container(
+                                                margin: EdgeInsets.only(top: 10.0, bottom: 5.0, left: 32.0, right: 28.0),
                                                 child: Row(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                  mainAxisAlignment: MainAxisAlignment.center,
                                                   children: [
                                                     Flexible(
-                                                      child: Text(
-                                                        returnTextSwitchers(),
-                                                        textAlign: TextAlign.start,
-                                                        overflow: TextOverflow.clip,
-                                                        style: TextStyle(
-                                                          fontSize: media.height * 0.020,
-                                                          color: BuytimeTheme.TextBlack,
-                                                          fontWeight: FontWeight.w500,
-                                                        ),
-                                                      ),
+                                                      child: Container(
+                                                          width: media.width * 0.9,
+                                                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0),
+                                                          //decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
+                                                          child: TextFormField(
+                                                            enabled: false,
+                                                            readOnly: true,
+                                                            keyboardType: TextInputType.multiline,
+                                                            maxLines: null,
+                                                            controller: addressController,
+                                                            //initialValue: _serviceAddress,
+                                                            onChanged: (value) {
+                                                              _serviceAddress = value;
+                                                              StoreProvider.of<AppState>(context).dispatch(SetServiceAddress(_serviceAddress));
+                                                            },
+                                                            onSaved: (value) {
+                                                              _serviceAddress = value;
+                                                            },
+                                                            style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextGrey),
+                                                            decoration: InputDecoration(
+                                                              labelText: AppLocalizations.of(context).addressOptional,
+                                                              //hintText: AppLocalizations.of(context).addressOptional,
+                                                              enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                              border: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                              focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                              errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                            ),
+                                                          )),
                                                     ),
+                                                    IconButton(
+                                                      icon: Icon(
+                                                        Icons.add_location_rounded,
+                                                        color: canEditService ? BuytimeTheme.ManagerPrimary : BuytimeTheme.TextGrey,
+                                                      ),
+                                                      onPressed: canEditService
+                                                          ? () {
+                                                              Utils.googleSearch(context, (place) {
+                                                                //_serviceAddress = store.state.business.street + ', ' + store.state.business.street_number + ', ' + store.state.business.ZIP + ', ' + store.state.business.state_province;
+                                                                addressController.text = place[0];
+                                                                setState(() {
+                                                                  _serviceCoordinates = '${place[1]}, ${place[2]}';
+                                                                });
+                                                                StoreProvider.of<AppState>(context).dispatch(SetServiceAddress(addressController.text));
+                                                                StoreProvider.of<AppState>(context).dispatch(SetServiceCoordinates(_serviceCoordinates));
+                                                              });
+                                                            }
+                                                          : null,
+                                                    )
                                                   ],
                                                 ),
                                               ),
 
-                                              ///Switch Auto Confirm
+                                              ///Categproes
                                               Padding(
-                                                padding: const EdgeInsets.only(top: 10.0, bottom: 0.0, left: 20.0, right: 20.0),
+                                                padding: const EdgeInsets.only(left: 20.0, top: 10.0),
                                                 child: Container(
-                                                  child: Row(
-                                                    children: [
-                                                      Switch(
-                                                          activeColor: BuytimeTheme.ManagerPrimary,
-                                                          value: snapshot.serviceState.switchAutoConfirm,
-                                                          onChanged: canEditService ? (value) {
-                                                            setState(() {
-                                                              StoreProvider.of<AppState>(context).dispatch(SetServiceSwitchAutoConfirm(value));
-                                                            });
-                                                          } : (value) {
-                                                          }),
-                                                      Expanded(
-                                                        child: Text(
-                                                          AppLocalizations.of(context).managerConfirmation,
-                                                          textAlign: TextAlign.start,
-                                                          overflow: TextOverflow.clip,
-                                                          style: TextStyle(
-                                                            fontSize: media.height * 0.018,
-                                                            color: BuytimeTheme.TextGrey,
-                                                            fontWeight: FontWeight.w500,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),///Switch Cross Selling
-                                              Padding(
-                                                padding: const EdgeInsets.only(top: 10.0, bottom: 0.0, left: 20.0, right: 20.0),
-                                                child: Container(
-                                                  child: Row(
-                                                    children: [
-                                                      Switch(
-                                                          activeColor: BuytimeTheme.ManagerPrimary,
-                                                          value: snapshot.serviceState.serviceCrossSell,
-                                                          onChanged: canEditService ? (value) {
-                                                            setState(() {
-                                                              StoreProvider.of<AppState>(context).dispatch(SetServiceServiceCrossSell(value));
-                                                            });
-
-                                                          } : (value) {
-                                                          }),
-                                                      Expanded(
-                                                        child: Text(
-                                                          AppLocalizations.of(context).crossSell,
-                                                          textAlign: TextAlign.start,
-                                                          overflow: TextOverflow.clip,
-                                                          style: TextStyle(
-                                                            fontSize: media.height * 0.018,
-                                                            color: BuytimeTheme.TextGrey,
-                                                            fontWeight: FontWeight.w500,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-
-                                              ///Switch Service Bookable
-                                              Padding(
-                                                padding: const EdgeInsets.only(top: 0.0, bottom: 10.0, left: 20.0, right: 20.0),
-                                                child: Container(
-                                                  child: Row(
-                                                    children: [
-                                                      Switch(
-                                                          activeColor: BuytimeTheme.ManagerPrimary,
-                                                          value: snapshot.serviceState.switchSlots,
-                                                          onChanged: canEditService ?  (value) {
-                                                            setState(() {
-                                                              StoreProvider.of<AppState>(context).dispatch(SetServiceSwitchSlots(value));
-                                                            });
-                                                          } : (value) {
-                                                          }),
-                                                      Expanded(
-                                                        child: Text(
-                                                          AppLocalizations.of(context).serviceCanBeReserved,
-                                                          textAlign: TextAlign.start,
-                                                          overflow: TextOverflow.clip,
-                                                          style: TextStyle(
-                                                            fontSize: media.height * 0.018,
-                                                            color: BuytimeTheme.TextGrey,
-                                                            fontWeight: FontWeight.w500,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-
-                                              ///Error message Empty CategoryList
-                                              errorSwitchSlots
-                                                  ? Padding(
-                                                padding: const EdgeInsets.only(left: 30.0, bottom: 10),
-                                                child: Container(
-                                                    child: Row(
-                                                      children: [
-                                                        Flexible(
-                                                          child: Text(
-                                                            AppLocalizations.of(context).notZeroServiceSlot,
-                                                            style: TextStyle(
-                                                              fontSize: media.height * 0.018,
-                                                              color: BuytimeTheme.ErrorRed,
-                                                              fontWeight: FontWeight.w500,
-                                                            ),
-                                                            overflow: TextOverflow.clip,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    )),
-                                              )
-                                                  : Container(),
-                                            ],
-                                          ),
-
-                                          ///Divider under switch booking block
-                                          Container(
-                                            child: Divider(
-                                              indent: 0.0,
-                                              color: BuytimeTheme.DividerGrey,
-                                              thickness: 20.0,
-                                            ),
-                                          ),
-
-                                          snapshot.serviceState.switchSlots
-                                              ?
-
-                                          ///Service Resevable Slot Block
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                              left: 0.0,
-                                              right: 0.0,
-                                              bottom: 20.0,
-                                            ),
-                                            child: Column(
-                                              children: [
-                                                Padding(
-                                                  padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 35.0),
-                                                  child: Row(
-                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                  child: Column(
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
                                                     children: [
                                                       Container(
+                                                        margin: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2),
                                                         child: Text(
-                                                          AppLocalizations.of(context).serviceTimeAvailability,
+                                                          AppLocalizations.of(context).selectCategories,
                                                           textAlign: TextAlign.start,
-                                                          overflow: TextOverflow.clip,
                                                           style: TextStyle(
-                                                            fontSize: 14,
+                                                            fontSize: media.height * 0.02,
                                                             color: BuytimeTheme.TextBlack,
                                                             fontWeight: FontWeight.w500,
                                                           ),
                                                         ),
                                                       ),
                                                       Container(
-                                                          child: GestureDetector(
-                                                            child: Icon(Icons.add, color: BuytimeTheme.SymbolGrey),
-                                                            onTap: canEditService ? () {
-                                                              ///Svuoto lo stato dello slot
-                                                              StoreProvider.of<AppState>(context).dispatch(SetServiceSlotToEmpty());
-                                                              Navigator.push(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                                    builder: (context) => UI_M_ServiceSlot(
-                                                                      createSlot: true,
-                                                                      editSlot: false,
-                                                                    )),
-                                                              );
-                                                            } : null,
+                                                          width: media.width * 0.9,
+                                                          child: Wrap(
+                                                            children: _buildChoiceList(),
                                                           )),
                                                     ],
                                                   ),
                                                 ),
-                                                snapshot.serviceState.serviceSlot.length > 0
-                                                    ? Padding(
-                                                  padding: const EdgeInsets.only(left: 20.0),
-                                                  child: ConstrainedBox(
-                                                    constraints: BoxConstraints(),
-                                                    child: ListView.builder(
-                                                      shrinkWrap: true,
-                                                      physics: const NeverScrollableScrollPhysics(),
-                                                      itemCount: snapshot.serviceState.serviceSlot.length,
-                                                      itemBuilder: (context, index) {
-                                                        return Dismissible(
-                                                          key: UniqueKey(),
-                                                          direction: canEditService ? DismissDirection.endToStart : DismissDirection.none,
-                                                          background: Container(
-                                                            color: Colors.red,
-                                                            margin: EdgeInsets.symmetric(horizontal: 0),
-                                                            alignment: Alignment.centerRight,
-                                                            child: Icon(
-                                                              Icons.delete,
-                                                              color: BuytimeTheme.SymbolWhite,
+                                              ),
+
+                                              ///Error message Empty CategoryList
+                                              errorCategoryListEmpty
+                                                  ? Padding(
+                                                      padding: const EdgeInsets.only(left: 30.0, bottom: 10),
+                                                      child: Container(
+                                                          child: Row(
+                                                        children: [
+                                                          Text(
+                                                            AppLocalizations.of(context).notZeroCategory,
+                                                            style: TextStyle(
+                                                              fontSize: media.height * 0.018,
+                                                              color: BuytimeTheme.ErrorRed,
+                                                              fontWeight: FontWeight.w500,
                                                             ),
                                                           ),
-                                                          onDismissed: (direction) {
-                                                            setState(() {
-                                                              ///Deleting Slot
-                                                              StoreProvider.of<AppState>(context).dispatch(DeleteServiceSlot(index));
-                                                            });
-                                                          },
-                                                          child: GestureDetector(
-                                                            onTap: canEditService ? () {
-                                                              StoreProvider.of<AppState>(context).dispatch(SetServiceSlot(snapshot.serviceState.serviceSlot[index]));
-                                                              Navigator.push(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                                    builder: (context) => UI_M_ServiceSlot(
-                                                                      createSlot: false,
-                                                                      editSlot: true,
-                                                                      indexSlot: index,
-                                                                    )),
-                                                              );
-                                                            } : null,
-                                                            child: Padding(
-                                                              padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 0.0),
-                                                              child: Column(
+                                                        ],
+                                                      )),
+                                                    )
+                                                  : Container(),
+
+                                              ///Divider under category selection
+                                              Container(
+                                                child: Divider(
+                                                  indent: 0.0,
+                                                  color: BuytimeTheme.DividerGrey,
+                                                  thickness: 5.0,
+                                                ),
+                                              ),
+
+                                              ///Tag Block
+                                              Padding(
+                                                padding: const EdgeInsets.only(left: 30.0, top: 5.0, bottom: 10.0, right: 30.0),
+                                                child: Container(
+                                                  child: Column(
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      Text(
+                                                        AppLocalizations.of(context).tag,
+                                                        textAlign: TextAlign.start,
+                                                        style: TextStyle(
+                                                          fontSize: media.height * 0.02,
+                                                          color: BuytimeTheme.TextBlack,
+                                                          fontWeight: FontWeight.w500,
+                                                        ),
+                                                      ),
+
+                                                      ///Tags
+                                                      Padding(
+                                                        padding: const EdgeInsets.only(top: 5.0),
+                                                        child: Container(
+                                                          child: Column(
+                                                            children: [
+                                                              Row(
                                                                 children: [
+                                                                  ///Add Tag field & Add Tag Button
                                                                   Container(
-                                                                    height: 88,
-                                                                    child: ListTile(
-                                                                      title: Row(
-                                                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                        children: [
-                                                                          Text(
-                                                                            '${AppLocalizations.of(context).timeAvailabilitySpace} ' + (index + 1).toString(),
-                                                                            style: TextStyle(
-                                                                              fontSize:16,
-                                                                              color: BuytimeTheme.TextBlack,
-                                                                              fontWeight: FontWeight.w400,
-                                                                            ),
-                                                                          ),
-                                                                        ],
+                                                                    height: 45,
+                                                                    width: media.width * 0.55,
+                                                                    child: TextFormField(
+                                                                      enabled: canEditService,
+                                                                      controller: _tagServiceController,
+                                                                      textAlign: TextAlign.start,
+                                                                      decoration: InputDecoration(
+                                                                        enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                                                        border: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                                                        focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                                                        errorBorder: OutlineInputBorder(borderSide: BorderSide(color: BuytimeTheme.ErrorRed), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                                                        labelText: AppLocalizations.of(context).addNewTag,
+                                                                        labelStyle: TextStyle(
+                                                                          fontSize: 14,
+                                                                          fontFamily: BuytimeTheme.FontFamily,
+                                                                          color: BuytimeTheme.TextGrey,
+                                                                          fontWeight: FontWeight.w400,
+                                                                        ),
                                                                       ),
-                                                                      subtitle: Column(
-                                                                        mainAxisAlignment: MainAxisAlignment.start,
-                                                                        children: [
-                                                                          Container(
-                                                                            margin: EdgeInsets.only(top: 10),
-                                                                            child: Row(
-                                                                              children: [
-                                                                                Text(snapshot.serviceState.serviceSlot[index].checkIn + " - " + snapshot.serviceState.serviceSlot[index].checkOut,
-                                                                                  style: TextStyle(
-                                                                                    fontSize: 14,
-                                                                                    color: BuytimeTheme.TextBlack,
-                                                                                    fontWeight: FontWeight.w400,
-                                                                                  ),),
-                                                                              ],
-                                                                            ),
-                                                                          ),
-                                                                          Row(
-                                                                            children: [
-                                                                              Text(
-                                                                                snapshot.serviceState.serviceSlot[index].price.toString().split('.')[1] == '0' ?
-                                                                                snapshot.serviceState.serviceSlot[index].price.toString().split('.')[0] + ' ${AppLocalizations.of(context).spaceEuro}' :
-                                                                                       snapshot.serviceState.serviceSlot[index].price.toStringAsFixed(2) + ' ${AppLocalizations.of(context).spaceEuro}',
-                                                                                style: TextStyle(
-                                                                                  fontSize: 14,
-                                                                                  color: BuytimeTheme.TextBlack,
-                                                                                  fontWeight: FontWeight.w400,
-                                                                                ),),
-                                                                            ],
-                                                                          ),
-                                                                          //showSlotInterval(snapshot.serviceState.serviceSlot[index].numberOfInterval, media, index),
-                                                                        ],
+                                                                      style: TextStyle(
+                                                                        fontFamily: BuytimeTheme.FontFamily,
+                                                                        color: BuytimeTheme.TextGrey,
+                                                                        fontWeight: FontWeight.w800,
                                                                       ),
                                                                     ),
                                                                   ),
+
+                                                                  ///Add tag button
                                                                   Container(
-                                                                    height: 1,
-                                                                    color: BuytimeTheme.DividerGrey,
-                                                                    margin: EdgeInsets.only(left: 20),
-                                                                  )
+                                                                    child: IconButton(
+                                                                      icon: Icon(
+                                                                        Icons.add_circle_rounded,
+                                                                        size: 30,
+                                                                        color: BuytimeTheme.TextGrey,
+                                                                      ),
+                                                                      onPressed: canEditService
+                                                                          ? () {
+                                                                              setState(() {
+                                                                                if (_tagServiceController.text.isNotEmpty) {
+                                                                                  snapshot.serviceState.tag.add(_tagServiceController.text);
+                                                                                  _tagServiceController.clear();
+                                                                                }
+                                                                              });
+                                                                            }
+                                                                          : null,
+                                                                    ),
+                                                                  ),
                                                                 ],
+                                                              ),
+                                                              (snapshot.serviceState.tag.length > 0 && snapshot.serviceState.tag != null)
+                                                                  ? Align(
+                                                                      alignment: Alignment.topLeft,
+                                                                      child: Wrap(
+                                                                        spacing: 3.0,
+                                                                        runSpacing: 3.0,
+                                                                        children: List<Widget>.generate(snapshot.serviceState.tag.length, (int index) {
+                                                                          return InputChip(
+                                                                            selected: false,
+                                                                            label: Text(
+                                                                              snapshot.serviceState.tag[index],
+                                                                              style: TextStyle(
+                                                                                fontSize: 13.0,
+                                                                                fontWeight: FontWeight.w500,
+                                                                              ),
+                                                                            ),
+                                                                            onDeleted: canEditService
+                                                                                ? () {
+                                                                                    setState(() {
+                                                                                      snapshot.serviceState.tag.remove(snapshot.serviceState.tag[index]);
+                                                                                    });
+                                                                                  }
+                                                                                : null,
+                                                                          );
+                                                                        }),
+                                                                      ),
+                                                                    )
+                                                                  : Container()
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Container(
+                                                          width: media.width * 0.9,
+                                                          child: Wrap(
+                                                            children: [Container()],
+                                                          )),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+
+                                              Padding(
+                                                padding: const EdgeInsets.only(top: 10.0),
+                                                child: Container(
+                                                  child: Divider(
+                                                    indent: 0.0,
+                                                    color: BuytimeTheme.DividerGrey,
+                                                    thickness: 20.0,
+                                                  ),
+                                                ),
+                                              ),
+                                              Column(
+                                                children: [
+                                                  Padding(
+                                                    padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 30.0),
+                                                    child: Row(
+                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                      children: [
+                                                        Flexible(
+                                                          child: Text(
+                                                            returnTextSwitchers(),
+                                                            textAlign: TextAlign.start,
+                                                            overflow: TextOverflow.clip,
+                                                            style: TextStyle(
+                                                              fontSize: media.height * 0.020,
+                                                              color: BuytimeTheme.TextBlack,
+                                                              fontWeight: FontWeight.w500,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+
+                                                  ///Switch Auto Confirm
+                                                  Padding(
+                                                    padding: const EdgeInsets.only(top: 10.0, bottom: 0.0, left: 20.0, right: 20.0),
+                                                    child: Container(
+                                                      child: Row(
+                                                        children: [
+                                                          Switch(
+                                                              activeColor: BuytimeTheme.ManagerPrimary,
+                                                              value: snapshot.serviceState.switchAutoConfirm,
+                                                              onChanged: canEditService
+                                                                  ? (value) {
+                                                                      setState(() {
+                                                                        StoreProvider.of<AppState>(context).dispatch(SetServiceSwitchAutoConfirm(value));
+                                                                      });
+                                                                    }
+                                                                  : (value) {}),
+                                                          Expanded(
+                                                            child: Text(
+                                                              AppLocalizations.of(context).managerConfirmation,
+                                                              textAlign: TextAlign.start,
+                                                              overflow: TextOverflow.clip,
+                                                              style: TextStyle(
+                                                                fontSize: media.height * 0.018,
+                                                                color: BuytimeTheme.TextGrey,
+                                                                fontWeight: FontWeight.w500,
                                                               ),
                                                             ),
                                                           ),
-                                                        );
-                                                      },
+                                                        ],
+                                                      ),
                                                     ),
                                                   ),
-                                                )
-                                                    : Padding(
-                                                  padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 12.0),
-                                                  child: Row(
-                                                    children: [
-                                                      Flexible(
-                                                        flex: 1,
-                                                        child: Container(
-                                                          height: SizeConfig.safeBlockVertical * 5,
-                                                          margin: EdgeInsets.only(left: 20, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * .5),
-                                                          decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(5)),
-                                                          child: Center(
-                                                              child: Container(
-                                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 1),
-                                                                alignment: Alignment.center,
-                                                                child: Text(
-                                                                  (snapshot.serviceState.name != null && snapshot.serviceState.name != ""
-                                                                      ? Utils.retriveField(Localizations.localeOf(context).languageCode, snapshot.serviceState.name)
-                                                                      : AppLocalizations.of(context).theService) + ' ' +
-                                                                      AppLocalizations.of(context).spaceHasNotReservableSlots,
-                                                                  style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextGrey, fontWeight: FontWeight.w500, fontSize: 14),
-                                                                ),
-                                                              )),
-                                                        ))],
+
+                                                  ///Switch Cross Selling
+                                                  Padding(
+                                                    padding: const EdgeInsets.only(top: 10.0, bottom: 0.0, left: 20.0, right: 20.0),
+                                                    child: Container(
+                                                      child: Row(
+                                                        children: [
+                                                          Switch(
+                                                              activeColor: BuytimeTheme.ManagerPrimary,
+                                                              value: snapshot.serviceState.serviceCrossSell,
+                                                              onChanged: canEditService
+                                                                  ? (value) {
+                                                                      setState(() {
+                                                                        StoreProvider.of<AppState>(context).dispatch(SetServiceServiceCrossSell(value));
+                                                                      });
+                                                                    }
+                                                                  : (value) {}),
+                                                          Expanded(
+                                                            child: Text(
+                                                              AppLocalizations.of(context).crossSell,
+                                                              textAlign: TextAlign.start,
+                                                              overflow: TextOverflow.clip,
+                                                              style: TextStyle(
+                                                                fontSize: media.height * 0.018,
+                                                                color: BuytimeTheme.TextGrey,
+                                                                fontWeight: FontWeight.w500,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
                                                   ),
+
+                                                  ///Switch Service Bookable
+                                                  Padding(
+                                                    padding: const EdgeInsets.only(top: 0.0, bottom: 10.0, left: 20.0, right: 20.0),
+                                                    child: Container(
+                                                      child: Row(
+                                                        children: [
+                                                          Switch(
+                                                              activeColor: BuytimeTheme.ManagerPrimary,
+                                                              value: snapshot.serviceState.switchSlots,
+                                                              onChanged: canEditService
+                                                                  ? (value) {
+                                                                      setState(() {
+                                                                        StoreProvider.of<AppState>(context).dispatch(SetServiceSwitchSlots(value));
+                                                                      });
+                                                                    }
+                                                                  : (value) {}),
+                                                          Expanded(
+                                                            child: Text(
+                                                              AppLocalizations.of(context).serviceCanBeReserved,
+                                                              textAlign: TextAlign.start,
+                                                              overflow: TextOverflow.clip,
+                                                              style: TextStyle(
+                                                                fontSize: media.height * 0.018,
+                                                                color: BuytimeTheme.TextGrey,
+                                                                fontWeight: FontWeight.w500,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+
+                                                  ///Error message Empty CategoryList
+                                                  errorSwitchSlots
+                                                      ? Padding(
+                                                          padding: const EdgeInsets.only(left: 30.0, bottom: 10),
+                                                          child: Container(
+                                                              child: Row(
+                                                            children: [
+                                                              Flexible(
+                                                                child: Text(
+                                                                  AppLocalizations.of(context).notZeroServiceSlot,
+                                                                  style: TextStyle(
+                                                                    fontSize: media.height * 0.018,
+                                                                    color: BuytimeTheme.ErrorRed,
+                                                                    fontWeight: FontWeight.w500,
+                                                                  ),
+                                                                  overflow: TextOverflow.clip,
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          )),
+                                                        )
+                                                      : Container(),
+                                                ],
+                                              ),
+
+                                              ///Divider under switch booking block
+                                              Container(
+                                                child: Divider(
+                                                  indent: 0.0,
+                                                  color: BuytimeTheme.DividerGrey,
+                                                  thickness: 20.0,
                                                 ),
-                                              ],
-                                            ),
-                                          )
-                                              : Container(),
-                                        ],
+                                              ),
+
+                                              snapshot.serviceState.switchSlots
+                                                  ?
+
+                                                  ///Service Resevable Slot Block
+                                                  Padding(
+                                                      padding: const EdgeInsets.only(
+                                                        left: 0.0,
+                                                        right: 0.0,
+                                                        bottom: 20.0,
+                                                      ),
+                                                      child: Column(
+                                                        children: [
+                                                          Padding(
+                                                            padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 35.0),
+                                                            child: Row(
+                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                              children: [
+                                                                Container(
+                                                                  child: Text(
+                                                                    AppLocalizations.of(context).serviceTimeAvailability,
+                                                                    textAlign: TextAlign.start,
+                                                                    overflow: TextOverflow.clip,
+                                                                    style: TextStyle(
+                                                                      fontSize: 14,
+                                                                      color: BuytimeTheme.TextBlack,
+                                                                      fontWeight: FontWeight.w500,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                Container(
+                                                                    child: GestureDetector(
+                                                                  child: Icon(Icons.add, color: BuytimeTheme.SymbolGrey),
+                                                                  onTap: canEditService
+                                                                      ? () {
+                                                                          ///Svuoto lo stato dello slot
+                                                                          StoreProvider.of<AppState>(context).dispatch(SetServiceSlotToEmpty());
+                                                                          Navigator.push(
+                                                                            context,
+                                                                            MaterialPageRoute(
+                                                                                builder: (context) => UI_M_ServiceSlot(
+                                                                                      createSlot: true,
+                                                                                      editSlot: false,
+                                                                                    )),
+                                                                          );
+                                                                        }
+                                                                      : null,
+                                                                )),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                          snapshot.serviceState.serviceSlot.length > 0
+                                                              ? Padding(
+                                                                  padding: const EdgeInsets.only(left: 20.0),
+                                                                  child: ConstrainedBox(
+                                                                    constraints: BoxConstraints(),
+                                                                    child: ListView.builder(
+                                                                      shrinkWrap: true,
+                                                                      physics: const NeverScrollableScrollPhysics(),
+                                                                      itemCount: snapshot.serviceState.serviceSlot.length,
+                                                                      itemBuilder: (context, index) {
+                                                                        return Dismissible(
+                                                                          key: UniqueKey(),
+                                                                          direction: canEditService ? DismissDirection.endToStart : DismissDirection.none,
+                                                                          background: Container(
+                                                                            color: Colors.red,
+                                                                            margin: EdgeInsets.symmetric(horizontal: 0),
+                                                                            alignment: Alignment.centerRight,
+                                                                            child: Icon(
+                                                                              Icons.delete,
+                                                                              color: BuytimeTheme.SymbolWhite,
+                                                                            ),
+                                                                          ),
+                                                                          onDismissed: (direction) {
+                                                                            setState(() {
+                                                                              ///Deleting Slot
+                                                                              StoreProvider.of<AppState>(context).dispatch(DeleteServiceSlot(index));
+                                                                            });
+                                                                          },
+                                                                          child: GestureDetector(
+                                                                            onTap: canEditService
+                                                                                ? () {
+                                                                                    StoreProvider.of<AppState>(context).dispatch(SetServiceSlot(snapshot.serviceState.serviceSlot[index]));
+                                                                                    Navigator.push(
+                                                                                      context,
+                                                                                      MaterialPageRoute(
+                                                                                          builder: (context) => UI_M_ServiceSlot(
+                                                                                                createSlot: false,
+                                                                                                editSlot: true,
+                                                                                                indexSlot: index,
+                                                                                              )),
+                                                                                    );
+                                                                                  }
+                                                                                : null,
+                                                                            child: Padding(
+                                                                              padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 0.0),
+                                                                              child: Column(
+                                                                                children: [
+                                                                                  Container(
+                                                                                    height: 88,
+                                                                                    child: ListTile(
+                                                                                      title: Row(
+                                                                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                                        children: [
+                                                                                          Text(
+                                                                                            '${AppLocalizations.of(context).timeAvailabilitySpace} ' + (index + 1).toString(),
+                                                                                            style: TextStyle(
+                                                                                              fontSize: 16,
+                                                                                              color: BuytimeTheme.TextBlack,
+                                                                                              fontWeight: FontWeight.w400,
+                                                                                            ),
+                                                                                          ),
+                                                                                        ],
+                                                                                      ),
+                                                                                      subtitle: Column(
+                                                                                        mainAxisAlignment: MainAxisAlignment.start,
+                                                                                        children: [
+                                                                                          Container(
+                                                                                            margin: EdgeInsets.only(top: 10),
+                                                                                            child: Row(
+                                                                                              children: [
+                                                                                                Text(
+                                                                                                  snapshot.serviceState.serviceSlot[index].checkIn + " - " + snapshot.serviceState.serviceSlot[index].checkOut,
+                                                                                                  style: TextStyle(
+                                                                                                    fontSize: 14,
+                                                                                                    color: BuytimeTheme.TextBlack,
+                                                                                                    fontWeight: FontWeight.w400,
+                                                                                                  ),
+                                                                                                ),
+                                                                                              ],
+                                                                                            ),
+                                                                                          ),
+                                                                                          Row(
+                                                                                            children: [
+                                                                                              Text(
+                                                                                                snapshot.serviceState.serviceSlot[index].price.toString().split('.')[1] == '0' ? snapshot.serviceState.serviceSlot[index].price.toString().split('.')[0] + ' ${AppLocalizations.of(context).spaceEuro}' : snapshot.serviceState.serviceSlot[index].price.toStringAsFixed(2) + ' ${AppLocalizations.of(context).spaceEuro}',
+                                                                                                style: TextStyle(
+                                                                                                  fontSize: 14,
+                                                                                                  color: BuytimeTheme.TextBlack,
+                                                                                                  fontWeight: FontWeight.w400,
+                                                                                                ),
+                                                                                              ),
+                                                                                            ],
+                                                                                          ),
+                                                                                          //showSlotInterval(snapshot.serviceState.serviceSlot[index].numberOfInterval, media, index),
+                                                                                        ],
+                                                                                      ),
+                                                                                    ),
+                                                                                  ),
+                                                                                  Container(
+                                                                                    height: 1,
+                                                                                    color: BuytimeTheme.DividerGrey,
+                                                                                    margin: EdgeInsets.only(left: 20),
+                                                                                  )
+                                                                                ],
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        );
+                                                                      },
+                                                                    ),
+                                                                  ),
+                                                                )
+                                                              : Padding(
+                                                                  padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 12.0),
+                                                                  child: Row(
+                                                                    children: [
+                                                                      Flexible(
+                                                                          flex: 1,
+                                                                          child: Container(
+                                                                            height: SizeConfig.safeBlockVertical * 5,
+                                                                            margin: EdgeInsets.only(left: 20, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * .5),
+                                                                            decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(5)),
+                                                                            child: Center(
+                                                                                child: Container(
+                                                                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 1),
+                                                                              alignment: Alignment.center,
+                                                                              child: Text(
+                                                                                (snapshot.serviceState.name != null && snapshot.serviceState.name != "" ? Utils.retriveField(Localizations.localeOf(context).languageCode, snapshot.serviceState.name) : AppLocalizations.of(context).theService) + ' ' + AppLocalizations.of(context).spaceHasNotReservableSlots,
+                                                                                style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextGrey, fontWeight: FontWeight.w500, fontSize: 14),
+                                                                              ),
+                                                                            )),
+                                                                          ))
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                        ],
+                                                      ),
+                                                    )
+                                                  : Container(),
+                                            ],
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              ),
-                            )))) :
-                Positioned.fill(
-                    child: Align(
-                        alignment: Alignment.topCenter,
-                        child: Scaffold(
-                            appBar: BuytimeAppbar(
-                              width: media.width,
-                              children: [
-                                Container(
-                                    child: IconButton(
-                                        icon: Icon(Icons.keyboard_arrow_left, color: Colors.white, size: 24),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
+                                ))))
+                    : Positioned.fill(
+                        child: Align(
+                            alignment: Alignment.topCenter,
+                            child: Scaffold(
+                                appBar: BuytimeAppbar(
+                                  width: media.width,
+                                  children: [
+                                    Container(
+                                        child: IconButton(
+                                            icon: Icon(Icons.keyboard_arrow_left, color: Colors.white, size: 24),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
 
-                                          //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_ServiceList()),);
-                                          //Navigator.pushReplacement(context, EnterExitRoute(enterPage: UI_M_ServiceList(), exitPage: UI_EditService(), from: false));
-                                        })),
-                                Flexible(
-                                  child: Utils.barTitle('${AppLocalizations.of(context).editSpace}' + widget.serviceName),
-                                ),
-                                Container(
-                                  child: IconButton(
+                                              //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_ServiceList()),);
+                                              //Navigator.pushReplacement(context, EnterExitRoute(enterPage: UI_M_ServiceList(), exitPage: UI_EditService(), from: false));
+                                            })),
+                                    Flexible(
+                                      child: Utils.barTitle('${AppLocalizations.of(context).editSpace}' + widget.serviceName),
+                                    ),
+                                    Container(
+                                        child: IconButton(
                                       icon: Icon(Icons.check, color: BuytimeTheme.SymbolLightGrey),
                                       onPressed: null,
-                                  )
+                                    )),
+                                  ],
                                 ),
-                              ],
-                            ),
-                            body: SafeArea(
-                              child: Center(
-                                child: SingleChildScrollView(
-                                  child: ConstrainedBox(
-                                    constraints: BoxConstraints(),
-                                    child: Center(
-                                      child: CircularProgressIndicator(),
+                                body: SafeArea(
+                                  child: Center(
+                                    child: SingleChildScrollView(
+                                      child: ConstrainedBox(
+                                        constraints: BoxConstraints(),
+                                        child: Center(
+                                          child: CircularProgressIndicator(),
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ),
-                            )))) ,
+                                )))),
+
                 ///Ripple Effect
-                rippleTranslate ?
-                Positioned.fill(
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: Container(
-                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3),
-                        height: double.infinity,
-                        decoration: BoxDecoration(
-                          color: BuytimeTheme.BackgroundWhite.withOpacity(.8),
-                        ),
-                        child: Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Container(
-                                width: SizeConfig.safeBlockVertical * 20,
-                                height: SizeConfig.safeBlockVertical * 20,
-                                child: Center(
-                                  child: SpinKitRipple(
-                                    color: BuytimeTheme.ManagerPrimary,
-                                    size: SizeConfig.safeBlockVertical * 18,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        )),
-                  ),
-                ):
-                rippleLoading
+                rippleTranslate
                     ? Positioned.fill(
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: Container(
-                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3),
-                        height: double.infinity,
-                        decoration: BoxDecoration(
-                          color: BuytimeTheme.BackgroundCerulean.withOpacity(.8),
-                        ),
-                        child: Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Container(
-                                width: SizeConfig.safeBlockVertical * 20,
-                                height: SizeConfig.safeBlockVertical * 20,
-                                child: Center(
-                                  child: SpinKitRipple(
-                                    color: Colors.white,
-                                    size: SizeConfig.safeBlockVertical * 18,
-                                  ),
-                                ),
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: Container(
+                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3),
+                              height: double.infinity,
+                              decoration: BoxDecoration(
+                                color: BuytimeTheme.BackgroundWhite.withOpacity(.8),
                               ),
-                            ],
-                          ),
-                        )),
-                  ),
-                )
-                    : Container(),
+                              child: Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Container(
+                                      width: SizeConfig.safeBlockVertical * 20,
+                                      height: SizeConfig.safeBlockVertical * 20,
+                                      child: Center(
+                                        child: SpinKitRipple(
+                                          color: BuytimeTheme.ManagerPrimary,
+                                          size: SizeConfig.safeBlockVertical * 18,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )),
+                        ),
+                      )
+                    : rippleLoading
+                        ? Positioned.fill(
+                            child: Align(
+                              alignment: Alignment.center,
+                              child: Container(
+                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3),
+                                  height: double.infinity,
+                                  decoration: BoxDecoration(
+                                    color: BuytimeTheme.BackgroundCerulean.withOpacity(.8),
+                                  ),
+                                  child: Center(
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: <Widget>[
+                                        Container(
+                                          width: SizeConfig.safeBlockVertical * 20,
+                                          height: SizeConfig.safeBlockVertical * 20,
+                                          child: Center(
+                                            child: SpinKitRipple(
+                                              color: Colors.white,
+                                              size: SizeConfig.safeBlockVertical * 18,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  )),
+                            ),
+                          )
+                        : Container(),
               ]),
             );
           }),
