@@ -257,7 +257,8 @@ class OrderState {
             id_business: itemToAdd.businessId,
             id_category: itemToAdd.categoryId != null ? itemToAdd.categoryId[0] : '',
             id_owner: idOwner,
-            switchAutoConfirm: itemToAdd.switchAutoConfirm
+            switchAutoConfirm: itemToAdd.switchAutoConfirm,
+          vat: itemToAdd.vat != null && itemToAdd.vat != 0 ? itemToAdd.vat : 22
         ));
       }
       this.total += itemToAdd.price;

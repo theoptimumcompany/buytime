@@ -37,6 +37,7 @@ class ServiceSlot {
   @JsonKey(defaultValue: 0.0)
   double price = 0.0;
 
+
   ServiceSlot({
     this.numberOfInterval,
     this.switchWeek,

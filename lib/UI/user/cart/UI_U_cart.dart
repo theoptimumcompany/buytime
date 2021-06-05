@@ -10,6 +10,7 @@ import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
+import 'package:Buytime/utils/utils.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
@@ -208,7 +209,7 @@ class CartState extends State<Cart> {
                                                             debugPrint('UI_U_SearchPage => DX to DELETE');
                                                             // Show a snackbar. This snackbar could also contain "Undo" actions.
                                                             Scaffold.of(context).showSnackBar(SnackBar(
-                                                                content: Text(item.name + ' ${AppLocalizations.of(context).spaceRemoved}'),
+                                                                content: Text(Utils.retriveField(Localizations.localeOf(context).languageCode, item.name) + ' ${AppLocalizations.of(context).spaceRemoved}'),
                                                                 action: SnackBarAction(
                                                                     label: AppLocalizations.of(context).undo,
                                                                     onPressed: () {

@@ -419,7 +419,7 @@ class _RActivityManagementItemDetailsState extends State<RActivityManagementItem
                                               debugPrint('UI_U_SearchPage => DX to DELETE');
                                               // Show a snackbar. This snackbar could also contain "Undo" actions.
                                               Scaffold.of(context).showSnackBar(SnackBar(
-                                                  content: Text(item.name + AppLocalizations.of(context).spaceRemoved),
+                                                  content: Text(Utils.retriveField(Localizations.localeOf(context).languageCode, item.name) + AppLocalizations.of(context).spaceRemoved),
                                                   action: SnackBarAction(
                                                       label: AppLocalizations.of(context).undo,
                                                       onPressed: () {

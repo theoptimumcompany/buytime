@@ -219,7 +219,9 @@ class OrderReservableState {
           id_business: itemToAdd.businessId,
           id_owner: idOwner,
           id_category: itemToAdd.categoryId != null ? itemToAdd.categoryId[0] : '',
-          switchAutoConfirm: itemToAdd.switchAutoConfirm));
+          switchAutoConfirm: itemToAdd.switchAutoConfirm,
+          vat: itemToAdd.vat
+      ));
     }
     this.total += itemToAdd.price;
   }
@@ -248,7 +250,8 @@ class OrderReservableState {
       time: time,
       minutes: minutes,
       date: tmpDate,
-        switchAutoConfirm: itemToAdd.switchAutoConfirm
+        switchAutoConfirm: itemToAdd.switchAutoConfirm,
+      vat: itemToAdd.vat != null && itemToAdd.vat != 0 ? itemToAdd.vat : 22
     ));
     this.total += price;
   }

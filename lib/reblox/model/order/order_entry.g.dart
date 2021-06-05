@@ -23,6 +23,7 @@ OrderEntry _$OrderEntryFromJson(Map<String, dynamic> json) {
     switchAutoConfirm: json['switchAutoConfirm'] as bool ?? false,
     idSquareSlot: json['idSquareSlot'] as String ?? '',
     orderCapacity: json['orderCapacity'] as int,
+    vat: json['vat'] as int ?? 22,
   );
 }
 
@@ -43,4 +44,5 @@ Map<String, dynamic> _$OrderEntryToJson(OrderEntry instance) =>
       'switchAutoConfirm': instance.switchAutoConfirm,
       'idSquareSlot': instance.idSquareSlot,
       'orderCapacity': instance.orderCapacity,
+      'vat': instance.vat,
     };

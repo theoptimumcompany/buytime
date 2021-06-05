@@ -208,7 +208,7 @@ class CartReservableState extends State<CartReservable> {
                                                                   debugPrint('UI_U_CartReservable => DX to DELETE');
                                                                   // Show a snackbar. This snackbar could also contain "Undo" actions.
                                                                   Scaffold.of(context).showSnackBar(SnackBar(
-                                                                      content: Text(item.name + ' ${AppLocalizations.of(context).spaceRemoved}'),
+                                                                      content: Text(Utils.retriveField(Localizations.localeOf(context).languageCode, item.name) + ' ${AppLocalizations.of(context).spaceRemoved}'),
                                                                       action: SnackBarAction(
                                                                           label: AppLocalizations.of(context).undo,
                                                                           onPressed: () {

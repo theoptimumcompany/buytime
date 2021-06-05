@@ -689,7 +689,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                           Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                ///Add to card
+                                ///Add to cart
                                 Container(
                                     width: 158,
 

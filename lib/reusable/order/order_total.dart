@@ -20,6 +20,11 @@ class OrderTotal extends StatelessWidget {
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
     SizeConfig().init(context);
+
+    double vat = 0.0;
+    orderState.itemList.forEach((element) {
+      vat += element.price * (element.vat/100);
+    });
     return Container(
       width: media.width,
       margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3, right: SizeConfig.safeBlockHorizontal * 3),
@@ -69,11 +74,11 @@ class OrderTotal extends StatelessWidget {
                 alignment: Alignment.centerRight,
                 //margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 8),
                 child: Text(
-                  //AppLocalizations.of(context).tax + (orderState.total != null ? (orderState.total * 0.25).toStringAsFixed(2) : "0"),
-                  AppLocalizations.of(context).tax + (orderState.total != null ?
+                  AppLocalizations.of(context).vat + ' € ' + vat.toStringAsFixed(2),
+                  /*AppLocalizations.of(context).vat + (orderState.total != null ?
                   (orderState.total *
                       (StoreProvider.of<AppState>(context).state.serviceState.vat != null && StoreProvider.of<AppState>(context).state.serviceState.vat != 0 ?
-                      StoreProvider.of<AppState>(context).state.serviceState.vat/100 : 0.22)).toStringAsFixed(2) : "0"),
+                      StoreProvider.of<AppState>(context).state.serviceState.vat/100 : 0.22)).toStringAsFixed(2) : "0"),*/
                   style: TextStyle(
                       fontFamily: BuytimeTheme.FontFamily,
                       fontWeight: FontWeight.w500,
