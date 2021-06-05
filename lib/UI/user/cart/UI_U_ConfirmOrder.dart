@@ -367,7 +367,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                   } : _selectedIndex == 1 ? (){
                     debugPrint("UI_U_ConfirmOrder confirmation NATIVE");
                     confirmationNative(context, snapshot);
-                  } :  _selectedIndex == 2 ? (){
+                  } :  _selectedIndex == 2 && !disableRoomPayment ? (){
                     debugPrint("UI_U_ConfirmOrder confirmation ROOM");
                     confirmationRoom(context, snapshot);
                   } : null,
