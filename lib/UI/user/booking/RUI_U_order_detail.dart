@@ -395,6 +395,7 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
                       if (orderSnapshot!= null && orderSnapshot.data != null && !orderSnapshot.hasError && orderSnapshot.connectionState != ConnectionState.waiting) {
                         orderDetails = OrderDetailState.fromJson(orderSnapshot.data.data());
                         debugPrint('YUI_U_order_detail => PRICE: ${orderDetails.total}');
+                        debugPrint('YUI_U_order_detail => CARD TYPE: ${orderDetails.cardType}');
                       }
 
                       return Column(
@@ -861,7 +862,7 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                orderDetails.cardType != null && !orderDetails.cardType.contains('room') ?
+                                orderDetails.cardType != null && (!orderDetails.cardType.contains('room') && orderDetails.cardType.isNotEmpty) ?
                                 Container(
                                   height: 30,
                                   width: 50,
@@ -876,11 +877,11 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
                                 ) : Container(),
                                 ///Card Name
                                 Container(
-                                  margin: EdgeInsets.only(top: orderDetails.cardType != null && !orderDetails.cardType.contains('room') ? 0 : 8),
+                                  margin: EdgeInsets.only(top: orderDetails.cardType != null && !orderDetails.cardType.contains('room') && orderDetails.cardType.isNotEmpty ? 0 : 8),
                                   child: Text(
                                     orderDetails.cardType != null && orderDetails.cardType.isNotEmpty ?
                                     orderDetails.cardType.substring(0,1).toUpperCase() + orderDetails.cardType.substring(1, orderDetails.cardType.length) + '  ' :
-                                    'Sample  ',
+                                    AppLocalizations.of(context).native,
                                     style: TextStyle(
                                         fontSize: 14,
                                         fontFamily: BuytimeTheme.FontFamily,
@@ -890,7 +891,7 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
                                   ),
                                 ),
                                 ///Ending **** ....
-                                orderDetails.cardType != null && !orderDetails.cardType.contains('room') ?
+                                orderDetails.cardType != null && !orderDetails.cardType.contains('room') && orderDetails.cardType.isNotEmpty ?
                                 Text(
                                   orderDetails.cardLast4Digit != null  ?
                                   '**** ' + orderDetails.cardLast4Digit :

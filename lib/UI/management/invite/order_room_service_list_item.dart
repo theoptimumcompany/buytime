@@ -36,7 +36,7 @@ class _OrderRoomServiceListItemState extends State<OrderRoomServiceListItem> {
               borderRadius: BorderRadius.all(Radius.circular(10)),
               onTap: () async {
                 debugPrint("orderId, serviceId " + widget.orderState.orderId  + " " + widget.orderState.itemList.first.id);
-                StoreProvider.of<AppState>(context).dispatch(SetOrderDetailAndNavigateRoom(widget.orderState.orderId, widget.orderState.itemList.first.id));
+                StoreProvider.of<AppState>(context).dispatch(SetOrderDetailAndNavigatePop(widget.orderState.orderId, widget.orderState.itemList.first.id));
               },
               child: Container(
                 height: 91,  ///SizeConfig.safeBlockVertical * 15

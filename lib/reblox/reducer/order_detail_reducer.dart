@@ -48,10 +48,10 @@ class SetOrderDetailAndNavigate{
   IdState get idState => _idState;
 }
 
-class SetOrderDetailAndNavigateRoom{
+class SetOrderDetailAndNavigatePop{
   String _serviceId;
   String _orderId;
-  SetOrderDetailAndNavigateRoom( this._orderId, this._serviceId);
+  SetOrderDetailAndNavigatePop( this._orderId, this._serviceId);
   String get serviceId => _serviceId;
   String get orderId => _orderId;
 }

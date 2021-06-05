@@ -582,7 +582,7 @@ class SetOrderDetailAndNavigateRoomService implements EpicClass<AppState> {
 
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    return actions.whereType<SetOrderDetailAndNavigateRoom>().asyncMap((event) async {
+    return actions.whereType<SetOrderDetailAndNavigatePop>().asyncMap((event) async {
       /// cerco l'ordine e lo setto come order detail
       var ordersStateData = await FirebaseFirestore.instance.collection("order").doc(event.orderId).get();
       orderState = OrderState.fromJson(ordersStateData.data());

@@ -569,5 +569,6 @@
   "still": "Still",
   "serviceVATBlank": "VAT field is blank",
   "notValidVAT": "Not a valid VAT",
-  "serviceVAT": "VAT"
+  "serviceVAT": "VAT",
+  "native": "Native"
 }

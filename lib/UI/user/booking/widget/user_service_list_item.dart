@@ -1,13 +1,16 @@
 import 'package:Buytime/UI/user/booking/RUI_U_order_detail.dart';
 import 'package:Buytime/UI/user/booking/UI_U_order_details.dart';
+import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
+import 'package:Buytime/reblox/reducer/order_detail_reducer.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/utils/utils.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:intl/intl.dart';
 import 'package:share/share.dart';
 import 'package:Buytime/UI/user/service/UI_U_service_details.dart';
@@ -36,8 +39,9 @@ class _UserServiceListItemState extends State<UserServiceListItem> {
             child: InkWell(
               borderRadius: BorderRadius.all(Radius.circular(10)),
               onTap: () async {
+
+                StoreProvider.of<AppState>(context).dispatch(SetOrderDetailAndNavigatePop(widget.orderState.orderId, widget.orderState.itemList.first.id));
                 //Navigator.push(context, MaterialPageRoute(builder: (context) => OrderDetails(orderState: widget.orderState, tourist: widget.tourist, serviceState: widget.serviceState,)));
-                Navigator.push(context, MaterialPageRoute(builder: (context) => RUI_U_OrderDetail('')));
               },
               child: Container(
                 height: 91,  ///SizeConfig.safeBlockVertical * 15

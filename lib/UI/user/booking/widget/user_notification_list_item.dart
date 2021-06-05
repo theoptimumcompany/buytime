@@ -91,7 +91,7 @@ class _UserNotificationListItemState extends State<UserNotificationListItem> {
                 ){
                   widget.notificationState.opened = true;
                   StoreProvider.of<AppState>(context).dispatch(UpdateNotification(widget.notificationState));
-                  StoreProvider.of<AppState>(context).dispatch(SetOrderDetailAndNavigate(widget.notificationState.data.state));
+                  StoreProvider.of<AppState>(context).dispatch(SetOrderDetailAndNavigatePop(widget.notificationState.data.state.orderId, widget.notificationState.data.state.serviceId));
                   // Navigator.push(context, MaterialPageRoute(builder: (context) => RUI_U_OrderDetail()));
                 }
               },
