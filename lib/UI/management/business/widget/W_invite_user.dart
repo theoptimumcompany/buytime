@@ -52,58 +52,61 @@ class InviteUserState extends State<InviteUser> {
                 StoreProvider.of<AppState>(context).dispatch(BookingListRequest(StoreProvider.of<AppState>(context).state.business.id_firestore));
                 //Navigator.push(context, MaterialPageRoute(builder: (context) => BookingList(bookingList: bookingList)));
               },
-              child: Container(
-                height: 70,
-                child: Row(
-                  children: [
-                    ///QR code Icon
-                    Expanded(
-                      flex: 1,
-                      child: Container(
-                        margin: EdgeInsets.only(left: 15.0),
-                        child: Icon(
-                          Icons.qr_code_scanner,
-                          color: Colors.grey,
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 20.0),
+                child: Container(
+                  height: 70,
+                  child: Row(
+                    children: [
+                      ///QR code Icon
+                      Expanded(
+                        flex: 1,
+                        child: Container(
+                          margin: EdgeInsets.only(left: 15.0),
+                          child: Icon(
+                            Icons.qr_code_scanner,
+                            color: Colors.grey,
+                          ),
                         ),
                       ),
-                    ),
 
-                    ///Message
-                    Expanded(
-                        flex: 3,
-                        child: Container(
-                          margin: EdgeInsets.only(top: 10.0, bottom: 5.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                child: Text(
-                                  AppLocalizations.of(context).inviteUser,
-                                  style: TextStyle(color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w400, fontFamily: BuytimeTheme.FontFamily, fontSize: 16, letterSpacing: 0.15),
-                                ),
-                              ),
-                              Container(
-                                child: FittedBox(
-                                  fit: BoxFit.scaleDown,
+                      ///Message
+                      Expanded(
+                          flex: 3,
+                          child: Container(
+                            margin: EdgeInsets.only(top: 10.0, bottom: 5.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
                                   child: Text(
-                                    AppLocalizations.of(context).userJoinQR,
-                                    style: TextStyle(color: BuytimeTheme.TextMedium, fontWeight: FontWeight.w400, fontFamily: BuytimeTheme.FontFamily, fontSize: 14, letterSpacing: 0.25),
+                                    AppLocalizations.of(context).inviteUser,
+                                    style: TextStyle(color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w400, fontFamily: BuytimeTheme.FontFamily, fontSize: 16, letterSpacing: 0.15),
                                   ),
                                 ),
-                              )
-                            ],
-                          ),
-                        )),
+                                Container(
+                                  child: FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: Text(
+                                      AppLocalizations.of(context).userJoinQR,
+                                      style: TextStyle(color: BuytimeTheme.TextMedium, fontWeight: FontWeight.w400, fontFamily: BuytimeTheme.FontFamily, fontSize: 15, letterSpacing: 0.25),
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          )),
 
-                    ///Arrow Icon
-                    Expanded(
-                      flex: 1,
-                      child: Container(
-                        child: Icon(Icons.keyboard_arrow_right, color: Colors.grey),
-                      ),
-                    )
-                  ],
+                      ///Arrow Icon
+                      Expanded(
+                        flex: 1,
+                        child: Container(
+                          child: Icon(Icons.keyboard_arrow_right, color: Colors.grey),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),

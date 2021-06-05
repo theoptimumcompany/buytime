@@ -298,7 +298,7 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                 ),
                 ///Title
                 //Utils.barTitle(AppLocalizations.of(context).dashboard),
-                Utils.barTitle('${snapshot.business.name} ${AppLocalizations.of(context).justDashboard}'),
+                Utils.barTitle('${snapshot.business.name}'),
                 StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin ||
                     StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman ||
                     StoreProvider.of<AppState>(context).state.user.getRole() == Role.owner ? Padding(
