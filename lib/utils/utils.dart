@@ -730,6 +730,34 @@ class Utils {
     progress == Utils.enumToString(OrderStatus.creating) ?
     '${AppLocalizations.of(context).creating}' : '???';
   }
+
+  static String translateOrderStatusUser(BuildContext context, String progress) {
+    return progress == Utils.enumToString(OrderStatus.progress) ?
+    '${AppLocalizations.of(context).pending}' :
+    progress == Utils.enumToString(OrderStatus.unpaid) ?
+    '${AppLocalizations.of(context).pending}' :
+    progress == Utils.enumToString(OrderStatus.accepted) ?
+    '${AppLocalizations.of(context).accepted}' :
+    progress == Utils.enumToString(OrderStatus.paid) ?
+    '${AppLocalizations.of(context).paid}' :
+    progress == Utils.enumToString(OrderStatus.pending) ?
+    '${AppLocalizations.of(context).pending}' :
+    progress == Utils.enumToString(OrderStatus.created) ?
+    '${AppLocalizations.of(context).created}' :
+    progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout) ?
+    '${AppLocalizations.of(context).accepted}' :
+    progress == Utils.enumToString(OrderStatus.canceled) ?
+    '${AppLocalizations.of(context).canceled}' :
+    progress == Utils.enumToString(OrderStatus.frozen) ?
+    '${AppLocalizations.of(context).canceled}' :
+    progress == Utils.enumToString(OrderStatus.declined) ?
+    '${AppLocalizations.of(context).canceled}' :
+    progress == Utils.enumToString(OrderStatus.holding) ?
+    '${AppLocalizations.of(context).accepted}' :
+    progress == Utils.enumToString(OrderStatus.creating) ?
+    '${AppLocalizations.of(context).pending}' : '???';
+  }
+
   static Color colorOrderStatus(BuildContext context, String progress) {
     return progress == Utils.enumToString(OrderStatus.progress) ?
     BuytimeTheme.Secondary :
@@ -753,6 +781,33 @@ class Utils {
     BuytimeTheme.AccentRed :
     progress == Utils.enumToString(OrderStatus.holding) ?
     BuytimeTheme.Secondary :
+    progress == Utils.enumToString(OrderStatus.creating) ?
+    BuytimeTheme.Secondary : BuytimeTheme.TextBlack;
+  }
+
+  static Color colorOrderStatusUser(BuildContext context, String progress) {
+    return progress == Utils.enumToString(OrderStatus.progress) ?
+    BuytimeTheme.Secondary :
+    progress == Utils.enumToString(OrderStatus.unpaid) ?
+    BuytimeTheme.Secondary :
+    progress == Utils.enumToString(OrderStatus.accepted) ?
+    BuytimeTheme.ActionButton :
+    progress == Utils.enumToString(OrderStatus.created) ?
+    BuytimeTheme.Secondary :
+    progress == Utils.enumToString(OrderStatus.paid) ?
+    BuytimeTheme.ActionButton :
+    progress == Utils.enumToString(OrderStatus.pending) ?
+    BuytimeTheme.Secondary :
+    progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout) ?
+    BuytimeTheme.ActionButton :
+    progress == Utils.enumToString(OrderStatus.canceled) ?
+    BuytimeTheme.AccentRed :
+    progress == Utils.enumToString(OrderStatus.frozen) ?
+    BuytimeTheme.AccentRed :
+    progress == Utils.enumToString(OrderStatus.declined) ?
+    BuytimeTheme.AccentRed :
+    progress == Utils.enumToString(OrderStatus.holding) ?
+    BuytimeTheme.ActionButton :
     progress == Utils.enumToString(OrderStatus.creating) ?
     BuytimeTheme.Secondary : BuytimeTheme.TextBlack;
   }

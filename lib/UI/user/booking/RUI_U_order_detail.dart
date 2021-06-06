@@ -734,21 +734,43 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
                             color: BuytimeTheme.DividerGrey,
                           ) : Container(),
                           ///Order status
-                          Container(
-                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
-                            child: FittedBox(
-                              fit: BoxFit.scaleDown,
-                              child: Text(
-                                Utils.translateOrderStatus(context, orderDetails.progress).toUpperCase(),
-                                style: TextStyle(
-                                    letterSpacing: 1.5,
-                                    fontFamily: BuytimeTheme.FontFamily,
-                                    color: Utils.colorOrderStatus(context, orderDetails.progress),
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
+                          Row(
+                            children: [
+                              Container(
+                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 1, top: SizeConfig.safeBlockVertical * 2),
+                                child: FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: Text(
+                                    Utils.translateOrderStatusUser(context, orderDetails.progress).toUpperCase(),
+                                    style: TextStyle(
+                                        letterSpacing: 1.5,
+                                        fontFamily: BuytimeTheme.FontFamily,
+                                        color: Utils.colorOrderStatusUser(context, orderDetails.progress),
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
+                              orderDetails.progress == Utils.enumToString(OrderStatus.paid) ||
+                                  orderDetails.progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout) ?
+                              Container(
+                                margin: EdgeInsets.only( right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                child: FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: Text(
+                                    " - " + AppLocalizations.of(context).paid,
+                                    style: TextStyle(
+                                        letterSpacing: 1.5,
+                                        fontFamily: BuytimeTheme.FontFamily,
+                                        color: Utils.colorOrderStatusUser(context, orderDetails.progress),
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
+                                    ),
+                                  ),
+                                ),
+                              ): Container()
+                            ],
                           ),
                           ///Date
                           Container(
