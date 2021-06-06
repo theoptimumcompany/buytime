@@ -721,17 +721,17 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
       if (snapshot.orderReservable.isOrderAutoConfirmable()) {
         if (Utils.getTimeInterval(orderReservableState) == OrderTimeInterval.directPayment) {
           StoreProvider.of<AppState>(context).dispatch(CreateOrderReservableNativeAndPay(
-              snapshot.orderReservable, paymentMethod, PaymentType.card, context, snapshot.business.stripeCustomerId));
+              snapshot.orderReservable, paymentMethod, PaymentType.native, context, snapshot.business.stripeCustomerId));
         } else if (Utils.getTimeInterval(orderReservableState) == OrderTimeInterval.holdAndReminder) {
           StoreProvider.of<AppState>(context).dispatch(CreateOrderReservableNativeAndHold(
-              snapshot.orderReservable, paymentMethod, PaymentType.card, context, snapshot.business.stripeCustomerId));
+              snapshot.orderReservable, paymentMethod, PaymentType.native, context, snapshot.business.stripeCustomerId));
         } else if (Utils.getTimeInterval(orderReservableState) == OrderTimeInterval.reminder) {
           StoreProvider.of<AppState>(context).dispatch(CreateOrderReservableNativeAndReminder(
-              snapshot.orderReservable, paymentMethod, PaymentType.card, context, snapshot.business.stripeCustomerId));
+              snapshot.orderReservable, paymentMethod, PaymentType.native, context, snapshot.business.stripeCustomerId));
         }
       } else {
         StoreProvider.of<AppState>(context).dispatch(CreateOrderReservableNativePending(
-            snapshot.orderReservable, paymentMethod, PaymentType.card, context, snapshot.business.stripeCustomerId));
+            snapshot.orderReservable, paymentMethod, PaymentType.native, context, snapshot.business.stripeCustomerId));
       }
     } else {
       /// Direct Native Payment

@@ -731,11 +731,11 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                           child: FittedBox(
                             fit: BoxFit.scaleDown,
                             child: Text(
-                              Utils.translateOrderStatus(context, widget.orderState.progress).toUpperCase(),
+                              Utils.translateOrderStatusUser(context, widget.orderState.progress).toUpperCase(),
                               style: TextStyle(
                                   letterSpacing: 1.5,
                                   fontFamily: BuytimeTheme.FontFamily,
-                                  color: Utils.colorOrderStatus(context, widget.orderState.progress),
+                                  color: Utils.colorOrderStatusUser(context, widget.orderState.progress),
                                   fontWeight: FontWeight.w600,
                                   fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
                               ),
