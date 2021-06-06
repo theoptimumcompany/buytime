@@ -98,6 +98,15 @@ class CreateCategory {
   CategoryState get categoryState => _categoryState;
 }
 
+class CreateDefaultCategory {
+  CategoryState _categoryState;
+  String _businessId;
+  CreateDefaultCategory(this._categoryState, this._businessId);
+
+  CategoryState get categoryState => _categoryState;
+  String get businessId => _businessId;
+}
+
 class CreatedCategory {
   CategoryState _categoryState;
 

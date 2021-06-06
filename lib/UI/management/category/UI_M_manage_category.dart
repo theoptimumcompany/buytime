@@ -625,7 +625,7 @@ class ManageCategoryState extends State<ManageCategory> with SingleTickerProvide
           //store.dispatch(CategoryTreeRequest());
           store.state.categoryList.categoryListState.clear();
           //store.state.categoryTree.categoryNodeList.clear();
-          store.dispatch(CategoryTreeCreateIfNotExists(store.state.business.id_firestore, context));
+          store.dispatch(CategoryTreeCreateIfNotExists(store.state.business.id_firestore));
           startRequest = true;
         },
         builder: (context, snapshot) {

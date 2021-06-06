@@ -8,6 +8,7 @@ import 'package:Buytime/reblox/reducer/category_tree_reducer.dart';
 import 'package:Buytime/reblox/model/snippet/parent.dart';
 import 'package:Buytime/reblox/reducer/statistics_reducer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:emojis/emojis.dart';
 import 'package:flutter/material.dart';
 import 'package:redux_epics/redux_epics.dart';
 import 'package:rxdart/rxdart.dart';
@@ -19,7 +20,7 @@ class CategoryTreeCreateIfNotExistsService implements EpicClass<AppState> {
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<CategoryTreeCreateIfNotExists>().asyncMap((event) {
       debugPrint("CATEGORY_TREE_SERVICE_EPIC - CategoryTreeCreateIfNotExistsService => CategoryNode exists?");
-      CollectionReference collectionReference = FirebaseFirestore.instance.collection("business").doc(store.state.business.id_firestore).collection("category_tree");
+      CollectionReference collectionReference = FirebaseFirestore.instance.collection("business").doc(event.idFirestore).collection("category_tree");
 
       /// 1 READ - ? DOC
       int docs = 0;
@@ -182,6 +183,8 @@ class CategoryTreeAddService implements EpicClass<AppState> {
     return actions
         .whereType<AddCategoryTree>()
         .asyncMap((event) async {
+          print(event.selectedParent.name);
+
           if (store.state.categoryTree.categoryNodeList != null && store.state.categoryTree.categoryNodeList.isNotEmpty) {
             updateLevel = store.state.categoryTree.nodeLevel;
             updateNumberOfCategories = store.state.categoryTree.numberOfCategories;
@@ -190,20 +193,11 @@ class CategoryTreeAddService implements EpicClass<AppState> {
             updateNumberOfCategories = 0;
           }
 
-          debugPrint("CATEGORY_TREE_SERVICE_EPIC - CategoryTreeAddService => CategorySnippetService adding category tree");
-          print('CATEGORY_TREE_SERVICE_EPIC - CategoryTreeAddService => ${event.selectedParent}');
           Parent selected = event.selectedParent;
           List<dynamic> listNode = store.state.categoryTree.categoryNodeList;
           CategoryTree categoryTree = store.state.categoryTree;
-          debugPrint("CATEGORY_TREE_SERVICE_EPIC - CategoryTreeAddService => Lista Iniziale " + listNode.toString());
-          debugPrint("CATEGORY_TREE_SERVICE_EPIC - CategoryTreeAddService => Parent : " + selected.name + " " + selected.id + " " + selected.level.toString());
           List<dynamic> newlistNode = addTree(listNode, selected.id, store);
-          debugPrint("CATEGORY_TREE_SERVICE_EPIC - CategoryTreeAddService => *******");
-          print(newlistNode);
-          debugPrint("CATEGORY_TREE_SERVICE_EPIC - CategoryTreeAddService => *******");
           CategoryTree newCategoryNode = CategoryTree(nodeName: "root", nodeId: "root", nodeLevel: updateLevel, numberOfCategories: updateNumberOfCategories, categoryNodeList: newlistNode);
-          debugPrint("CATEGORY_TREE_SERVICE_EPIC - CategoryTreeAddService => Dopo creazione category node");
-          debugPrint('CATEGORY_TREE_SERVICE_EPIC - CategoryTreeAddService => ${store.state.business.id_firestore}');
 
           QuerySnapshot query = await FirebaseFirestore.instance
 
@@ -535,5 +529,102 @@ class CategoryTreeUpdateService implements EpicClass<AppState> {
         .expand((element) => [
               UpdateStatistics(statisticsState),
             ]);
+  }
+}
+
+class DefaultCategoryTreeAddService implements EpicClass<AppState> {
+  int updateLevel;
+  int updateNumberOfCategories;
+  CategoryState categoryState;
+
+  addDefaultTree(List<dynamic> list, String id, CategoryTree categoryTree) {
+    if (id == "no_parent") {
+      List<dynamic> newNode = [];
+      Map<dynamic, dynamic> newNodeMap = {
+        "nodeName": categoryState.name,
+        "nodeId": categoryState.id,
+        "level": 0,
+        "nodeCategory": null,
+        "categoryRootId": categoryState.parent.parentRootId,
+      };
+      updateNumberOfCategories = updateNumberOfCategories + 1;
+
+      if (list == null) {
+        newNode.add(newNodeMap);
+        list = [];
+        list = newNode;
+        return list;
+      } else {
+        list.add(newNodeMap);
+        return list;
+      }
+    } else {
+      if (list != null) {
+        for (int i = 0; i < list.length; i++) {
+          if (list[i]['nodeId'] == id) {
+            List<dynamic> newNode = new List<dynamic>();
+            Map<dynamic, dynamic> newNodeMap = {
+              "nodeName": categoryState.name,
+              "nodeId": categoryState.id,
+              "level": categoryState.level,
+              "nodeCategory": null,
+              "categoryRootId": categoryState.parent.parentRootId,
+            };
+            updateLevel = updateLevel < categoryState.level ? categoryState.level : updateLevel;
+            updateNumberOfCategories = updateNumberOfCategories + 1;
+            newNode.add(newNodeMap);
+
+            if (list[i]['nodeCategory'] == null) {
+              list[i]['nodeCategory'] = newNode;
+              return list;
+            } else {
+              list[i]['nodeCategory'].add(newNodeMap);
+
+              return list;
+            }
+          } else {
+            if (list[i]['nodeCategory'] != null) {
+              List<dynamic> attach = addDefaultTree(list[i]['nodeCategory'], id, categoryTree);
+              list[i]['nodeCategory'] = attach;
+            }
+          }
+        }
+      }
+
+      return list;
+    }
+  }
+
+  @override
+  Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
+    return actions.whereType<AddDefaultCategoryTree>().asyncMap((event) async {
+      categoryState = event.categoryState;
+
+      QuerySnapshot queryTree = await FirebaseFirestore.instance.collection("business").doc(categoryState.businessId).collection("category_tree").get();
+      CategoryTree categoryTree = CategoryTree.fromJson(queryTree.docs[0].data());
+
+      if (categoryTree.categoryNodeList != null && categoryTree.categoryNodeList.isNotEmpty) {
+        updateLevel = categoryTree.nodeLevel;
+        updateNumberOfCategories = categoryTree.numberOfCategories;
+      } else {
+        updateLevel = 0;
+        updateNumberOfCategories = 0;
+      }
+
+      Parent selected = categoryState.parent;
+      List<dynamic> listNode = categoryTree.categoryNodeList;
+
+      List<dynamic> newlistNode = addDefaultTree(listNode, selected.id, categoryTree);
+
+      CategoryTree newCategoryNode = CategoryTree(nodeName: "root", nodeId: "root", nodeLevel: updateLevel, numberOfCategories: updateNumberOfCategories, categoryNodeList: newlistNode);
+
+      QuerySnapshot query = await FirebaseFirestore.instance.collection("business").doc(categoryState.businessId).collection("category_tree").get();
+
+      query.docs.forEach((document) {
+        document.reference.update(newCategoryNode.toJson()).then((value) {
+          debugPrint("CATEGORY_TREE_SERVICE_EPIC - CategoryTreeAddService => Category Node Service should be updated online ");
+        });
+      });
+    });
   }
 }

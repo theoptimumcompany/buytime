@@ -201,7 +201,10 @@ void main() {
     NotificationRequestService(),
     NotificationListRequestService(),
     NotificationUpdateRequestService(),
-    SlotListSnippetRequestService()
+    SlotListSnippetRequestService(),
+    BusinessCreateGenerateDefaultCategoryService(),
+    DefaultCategoryCreateService(),
+    DefaultCategoryTreeAddService()
   ]);
   final _initialState = AppState(
       category: CategoryState().toEmpty(),

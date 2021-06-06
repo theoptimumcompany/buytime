@@ -87,6 +87,14 @@ class UpdatedBusiness {
   BusinessState get businessState => _businessState;
 }
 
+class GenerateDefaultCategory {
+  BusinessState _businessState;
+
+  GenerateDefaultCategory(this._businessState);
+
+  BusinessState get businessState => _businessState;
+}
+
 class CreateBusiness {
   BusinessState _businessState;
 

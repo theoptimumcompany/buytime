@@ -1,5 +1,6 @@
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
+import 'package:Buytime/reblox/model/category/default_category_state.dart';
 import 'package:Buytime/reblox/model/file/optimum_file_to_upload.dart';
 import 'package:Buytime/reblox/model/role/role.dart';
 import 'package:Buytime/reblox/model/service/snippet/service_snippet_state.dart';
@@ -7,11 +8,12 @@ import 'package:Buytime/reblox/model/statistics_state.dart';
 import 'package:Buytime/reblox/navigation/navigation_reducer.dart';
 import 'package:Buytime/reblox/reducer/business_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/business_reducer.dart';
+import 'package:Buytime/reblox/reducer/category_reducer.dart';
+import 'package:Buytime/reblox/reducer/category_tree_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/service_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/service_list_snippet_reducer.dart';
 import 'package:Buytime/reblox/reducer/statistics_reducer.dart';
-import 'package:Buytime/services/file_upload_service.dart'
-    if (dart.library.html) 'package:Buytime/services/file_upload_service_web.dart';
+import 'package:Buytime/services/file_upload_service.dart' if (dart.library.html) 'package:Buytime/services/file_upload_service_web.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:redux_epics/redux_epics.dart';
@@ -20,6 +22,7 @@ import 'package:rxdart/rxdart.dart';
 class BusinessListRequestService implements EpicClass<AppState> {
   List<BusinessState> businessStateList;
   StatisticsState statisticsState;
+
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<BusinessListRequest>().asyncMap((event) async {
@@ -32,32 +35,42 @@ class BusinessListRequestService implements EpicClass<AppState> {
         limit = event.limit;
       }
       if (event.userId == "any") {
-        businessListFromFirebase = await FirebaseFirestore.instance /// 1 read - ? DOC
+        businessListFromFirebase = await FirebaseFirestore.instance
+
+            /// 1 read - ? DOC
             .collection("business")
             .where("draft", isEqualTo: false)
             .limit(limit)
             .get();
       } else {
         if (event.role == Role.manager || event.role == Role.worker) {
-          businessListFromFirebase = await FirebaseFirestore.instance /// 1 READ - ? DOC
+          businessListFromFirebase = await FirebaseFirestore.instance
+
+              /// 1 READ - ? DOC
               .collection("business")
               .where("hasAccess", arrayContains: store.state.user.email)
               .limit(limit)
               .get();
         } else if (event.role == Role.owner) {
-          businessListFromFirebase = await FirebaseFirestore.instance /// 1 READ - ? DOC
+          businessListFromFirebase = await FirebaseFirestore.instance
+
+              /// 1 READ - ? DOC
               .collection("business")
               .where("ownerId", isEqualTo: store.state.user.uid)
               .limit(limit)
               .get();
         } else if (event.role == Role.salesman) {
-          businessListFromFirebase = await FirebaseFirestore.instance /// 1 READ - ? DOC
+          businessListFromFirebase = await FirebaseFirestore.instance
+
+              /// 1 READ - ? DOC
               .collection("business")
               .where("salesmanId", isEqualTo: store.state.user.uid)
               .limit(limit)
               .get();
         } else if (event.role == Role.admin) {
-          businessListFromFirebase = await FirebaseFirestore.instance /// 1 READ - ? DOC
+          businessListFromFirebase = await FirebaseFirestore.instance
+
+              /// 1 READ - ? DOC
               .collection("business")
               .limit(limit)
               .get();
@@ -66,8 +79,7 @@ class BusinessListRequestService implements EpicClass<AppState> {
 
       businessListFromFirebaseDocs = businessListFromFirebase.docs.length;
 
-      if(businessListFromFirebase.docs.isEmpty)
-        businessStateList.add(BusinessState());
+      if (businessListFromFirebase.docs.isEmpty) businessStateList.add(BusinessState());
 
       businessListFromFirebase.docs.forEach((element) {
         BusinessState businessState = BusinessState.fromJson(element.data());
@@ -90,25 +102,23 @@ class BusinessListRequestService implements EpicClass<AppState> {
       ///Return
       //return new BusinessListReturned(businessStateList);
     }).expand((element) => [
-      BusinessListReturned(businessStateList),
-      UpdateStatistics(statisticsState),
-    ]);
+          BusinessListReturned(businessStateList),
+          UpdateStatistics(statisticsState),
+        ]);
   }
 }
 
 class BusinessServiceSnippetListRequestService implements EpicClass<AppState> {
   List<ServiceSnippetState> businessServiceSnippetList;
   StatisticsState statisticsState;
+
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<BusinessServiceSnippetListRequest>().asyncMap((event) async {
       debugPrint("BUSINESS_SERVICE_EPIC - BusinessServiceSnippetListRequest => BUSINESS ID: ${event.businessId}");
       int serviceSnippetListFromFirebaseDocs = 0;
       businessServiceSnippetList = [];
-      QuerySnapshot serviceSnippetListFromFirebase = await FirebaseFirestore.instance 
-            .collection("business/" + event.businessId + "serviceListSnapshot")
-            .limit(1)
-            .get();
+      QuerySnapshot serviceSnippetListFromFirebase = await FirebaseFirestore.instance.collection("business/" + event.businessId + "serviceListSnapshot").limit(1).get();
 
       serviceSnippetListFromFirebaseDocs = serviceSnippetListFromFirebase.docs.length;
 
@@ -118,11 +128,10 @@ class BusinessServiceSnippetListRequestService implements EpicClass<AppState> {
       });
 
       statisticsBusinessServiceSnippetList(store, serviceSnippetListFromFirebaseDocs);
-
     }).expand((element) => [
-      BusinessServiceSnippetListReturned(businessServiceSnippetList),
-      UpdateStatistics(statisticsState),
-    ]);
+          BusinessServiceSnippetListReturned(businessServiceSnippetList),
+          UpdateStatistics(statisticsState),
+        ]);
   }
 
   void statisticsBusinessServiceSnippetList(EpicStore<AppState> store, int serviceSnippetListFromFirebaseDocs) {
@@ -143,17 +152,20 @@ class BusinessServiceSnippetListRequestService implements EpicClass<AppState> {
 class BusinessAndNavigateRequestService implements EpicClass<AppState> {
   BusinessState businessState;
   StatisticsState statisticsState;
+
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<BusinessServiceListAndNavigateRequest>().asyncMap((event) async {
       debugPrint("BUSINESS_SERVICE_EPIC - BusinessAndNavigateRequestService => DOCUMENT ID: ${event.businessStateId}");
 
-      DocumentSnapshot businessSnapshot = await FirebaseFirestore.instance /// 1 READ - 1 DOC
+      DocumentSnapshot businessSnapshot = await FirebaseFirestore.instance
+
+          /// 1 READ - 1 DOC
           .collection("business")
           .doc(event.businessStateId)
           .get();
 
-     businessState =  BusinessState.fromJson(businessSnapshot.data());
+      businessState = BusinessState.fromJson(businessSnapshot.data());
       debugPrint("BUSINESS_SERVICE_EPIC - BusinessAndNavigateRequestService => DOCUMENT ID from Request: ${businessState.id_firestore}");
       statisticsState = store.state.statistics;
       int reads = statisticsState.businessAndNavigateRequestServiceRead;
@@ -166,31 +178,33 @@ class BusinessAndNavigateRequestService implements EpicClass<AppState> {
       statisticsState.businessAndNavigateRequestServiceRead = reads;
       statisticsState.businessAndNavigateRequestServiceWrite = writes;
       statisticsState.businessAndNavigateRequestServiceDocuments = documents;
-
     }).expand((element) => [
-      BusinessRequestResponse(businessState),
-      UpdateStatistics(statisticsState),
-      //NavigatePushAction(AppRoutes.bookingPage),
-      ServiceListSnippetRequestNavigate(businessState.id_firestore)
-      //ServiceListAndNavigateRequest(businessState.id_firestore, store.state.user.getRole().toString().split('.').last)
-    ]);
+          BusinessRequestResponse(businessState),
+          UpdateStatistics(statisticsState),
+          //NavigatePushAction(AppRoutes.bookingPage),
+          ServiceListSnippetRequestNavigate(businessState.id_firestore)
+          //ServiceListAndNavigateRequest(businessState.id_firestore, store.state.user.getRole().toString().split('.').last)
+        ]);
   }
 }
 
 class BusinessAndNavigateOnConfirmRequestService implements EpicClass<AppState> {
   BusinessState businessState;
   StatisticsState statisticsState;
+
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<BusinessAndNavigateOnConfirmRequest>().asyncMap((event) async {
       debugPrint("BUSINESS_SERVICE_EPIC - BusinessAndNavigateOnConfirmRequestService => DOCUMENT ID: ${event.businessStateId}");
 
-      DocumentSnapshot businessSnapshot = await FirebaseFirestore.instance /// 1 READ - 1 DOC
+      DocumentSnapshot businessSnapshot = await FirebaseFirestore.instance
+
+          /// 1 READ - 1 DOC
           .collection("business")
           .doc(event.businessStateId)
           .get();
 
-      businessState =  BusinessState.fromJson(businessSnapshot.data());
+      businessState = BusinessState.fromJson(businessSnapshot.data());
 
       statisticsState = store.state.statistics;
       int reads = statisticsState.businessAndNavigateOnConfirmRequestServiceRead;
@@ -203,55 +217,48 @@ class BusinessAndNavigateOnConfirmRequestService implements EpicClass<AppState> 
       statisticsState.businessAndNavigateOnConfirmRequestServiceRead = reads;
       statisticsState.businessAndNavigateOnConfirmRequestServiceWrite = writes;
       statisticsState.businessAndNavigateOnConfirmRequestServiceDocuments = documents;
-
-    }).expand((element) => [
-      BusinessRequestResponse(businessState),
-      UpdateStatistics(statisticsState),
-      ServiceListAndNavigateOnConfirmRequest(businessState.id_firestore, store.state.user.getRole().toString().split('.').last)
-    ]);
+    }).expand((element) => [BusinessRequestResponse(businessState), UpdateStatistics(statisticsState), ServiceListAndNavigateOnConfirmRequest(businessState.id_firestore, store.state.user.getRole().toString().split('.').last)]);
   }
 }
 
 class BusinessRequestService implements EpicClass<AppState> {
   BusinessState businessState;
   StatisticsState statisticsState;
+
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<BusinessRequest>().asyncMap((event) async {
-      businessState =  await BusinessRequestMethod(event, store, businessState, statisticsState);
+      businessState = await BusinessRequestMethod(event, store, businessState, statisticsState);
     }).expand((element) => [
-      BusinessRequestResponse(businessState),
-      UpdateStatistics(statisticsState),
-    ]);
+          BusinessRequestResponse(businessState),
+          UpdateStatistics(statisticsState),
+        ]);
   }
 }
 
 class BusinessRequestAndNavigateService implements EpicClass<AppState> {
   BusinessState businessState;
   StatisticsState statisticsState;
+
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<BusinessRequestAndNavigate>().asyncMap((event) async {
       businessState = await BusinessRequestMethod(event, store, businessState, statisticsState);
-    }).expand((element) => [
-      BusinessRequestResponse(businessState),
-      UpdateStatistics(statisticsState),
-      NavigatePushAction(AppRoutes.business)
-    ]);
+    }).expand((element) => [BusinessRequestResponse(businessState), UpdateStatistics(statisticsState), NavigatePushAction(AppRoutes.business)]);
   }
 }
-
-
 
 Future BusinessRequestMethod(dynamic event, EpicStore<AppState> store, BusinessState businessState, StatisticsState statisticsState) async {
   debugPrint("BUSINESS_SERVICE_EPIC - BusinessRequestService => DOCUMENT ID: ${event.businessStateId}");
 
-  DocumentSnapshot businessSnapshot = await FirebaseFirestore.instance /// 1 READ - 1 DOC
+  DocumentSnapshot businessSnapshot = await FirebaseFirestore.instance
+
+      /// 1 READ - 1 DOC
       .collection("business")
       .doc(event.businessStateId)
       .get();
 
-  businessState =  BusinessState.fromJson(businessSnapshot.data());
+  businessState = BusinessState.fromJson(businessSnapshot.data());
 
   statisticsState = store.state.statistics;
   int reads = statisticsState.businessRequestServiceRead;
@@ -267,8 +274,7 @@ Future BusinessRequestMethod(dynamic event, EpicStore<AppState> store, BusinessS
   return businessState;
 }
 
-BusinessState businessStateImageLinksUpdate(
-    BusinessState businessState, OptimumFileToUpload fileToUpload, String fileUrl) {
+BusinessState businessStateImageLinksUpdate(BusinessState businessState, OptimumFileToUpload fileToUpload, String fileUrl) {
   return businessState;
 }
 
@@ -293,6 +299,7 @@ Future<BusinessState> uploadFiles(List<OptimumFileToUpload> fileToUploadList, Bu
 class BusinessUpdateService implements EpicClass<AppState> {
   BusinessState businessState;
   StatisticsState statisticsState;
+
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     debugPrint("BUSINESS_SERVICE_EPIC - BusinessUpdateService => CALL OF UPDATE");
@@ -301,10 +308,14 @@ class BusinessUpdateService implements EpicClass<AppState> {
 
       if (businessState.fileToUploadList != null) {
         // TODO at the moment the upload error is not managed
-        businessState = await uploadFiles(businessState.fileToUploadList, businessState); /// ? WRITE
+        businessState = await uploadFiles(businessState.fileToUploadList, businessState);
+
+        /// ? WRITE
       }
 
-      await FirebaseFirestore.instance /// 1 WRITE
+      await FirebaseFirestore.instance
+
+          /// 1 WRITE
           .collection("business")
           .doc(businessState.id_firestore)
           .update(businessState.toJson())
@@ -322,24 +333,26 @@ class BusinessUpdateService implements EpicClass<AppState> {
       statisticsState.businessUpdateServiceRead = reads;
       statisticsState.businessUpdateServiceWrite = writes;
       statisticsState.businessUpdateServiceDocuments = documents;
-
     }).expand((element) => [
-      UpdatedBusiness(businessState),
-      UpdateStatistics(statisticsState),
-      NavigatePushAction(AppRoutes.business),
-    ]);
+          UpdatedBusiness(businessState),
+          UpdateStatistics(statisticsState),
+          NavigatePushAction(AppRoutes.business),
+        ]);
   }
 }
 
 class BusinessCreateService implements EpicClass<AppState> {
   BusinessState businessState;
   StatisticsState statisticsState;
+
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<CreateBusiness>().asyncMap((event) async {
       businessState = event.businessState;
-      DocumentReference docReference = FirebaseFirestore.instance.collection("business").doc(); /// 1 READ - 1 DOC
+      DocumentReference docReference = FirebaseFirestore.instance.collection("business").doc();
 
+      /// 1 READ - 1 DOC
+      ///
       if (businessState.business_type.isNotEmpty && businessState.business_type[0].toString().isEmpty && businessState.business_type.length > 1) {
         businessState.business_type = businessState.business_type.sublist(1);
       }
@@ -353,7 +366,9 @@ class BusinessCreateService implements EpicClass<AppState> {
       }
 
       if (event.businessState.fileToUploadList != null) {
-        businessState = await uploadFiles(event.businessState.fileToUploadList, event.businessState); /// ? WRITE
+        businessState = await uploadFiles(event.businessState.fileToUploadList, event.businessState);
+
+        /// ? WRITE
       }
 
       statisticsState = store.state.statistics;
@@ -369,19 +384,20 @@ class BusinessCreateService implements EpicClass<AppState> {
       statisticsState.businessCreateServiceWrite = writes;
       statisticsState.businessCreateServiceDocuments = documents;
 
-      return docReference.set(businessState.toJson()).then((value) async{ /// 1 WRITE
+      return docReference.set(businessState.toJson()).then((value) async {
+        /// 1 WRITE
         debugPrint("BUSINESS_SERVICE_EPIC - BusinessCreateService => Has created new Business!");
       }).catchError((error) {
         debugPrint("BUSINESS_SERVICE_EPIC - BusinessCreateService => ERROR: $error");
       }).then((value) {
         return null;
       });
-
     }).expand((element) => [
-      CreatedBusiness(businessState),
-      UpdateStatistics(statisticsState),
-      NavigatePushAction(AppRoutes.businessList),
-    ]);
+          CreatedBusiness(businessState),
+          UpdateStatistics(statisticsState),
+          GenerateDefaultCategory(businessState),
+          NavigatePushAction(AppRoutes.businessList),
+        ]);
   }
 }
 
@@ -395,12 +411,45 @@ Future<CreatedBusiness> createBusiness(BusinessState businessState) {
 }
 
 Future<UpdatedBusiness> updateBusiness(BusinessState businessState) {
-  return FirebaseFirestore.instance
-      .collection("business")
-      .doc(businessState.id_firestore)
-      .update(businessState.toJson())
-      .then((value) {
+  return FirebaseFirestore.instance.collection("business").doc(businessState.id_firestore).update(businessState.toJson()).then((value) {
     print("BusinessService should be updated online ");
     return new UpdatedBusiness(businessState);
   });
+}
+
+class BusinessCreateGenerateDefaultCategoryService implements EpicClass<AppState> {
+  BusinessState businessState;
+  StatisticsState statisticsState;
+  var actionArray = [];
+
+  @override
+  Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
+    return actions.whereType<GenerateDefaultCategory>().asyncMap((event) async {
+      print("START EPIC GENERATING BUSINESSES");
+
+      DefaultCategoryState defaultCategory;
+      await FirebaseFirestore.instance.collection("defaultCategory").where("businessType", arrayContains: event.businessState.business_type[0]).orderBy('category.level').get().then((querySnapshot) => {
+            // actionArray.add(CreatedBusiness(businessState)),
+            // actionArray.add(UpdateStatistics(statisticsState)),
+            actionArray.add(CategoryTreeCreateIfNotExists(event.businessState.id_firestore)),
+
+            print("BUSINESS ID : " + event.businessState.id_firestore),
+            querySnapshot.docs.forEach((element) {
+
+              DefaultCategoryState defaultCategory = DefaultCategoryState.fromJson(element.data());
+              print("LIVELLO  : " + defaultCategory.category.level.toString());
+              actionArray.add(CreateDefaultCategory(defaultCategory.category, event.businessState.id_firestore));
+            }),
+
+
+          // defaultCategory = DefaultCategoryState.fromJson(querySnapshot.docs[0].data()),
+          // actionArray.add(CreateDefaultCategory(defaultCategory.category, event.businessState.id_firestore)),
+
+            actionArray.add(NavigatePushAction(AppRoutes.businessList)),
+          });
+      //   CreateBusiness(store.state.business);
+    }).expand((element) {
+      return actionArray;
+    });
+  }
 }

@@ -1,12 +1,12 @@
+import 'package:Buytime/reblox/model/category/category_state.dart';
 import 'package:Buytime/reblox/model/category/tree/category_tree_state.dart';
 import 'package:Buytime/reblox/model/snippet/generic.dart';
 import 'package:Buytime/reblox/model/snippet/parent.dart';
 
 class CategoryTreeCreateIfNotExists {
   String _idFirestore;
-  var context;
 
-  CategoryTreeCreateIfNotExists(this._idFirestore, this.context);
+  CategoryTreeCreateIfNotExists(this._idFirestore);
 
   String get idFirestore => _idFirestore;
 }
@@ -52,6 +52,15 @@ class AddCategoryTree {
 
   Parent get selectedParent => _selectedParent;
 }
+
+class AddDefaultCategoryTree {
+  CategoryState _categoryState;
+
+  AddDefaultCategoryTree(this._categoryState);
+
+  CategoryState get categoryState => _categoryState;
+}
+
 
 class DeleteCategoryTree {
   String _selectedNodeId;
