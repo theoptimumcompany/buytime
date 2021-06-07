@@ -38,10 +38,8 @@ ExternalBusinessState _$ExternalBusinessStateFromJson(
     wide: json['wide'] as String,
     logo: json['logo'] as String,
     draft: json['draft'] as bool,
-    business_type: (json['business_type'] as List)
-        ?.map((e) =>
-            e == null ? null : GenericState.fromJson(e as Map<String, dynamic>))
-        ?.toList(),
+    business_type:
+        (json['business_type'] as List)?.map((e) => e as String)?.toList(),
     description: json['description'] as String,
     id_firestore: json['id_firestore'] as String,
     salesman: json['salesman'] == null
@@ -91,8 +89,7 @@ Map<String, dynamic> _$ExternalBusinessStateToJson(
       'hasAccess': instance.hasAccess,
       'wide': instance.wide,
       'logo': instance.logo,
-      'business_type':
-          instance.business_type?.map((e) => e?.toJson())?.toList(),
+      'business_type': instance.business_type,
       'description': instance.description,
       'id_firestore': instance.id_firestore,
       'salesman': instance.salesman?.toJson(),

@@ -40,7 +40,7 @@ class ExternalBusinessState {
   List<String> hasAccess;
   String wide;
   String logo;
-  List<GenericState> business_type;
+  List<String> business_type;
   String description;
   String id_firestore;
   GenericState salesman;
@@ -223,7 +223,7 @@ class ExternalBusinessState {
     List<String> hasAccess,
     String wide,
     String logo,
-    List<GenericState> business_type,
+    List<String> business_type,
     String description,
     String id_firestore,
     GenericState salesaman,

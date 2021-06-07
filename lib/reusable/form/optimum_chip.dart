@@ -4,12 +4,12 @@ import 'package:Buytime/utils/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
-typedef OptimumChipListToDispatch = void Function(List<GenericState>);
+typedef OptimumChipListToDispatch = void Function(List<String>);
 
 class OptimumChip extends StatefulWidget {
   OptimumChipListToDispatch optimumChipListToDispatch;
-  List<GenericState> chipList;
-  List<GenericState> selectedChoices;
+  List<String> chipList;
+  List<String> selectedChoices;
 
   OptimumChip({@required this.chipList, this.selectedChoices, @required this.optimumChipListToDispatch}) {
     this.chipList = chipList;
@@ -22,9 +22,9 @@ class OptimumChip extends StatefulWidget {
 }
 
 class _OptimumChipState extends State<OptimumChip> {
-  List<GenericState> selectedChoices;
+  List<String> selectedChoices;
   OptimumChipListToDispatch optimumChipListToDispatch;
-  List<GenericState> chipList;
+  List<String> chipList;
 
   _OptimumChipState({this.chipList, this.selectedChoices, this.optimumChipListToDispatch});
 
@@ -34,22 +34,22 @@ class _OptimumChipState extends State<OptimumChip> {
       choices.add(Container(
         padding: const EdgeInsets.all(2.0),
         child: ChoiceChip(
-          label: Text(item.name),
-          selected: selectedChoices.any((element) => element.name == item.name),
+          label: Text(item),
+          selected: selectedChoices.any((element) => element == item),
           selectedColor: Theme.of(context).accentColor,
-          labelStyle: TextStyle(color: selectedChoices.any((element) => element.name == item.name) ? Colors.black : Colors.white),
+          labelStyle: TextStyle(color: selectedChoices.any((element) => element == item) ? Colors.black : Colors.white),
           onSelected: (selected) {
 
             setState(() {
-              if (selectedChoices.any((element) => element.name == item.name)) {
-                selectedChoices.removeWhere((element) => element.name == item.name);
+              if (selectedChoices.any((element) => element == item)) {
+                selectedChoices.removeWhere((element) => element == item);
               } else {
                 selectedChoices.add(item);
               }
             });
 
             selectedChoices.forEach((element) {
-              print(element.name);
+              print(element);
             });
             optimumChipListToDispatch(selectedChoices);
           },

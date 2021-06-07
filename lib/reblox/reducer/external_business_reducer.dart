@@ -271,11 +271,11 @@ class SetExternalBusinessLogo {
 }
 
 class SetExternalBusinessType {
-  List<GenericState> _business_type;
+  List<String> _business_type;
 
   SetExternalBusinessType(this._business_type);
 
-  List<GenericState> get business_type => _business_type;
+  List<String> get business_type => _business_type;
 }
 
 class SetExternalBusinessDescription {
