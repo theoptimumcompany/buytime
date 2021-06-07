@@ -955,10 +955,11 @@ class _TouristSessionRegisterState extends State<TouristSessionRegister> with Si
                         color: BuytimeTheme.BackgroundCerulean,
                         child: Column(mainAxisAlignment: MainAxisAlignment.center, mainAxisSize: MainAxisSize.min, children: [
                           BrandedButton("assets/img/google_logo.png", AppLocalizations.of(context).logInWithGoogle, initiateGoogleSignIn),
+                          !Platform.isAndroid?
                           Padding(
                             padding: EdgeInsets.only(top: 24.0, bottom: SizeConfig.safeBlockVertical * 3),
                             child: BrandedButton("assets/img/apple_logo.png", AppLocalizations.of(context).logInWithApple, initiateAppleSignIn),
-                          ),
+                          ): Container(),
                           Container(
                               margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
                               //margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 0.5),

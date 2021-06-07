@@ -1080,13 +1080,14 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
                           color: BuytimeTheme.BackgroundCerulean,
                           child: Column(mainAxisAlignment: MainAxisAlignment.center, mainAxisSize: MainAxisSize.min, children: [
                             Padding(
-                              padding: EdgeInsets.only(top:SizeConfig.safeBlockVertical * 3),
+                              padding: EdgeInsets.only(top: Platform.isAndroid? SizeConfig.safeBlockVertical * 1:SizeConfig.safeBlockVertical * 3),
                               child: BrandedButton("assets/img/google_logo.png", AppLocalizations.of(context).logInWithGoogle, initiateGoogleSignIn),
                             ),
+                            !Platform.isAndroid?
                             Padding(
                               padding: EdgeInsets.only(top: 24.0, bottom: SizeConfig.safeBlockVertical * 3),
                               child: BrandedButton("assets/img/apple_logo.png", AppLocalizations.of(context).logInWithApple, initiateAppleSignIn),
-                            ),
+                            ): Container(),
                             //BrandedButton("assets/img/facebook_logo.png", AppLocalizations.of(context).signFacebook, initiateFacebookSignIn),
                           ]),
                         )
