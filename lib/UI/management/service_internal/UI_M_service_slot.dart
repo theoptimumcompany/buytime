@@ -158,7 +158,7 @@ class UI_M_ServiceSlotState extends State<UI_M_ServiceSlot> {
                                                   child: Padding(
                                                     padding: const EdgeInsets.all(0.0),
                                                     child: Text(
-                                                      currentStep < 3 ? AppLocalizations.of(context).nextUpper : AppLocalizations.of(context).saveUpper,
+                                                      currentStep < 3 ? AppLocalizations.of(context).nextUpper : AppLocalizations.of(context).confirmUpper,
                                                       textAlign: TextAlign.start,
                                                       style: TextStyle(
                                                         fontSize: 18,

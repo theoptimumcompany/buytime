@@ -38,6 +38,7 @@ class CalendarAvailabilityState extends State<CalendarAvailability> {
     currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0);
     if(checkIn.isBefore(currentTime) && !checkIn.isAtSameMomentAs(currentTime)){
       picked = await showDateRangePicker(
+          saveText: AppLocalizations.of(context).confirmUpper,
           context: context, firstDate: DateTime.now(), lastDate: new DateTime(2025),
           builder: (BuildContext context, Widget child) {
             return Theme(
@@ -55,6 +56,7 @@ class CalendarAvailabilityState extends State<CalendarAvailability> {
       );
     }else{
       picked = await showDateRangePicker(
+          saveText: AppLocalizations.of(context).confirmUpper,
           context: context, initialDateRange: DateTimeRange(start: cIn, end: cOut), firstDate: checkIn, lastDate: new DateTime(2025),
           builder: (BuildContext context, Widget child) {
             return Theme(
