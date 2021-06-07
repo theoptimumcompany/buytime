@@ -8,11 +8,13 @@ class RNotificationBell extends StatelessWidget {
   const RNotificationBell({
     Key key,
     @required this.orderList,
-    @required this.userId
+    @required this.userId,
+    this.tourist
   }) : super(key: key);
 
   final List<OrderState> orderList;
   final String userId;
+  final bool tourist;
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +41,7 @@ class RNotificationBell extends StatelessWidget {
                               {'hasNotification': false}
                           );
                         }
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => RNotifications(orderStateList: orderList, tourist: false,)));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => RNotifications(orderStateList: orderList, tourist: tourist,)));
                       },
                     ),
                   ),

@@ -329,8 +329,10 @@ class Utils {
       ),
       builder: (BuildContext context) {
         return SingleChildScrollView(
+          physics: ClampingScrollPhysics(),
           child: Padding(
             padding: EdgeInsets.only(
+              //top: SizeConfig.safeBlockVertical * 5,
                 bottom: MediaQuery.of(context).viewInsets.bottom),
             child: SafeArea(
               child: Container(
@@ -421,8 +423,11 @@ class Utils {
                     ),
                     Flexible(
                       child: Container(
+                        height: SizeConfig.safeBlockVertical * 50,
                         margin: EdgeInsets.only(bottom: 10),
-                        child: CustomScrollView(shrinkWrap: true, slivers: [
+                        child: CustomScrollView(
+                          //physics: NeverScrollableScrollPhysics(),
+                            shrinkWrap: true, slivers: [
                           SliverList(
                             delegate: SliverChildBuilderDelegate((context, index) {
                               String flag = flags.elementAt(index);

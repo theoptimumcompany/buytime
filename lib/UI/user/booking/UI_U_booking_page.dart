@@ -262,7 +262,7 @@ class _BookingPageState extends State<BookingPage> {
             debugPrint('UI_U_booking_page => ALL CATEGORIES: ${element.name}');
           });
           categoryListState.categoryListState.forEach((element) {
-            if(element.customTag == 'showcase')
+            if(element.customTag == 'showcase') ///TODO se si vuole showcase decommentare è un TODO fake ahah
               categoryList.add(element);
           });
           categoryList.shuffle();
@@ -374,7 +374,7 @@ class _BookingPageState extends State<BookingPage> {
                             children: [
                               ///Notification
                               Flexible(
-                                  child: RNotificationBell(orderList: orderList, userId: snapshot.user.uid)
+                                  child: RNotificationBell(orderList: orderList, userId: snapshot.user.uid, tourist: false,)
                               ),
                               /*Flexible(
                                   child: Container(

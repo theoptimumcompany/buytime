@@ -403,7 +403,7 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                         children: [
                           ///Notification
                           Flexible(
-                              child: snapshot.user.uid != null && snapshot.user.uid.isNotEmpty ? RNotificationBell(orderList: orderList, userId: snapshot.user.uid) : Container()
+                              child: snapshot.user.uid != null && snapshot.user.uid.isNotEmpty ? RNotificationBell(orderList: orderList, userId: snapshot.user.uid, tourist: true,) : Container()
                           ),
                           ///Cart
                           Flexible(
@@ -428,7 +428,7 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                                               // go to the cart page
                                               Navigator.push(
                                                 context,
-                                                MaterialPageRoute(builder: (context) => Cart(tourist: false,)),
+                                                MaterialPageRoute(builder: (context) => Cart(tourist: true,)),
                                               );
                                             } else {
                                               showDialog(
