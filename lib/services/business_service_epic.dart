@@ -428,7 +428,7 @@ class BusinessCreateGenerateDefaultCategoryService implements EpicClass<AppState
       print("START EPIC GENERATING BUSINESSES");
 
       DefaultCategoryState defaultCategory;
-      await FirebaseFirestore.instance.collection("defaultCategory").where("businessType", arrayContains: event.businessState.business_type[0]).orderBy('category.level').get().then((querySnapshot) => {
+      await FirebaseFirestore.instance.collection("defaultCategory").where("businessType", arrayContainsAny: event.businessState.business_type).orderBy('category.level').get().then((querySnapshot) => {
             // actionArray.add(CreatedBusiness(businessState)),
             // actionArray.add(UpdateStatistics(statisticsState)),
             actionArray.add(CategoryTreeCreateIfNotExists(event.businessState.id_firestore)),
