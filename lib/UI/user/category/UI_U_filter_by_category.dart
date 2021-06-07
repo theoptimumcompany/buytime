@@ -236,8 +236,10 @@ class _FilterByCategoryState extends State<FilterByCategory> {
 
                     if(!found){
                       debugPrint('UI_U_filter_by_category => CATEGORY NAME: ${element.name}');
-                      categoryList.add(element);
-                      categoryListIds.putIfAbsent(element.name, () => [element.id]);
+                      if(element.customTag == 'showcase'){
+                        categoryList.add(element);
+                        categoryListIds.putIfAbsent(element.name, () => [element.id]);
+                      }
                     }else{
                       categoryListIds[element.name].add(element.id);
                     }
