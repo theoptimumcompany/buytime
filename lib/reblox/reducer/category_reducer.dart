@@ -107,6 +107,7 @@ class CreateDefaultCategory {
   String get businessId => _businessId;
 }
 
+
 class CreatedCategory {
   CategoryState _categoryState;
 

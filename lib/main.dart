@@ -204,7 +204,8 @@ void main() {
     SlotListSnippetRequestService(),
     BusinessCreateGenerateDefaultCategoryService(),
     DefaultCategoryCreateService(),
-    DefaultCategoryTreeAddService()
+    DefaultCategoryTreeAddService(),
+    ConvertBusinessToSnippetService()
   ]);
   final _initialState = AppState(
       category: CategoryState().toEmpty(),
