@@ -226,6 +226,7 @@ class RBusinessListState extends State<RBusinessList> {
                                       debugPrint('RUI_M_business_list => BUSINESS SNIPPET | ${businessState.name}');
 
                                       for(int i = 0; i < businessListState.length; i++){
+                                        print("Prova");
                                         //networkServicesList.add(0);
                                         if(serviceListSnippetState.businessId != null) {
                                           if(businessListState[i].id_firestore == serviceListSnippetState.businessId){
@@ -238,14 +239,14 @@ class RBusinessListState extends State<RBusinessList> {
                                       return  Padding(
                                         padding: const EdgeInsets.only(top: 1.0),
                                         child: new OptimumBusinessCardMediumManager(
-                                          businessState: businessListState[index],
+                                          businessState: businessState,
                                           networkServices: networkServices ?? 0,
                                           onBusinessCardTap: (BusinessState businessState) async{
                                             StoreProvider.of<AppState>(context).dispatch(SetBusiness(businessListState[index]));
                                             //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_Business()),);
                                             Navigator.push(context, EnterExitRoute(enterPage: UI_M_Business(), exitPage: RBusinessList(), from: true));
                                           },
-                                          imageUrl: businessListState[index].profile,
+                                          imageUrl: businessState.profile,
                                           mediaSize: media,
                                         ),
                                       );
