@@ -353,6 +353,7 @@ class BusinessCreateService implements EpicClass<AppState> {
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<CreateBusiness>().asyncMap((event) async {
+      actionArray.clear();
       businessState = event.businessState;
       DocumentReference docReference = FirebaseFirestore.instance.collection("business").doc();
 
@@ -430,6 +431,7 @@ class BusinessGenerateDefaultCategoryService implements EpicClass<AppState> {
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<GenerateDefaultCategory>().asyncMap((event) async {
+      actionArray.clear();
       DefaultCategoryState defaultCategory;
       await FirebaseFirestore.instance.collection("defaultCategory").where("businessType", arrayContainsAny: event.businessState.business_type).orderBy('category.level').get().then((querySnapshot) => {
             actionArray.add(CategoryTreeCreateIfNotExists(event.businessState.id_firestore)),
@@ -440,56 +442,51 @@ class BusinessGenerateDefaultCategoryService implements EpicClass<AppState> {
               },
           });
 
-       actionArray.add(ConvertBusinessToSnippet(event.businessState.id_firestore));
+      actionArray.add(ConvertBusinessToSnippet(event.businessState.id_firestore));
+      
+    }).expand((element) {
+      return actionArray;
+    }).delay(Duration(seconds: 1));
+  }
+}
+
+
+class ConvertBusinessToSnippetService implements EpicClass<AppState> {
+  var actionArray = [];
+  @override
+  Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
+    return actions.whereType<ConvertBusinessToSnippet>().asyncMap((event) async {
+      actionArray.clear();
+      print("START EPIC CONVERTING BUSINESS TO SNIPPET");
+      await FirebaseFirestore.instance.collection("convertionTrigger").doc("convertionTriggerDocument").update({'businessIdToSnippet': event.businessId});
+      actionArray.add(NavigatePushAction(AppRoutes.businessList));
+
     }).expand((element) {
       return actionArray;
     });
   }
 }
 
-// class BusinessUpdateDefaultCategoryService implements EpicClass<AppState> {
-//   var actionArray = [];
-//   DefaultCategoryState defaultCategory;
-//
-//   @override
-//   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-//     return actions.whereType<UpdateDefaultCategory>().asyncMap((event) async {
-//       DefaultCategoryState defaultCategory;
-//       BuildContext context;
-//
-//       await FirebaseFirestore.instance.collection("defaultCategory").where("businessType", arrayContainsAny: event.businessState.business_type).orderBy('category.level').get().then((querySnapshot) => {
-//             actionArray.add(CategoryTreeCreateIfNotExists(event.businessState.id_firestore)),
-//             print("BUSINESS ID : " + event.businessState.id_firestore),
-//
-//             for (var z = 0; z < querySnapshot.docs.length; z++)
-//               {
-//                 defaultCategory = DefaultCategoryState.fromJson(querySnapshot.docs[z].data()),
-//                // actionArray.add(CreateDefaultCategory(defaultCategory.category, event.businessState.id_firestore)),
-//                // StoreProvider.of<AppState>(context).dispatch(CreateDefaultCategory(defaultCategory.category, event.businessState.id_firestore)),
-//
-//               },
-//               Timer(const Duration(seconds: 2), () {
-//                 print("WAIT");
-//               })
-//
-//           });
-//
-//       //actionArray.add(ConvertBusinessToSnippet(event.businessState.id_firestore));
-//      // actionArray.add(NavigatePushAction(AppRoutes.businessList));
-//     }).expand((element) {
-//       return actionArray;
-//     });
-//   }
-// }
+/*class BusinessUpdateDefaultCategoryService implements EpicClass<AppState> {
+  var actionArray = [];
+  DefaultCategoryState defaultCategory;
 
-class ConvertBusinessToSnippetService implements EpicClass<AppState> {
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    return actions.whereType<ConvertBusinessToSnippet>().asyncMap((event) async {
-      print("START EPIC CONVERTING BUSINESS TO SNIPPET");
-      Timer(const Duration(seconds: 8), () async {
-        await FirebaseFirestore.instance.collection("convertionTrigger").doc("convertionTriggerDocument").update({'businessIdToSnippet': event.businessId});
-      });
-    }).expand((element) => [NavigatePushAction(AppRoutes.businessList)]);
+    return actions.whereType<UpdateDefaultCategory>().asyncMap((event) async {
+      DefaultCategoryState defaultCategory;
+      await FirebaseFirestore.instance.collection("defaultCategory").where("businessType", arrayContainsAny: event.businessState.business_type).orderBy('category.level').get().then((querySnapshot) => {
+            for (var z = 0; z < querySnapshot.docs.length; z++)
+              {
+                defaultCategory = DefaultCategoryState.fromJson(querySnapshot.docs[z].data()),
+                // actionArray.add(CreateDefaultCategory(defaultCategory.category, event.businessState.id_firestore)),
+              },
+          });
+
+      // actionArray.add(ConvertBusinessToSnippet(event.businessState.id_firestore));
+    }).expand((element) {
+      return actionArray;
+    });
   }
 }
+*/

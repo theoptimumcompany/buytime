@@ -4,12 +4,12 @@ import 'package:Buytime/utils/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
-typedef OptimumChipListToDispatch = void Function(List<String>);
+typedef OptimumChipListToDispatch = void Function(String);
 
 class OptimumChip extends StatefulWidget {
   OptimumChipListToDispatch optimumChipListToDispatch;
   List<String> chipList;
-  List<String> selectedChoices;
+  String selectedChoices;
 
   OptimumChip({@required this.chipList, this.selectedChoices, @required this.optimumChipListToDispatch}) {
     this.chipList = chipList;
@@ -22,7 +22,7 @@ class OptimumChip extends StatefulWidget {
 }
 
 class _OptimumChipState extends State<OptimumChip> {
-  List<String> selectedChoices;
+  String selectedChoices;
   OptimumChipListToDispatch optimumChipListToDispatch;
   List<String> chipList;
 
@@ -35,21 +35,12 @@ class _OptimumChipState extends State<OptimumChip> {
         padding: const EdgeInsets.all(2.0),
         child: ChoiceChip(
           label: Text(item),
-          selected: selectedChoices.any((element) => element == item),
+          selected: selectedChoices == item? true : false,
           selectedColor: Theme.of(context).accentColor,
-          labelStyle: TextStyle(color: selectedChoices.any((element) => element == item) ? Colors.black : Colors.white),
+          labelStyle: TextStyle(color: selectedChoices == item? Colors.black : Colors.white),
           onSelected: (selected) {
-
             setState(() {
-              if (selectedChoices.any((element) => element == item)) {
-                selectedChoices.removeWhere((element) => element == item);
-              } else {
-                selectedChoices.add(item);
-              }
-            });
-
-            selectedChoices.forEach((element) {
-              print(element);
+                selectedChoices = item;
             });
             optimumChipListToDispatch(selectedChoices);
           },

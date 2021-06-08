@@ -171,7 +171,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
 
   List<String> hubType = [];
   List<String> notHubType = [];
-  List<String> businessType = [];
+  String businessType = "";
 
   bool isHub = false;
   bool required = false;
@@ -300,20 +300,20 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                         tag = snapshot.tag;
                                         if (snapshot.area.isEmpty) snapshot.area = ['Reception'];
                                         if (snapshot.hub != null && snapshot.business_type != null) {
-                                          if (snapshot.business_type.isNotEmpty) businessType = snapshot.business_type;
+                                          if (snapshot.business_type.isNotEmpty) businessType = snapshot.business_type.first;
                                           if (isHub != snapshot.hub) {
                                             snapshot.business_type.clear();
-                                            businessType = [];
+                                            businessType = "";
                                             //StoreProvider.of<AppState>(context).dispatch(SetBusinessType([]));
                                             if (snapshot.hub) {
                                               debugPrint('UI_M_create_business => NOW IS HUB');
                                               //snapshot.business_type = [GenericState(name: 'Hotel')];
-                                              businessType = ['Hotel'];
+                                              businessType = 'Hotel';
                                               //StoreProvider.of<AppState>(context).dispatch(SetBusinessType([GenericState(name: 'Hotel')]));
                                             } else {
                                               debugPrint('UI_M_create_business => NOW IS NOT A HUB');
                                               //snapshot.business_type = [GenericState(name: 'Bar')];
-                                              businessType = ['Bar'];
+                                              businessType = 'Bar';
                                               //StoreProvider.of<AppState>(context).dispatch(SetBusinessType([GenericState(name: 'Bar')]));
                                             }
                                             isHub = snapshot.hub;
@@ -647,15 +647,15 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                               ? OptimumChip(
                                                                   chipList: hubType,
                                                                   selectedChoices: businessType,
-                                                                  optimumChipListToDispatch: (List<String> selectedChoices) {
-                                                                    StoreProvider.of<AppState>(context).dispatch(SetBusinessType(selectedChoices));
+                                                                  optimumChipListToDispatch: (String selectedChoices) {
+                                                                    StoreProvider.of<AppState>(context).dispatch(SetBusinessType([selectedChoices]));
                                                                   },
                                                                 )
                                                               : OptimumChip(
                                                                   chipList: notHubType,
                                                                   selectedChoices: businessType,
-                                                                  optimumChipListToDispatch: (List<String> selectedChoices) {
-                                                                    StoreProvider.of<AppState>(context).dispatch(SetBusinessType(selectedChoices));
+                                                                  optimumChipListToDispatch: (String selectedChoices) {
+                                                                    StoreProvider.of<AppState>(context).dispatch(SetBusinessType([selectedChoices]));
                                                                   },
                                                                 ),
                                                         ],
@@ -1427,7 +1427,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                                   borderRadius: new BorderRadius.circular(5),
                                                                 ),
                                                                 onPressed: () {
-                                                                  /*setState(() {
+                                                                  setState(() {
                                                                     required = validate(snapshot);
                                                                   });
                                                                   if (required) {
@@ -1436,7 +1436,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
 
                                                                     print("buytime_salesman_create: validate problems");
                                                                     return;
-                                                                  }*/
+                                                                  }
                                                                   setState(() {
                                                                     bookingRequest = 'send';
                                                                   });
