@@ -389,7 +389,7 @@ class RegistrationState extends State<Registration> {
         ),
         body: Form(
             key: _formKey,
-            child: SingleChildScrollView(
+            child: SafeArea(
               child: Container(
                 height: SizeConfig.safeBlockVertical * 98,
 
@@ -664,23 +664,23 @@ class RegistrationState extends State<Registration> {
                     ),
                   ),
                   ///Google & Facebook & Apple Sign up buttons
-                  Container(
-                    //height: SizeConfig.safeBlockVertical * 30,
-                    //height: 243, ///285
-                    padding: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5, bottom: SizeConfig.safeBlockVertical * 2.5),
-                    color: BuytimeTheme.BackgroundCerulean,
-                    child: Column(mainAxisAlignment: MainAxisAlignment.center, mainAxisSize: MainAxisSize.min, children: [
-                      Padding(
-                        padding: EdgeInsets.only(top: Platform.isAndroid? SizeConfig.safeBlockVertical * 1:SizeConfig.safeBlockVertical * 3),
-                        child: BrandedButton("assets/img/google_logo.png", AppLocalizations.of(context).logInWithGoogle, initiateGoogleSignIn),
-                      ),
-                      !Platform.isAndroid?
-                      Padding(
-                        padding: EdgeInsets.only(top: 24.0, bottom: SizeConfig.safeBlockVertical * 3),
-                        child: BrandedButton("assets/img/apple_logo.png", AppLocalizations.of(context).logInWithApple, initiateAppleSignIn),
-                      ): Container(),
-                      //BrandedButton("assets/img/facebook_logo.png", AppLocalizations.of(context).signFacebook, initiateFacebookSignIn),
-                    ]),
+                  Expanded(
+                    flex: 2,
+                    child: Container(
+                      //height: SizeConfig.safeBlockVertical * 30,
+                      //height: 243, ///285
+                      padding: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, bottom: SizeConfig.safeBlockVertical * 2),
+                      color: BuytimeTheme.BackgroundCerulean,
+                      child: Column(mainAxisAlignment: MainAxisAlignment.center, mainAxisSize: MainAxisSize.min, children: [
+                        BrandedButton("assets/img/google_logo.png", AppLocalizations.of(context).logInWithGoogle, initiateGoogleSignIn),
+                        Container(
+                          height: 5,
+                        ),
+                        Platform.isIOS ?
+                        BrandedButton("assets/img/apple_logo.png", AppLocalizations.of(context).logInWithApple, initiateAppleSignIn) : Container(),
+                        //BrandedButton("assets/img/facebook_logo.png", AppLocalizations.of(context).signFacebook, initiateFacebookSignIn),
+                      ]),
+                    ),
                   )
                 ]),
               ),

@@ -36,6 +36,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:Buytime/UI/management/business/RUI_M_business_list.dart';
 
 import '../../utils/globals.dart';
 
@@ -185,7 +186,7 @@ class _UI_M_BusinessListDrawerState extends State<UI_M_BusinessListDrawer> {
                     //Navigator.pop(context);
                     setState(() {
                       drawerSelection = DrawerSelection.BusinessList;
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_BusinessList()));
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => RBusinessList()));
                     });
                   },
                 ),

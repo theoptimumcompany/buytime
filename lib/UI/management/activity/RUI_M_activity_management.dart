@@ -699,23 +699,25 @@ class _RActivityManagementState extends State<RActivityManagement> {
     DateTime sevenDaysFromNow =  currentTime.add(Duration(days: 7));
     debugPrint('RUI_M_activity_management => CURRENT TIME: $currentTime | SEVEN DAYS IN: $sevenDaysFromNow');
 
-    if(businessIdList.length > 10){
-      _orderListRealtime = FirebaseFirestore.instance.collection('order')
-          .where("businessId", whereIn: businessIdList.sublist(0, 10))
-          .orderBy('date', descending: false)
-          .where("date", isGreaterThanOrEqualTo: currentTime)
-      //.where("date", isLessThanOrEqualTo: sevenDaysFromNow)
-          .snapshots();
-    }else{
-      _orderListRealtime = FirebaseFirestore.instance.collection('order')
-          .where("businessId", whereIn: businessIdList)
-          .orderBy('date', descending: false)
-          .where("date", isGreaterThanOrEqualTo: currentTime)
-      //.where("date", isLessThanOrEqualTo: sevenDaysFromNow)
-          .snapshots();
+    if(businessIdList.isNotEmpty){
+      if(businessIdList.length > 10){
+        _orderListRealtime = FirebaseFirestore.instance.collection('order')
+            .where("businessId", whereIn: businessIdList.sublist(0, 10))
+            .orderBy('date', descending: false)
+            .where("date", isGreaterThanOrEqualTo: currentTime)
+        //.where("date", isLessThanOrEqualTo: sevenDaysFromNow)
+            .snapshots();
+      }else{
+        _orderListRealtime = FirebaseFirestore.instance.collection('order')
+            .where("businessId", whereIn: businessIdList)
+            .orderBy('date', descending: false)
+            .where("date", isGreaterThanOrEqualTo: currentTime)
+        //.where("date", isLessThanOrEqualTo: sevenDaysFromNow)
+            .snapshots();
+      }
     }
 
-    debugPrint('RUI_M_activity_management => STREAM LENGTH: ${_orderListRealtime.length}');
+    //debugPrint('RUI_M_activity_management => STREAM LENGTH: ${_orderListRealtime.length}');
 
     ///Init sizeConfig
     SizeConfig().init(context);
@@ -807,100 +809,102 @@ class _RActivityManagementState extends State<RActivityManagement> {
               List<OrderState> tmp = [];
               //debugPrint('ORDER MAP LENGTH: ${orderMap.length}');
 
-              for (int j = 0; j < snapshot.data.docs.length; j++) {
-                tmp.add(OrderState.fromJson(snapshot.data.docs[j].data()));
-              }
-
-              if(tmp.isEmpty && startRequest){
-                noActivity = true;
-              }else{
-                if(tmp.isNotEmpty && tmp.first.businessId == null)
-                  tmp.removeLast();
-                debugPrint('CHECK 1');
-                noActivity = false;
-                startRequest = false;
-              }
-
-              tmp.forEach((element) {
-                //debugPrint('CHECK 1');
-                DateTime orderTime = element.date;
-                orderTime = new DateTime(orderTime.year, orderTime.month, orderTime.day, 0, 0, 0, 0, 0);
-
-                if(element.progress == Utils.enumToString(OrderStatus.canceled) || element.progress == Utils.enumToString(OrderStatus.declined)){
-                  listUp(element, currentTime, sevenDaysFromNow, orderTime, canceledList);
-                  //pendingList.add(element);
-                }else if(element.progress == Utils.enumToString(OrderStatus.pending) || element.progress == Utils.enumToString(OrderStatus.unpaid)){
-                  listUp(element, currentTime, sevenDaysFromNow, orderTime, pendingList);
-                  //acceptedList.add(element);
-                }else{
-                  listUp(element, currentTime, sevenDaysFromNow, orderTime, acceptedList);
-                  //acceptedList.add(element);
+              if(snapshot.data != null && snapshot.data.docs.isNotEmpty){
+                for (int j = 0; j < snapshot.data.docs.length; j++) {
+                  tmp.add(OrderState.fromJson(snapshot.data.docs[j].data()));
                 }
-              });
+
+                if(tmp.isEmpty && startRequest){
+                  noActivity = true;
+                }else{
+                  if(tmp.isNotEmpty && tmp.first.businessId == null)
+                    tmp.removeLast();
+                  debugPrint('CHECK 1');
+                  noActivity = false;
+                  startRequest = false;
+                }
+
+                tmp.forEach((element) {
+                  //debugPrint('CHECK 1');
+                  DateTime orderTime = element.date;
+                  orderTime = new DateTime(orderTime.year, orderTime.month, orderTime.day, 0, 0, 0, 0, 0);
+
+                  if(element.progress == Utils.enumToString(OrderStatus.canceled) || element.progress == Utils.enumToString(OrderStatus.declined)){
+                    listUp(element, currentTime, sevenDaysFromNow, orderTime, canceledList);
+                    //pendingList.add(element);
+                  }else if(element.progress == Utils.enumToString(OrderStatus.pending) || element.progress == Utils.enumToString(OrderStatus.unpaid)){
+                    listUp(element, currentTime, sevenDaysFromNow, orderTime, pendingList);
+                    //acceptedList.add(element);
+                  }else{
+                    listUp(element, currentTime, sevenDaysFromNow, orderTime, acceptedList);
+                    //acceptedList.add(element);
+                  }
+                });
 
 
-              pendingList.forEach((pending) {
-                //debugPrint('CHECK PENDING');
-                DateTime pendingTime = pending[0].date;
-                pendingTime = DateTime(pendingTime.year, pendingTime.month, pendingTime.day, 0, 0, 0, 0, 0);
-                //orderMap[DateFormat('dd MM yyyy').format(pendingTime)].add(pending);
-                if(!filterAccepted || filterPending)
-                  orderMap[pendingTime].add(pending);
-              });
+                pendingList.forEach((pending) {
+                  //debugPrint('CHECK PENDING');
+                  DateTime pendingTime = pending[0].date;
+                  pendingTime = DateTime(pendingTime.year, pendingTime.month, pendingTime.day, 0, 0, 0, 0, 0);
+                  //orderMap[DateFormat('dd MM yyyy').format(pendingTime)].add(pending);
+                  if(!filterAccepted || filterPending)
+                    orderMap[pendingTime].add(pending);
+                });
 
-              acceptedList.forEach((accepted) {
-                //debugPrint('CHECK ACCEPTED');
-                DateTime acceptedTime = accepted[0].date;
-                acceptedTime = new DateTime(acceptedTime.year, acceptedTime.month, acceptedTime.day, 0, 0, 0, 0, 0);
-                //orderMap[DateFormat('dd MM yyyy').format(acceptedTime)].add(accepted);
-                if(!filterPending || filterAccepted)
-                  orderMap[acceptedTime].add(accepted);
-              });
+                acceptedList.forEach((accepted) {
+                  //debugPrint('CHECK ACCEPTED');
+                  DateTime acceptedTime = accepted[0].date;
+                  acceptedTime = new DateTime(acceptedTime.year, acceptedTime.month, acceptedTime.day, 0, 0, 0, 0, 0);
+                  //orderMap[DateFormat('dd MM yyyy').format(acceptedTime)].add(accepted);
+                  if(!filterPending || filterAccepted)
+                    orderMap[acceptedTime].add(accepted);
+                });
 
-              canceledList.forEach((pending) {
-                //debugPrint('CHECK CANCELED');
-                DateTime pendingTime = pending[0].date;
-                pendingTime = DateTime(pendingTime.year, pendingTime.month, pendingTime.day, 0, 0, 0, 0, 0);
-                // orderMap[DateFormat('dd MM yyyy').format(pendingTime)].add(pending);
-                if(!filterPending && !filterAccepted)
-                  orderMap[pendingTime].add(pending);
-              });
+                canceledList.forEach((pending) {
+                  //debugPrint('CHECK CANCELED');
+                  DateTime pendingTime = pending[0].date;
+                  pendingTime = DateTime(pendingTime.year, pendingTime.month, pendingTime.day, 0, 0, 0, 0, 0);
+                  // orderMap[DateFormat('dd MM yyyy').format(pendingTime)].add(pending);
+                  if(!filterPending && !filterAccepted)
+                    orderMap[pendingTime].add(pending);
+                });
 
-              orderMap.forEach((key, value) {
-                //debugPrint('RUI_M_activity_management: KEY: $key');
-                //debugPrint('RUI_M_activity_management: VALUE LENGTH: ${value.length}');
-                //DateTime keyTime =  DateFormat("dd/MM/yyyy").parse(key).toUtc();
+                orderMap.forEach((key, value) {
+                  //debugPrint('RUI_M_activity_management: KEY: $key');
+                  //debugPrint('RUI_M_activity_management: VALUE LENGTH: ${value.length}');
+                  //DateTime keyTime =  DateFormat("dd/MM/yyyy").parse(key).toUtc();
 
-                /*value.forEach((element) {
+                  /*value.forEach((element) {
             debugPrint('UI_M_BookingList: value booking status: ${element.user.first.surname} ${element.status}');
           });*/
-                //value.sort((a,b) => DateFormat('dd').format(a[0].start_date).compareTo(DateFormat('dd').format(b[0].start_date)));
-                //value.sort((a,b) => DateFormat('dd').format(a[0].end_date).compareTo(DateFormat('dd').format(b[0].end_date)));
+                  //value.sort((a,b) => DateFormat('dd').format(a[0].start_date).compareTo(DateFormat('dd').format(b[0].start_date)));
+                  //value.sort((a,b) => DateFormat('dd').format(a[0].end_date).compareTo(DateFormat('dd').format(b[0].end_date)));
 
-                if(seeAll){
-                  DateTime tmp = key;
-                  tmp = DateTime(key.year, key.month, 1, 0,0,0,0,0);
-                  allMap.putIfAbsent(tmp, () => []);
-                  //debugPrint('RUI_M_activity_management: VALUE LENGTH: ${value.length}');
-                  if(allMap.containsKey(tmp)){
-                    //debugPrint('RUI_M_activity_management: KEY: $key');
-                    allMap[tmp].add(value);
-                    /*if(key.isAtSameMomentAs(currentTime) || (key.isAfter(currentTime) && key.isBefore(sevenDaysFromNow)) ){
+                  if(seeAll){
+                    DateTime tmp = key;
+                    tmp = DateTime(key.year, key.month, 1, 0,0,0,0,0);
+                    allMap.putIfAbsent(tmp, () => []);
+                    //debugPrint('RUI_M_activity_management: VALUE LENGTH: ${value.length}');
+                    if(allMap.containsKey(tmp)){
+                      //debugPrint('RUI_M_activity_management: KEY: $key');
+                      allMap[tmp].add(value);
+                      /*if(key.isAtSameMomentAs(currentTime) || (key.isAfter(currentTime) && key.isBefore(sevenDaysFromNow)) ){
               debugPrint('RUI_M_activity_management: KEY TIME: $key | CURRENT TIME: $currentTime | SEVEN DAYS FROM NOW: $sevenDaysFromNow');
               debugPrint('RUI_M_activity_management: VALUE LENGTH: ${allMap[tmp].last.length}');
               weekOrderList.add(value);
             }*/
+                    }
+                  }else{
+                    weekOrderList.add(value);
                   }
-                }else{
-                  weekOrderList.add(value);
-                }
 
-                allOrderList.add(value);
-              });
+                  allOrderList.add(value);
+                });
 
-              orderList.addAll(pendingList);
-              orderList.addAll(acceptedList);
-              orderList.addAll(canceledList);
+                orderList.addAll(pendingList);
+                orderList.addAll(acceptedList);
+                orderList.addAll(canceledList);
+              }
 
               //List<CategoryState> categoryRootList = snapshot.categoryList.categoryListState;
               return Column(

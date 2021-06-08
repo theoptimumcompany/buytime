@@ -50,6 +50,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:Buytime/UI/management/business/RUI_M_business_list.dart';
 import 'package:http/http.dart' as http;
 
 class Landing extends StatefulWidget {
@@ -223,7 +224,7 @@ class LandingState extends State<Landing> {
 
               //https://europe-west1-buytime-458a1.cloudfunctions.net/getCategoriesForManagerInBusiness
               if(bookingCode.isEmpty)
-                Navigator.push(context, MaterialPageRoute(builder: (context) => UI_M_BusinessList()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => RBusinessList()));
             });
           }
           else{
