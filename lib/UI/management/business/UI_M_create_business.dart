@@ -1427,7 +1427,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                                   borderRadius: new BorderRadius.circular(5),
                                                                 ),
                                                                 onPressed: () {
-                                                                  setState(() {
+                                                                  /*setState(() {
                                                                     required = validate(snapshot);
                                                                   });
                                                                   if (required) {
@@ -1436,7 +1436,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
 
                                                                     print("buytime_salesman_create: validate problems");
                                                                     return;
-                                                                  }
+                                                                  }*/
                                                                   setState(() {
                                                                     bookingRequest = 'send';
                                                                   });

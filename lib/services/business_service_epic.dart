@@ -299,6 +299,7 @@ Future<BusinessState> uploadFiles(List<OptimumFileToUpload> fileToUploadList, Bu
 class BusinessUpdateService implements EpicClass<AppState> {
   BusinessState businessState;
   StatisticsState statisticsState;
+  var actionArray = [];
 
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
@@ -313,13 +314,11 @@ class BusinessUpdateService implements EpicClass<AppState> {
         /// ? WRITE
       }
 
-      await FirebaseFirestore.instance
+      var refBusiness = await FirebaseFirestore.instance.collection("business").doc(businessState.id_firestore);
 
-          /// 1 WRITE
-          .collection("business")
-          .doc(businessState.id_firestore)
-          .update(businessState.toJson())
-          .then((value) {
+      //  if(refBusiness.s)
+
+      refBusiness.update(businessState.toJson()).then((value) {
         debugPrint("BUSINESS_SERVICE_EPIC - BusinessUpdateService => Should be updated online");
       });
 
@@ -333,11 +332,13 @@ class BusinessUpdateService implements EpicClass<AppState> {
       statisticsState.businessUpdateServiceRead = reads;
       statisticsState.businessUpdateServiceWrite = writes;
       statisticsState.businessUpdateServiceDocuments = documents;
-    }).expand((element) => [
-          UpdatedBusiness(businessState),
-          UpdateStatistics(statisticsState),
-          NavigatePushAction(AppRoutes.business),
-        ]);
+    }).expand((element) {
+      actionArray.add(UpdatedBusiness(businessState));
+      actionArray.add(UpdateStatistics(statisticsState));
+      actionArray.add(NavigatePushAction(AppRoutes.business));
+      //   actionArray.add(UpdateDefaultCategory(businessState));
+      return actionArray;
+    });
   }
 }
 
@@ -397,7 +398,6 @@ class BusinessCreateService implements EpicClass<AppState> {
       actionArray.add(CreatedBusiness(businessState));
       actionArray.add(UpdateStatistics(statisticsState));
       actionArray.add(GenerateDefaultCategory(businessState));
-      actionArray.add(ConvertBusinessToSnippet(businessState.id_firestore));
       return actionArray;
     });
   }
@@ -419,23 +419,40 @@ Future<UpdatedBusiness> updateBusiness(BusinessState businessState) {
   });
 }
 
-class BusinessCreateGenerateDefaultCategoryService implements EpicClass<AppState> {
-  BusinessState businessState;
-  StatisticsState statisticsState;
+class BusinessGenerateDefaultCategoryService implements EpicClass<AppState> {
   var actionArray = [];
   DefaultCategoryState defaultCategory;
 
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<GenerateDefaultCategory>().asyncMap((event) async {
-      print("START EPIC GENERATING BUSINESSES");
-
       DefaultCategoryState defaultCategory;
       await FirebaseFirestore.instance.collection("defaultCategory").where("businessType", arrayContainsAny: event.businessState.business_type).orderBy('category.level').get().then((querySnapshot) => {
-            // actionArray.add(CreatedBusiness(businessState)),
-            // actionArray.add(UpdateStatistics(statisticsState)),
             actionArray.add(CategoryTreeCreateIfNotExists(event.businessState.id_firestore)),
+            for (var z = 0; z < querySnapshot.docs.length; z++)
+              {
+                defaultCategory = DefaultCategoryState.fromJson(querySnapshot.docs[z].data()),
+                actionArray.add(CreateDefaultCategory(defaultCategory.category, event.businessState.id_firestore)),
+              },
+          });
+      actionArray.add(ConvertBusinessToSnippet(event.businessState.id_firestore));
+      actionArray.add(NavigatePushAction(AppRoutes.businessList));
+    }).expand((element) {
+      return actionArray;
+    });
+  }
+}
 
+class BusinessUpdateDefaultCategoryService implements EpicClass<AppState> {
+  var actionArray = [];
+  DefaultCategoryState defaultCategory;
+
+  @override
+  Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
+    return actions.whereType<UpdateDefaultCategory>().asyncMap((event) async {
+      DefaultCategoryState defaultCategory;
+      await FirebaseFirestore.instance.collection("defaultCategory").where("businessType", arrayContainsAny: event.businessState.business_type).orderBy('category.level').get().then((querySnapshot) => {
+            actionArray.add(CategoryTreeCreateIfNotExists(event.businessState.id_firestore)),
             print("BUSINESS ID : " + event.businessState.id_firestore),
             for (var z = 0; z < querySnapshot.docs.length; z++)
               {
@@ -444,23 +461,22 @@ class BusinessCreateGenerateDefaultCategoryService implements EpicClass<AppState
                 print("LIVELLO  : " + defaultCategory.category.level.toString()),
                 actionArray.add(CreateDefaultCategory(defaultCategory.category, event.businessState.id_firestore)),
               },
-            // defaultCategory = DefaultCategoryState.fromJson(querySnapshot.docs[0].data()),
-            // actionArray.add(CreateDefaultCategory(defaultCategory.category, event.businessState.id_firestore)),
           });
-      //   CreateBusiness(store.state.business);
+
+      actionArray.add(ConvertBusinessToSnippet(event.businessState.id_firestore));
+      actionArray.add(NavigatePushAction(AppRoutes.businessList));
     }).expand((element) {
       return actionArray;
     });
   }
 }
 
-
 class ConvertBusinessToSnippetService implements EpicClass<AppState> {
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<ConvertBusinessToSnippet>().asyncMap((event) async {
       print("START EPIC CONVERTING BUSINESS TO SNIPPET");
-      await FirebaseFirestore.instance.collection("convertionTrigger").add({'businessIdToSnippet' : event.businessId});
-    }).expand((element) => [NavigatePushAction(AppRoutes.businessList)]);
+      await FirebaseFirestore.instance.collection("convertionTrigger").doc("convertionTriggerDocument").update({'businessIdToSnippet': event.businessId});
+    });
   }
 }

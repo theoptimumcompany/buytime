@@ -103,6 +103,14 @@ class GenerateDefaultCategory {
   BusinessState get businessState => _businessState;
 }
 
+class UpdateDefaultCategory {
+  BusinessState _businessState;
+
+  UpdateDefaultCategory(this._businessState);
+
+  BusinessState get businessState => _businessState;
+}
+
 class CreateBusiness {
   BusinessState _businessState;
 

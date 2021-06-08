@@ -202,7 +202,7 @@ void main() {
     NotificationListRequestService(),
     NotificationUpdateRequestService(),
     SlotListSnippetRequestService(),
-    BusinessCreateGenerateDefaultCategoryService(),
+    BusinessGenerateDefaultCategoryService(),
     DefaultCategoryCreateService(),
     DefaultCategoryTreeAddService(),
     ConvertBusinessToSnippetService()
