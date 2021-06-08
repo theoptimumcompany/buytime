@@ -226,8 +226,6 @@ class RBusinessListState extends State<RBusinessList> {
                                       debugPrint('RUI_M_business_list => BUSINESS SNIPPET | ${businessState.name}');
 
                                       for(int i = 0; i < businessListState.length; i++){
-                                        print("Prova");
-                                        //networkServicesList.add(0);
                                         if(serviceListSnippetState.businessId != null) {
                                           if(businessListState[i].id_firestore == serviceListSnippetState.businessId){
                                             networkServices = serviceListSnippetState.businessServiceNumberInternal + serviceListSnippetState.businessServiceNumberExternal;
