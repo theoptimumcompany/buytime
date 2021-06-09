@@ -139,6 +139,18 @@ class LandingState extends State<Landing> {
             debugPrint('UI_U_landing: USER NOT LOGGED in onLink');
 
         }
+        // else if (deepLink.queryParameters.containsKey('orderId')) {
+        //   String orderId = deepLink.queryParameters['orderId'];
+        //   debugPrint('UI_U_landing: orderId from dynamic link: $orderId');
+        //   // await storage.write(key: 'orderId', value: orderId);
+        //   //StoreProvider.of<AppState>(context).dispatch(BusinessRequestAndNavigate(businessId));
+        //   if(FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty){
+        //     debugPrint('UI_U_landing: USER Is LOGGED in onLink');
+        //     StoreProvider.of<AppState>(context).dispatch(SetOrderDetailAndNavigatePopOrderId(orderId));
+        //     Navigator.push(context, MaterialPageRoute(builder: (context) => UI_M_BusinessList()));
+        //   }else
+        //     debugPrint('UI_U_landing: USER NOT LOGGED in onLink');
+        // }
       }
     }, onError: (OnLinkErrorException e) async {
       print('onLinkError');

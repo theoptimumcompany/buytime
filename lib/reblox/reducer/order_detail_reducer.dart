@@ -55,6 +55,13 @@ class SetOrderDetailAndNavigatePop{
   String get serviceId => _serviceId;
   String get orderId => _orderId;
 }
+
+class SetOrderDetailAndNavigatePopOrderId{
+  String _orderId;
+  SetOrderDetailAndNavigatePopOrderId( this._orderId);
+  String get orderId => _orderId;
+}
+
 class UpdatedOrderDetail {
   OrderDetailState _orderState;
   UpdatedOrderDetail(this._orderState);

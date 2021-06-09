@@ -180,6 +180,7 @@ void main() {
     CreateOrderReservableNativePendingService(),
     CreateOrderReservableRoomAndPayService(),
     CreateOrderReservableRoomPendingService(),
+    SetOrderDetailAndNavigatePopService(),
     AddingReservableStripePaymentMethodRequest(),
     CreateOrderReservableCardPendingService(),
     EmailCreateService(),

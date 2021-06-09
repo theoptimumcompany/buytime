@@ -216,7 +216,7 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
   }
 
   void checkIfNativePayReady() async {
-    StripePayment.setOptions(StripeOptions(publishableKey: "pk_test_51HS20eHr13hxRBpCZl1V0CKFQ7XzJbku7UipKLLIcuNGh3rp4QVsEDCThtV0l2AQ3jMtLsDN2zdC0fQ4JAK6yCOp003FIf3Wjz", merchantId: "Test", androidPayMode: 'test'));
+    StripePayment.setOptions(StripeOptions(publishableKey: "pk_test_51HS20eHr13hxRBpCZl1V0CKFQ7XzJbku7UipKLLIcuNGh3rp4QVsEDCThtV0l2AQ3jMtLsDN2zdC0fQ4JAK6yCOp003FIf3Wjz", merchantId: "merchant.theoptimumcompany.buytime", androidPayMode: 'test'));
 
     debugPrint('splash_screen: started to check if native pay ready');
     bool deviceSupportNativePay = await StripePayment.deviceSupportsNativePay();
