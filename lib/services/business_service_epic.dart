@@ -442,11 +442,25 @@ class BusinessGenerateDefaultCategoryService implements EpicClass<AppState> {
               },
           });
 
-      actionArray.add(ConvertBusinessToSnippet(event.businessState.id_firestore));
+      actionArray.add(BeforeConvertBusinessToSnippet(event.businessState));
       
     }).expand((element) {
       return actionArray;
-    }).delay(Duration(seconds: 1));
+    });
+  }
+}
+
+class BeforeConvertBusinessToSnippetService implements EpicClass<AppState> {
+  var actionArray = [];
+  @override
+  Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
+    return actions.whereType<BeforeConvertBusinessToSnippet>().asyncMap((event) async {
+      actionArray.clear();
+      actionArray.add(ConvertBusinessToSnippet(event.business));
+
+    }).expand((element) {
+      return actionArray;
+    }).delay(Duration(seconds: 7));
   }
 }
 
@@ -458,7 +472,7 @@ class ConvertBusinessToSnippetService implements EpicClass<AppState> {
     return actions.whereType<ConvertBusinessToSnippet>().asyncMap((event) async {
       actionArray.clear();
       print("START EPIC CONVERTING BUSINESS TO SNIPPET");
-      await FirebaseFirestore.instance.collection("convertionTrigger").doc("convertionTriggerDocument").update({'businessIdToSnippet': event.businessId});
+      await FirebaseFirestore.instance.collection("convertionTrigger").doc("convertionTriggerDocument").update({'businessIdToSnippet': event.business.id_firestore,'businessNameToSnippet': event.business.name,'businessProfileToSnippet': event.business.profile});
       actionArray.add(NavigatePushAction(AppRoutes.businessList));
 
     }).expand((element) {

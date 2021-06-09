@@ -87,12 +87,20 @@ class UpdatedBusiness {
   BusinessState get businessState => _businessState;
 }
 
+class BeforeConvertBusinessToSnippet {
+  BusinessState _business;
+
+  BeforeConvertBusinessToSnippet(this._business);
+
+  BusinessState get business => _business;
+}
+
 class ConvertBusinessToSnippet {
-  String _businessId;
+  BusinessState _business;
 
-  ConvertBusinessToSnippet(this._businessId);
+  ConvertBusinessToSnippet(this._business);
 
-  String get businessId => _businessId;
+  BusinessState get business => _business;
 }
 
 class GenerateDefaultCategory {

@@ -206,6 +206,7 @@ void main() {
     DefaultCategoryCreateService(),
     DefaultCategoryTreeAddService(),
     ConvertBusinessToSnippetService(),
+    BeforeConvertBusinessToSnippetService(),
   ]);
   final _initialState = AppState(
       category: CategoryState().toEmpty(),
