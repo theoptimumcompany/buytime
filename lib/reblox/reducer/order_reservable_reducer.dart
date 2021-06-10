@@ -279,6 +279,13 @@ class SetOrderReservableUser
   UserSnippet get user => _user;
 }
 
+class SetOrderReservableCancellationReason
+{
+  String _cancellationReason;
+  SetOrderReservableCancellationReason(this._cancellationReason);
+  String get cancellationReason => _cancellationReason;
+}
+
 class AddingReservableStripePaymentMethod {
   AddingReservableStripePaymentMethod();
 }
@@ -322,6 +329,10 @@ OrderReservableState orderReservableReducer(OrderReservableState state, action) 
   }
   if (action is SetOrderReservableUser) {
     orderReservableState.user = action.user;
+    return orderReservableState;
+  }
+  if (action is SetOrderReservableCancellationReason) {
+    orderReservableState.cancellationReason = action.cancellationReason;
     return orderReservableState;
   }
   if (action is OrderReservableRequestResponse) {

@@ -204,6 +204,13 @@ class SetOrderUser
   SetOrderUser(this._user);
   UserSnippet get user => _user;
 }
+class SetOrderCancellationReason
+{
+  String _cancellationReason;
+  SetOrderCancellationReason(this._cancellationReason);
+  String get cancellationReason => _cancellationReason;
+}
+
 class ConfirmOrderWait
 {
   bool _confirmOrderWait;
@@ -254,6 +261,10 @@ OrderState orderReducer(OrderState state, action) {
   }
   if (action is SetOrderUser) {
     orderState.user = action.user;
+    return orderState;
+  }
+  if (action is SetOrderCancellationReason) {
+    orderState.cancellationReason = action.cancellationReason;
     return orderState;
   }
   if (action is OrderRequestResponse) {

@@ -32,12 +32,15 @@ class _CancelPopState extends State<CancelPop> {
       switch (_radioValue) {
         case 0:
           _result = 0;
+          StoreProvider.of<AppState>(context).dispatch(SetOrderCancellationReason(AppLocalizations.of(context).overbooking));
           break;
         case 1:
           _result = 0;
+          StoreProvider.of<AppState>(context).dispatch(SetOrderCancellationReason(AppLocalizations.of(context).techProblem));
           break;
         case 2:
           _result = 0;
+          StoreProvider.of<AppState>(context).dispatch(SetOrderCancellationReason(AppLocalizations.of(context).legalRestrict));
           break;
       }
     });

@@ -45,6 +45,7 @@ class OrderReservableState {
   StripeRecommended.PaymentMethod paymentMethod;
   String location;
   String openUntil;
+  String cancellationReason;
 
   OrderReservableState({
     @required this.itemList,
@@ -74,6 +75,7 @@ class OrderReservableState {
     this.paymentMethod,
     this.location,
     this.openUntil,
+    this.cancellationReason,
   });
 
 
@@ -106,6 +108,7 @@ class OrderReservableState {
     this.paymentMethod = state.paymentMethod;
     this.location = state.location;
     this.openUntil = state.openUntil;
+    this.cancellationReason = state.cancellationReason;
   }
 
   OrderReservableState copyWith({
@@ -135,7 +138,8 @@ class OrderReservableState {
     bool confirmOrderWait,
     StripeRecommended.PaymentMethod paymentMethodRequest,
     String location,
-    String openUntil
+    String openUntil,
+    String cancellationReason,
   }) {
     return OrderReservableState(
       itemList: itemList ?? this.itemList,
@@ -165,6 +169,7 @@ class OrderReservableState {
       paymentMethod: paymentMethod ?? this.paymentMethod,
       location: location ?? this.location,
       openUntil: openUntil ?? this.openUntil,
+      cancellationReason: cancellationReason ?? this.cancellationReason,
     );
   }
 
@@ -196,7 +201,8 @@ class OrderReservableState {
         confirmOrderWait: false,
         paymentMethod: null,
         location: '',
-        openUntil: '--:--'
+        openUntil: '--:--',
+      cancellationReason: 'Overbooking',
     );
   }
 
