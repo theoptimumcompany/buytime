@@ -45,7 +45,8 @@ class UpdateOrder {
 class UpdateOrderByManager{
   OrderState _orderState;
   OrderStatus _orderStatus;
-  UpdateOrderByManager(this._orderState, this._orderStatus);
+  String cancellationReason = '';
+  UpdateOrderByManager(this._orderState, this._orderStatus, {this.cancellationReason});
   OrderState get orderState => _orderState;
   OrderStatus get orderStatus => _orderStatus;
 }

@@ -192,6 +192,7 @@ class OrderUpdateByManagerService implements EpicClass<AppState> {
       print("ORDER_SERVICE_EPIC - OrderUpdateService => ORDER ID: ${event.orderState.orderId}");
       orderState = event.orderState;
       orderState.progress = Utils.enumToString(event.orderStatus);
+      orderState.cancellationReason = event.cancellationReason;
       orderStateList = store.state.orderList.orderListState;
 
       /// awaited promise

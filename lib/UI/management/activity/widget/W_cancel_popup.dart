@@ -21,26 +21,24 @@ class CancelPop extends StatefulWidget {
 
 class _CancelPopState extends State<CancelPop> {
 
-  double _result = 0.0;
+  String _cancellationReason = 'Overbooking';
   int _radioValue = 0;
 
   void _handleRadioValueChange(int value) {
     setState(() {
       _radioValue = value;
+      _cancellationReason = AppLocalizations.of(context).overbooking;
       debugPrint('UI_M_activity_management => RADIO VALUE: $_radioValue');
 
       switch (_radioValue) {
         case 0:
-          _result = 0;
-          StoreProvider.of<AppState>(context).dispatch(SetOrderCancellationReason(AppLocalizations.of(context).overbooking));
+          _cancellationReason = AppLocalizations.of(context).overbooking;
           break;
         case 1:
-          _result = 0;
-          StoreProvider.of<AppState>(context).dispatch(SetOrderCancellationReason(AppLocalizations.of(context).techProblem));
+          _cancellationReason = AppLocalizations.of(context).techProblem;
           break;
         case 2:
-          _result = 0;
-          StoreProvider.of<AppState>(context).dispatch(SetOrderCancellationReason(AppLocalizations.of(context).legalRestrict));
+          _cancellationReason = AppLocalizations.of(context).legalRestrict;
           break;
       }
     });
@@ -229,7 +227,7 @@ class _CancelPopState extends State<CancelPop> {
                                   child: InkWell(
                                       onTap: () {
                                         widget.order.progress = Utils.enumToString(OrderStatus.canceled);
-                                        StoreProvider.of<AppState>(context).dispatch(UpdateOrderByManager(widget.order, OrderStatus.canceled));
+                                        StoreProvider.of<AppState>(context).dispatch(UpdateOrderByManager(widget.order, OrderStatus.canceled, cancellationReason: _cancellationReason));
                                         Navigator.of(context).pop();
                                       },
                                       borderRadius: BorderRadius.all(Radius.circular(5.0)),
