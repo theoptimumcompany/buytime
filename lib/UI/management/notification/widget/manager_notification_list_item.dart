@@ -144,7 +144,7 @@ class _ManagerNotificationListItemState extends State<ManagerNotificationListIte
                                               widget.notificationState.serviceName != null && widget.notificationState.serviceName.isNotEmpty ?
                                             '${Utils.retriveField(Localizations.localeOf(context).languageCode,  widget.notificationState.serviceName)} ${widget.notificationState.title.split(' ').last}' :
                                               '*** ${widget.notificationState.title.split(' ').last}',
-                                            maxLines: 2,
+                                            maxLines: 3,
                                             style: TextStyle(
                                                 letterSpacing: 1.5,
                                                 fontFamily: BuytimeTheme.FontFamily,
@@ -195,7 +195,7 @@ class _ManagerNotificationListItemState extends State<ManagerNotificationListIte
                                       child: Text(
                                         widget.notificationState.body,
                                         overflow: TextOverflow.ellipsis,
-                                        maxLines: 2,
+                                        maxLines: 3,
                                         style: TextStyle(
                                             letterSpacing: 0.15,
                                             fontFamily: BuytimeTheme.FontFamily,

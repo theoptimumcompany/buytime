@@ -816,7 +816,7 @@ class CreateOrderReservableRoomPendingService implements EpicClass<AppState> {
         /// add needed data to the order state
         OrderReservableState orderReservableState = configureOrderReservable(reservable, store);
         if(store.state.booking != null && store.state.booking.booking_id != null) {
-          reservable.cardType = Utils.enumToString(PaymentType.card);
+          reservable.cardType = Utils.enumToString(PaymentType.room);
           reservable.progress = Utils.enumToString(OrderStatus.pending);
           /// send document to orders collection
           /// This is a time based id, meaning that even if 2 users are going to generate a document at the same moment in time

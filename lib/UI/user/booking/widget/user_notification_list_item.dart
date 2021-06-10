@@ -96,7 +96,7 @@ class _UserNotificationListItemState extends State<UserNotificationListItem> {
                 }
               },
               child: Container(
-                height:  widget.notificationState.title.split(' ').last.toLowerCase() == 'canceled' && widget.serviceState.switchSlots ? 122 : 110,  ///SizeConfig.safeBlockVertical * 15
+                height:  widget.notificationState.title.split(' ').last.toLowerCase() == 'canceled' && widget.serviceState.switchSlots ? 132 : 110,  ///SizeConfig.safeBlockVertical * 15
                 margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 2.5, top: 1, bottom: 1),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -142,7 +142,7 @@ class _UserNotificationListItemState extends State<UserNotificationListItem> {
                                           child:  Text(
                                             Utils.retriveField(Localizations.localeOf(context).languageCode,  widget.serviceState.name)
                                                 + ' ' + widget.notificationState.title.split(' ').last,
-                                            maxLines: 2,
+                                            maxLines: 3,
                                             style: TextStyle(
                                                 letterSpacing: 1.5,
                                                 fontFamily: BuytimeTheme.FontFamily,
@@ -193,7 +193,7 @@ class _UserNotificationListItemState extends State<UserNotificationListItem> {
                                       child: Text(
                                         widget.notificationState.body,
                                         overflow: TextOverflow.ellipsis,
-                                        maxLines: 2,
+                                        maxLines: 3,
                                         style: TextStyle(
                                             letterSpacing: 0.15,
                                             fontFamily: BuytimeTheme.FontFamily,

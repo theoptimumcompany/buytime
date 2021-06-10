@@ -538,6 +538,40 @@ class _RActivityManagementState extends State<RActivityManagement> {
                       ),
                     )),
               )) : Container(),
+
+          /// Decline
+          order.progress == Utils.enumToString(OrderStatus.pending) || order.progress == Utils.enumToString(OrderStatus.holding) || order.progress == Utils.enumToString(OrderStatus.accepted)?
+          Container(
+              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 1.5, right: SizeConfig.safeBlockHorizontal * 1.5, bottom: SizeConfig.safeBlockVertical * .5, top: SizeConfig.safeBlockVertical * .25),
+              alignment: Alignment.center,
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                    onTap: () {
+                      // order.progress = Utils.enumToString(OrderStatus.declined);
+                      if (!managerHasChosenAction) {
+                        StoreProvider.of<AppState>(context).dispatch(UpdateOrderByManager(order, OrderStatus.declined));
+                        managerHasChosenAction = true;
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content:  Text(AppLocalizations.of(context).networkRequestStillInProgress)));
+                      }
+                    },
+                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                    child: Container(
+                      padding: EdgeInsets.all(5.0),
+                      child: Text(
+                        AppLocalizations.of(context).decline.toUpperCase(),
+                        style:  TextStyle(
+                            letterSpacing: 1.25,
+                            fontFamily: BuytimeTheme.FontFamily,
+                            color: BuytimeTheme.TextMalibu,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14
+                          ///SizeConfig.safeBlockHorizontal * 4
+                        ),
+                      ),
+                    )),
+              )) : Container(),
           /// Accept: the worker/manager thinks that he can provide the order, so he accepts it.
           /// A notification to the customer is sent, but the rest of the process depends on the payment method and the order type.
           order.progress == Utils.enumToString(OrderStatus.pending)?
@@ -561,39 +595,6 @@ class _RActivityManagementState extends State<RActivityManagement> {
                       padding: EdgeInsets.all(5.0),
                       child: Text(
                         AppLocalizations.of(context).accept.toUpperCase(),
-                        style:  TextStyle(
-                            letterSpacing: 1.25,
-                            fontFamily: BuytimeTheme.FontFamily,
-                            color: BuytimeTheme.TextMalibu,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 14
-                          ///SizeConfig.safeBlockHorizontal * 4
-                        ),
-                      ),
-                    )),
-              )) : Container(),
-          /// Decline
-          order.progress == Utils.enumToString(OrderStatus.pending) || order.progress == Utils.enumToString(OrderStatus.holding) || order.progress == Utils.enumToString(OrderStatus.accepted)?
-          Container(
-              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 1.5, right: SizeConfig.safeBlockHorizontal * 1.5, bottom: SizeConfig.safeBlockVertical * .5, top: SizeConfig.safeBlockVertical * .25),
-              alignment: Alignment.center,
-              child: Material(
-                color: Colors.transparent,
-                child: InkWell(
-                    onTap: () {
-                      // order.progress = Utils.enumToString(OrderStatus.declined);
-                      if (!managerHasChosenAction) {
-                        StoreProvider.of<AppState>(context).dispatch(UpdateOrderByManager(order, OrderStatus.declined));
-                        managerHasChosenAction = true;
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content:  Text(AppLocalizations.of(context).networkRequestStillInProgress)));
-                      }
-                    },
-                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                    child: Container(
-                      padding: EdgeInsets.all(5.0),
-                      child: Text(
-                        AppLocalizations.of(context).decline.toUpperCase(),
                         style:  TextStyle(
                             letterSpacing: 1.25,
                             fontFamily: BuytimeTheme.FontFamily,
