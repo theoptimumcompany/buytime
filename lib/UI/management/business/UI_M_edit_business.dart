@@ -276,18 +276,10 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
                                       converter: (store) => store.state.business,
                                       onInit: (store) {
                                         isHub = store.state.business.hub;
-                                        hubType = ['Hotel', 'Eco','Service Center','Center(Membership)'];
+                                        hubType = ['Hotel', 'Eco', 'Center(Membership)'];
 
                                         //hubType.sort((a,b) => a.name.compareTo(b.name));
-                                        notHubType = [
-                                          'Bar',
-                                         'Bike Renting',
-                                          'Museum',
-                                      'Diving and Sailing Center',
-                                          'Motor Rental',
-                                          'Tour Operator',
-                                           'Wellness',
-                                        ];
+                                        notHubType = ['Bar', 'Bike Renting', 'Museum', 'Diving and Sailing Center', 'Motor Rental', 'Tour Operator', 'Wellness', 'Service Center'];
                                         //notHubType.sort((a,b) => a.name.compareTo(b.name));
                                         ///Definition
                                         _businessNameController.text = store.state.business.name;
