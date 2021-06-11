@@ -65,7 +65,7 @@ class RBusinessListState extends State<RBusinessList> {
     var media = MediaQuery.of(context).size;
     var mediaHeight = media.height;
     Stream<QuerySnapshot> _businessStream;
-    int limit = 20;
+    int limit = 150;
     Role userRole = StoreProvider.of<AppState>(context).state.user.getRole();
     if (userRole == Role.manager || userRole == Role.worker) {
       _businessStream =  FirebaseFirestore.instance

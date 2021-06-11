@@ -111,8 +111,6 @@ class _RActivityManagementState extends State<RActivityManagement> {
     orderMap.putIfAbsent(orderTime, () => []);
     if(element.selected != null && element.selected.isNotEmpty){
       element.itemList.forEach((entry) {
-        DateTime orderEntryTime = entry.date;
-        orderEntryTime = new DateTime(orderEntryTime.year, orderEntryTime.month, orderEntryTime.day, 0, 0, 0, 0, 0);
         if(seeAll){
           list.add([element, entry]);
         }else{
@@ -270,6 +268,7 @@ class _RActivityManagementState extends State<RActivityManagement> {
                 insetOnOverlap: true,
                 children: [
                   SliverPositioned.fill(
+
                     top: 0,
                     child: Container(),
                   ),
@@ -712,7 +711,8 @@ class _RActivityManagementState extends State<RActivityManagement> {
         _orderListRealtime = FirebaseFirestore.instance.collection('order')
             .where("businessId", whereIn: businessIdList)
             .orderBy('date', descending: false)
-            .where("date", isGreaterThanOrEqualTo: currentTime)
+            // .startAt([currentTime])
+            .where("date", isGreaterThan: currentTime)
         //.where("date", isLessThanOrEqualTo: sevenDaysFromNow)
             .snapshots();
       }
@@ -797,7 +797,7 @@ class _RActivityManagementState extends State<RActivityManagement> {
               }
 
               if (snapshot.connectionState == ConnectionState.active) {
-                debugPrint('Coonection Stablished');
+                debugPrint('Connection Established, total docs: ' + snapshot.data.docs.length.toString());
               }
               pendingList.clear();
               acceptedList.clear();
@@ -820,10 +820,27 @@ class _RActivityManagementState extends State<RActivityManagement> {
                 }else{
                   if(tmp.isNotEmpty && tmp.first.businessId == null)
                     tmp.removeLast();
-                  debugPrint('CHECK 1');
+                  debugPrint('CHECK 1 : ' + tmp.length.toString());
                   noActivity = false;
                   startRequest = false;
                 }
+
+                /// remove old orders just for today
+                List<OrderState> tmpToRemove = [];
+                tmpToRemove.clear();
+                tmp.forEach((element) {
+                  DateTime orderTime = element.date;
+                  if(orderTime.toUtc().isBefore(DateTime.now().toUtc())) {
+                    if(element.itemList.first.time != null){
+                      tmpToRemove.add(element);
+
+                    }
+                  }
+                });
+                tmpToRemove.forEach((element) {
+                  tmp.remove(element);
+                });
+
 
                 tmp.forEach((element) {
                   //debugPrint('CHECK 1');
@@ -848,25 +865,25 @@ class _RActivityManagementState extends State<RActivityManagement> {
                   DateTime pendingTime = pending[0].date;
                   pendingTime = DateTime(pendingTime.year, pendingTime.month, pendingTime.day, 0, 0, 0, 0, 0);
                   //orderMap[DateFormat('dd MM yyyy').format(pendingTime)].add(pending);
-                  if(!filterAccepted || filterPending)
+                  if((!filterAccepted || filterPending) && orderMap.containsKey(pendingTime) )
                     orderMap[pendingTime].add(pending);
                 });
 
                 acceptedList.forEach((accepted) {
                   //debugPrint('CHECK ACCEPTED');
                   DateTime acceptedTime = accepted[0].date;
-                  acceptedTime = new DateTime(acceptedTime.year, acceptedTime.month, acceptedTime.day, 0, 0, 0, 0, 0);
+                  acceptedTime = new DateTime(acceptedTime.year, acceptedTime.month, acceptedTime.day, 0 , 0, 0, 0, 0);
                   //orderMap[DateFormat('dd MM yyyy').format(acceptedTime)].add(accepted);
-                  if(!filterPending || filterAccepted)
+                  if((!filterPending || filterAccepted)  && orderMap.containsKey(acceptedTime))
                     orderMap[acceptedTime].add(accepted);
                 });
 
                 canceledList.forEach((pending) {
                   //debugPrint('CHECK CANCELED');
                   DateTime pendingTime = pending[0].date;
-                  pendingTime = DateTime(pendingTime.year, pendingTime.month, pendingTime.day, 0, 0, 0, 0, 0);
+                  pendingTime = DateTime(pendingTime.year, pendingTime.month, pendingTime.day, 0 , 0, 0, 0, 0);
                   // orderMap[DateFormat('dd MM yyyy').format(pendingTime)].add(pending);
-                  if(!filterPending && !filterAccepted)
+                  if((!filterPending || filterAccepted)  && orderMap.containsKey(pendingTime))
                     orderMap[pendingTime].add(pending);
                 });
 
@@ -898,7 +915,6 @@ class _RActivityManagementState extends State<RActivityManagement> {
                   }else{
                     weekOrderList.add(value);
                   }
-
                   allOrderList.add(value);
                 });
 
@@ -1036,7 +1052,7 @@ class _RActivityManagementState extends State<RActivityManagement> {
                               margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
                               height: 2,
                               width: 125,
-                              color: filterAccepted ? Color(0xff4C95C2) : BuytimeTheme.TextWhite,
+                              // color: filterAccepted ? Color(0xff4C95C2) : BuytimeTheme.TextWhite,
                             )
                           ],
                         )

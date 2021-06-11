@@ -302,7 +302,6 @@ class StripePaymentService {
     items.add(item);
     /// add total item???
 
-
     //step 1: add card
     var token = await StripeRecommended.StripePayment.paymentRequestWithNativePay(
       androidPayOptions: StripeRecommended.AndroidPayPaymentRequest(
@@ -323,6 +322,7 @@ class StripePaymentService {
         ),
       ),
     );
+    // await StripeRecommended.StripePayment.cancelNativePayRequest();
     if (paymentMethod != null) {
       return paymentMethod;
     } else {
@@ -365,6 +365,7 @@ class StripePaymentService {
         ),
       ),
     );
+
     if (paymentMethod != null) {
       return paymentMethod;
     } else {

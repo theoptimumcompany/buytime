@@ -710,11 +710,11 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
 
   Future<void> confirmationNative(BuildContext context, AppState snapshot) async {
     StoreProvider.of<AppState>(context).dispatch(CreatingOrder());
-
+    StripeRecommended.PaymentMethod paymentMethod;
     /// 1: create the payment method
     StripePaymentService stripePaymentService = StripePaymentService();
-    StripeRecommended.PaymentMethod paymentMethod = await stripePaymentService.createPaymentMethodNative(snapshot.order, snapshot.business.name);
     if (widget.reserve != null && widget.reserve) {
+      paymentMethod = await stripePaymentService.createPaymentMethodNative(OrderState.fromReservableState(snapshot.orderReservable), snapshot.business.name);
       /// Reservable payment process starts with Native Method
       StoreProvider.of<AppState>(context).dispatch(SetOrderReservablePaymentMethod(paymentMethod));
       debugPrint('UI_U_ConfirmOrder => start reservable payment process with Native Method');
@@ -734,6 +734,8 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
             snapshot.orderReservable, paymentMethod, PaymentType.native, context, snapshot.business.stripeCustomerId));
       }
     } else {
+      paymentMethod = await stripePaymentService.createPaymentMethodNative(snapshot.order, snapshot.business.name);
+
       /// Direct Native Payment
       debugPrint('UI_U_ConfirmOrder => start direct payment process with Native Method');
 
