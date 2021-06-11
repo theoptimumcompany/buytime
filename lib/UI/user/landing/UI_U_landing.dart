@@ -77,14 +77,15 @@ class LandingState extends State<Landing> {
   bookingCodeFound() async{
     bookingCode = await storage.read(key: 'bookingCode') ?? '';
     debugPrint('UI_U_landing: DEEP LINK EMPTY | BOOKING CODE: $bookingCode');
+    // await storage.delete(key: 'bookingCode');
     if(bookingCode.isNotEmpty)
       Navigator.of(context).push(MaterialPageRoute(builder: (context) => InviteGuestForm(id: bookingCode, fromLanding: true,)));
-
   }
 
   categoryInviteFound() async{
     categoryCode = await storage.read(key: 'categoryInvite') ?? '';
     debugPrint('UI_U_landing: DEEP LINK EMPTY | CATEGORY INVITE: $categoryCode');
+    // await storage.delete(key: 'categoryInvite');
     if(categoryCode.isNotEmpty){
       StoreProvider.of<AppState>(context).dispatch(UserBookingListRequest(StoreProvider.of<AppState>(context).state.user.email, false));
       Navigator.push(context, MaterialPageRoute(builder: (context) => UI_M_BusinessList()));
@@ -139,18 +140,18 @@ class LandingState extends State<Landing> {
             debugPrint('UI_U_landing: USER NOT LOGGED in onLink');
 
         }
-        // else if (deepLink.queryParameters.containsKey('orderId')) {
-        //   String orderId = deepLink.queryParameters['orderId'];
-        //   debugPrint('UI_U_landing: orderId from dynamic link: $orderId');
-        //   // await storage.write(key: 'orderId', value: orderId);
-        //   //StoreProvider.of<AppState>(context).dispatch(BusinessRequestAndNavigate(businessId));
-        //   if(FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty){
-        //     debugPrint('UI_U_landing: USER Is LOGGED in onLink');
-        //     StoreProvider.of<AppState>(context).dispatch(SetOrderDetailAndNavigatePopOrderId(orderId));
-        //     Navigator.push(context, MaterialPageRoute(builder: (context) => UI_M_BusinessList()));
-        //   }else
-        //     debugPrint('UI_U_landing: USER NOT LOGGED in onLink');
-        // }
+        else if (deepLink.queryParameters.containsKey('orderId')) {
+          String orderId = deepLink.queryParameters['orderId'];
+          debugPrint('UI_U_landing: orderId from dynamic link: $orderId');
+          // await storage.write(key: 'orderId', value: orderId);
+          //StoreProvider.of<AppState>(context).dispatch(BusinessRequestAndNavigate(businessId));
+          if(FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty){
+            debugPrint('UI_U_landing: USER Is LOGGED in onLink');
+            StoreProvider.of<AppState>(context).dispatch(SetOrderDetailAndNavigatePopOrderId(orderId));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => UI_M_BusinessList()));
+          }else
+            debugPrint('UI_U_landing: USER NOT LOGGED in onLink');
+        }
       }
     }, onError: (OnLinkErrorException e) async {
       print('onLinkError');

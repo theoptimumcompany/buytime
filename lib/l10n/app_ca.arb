@@ -570,5 +570,6 @@
   "serviceVATBlank": "VAT field is blank",
   "notValidVAT": "Not a valid VAT",
   "serviceVAT": "VAT",
+  "showMore": "Show More",
   "native": "Native"
 }

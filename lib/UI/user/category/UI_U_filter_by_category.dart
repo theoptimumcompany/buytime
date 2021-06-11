@@ -964,14 +964,17 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                                   //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ServiceList()),);
                                                   //Navigator.of(context).pop();
                                                   setState(() {
-                                                    showAll = !showAll;
+                                                    // showAll = !showAll;
+                                                    categoryList.shuffle();
                                                   });
+                                                  grid(categoryList);
                                                 },
                                                 borderRadius: BorderRadius.all(Radius.circular(5.0)),
                                                 child: Container(
                                                   padding: EdgeInsets.all(5.0),
                                                   child: Text(
-                                                    !showAll ? AppLocalizations.of(context).showAll : AppLocalizations.of(context).showLess,
+                                                    AppLocalizations.of(context).showMore,
+                                                    // !showAll ? AppLocalizations.of(context).showAll : AppLocalizations.of(context).showLess,
                                                     style: TextStyle(
                                                         letterSpacing: SizeConfig.safeBlockHorizontal * .2,
                                                         fontFamily: BuytimeTheme.FontFamily,
@@ -996,12 +999,14 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                         width: double.infinity,
                                         child: Column(
                                           children: [
-                                            !showAll && rowLess1.isNotEmpty ? inspiration(rowLess1) : Container(),
-                                            !showAll && rowLess2.isNotEmpty ? inspiration(rowLess2) : Container(),
-                                            showAll && row1.isNotEmpty ? inspiration(row1) : Container(),
-                                            showAll && row2.isNotEmpty ? inspiration(row2) : Container(),
-                                            showAll && row3.isNotEmpty ? inspiration(row3) : Container(),
-                                            showAll && row4.isNotEmpty ? inspiration(row4) : Container(),
+                                            // !showAll && rowLess1.isNotEmpty ? inspiration(rowLess1) : Container(),
+                                            rowLess1.isNotEmpty ? inspiration(rowLess1) : Container(),
+                                            // !showAll && rowLess2.isNotEmpty ? inspiration(rowLess2) : Container(),
+                                            rowLess2.isNotEmpty ? inspiration(rowLess2) : Container(),
+                                            // showAll && row1.isNotEmpty ? inspiration(row1) : Container(),
+                                            // showAll && row2.isNotEmpty ? inspiration(row2) : Container(),
+                                            // showAll && row3.isNotEmpty ? inspiration(row3) : Container(),
+                                            // showAll && row4.isNotEmpty ? inspiration(row4) : Container(),
                                           ],
                                         )) :
                                     ///No Category
