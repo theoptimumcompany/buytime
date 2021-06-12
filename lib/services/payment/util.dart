@@ -39,7 +39,7 @@ Future <List<CardState>> stripeCardListMaker(dynamic event, List<StripeState> st
     snapshotToken.docs.forEach((tokenData) {
       if (snapshotCard?.docs != null && snapshotCard.docs.length > counter) {
         snapshotCard.docs.forEach((cardData) {
-          if ( cardData['payment_method'] == tokenData.id) {
+          if ( cardData['payment_method'] == tokenData['id']) {
             stripeStateList.add(StripeState(
                 stripeCard: StripeCardResponse(
                   firestore_id: cardData.id,
@@ -48,7 +48,7 @@ Future <List<CardState>> stripeCardListMaker(dynamic event, List<StripeState> st
                   expMonth: tokenData['card']['exp_month'],
                   brand: tokenData['card']['brand'],
                   paymentMethodId: tokenData['id'],
-                  country: cardData['country']
+                  country: '' // cardData.get('country') ?? ''
                 )));
           }
         });
