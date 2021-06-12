@@ -36,6 +36,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:emojis/emojis.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 import 'package:share/share.dart';
@@ -56,6 +57,7 @@ class BookingPage extends StatefulWidget {
 
 class _BookingPageState extends State<BookingPage> {
   TextEditingController _searchController = TextEditingController();
+  final storage = new FlutterSecureStorage();
 
   BookingState bookingState;
   BusinessState businessState;
@@ -343,7 +345,8 @@ class _BookingPageState extends State<BookingPage> {
                                   size: 25.0,
                                 ),
                                 tooltip: AppLocalizations.of(context).comeBack,
-                                onPressed: () {
+                                onPressed: () async {
+                                  await storage.delete(key: 'bookingCode');
                                   //widget.fromConfirm != null ? Navigator.of(context).pop() : Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Landing()),);
                                   Future.delayed(Duration.zero, () {
 

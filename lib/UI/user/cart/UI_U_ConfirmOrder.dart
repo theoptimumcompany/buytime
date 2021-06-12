@@ -773,7 +773,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
       }
     } else {
       /// Direct Payment process starts with Native Method
-      debugPrint('UI_U_ConfirmOrder => start direct payment process with Native Method');
+      debugPrint('UI_U_ConfirmOrder => start direct payment process with Room Method');
       if (snapshot.order.isOrderAutoConfirmable()) {
         if (roomNumber.isNotEmpty) {
           StoreProvider.of<AppState>(context).dispatch(CreateOrderRoomAndPay(snapshot.order, roomNumber, PaymentType.room));

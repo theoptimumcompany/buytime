@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -18,6 +19,7 @@ import 'package:Buytime/services/payment/util.dart';
 import 'package:Buytime/services/statistic/util.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart';
 import 'package:redux_epics/redux_epics.dart';
 import 'package:rxdart/rxdart.dart';
@@ -38,7 +40,6 @@ final StripeUnofficial.Stripe stripeSDK = StripeUnofficial.Stripe(
   returnUrlForSca: "stripesdk://3ds.stripesdk.io", //Return URL for SCA
 );
 
-
 /// SAVE A CREDIT CARD
 class StripePaymentAddPaymentMethod implements EpicClass<AppState> {
   String userId = '';
@@ -55,7 +56,10 @@ class StripePaymentAddPaymentMethod implements EpicClass<AppState> {
       if (userId.isNotEmpty) {
         try {
           /// create setupIntent on the user
-          await FirebaseFirestore.instance.collection("stripeCustomer/" + userId + "_test/setupIntent").doc().set({'status': "create request"}).then((value) async {
+          await FirebaseFirestore.instance
+              .collection("stripeCustomer/" + userId + "_test/setupIntent")
+              .doc()
+              .set({'status': "create request"}).then((value) async {
             var url = Uri.https('europe-west1-buytime-458a1.cloudfunctions.net', '/createSetupIntent', {'userId': '$userId'});
             final http.Response response = await http.get(url);
             if (response.statusCode == 200 && !response.body.contains('error')) {
@@ -63,10 +67,13 @@ class StripePaymentAddPaymentMethod implements EpicClass<AppState> {
               DocumentSnapshot stripeCustomerReference = await FirebaseFirestore.instance.collection("stripeCustomer/").doc(userId + "_test").get();
               debugPrint("STRIPE_PAYMENT_SERVICE_EPIC - StripePaymentAddPaymentMethod => SetupIntentSecret got from firestore");
               String customerSecret = stripeCustomerReference.get("stripeCustomerSecret");
+
               /// saving payment method on firebase TODO: store only the payment method ID as soon as the libraries allow that
               await FirebaseFirestore.instance.collection("stripeCustomer/" + userId + "_test/token/").doc().set(stripePaymentMethod);
-              debugPrint("STRIPE_PAYMENT_SERVICE_EPIC - StripePaymentAddPaymentMethod => Added to firestore"); // this will trigger the creation of a new stripeIntent to be used in the next request
+              debugPrint(
+                  "STRIPE_PAYMENT_SERVICE_EPIC - StripePaymentAddPaymentMethod => Added to firestore"); // this will trigger the creation of a new stripeIntent to be used in the next request
               String paymentMethodId = stripePaymentMethod["id"];
+
               /// confirm the setupIntent (and in doing so add the card to stripe)
               var confirmationResultResolved = await stripeSDK.api.confirmSetupIntent(customerSecret, data: {'payment_method': paymentMethodId});
               if (stripePaymentMethod['card'] != null && stripePaymentMethod['card']['three_d_secure_usage'] != null) {
@@ -84,15 +91,17 @@ class StripePaymentAddPaymentMethod implements EpicClass<AppState> {
                 }
               }
               // save the card also on firestore
-              var cardSavingResult = await FirebaseFirestore.instance.collection("stripeCustomer/" + userId + "_test/card/").doc().set(confirmationResultResolved);
+              var cardSavingResult =
+                  await FirebaseFirestore.instance.collection("stripeCustomer/" + userId + "_test/card/").doc().set(confirmationResultResolved);
               debugPrint("STRIPE_PAYMENT_SERVICE_EPIC - StripePaymentAddPaymentMethod => card should be added in firestore ");
               statisticsComputation();
             } else {
               debugPrint("STRIPE_PAYMENT_SERVICE_EPIC - StripePaymentAddPaymentMethod => error in the setup intent creation: " + response.body);
               error = "error in the setup intent creation";
             }
-          }).catchError((onError){
-            debugPrint("STRIPE_PAYMENT_SERVICE_EPIC - StripePaymentAddPaymentMethod => error  creating the setupIntent document on firebase" + onError.toString());
+          }).catchError((onError) {
+            debugPrint("STRIPE_PAYMENT_SERVICE_EPIC - StripePaymentAddPaymentMethod => error  creating the setupIntent document on firebase" +
+                onError.toString());
             error = "error in the setup intent creation on firebase";
           });
         } catch (errorCatched) {
@@ -116,8 +125,6 @@ class StripePaymentAddPaymentMethod implements EpicClass<AppState> {
     });
   }
 }
-
-
 
 /// Checks if the stripe_customer document for the current logged in user has been created,
 /// always checks the production document.
@@ -200,15 +207,21 @@ class StripeDetachPaymentMethodRequest implements EpicClass<AppState> {
   String userId = '';
   String firestoreCardId = '';
 
+
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<CreateDisposePaymentMethodIntent>().asyncMap((event) async {
-      debugPrint("STRIPE_PAYMENT_SERVICE_EPIC - StripeDetachPaymentMethodRequest => USER ID: ${event.userId} FIRESTORE CARD ID: ${event.firestoreCardId}");
+      debugPrint(
+          "STRIPE_PAYMENT_SERVICE_EPIC - StripeDetachPaymentMethodRequest => USER ID: ${event.userId} FIRESTORE CARD ID: ${event.firestoreCardId}");
       userId = event.userId;
       firestoreCardId = event.firestoreCardId;
-      await FirebaseFirestore.instance.collection("stripeCustomer/" + event.userId + "_test/detach/").doc().set({'firestore_id': event.firestoreCardId});
+      await FirebaseFirestore.instance
+          .collection("stripeCustomer/" + event.userId + "_test/detach/")
+          .doc()
+          .set({'firestore_id': event.firestoreCardId});
       debugPrint("STRIPE_PAYMENT_SERVICE_EPIC - StripeDetachPaymentMethodRequest => Detach document created");
-      var url = Uri.https('europe-west1-buytime-458a1.cloudfunctions.net', '/detachPaymentMethod', {'userId': '$userId','firestoreCardId': '${event.firestoreCardId.toString()}'});
+      var url = Uri.https('europe-west1-buytime-458a1.cloudfunctions.net', '/detachPaymentMethod',
+          {'userId': '$userId', 'firestoreCardId': '${event.firestoreCardId.toString()}'});
       response = await http.get(url);
       statisticsComputation();
     }).expand((element) {
@@ -240,22 +253,17 @@ class StripePaymentService {
   String currency = 'EUR';
   String country = 'IT';
 
-  StripePaymentService({
-    this.tip = 0.0,
-    this.tax = 0.0,
-    this.taxPercent = 0.2,
-    this.currency = 'EUR',
-    this.country = 'IT'
-  });
+  StripePaymentService({this.tip = 0.0, this.tax = 0.0, this.taxPercent = 0.2, this.currency = 'EUR', this.country = 'IT'});
 
   void initializePaymentValues(OrderState orderState, String businessName) {
     print('initializing instance payment values...');
     totalCost = orderState.total;
+
     /// why setting the account to null?
     /// StripeRecommended.StripePayment.setStripeAccount(null);
 
     /// Apple items initialization
-    for(int i= 0; i < orderState.itemList.length; i++) {
+    for (int i = 0; i < orderState.itemList.length; i++) {
       items.add(StripeRecommended.ApplePayItem(
         label: Utils.retriveField("en", orderState.itemList[i].name),
         amount: orderState.itemList[i].toString(),
@@ -276,9 +284,9 @@ class StripePaymentService {
     }
     items.add(StripeRecommended.ApplePayItem(
       label: businessName,
-      amount: (totalCost + tip ).toString(),
+      amount: (totalCost + tip).toString(),
     ));
-    amount = ((totalCost + tip ) * 100).toInt();
+    amount = ((totalCost + tip) * 100).toInt();
     debugPrint('amount in cent which will be charged = $amount');
   }
 
@@ -286,6 +294,7 @@ class StripePaymentService {
     StripeRecommended.PaymentMethod paymentMethod;
     initializePaymentValues(orderState, businessName);
     print('started NATIVE payment method creation...');
+
     /// why setting the account to null????? TODO: discover why
     /// StripeRecommended.StripePayment.setStripeAccount(null);
 
@@ -296,45 +305,59 @@ class StripePaymentService {
       StripeRecommended.ApplePayItem item = StripeRecommended.ApplePayItem(label: Utils.retriveField("en", orderEntry.name), amount: totalItemPrice);
       items.add(item);
     }
-    OrderEntry orderEntry = OrderEntry(number: 1, name: '', description: '', price: orderState.total, thumbnail: '', id: '', id_business: '', id_owner: '', id_category: '');
+    OrderEntry orderEntry = OrderEntry(
+        number: 1, name: '', description: '', price: orderState.total, thumbnail: '', id: '', id_business: '', id_owner: '', id_category: '');
     String totalItemPrice = (orderEntry.price * orderEntry.number).toString();
     StripeRecommended.ApplePayItem item = StripeRecommended.ApplePayItem(label: Utils.retriveField("en", orderEntry.name), amount: totalItemPrice);
     items.add(item);
-    /// add total item???
 
-    //step 1: add card
-    var token = await StripeRecommended.StripePayment.paymentRequestWithNativePay(
-      androidPayOptions: StripeRecommended.AndroidPayPaymentRequest(
-        totalPrice: (totalCost + tip).toStringAsFixed(2),
-        currencyCode: currency,
-      ),
-      applePayOptions: StripeRecommended.ApplePayPaymentOptions(
-        countryCode: country,
-        currencyCode: currency,
-        items: items,
-      ),
-    );
-    debugPrint('UI_U_ConfirmOrder => token received:' + token.toString());
-    paymentMethod = await StripeRecommended.StripePayment.createPaymentMethod(
-      StripeRecommended.PaymentMethodRequest(
-        card: StripeRecommended.CreditCard(
-          token: token.tokenId,
+    /// add total item???
+    try {
+      //step 1: add card
+      var token = await StripeRecommended.StripePayment.paymentRequestWithNativePay(
+        androidPayOptions: StripeRecommended.AndroidPayPaymentRequest(
+          totalPrice: (totalCost + tip).toStringAsFixed(2),
+          currencyCode: currency,
         ),
-      ),
-    );
-    // await StripeRecommended.StripePayment.cancelNativePayRequest();
-    if (paymentMethod != null) {
-      return paymentMethod;
-    } else {
-      debugPrint('UI_U_ConfirmOrder => error in creating Native Method, the response from stripe is null');
-      return null;
+        applePayOptions: StripeRecommended.ApplePayPaymentOptions(
+          countryCode: country,
+          currencyCode: currency,
+          items: items,
+        ),
+      );
+      const MethodChannel channel = const MethodChannel('stripe_payment');
+
+      debugPrint('UI_U_ConfirmOrder => token received:' + token.toString());
+      paymentMethod = await StripeRecommended.StripePayment.createPaymentMethod(
+        StripeRecommended.PaymentMethodRequest(
+          card: StripeRecommended.CreditCard(
+            token: token.tokenId,
+          ),
+        ),
+      ).whenComplete((){
+        debugPrint('UI_U_ConfirmOrder => whenComplete:');
+        if (Platform.isIOS) {
+          return channel.invokeMethod("completeApplePayRequest");
+        }
+      });
+      // await StripeRecommended.StripePayment.cancelNativePayRequest();
+      if (paymentMethod != null) {
+        return paymentMethod;
+      } else {
+        debugPrint('UI_U_ConfirmOrder => error in creating Native Method, the response from stripe is null');
+        return null;
+      }
+    } catch (e) {
+      debugPrint('stripe_payment_service_epic payment exception: ' + e.toString());
     }
+    return null;
   }
 
   Future<StripeRecommended.PaymentMethod> createPaymentMethodNativeReservable(OrderState orderState, String businessName) async {
     StripeRecommended.PaymentMethod paymentMethod;
     initializePaymentValues(orderState, businessName);
     print('started NATIVE payment method creation...');
+
     /// why setting the account to null????? TODO: discover why
     /// StripeRecommended.StripePayment.setStripeAccount(null);
 
@@ -346,32 +369,43 @@ class StripePaymentService {
       items.add(item);
     }
     //step 1: add card
-    var token = await StripeRecommended.StripePayment.paymentRequestWithNativePay(
-      androidPayOptions: StripeRecommended.AndroidPayPaymentRequest(
-        totalPrice: (totalCost + tip).toStringAsFixed(2),
-        currencyCode: currency,
-      ),
-      applePayOptions: StripeRecommended.ApplePayPaymentOptions(
-        countryCode: country,
-        currencyCode: currency,
-        items: items,
-      ),
-    );
-    debugPrint('UI_U_ConfirmOrder => token received:' + token.toString());
-    paymentMethod = await StripeRecommended.StripePayment.createPaymentMethod(
-      StripeRecommended.PaymentMethodRequest(
-        card: StripeRecommended.CreditCard(
-          token: token.tokenId,
+    try {
+      var token = await StripeRecommended.StripePayment.paymentRequestWithNativePay(
+        androidPayOptions: StripeRecommended.AndroidPayPaymentRequest(
+          totalPrice: (totalCost + tip).toStringAsFixed(2),
+          currencyCode: currency,
         ),
-      ),
-    );
-    await StripeRecommended.StripePayment.cancelNativePayRequest();
-    if (paymentMethod != null) {
-      return paymentMethod;
-    } else {
-      debugPrint('UI_U_ConfirmOrder => error in creating Native Method, the response from stripe is null');
-      return null;
+        applePayOptions: StripeRecommended.ApplePayPaymentOptions(
+          countryCode: country,
+          currencyCode: currency,
+          items: items,
+        ),
+      );
+      debugPrint('UI_U_ConfirmOrder => token received:' + token.toString());
+      const MethodChannel channel = const MethodChannel('stripe_payment');
+      paymentMethod = await StripeRecommended.StripePayment.createPaymentMethod(
+        StripeRecommended.PaymentMethodRequest(
+          card: StripeRecommended.CreditCard(
+            token: token.tokenId,
+          ),
+        ),
+      ).whenComplete((){
+        debugPrint('UI_U_ConfirmOrder => whenComplete:');
+        if (Platform.isIOS) {
+          return channel.invokeMethod("completeApplePayRequest");
+        }
+      });
+      await StripeRecommended.StripePayment.cancelNativePayRequest();
+      if (paymentMethod != null) {
+        return paymentMethod;
+      } else {
+        debugPrint('UI_U_ConfirmOrder => error in creating Native Method, the response from stripe is null');
+        return null;
+      }
+    } catch (e) {
+      debugPrint('stripe_payment_service_epic payment exception: ' + e.toString());
     }
+    return null;
   }
 
   Future<String> processPaymentAsDirectCharge(String orderId, String StripeConnectedBusinessId) async {
@@ -388,30 +422,32 @@ class StripePaymentService {
         StripeRecommended.StripePayment.completeNativePayRequest();
         debugPrint('processPaymentAsDirectCharge:  Payment completed. ${paymentIntentX['amount'].toString()} successfully charged');
         return "success";
+
         /// stop spinner
       } else {
         //step 4: there is a need to authenticate
         /// set stripe account of connected business
         StripeRecommended.StripePayment.setStripeAccount(StripeConnectedBusinessId);
-        StripeRecommended.PaymentIntentResult paymentIntentResult = await StripeRecommended.StripePayment.confirmPaymentIntent(StripeRecommended.PaymentIntent(
-            paymentMethodId: paymentIntentX['payment_method'],
-            clientSecret: paymentIntentX['client_secret']
-        ));
+        StripeRecommended.PaymentIntentResult paymentIntentResult = await StripeRecommended.StripePayment.confirmPaymentIntent(
+            StripeRecommended.PaymentIntent(paymentMethodId: paymentIntentX['payment_method'], clientSecret: paymentIntentX['client_secret']));
         //This code will be executed if the authentication is successful
         //step 5: request the server to confirm the payment with
         final statusFinal = paymentIntentResult.status;
         if (statusFinal == 'succeeded') {
           StripeRecommended.StripePayment.completeNativePayRequest();
+
           /// stop spinner
           debugPrint('processPaymentAsDirectCharge:  Payment success');
           return "success";
         } else if (statusFinal == 'processing') {
           StripeRecommended.StripePayment.cancelNativePayRequest();
+
           /// stop spinner
           debugPrint('processPaymentAsDirectCharge:  processing. this is weird');
           return "trouble";
         } else {
           StripeRecommended.StripePayment.cancelNativePayRequest();
+
           /// stop spinner
           debugPrint('processPaymentAsDirectCharge:  Payment error. canceling.');
           return "error";
@@ -420,6 +456,7 @@ class StripePaymentService {
     } else {
       //case A
       StripeRecommended.StripePayment.cancelNativePayRequest();
+
       /// stop spinner
       debugPrint('processPaymentAsDirectCharge:  Payment error. canceling.');
       return "error";
@@ -428,7 +465,7 @@ class StripePaymentService {
 
   Future<String> processHoldCharge(String orderId, String StripeConnectedBusinessId, BuildContext context) async {
     var url = Uri.https(cloudAddress, cloudFunctionPathHold, {'orderId': '$orderId', 'currency': currency});
-    final http.Response response  = await http.get(url);
+    final http.Response response = await http.get(url);
     if (response.body != null && response.body != 'error') {
       final paymentIntentX = jsonDecode(response.body);
       final status = paymentIntentX['status'];
@@ -438,17 +475,19 @@ class StripePaymentService {
         StripeRecommended.StripePayment.completeNativePayRequest();
         debugPrint('processPaymentAsDirectCharge:  Payment completed. ${paymentIntentX['amount'].toString()} successfully charged');
         return "success";
+
         /// stop spinner
       } else {
         /// set stripe account of connected business
         StripeRecommended.StripePayment.setStripeAccount(StripeConnectedBusinessId);
-        StripeRecommended.PaymentIntentResult paymentIntentResult = await StripeRecommended.StripePayment.authenticatePaymentIntent(clientSecret: paymentIntentX['client_secret']);
+        StripeRecommended.PaymentIntentResult paymentIntentResult =
+            await StripeRecommended.StripePayment.authenticatePaymentIntent(clientSecret: paymentIntentX['client_secret']);
         // confirmPaymentIntent(StripeRecommended.PaymentIntent(
         //     paymentMethodId: paymentIntentX['payment_method'],
         //     clientSecret: paymentIntentX['client_secret']
         // ));
         final statusFinal = paymentIntentResult.status;
-        if (statusFinal == 'requires_capture' || statusFinal == 'requires_confirmation' ) {
+        if (statusFinal == 'requires_capture' || statusFinal == 'requires_confirmation') {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context).holdingConfirmed)));
           debugPrint('processPaymentAsDirectCharge:  Payment success');
           return "success";
@@ -461,29 +500,29 @@ class StripePaymentService {
     } else {
       //case A
       StripeRecommended.StripePayment.cancelNativePayRequest();
+
       /// stop spinner
       debugPrint('processPaymentAsDirectCharge:  Payment error. canceling.');
       return "error";
     }
   }
 
-
-  Future<String> confirmPaymentIntent(BuildContext context, String paymentIntentClientSecret,  String paymentMethodId) async {
+  Future<String> confirmPaymentIntent(BuildContext context, String paymentIntentClientSecret, String paymentMethodId) async {
     String result = 'processing';
     await StripeRecommended.StripePayment.confirmPaymentIntent(
       StripeRecommended.PaymentIntent(
-          clientSecret: paymentIntentClientSecret,
-          paymentMethodId: paymentMethodId,
-        ),
-      ).then((paymentIntent) {
-        /// TODO: check if the payment intent has a next action, if so, redirect the user to the link
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context).holdingConfirmed)));
-        result = "success";
-        debugPrint('confirmPaymentIntent: success');
-      }).catchError((error) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context).holdingError)));
-        result = "error";
-        debugPrint('confirmPaymentIntent: error ' + error);
+        clientSecret: paymentIntentClientSecret,
+        paymentMethodId: paymentMethodId,
+      ),
+    ).then((paymentIntent) {
+      /// TODO: check if the payment intent has a next action, if so, redirect the user to the link
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context).holdingConfirmed)));
+      result = "success";
+      debugPrint('confirmPaymentIntent: success');
+    }).catchError((error) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context).holdingError)));
+      result = "error";
+      debugPrint('confirmPaymentIntent: error ' + error);
     });
     return result;
   }
@@ -492,6 +531,4 @@ class StripePaymentService {
     Map<String, dynamic> paymentMethod = await stripeSDK.api.createPaymentMethodFromCard(stripeCard);
     return paymentMethod;
   }
-
-
 }

@@ -1,29 +1,10 @@
-import 'package:Buytime/reblox/model/app_state.dart';
-import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
-import 'package:Buytime/reblox/reducer/order_reducer.dart';
-import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
-import 'package:Buytime/reusable/order/optimum_order_item_card_medium.dart';
 import 'package:Buytime/utils/size_config.dart';
-import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_redux/flutter_redux.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:intl/intl.dart';
 import 'dart:async';
-import 'dart:io';
-import 'package:Buytime/UI/user/cart/UI_U_cart.dart';
-import 'package:Buytime/reusable/buytime_icons.dart';
-import 'package:Buytime/utils/theme/buytime_config.dart';
-import 'package:Buytime/utils/utils.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:Buytime/reblox/model/service/service_state.dart';
-import 'package:flutter/foundation.dart';
-import 'package:Buytime/UI/user/map/UI_U_map.dart';
 
 class RUI_U_test extends StatefulWidget {
   @override

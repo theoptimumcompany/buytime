@@ -82,8 +82,9 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                 color: Colors.white,
               ),
               onPressed: () async{
-                await storage.delete(key: 'bookingCode');
-                Navigator.of(context).pop();
+                await storage.delete(key: 'bookingCode').whenComplete(() => {
+                  Navigator.of(context).pop()
+                });
               },
             ),
           ),

@@ -60,6 +60,7 @@ class Landing extends StatefulWidget {
 }
 bool switchToClient = false;
 
+
 class LandingState extends State<Landing> {
   List<LandingCardWidget> cards = new List();
 
@@ -77,7 +78,7 @@ class LandingState extends State<Landing> {
   bookingCodeFound() async{
     bookingCode = await storage.read(key: 'bookingCode') ?? '';
     debugPrint('UI_U_landing: DEEP LINK EMPTY | BOOKING CODE: $bookingCode');
-    // await storage.delete(key: 'bookingCode');
+    await storage.delete(key: 'bookingCode');
     if(bookingCode.isNotEmpty)
       Navigator.of(context).push(MaterialPageRoute(builder: (context) => InviteGuestForm(id: bookingCode, fromLanding: true,)));
   }
@@ -95,27 +96,31 @@ class LandingState extends State<Landing> {
   @override
   void initState() {
     super.initState();
-
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       //initDynamicLinks();
 
       debugPrint('UI_U_Landing => initState()');
     });
-
+    initDynamicLinks();
   }
 
   void initDynamicLinks() async {
     print("Dentro initial dynamic");
     Uri deepLink;
+
     FirebaseDynamicLinks.instance.onLink(onSuccess: (PendingDynamicLinkData dynamicLink) async {
       deepLink = null;
       deepLink = dynamicLink?.link;
       debugPrint('UI_U_landing: DEEPLINK onLink: $deepLink');
       if (deepLink != null) {
-        if (deepLink.queryParameters.containsKey('booking')) {
+        String bookingCodeRead = await storage.read(key: 'bookingCodeRead') ?? '';
+        String categoryInviteRead = await storage.read(key: 'categoryInviteRead') ?? '';
+        String orderIdRead = await storage.read(key: 'orderIdRead') ?? '';
+        if (deepLink.queryParameters.containsKey('booking') && bookingCodeRead != 'true') {
           String id = deepLink.queryParameters['booking'];
           debugPrint('UI_U_landing: booking onLink: $id');
           await storage.write(key: 'bookingCode', value: id);
+          await storage.write(key: 'bookingCodeRead', value: 'true');
           setState(() {
             onBookingCode = true;
           });
@@ -127,10 +132,12 @@ class LandingState extends State<Landing> {
           }else
             debugPrint('UI_U_landing: USER NOT LOGGED in onLink');
         }
-        else if (deepLink.queryParameters.containsKey('categoryInvite')) {
+        else if (deepLink.queryParameters.containsKey('categoryInvite') && categoryInviteRead != 'true') {
           String categoryInvite = deepLink.queryParameters['categoryInvite'];
           debugPrint('UI_U_landing: categoryInvite: $categoryInvite');
           await storage.write(key: 'categoryInvite', value: categoryInvite);
+          await storage.write(key: 'categoryInviteRead', value: 'true');
+
           //StoreProvider.of<AppState>(context).dispatch(BusinessRequestAndNavigate(businessId));
           if(FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty){
             debugPrint('UI_U_landing: USER Is LOGGED in onLink');
@@ -140,10 +147,11 @@ class LandingState extends State<Landing> {
             debugPrint('UI_U_landing: USER NOT LOGGED in onLink');
 
         }
-        else if (deepLink.queryParameters.containsKey('orderId')) {
+        else if (deepLink.queryParameters.containsKey('orderId') && orderIdRead != 'true') {
           String orderId = deepLink.queryParameters['orderId'];
           debugPrint('UI_U_landing: orderId from dynamic link: $orderId');
-          // await storage.write(key: 'orderId', value: orderId);
+          await storage.write(key: 'orderId', value: orderId);
+          await storage.write(key: 'orderIdRead', value: 'true');
           //StoreProvider.of<AppState>(context).dispatch(BusinessRequestAndNavigate(businessId));
           if(FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty){
             debugPrint('UI_U_landing: USER Is LOGGED in onLink');
@@ -166,10 +174,14 @@ class LandingState extends State<Landing> {
     deepLink = data?.link;
     debugPrint('UI_U_landing: DEEPLINK getInitialLink: $deepLink');
     if (deepLink != null) {
-      if (deepLink.queryParameters.containsKey('booking')) {
+      String bookingCodeRead = await storage.read(key: 'bookingCodeRead') ?? '';
+      String categoryInviteRead = await storage.read(key: 'categoryInviteRead') ?? '';
+      String orderIdRead = await storage.read(key: 'orderIdRead') ?? '';
+      if (deepLink.queryParameters.containsKey('booking') && bookingCodeRead != 'true') {
         String id = deepLink.queryParameters['booking'];
         debugPrint('UI_U_landing: booking getInitialLink: $id');
         await storage.write(key: 'bookingCode', value: id);
+        await storage.write(key: 'bookingCodeRead', value: 'true');
         setState(() {
           onBookingCode = true;
         });
@@ -179,16 +191,31 @@ class LandingState extends State<Landing> {
         }else
           debugPrint('UI_U_landing: USER NOT LOGGED in getInitialLink');
       }
-      else if (deepLink.queryParameters.containsKey('categoryInvite')) {
+      else if (deepLink.queryParameters.containsKey('categoryInvite') && categoryInviteRead != 'true') {
         String categoryInvite = deepLink.queryParameters['categoryInvite'];
         debugPrint('UI_U_landing: categoryInvite: $categoryInvite');
         await storage.write(key: 'categoryInvite', value: categoryInvite);
+        await storage.write(key: 'categoryInviteRead', value: 'true');
         //Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => InviteGuestForm(id: id, fromLanding: false)), (Route<dynamic> route) => false);
         if(FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty){
           debugPrint('UI_U_landing: USER Is LOGGED in onLink');
           StoreProvider.of<AppState>(context).dispatch(UserBookingListRequest(StoreProvider.of<AppState>(context).state.user.email, false));
           Navigator.push(context, MaterialPageRoute(builder: (context) => UI_M_BusinessList()));
-        }else
+        }
+        else if (deepLink.queryParameters.containsKey('orderId') && orderIdRead != 'true') {
+          String orderId = deepLink.queryParameters['orderId'];
+          debugPrint('UI_U_landing: orderId from dynamic link: $orderId');
+          await storage.write(key: 'orderId', value: orderId);
+          await storage.write(key: 'orderIdRead', value: 'true');
+          //StoreProvider.of<AppState>(context).dispatch(BusinessRequestAndNavigate(businessId));
+          if(FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty){
+            debugPrint('UI_U_landing: USER Is LOGGED in onLink');
+            StoreProvider.of<AppState>(context).dispatch(SetOrderDetailAndNavigatePopOrderId(orderId));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => UI_M_BusinessList()));
+          }else
+            debugPrint('UI_U_landing: USER NOT LOGGED in onLink');
+        }
+        else
           debugPrint('UI_U_landing: USER NOT LOGGED in onLink');
 
       }
@@ -213,7 +240,7 @@ class LandingState extends State<Landing> {
         distinct: true,
         onInit: (store){
           bookingCodeFound();
-          initDynamicLinks();
+
           //debugPrint('UI_U_Landing => Booking code: ${store.state.booking.booking_code}');
           debugPrint('UI_U_Landing => onInit()');
           debugPrint('UI_U_Landing => store on init()');
