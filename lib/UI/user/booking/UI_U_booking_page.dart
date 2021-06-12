@@ -1140,7 +1140,7 @@ class _BookingPageState extends State<BookingPage> {
                                                         child: Container(
                                                           padding: EdgeInsets.all(5.0),
                                                           child: Text(
-                                                            !showAll ? AppLocalizations.of(context).showAll : AppLocalizations.of(context).showLess,
+                                                            !showAll ? AppLocalizations.of(context).showMore : AppLocalizations.of(context).showLess,
                                                             style: TextStyle(
                                                                 letterSpacing: SizeConfig.safeBlockHorizontal * .2,
                                                                 fontFamily: BuytimeTheme.FontFamily,
