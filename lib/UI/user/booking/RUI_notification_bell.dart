@@ -23,6 +23,8 @@ class RNotificationBell extends StatelessWidget {
         builder: (context, AsyncSnapshot<DocumentSnapshot> userNotificationSnapshot) {
           if(userNotificationSnapshot.hasError)
             return Container();
+
+
           return Container(
             child: Stack(
               children: [
@@ -36,7 +38,7 @@ class RNotificationBell extends StatelessWidget {
                         size: 30.0,
                       ),
                       onPressed: () async{
-                        if(userNotificationSnapshot.data.data()['hasNotification']){
+                        if(userNotificationSnapshot.data.get('hasNotification')){
                           FirebaseFirestore.instance.collection('user').doc(userId).collection('userNotification').doc('userNotificationDoc').update(
                               {'hasNotification': false}
                           );
@@ -46,7 +48,7 @@ class RNotificationBell extends StatelessWidget {
                     ),
                   ),
                 ),
-                userNotificationSnapshot.data != null && userNotificationSnapshot.data.data()['hasNotification'] ?
+                userNotificationSnapshot.data != null && userNotificationSnapshot.data.get('hasNotification') ?
                 Positioned.fill(
                   bottom: 20,
                   left: 15,

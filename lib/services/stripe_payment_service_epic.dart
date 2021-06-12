@@ -365,7 +365,7 @@ class StripePaymentService {
         ),
       ),
     );
-
+    await StripeRecommended.StripePayment.cancelNativePayRequest();
     if (paymentMethod != null) {
       return paymentMethod;
     } else {

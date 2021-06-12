@@ -56,7 +56,7 @@ class _RUI_U_testState extends State<RUI_U_test> with SingleTickerProviderStateM
                 children: [
                   Text(orderState.orderId),
                   Text(orderState.progress),
-                  Text(orderSnapshot.data.data()['progress']),
+                  Text(orderSnapshot.data.get('progress')),
                 ],
               ),
             );

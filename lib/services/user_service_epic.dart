@@ -28,7 +28,7 @@ class UserRequestService implements EpicClass<AppState> {
       });
 
 
-      if(userDocumentSnapshot.data() != null && userDocumentSnapshot.data().isNotEmpty)
+      if(userDocumentSnapshot.data() != null)
         stateFromFirebase = UserState.fromJson(userDocumentSnapshot.data());
 
       debugPrint("USER_SERVICE_EPIC - UserRequstService => USER STATE: " + stateFromFirebase.toString());

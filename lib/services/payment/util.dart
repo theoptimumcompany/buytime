@@ -36,15 +36,13 @@ Future <List<CardState>> stripeCardListMaker(dynamic event, List<StripeState> st
       debugPrint('util - stripeCardListMaker => CARD ID: ${element.id}');
     });
     int counter = 0;
-    snapshotToken.docs.forEach((elementToken) {
-      var tokenData = elementToken.data();
+    snapshotToken.docs.forEach((tokenData) {
       if (snapshotCard?.docs != null && snapshotCard.docs.length > counter) {
-        snapshotCard.docs.forEach((elementCard) {
-          var cardData = elementCard.data();
-          if ( cardData['payment_method'] == tokenData['id']) {
+        snapshotCard.docs.forEach((cardData) {
+          if ( cardData['payment_method'] == tokenData.id) {
             stripeStateList.add(StripeState(
                 stripeCard: StripeCardResponse(
-                  firestore_id: elementCard.id,
+                  firestore_id: cardData.id,
                   last4: tokenData['card']['last4'],
                   expYear: tokenData['card']['exp_year'],
                   expMonth: tokenData['card']['exp_month'],
