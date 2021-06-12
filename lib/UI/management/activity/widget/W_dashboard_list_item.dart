@@ -15,9 +15,9 @@ import 'package:share/share.dart';
 import 'package:Buytime/reusable/material_design_icons.dart';
 
 class DashboardListItem extends StatefulWidget {
-
   OrderState orderState;
   OrderEntry orderEntry;
+
   DashboardListItem(this.orderState, this.orderEntry);
 
   @override
@@ -25,29 +25,29 @@ class DashboardListItem extends StatefulWidget {
 }
 
 class _DashboardListItemState extends State<DashboardListItem> {
-
   BookingState booking;
 
   @override
   void initState() {
     super.initState();
-
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Container(
       color: BuytimeTheme.BackgroundWhite,
-      height: 75,
+      height: 85,
       width: double.infinity,
       child: Material(
         color: Colors.transparent,
         child: InkWell(
           splashColor: Colors.black.withOpacity(.3),
-          onTap: (){
+          onTap: () {
             debugPrint('W_dashboard_list_item => ORDER ID: ${widget.orderState.orderId}');
-            Navigator.push(context, MaterialPageRoute(builder: (context) => RActivityManagementItemDetails(orderId: widget.orderState.orderId)),);
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => RActivityManagementItemDetails(orderId: widget.orderState.orderId)),
+            );
           },
           //borderRadius: BorderRadius.all(Radius.circular(10)),
           child: Row(
@@ -59,98 +59,100 @@ class _DashboardListItemState extends State<DashboardListItem> {
                   Container(
                     margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
                     child: Icon(
-                      widget.orderState.progress == Utils.enumToString(OrderStatus.canceled) || widget.orderState.progress == Utils.enumToString(OrderStatus.declined)  ? BuytimeIcons.pending_clock : BuytimeIcons.accepted_clock,
-                      color:
-                      widget.orderState.progress == Utils.enumToString(OrderStatus.canceled) || widget.orderState.progress == Utils.enumToString(OrderStatus.declined) ?
-                      BuytimeTheme.AccentRed :
-                      widget.orderState.progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout) ?
-                      BuytimeTheme.Secondary : BuytimeTheme.SymbolBlack,
+                      widget.orderState.progress == Utils.enumToString(OrderStatus.canceled) || widget.orderState.progress == Utils.enumToString(OrderStatus.declined) ? BuytimeIcons.pending_clock : BuytimeIcons.accepted_clock,
+                      color: widget.orderState.progress == Utils.enumToString(OrderStatus.canceled) || widget.orderState.progress == Utils.enumToString(OrderStatus.declined)
+                          ? BuytimeTheme.AccentRed
+                          : widget.orderState.progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout)
+                              ? BuytimeTheme.Secondary
+                              : BuytimeTheme.SymbolBlack,
                       size: 22,
                     ),
                   )
                 ],
               ),
+
               ///Order info
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
+              Row(
                 children: [
-                  ///Name ecc.
-                  Container(
-                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
-                    child: Row(
-                      children: [
-                        Container(
-                          child: Text(
-                              widget.orderState.selected == null || widget.orderState.selected.isEmpty ?
-                            '${widget.orderState.user.name ?? ''} ${widget.orderState.user.surname ?? ''}' :
-                            '${widget.orderState.user.name ?? ''} ${widget.orderState.user.surname ?? ''} - ${widget.orderEntry.time}',
-                            style: TextStyle(
-                                fontFamily: BuytimeTheme.FontFamily,
-                                fontSize: 16,
-                                letterSpacing: 0.15,
-                                fontWeight: FontWeight.w400
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ///Name ecc.
+                      Container(
+                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              child: Text(
+                                /*  widget.orderState.selected == null || widget.orderState.selected.isEmpty ?
+                                '${widget.orderState.user.name ?? ''} ${widget.orderState.user.surname ?? ''}' :
+                                '${widget.orderState.user.name ?? ''} ${widget.orderState.user.surname ?? ''} - ${widget.orderEntry.time}',*/
+                                widget.orderState.selected == null || widget.orderState.selected.isEmpty ? '${AppLocalizations.of(context).product}' : '${AppLocalizations.of(context).service} - ${widget.orderEntry.time}',
+                                style: TextStyle(fontFamily: BuytimeTheme.FontFamily, fontSize: 16, letterSpacing: 0.15, fontWeight: FontWeight.w400),
+                              ),
                             ),
-                          ),
-                        )
-                      ],
-                    ),
+                          ],
+                        ),
+                      ),
+
+                      ///Service Name & Price
+                      Container(
+                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
+                        child: Row(
+                          children: [
+                            Container(
+                              child: Text(
+                                widget.orderState.selected == null || widget.orderState.selected.isEmpty
+                                    ? widget.orderState.itemList.length > 1
+                                        ? '${AppLocalizations.of(context).multipleOrders} - ${AppLocalizations.of(context).currency} ${widget.orderState.total.toStringAsFixed(2)}'
+                                        : '${Utils.retriveField(Localizations.localeOf(context).languageCode, widget.orderState.itemList.first.name)} - ${AppLocalizations.of(context).currency} ${widget.orderState.total.toStringAsFixed(2)}'
+                                    : '${Utils.retriveField(Localizations.localeOf(context).languageCode, widget.orderEntry.name)} - € ${widget.orderEntry.price.toStringAsFixed(2)}',
+                                style: TextStyle(fontFamily: BuytimeTheme.FontFamily, fontSize: 14, letterSpacing: 0.25, fontWeight: FontWeight.w400, color: BuytimeTheme.TextMedium),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+
+                      ///Order Creation Time
+                      Container(
+                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 0.4),
+                        child: Row(
+                          children: [
+                            Container(
+                              child: Text(
+                                '${AppLocalizations.of(context).createdAt} ${DateFormat('HH:mm', Localizations.localeOf(context).languageCode).format(widget.orderState.creationDate)}',
+                                style: TextStyle(fontFamily: BuytimeTheme.FontFamily, fontSize: 12, letterSpacing: 0.25, fontWeight: FontWeight.w400, color: BuytimeTheme.TextMedium),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+
+                      ///Status
+                      Container(
+                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * .2),
+                        child: Row(
+                          children: [
+                            Container(
+                              child: Text(
+                                Utils.translateOrderStatus(context, widget.orderState.progress),
+                                style: TextStyle(fontFamily: BuytimeTheme.FontFamily, fontSize: 12, letterSpacing: 0.25, fontWeight: FontWeight.w400, color: BuytimeTheme.TextMedium, fontStyle: FontStyle.italic),
+                              ),
+                            )
+                          ],
+                        ),
+                      )
+                    ],
                   ),
-                  ///Service Name & Price
-                  Container(
-                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
-                    child: Row(
-                      children: [
-                        Container(
-                          child: Text(
-                              widget.orderState.selected == null || widget.orderState.selected.isEmpty ?
-                              widget.orderState.itemList.length > 1 ?
-                              '${AppLocalizations.of(context).multipleOrders} - ${AppLocalizations.of(context).currency} ${widget.orderState.total.toStringAsFixed(2)}' :
-                              '${Utils.retriveField(Localizations.localeOf(context).languageCode, widget.orderState.itemList.first.name)} - ${AppLocalizations.of(context).currency} ${widget.orderState.total.toStringAsFixed(2)}' :
-                              '${Utils.retriveField(Localizations.localeOf(context).languageCode, widget.orderEntry.name)} - € ${widget.orderEntry.price.toStringAsFixed(2)}',
-                            style: TextStyle(
-                                fontFamily: BuytimeTheme.FontFamily,
-                                fontSize: 14,
-                                letterSpacing: 0.25,
-                                fontWeight: FontWeight.w400,
-                              color: BuytimeTheme.TextMedium
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                  ///Status
-                  Container(
-                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * .5),
-                    child: Row(
-                      children: [
-                        Container(
-                          child: Text(
-                            Utils.translateOrderStatus(context, widget.orderState.progress),
-                            style: TextStyle(
-                                fontFamily: BuytimeTheme.FontFamily,
-                                fontSize: 12,
-                                letterSpacing: 0.25,
-                                fontWeight: FontWeight.w400,
-                                color: BuytimeTheme.TextMedium,
-                              fontStyle: FontStyle.italic
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  )
                 ],
-              )
+              ),
             ],
           ),
         ),
       ),
     );
   }
-
-
-
 }
-

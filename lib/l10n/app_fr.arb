@@ -571,5 +571,7 @@
   "notValidVAT": "Not a valid VAT",
   "serviceVAT": "VAT",
   "showMore": "Show More",
-  "native": "Native"
+  "native": "Native",
+  "service": "Service",
+  "createdAt": "Created at"
 }
