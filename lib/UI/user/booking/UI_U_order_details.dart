@@ -89,6 +89,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
   }
 
   String whichDate(DateTime orderDate){
+    DateTime orderDateUTC2 = new DateTime(orderDate.year, orderDate.month, orderDate.day, orderDate.hour + 2, orderDate.minute, 0, 0, 0);
     if(widget.orderState.itemList.first.time != null){
       return currentDate == date ?
       AppLocalizations.of(context).todayLower + ' ${DateFormat('dd EEE',Localizations.localeOf(context).languageCode).format(orderDate)}, ${widget.orderState.itemList.first.time}' :
@@ -96,9 +97,9 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
       '${DateFormat('dd EEE',Localizations.localeOf(context).languageCode).format(orderDate)},  ${widget.orderState.itemList.first.time}';
     }else{
       return currentDate == date ?
-      AppLocalizations.of(context).todayLower + ' ${DateFormat('dd EEE',Localizations.localeOf(context).languageCode).format(orderDate)}, ${DateFormat('HH:mm',Localizations.localeOf(context).languageCode).format(widget.orderState.date)}' :
-      nextDate == date ? AppLocalizations.of(context).tomorrowLower + ' ${DateFormat('dd EEE',Localizations.localeOf(context).languageCode).format(orderDate)}, ${DateFormat('HH:mm',Localizations.localeOf(context).languageCode).format(widget.orderState.date)}' :
-      '${DateFormat('dd EEE',Localizations.localeOf(context).languageCode).format(orderDate)},  ${DateFormat('HH:mm',Localizations.localeOf(context).languageCode).format(widget.orderState.date)}';
+      AppLocalizations.of(context).todayLower + ' ${DateFormat('dd EEE',Localizations.localeOf(context).languageCode).format(orderDate)}, ${DateFormat('HH:mm',Localizations.localeOf(context).languageCode).format(orderDateUTC2)}' :
+      nextDate == date ? AppLocalizations.of(context).tomorrowLower + ' ${DateFormat('dd EEE',Localizations.localeOf(context).languageCode).format(orderDate)}, ${DateFormat('HH:mm',Localizations.localeOf(context).languageCode).format(orderDateUTC2)}' :
+      '${DateFormat('dd EEE',Localizations.localeOf(context).languageCode).format(orderDate)},  ${DateFormat('HH:mm',Localizations.localeOf(context).languageCode).format(orderDateUTC2)}';
     }
 
   }

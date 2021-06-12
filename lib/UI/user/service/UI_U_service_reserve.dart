@@ -731,7 +731,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Container(
-                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 5),
+                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 2.5),
                             child: Text(
                               AppLocalizations.of(context).nextAvailableTime,
                               style: TextStyle(
