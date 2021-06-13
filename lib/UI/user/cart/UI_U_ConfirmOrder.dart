@@ -738,16 +738,16 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
 
       /// Direct Native Payment
       debugPrint('UI_U_ConfirmOrder => start direct payment process with Native Method');
+      if (paymentMethod != null) {
+        /// 2: add the payment method to the order state
+        StoreProvider.of<AppState>(context).dispatch(SetOrderPaymentMethod(paymentMethod));
 
-      /// 2: add the payment method to the order state
-      StoreProvider.of<AppState>(context).dispatch(SetOrderPaymentMethod(paymentMethod));
-
-      /// 3: now we can create the order on the database and its sub collection
-      if (snapshot.order.isOrderAutoConfirmable()) {
-        StoreProvider.of<AppState>(context)
-            .dispatch(CreateOrderNativeAndPay(snapshot.order, paymentMethod, PaymentType.native, context, snapshot.business.stripeCustomerId));
-      } else {
-        StoreProvider.of<AppState>(context).dispatch(CreateOrderNativePending(snapshot.order, paymentMethod, PaymentType.native));
+        /// 3: now we can create the order on the database and its sub collection
+        if (snapshot.order.isOrderAutoConfirmable()) {
+          StoreProvider.of<AppState>(context).dispatch(CreateOrderNativeAndPay(snapshot.order, paymentMethod, PaymentType.native, context, snapshot.business.stripeCustomerId));
+        } else {
+          StoreProvider.of<AppState>(context).dispatch(CreateOrderNativePending(snapshot.order, paymentMethod, PaymentType.native));
+        }
       }
     }
   }

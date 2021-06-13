@@ -114,9 +114,16 @@ class AllCategoryListRequestService implements EpicClass<AppState> {
           CollectionReference servicesFirebase = FirebaseFirestore.instance.collection("service");
           Query query;
           if (store.state.area != null && store.state.area.areaId != null && store.state.area.areaId.isNotEmpty) {
-            query = servicesFirebase.where("businessId", isEqualTo: businessListFromFirebase.docs[i].id).where("tag", arrayContains: store.state.area.areaId).limit(20);
+            query = servicesFirebase
+                .where("businessId", isEqualTo: businessListFromFirebase.docs[i].id)
+                .where("tag", arrayContains: store.state.area.areaId)
+                .where("serviceCrossSell", isEqualTo: true)
+                .limit(20);
           } else {
-            query = servicesFirebase.where("businessId", isEqualTo: businessListFromFirebase.docs[i].id).limit(20);
+            query = servicesFirebase
+                .where("businessId", isEqualTo: businessListFromFirebase.docs[i].id)
+                .where("serviceCrossSell", isEqualTo: true)
+                .limit(20);
           }
 
           /// 1 READ - ? DOC

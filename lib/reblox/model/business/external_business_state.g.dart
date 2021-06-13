@@ -9,7 +9,7 @@ part of 'external_business_state.dart';
 ExternalBusinessState _$ExternalBusinessStateFromJson(
     Map<String, dynamic> json) {
   return ExternalBusinessState(
-    name: json['name'] as String,
+    name: json['name'] as String ?? '',
     responsible_person_name: json['responsible_person_name'] as String,
     responsible_person_surname: json['responsible_person_surname'] as String,
     responsible_person_email: json['responsible_person_email'] as String,

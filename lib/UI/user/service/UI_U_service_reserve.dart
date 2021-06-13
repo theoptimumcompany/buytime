@@ -191,6 +191,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
 
   List<DateTime> getDaysInBeteween(DateTime startDate, DateTime endDate, DateTime userStartDate, DateTime userEndDate, List<SquareSlotState> mySlots, ServiceSlot slot) {
     tmpSlots.clear();
+    debugPrint("UI_U_service_reserve => mySlots" + mySlots.length.toString());
     List<DateTime> days = [];
     for (int i = 0; i <= endDate.difference(startDate).inDays; i++) {
       //debugPrint('UI_U_ServiceReserve => LOOKING DATE: ${startDate.add(Duration(days: i))} - IS AFTER: $userStartDate - IS BEFORE: $userEndDate');
@@ -390,7 +391,18 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
             DateTime tmpEndDate = DateFormat('dd/MM/yyyy').parse(widget.serviceState.serviceSlot[i].checkOut);
             debugPrint('UI_U_service_reserve => START DATE: $tmpStartDate | END DATE: $tmpEndDate');
             if (dates.isEmpty) {
-              dates = getDaysInBeteween(tmpStartDate, tmpEndDate, snapshot.booking.start_date, snapshot.booking.end_date, tmpState[i].slot, widget.serviceState.serviceSlot[i]);
+
+              DateTime endDateBoth;
+              DateTime startDateBoth;
+              if (widget.tourist) {
+                startDateBoth = DateTime.now();
+                endDateBoth = DateTime(startDateBoth.year, startDateBoth.month, startDateBoth.day + 14, 0, 0, 0, 0, 0);
+              } else {
+                startDateBoth = snapshot.booking.start_date;
+                endDateBoth = snapshot.booking.end_date;
+              }
+
+              dates = getDaysInBeteween(tmpStartDate, tmpEndDate, startDateBoth, endDateBoth, tmpState[i].slot, widget.serviceState.serviceSlot[i]);
               if (tmpSlots.isNotEmpty) {
                 slots.addAll(tmpSlots);
                 slots.forEach((element) {
@@ -475,7 +487,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
             element.sort((a, b) => (a[2].on).compareTo(b[2].on));
           });
 
-          debugPrint("UI_U_ServiceReserve => SLOTS LENGTH: ${slots.length}");
+          debugPrint("UI_U_ServiceReserve => SLOTS LENGTH: ${slots.length} ${tmpSlots.length}");
 
           /*slots.forEach((element) {
             picked.add(List.generate(element.length, (index) => false));

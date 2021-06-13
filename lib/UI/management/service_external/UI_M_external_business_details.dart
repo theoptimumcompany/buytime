@@ -333,6 +333,8 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
             else{
               popularServiceList.addAll(snapshot.serviceList.serviceListState);
               allServiceList.addAll(snapshot.serviceList.serviceListState);
+              removeCrossSellServices(popularServiceList);
+              removeCrossSellServices(allServiceList);
             }
             noActivity = false;
             startRequest = false;
@@ -1441,5 +1443,13 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
       lng = double.parse(latLng[1]);
     }
     return [lat, lng];
+  }
+
+  void removeCrossSellServices(List<ServiceState> popularServiceList) {
+    for (int i = 0; i < popularServiceList.length; i++) {
+      if (!popularServiceList[i].serviceCrossSell) {
+        popularServiceList.remove(popularServiceList[i]);
+      }
+    }
   }
 }

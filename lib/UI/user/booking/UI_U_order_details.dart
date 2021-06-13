@@ -855,6 +855,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
+                              widget.orderState.cardLast4Digit != null ?
                               Container(
                                 height: 30,
                                 width: 50,
@@ -866,8 +867,9 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                                         )
                                     )
                                 ),
-                              ),
+                              ) : Container(),
                               ///Card Name
+                              widget.orderState.cardLast4Digit != null ?
                               Text(
                                 widget.orderState.cardType != null && widget.orderState.cardType.isNotEmpty?
                                   widget.orderState.cardType.substring(0,1).toUpperCase() + widget.orderState.cardType.substring(1, widget.orderState.cardType.length) + '  ' :
@@ -878,12 +880,12 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                                     fontWeight: FontWeight.w600,
                                     color: BuytimeTheme.TextBlack
                                 ),
-                              ),
+                              ) : Container(),
                               ///Ending **** ....
                               Text(
                                 widget.orderState.cardType != null && widget.orderState.cardLast4Digit != null  ?
                                   '**** ' + widget.orderState.cardLast4Digit :
-                                 '**** 0000',
+                                AppLocalizations.of(context).native,
                                 style: TextStyle(
                                     fontSize: 14,
                                     fontFamily: BuytimeTheme.FontFamily,

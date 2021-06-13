@@ -6,6 +6,7 @@ part 'external_business_state.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class ExternalBusinessState {
+  @JsonKey(defaultValue: '')
   String name;
   String responsible_person_name;
   String responsible_person_surname;

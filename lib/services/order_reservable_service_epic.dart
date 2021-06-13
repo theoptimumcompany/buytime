@@ -168,7 +168,7 @@ class OrderReservableUpdateService implements EpicClass<AppState> {
 }
 
 class OrderReservableCreateService implements EpicClass<AppState> {
-  String stripeTestKey = "pk_test_51HS20eHr13hxRBpCZl1V0CKFQ7XzJbku7UipKLLIcuNGh3rp4QVsEDCThtV0l2AQ3jMtLsDN2zdC0fQ4JAK6yCOp003FIf3Wjz";
+  // String stripeTestKey = "pk_test_51HS20eHr13hxRBpCZl1V0CKFQ7XzJbku7UipKLLIcuNGh3rp4QVsEDCThtV0l2AQ3jMtLsDN2zdC0fQ4JAK6yCOp003FIf3Wjz";
   String stripeKey = "pk_live_51HS20eHr13hxRBpCLHzfi0SXeqw8Efu911cWdYEE96BAV0zSOesvE83OiqqzRucKIxgCcKHUvTCJGY6cXRtkDVCm003CmGXYzy";
   StatisticsState statisticsState;
   String state = '';
@@ -246,7 +246,7 @@ class OrderReservableCreateService implements EpicClass<AppState> {
           // if an action is required, send the user to the confirmation link
           if (jsonResponse != null && jsonResponse["next_action_url"] != null ) {
             // final Stripe stripe = Stripe(
-            //   stripeTestKey, // our publishable key
+            //   stripeKey, // our publishable key
             //   stripeAccount: jsonResponse["stripeAccount"], // the connected account
             //   returnUrlForSca: "stripesdk://3ds.stripesdk.io", //Return URL for SCA
             // );
@@ -307,7 +307,7 @@ class AddingReservableStripePaymentMethodRequest implements EpicClass<AppState> 
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<AddingReservableStripePaymentMethodWithNavigation>().asyncMap((event) async {
       String userId = event.userId;
-      var stripeCustomerSetupIntentCreationReference = await FirebaseFirestore.instance.collection("stripeCustomer/" + userId + "_test/setupIntent").doc() ///TODO Remember _test
+      var stripeCustomerSetupIntentCreationReference = await FirebaseFirestore.instance.collection("stripeCustomer/" + userId + test_variable +"/setupIntent").doc() ///TODO Remember _test
         .set({ ///1 WRITE
       'status': "create request"
     });

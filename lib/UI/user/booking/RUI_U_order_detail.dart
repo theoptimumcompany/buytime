@@ -81,7 +81,7 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
   }
 
   String whichDate(DateTime orderDate){
-    DateTime orderDateUTC2 = new DateTime(orderDate.year, orderDate.month, orderDate.day, orderDate.hour + 2, orderDate.minute, 0, 0, 0);
+    DateTime orderDateUTC2 = new DateTime(orderDate.year, orderDate.month, orderDate.day, orderDate.hour +2, orderDate.minute, 0, 0, 0);
     if(orderDetails.itemList.first.time != null){
       return currentDate == date ?
       AppLocalizations.of(context).todayLower + ' ${DateFormat('dd EEE',Localizations.localeOf(context).languageCode).format(orderDate)}, ${orderDetails.itemList.first.time}' :
@@ -885,7 +885,7 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                orderDetails.cardType != null && (!orderDetails.cardType.contains('room') && orderDetails.cardType.isNotEmpty) ?
+                                orderDetails.cardType != null && (!orderDetails.cardType.contains('room') && orderDetails.cardType.isNotEmpty && orderDetails.cardLast4Digit != null) ?
                                 Container(
                                   height: 30,
                                   width: 50,
@@ -899,6 +899,7 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
                                   ),
                                 ) : Container(),
                                 ///Card Name
+                                orderDetails.cardLast4Digit != null ?
                                 Container(
                                   margin: EdgeInsets.only(top: orderDetails.cardType != null && !orderDetails.cardType.contains('room') && orderDetails.cardType.isNotEmpty ? 0 : 8),
                                   child: Text(
@@ -912,13 +913,13 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
                                         color: BuytimeTheme.TextBlack
                                     ),
                                   ),
-                                ),
+                                ) : Container(),
                                 ///Ending **** ....
                                 orderDetails.cardType != null && !orderDetails.cardType.contains('room') && orderDetails.cardType.isNotEmpty ?
                                 Text(
                                   orderDetails.cardLast4Digit != null  ?
                                   '**** ' + orderDetails.cardLast4Digit :
-                                  '**** 0000',
+                                  AppLocalizations.of(context).native,
                                   style: TextStyle(
                                       fontSize: 14,
                                       fontFamily: BuytimeTheme.FontFamily,
