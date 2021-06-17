@@ -77,6 +77,20 @@ android {
 //            signingConfig signingConfigs.debug
 //        }
     }
+
+    flavorDimensions "flavor-type"
+
+    productFlavors{
+        dev{
+            dimension "flavor-type"
+            applicationId "com.theoptimumcompany.buytimeDev"
+            versionNameSuffix "-dev"
+        }
+
+        prod{
+            dimension "flavor-type"
+        }
+    }
 }
 
 flutter {

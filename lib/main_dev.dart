@@ -65,7 +65,7 @@ class Buytime extends StatelessWidget {
         navigatorObservers: [routeObserver],
         onGenerateRoute: (RouteSettings settings) => _getRoute(settings),
         title: 'Buytime',
-        debugShowCheckedModeBanner: false,
+        debugShowCheckedModeBanner: true,
         theme: BuytimeTheme().userTheme,
         home: SplashScreen() /*LogConsoleOnShake(
           dark: true,
