@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:76896773127:android:e81333c9f06fd8181636a2",
+        "mobilesdk_app_id": "1:76896773127:android:2f0ac9868461fa761636a2",
         "android_client_info": {
-          "package_name": "com.theoptimumcompany.buytimeDev"
+          "package_name": "com.theoptimumcompany.buytime"
         }
       },
       "oauth_client": [
