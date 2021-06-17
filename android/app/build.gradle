@@ -83,7 +83,7 @@ android {
     productFlavors{
         dev{
             dimension "flavor-type"
-            applicationId "com.theoptimumcompany.buytimeDev"
+            applicationId "com.theoptimumcompany.buytime"
             versionNameSuffix "-dev"
         }
 
