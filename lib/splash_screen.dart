@@ -222,7 +222,7 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
         StripeOptions(
           publishableKey: stripeKey,
           merchantId: "merchant.theoptimumcompany.buytime",
-          androidPayMode: 'test'
+          androidPayMode: 'production'
         ));
 
     debugPrint('splash_screen: started to check if native pay ready');
