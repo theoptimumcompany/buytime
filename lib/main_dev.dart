@@ -1,3 +1,4 @@
+import 'package:Buytime/environment_abstract.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/reducer/app_reducer.dart';
@@ -27,6 +28,13 @@ void main() {
 // can be called before `runApp()`
   WidgetsFlutterBinding.ensureInitialized();
 
+  const String environment = String.fromEnvironment(
+    'ENVIRONMENT',
+    defaultValue: Environment.DEV,
+  );
+
+  Environment().initConfig(environment);
+
   runApp(
       Buytime(store: store)
   );
@@ -45,6 +53,7 @@ class Buytime extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("MAIN DEV STRIPE CONFIGURATION : " + Environment().config.stripePublicKey);
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
     //SizeConfig().init(context);
     //ScreenUtil.init(bcontext, width: 1125, height: 2436, allowFontScaling: true);

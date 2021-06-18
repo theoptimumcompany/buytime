@@ -1,3 +1,4 @@
+import 'package:Buytime/environment_abstract.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/reducer/app_reducer.dart';
@@ -26,6 +27,13 @@ void main() {
   // Ensure that plugin services are initialized so that `availableCameras()`
 // can be called before `runApp()`
   WidgetsFlutterBinding.ensureInitialized();
+
+  const String environment = String.fromEnvironment(
+    'ENVIRONMENT',
+    defaultValue: Environment.DEV,
+  );
+
+  Environment().initConfig(environment);
 
   runApp(
       Buytime(store: store)
