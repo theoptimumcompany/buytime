@@ -114,16 +114,9 @@ class AllCategoryListRequestService implements EpicClass<AppState> {
           CollectionReference servicesFirebase = FirebaseFirestore.instance.collection("service");
           Query query;
           if (store.state.area != null && store.state.area.areaId != null && store.state.area.areaId.isNotEmpty) {
-            query = servicesFirebase
-                .where("businessId", isEqualTo: businessListFromFirebase.docs[i].id)
-                .where("tag", arrayContains: store.state.area.areaId)
-                .where("serviceCrossSell", isEqualTo: true)
-                .limit(20);
+            query = servicesFirebase.where("businessId", isEqualTo: businessListFromFirebase.docs[i].id).where("tag", arrayContains: store.state.area.areaId).where("serviceCrossSell", isEqualTo: true).limit(20);
           } else {
-            query = servicesFirebase
-                .where("businessId", isEqualTo: businessListFromFirebase.docs[i].id)
-                .where("serviceCrossSell", isEqualTo: true)
-                .limit(20);
+            query = servicesFirebase.where("businessId", isEqualTo: businessListFromFirebase.docs[i].id).where("serviceCrossSell", isEqualTo: true).limit(20);
           }
 
           /// 1 READ - ? DOC
@@ -585,23 +578,18 @@ class CategoryDeleteWorkerService implements EpicClass<AppState> {
 }
 
 ///Scorro Albero e una volta trovato nodo con id passato, controllo se ha figli, se li ha modifico il parent nuovo
-seekNode(List<dynamic> list, String id, String id_business, String rootId, int level, String oldRootId) {
-  if (list != null) {
-    for (int i = 0; i < list.length; i++) {
-      if (list[i]['nodeId'] == id) {
-        print("Trovato ID nella ricerca");
-        if (list[i]['nodeCategory'] != null && list[i]['nodeCategory'].length != 0) {
-          openTreeToUpdateSon(list[i]['nodeCategory'], id_business, rootId, level, oldRootId);
-        }
-      }
-      if (list[i]['nodeCategory'] != null) {
-        seekNode(list[i]['nodeCategory'], id, id_business, rootId, level, oldRootId);
-      }
-    }
-  }
-}
+// seekNode(List<dynamic> list, String id, String id_business, String rootId, int level, String oldRootId) {
+//   if (list != null) {
+//     for (int i = 0; i < list.length; i++) {
+//       if(list[i].categoryAbsolutePath.split('/').contains(id))
+//       {
+//         openTreeToUpdateSon(list[i].categoryAbsolutePath.split('/').last, id_business, rootId, level, oldRootId);
+//       }
+//     }
+//   }
+// }
 
-openTreeToUpdateSon(List<dynamic> list, String id_business, String rootId, int level, String oldRootId) async {
+/*openTreeToUpdateSon(List<dynamic> list, String id_business, String rootId, int level, String oldRootId) async {
   for (int i = 0; i < list.length; i++) {
     ///Qui ho il figlio da aggiornare nelle categorie
     FirebaseFirestore.instance.collection("business").doc(id_business).collection("category").doc(list[i]['nodeId']).update({"categoryRootId": rootId, "parent.parentRootId": rootId, "level": level + 1});
@@ -630,6 +618,7 @@ openTreeToUpdateSon(List<dynamic> list, String id_business, String rootId, int l
     }
   }
 }
+*/
 
 class CategoryUpdateService implements EpicClass<AppState> {
   CategoryState categoryState;
@@ -639,40 +628,6 @@ class CategoryUpdateService implements EpicClass<AppState> {
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<UpdateCategory>().asyncMap((event) async {
       categoryState = event.categoryState;
-      DocumentReference docReference = FirebaseFirestore.instance
-
-          /// 1 READ - 1 DOC
-          .collection('business')
-          .doc(store.state.business.id_firestore)
-          .collection('category')
-          .doc();
-      debugPrint("CATEGORY_SERVICE_EPIC - CategoryUpdateService => CategoryService updating category: " + categoryState.name);
-
-      String oldRootId = categoryState.categoryRootId;
-
-      if (categoryState.parent.id == "no_parent") {
-        categoryState.categoryRootId = categoryState.id;
-      } else {
-        categoryState.categoryRootId = categoryState.parent.parentRootId;
-      }
-
-      ///Aggiorno servizi associati a questa categoria
-
-      ///Qui ho la categoria da aggiornare nei servizi
-      QuerySnapshot snapshot = await FirebaseFirestore.instance.collection("service").where("categoryId", arrayContains: categoryState.id).get();
-
-      ///Qui ho agganciato i servizi con categoryId a cui è variato il categoryRootId
-      snapshot.docs.forEach((element) {
-        FirebaseFirestore.instance.collection("service").doc(element.id).update({
-          "categoryRootId": FieldValue.arrayUnion([categoryState.categoryRootId]),
-        });
-        FirebaseFirestore.instance.collection("service").doc(element.id).update({
-          "categoryRootId": FieldValue.arrayRemove([oldRootId]),
-        });
-      });
-
-      ///Va controllato se ha figli, e se li ha vanno aggiornati i categoryRootId e parent.parentRootId e livello a cascata
-      seekNode(store.state.categoryTree.categoryNodeList, categoryState.id, store.state.business.id_firestore, categoryState.categoryRootId, categoryState.level, oldRootId);
 
       if (event.categoryState.fileToUpload != null) {
         categoryState = await uploadFile(event.categoryState.fileToUpload, event.categoryState).catchError((error, stackTrace) {
@@ -694,7 +649,6 @@ class CategoryUpdateService implements EpicClass<AppState> {
           .update(event.categoryState.toJson())
           .then((value) {
         debugPrint("CATEGORY_SERVICE_EPIC - CategoryUpdateService => Category Service should be updated online ");
-        debugPrint('CATEGORY_SERVICE_EPIC - CategoryUpdateService => CATEGORY ROOT ID: ${categoryState.categoryRootId} | CATEGORY ID: ${categoryState.id}');
         String parentPath = '';
         store.state.serviceListSnippetState.businessSnippet.forEach((element) {
           List<String> tmp = element.categoryAbsolutePath.split('/');
@@ -706,7 +660,7 @@ class CategoryUpdateService implements EpicClass<AppState> {
           if (tmp.last == categoryState.id) {
             debugPrint('CATEGORY_SERVICE_EPIC - CategoryUpdateService => MATCH');
             debugPrint('CATEGORY_SERVICE_EPIC - CategoryUpdateService => CURRENT PATH: ${element.categoryAbsolutePath}');
-            if (categoryState.categoryRootId != categoryState.id)
+            if (categoryState.parent.id != 'no_parent')
               element.categoryAbsolutePath = parentPath + '/' + categoryState.id;
             else
               element.categoryAbsolutePath = categoryState.businessId + '/' + categoryState.id;
@@ -759,10 +713,10 @@ class CategoryCreateService implements EpicClass<AppState> {
 
       store.state.category.id = docReference.id;
       if (categoryState.parent.id == 'no_parent') {
-        categoryState.categoryRootId = docReference.id;
-        categoryState.parent.parentRootId = docReference.id;
+        // categoryState.categoryRootId = docReference.id;
+        // categoryState.parent.parentRootId = docReference.id;
       } else {
-        categoryState.categoryRootId = categoryState.parent.parentRootId;
+        //  categoryState.categoryRootId = categoryState.parent.parentRootId;
       }
       //categoryState.categoryImage = store.state.category.categoryImage;
       categoryState.businessId = store.state.business.id_firestore;
@@ -848,6 +802,7 @@ class CategoryDeleteService implements EpicClass<AppState> {
   }
 }
 
+/*
 class DefaultCategoryCreateService implements EpicClass<AppState> {
   CategoryState categoryState;
   StatisticsState statisticsState;
@@ -899,3 +854,4 @@ class DefaultCategoryCreateService implements EpicClass<AppState> {
     ]); */
   }
 }
+*/

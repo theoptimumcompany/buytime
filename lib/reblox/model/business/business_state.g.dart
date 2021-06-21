@@ -37,8 +37,7 @@ BusinessState _$BusinessStateFromJson(Map<String, dynamic> json) {
     wide: json['wide'] as String,
     logo: json['logo'] as String,
     draft: json['draft'] as bool,
-    business_type:
-        (json['business_type'] as List)?.map((e) => e as String)?.toList(),
+    business_type: json['business_type'] as String,
     description: json['description'] as String,
     id_firestore: json['id_firestore'] as String,
     salesman: json['salesman'] == null

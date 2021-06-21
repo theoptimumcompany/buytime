@@ -112,45 +112,34 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
     }
   }
 
+
   void setCategoryList() {
-    CategoryTree categoryNode = StoreProvider.of<AppState>(context).state.categoryTree;
+    List<dynamic> snippet = StoreProvider.of<AppState>(context).state.serviceListSnippetState.businessSnippet;
     List<Parent> items = [];
 
-    if (categoryNode.categoryNodeList != null) {
-      if (categoryNode.categoryNodeList.length != 0 && categoryNode.categoryNodeList.length != null) {
-        List<dynamic> list = categoryNode.categoryNodeList;
-        items = openTree(list, items);
-      }
-    }
-
-    categoryList = items;
-  }
-
-  openTree(List<dynamic> list, List<Parent> items) {
-    for (int i = 0; i < list.length; i++) {
+    for (var i = 0; i < snippet.length; i++) {
+      String categoryPath = snippet[i].categoryAbsolutePath;
+      List<String> categoryRoute = categoryPath.split('/');
       items.add(
         Parent(
-          name: list[i]['nodeName'],
-          id: list[i]['nodeId'],
-          level: list[i]['level'],
-          parentRootId: list[i]['categoryRootId'],
+          name: snippet[i].categoryName,
+          id: categoryRoute.last,
+          level: categoryRoute.length - 1,
+         // parentRootId: categoryRoute[1],
         ),
       );
-      if (StoreProvider.of<AppState>(context).state.serviceState.categoryId.contains(list[i]['nodeId'])) {
+      if (StoreProvider.of<AppState>(context).state.serviceState.categoryId.contains(categoryRoute.last)) {
         selectedCategoryList.add(
           Parent(
-            name: list[i]['nodeName'],
-            id: list[i]['nodeId'],
-            level: list[i]['level'],
-            parentRootId: list[i]['categoryRootId'],
+            name: snippet[i].categoryName,
+            id: categoryRoute.last,
+            level: categoryRoute.length - 1,
+           // parentRootId: categoryRoute[1],
           ),
         );
       }
-      if (list[i]['nodeCategory'] != null) {
-        openTree(list[i]['nodeCategory'], items);
-      }
     }
-    return items;
+    categoryList = items;
   }
 
   _buildChoiceList() {
@@ -252,7 +241,6 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
           converter: (store) => store.state,
           onInit: (store) {
             store.state.serviceState = ServiceState();
-            store.dispatch(CategoryTreeRequest());
             store.dispatch(ServiceRequestByID(widget.serviceId));
             if (store.state.business.businessAddress != null && store.state.business.businessAddress.isNotEmpty)
               _serviceBusinessAddress = store.state.business.businessAddress;

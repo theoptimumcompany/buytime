@@ -44,7 +44,7 @@ class BusinessState {
   List<String> hasAccess;
   String wide;
   String logo;
-  List<String> business_type;
+  String business_type;
   String description;
   String id_firestore;
   GenericState salesman;
@@ -139,7 +139,7 @@ class BusinessState {
       wide: "",
       logo: "",
       draft: true,
-      business_type: [],
+      business_type: '',
       description: "",
       id_firestore: "",
       salesman: GenericState(),
@@ -274,7 +274,7 @@ class BusinessState {
     List<String> hasAccess,
     String wide,
     String logo,
-    List<String> business_type,
+    String business_type,
     String description,
     String id_firestore,
     GenericState salesaman,

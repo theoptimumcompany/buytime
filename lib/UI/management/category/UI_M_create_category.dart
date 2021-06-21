@@ -33,7 +33,7 @@ class UI_M_CreateCategoryState extends State<UI_M_CreateCategory> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final GlobalKey<FormState> _formInviteKey = GlobalKey<FormState>();
 
-  Parent _dropdownParentCategory = Parent(level: 0, id: "no_parent", name: "No Parent", parentRootId: "");
+  Parent _dropdownParentCategory = Parent(level: 0, id: "no_parent", name: "No Parent");
 
   List<DropdownMenuItem<Parent>> _dropdownMenuParentCategory = [];
 
@@ -79,12 +79,12 @@ class UI_M_CreateCategoryState extends State<UI_M_CreateCategory> {
    }
   }
 
-  setNewCategoryParent(Parent contentSelectDrop, List<dynamic> list) {
-    if (list == null || list.length == 0) {
-      Parent parentInitial = Parent(level: 0, id: "no_parent", name: "No Parent",parentRootId: "");
+  setNewCategoryParent(Parent contentSelectDrop,/* List<dynamic> list*/) {
+    if (contentSelectDrop.id == 'no_parent') {
+      Parent parentInitial = Parent(level: 0, id: "no_parent", name: "No Parent");
       StoreProvider.of<AppState>(context).dispatch(SetCategoryLevel(0));
       StoreProvider.of<AppState>(context).dispatch(SetCategoryParent(parentInitial));
-    } else if (list != null && list.length > 0) {
+    } else {
       StoreProvider.of<AppState>(context).dispatch(SetCategoryLevel(contentSelectDrop.level + 1));
       StoreProvider.of<AppState>(context).dispatch(SetCategoryParent(contentSelectDrop));
     }
@@ -102,10 +102,53 @@ class UI_M_CreateCategoryState extends State<UI_M_CreateCategory> {
   void buildDropDownMenuItemsParent(Parent item) {
     if (stopBuildDropDown == false) {
       stopBuildDropDown = true;
-      CategoryTree categoryNode = StoreProvider.of<AppState>(context).state.categoryTree;
+     // CategoryTree categoryNode = StoreProvider.of<AppState>(context).state.categoryTree;
       List<DropdownMenuItem<Parent>> items = [];
 
-      items.add(
+      // items.add(
+      //   DropdownMenuItem(
+      //     child: Text(
+      //       item.name,
+      //       overflow: TextOverflow.ellipsis,
+      //     ),
+      //     value: item,
+      //   ),
+      // );
+      //
+      // if (categoryNode.categoryNodeList != null) {
+      //   if (categoryNode.categoryNodeList.length != 0 && categoryNode.categoryNodeList.length != null) {
+      //     List<dynamic> list = categoryNode.categoryNodeList;
+      //     items = openTree(list, items);
+      //   }
+      // }
+
+
+      List<dynamic> snippet = StoreProvider.of<AppState>(context).state.serviceListSnippetState.businessSnippet;
+
+      for (var i = 0; i < snippet.length; i++) {
+        String categoryPath = snippet[i].categoryAbsolutePath;
+        List<String> categoryRoute = categoryPath.split('/');
+
+        Parent placeHolderParent = Parent(
+          name: snippet[i].categoryName,
+          id: categoryRoute.last,
+          level: categoryRoute.length - 1,
+         // parentRootId: categoryRoute[1],
+        );
+        items.insert(
+          0,
+          DropdownMenuItem(
+            child: Text(
+              placeHolderParent.name,
+              overflow: TextOverflow.ellipsis,
+            ),
+            value: placeHolderParent,
+          ),
+        );
+      }
+
+      items.insert(
+        0,
         DropdownMenuItem(
           child: Text(
             item.name,
@@ -115,17 +158,10 @@ class UI_M_CreateCategoryState extends State<UI_M_CreateCategory> {
         ),
       );
 
-      if (categoryNode.categoryNodeList != null) {
-        if (categoryNode.categoryNodeList.length != 0 && categoryNode.categoryNodeList.length != null) {
-          List<dynamic> list = categoryNode.categoryNodeList;
-          items = openTree(list, items);
-        }
-      }
-
       _dropdownMenuParentCategory = items;
     }
   }
-
+/*
   openTree(List<dynamic> list, List<DropdownMenuItem<Parent>> items) {
     for (int i = 0; i < list.length; i++) {
       if (list[i]['level'] < 4) {
@@ -149,7 +185,7 @@ class UI_M_CreateCategoryState extends State<UI_M_CreateCategory> {
     }
     return items;
   }
-
+*/
   Parent searchDropdownParent(var snapshot) {
     for (var element in _dropdownMenuParentCategory) {
       if (snapshot.category.id == element.value.id) {
@@ -249,15 +285,15 @@ class UI_M_CreateCategoryState extends State<UI_M_CreateCategory> {
                                       }
 
                                       StoreProvider.of<AppState>(context).dispatch(new CreateCategory(categoryCreate));
-                                      StoreProvider.of<AppState>(context).dispatch(new AddCategoryTree(newCategoryParent));
+                                    //  StoreProvider.of<AppState>(context).dispatch(new AddCategoryTree(newCategoryParent));
                                     } else {
                                       CategoryState categoryCreate = snapshot.category != null ? snapshot.category : CategoryState().toEmpty();
 
                                       if(categoryCreate.parent.id == 'no_parent'){
                                         categoryCreate.level = 0;
                                       }
-                                      StoreProvider.of<AppState>(context).dispatch(new CreateCategory(categoryCreate));
-                                      StoreProvider.of<AppState>(context).dispatch(new AddCategoryTree(newParent));
+                                      StoreProvider.of<AppState>(context).dispatch(CreateCategory(categoryCreate));
+                                    //  StoreProvider.of<AppState>(context).dispatch(new AddCategoryTree(newParent));
                                     }
 
                                   }
@@ -403,7 +439,7 @@ class UI_M_CreateCategoryState extends State<UI_M_CreateCategory> {
                                                     selectedParentDropValue = newValue;
                                                     newParent = newValue;
                                                     print("Drop Selezionato su onchangedrop : " + selectedParentDropValue.name);
-                                                    setNewCategoryParent(selectedParentDropValue, snapshot.categoryTree.categoryNodeList);
+                                                    setNewCategoryParent(selectedParentDropValue);
                                                   });
                                                 }),
                                           ),
