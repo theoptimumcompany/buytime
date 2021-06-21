@@ -33,10 +33,14 @@ class Utils {
 
   ///Set image
   static String sizeImage(String image, String sizing) {
-    int lastPoint = image.lastIndexOf('.');
-    String extension = image.substring(lastPoint);
-    image = image.replaceAll(extension, '');
-    return image + sizing + extension;
+    //debugPrint('UTILS => SIZE IMAGE: $image');
+    if(image.isNotEmpty){
+      int lastPoint = image.lastIndexOf('.');
+      String extension = image.substring(lastPoint);
+      image = image.replaceAll(extension, '');
+      return image + sizing + extension;
+    }
+    return image;
   }
 
   ///Custom app bar bottom part

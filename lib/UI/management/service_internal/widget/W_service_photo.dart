@@ -247,7 +247,7 @@ class WidgetServicePhotoState extends State<WidgetServicePhoto> {
         Container(
           child: GestureDetector(
             child: croppedImage != null ? croppedImage : (image != '' ? CachedNetworkImage(
-              imageUrl: remotePath.endsWith('1') ? Utils.sizeImage(image, Utils.imageSizing600) :Utils.sizeImage(image, Utils.imageSizing200),
+              imageUrl: remotePath.endsWith('1') ? Utils.sizeImage(image, Utils.imageSizing600) : Utils.sizeImage(image, Utils.imageSizing200),
               imageBuilder: (context, imageProvider) => Container(
                 //margin: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 5), ///5%
                 height: remotePath.endsWith('1') ? 300 : 150,

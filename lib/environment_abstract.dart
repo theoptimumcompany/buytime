@@ -39,7 +39,7 @@ class DevConfig implements BaseConfig {
 
   String get serverToken => '';
 
-  String get stripePublicKey => '';
+  String get stripePublicKey => 'DEV STRIPE';
 
   @override
   set cloudFunctionLink(String _cloudFunctionLink) {
@@ -133,7 +133,7 @@ class ProdConfig implements BaseConfig {
 
   String get serverToken => '';
 
-  String get stripePublicKey => '';
+  String get stripePublicKey => 'PROD STRIPE';
 
   @override
   set cloudFunctionLink(String _cloudFunctionLink) {

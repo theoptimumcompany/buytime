@@ -1,3 +1,4 @@
+import 'package:Buytime/UI/management/business/RUI_M_business.dart';
 import 'package:Buytime/UI/management/business/UI_M_business_list.dart';
 import 'package:Buytime/UI/management/business/UI_M_create_business.dart';
 import 'package:Buytime/UI/management/business/UI_M_manage_business.dart';
@@ -145,6 +146,7 @@ class RBusinessListState extends State<RBusinessList> {
           drawer: UI_M_BusinessListDrawer(),
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               StreamBuilder<QuerySnapshot>(
                   stream: _businessStream,
@@ -211,6 +213,7 @@ class RBusinessListState extends State<RBusinessList> {
 
                                       if (businessSnippetSnapshot.hasError || businessSnippetSnapshot.connectionState == ConnectionState.waiting) {
                                         return Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
                                             CircularProgressIndicator()
                                           ],
@@ -242,7 +245,7 @@ class RBusinessListState extends State<RBusinessList> {
                                           onBusinessCardTap: (BusinessState businessState) async{
                                             StoreProvider.of<AppState>(context).dispatch(SetBusiness(businessListState[index]));
                                             //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_Business()),);
-                                            Navigator.push(context, EnterExitRoute(enterPage: UI_M_Business(), exitPage: RBusinessList(), from: true));
+                                            Navigator.push(context, EnterExitRoute(enterPage: RBusiness(), exitPage: RBusinessList(), from: true));
                                           },
                                           imageUrl: businessState.profile,
                                           mediaSize: media,

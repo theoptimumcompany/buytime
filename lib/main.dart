@@ -30,7 +30,7 @@ void main() {
 
   const String environment = String.fromEnvironment(
     'ENVIRONMENT',
-    defaultValue: Environment.DEV,
+    defaultValue: Environment.PROD,
   );
 
   Environment().initConfig(environment);
@@ -53,6 +53,7 @@ class Buytime extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("MAIN PROD/DEV STRIPE CONFIGURATION : " + Environment().config.stripePublicKey);
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
     //SizeConfig().init(context);
     //ScreenUtil.init(bcontext, width: 1125, height: 2436, allowFontScaling: true);
