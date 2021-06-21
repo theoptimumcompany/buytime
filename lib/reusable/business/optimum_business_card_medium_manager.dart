@@ -186,7 +186,11 @@ class _OptimumBusinessCardMediumManagerState extends State<OptimumBusinessCardMe
                                       ),
                                     ),
                                     Text(
-                                      (widget.businessState.hasAccess != null && widget.businessState.hasAccess.isNotEmpty && widget.businessState.hasAccess.length > 1) ? '${widget.businessState.hasAccess.length} ${AppLocalizations.of(context).justEmployees}': '0 ${AppLocalizations.of(context).justEmployee}',
+                                      (widget.businessState.hasAccess != null && widget.businessState.hasAccess.isNotEmpty && widget.businessState.hasAccess.length > 1) ?
+                                      '${ widget.businessState.hasAccess.length} ${AppLocalizations.of(context).justEmployees}':
+                                      (widget.businessState.hasAccess != null && widget.businessState.hasAccess.isNotEmpty && widget.businessState.hasAccess.length == 1) ?
+                                      '${ widget.businessState.hasAccess.length} ${AppLocalizations.of(context).justEmployee}' :
+                                      '0 ${AppLocalizations.of(context).justEmployee}',
                                       overflow: TextOverflow.ellipsis,
                                       textAlign: TextAlign.start,
                                       style: TextStyle(

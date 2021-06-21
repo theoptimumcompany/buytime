@@ -266,9 +266,11 @@ class _RBusinessState extends State<RBusiness> {
                                                   Container(
                                                     margin: EdgeInsets.only(top: 10),
                                                     child: Text(
-                                                      StoreProvider.of<AppState>(context).state.business.hasAccess.length > 1 ?
+                                                        (StoreProvider.of<AppState>(context).state.business.hasAccess != null && StoreProvider.of<AppState>(context).state.business.hasAccess.isNotEmpty && StoreProvider.of<AppState>(context).state.business.hasAccess.length > 1) ?
                                                       '${ StoreProvider.of<AppState>(context).state.business.hasAccess.length} ${AppLocalizations.of(context).justEmployees}':
-                                                      '${ StoreProvider.of<AppState>(context).state.business.hasAccess.length} ${AppLocalizations.of(context).justEmployee}',
+                                                        (StoreProvider.of<AppState>(context).state.business.hasAccess != null &&StoreProvider.of<AppState>(context).state.business.hasAccess.isNotEmpty && StoreProvider.of<AppState>(context).state.business.hasAccess.length == 1) ?
+                                                      '${ StoreProvider.of<AppState>(context).state.business.hasAccess.length} ${AppLocalizations.of(context).justEmployee}' :
+                                                      '0 ${AppLocalizations.of(context).justEmployee}',
                                                       style: TextStyle(fontWeight: FontWeight.w400, fontFamily: BuytimeTheme.FontFamily, fontSize: 14, color: BuytimeTheme.TextMedium),
                                                     ),
                                                   ),
