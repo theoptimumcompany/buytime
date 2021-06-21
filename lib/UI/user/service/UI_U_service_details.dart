@@ -73,7 +73,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
   }
 
   bool isExternal = false;
-  ExternalBusinessState externalBusinessState;
+  ExternalBusinessState externalBusinessState = ExternalBusinessState().toEmpty();
   String address = '';
 
   @override
@@ -499,6 +499,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                                             color: Colors.transparent,
                                                             child: InkWell(
                                                                 onTap: () {
+                                                                  debugPrint('UI_U_service_details => BUSINESS STATE: ${externalBusinessState.name}');
                                                                   Navigator.push(
                                                                     context,
                                                                     MaterialPageRoute(

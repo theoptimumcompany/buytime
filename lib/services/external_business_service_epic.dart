@@ -396,7 +396,7 @@ class ExternalBusinessCreateService implements EpicClass<AppState> {
 
       if (businessState.business_type.isNotEmpty && businessState.business_type[0].toString().isEmpty &&
           businessState.business_type.length > 1) {
-        businessState.business_type = businessState.business_type.sublist(1);
+        businessState.business_type = businessState.business_type;
       }
 
       businessState.id_firestore = docReference.id;

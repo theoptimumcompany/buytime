@@ -12,7 +12,6 @@ CategoryState _$CategoryStateFromJson(Map<String, dynamic> json) {
     id: json['id'] as String,
     level: json['level'] as int,
     children: json['children'] as int,
-    categoryRootId: json['categoryRootId'] as String,
     parent: json['parent'] == null
         ? null
         : Parent.fromJson(json['parent'] as Map<String, dynamic>),
@@ -40,7 +39,6 @@ Map<String, dynamic> _$CategoryStateToJson(CategoryState instance) =>
       'id': instance.id,
       'level': instance.level,
       'children': instance.children,
-      'categoryRootId': instance.categoryRootId,
       'parent': instance.parent?.toJson(),
       'manager': instance.manager?.map((e) => e?.toJson())?.toList(),
       'managerMailList': instance.managerMailList,

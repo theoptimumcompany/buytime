@@ -11,7 +11,6 @@ Parent _$ParentFromJson(Map<String, dynamic> json) {
     id: json['id'] as String,
     level: json['level'] as int,
     name: json['name'] as String,
-    parentRootId: json['parentRootId'] as String,
   );
 }
 
@@ -19,5 +18,4 @@ Map<String, dynamic> _$ParentToJson(Parent instance) => <String, dynamic>{
       'id': instance.id,
       'level': instance.level,
       'name': instance.name,
-      'parentRootId': instance.parentRootId,
     };

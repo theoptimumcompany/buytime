@@ -32,6 +32,7 @@ _navigateReplace(Store<AppState> store, action, NextDispatcher next) {
 
 _navigate(Store<AppState> store, action, NextDispatcher next) {
   final routeName = (action as NavigatePushAction).routeName;
+  print("ROUTE NAVIGATE : " + routeName);
   navigatorKey.currentState.pushNamed(routeName);
   next(action); //This need to be after name checks
 }

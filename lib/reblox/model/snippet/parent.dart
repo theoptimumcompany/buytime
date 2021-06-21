@@ -6,13 +6,11 @@ class Parent {
   String id;
   int level;
   String name;
-  String parentRootId;
 
   Parent({
     this.id = "",
     this.level = 0,
     this.name = "",
-    this.parentRootId = "",
   });
 
   factory Parent.fromJson(Map<String, dynamic> json) => _$ParentFromJson(json);

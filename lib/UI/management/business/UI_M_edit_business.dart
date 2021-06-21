@@ -314,15 +314,13 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
 
                                         if (snapshot.hub != null && snapshot.business_type != null) {
                                           if (snapshot.business_type.isNotEmpty)
-                                            businessType = snapshot.business_type.first;
+                                            businessType = snapshot.business_type;
                                           else
                                             debugPrint('UI_M_create_business => HAS BUSINESSS TYPE');
                                           debugPrint('UI_M_create_business => BEFORE BUSINESS TYPE LENGTH: ${snapshot.business_type.length}');
-                                          snapshot.business_type.forEach((element) {
-                                            debugPrint('UI_M_create_business => BEFORE BUSINESS TYPE: ${element}');
-                                          });
+
                                           if (isHub != snapshot.hub) {
-                                            snapshot.business_type.clear();
+                                            snapshot.business_type = '';
                                             businessType = '';
                                             //StoreProvider.of<AppState>(context).dispatch(SetBusinessType([]));
                                             if (snapshot.hub) {
@@ -339,9 +337,6 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
                                             isHub = snapshot.hub;
                                           }
                                           debugPrint('UI_M_create_business => AFTER BUSINESS TYPE LENGTH: ${snapshot.business_type.length}');
-                                          snapshot.business_type.forEach((element) {
-                                            debugPrint('UI_M_create_business => AFTER BUSINESS TYPE: ${element}');
-                                          });
                                         }
                                         return Stepper(
                                           steps: [
@@ -645,14 +640,14 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
                                                               chipList: hubType,
                                                               selectedChoices: businessType,
                                                               optimumChipListToDispatch: (String selectedChoices) {
-                                                                StoreProvider.of<AppState>(context).dispatch(SetBusinessType([selectedChoices]));
+                                                                StoreProvider.of<AppState>(context).dispatch(SetBusinessType(selectedChoices));
                                                               },
                                                             )
                                                           : OptimumChip(
                                                               chipList: notHubType,
                                                               selectedChoices: businessType,
                                                               optimumChipListToDispatch: (String selectedChoices) {
-                                                                StoreProvider.of<AppState>(context).dispatch(SetBusinessType([selectedChoices]));
+                                                                StoreProvider.of<AppState>(context).dispatch(SetBusinessType(selectedChoices));
                                                               },
                                                             ),
                                                     ],
