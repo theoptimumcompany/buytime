@@ -233,7 +233,7 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
     // deviceSupportNativePay && isNativeReady ? createPaymentMethodNative() : createPaymentMethod();
   }
 
-  /// Replace with server token from firebase console settings.
+
   String serverToken = 'AAAA6xUtyfE:APA91bGHhEzVUY9fnj4FbTXJX57qcgF-8GBrfBbGIa8kEpEIdsXRgQxbtsvbhL-w-_MQYKIj0XVlSaDSf2s6O3D3SM3o-z_AZnHQwBNLiw1ygyZOuVAKa5YmXeu6Da9eBqRD9uwFHSPi';
 
   static final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
