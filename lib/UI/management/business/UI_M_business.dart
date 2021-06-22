@@ -186,6 +186,12 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                   internalCategories.add(element);
                 if(element.categoryAbsolutePath.split('/').first != snapshot.business.id_firestore)
                   externalCategories.add(element);
+                element.serviceList.forEach((service) {
+                  if(service.serviceAbsolutePath.split('/').first != snapshot.business.id_firestore){
+                    if(!externalCategories.contains(element))
+                      externalCategories.add(element);
+                  }
+                });
               });
             //print("UI_M_Business => AFTER | Categories length: ${categories.length}");
             tmpCategories.forEach((allC) {
@@ -199,7 +205,7 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                     print("UI_M_Business => INTERNAL | Sub category service list length: ${allC.serviceList.length}");
                     print("UI_M_Business => INTERNAL | BEFORE | Main category service list length: ${c.serviceList.length}");
                     allC.serviceList.forEach((s) {
-                      if(!c.serviceList.contains(s))
+                      if(!c.serviceList.contains(s) && s.serviceAbsolutePath.split('/').first == snapshot.business.id_firestore)
                         c.serviceList.add(s);
                     });
                     print("UI_M_Business => INTERNAL | AFTER | Main category service list length: ${c.serviceList.length}");
@@ -217,7 +223,7 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                     print("UI_M_Business => EXTERNAL | Sub category service list length: ${allC.serviceList.length}");
                     print("UI_M_Business => EXTERNAL | BEFORE | Main category service list length: ${c.serviceList.length}");
                     allC.serviceList.forEach((s) {
-                      if(!c.serviceList.contains(s))
+                      if(!c.serviceList.contains(s) && s.serviceAbsolutePath.split('/').first != snapshot.business.id_firestore)
                         c.serviceList.add(s);
                     });
                     print("UI_M_Business => EXTERNAL | AFTER | Main category service list length: ${c.serviceList.length}");

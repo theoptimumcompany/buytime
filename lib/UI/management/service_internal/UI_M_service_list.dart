@@ -219,7 +219,7 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                       print("UI_M_service_list => Sub category service list length: ${allC.serviceList.length}");
                       print("UI_M_service_list => BEFORE | Main category service list length: ${c.serviceList.length}");
                       allC.serviceList.forEach((s) {
-                        if(!c.serviceList.contains(s))
+                        if(!c.serviceList.contains(s) && s.serviceAbsolutePath.split('/').first == snapshot.business.id_firestore)
                           c.serviceList.add(s);
                       });
                       print("UI_M_service_list => AFTER | Main category service list length: ${c.serviceList.length}");
