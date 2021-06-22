@@ -53,7 +53,7 @@ class InviteUserState extends State<InviteUser> {
                 //Navigator.push(context, MaterialPageRoute(builder: (context) => BookingList(bookingList: bookingList)));
               },
               child: Padding(
-                padding: const EdgeInsets.only(bottom: 20.0),
+                padding: const EdgeInsets.only(bottom: 5.0),
                 child: Container(
                   height: 70,
                   child: Row(

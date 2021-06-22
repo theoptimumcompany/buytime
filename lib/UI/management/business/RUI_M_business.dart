@@ -401,6 +401,12 @@ class _RBusinessState extends State<RBusiness> {
                                   internalCategories.add(element);
                                 if(element.categoryAbsolutePath.split('/').first != StoreProvider.of<AppState>(context).state.business.id_firestore)
                                   externalCategories.add(element);
+                                element.serviceList.forEach((service) { 
+                                  if(service.serviceAbsolutePath.split('/').first != StoreProvider.of<AppState>(context).state.business.id_firestore){
+                                    if(!externalCategories.contains(element))
+                                      externalCategories.add(element);
+                                  }
+                                });
                               });
                               //print("RUI_M_business => AFTER | Categories length: ${categories.length}");
                               tmpCategories.forEach((allC) {
@@ -414,7 +420,7 @@ class _RBusinessState extends State<RBusiness> {
                                       //print("RUI_M_business => INTERNAL | Sub category service list length: ${allC.serviceList.length}");
                                       //print("RUI_M_business => INTERNAL | BEFORE | Main category service list length: ${c.serviceList.length}");
                                       allC.serviceList.forEach((s) {
-                                        if(!c.serviceList.contains(s))
+                                        if(!c.serviceList.contains(s) && s.serviceAbsolutePath.split('/').first == StoreProvider.of<AppState>(context).state.business.id_firestore)
                                           c.serviceList.add(s);
                                       });
                                       //print("RUI_M_business => INTERNAL | AFTER | Main category service list length: ${c.serviceList.length}");
@@ -432,7 +438,7 @@ class _RBusinessState extends State<RBusiness> {
                                       //print("RUI_M_business => EXTERNAL | Sub category service list length: ${allC.serviceList.length}");
                                       //print("RUI_M_business => EXTERNAL | BEFORE | Main category service list length: ${c.serviceList.length}");
                                       allC.serviceList.forEach((s) {
-                                        if(!c.serviceList.contains(s))
+                                        if(!c.serviceList.contains(s) && s.serviceAbsolutePath.split('/').first != StoreProvider.of<AppState>(context).state.business.id_firestore)
                                           c.serviceList.add(s);
                                       });
                                       //print("RUI_M_business => EXTERNAL | AFTER | Main category service list length: ${c.serviceList.length}");
