@@ -248,52 +248,73 @@ class _RBusinessState extends State<RBusiness> {
                                           width: double.infinity,
                                           margin: EdgeInsets.only(top: 25.0, left: 20.0),
                                           color: Colors.transparent,
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              ///Welcome message 'Hi ...'
-                                              Container(
-                                                child: Text(
-                                                  '${AppLocalizations.of(context).hi} ' + StoreProvider.of<AppState>(context).state.user.name,
-                                                  style: TextStyle(fontWeight: FontWeight.w700, fontFamily: BuytimeTheme.FontFamily, fontSize: 24, color: BuytimeTheme.TextBlack),
-                                                ),
-                                              ),
+                                          child: StreamBuilder<QuerySnapshot>(
+                                              stream: _businessStream,
+                                              builder: (context, AsyncSnapshot<QuerySnapshot> businessSnapshot) {
+                                                if (businessSnapshot.hasError || businessSnapshot.connectionState == ConnectionState.waiting) {
+                                                  return Row(
+                                                    mainAxisAlignment: MainAxisAlignment.start,
+                                                    children: [
+                                                      CircularProgressIndicator()
+                                                    ],
+                                                  );
+                                                }
 
-                                              networkServices >= 0 ? Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  ///Employees count
-                                                  Container(
-                                                    margin: EdgeInsets.only(top: 10),
-                                                    child: Text(
-                                                        (StoreProvider.of<AppState>(context).state.business.hasAccess != null && StoreProvider.of<AppState>(context).state.business.hasAccess.isNotEmpty && StoreProvider.of<AppState>(context).state.business.hasAccess.length > 1) ?
-                                                      '${ StoreProvider.of<AppState>(context).state.business.hasAccess.length} ${AppLocalizations.of(context).justEmployees}':
-                                                        (StoreProvider.of<AppState>(context).state.business.hasAccess != null &&StoreProvider.of<AppState>(context).state.business.hasAccess.isNotEmpty && StoreProvider.of<AppState>(context).state.business.hasAccess.length == 1) ?
-                                                      '${ StoreProvider.of<AppState>(context).state.business.hasAccess.length} ${AppLocalizations.of(context).justEmployee}' :
-                                                      '0 ${AppLocalizations.of(context).justEmployee}',
-                                                      style: TextStyle(fontWeight: FontWeight.w400, fontFamily: BuytimeTheme.FontFamily, fontSize: 14, color: BuytimeTheme.TextMedium),
-                                                    ),
-                                                  ),
+                                                ServiceListSnippetState serviceListSnippetState = ServiceListSnippetState.fromJson(businessSnapshot.data.docs.first.data());
+                                                StoreProvider.of<AppState>(context).dispatch(ServiceListSnippetRequestResponse(serviceListSnippetState));
+                                                print("RUI_M_business => Business Id from snippet: ${serviceListSnippetState.businessId}");
+                                                //print("RUI_M_business => BEFORE | Categories length: ${categories.length}");
+                                                networkServices = serviceListSnippetState.businessServiceNumberInternal + serviceListSnippetState.businessServiceNumberExternal;
 
-                                                  ///Menu items count
-                                                  Container(
-                                                    margin: EdgeInsets.only(top: 2.5),
-                                                    child: Text(
-                                                      networkServices > 1 ? '$networkServices ${AppLocalizations.of(context).networkServices}' : '$networkServices ${AppLocalizations.of(context).networkService}',
-                                                      style: TextStyle(fontWeight: FontWeight.w400, fontFamily: BuytimeTheme.FontFamily, fontSize: 14, color: BuytimeTheme.TextMedium),
-                                                    ),
-                                                  )
-                                                ],
-                                              ) : Container(
-                                                padding: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2,left: 20.0),
-                                                child: Row(
-                                                  mainAxisAlignment: MainAxisAlignment.start,
+
+                                                return Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
-                                                    CircularProgressIndicator()
+                                                    ///Welcome message 'Hi ...'
+                                                    Container(
+                                                      child: Text(
+                                                        '${AppLocalizations.of(context).hi} ' + StoreProvider.of<AppState>(context).state.user.name,
+                                                        style: TextStyle(fontWeight: FontWeight.w700, fontFamily: BuytimeTheme.FontFamily, fontSize: 24, color: BuytimeTheme.TextBlack),
+                                                      ),
+                                                    ),
+
+                                                    networkServices >= 0 ? Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        ///Employees count
+                                                        Container(
+                                                          margin: EdgeInsets.only(top: 10),
+                                                          child: Text(
+                                                            (StoreProvider.of<AppState>(context).state.business.hasAccess != null && StoreProvider.of<AppState>(context).state.business.hasAccess.isNotEmpty && StoreProvider.of<AppState>(context).state.business.hasAccess.length > 1) ?
+                                                            '${ StoreProvider.of<AppState>(context).state.business.hasAccess.length} ${AppLocalizations.of(context).justEmployees}':
+                                                            (StoreProvider.of<AppState>(context).state.business.hasAccess != null &&StoreProvider.of<AppState>(context).state.business.hasAccess.isNotEmpty && StoreProvider.of<AppState>(context).state.business.hasAccess.length == 1) ?
+                                                            '${ StoreProvider.of<AppState>(context).state.business.hasAccess.length} ${AppLocalizations.of(context).justEmployee}' :
+                                                            '0 ${AppLocalizations.of(context).justEmployee}',
+                                                            style: TextStyle(fontWeight: FontWeight.w400, fontFamily: BuytimeTheme.FontFamily, fontSize: 14, color: BuytimeTheme.TextMedium),
+                                                          ),
+                                                        ),
+
+                                                        ///Menu items count
+                                                        Container(
+                                                          margin: EdgeInsets.only(top: 2.5),
+                                                          child: Text(
+                                                            networkServices > 1 ? '$networkServices ${AppLocalizations.of(context).networkServices}' : '$networkServices ${AppLocalizations.of(context).networkService}',
+                                                            style: TextStyle(fontWeight: FontWeight.w400, fontFamily: BuytimeTheme.FontFamily, fontSize: 14, color: BuytimeTheme.TextMedium),
+                                                          ),
+                                                        )
+                                                      ],
+                                                    ) : Container(
+                                                      padding: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2,left: 20.0),
+                                                      child: Row(
+                                                        mainAxisAlignment: MainAxisAlignment.start,
+                                                        children: [
+                                                          CircularProgressIndicator()
+                                                        ],
+                                                      ),
+                                                    )
                                                   ],
-                                                ),
-                                              )
-                                            ],
+                                                );
+                                              }
                                           ),
                                         ),
                                       ),
@@ -356,13 +377,16 @@ class _RBusinessState extends State<RBusiness> {
                                 return Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    CircularProgressIndicator()
+                                    Container(
+                                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 25),
+                                      child: CircularProgressIndicator(),
+                                    )
                                   ],
                                 );
                               }
 
                               ServiceListSnippetState serviceListSnippetState = ServiceListSnippetState.fromJson(businessSnapshot.data.docs.first.data());
-
+                              StoreProvider.of<AppState>(context).dispatch(ServiceListSnippetRequestResponse(serviceListSnippetState));
                               print("RUI_M_business => Business Id from snippet: ${serviceListSnippetState.businessId}");
                               internalCategories.clear();
                               externalCategories.clear();
@@ -535,7 +559,9 @@ class _RBusinessState extends State<RBusiness> {
                                                 return CategoryListItemWidget(categoryItem, BuytimeTheme.SymbolLime);
                                               }).toList(),
                                             )*/
-                                          CustomScrollView(shrinkWrap: true, slivers: [
+                                          CustomScrollView(
+                                              physics: NeverScrollableScrollPhysics(),
+                                              shrinkWrap: true, slivers: [
                                             SliverList(
                                               delegate: SliverChildBuilderDelegate(
                                                     (context, index) {
@@ -662,7 +688,9 @@ class _RBusinessState extends State<RBusiness> {
                                                   return CategoryListItemWidget(categoryItem, BuytimeTheme.Indigo);
                                                 }).toList(),
                                               )*/
-                                            CustomScrollView(shrinkWrap: true, slivers: [
+                                            CustomScrollView(
+                                                physics: NeverScrollableScrollPhysics(),
+                                                shrinkWrap: true, slivers: [
                                               SliverList(
                                                 delegate: SliverChildBuilderDelegate(
                                                       (context, index) {
