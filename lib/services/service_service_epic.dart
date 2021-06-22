@@ -694,7 +694,11 @@ class ServiceUpdateService implements EpicClass<AppState> {
       if (event.serviceState.fileToUploadList != null) {
         await uploadFiles(event.serviceState.fileToUploadList, event.serviceState).then((ServiceState updatedServiceState) {
           serviceState = updatedServiceState;
+          serviceState.serviceSlot.forEach((element) {
+            debugPrint('EPIC => MAX QUANTITY: ${element.maxQuantity}');
+          });
           FirebaseFirestore.instance.collection("service").doc(serviceState.serviceId).update(updatedServiceState.toJson()).then((value) {
+
             print("ServiceService should be updated online ");
             serviceState = updatedServiceState;
 
@@ -713,8 +717,11 @@ class ServiceUpdateService implements EpicClass<AppState> {
         statisticsState.serviceUpdateServiceRead = reads;
         statisticsState.serviceUpdateServiceWrite = writes;
         statisticsState.serviceUpdateServiceDocuments = documents;
-
+        serviceState.serviceSlot.forEach((element) {
+          debugPrint('EPIC => MAX QUANTITY: ${element.maxQuantity}');
+        });
         FirebaseFirestore.instance.collection("service").doc(serviceState.serviceId).update(serviceState.toJson()).then((value) {
+
           print("ServiceService should be updated online ");
         }).catchError((error) {
           print(error);

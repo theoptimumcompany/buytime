@@ -191,25 +191,25 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
 
   List<DateTime> getDaysInBeteween(DateTime startDate, DateTime endDate, DateTime userStartDate, DateTime userEndDate, List<SquareSlotState> mySlots, ServiceSlot slot) {
     tmpSlots.clear();
-    debugPrint("UI_U_service_reserve => mySlots" + mySlots.length.toString());
+    debugPrint("UI_U_service_reserve => mySlots - " + mySlots.length.toString());
     List<DateTime> days = [];
     for (int i = 0; i <= endDate.difference(startDate).inDays; i++) {
-      //debugPrint('UI_U_ServiceReserve => LOOKING DATE: ${startDate.add(Duration(days: i))} - IS AFTER: $userStartDate - IS BEFORE: $userEndDate');
-      if (startDate.add(Duration(days: i)).isAfter(userStartDate) && startDate.add(Duration(days: i)).isBefore(userEndDate)) {
-        //debugPrint('UI_U_ServiceReserve => LOOKED DATE: ${startDate.add(Duration(days: i))} - IS AFTER: $startDate');
+      debugPrint('UI_U_ServiceReserve => LOOKING DATE: ${startDate.add(Duration(days: i))} - IS AFTER: $userStartDate - IS BEFORE: $userEndDate');
+      if ((startDate.add(Duration(days: i)).isAtSameMomentAs(userStartDate) || startDate.add(Duration(days: i)).isAfter(userStartDate)) && startDate.add(Duration(days: i)).isBefore(userEndDate)) {
+        debugPrint('UI_U_ServiceReserve => LOOKED DATE: ${startDate.add(Duration(days: i))} - IS AFTER: $startDate');
         if (startDate.add(Duration(days: i)).isAfter(startDate) || startDate.add(Duration(days: i)).isAtSameMomentAs(startDate)) {
           DateTime currentTime = DateTime.now();
           currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0);
-          //debugPrint('UI_U_ServiceReserve => LOOKED DATE: ${startDate.add(Duration(days: i))} - CURRENT DATE: ${currentTime}');
+          debugPrint('UI_U_ServiceReserve => LOOKED DATE: ${startDate.add(Duration(days: i))} - CURRENT DATE: ${currentTime}');
           if (startDate.add(Duration(days: i)).isAfter(currentTime) || startDate.add(Duration(days: i)).isAtSameMomentAs(currentTime)) {
             days.add(startDate.add(Duration(days: i)));
             tmpSlots.add([]);
             for (int j = 0; j < mySlots.length; j++) {
               if (!first /*&& mySlots[i].visibility*/) {
                 if (mySlots[j].free != 0) {
-                  //debugPrint('HEREEE => ${mySlots[j].on}');
+                  debugPrint('HEREEE => ${mySlots[j].on}');
                   DateTime squareDateFormat = DateFormat("dd/MM/yyyy").parse(mySlots[j].date).toUtc();
-                  //debugPrint('DATE: $squareDateFormat');
+                  debugPrint('DATE: $squareDateFormat');
                   DateTime squareDate = squareDateFormat;
                   squareDate = new DateTime(squareDate.year, squareDate.month, squareDate.day, 0, 0, 0, 0, 0);
                   DateTime squareTime = DateFormat("dd/MM/yyyy").parse(mySlots[j].date).toUtc();
@@ -391,7 +391,6 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
             DateTime tmpEndDate = DateFormat('dd/MM/yyyy').parse(widget.serviceState.serviceSlot[i].checkOut);
             debugPrint('UI_U_service_reserve => START DATE: $tmpStartDate | END DATE: $tmpEndDate');
             if (dates.isEmpty) {
-
               DateTime endDateBoth;
               DateTime startDateBoth;
               if (widget.tourist) {

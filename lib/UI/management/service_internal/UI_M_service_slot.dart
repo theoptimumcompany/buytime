@@ -191,7 +191,9 @@ class UI_M_ServiceSlotState extends State<UI_M_ServiceSlot> {
                                                 StoreProvider.of<AppState>(context).dispatch(SetServiceSlotToEmpty());
                                                 Navigator.pop(context);
                                               } else if (widget.editSlot) {
+                                                debugPrint('UI_M_service_slot => MAX QUANTITY: ${snapshot.serviceSlot.maxQuantity}');
                                                 StoreProvider.of<AppState>(context).dispatch(UpdateServiceSlot(snapshot.serviceSlot, widget.indexSlot));
+                                                debugPrint('UI_M_service_slot => SERVICE MAX QUANTITY: ${snapshot.serviceState.serviceSlot[widget.indexSlot].maxQuantity}');
                                                 StoreProvider.of<AppState>(context).dispatch(SetServiceSlotToEmpty());
                                                 Navigator.pop(context);
                                               }

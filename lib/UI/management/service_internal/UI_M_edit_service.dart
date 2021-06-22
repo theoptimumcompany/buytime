@@ -391,10 +391,10 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                       tmpService.vat = _serviceVAT;
                                                     debugPrint('UI_M_edit_service => Service Name: ${tmpService.name}');
                                                     debugPrint('UI_M_edit_service => Service Description: ${tmpService.description}');
-                                                    debugPrint('UI_M_create_service => Service Address: ${tmpService.serviceAddress}');
-                                                    debugPrint('UI_M_create_service => Service Business Address: ${tmpService.serviceBusinessAddress}');
-                                                    debugPrint('UI_M_create_service => Service Coordinates: ${tmpService.serviceCoordinates}');
-                                                    debugPrint('UI_M_create_service => Service Business Coordinates: ${tmpService.serviceBusinessCoordinates}');
+                                                    debugPrint('UI_M_edit_service => Service Address: ${tmpService.serviceAddress}');
+                                                    debugPrint('UI_M_edit_service => Service Business Address: ${tmpService.serviceBusinessAddress}');
+                                                    debugPrint('UI_M_edit_service => Service Coordinates: ${tmpService.serviceCoordinates}');
+                                                    debugPrint('UI_M_edit_service => Service Business Coordinates: ${tmpService.serviceBusinessCoordinates}');
                                                     StoreProvider.of<AppState>(context).dispatch(SetServiceServiceCrossSell(snapshot.serviceState.serviceCrossSell));
 
                                                     /// set the area of the service
@@ -414,6 +414,9 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                         }
                                                       }
                                                     }
+                                                    tmpService.serviceSlot.forEach((element) {
+                                                      debugPrint('UI_M_edit_service => MAX QUANTITY: ${element.maxQuantity}');
+                                                    });
 
                                                     StoreProvider.of<AppState>(context).dispatch(UpdateService(tmpService));
                                                   }
