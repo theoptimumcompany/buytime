@@ -181,6 +181,7 @@ class RBusinessListState extends State<RBusinessList> {
                       businessListState.add(businesState);
                     });
 
+                    businessListState.sort((a,b) => a.name.compareTo(b.name));
                     StoreProvider.of<AppState>(context).dispatch(BusinessListReturned(businessListState));
 
 
