@@ -138,7 +138,6 @@ class ExternalServiceListState extends State<ExternalServiceList> {
                         externalServiceCount.add(gCBI.serviceGivenNumber);
                       }
                     });
-
                   });
                 }
 
