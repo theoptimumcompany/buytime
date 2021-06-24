@@ -719,26 +719,32 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                               child: Padding(
                                 padding: EdgeInsets.only(top: 10.0),
                                 child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: <Widget>[
                                     ///Category Image
-                                    OptimumFormMultiPhoto(
-                                      text: AppLocalizations.of(context).categoryImage,
-                                      remotePath: "business/" + businessName + "/category",
-                                      maxHeight: 1000,
-                                      maxPhoto: 1,
-                                      maxWidth: 800,
-                                      minHeight: 200,
-                                      minWidth: 600,
-                                      cropAspectRatioPreset: CropAspectRatioPreset.square,
-                                      image: snapshot.category.categoryImage == null || snapshot.category.categoryImage.isEmpty
-                                          ? null
-                                          : snapshot.category.categoryImage,
-                                      //Image.network(snapshot.category.categoryImage, width: media.width * 0.3),
-                                      roleAllowedArray: [Role.admin, Role.salesman],
-                                      onFilePicked: (fileToUpload) {
-                                        fileToUpload.remoteFolder = "business/" + businessName + "/category";
-                                        StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInCategory(fileToUpload, fileToUpload.state, 0));
-                                      },
+                                    Container(
+                                      margin: EdgeInsets.only(left: 20 , bottom: 10),
+                                      width: SizeConfig.screenWidth,
+                                      alignment: Alignment.center,
+                                      child: OptimumFormMultiPhoto(
+                                        text: AppLocalizations.of(context).categoryImage,
+                                        remotePath: "business/" + businessName + "/category",
+                                        maxHeight: 1000,
+                                        maxPhoto: 1,
+                                        maxWidth: 800,
+                                        minHeight: 200,
+                                        minWidth: 600,
+                                        cropAspectRatioPreset: CropAspectRatioPreset.square,
+                                        image: snapshot.category.categoryImage == null || snapshot.category.categoryImage.isEmpty
+                                            ? null
+                                            : snapshot.category.categoryImage,
+                                        //Image.network(snapshot.category.categoryImage, width: media.width * 0.3),
+                                        roleAllowedArray: [Role.admin, Role.salesman],
+                                        onFilePicked: (fileToUpload) {
+                                          fileToUpload.remoteFolder = "business/" + businessName + "/category";
+                                          StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInCategory(fileToUpload, fileToUpload.state, 0));
+                                        },
+                                      ),
                                     ),
                                     ///Category Name
                                     Padding(
