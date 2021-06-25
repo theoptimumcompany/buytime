@@ -96,7 +96,7 @@ class AllCategoryListRequestService implements EpicClass<AppState> {
             .collection("business")
             .doc(businessListFromFirebase.docs[i].id)
             .collection("category")
-            .where("level", isEqualTo: 0)
+            //.where("level", isEqualTo: 0)
             .limit(10)
             .get();
         read++;

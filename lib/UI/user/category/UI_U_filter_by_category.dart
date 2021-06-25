@@ -239,7 +239,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                       if(element.customTag == 'showcase'){
                         store.state.serviceList.serviceListState.forEach((service) {
                           //debugPrint('CATAGORY ID: ${cLS.id} - CATEGORY LIST: ${service.categoryId}');
-                          if(service.categoryId.contains(element.id) || service.categoryRootId.contains(element.id)){
+                          if((service.categoryId.contains(element.id) || service.categoryRootId.contains(element.id)) && element.level == 0){
                             if(!categoryList.contains(element)){
                               categoryList.add(element);
                             }
