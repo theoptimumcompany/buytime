@@ -112,45 +112,48 @@ class ManageCategoryState extends State<ManageCategory> with SingleTickerProvide
     List<dynamic> snippet = StoreProvider.of<AppState>(context).state.serviceListSnippetState.businessSnippet;
     List<dynamic> tree = [];
 
-    for (var i = 0; i < snippet.length; i++) {
-      String categoryPath = snippet[i].categoryAbsolutePath;
-      List<String> categoryRoute = categoryPath.split('/');
-      if (categoryRoute.length <= 2) {
-        ///La categoria è una foglia
-        CategoryTree singleNode = CategoryTree();
-        singleNode.nodeName = snippet[i].categoryName;
-        singleNode.nodeId = categoryRoute[1];
-        singleNode.nodeLevel = 0;
-        singleNode.categoryNodeList = [];
+    if(snippet != null && snippet.isNotEmpty){
+      for (var i = 0; i < snippet.length; i++) {
+        String categoryPath = snippet[i].categoryAbsolutePath;
+        List<String> categoryRoute = categoryPath.split('/');
+        if (categoryRoute.length <= 2) {
+          ///La categoria è una foglia
+          CategoryTree singleNode = CategoryTree();
+          singleNode.nodeName = snippet[i].categoryName;
+          singleNode.nodeId = categoryRoute[1];
+          singleNode.nodeLevel = 0;
+          singleNode.categoryNodeList = [];
 
-        ///Controllare che non esista già il ramo prima di aggiungere al tree
-        print("ESISTE NEL TREE??? " + searchIfExistsOnTree(categoryRoute[1], tree).toString());
-        if (!searchIfExistsOnTree(categoryRoute[1], tree)) {
-          addToTree(tree, singleNode, 'no_parent');
+          ///Controllare che non esista già il ramo prima di aggiungere al tree
+          print("ESISTE NEL TREE??? " + searchIfExistsOnTree(categoryRoute[1], tree).toString());
+          if (!searchIfExistsOnTree(categoryRoute[1], tree)) {
+            addToTree(tree, singleNode, 'no_parent');
+          }
         }
-      } else {
-        ///La categoria è nodo di un ramo e ha delle foglie
-        List<dynamic> placeHolder = [];
+        else {
+          ///La categoria è nodo di un ramo e ha delle foglie
+          List<dynamic> placeHolder = [];
 
-        ///Controllare se esistono fratelli o altrimenti creare ex novo il ramo
-        for (var y = 1; y < categoryRoute.length; y++) {
-          if (y == 1) {
-            if (!searchIfExistsOnTree(categoryRoute[1], tree)) {
-              CategoryTree singleNode = CategoryTree();
-              singleNode.nodeName = searchCategoryNameIntoSnippet(categoryRoute[y], snippet);
-              singleNode.nodeId = categoryRoute[1];
-              singleNode.nodeLevel = 0;
-              singleNode.categoryNodeList = [];
-              addToTree(tree, singleNode, 'no_parent');
-            }
-          } else {
-            if (!searchIfExistsOnTree(categoryRoute[y], tree)) {
-              CategoryTree singleNode = CategoryTree();
-              singleNode.nodeName = searchCategoryNameIntoSnippet(categoryRoute[y], snippet);
-              singleNode.nodeId = categoryRoute[y];
-              singleNode.nodeLevel = y - 1;
-              singleNode.categoryNodeList = [];
-              addToTree(tree, singleNode, categoryRoute[y - 1]);
+          ///Controllare se esistono fratelli o altrimenti creare ex novo il ramo
+          for (var y = 1; y < categoryRoute.length; y++) {
+            if (y == 1) {
+              if (!searchIfExistsOnTree(categoryRoute[1], tree)) {
+                CategoryTree singleNode = CategoryTree();
+                singleNode.nodeName = searchCategoryNameIntoSnippet(categoryRoute[y], snippet);
+                singleNode.nodeId = categoryRoute[1];
+                singleNode.nodeLevel = 0;
+                singleNode.categoryNodeList = [];
+                addToTree(tree, singleNode, 'no_parent');
+              }
+            } else {
+              if (!searchIfExistsOnTree(categoryRoute[y], tree)) {
+                CategoryTree singleNode = CategoryTree();
+                singleNode.nodeName = searchCategoryNameIntoSnippet(categoryRoute[y], snippet);
+                singleNode.nodeId = categoryRoute[y];
+                singleNode.nodeLevel = y - 1;
+                singleNode.categoryNodeList = [];
+                addToTree(tree, singleNode, categoryRoute[y - 1]);
+              }
             }
           }
         }
@@ -566,7 +569,7 @@ class ManageCategoryState extends State<ManageCategory> with SingleTickerProvide
     String bg = '';
     if (StoreProvider.of<AppState>(context).state.serviceListSnippetState.businessId != null) {
       StoreProvider.of<AppState>(context).state.serviceListSnippetState.businessSnippet.forEach((element) {
-        if (element.categoryAbsolutePath.split('/').last == list[index].nodeId) bg = element.categoryImage;
+        if (element.categoryAbsolutePath.split('/').last == list[index].nodeId) bg = Utils.sizeImage(element.categoryImage, Utils.imageSizing600);
       });
     }
 

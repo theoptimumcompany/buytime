@@ -114,30 +114,34 @@ class _OptimumBusinessCardMediumManagerState extends State<OptimumBusinessCardMe
                 children: [
                   ///Image
                   widget.image == null
-                      ? CachedNetworkImage(
+                      ? Container(
+                    height: 100,
+                    width: 100,
+                        child: CachedNetworkImage(
                     imageUrl: version200(widget.imageUrl),
                     imageBuilder: (context, imageProvider) => Container(
-                      //margin: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 5), ///5%
-                      height: 100,
-                      width: 100,
-                      decoration: BoxDecoration(
-                        //borderRadius: BorderRadius.all(Radius.circular(SizeConfig.blockSizeHorizontal * 5)), ///12.5%
-                          image: DecorationImage(image: imageProvider, fit: BoxFit.cover)),
-                    ),
-                    placeholder: (context, url) => Container(
+                        //margin: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 5), ///5%
                         height: 100,
                         width: 100,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          CircularProgressIndicator(
-                            //valueColor: new AlwaysStoppedAnimation<Color>(BuytimeTheme.ManagerPrimary),
+                        decoration: BoxDecoration(
+                          //borderRadius: BorderRadius.all(Radius.circular(SizeConfig.blockSizeHorizontal * 5)), ///12.5%
+                            image: DecorationImage(image: imageProvider, fit: BoxFit.cover)),
+                    ),
+                    placeholder: (context, url) => Container(
+                          height: 100,
+                          width: 100,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              CircularProgressIndicator(
+                          valueColor: new AlwaysStoppedAnimation<Color>(BuytimeTheme.Secondary),
+                              )
+                            ],
                           )
-                        ],
-                      )
                     ),
                     errorWidget: (context, url, error) => Icon(Icons.error),
-                  )
+                  ),
+                      )
                   /*Image.network(
                     version200(widget.imageUrl),
                     height: widget.mediaSize != null
@@ -182,7 +186,11 @@ class _OptimumBusinessCardMediumManagerState extends State<OptimumBusinessCardMe
                                       ),
                                     ),
                                     Text(
-                                        (widget.businessState.hasAccess != null && widget.businessState.hasAccess.isNotEmpty && widget.businessState.hasAccess.length > 1) ? '${widget.businessState.hasAccess.length} ${AppLocalizations.of(context).justEmployees}': '0 ${AppLocalizations.of(context).justEmployee}',
+                                      (widget.businessState.hasAccess != null && widget.businessState.hasAccess.isNotEmpty && widget.businessState.hasAccess.length > 1) ?
+                                      '${ widget.businessState.hasAccess.length} ${AppLocalizations.of(context).justEmployees}':
+                                      (widget.businessState.hasAccess != null && widget.businessState.hasAccess.isNotEmpty && widget.businessState.hasAccess.length == 1) ?
+                                      '${ widget.businessState.hasAccess.length} ${AppLocalizations.of(context).justEmployee}' :
+                                      '0 ${AppLocalizations.of(context).justEmployee}',
                                       overflow: TextOverflow.ellipsis,
                                       textAlign: TextAlign.start,
                                       style: TextStyle(

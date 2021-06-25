@@ -369,7 +369,7 @@ ServiceState serviceReducer(ServiceState state, action) {
     return serviceState;
   }
   if (action is UpdateServiceSlot) {
-    serviceState.serviceSlot[action.index] = action.serviceSlot.copyWith();
+    serviceState.serviceSlot[action.index] = action.serviceSlot;
     return serviceState;
   }
   if (action is DeleteServiceSlot) {
