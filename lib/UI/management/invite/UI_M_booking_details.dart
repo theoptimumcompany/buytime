@@ -21,6 +21,8 @@ import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:share/share.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../../environment_abstract.dart';
+
 // ignore: must_be_immutable
 class BookingDetails extends StatefulWidget {
   static String route = '/bookingDetails';
@@ -71,8 +73,8 @@ class _BookingDetailsState extends State<BookingDetails> {
 
   Future<Uri> createDynamicLink(String id) async {
     final DynamicLinkParameters parameters = DynamicLinkParameters(
-      uriPrefix: 'https://buytime.page.link',
-      link: Uri.parse('https://buytime.page.link/booking/?booking=$id'),
+      uriPrefix: Environment().config.dynamicLink,
+      link: Uri.parse('${Environment().config.dynamicLink}/booking/?booking=$id'),
       androidParameters: AndroidParameters(
         packageName: 'com.theoptimumcompany.buytime',
         minimumVersion: 1,

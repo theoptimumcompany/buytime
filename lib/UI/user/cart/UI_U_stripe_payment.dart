@@ -295,7 +295,6 @@
 //       'status': "create request"
 //     });
 //     // now http request to create the actual setupIntent
-//     final http.Response response = await http.post('https://europe-west1-buytime-458a1.cloudfunctions.net/createSetupIntent?userId=' + userId);
 //
 //     Map<String, dynamic> paymentIntentRes = await createPaymentIntent(stripeCard, customerEmail);
 //

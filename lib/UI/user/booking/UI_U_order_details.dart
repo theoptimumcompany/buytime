@@ -109,9 +109,9 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
 
     String url;
     if(Platform.isIOS)
-      url = 'https://maps.googleapis.com/maps/api/staticmap?center=$lat,$lng&zoom=18&size=640x640&scale=2&markers=color:red|$lat,$lng&key=${BuytimeConfig.AndroidApiKey}';
+      url = 'https://maps.googleapis.com/maps/api/staticmap?center=$lat,$lng&zoom=18&size=640x640&scale=2&markers=color:red|$lat,$lng&key=${Environment().config.googleApiKey}';
     else
-      url = 'https://maps.googleapis.com/maps/api/staticmap?center=$lat,$lng&zoom=18&size=640x640&scale=2&markers=color:red|$lat,$lng&key=${BuytimeConfig.AndroidApiKey}';
+      url = 'https://maps.googleapis.com/maps/api/staticmap?center=$lat,$lng&zoom=18&size=640x640&scale=2&markers=color:red|$lat,$lng&key=${Environment().config.googleApiKey}';
 
     return url;
   }

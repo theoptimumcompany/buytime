@@ -1,5 +1,4 @@
 /// some of the old payment flow
-// var url = Uri.https('europe-west1-buytime-458a1.cloudfunctions.net', '/StripePIOnOrder', {'orderId': '${addedOrder.id}', 'currency': 'EUR'});
 // final http.Response response = await http.get(url);
 // print('ORDER_SERVICE_EPIC - OrderCreateService => RESPONSE: $response');
 // if (response != null && response.body == "Error: could not handle the request\n") {

@@ -202,7 +202,7 @@ class Utils {
           var url = Uri.https('translation.googleapis.com', '/language/translate/v2', {
             'source': '${myLocale.languageCode}',
             'target': '${language[i]}',
-            'key': '${BuytimeConfig.AndroidApiKey}',
+            'key': '${Environment().config.googleApiKey}',
             'q': '${controllers[myIndex].text}'
           });
           final http.Response response = await http.get(url);
@@ -548,15 +548,15 @@ class Utils {
   }
 
   static void googleSearch(BuildContext context, OnPlaceDetailsCallback detailsCallback){
-    GooglePlace googlePlace = GooglePlace(BuytimeConfig.AndroidApiKey);
+    GooglePlace googlePlace = GooglePlace(Environment().config.googleApiKey);
     List<List<String>> predictions = [];
     List<dynamic> detailsResult = [];
 
     Future<List<List<String>>> autoCompleteSearch(String value) async {
       List<List<String>> tmpPredictions = [];
       ///https://maps.googleapis.com/maps/api/place/autocomplete/xml?input=Amoeba&types=establishment&location=37.76999,-122.44696&radius=500&key=YOUR_API_KEY
-     // var url = Uri.https('maps.googleapis.com', '/maps/api/place/autocomplete/json', {'input': '$value','types': 'establishment', 'radius': '500', 'key': '${BuytimeConfig.AndroidApiKey}'});
-      var url = Uri.https('maps.googleapis.com', '/maps/api/place/autocomplete/json', {'input': '$value', 'key': '${BuytimeConfig.AndroidApiKey}'});
+     // var url = Uri.https('maps.googleapis.com', '/maps/api/place/autocomplete/json', {'input': '$value','types': 'establishment', 'radius': '500', 'key': '${Environment().config.googleApiKey}'});
+      var url = Uri.https('maps.googleapis.com', '/maps/api/place/autocomplete/json', {'input': '$value', 'key': '${Environment().config.googleApiKey}'});
       final http.Response response = await http.get(url);
       if(response.statusCode == 200){
         //debugPrint('Place Autocomplete done => response body: ${response.body}');
@@ -572,7 +572,7 @@ class Utils {
 
     void getDetails(String placeId, BuildContext bootmContext) async {
       ///https://maps.googleapis.com/maps/api/place/details/json?place_id=ChIJN1t_tDeuEmsRUsoyG83frY4&fields=name,rating,formatted_phone_number&key=YOUR_API_KEY
-      var url = Uri.https('maps.googleapis.com', '/maps/api/place/details/json', {'place_id': '$placeId', 'fields' : 'address_components,geometry,formatted_address', 'key': '${BuytimeConfig.AndroidApiKey}'});
+      var url = Uri.https('maps.googleapis.com', '/maps/api/place/details/json', {'place_id': '$placeId', 'fields' : 'address_components,geometry,formatted_address', 'key': '${Environment().config.googleApiKey}'});
       final http.Response response = await http.get(url);
       if(response.statusCode == 200){
         //debugPrint('Place Details done => response body: ${response.body}');

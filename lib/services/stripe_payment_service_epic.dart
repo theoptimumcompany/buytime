@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:Buytime/environment_abstract.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/card/card_state.dart';
 import 'package:Buytime/reblox/model/order/order_entry.dart';
@@ -31,14 +32,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
 import 'package:Buytime/utils/utils.dart';
 
-// String stripeTestKey = "pk_test_51HS20eHr13hxRBpCZl1V0CKFQ7XzJbku7UipKLLIcuNGh3rp4QVsEDCThtV0l2AQ3jMtLsDN2zdC0fQ4JAK6yCOp003FIf3Wjz";
-String stripeKey = "pk_live_51HS20eHr13hxRBpCLHzfi0SXeqw8Efu911cWdYEE96BAV0zSOesvE83OiqqzRucKIxgCcKHUvTCJGY6cXRtkDVCm003CmGXYzy";
-// String test_variable = "_test";
-String test_variable = "";
-
-
 final StripeUnofficial.Stripe stripeSDK = StripeUnofficial.Stripe(
-  stripeKey,
+  Environment().config.stripePublicKey,
   // stripeAccount: "",
   returnUrlForSca: "stripesdk://3ds.stripesdk.io", //Return URL for SCA
 );
@@ -60,21 +55,20 @@ class StripePaymentAddPaymentMethod implements EpicClass<AppState> {
         try {
           /// create setupIntent on the user
           await FirebaseFirestore.instance
-              .collection("stripeCustomer/" + userId + test_variable + "/setupIntent")
+              .collection("stripeCustomer/" + userId + Environment().config.stripeSuffix + "/setupIntent")
               .doc()
               .set({'status': "create request"}).then((value) async {
-            var url = Uri.https('europe-west1-buytime-458a1.cloudfunctions.net', '/createSetupIntent', {'userId': '$userId'});
+            var url = Uri.https(Environment().config.cloudFunctionLink, '/createSetupIntent', {'userId': '$userId'});
             final http.Response response = await http.get(url);
             if (response.statusCode == 200 && !response.body.contains('error')) {
               /// requesting back the secretKey (aka the setupIntent)
-              DocumentSnapshot stripeCustomerReference = await FirebaseFirestore.instance.collection("stripeCustomer/").doc(userId + test_variable).get();
+              DocumentSnapshot stripeCustomerReference = await FirebaseFirestore.instance.collection("stripeCustomer/").doc(userId + Environment().config.stripeSuffix).get();
               debugPrint("STRIPE_PAYMENT_SERVICE_EPIC - StripePaymentAddPaymentMethod => SetupIntentSecret got from firestore");
               String customerSecret = stripeCustomerReference.get("stripeCustomerSecret");
 
               /// saving payment method on firebase TODO: store only the payment method ID as soon as the libraries allow that
-              await FirebaseFirestore.instance.collection("stripeCustomer/" + userId + test_variable + "/token/").doc().set(stripePaymentMethod);
-              debugPrint(
-                  "STRIPE_PAYMENT_SERVICE_EPIC - StripePaymentAddPaymentMethod => Added to firestore"); // this will trigger the creation of a new stripeIntent to be used in the next request
+              await FirebaseFirestore.instance.collection("stripeCustomer/" + userId + Environment().config.stripeSuffix + "/token/").doc().set(stripePaymentMethod);
+              debugPrint("STRIPE_PAYMENT_SERVICE_EPIC - StripePaymentAddPaymentMethod => Added to firestore"); // this will trigger the creation of a new stripeIntent to be used in the next request
               String paymentMethodId = stripePaymentMethod["id"];
 
               /// confirm the setupIntent (and in doing so add the card to stripe)
@@ -95,7 +89,7 @@ class StripePaymentAddPaymentMethod implements EpicClass<AppState> {
               }
               // save the card also on firestore
               var cardSavingResult =
-                  await FirebaseFirestore.instance.collection("stripeCustomer/" + userId + test_variable + "/card/").doc().set(confirmationResultResolved);
+                  await FirebaseFirestore.instance.collection("stripeCustomer/" + userId + Environment().config.stripeSuffix + "/card/").doc().set(confirmationResultResolved);
               debugPrint("STRIPE_PAYMENT_SERVICE_EPIC - StripePaymentAddPaymentMethod => card should be added in firestore ");
               statisticsComputation();
             } else {
@@ -121,7 +115,7 @@ class StripePaymentAddPaymentMethod implements EpicClass<AppState> {
       if (error != null) {
         actionArray.add(ErrorAction(error));
       } else {
-        actionArray.add(StripeCardListRequestAndNavigate('${userId}${test_variable}'));
+        actionArray.add(StripeCardListRequestAndNavigate('${userId}${Environment().config.stripeSuffix}'));
       }
       actionArray.add(UpdateStatistics(statisticsState));
       return actionArray;
@@ -156,7 +150,7 @@ class CheckStripeCustomerService implements EpicClass<AppState> {
     }).expand((element) => [
           CheckedStripeCustomer(stripeCustomerCreated),
           UpdateStatistics(statisticsState),
-          if (stripeCustomerCreated && updateCardList) StripeCardListRequest('${userId}${test_variable}') else null,
+          if (stripeCustomerCreated && updateCardList) StripeCardListRequest('${userId}${Environment().config.stripeSuffix}') else null,
         ]);
   }
 }
@@ -219,11 +213,11 @@ class StripeDetachPaymentMethodRequest implements EpicClass<AppState> {
       userId = event.userId;
       firestoreCardId = event.firestoreCardId;
       await FirebaseFirestore.instance
-          .collection("stripeCustomer/" + event.userId + test_variable + "/detach/")
+          .collection("stripeCustomer/" + event.userId + Environment().config.stripeSuffix + "/detach/")
           .doc()
           .set({'firestore_id': event.firestoreCardId});
       debugPrint("STRIPE_PAYMENT_SERVICE_EPIC - StripeDetachPaymentMethodRequest => Detach document created");
-      var url = Uri.https('europe-west1-buytime-458a1.cloudfunctions.net', '/detachPaymentMethod',
+      var url = Uri.https(Environment().config.cloudFunctionLink, '/detachPaymentMethod',
           {'userId': '$userId', 'firestoreCardId': '${event.firestoreCardId.toString()}'});
       response = await http.get(url);
       statisticsComputation();
@@ -250,7 +244,7 @@ class StripePaymentService {
   int amount = 0;
   bool showSpinner = false;
   List<StripeRecommended.ApplePayItem> items = [];
-  final String cloudAddress = 'europe-west1-buytime-458a1.cloudfunctions.net';
+  final String cloudAddress = Environment().config.cloudFunctionLink;
   final String cloudFunctionPathPay = '/StripePIOnOrder';
   final String cloudFunctionPathHold = '/StripePIOnOrderHold';
   String currency = 'EUR';

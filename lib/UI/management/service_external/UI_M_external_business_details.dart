@@ -42,6 +42,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:intl/intl.dart';
 
+import '../../../environment_abstract.dart';
+
 
 class ExternalBusinessDetails extends StatefulWidget {
    ExternalBusinessState externalBusinessState;
@@ -115,15 +117,15 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
     List<double> coordinatesDouble = convertCoordinateString(coordinates);
     if(coordinatesDouble.isNotEmpty){
       if(Platform.isIOS)
-        url = 'https://maps.googleapis.com/maps/api/staticmap?center=${coordinatesDouble[0]},${coordinatesDouble[1]}&zoom=18&size=640x640&scale=2&markers=color:red|${coordinatesDouble[0]},${coordinatesDouble[1]}&key=${BuytimeConfig.AndroidApiKey}';
+        url = 'https://maps.googleapis.com/maps/api/staticmap?center=${coordinatesDouble[0]},${coordinatesDouble[1]}&zoom=18&size=640x640&scale=2&markers=color:red|${coordinatesDouble[0]},${coordinatesDouble[1]}&key=${Environment().config.googleApiKey}';
       else
-        url = 'https://maps.googleapis.com/maps/api/staticmap?center=${coordinatesDouble[0]},${coordinatesDouble[1]}&zoom=18&size=640x640&scale=2&markers=color:red|${coordinatesDouble[0]},${coordinatesDouble[1]}&key=${BuytimeConfig.AndroidApiKey}';
+        url = 'https://maps.googleapis.com/maps/api/staticmap?center=${coordinatesDouble[0]},${coordinatesDouble[1]}&zoom=18&size=640x640&scale=2&markers=color:red|${coordinatesDouble[0]},${coordinatesDouble[1]}&key=${Environment().config.googleApiKey}';
       return url;
     }else{
       if(Platform.isIOS)
-        url = 'https://maps.googleapis.com/maps/api/staticmap?center=$address&zoom=18&size=640x640&scale=2&markers=color:red|$address&key=${BuytimeConfig.AndroidApiKey}';
+        url = 'https://maps.googleapis.com/maps/api/staticmap?center=$address&zoom=18&size=640x640&scale=2&markers=color:red|$address&key=${Environment().config.googleApiKey}';
       else
-        url = 'https://maps.googleapis.com/maps/api/staticmap?center=$address&zoom=18&size=640x640&scale=2&markers=color:red|$address&key=${BuytimeConfig.AndroidApiKey}';
+        url = 'https://maps.googleapis.com/maps/api/staticmap?center=$address&zoom=18&size=640x640&scale=2&markers=color:red|$address&key=${Environment().config.googleApiKey}';
       return url;
     }
   }

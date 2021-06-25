@@ -22,6 +22,7 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:share/share.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../../environment_abstract.dart';
 import '../../../reusable/appbar/buytime_appbar.dart';
 
 class UI_M_EditCategory extends StatefulWidget {
@@ -271,8 +272,8 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
 
   Future<Uri> createDynamicLink(String id, String businessId) async {
     final DynamicLinkParameters parameters = DynamicLinkParameters(
-      uriPrefix: 'https://buytime.page.link',
-      link: Uri.parse('https://buytime.page.link/categoryInvite/?categoryInvite=$id&businessId=$businessId'),
+      uriPrefix: Environment().config.dynamicLink,
+      link: Uri.parse('${Environment().config.dynamicLink}/categoryInvite/?categoryInvite=$id&businessId=$businessId'),
       androidParameters: AndroidParameters(
         packageName: 'com.theoptimumcompany.buytime',
         minimumVersion: 1,

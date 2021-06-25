@@ -33,6 +33,8 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:http/http.dart' as http;
 
+import '../../../environment_abstract.dart';
+
 
 class RBusiness extends StatefulWidget {
   static String route = '/business';
@@ -61,11 +63,9 @@ class _RBusinessState extends State<RBusiness> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       StoreProvider.of<AppState>(context).dispatch(ExternalServiceImportedListRequest(StoreProvider.of<AppState>(context).state.business.id_firestore));
       StoreProvider.of<AppState>(context).dispatch(ExternalBusinessImportedListRequest(StoreProvider.of<AppState>(context).state.business.id_firestore));
-      //https://europe-west1-buytime-458a1.cloudfunctions.net/getCategoriesForManagerInBusiness
-      //https://europe-west1-buytime-458a1.cloudfunctions.net/getCategoriesForWorkerInBusiness
       debugPrint('RUI_M_business_list => BUSIENSS ID: ${StoreProvider.of<AppState>(context).state.business.id_firestore}');
-      var urlManager = Uri.https('europe-west1-buytime-458a1.cloudfunctions.net', '/getCategoriesForManagerInBusiness', {'businessId': '${StoreProvider.of<AppState>(context).state.business.id_firestore}', 'userEmail': '${StoreProvider.of<AppState>(context).state.user.email}'});
-      var urlWorker = Uri.https('europe-west1-buytime-458a1.cloudfunctions.net', '/getCategoriesForWorkerInBusiness', {'businessId': '${StoreProvider.of<AppState>(context).state.business.id_firestore}', 'userEmail': '${StoreProvider.of<AppState>(context).state.user.email}'});
+      var urlManager = Uri.https(Environment().config.cloudFunctionLink, '/getCategoriesForManagerInBusiness', {'businessId': '${StoreProvider.of<AppState>(context).state.business.id_firestore}', 'userEmail': '${StoreProvider.of<AppState>(context).state.user.email}'});
+      var urlWorker = Uri.https(Environment().config.cloudFunctionLink, '/getCategoriesForWorkerInBusiness', {'businessId': '${StoreProvider.of<AppState>(context).state.business.id_firestore}', 'userEmail': '${StoreProvider.of<AppState>(context).state.user.email}'});
       final http.Response responseManager = await http.get(urlManager);
       if(responseManager.statusCode == 200){
         debugPrint('RUI_M_business_list => RESPONSE MANAGER: ${responseManager.body}');

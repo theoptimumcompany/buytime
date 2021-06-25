@@ -262,7 +262,6 @@ class LandingState extends State<Landing> {
             StoreProvider.of<AppState>(context).dispatch(UserBookingListRequest(snapshot.user.email, false));
 
             WidgetsBinding.instance.addPostFrameCallback((_) async {
-              //https://europe-west1-buytime-458a1.cloudfunctions.net/getCategoriesForManagerInBusiness
               if (bookingCode.isEmpty) Navigator.push(context, MaterialPageRoute(builder: (context) => RBusinessList()));
             });
           } else {
@@ -387,7 +386,7 @@ class LandingState extends State<Landing> {
                                                   child: IconButton(
                                                     onPressed: () async
                                                     {
-                                                      Share.share('${AppLocalizations.of(context).checkOutBuytimeApp} https://buytime.page.link/shareBuytime', subject: '${AppLocalizations.of(context).takeYourTime}',);
+                                                      Share.share('${AppLocalizations.of(context).checkOutBuytimeApp} ${Environment().config.dynamicLink}/shareBuytime', subject: '${AppLocalizations.of(context).takeYourTime}',);
 
                                                       //LogConsole.init();
                                                       /*final RenderBox box = context.findRenderObject();
