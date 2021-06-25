@@ -26,8 +26,8 @@ class ServiceSlot {
   int minute = 0;
   @JsonKey(defaultValue: 0)
   int day = 0;
-  @JsonKey(defaultValue: 0)
-  int maxQuantity = 0;
+  @JsonKey(defaultValue: 1)
+  int maxQuantity = 1;
   @JsonKey(defaultValue: 1)
   int limitBooking = 1;
   @JsonKey(defaultValue: false)
@@ -106,7 +106,7 @@ class ServiceSlot {
       limitBooking: 1,
       noLimitBooking: false,
       price: 0.0,
-      maxQuantity: 0,
+      maxQuantity: 1,
       intervalVisibility: [true],
       day: 0,
     );

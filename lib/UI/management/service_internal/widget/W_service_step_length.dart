@@ -28,9 +28,9 @@ class StepLengthState extends State<StepLength> {
 
   int hour = 0;
   int minute = 0;
-  int limitBooking = 0;
+  int limitBooking = 1;
   int day = 0;
-  int maxQuantity = 0;
+  int maxQuantity = 1;
 
   //String errorDay = null;
 
