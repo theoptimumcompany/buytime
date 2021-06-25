@@ -78,7 +78,6 @@ class AllCategoryListRequestService implements EpicClass<AppState> {
     return actions.whereType<AllRequestListCategory>().asyncMap((event) async {
       QuerySnapshot businessListFromFirebase;
       businessListFromFirebase = await FirebaseFirestore.instance
-
           /// 1 read - ? DOC
           .collection("business")
           .where("draft", isEqualTo: false)
@@ -93,7 +92,6 @@ class AllCategoryListRequestService implements EpicClass<AppState> {
 
       for (int i = 0; i < businessListFromFirebase.docs.length; i++) {
         QuerySnapshot snapshot = await FirebaseFirestore.instance
-
             /// 1 READ - ? DOC
             .collection("business")
             .doc(businessListFromFirebase.docs[i].id)
@@ -117,12 +115,14 @@ class AllCategoryListRequestService implements EpicClass<AppState> {
             query = servicesFirebase
                 .where("businessId", isEqualTo: businessListFromFirebase.docs[i].id)
                 .where("tag", arrayContains: store.state.area.areaId)
-                .where("serviceCrossSell", isEqualTo: true)
+                //.where("serviceCrossSell", isEqualTo: true)
+                .where("visibility", isEqualTo: 'Active')
                 .limit(20);
           } else {
             query = servicesFirebase
                 .where("businessId", isEqualTo: businessListFromFirebase.docs[i].id)
-                .where("serviceCrossSell", isEqualTo: true)
+                //.where("serviceCrossSell", isEqualTo: true)
+                .where("visibility", isEqualTo: 'Active')
                 .limit(20);
           }
 

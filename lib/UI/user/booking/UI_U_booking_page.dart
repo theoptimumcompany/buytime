@@ -260,12 +260,22 @@ class _BookingPageState extends State<BookingPage> {
           // no
           //grid(store.state.categoryList.categoryListState);
           categoryListState = snapshot.categoryList;
+          serviceListState = snapshot.serviceList;
           categoryListState.categoryListState.forEach((element) {
             debugPrint('UI_U_booking_page => ALL CATEGORIES: ${element.name}');
           });
           categoryListState.categoryListState.forEach((element) {
-            if(element.customTag == 'showcase') ///TODO se si vuole showcase decommentare è un TODO fake ahah
-              categoryList.add(element);
+            if(element.customTag == 'showcase'){///TODO se si vuole showcase decommentare è un TODO fake ahah
+              serviceListState.serviceListState.forEach((service) {
+                //debugPrint('CATAGORY ID: ${cLS.id} - CATEGORY LIST: ${service.categoryId}');
+                if(service.categoryId.contains(element.id) || service.categoryRootId.contains(element.id)){
+                  if(!categoryList.contains(element)){
+                    categoryList.add(element);
+                  }
+                }
+              });
+            }
+
           });
           categoryList.shuffle();
           categoryList.forEach((element) {
@@ -278,7 +288,6 @@ class _BookingPageState extends State<BookingPage> {
           });
           bookingState = snapshot.booking;
           businessState = snapshot.business;
-          serviceListState = snapshot.serviceList;
           serviceList = serviceListState.serviceListState.length >= 5 ? serviceListState.serviceListState.sublist(0,5) : serviceListState.serviceListState;
 
 

@@ -305,7 +305,12 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
               }
 
               snapshot.categoryList.categoryListState.forEach((cLS) {
-                createCategoryList(cLS);
+                snapshot.serviceList.serviceListState.forEach((service) {
+                  //debugPrint('CATAGORY ID: ${cLS.id} - CATEGORY LIST: ${service.categoryId}');
+                  if(service.categoryId.contains(cLS.id) || service.categoryRootId.contains(cLS.id)){
+                    createCategoryList(cLS);
+                  }
+                });
               });
 
               //categoryList.addAll(snapshot.categoryList.categoryListState);

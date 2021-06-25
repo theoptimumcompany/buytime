@@ -237,7 +237,14 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                     if(!found){
                       debugPrint('UI_U_filter_by_category => CATEGORY NAME: ${element.name}');
                       if(element.customTag == 'showcase'){
-                        categoryList.add(element);
+                        store.state.serviceList.serviceListState.forEach((service) {
+                          //debugPrint('CATAGORY ID: ${cLS.id} - CATEGORY LIST: ${service.categoryId}');
+                          if(service.categoryId.contains(element.id) || service.categoryRootId.contains(element.id)){
+                            if(!categoryList.contains(element)){
+                              categoryList.add(element);
+                            }
+                          }
+                        });
                         categoryListIds.putIfAbsent(element.name, () => [element.id]);
                       }
                     }else{
@@ -270,6 +277,16 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                 serviceList.add(element);
               }
             });
+
+            if(!tmpServiceList.contains(element) && !serviceList.contains(element)){
+              element.categoryRootId.forEach((element2) {
+                if(widget.categoryListIds != null && widget.categoryListIds.contains(element2)) {
+                  tmpServiceList.add(element);
+                  serviceList.add(element);
+                }
+              });
+            }
+
           });
         }
 

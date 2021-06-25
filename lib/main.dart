@@ -3,6 +3,7 @@ import 'package:Buytime/UI/management/business/UI_M_business_list.dart';
 import 'package:Buytime/UI/management/category/UI_M_manage_category.dart';
 import 'package:Buytime/UI/management/invite/UI_M_booking_details.dart';
 import 'package:Buytime/UI/management/invite/UI_M_booking_list.dart';
+import 'package:Buytime/UI/management/service_internal/RUI_M_service_list.dart';
 import 'package:Buytime/UI/management/service_internal/UI_M_service_list.dart';
 import 'package:Buytime/UI/user/booking/UI_U_booking_page.dart';
 import 'package:Buytime/UI/user/booking/UI_U_confirm_booking.dart';
@@ -85,6 +86,7 @@ import 'package:Buytime/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:provider/provider.dart';
 import 'package:redux/redux.dart';
 import 'package:redux_epics/redux_epics.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
@@ -265,7 +267,15 @@ void main() {
 // can be called before `runApp()`
   WidgetsFlutterBinding.ensureInitialized();
 
-  runApp(Buytime(store: store));
+  //runApp(Buytime(store: store));
+  runApp(
+      MultiProvider(
+        providers: [
+          //ChangeNotifierProvider(create: (_) => NavigationState()),
+          ChangeNotifierProvider(create: (_) => Spinner([])),
+        ],
+        child: Buytime(store: store),
+      ));
   //log();
 }
 
