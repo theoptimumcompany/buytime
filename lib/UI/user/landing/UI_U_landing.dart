@@ -55,6 +55,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:Buytime/UI/management/business/RUI_M_business_list.dart';
 import 'package:http/http.dart' as http;
 
+import '../../../environment_abstract.dart';
+
 class Landing extends StatefulWidget {
   static String route = '/landing';
 
