@@ -572,5 +572,7 @@
   "native": "Paiement mobile (Apple pay ou Google pay)",
   "showMore": "Montre plus",
   "service": "Service",
-  "createdAt": "Créé à"
+  "createdAt": "Créé à",
+
+  "showcase": "Showcase"
 }

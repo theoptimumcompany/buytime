@@ -31,6 +31,8 @@ class CategoryState {
   OptimumFileToUpload fileToUpload;
   String categoryImage;
   String customTag;
+  @JsonKey(defaultValue: false)
+  bool showcase;
 
   CategoryState({
     this.name,
@@ -46,7 +48,8 @@ class CategoryState {
     this.categorySnippet,
     this.fileToUpload,
     this.categoryImage,
-    this.customTag
+    this.customTag,
+    this.showcase
   });
 
   CategoryState toEmpty() {
@@ -64,7 +67,8 @@ class CategoryState {
       categorySnippet: CategorySnippetState().toEmpty(),
       fileToUpload: null,
         categoryImage: '',
-      customTag: ''
+      customTag: '',
+        showcase: false
     );
   }
 
@@ -83,6 +87,7 @@ class CategoryState {
     this.fileToUpload = category.fileToUpload;
     this.categoryImage = category.categoryImage;
     this.customTag = category.customTag;
+    this.showcase = category.showcase;
   }
 
   CategoryState copyWith(
@@ -99,7 +104,8 @@ class CategoryState {
       CategorySnippetState categorySnippet,
         OptimumFileToUpload fileToUpload,
         String categoryImage,
-        String customTag
+        String customTag,
+        String showcase
       }) {
     return CategoryState(
       name: name ?? this.name,
@@ -115,7 +121,8 @@ class CategoryState {
       categorySnippet: categorySnippet ?? this.categorySnippet,
       fileToUpload: fileToUpload ?? this.fileToUpload,
         categoryImage: categoryImage ?? this.categoryImage,
-        customTag:  customTag ?? this.customTag
+        customTag: customTag ?? this.customTag,
+        showcase: showcase ?? this.showcase
     );
   }
 

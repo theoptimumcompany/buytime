@@ -30,6 +30,7 @@ CategoryState _$CategoryStateFromJson(Map<String, dynamic> json) {
         (json['workerMailList'] as List)?.map((e) => e as String)?.toList(),
     categoryImage: json['categoryImage'] as String,
     customTag: json['customTag'] as String,
+    showcase: json['showcase'] as bool ?? false,
   );
 }
 
@@ -47,4 +48,5 @@ Map<String, dynamic> _$CategoryStateToJson(CategoryState instance) =>
       'workerMailList': instance.workerMailList,
       'categoryImage': instance.categoryImage,
       'customTag': instance.customTag,
+      'showcase': instance.showcase,
     };

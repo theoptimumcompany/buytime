@@ -728,24 +728,59 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                                 child: Column(
                                   children: <Widget>[
                                     ///Category Image
-                                    OptimumFormMultiPhoto(
-                                      text: AppLocalizations.of(context).categoryImage,
-                                      remotePath: "business/" + businessName + "/category",
-                                      maxHeight: 1000,
-                                      maxPhoto: 1,
-                                      maxWidth: 800,
-                                      minHeight: 200,
-                                      minWidth: 600,
-                                      cropAspectRatioPreset: CropAspectRatioPreset.square,
-                                      image: snapshot.category.categoryImage == null || snapshot.category.categoryImage.isEmpty ? null : snapshot.category.categoryImage,
-                                      //Image.network(snapshot.category.categoryImage, width: media.width * 0.3),
-                                      roleAllowedArray: [Role.admin, Role.salesman],
-                                      onFilePicked: (fileToUpload) {
-                                        fileToUpload.remoteFolder = "business/" + businessName + "/category";
-                                        StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInCategory(fileToUpload, fileToUpload.state, 0));
-                                      },
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                          margin: EdgeInsets.only(left: 12 , bottom: 10),
+                                          width: SizeConfig.safeBlockHorizontal* 50,
+                                          alignment: Alignment.center,
+                                          child: OptimumFormMultiPhoto(
+                                            text: AppLocalizations.of(context).categoryImage,
+                                            remotePath: "business/" + businessName + "/category",
+                                            maxHeight: 1000,
+                                            maxPhoto: 1,
+                                            maxWidth: 800,
+                                            minHeight: 200,
+                                            minWidth: 600,
+                                            cropAspectRatioPreset: CropAspectRatioPreset.square,
+                                            image: snapshot.category.categoryImage == null || snapshot.category.categoryImage.isEmpty
+                                                ? null
+                                                : snapshot.category.categoryImage,
+                                            //Image.network(snapshot.category.categoryImage, width: media.width * 0.3),
+                                            roleAllowedArray: [Role.admin, Role.salesman],
+                                            onFilePicked: (fileToUpload) {
+                                              fileToUpload.remoteFolder = "business/" + businessName + "/category";
+                                              StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInCategory(fileToUpload, fileToUpload.state, 0));
+                                            },
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(top: 10.0, bottom: 10.0, left: 0.0),
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                AppLocalizations.of(context).showcase,
+                                                style: TextStyle(fontFamily: BuytimeTheme.FontFamily, fontWeight: FontWeight.w600, color: BuytimeTheme.TextGrey, fontSize: 16),
+                                              ),
+                                              Switch(
+                                                  activeColor: BuytimeTheme.ManagerPrimary,
+                                                  value: snapshot.category.showcase,
+                                                  onChanged: StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin || StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman
+                                                      ? (value) {
+                                                    debugPrint('UI_M_create_category => SHOWCASE: $value');
+                                                    setState(() {
+                                                      //isHub = value;
+                                                    });
+                                                    StoreProvider.of<AppState>(context).dispatch(SetCategoryShowcase(value));
+                                                    //snapshot.hub = value;
+                                                  }
+                                                      : (value) {}),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
                                     ),
-
                                     ///Category Name
                                     Padding(
                                       padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
@@ -782,7 +817,7 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                                     ),
 
                                     ///Category Tag
-                                    Padding(
+                                    /*Padding(
                                       padding: const EdgeInsets.only(top: 5.0, bottom: 5.0, left: 20.0, right: 20.0),
                                       child: Center(
                                         child: Container(
@@ -830,7 +865,7 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                                           ),
                                         ),
                                       ),
-                                    ),
+                                    ),*/
 
                                     ///Parent Category
                                     Padding(
