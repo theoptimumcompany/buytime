@@ -1,0 +1,2 @@
+#!/bin/zsh
+flutter run --dart-define=ENVIRONMENT=PROD --flavor prod-t lib/main.dart
