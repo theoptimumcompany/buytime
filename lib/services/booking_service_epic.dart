@@ -102,6 +102,8 @@ class BookingCreateRequestService implements EpicClass<AppState> {
   }
 }
 
+///TODO: EPIC ON SELF CREATE BOOKING NAVIGATE TO BookingPage
+
 class BookingRequestService implements EpicClass<AppState> {
   BookingState bookingState;
   StatisticsState statisticsState;

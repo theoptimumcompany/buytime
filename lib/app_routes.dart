@@ -5,6 +5,7 @@ import 'package:Buytime/UI/management/invite/UI_M_booking_details.dart';
 import 'package:Buytime/UI/management/invite/UI_M_booking_list.dart';
 import 'package:Buytime/UI/management/service_internal/UI_M_service_list.dart';
 import 'package:Buytime/UI/user/booking/UI_U_booking_page.dart';
+import 'package:Buytime/UI/user/booking/UI_U_booking_self_creation.dart';
 import 'package:Buytime/UI/user/booking/UI_U_confirm_booking.dart';
 import 'package:Buytime/UI/user/booking/UI_U_my_bookings.dart';
 import 'package:Buytime/UI/user/cart/UI_U_ConfirmOrder.dart';
@@ -31,6 +32,8 @@ MaterialPageRoute<dynamic> appRoutes(RouteSettings settings) {
       return FabRoute(Landing(), settings: settings);
     case AppRoutes.bookingDetails:
       return FabRoute(BookingDetails(), settings: settings);
+    case AppRoutes.bookingSelfCreation:
+      return FabRoute(BookingSelfCreation(), settings: settings);
     case AppRoutes.categories:
       return SlideInExitRoute(ManageCategory(), settings: settings);
     case AppRoutes.businessList:
