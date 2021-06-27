@@ -29,6 +29,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+import '../../../environment_abstract.dart';
 import '../../../reblox/model/app_state.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -77,7 +78,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
   static final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
   Map<String, dynamic> _deviceData = <String, dynamic>{};
 
-  String serverToken = 'AAAA6xUtyfE:APA91bGHhEzVUY9fnj4FbTXJX57qcgF-8GBrfBbGIa8kEpEIdsXRgQxbtsvbhL-w-_MQYKIj0XVlSaDSf2s6O3D3SM3o-z_AZnHQwBNLiw1ygyZOuVAKa5YmXeu6Da9eBqRD9uwFHSPi';
+
   final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
 
   ///Validation variables
@@ -225,10 +226,10 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
         }
       }
       print("Device ID : " + deviceId);
-      StoreProvider.of<AppState>(context).dispatch(new LoggedUser(UserState.fromFirebaseUser(user, deviceId, [serverToken])));
+      StoreProvider.of<AppState>(context).dispatch(new LoggedUser(UserState.fromFirebaseUser(user, deviceId, [Environment().config.serverToken])));
       Device device = Device(name: "device", id: deviceId, user_uid: user.uid);
       StoreProvider.of<AppState>(context).dispatch(new UpdateUserDevice(device));
-      TokenB token = TokenB(name: "token", id: serverToken, user_uid: user.uid);
+      TokenB token = TokenB(name: "token", id: Environment().config.serverToken, user_uid: user.uid);
       StoreProvider.of<AppState>(context).dispatch(new UpdateUserToken(token));
       // return 'signInWithGoogle succeeded: $user';
       await pr.hide();
@@ -325,10 +326,10 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
       }
       print("Device ID : " + deviceId);
 
-      StoreProvider.of<AppState>(context).dispatch(new LoggedUser(UserState.fromFirebaseUser(user, deviceId, [serverToken])));
+      StoreProvider.of<AppState>(context).dispatch(new LoggedUser(UserState.fromFirebaseUser(user, deviceId, [Environment().config.serverToken])));
       Device device = Device(name: "device", id: deviceId, user_uid: user.uid);
       StoreProvider.of<AppState>(context).dispatch(new UpdateUserDevice(device));
-      TokenB token = TokenB(name: "token", id: serverToken, user_uid: user.uid);
+      TokenB token = TokenB(name: "token", id: Environment().config.serverToken, user_uid: user.uid);
       StoreProvider.of<AppState>(context).dispatch(new UpdateUserToken(token));
       // return 'signInWithGoogle succeeded: $user';
       await pr.hide();
@@ -355,7 +356,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
         assert(token != null);
 
         print("Token " + token);
-        serverToken = token;
+        Environment().config.serverToken = token;
       });
 
       //   check_logged();
@@ -1216,10 +1217,10 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
 
       print("Device ID : " + deviceId);
 
-      StoreProvider.of<AppState>(context).dispatch(new LoggedUser(UserState.fromFirebaseUser(user, deviceId, [serverToken])));
+      StoreProvider.of<AppState>(context).dispatch(new LoggedUser(UserState.fromFirebaseUser(user, deviceId, [Environment().config.serverToken])));
       Device device = Device(name: "device", id: deviceId, user_uid: user.uid);
       StoreProvider.of<AppState>(context).dispatch(new UpdateUserDevice(device));
-      TokenB token = TokenB(name: "token", id: serverToken, user_uid: user.uid);
+      TokenB token = TokenB(name: "token", id: Environment().config.serverToken, user_uid: user.uid);
       StoreProvider.of<AppState>(context).dispatch(new UpdateUserToken(token));
       setState(() {
         _success = true;

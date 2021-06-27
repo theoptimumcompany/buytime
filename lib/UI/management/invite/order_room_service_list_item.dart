@@ -1,5 +1,6 @@
 import 'package:Buytime/UI/user/booking/RUI_U_order_detail.dart';
 import 'package:Buytime/UI/user/booking/UI_U_order_details.dart';
+import 'package:Buytime/environment_abstract.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/reducer/order_detail_reducer.dart';
@@ -48,10 +49,10 @@ class _OrderRoomServiceListItemState extends State<OrderRoomServiceListItem> {
                       imageUrl: widget.orderState.itemList.length > 1 ?
                         widget.orderState.business.thumbnail != null && widget.orderState.business.thumbnail.isNotEmpty ?
                           widget.orderState.business.thumbnail :
-                          'https://firebasestorage.googleapis.com/v0/b/buytime-458a1.appspot.com/o/general%2Fimage_placeholder_200x200_1000x1000.png?alt=media&token=082a1896-32d8-4750-b7cc-141f00bc060c' :
+                          'https://firebasestorage.googleapis.com/v0/b/${Environment().config.fireStorageServiceStorageBucket}/o/general%2Fimage_placeholder_200x200_1000x1000.png?alt=media&token=082a1896-32d8-4750-b7cc-141f00bc060c' :
                       widget.orderState.itemList.first.thumbnail != null && widget.orderState.itemList.first.thumbnail.isNotEmpty ?
                       widget.orderState.itemList.first.thumbnail :
-                      'https://firebasestorage.googleapis.com/v0/b/buytime-458a1.appspot.com/o/general%2Fimage_placeholder_200x200_1000x1000.png?alt=media&token=082a1896-32d8-4750-b7cc-141f00bc060c',
+                      'https://firebasestorage.googleapis.com/v0/b/${Environment().config.fireStorageServiceStorageBucket}/o/general%2Fimage_placeholder_200x200_1000x1000.png?alt=media&token=082a1896-32d8-4750-b7cc-141f00bc060c',
                       imageBuilder: (context, imageProvider) => Container(
                         //margin: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 5), ///5%
                         height: 91,

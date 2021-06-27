@@ -290,5 +290,7 @@
 	<false/>
 	<key>io.flutter.embedded_views_preview</key>
 	<true/>
+	<key>CFBundleDisplayName</key>
+    <string>$(APP_DISPLAY_NAME)</string>
 </dict>
 </plist>

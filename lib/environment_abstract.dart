@@ -1,4 +1,4 @@
-abstract class BaseConfig {
+ abstract class BaseConfig {
   String stripePublicKey;
   String stripeSuffix;
   String googleApiKey;
@@ -17,15 +17,15 @@ abstract class BaseConfig {
 
 class DevConfig implements BaseConfig {
   String get cloudFunctionLink => 'europe-west1-buytimedev-2e17a.cloudfunctions.net';
-  String get dynamicLink => '';
-  String get fireStorageServiceApiKey => '';
-  String get fireStorageServiceAppId => '';
-  String get fireStorageServiceAuthDomain => '';
-  String get fireStorageServiceDatabaseURL => '';
-  String get fireStorageServiceMeasurementId => '';
-  String get fireStorageServiceMessagingSenderId => '';
-  String get fireStorageServiceProjectId => '';
-  String get fireStorageServiceStorageBucket => '';
+  String get dynamicLink => 'https://buytimedev.page.link';
+  String get fireStorageServiceApiKey => 'AIzaSyA-4Vxvqrs1xSz3AxFk5QJzoL9VbRR7THY';
+  String get fireStorageServiceAppId => '1:76896773127:android:2f0ac9868461fa761636a2';
+  String get fireStorageServiceAuthDomain => 'buytimedev-2e17a.firebaseapp.com';
+  String get fireStorageServiceDatabaseURL => 'https://buytimedev-2e17a.firebaseio.com';
+  String get fireStorageServiceMeasurementId => ''; // optional
+  String get fireStorageServiceMessagingSenderId => '76896773127';
+  String get fireStorageServiceProjectId => 'buytimedev-2e17a';
+  String get fireStorageServiceStorageBucket => 'buytimedev-2e17a.appspot.com';
   String get googleApiKey => 'AIzaSyBwDB1i6FveSGC0rFar4ZYcJM3xacQqZ1g';
   String get serverToken => 'AAAAEednpAc:APA91bEoNyQrUKghz6Mlrg7kA6kMaXM2DqDCkFmGnDJSiNXD6T3jgtfbDbl1Dm4QeJ6uzfg0H888YAqa2tIOLM4VhLp3CmuzOXaxe3v3sIWABGmyxi_nm73g1vfDHoFv9PQj2YhG1A9o';
   String get stripePublicKey => 'pk_test_51HS20eHr13hxRBpCZl1V0CKFQ7XzJbku7UipKLLIcuNGh3rp4QVsEDCThtV0l2AQ3jMtLsDN2zdC0fQ4JAK6yCOp003FIf3Wjz';
@@ -94,14 +94,14 @@ class DevConfig implements BaseConfig {
 class ProdConfig implements BaseConfig {
   String get cloudFunctionLink => 'europe-west1-buytime-458a1.cloudfunctions.net';
   String get dynamicLink => 'https://buytime.page.link';
-  String get fireStorageServiceApiKey => '';
-  String get fireStorageServiceAppId => '';
-  String get fireStorageServiceAuthDomain => '';
-  String get fireStorageServiceDatabaseURL => '';
-  String get fireStorageServiceMeasurementId => '';
-  String get fireStorageServiceMessagingSenderId => '';
-  String get fireStorageServiceProjectId => '';
-  String get fireStorageServiceStorageBucket => '';
+  String get fireStorageServiceApiKey => 'AIzaSyAqLCyfL4leWMXJoLKM1_He-p400XIuAmo';
+  String get fireStorageServiceAppId => '1:1009672636913:web:8c0345f639441bc0cfdc50';
+  String get fireStorageServiceAuthDomain => 'buytime-458a1.firebaseapp.com';
+  String get fireStorageServiceDatabaseURL => 'https://buytime-458a1.firebaseio.com';
+  String get fireStorageServiceMeasurementId => 'G-3L79M45JSN';
+  String get fireStorageServiceMessagingSenderId => '1009672636913';
+  String get fireStorageServiceProjectId => 'buytime-458a1';
+  String get fireStorageServiceStorageBucket => 'buytime-458a1.appspot.com';
   String get googleApiKey => 'AIzaSyBwDB1i6FveSGC0rFar4ZYcJM3xacQqZ1g';
   String get serverToken => 'AAAA6xUtyfE:APA91bGHhEzVUY9fnj4FbTXJX57qcgF-8GBrfBbGIa8kEpEIdsXRgQxbtsvbhL-w-_MQYKIj0XVlSaDSf2s6O3D3SM3o-z_AZnHQwBNLiw1ygyZOuVAKa5YmXeu6Da9eBqRD9uwFHSPi';
   String get stripePublicKey => 'pk_live_51HS20eHr13hxRBpCLHzfi0SXeqw8Efu911cWdYEE96BAV0zSOesvE83OiqqzRucKIxgCcKHUvTCJGY6cXRtkDVCm003CmGXYzy';

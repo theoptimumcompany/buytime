@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:Buytime/UI/management/business/UI_M_business_list.dart';
+import 'package:Buytime/environment_abstract.dart';
 import 'package:Buytime/reblox/model/role/role.dart';
 import 'package:Buytime/reblox/model/snippet/device.dart';
 import 'package:Buytime/reblox/model/snippet/token.dart';
@@ -45,7 +46,6 @@ class ForgotPasswordState extends State<ForgotPassword> {
   static final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
   Map<String, dynamic> _deviceData = <String, dynamic>{};
 
-  String serverToken = 'AAAA6xUtyfE:APA91bGHhEzVUY9fnj4FbTXJX57qcgF-8GBrfBbGIa8kEpEIdsXRgQxbtsvbhL-w-_MQYKIj0XVlSaDSf2s6O3D3SM3o-z_AZnHQwBNLiw1ygyZOuVAKa5YmXeu6Da9eBqRD9uwFHSPi';
   final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
 
   ///Validation variables
@@ -369,10 +369,10 @@ class ForgotPasswordState extends State<ForgotPassword> {
 
       print("Device ID : " + deviceId);
 
-      StoreProvider.of<AppState>(context).dispatch(new LoggedUser(UserState.fromFirebaseUser(user, deviceId, [serverToken])));
+      StoreProvider.of<AppState>(context).dispatch(new LoggedUser(UserState.fromFirebaseUser(user, deviceId, [Environment().config.serverToken])));
       Device device = Device(name: "device", id: deviceId, user_uid: user.uid);
       StoreProvider.of<AppState>(context).dispatch(new UpdateUserDevice(device));
-      TokenB token = TokenB(name: "token", id: serverToken, user_uid: user.uid);
+      TokenB token = TokenB(name: "token", id: Environment().config.serverToken, user_uid: user.uid);
       StoreProvider.of<AppState>(context).dispatch(new UpdateUserToken(token));
       setState(() {
         _success = true;
