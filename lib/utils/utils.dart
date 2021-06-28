@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:Buytime/reblox/enum/order_time_intervals.dart';
@@ -18,6 +19,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:google_place/google_place.dart';
+import 'package:html_unescape/html_unescape.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart'as http;
 
@@ -201,13 +203,24 @@ class Utils {
             'key': '${BuytimeConfig.AndroidApiKey}',
             'q': '${controllers[myIndex].text}'
           });
-          final http.Response response = await http.get(url);
-          //debugPrint('Response code: ${response.statusCode} | Response Body: ${response.body}');
+          final http.Response response = await http.get(
+              url,
+            headers: {
+              //HttpHeaders.contentTypeHeader : "utf-8",
+              'charset' : "utf-8"
+            }
+          );
+          debugPrint('Response code: ${response.statusCode} | Response Body: ${response.body}');
           if (response.statusCode == 200) {
+            //var langResponseMap = jsonDecode(utf8.decode(response.bodyBytes));
             var langResponseMap = jsonDecode(response.body);
+            //var langResponseMap = jsonDecode(Html.decode(response.bodyBytes));
             debugPrint('${language[i]} DONE | Decode: $langResponseMap');
             debugPrint('${language[i]} ${langResponseMap['data']['translations'][0]['translatedText']}');
-            controllers[i].text = langResponseMap['data']['translations'][0]['translatedText'];
+            var unescape = HtmlUnescape();
+            var text = unescape.convert(langResponseMap['data']['translations'][0]['translatedText']);
+            debugPrint('Convert: $text');
+            controllers[i].text = text;
           }
         }
       }

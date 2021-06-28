@@ -95,6 +95,7 @@ dependencies:
   plugin_platform_interface: ^2.0.0
   sliver_tools: ^0.2.2
   provider: ^5.0.0
+  html_unescape: ^2.0.0
 
 
 dependency_overrides:

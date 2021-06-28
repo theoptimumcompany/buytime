@@ -594,6 +594,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                   },*/
                                                               style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: canEditService ? BuytimeTheme.TextBlack : BuytimeTheme.TextGrey),
                                                               onEditingComplete: () {
+                                                                debugPrint('UI_M_edit_service => DESCRIPTION EDITED');
                                                                 StoreProvider.of<AppState>(context).dispatch(SetServiceDescription(Utils.saveField(myLocale.languageCode, descriptionController.text, snapshot.serviceState.description)));
                                                                 currentFocus.unfocus();
                                                               },
@@ -616,7 +617,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                                 rippleTranslate = true;
                                                               });
                                                               currentFocus.unfocus();
-                                                              StoreProvider.of<AppState>(context).dispatch(SetServiceDescription(Utils.saveField(myLocale.languageCode, descriptionController.text, snapshot.serviceState.description)));
+                                                              //StoreProvider.of<AppState>(context).dispatch(SetServiceDescription(Utils.saveField(myLocale.languageCode, descriptionController.text, snapshot.serviceState.description)));
                                                               String newField = Utils.saveField(myLocale.languageCode, descriptionController.text, snapshot.serviceState.description);
                                                               Utils.multiLingualTranslate(context, flagsCharCode, languageCode, AppLocalizations.of(context).description, newField, currentFocus, (value) {
                                                                 if (!value) {
