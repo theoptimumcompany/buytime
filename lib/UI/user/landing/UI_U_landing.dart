@@ -71,6 +71,7 @@ class LandingState extends State<Landing> {
   List<LandingCardWidget> cards = new List();
 
   bool onBookingCode = false;
+  bool onSelfBookingCode = false;
   bool rippleLoading = false;
   bool secondRippleLoading = false;
   bool requestingBookings = false;
@@ -177,6 +178,9 @@ class LandingState extends State<Landing> {
           debugPrint('UI_U_landing: selfBookingCode from dynamic link: $selfBookingCode');
           await storage.write(key: 'selfBookingCode', value: selfBookingCode);
           await storage.write(key: 'selfBookingCodeRead', value: 'true');
+          setState(() {
+            onSelfBookingCode = true;
+          });
           if (FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty) {
             debugPrint('UI_U_landing: USER Is LOGGED in onLink');
             Navigator.push(context, MaterialPageRoute(builder: (context) => BookingSelfCreation(idBusiness: selfBookingCode,)));
@@ -200,6 +204,7 @@ class LandingState extends State<Landing> {
       String bookingCodeRead = await storage.read(key: 'bookingCodeRead') ?? '';
       String categoryInviteRead = await storage.read(key: 'categoryInviteRead') ?? '';
       String orderIdRead = await storage.read(key: 'orderIdRead') ?? '';
+      String selfBookingCodeRead = await storage.read(key: 'selfBookingCodeRead') ?? '';
       if (deepLink.queryParameters.containsKey('booking') && bookingCodeRead != 'true') {
         String id = deepLink.queryParameters['booking'];
         debugPrint('UI_U_landing: booking getInitialLink: $id');
@@ -213,7 +218,20 @@ class LandingState extends State<Landing> {
           Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => InviteGuestForm(id: id, fromLanding: false)), ModalRoute.withName('/landing'));
         } else
           debugPrint('UI_U_landing: USER NOT LOGGED in getInitialLink');
-      } else if (deepLink.queryParameters.containsKey('categoryInvite') && categoryInviteRead != 'true') {
+      } else if (deepLink.queryParameters.containsKey('selfBookingCode') && categoryInviteRead != 'true') {
+      String id = deepLink.queryParameters['selfBookingCode'];
+      debugPrint('UI_U_landing: selfBookingCode getInitialLink: $id');
+      await storage.write(key: 'selfBookingCode', value: id);
+      await storage.write(key: 'selfBookingCodeRead', value: 'true');
+      setState(() {
+        onSelfBookingCode = true;
+      });
+      if (FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty) {
+        debugPrint('UI_U_landing: USER IS LOGGED in getInitialLink');
+        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => BookingSelfCreation()), ModalRoute.withName('/bookingSelfCreation'));
+      } else
+        debugPrint('UI_U_landing: USER NOT LOGGED in getInitialLink');
+    } else if (deepLink.queryParameters.containsKey('categoryInvite') && categoryInviteRead != 'true') {
         String categoryInvite = deepLink.queryParameters['categoryInvite'];
         debugPrint('UI_U_landing: categoryInvite: $categoryInvite');
         await storage.write(key: 'categoryInvite', value: categoryInvite);

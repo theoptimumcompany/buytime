@@ -30,7 +30,7 @@ class _PRCardWidgetState extends State<PRCardWidget> {
   Widget build(BuildContext context) {
 
     return  CachedNetworkImage(
-      imageUrl: widget.serviceState.image1 != null && widget.serviceState.image1.isNotEmpty ? widget.serviceState.image1:  'https://firebasestorage.googleapis.com/v0/b/${Environment().config.fireStorageServiceStorageBucket}/o/general%2Fimage_placeholder_200x200_1000x1000.png?alt=media&token=082a1896-32d8-4750-b7cc-141f00bc060c',
+      imageUrl: widget.serviceState.image1 != null && widget.serviceState.image1.isNotEmpty ? widget.serviceState.image1:  'https://firebasestorage.googleapis.com/v0/b/buytime-458a1.appspot.com/o/general%2Fimage_placeholder_200x200_1000x1000.png?alt=media&token=082a1896-32d8-4750-b7cc-141f00bc060c',
       imageBuilder: (context, imageProvider) =>
           Container(
             //margin: EdgeInsets.all(SizeConfig.safeBlockVertical*.25),

@@ -25,6 +25,16 @@ class CreateBookingRequest {
   BookingState get bookingState => _bookingState;
 }
 
+class CreateSelfBookingRequest {
+  BookingState _bookingState;
+  String _idBusiness;
+
+  CreateSelfBookingRequest(this._bookingState,this._idBusiness);
+
+  BookingState get bookingState => _bookingState;
+  String get idBusiness => _idBusiness;
+}
+
 class ConfirmBookingRequest {
   BookingState _bookingState;
 

@@ -592,7 +592,7 @@ class _BookingSelfCreationState extends State<BookingSelfCreation> {
                                                         bookingRequest = 'send';
                                                       });
 
-                                                      bookingState.business_id = businessState.id_firestore;
+                                                      bookingState.business_id = widget.idBusiness;
                                                       bookingState.business_name = businessState.name;
                                                       bookingState.guest_number_booked_for = _numberOfGuestsController.text.isNotEmpty ? int.parse(_numberOfGuestsController.text) : 1;
 
@@ -612,7 +612,7 @@ class _BookingSelfCreationState extends State<BookingSelfCreation> {
 
                                                       bookingState.userEmail.add(_emailToInviteController.text);
 
-                                                      StoreProvider.of<AppState>(context).dispatch(CreateBookingRequest(bookingState));
+                                                      StoreProvider.of<AppState>(context).dispatch(CreateSelfBookingRequest(bookingState, widget.idBusiness));
 
                                                       Timer(Duration(seconds: 1), () {
                                                         setState(() {
