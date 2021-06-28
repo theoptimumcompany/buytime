@@ -111,7 +111,7 @@ class SelfBookingCreateRequestService implements EpicClass<AppState> {
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<CreateSelfBookingRequest>().asyncMap((event) async {
-      print("BOOKING_SERVICE_EPIC - BookingCreateRequestService => DOCUMENT ID: ${event.bookingState.business_id}");
+      print("BOOKING_SERVICE_EPIC - SelfBookingCreateRequestService => DOCUMENT ID: ${event.bookingState.business_id}");
 
       // create a unique booking code for this booking
       String randomBookingCodeCandidate;
@@ -122,7 +122,7 @@ class SelfBookingCreateRequestService implements EpicClass<AppState> {
         // WARNING, every booking we do tops 5 reads to mitigate collisions.
         // This has a really low chance of generating a booking without a code. this is on purpose, to avoid infinite loop risk in a read statement.
         randomBookingCodeCandidate = Utils.getRandomBookingCode(6);
-        debugPrint('BOOKING_SERVICE_EPIC - BookingCreateRequestService => GENERATE BOOKING CODE| Random booking code candidate: $randomBookingCodeCandidate');
+        debugPrint('BOOKING_SERVICE_EPIC - SelfBookingCreateRequestService => GENERATE BOOKING CODE| Random booking code candidate: $randomBookingCodeCandidate');
         // search if the code already exists
         QuerySnapshot bookingCodeCollision = await FirebaseFirestore.instance /// ? READ - ? DOC
             .collection("booking")
@@ -131,7 +131,7 @@ class SelfBookingCreateRequestService implements EpicClass<AppState> {
         bookingCodeCollisionDocs = bookingCodeCollisionDocs + bookingCodeCollision.docs.length;
         ++read;
         if (bookingCodeCollision.size > 0) {
-          debugPrint('BOOKING_SERVICE_EPIC - BookingCreateRequestService => GENERATE BOOKING CODE| Code collision happening for code: $randomBookingCodeCandidate');
+          debugPrint('BOOKING_SERVICE_EPIC - SelfBookingCreateRequestService => GENERATE BOOKING CODE| Code collision happening for code: $randomBookingCodeCandidate');
         } else {
           // the candidate is ok, we can break and use it
           foundRandomCode = true;
@@ -139,14 +139,14 @@ class SelfBookingCreateRequestService implements EpicClass<AppState> {
         }
       }
       if (foundRandomCode) {
-        print('BOOKING_SERVICE_EPIC - BookingCreateRequestService => GENERATE BOOKING CODE| Creating booking for business: ${event.bookingState.business_id}');
+        print('BOOKING_SERVICE_EPIC - SelfBookingCreateRequestService => GENERATE BOOKING CODE| Creating booking for business: ${event.bookingState.business_id}');
         event.bookingState.booking_code = randomBookingCodeCandidate;
         // create a booking
         DocumentReference addingReturn = await FirebaseFirestore.instance /// 1 WRITE
             .collection("booking")
             .add(event.bookingState.toJson());
         bookingId = addingReturn.id;
-        print('BOOKING_SERVICE_EPIC - BookingCreateRequestService =>  $addingReturn');
+        print('BOOKING_SERVICE_EPIC - SelfBookingCreateRequestService =>  $addingReturn');
       } else {
         // TODO notify the user something went wrong and he has to try again.
         // example: return new ErrorInBookingCreation(event.bookingState);
