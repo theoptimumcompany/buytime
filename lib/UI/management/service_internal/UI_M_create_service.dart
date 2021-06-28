@@ -497,7 +497,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                               rippleTranslate = true;
                                             });
                                             currentFocus.unfocus();
-                                            StoreProvider.of<AppState>(context).dispatch(SetServiceDescription(Utils.saveField(myLocale.languageCode, descriptionController.text, snapshot.serviceState.description)));
+                                            //StoreProvider.of<AppState>(context).dispatch(SetServiceDescription(Utils.saveField(myLocale.languageCode, descriptionController.text, snapshot.serviceState.description)));
                                             String newField = Utils.saveField(myLocale.languageCode, descriptionController.text, snapshot.serviceState.description);
                                             Utils.multiLingualTranslate(
                                                 context, flagsCharCode, languageCode,
