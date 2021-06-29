@@ -572,5 +572,7 @@
   "native": "Pago Mobbile (Apple pay o Google pay)",
   "showMore": "Enseña más",
   "service": "Servicio",
-  "createdAt": "Creado en"
+  "createdAt": "Creado en",
+
+  "suppliedBy": "Supplied By"
 }

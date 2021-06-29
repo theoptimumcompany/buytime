@@ -761,6 +761,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                                         MaterialPageRoute(builder: (context) => BuytimeMap(user: false, title: widget.externalBusinessState.name,
                                                           businessState: BusinessState.fromExternalState(widget.externalBusinessState),
                                                           serviceState: ServiceState().toEmpty(),
+                                                          tourist: false,
                                                         )
                                                         ),
                                                       );
@@ -800,6 +801,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                   Navigator.push(context, MaterialPageRoute(builder: (context) => BuytimeMap(user: false, title: address,
                                     businessState: BusinessState.fromExternalState(widget.externalBusinessState),
                                     serviceState: ServiceState().toEmpty(),
+                                    tourist: false,
                                   )),);
                                   //Navigator.push(context, MaterialPageRoute(builder: (context) => AnimatedScreen()));
                                 },

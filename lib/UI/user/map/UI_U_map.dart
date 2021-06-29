@@ -28,7 +28,8 @@ class BuytimeMap extends StatefulWidget {
   String title;
   BusinessState businessState;
   ServiceState serviceState;
-  BuytimeMap({@required this.user, this.title, this.businessState, this.serviceState});
+  bool tourist;
+  BuytimeMap({@required this.user, this.title, this.businessState, this.serviceState, this.tourist});
 
   @override
   createState() => _BuytimeMapState();
@@ -122,7 +123,7 @@ class _BuytimeMapState extends State<BuytimeMap> with SingleTickerProviderStateM
         title: '${widget.businessState.name}',
         //snippet: '5 Star Rating',
       ),
-      icon: BitmapDescriptor.defaultMarkerWithHue(197),
+      icon:  BitmapDescriptor.defaultMarkerWithHue(197),
     ));
     rootBundle.loadString('assets/json/grey_map.txt').then((string) {
       _mapStyle = string;
@@ -146,7 +147,7 @@ class _BuytimeMapState extends State<BuytimeMap> with SingleTickerProviderStateM
     final height = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: BuytimeAppbar(
-        background: !widget.user ? BuytimeTheme.ManagerPrimary : BuytimeTheme.UserPrimary,
+        background: widget.tourist ? BuytimeTheme.BackgroundCerulean : !widget.user ? BuytimeTheme.ManagerPrimary : BuytimeTheme.UserPrimary,
         width: media.width,
         children: [
           ///Back Button
@@ -260,7 +261,7 @@ class _BuytimeMapState extends State<BuytimeMap> with SingleTickerProviderStateM
                                             ///18 | SizeConfig.safeBlockHorizontal * 5
                                             fontFamily: BuytimeTheme.FontFamily,
                                             fontWeight: FontWeight.w500,
-                                            color: widget.user? BuytimeTheme.UserPrimary :  BuytimeTheme.ButtonMalibu
+                                            color: widget.tourist ? BuytimeTheme.BackgroundCerulean : widget.user? BuytimeTheme.UserPrimary :  BuytimeTheme.ButtonMalibu
                                         ),
                                       ),
                                     )
@@ -330,7 +331,7 @@ class _BuytimeMapState extends State<BuytimeMap> with SingleTickerProviderStateM
                                             ///18 | SizeConfig.safeBlockHorizontal * 5
                                             fontFamily: BuytimeTheme.FontFamily,
                                             fontWeight: FontWeight.w500,
-                                            color: widget.user? BuytimeTheme.UserPrimary :  BuytimeTheme.ButtonMalibu
+                                            color: widget.tourist ? BuytimeTheme.BackgroundCerulean : widget.user? BuytimeTheme.UserPrimary :  BuytimeTheme.ButtonMalibu
                                         ),
                                       ),
                                     )
@@ -366,7 +367,7 @@ class _BuytimeMapState extends State<BuytimeMap> with SingleTickerProviderStateM
                                         );
                                       },
                                       textColor: BuytimeTheme.UserPrimary.withOpacity(0.3),
-                                      color: widget.user ? BuytimeTheme.UserPrimary : BuytimeTheme.ManagerPrimary,
+                                      color: widget.tourist ? BuytimeTheme.BackgroundCerulean : widget.user ? BuytimeTheme.UserPrimary : BuytimeTheme.ManagerPrimary,
                                       //padding: EdgeInsets.all(media.width * 0.03),
                                       shape: RoundedRectangleBorder(
                                         borderRadius: new BorderRadius.circular(5),

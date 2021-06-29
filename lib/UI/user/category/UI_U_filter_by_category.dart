@@ -60,6 +60,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
   List<CategoryState> rowLess2 = [];
 
   Map<String, List<String>> categoryListIds = Map();
+  Map<String, List<String>> subCategoryListIds = Map();
 
   @override
   void initState() {
@@ -204,6 +205,23 @@ class _FilterByCategoryState extends State<FilterByCategory> {
     );
   }
 
+  void createSubCategoryList(CategoryState element) {
+    bool found = false;
+    subCategoryList.forEach((cL) {
+      if(cL.name == element.name)
+        found = true;
+    });
+
+    if(!found){
+      subCategoryList.add(element);
+      subCategoryListIds.putIfAbsent(element.name, () => [element.id]);
+    }else{
+      if(!subCategoryListIds[element.name].contains(element.id)){
+        subCategoryListIds[element.name].add(element.id);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
@@ -212,6 +230,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
     return StoreConnector<AppState, AppState>(
       converter: (store) => store.state,
       onInit: (store) {
+        debugPrint('UI_U_filter_by_category => ${widget.categoryListIds}');
         WidgetsBinding.instance.addPostFrameCallback((_) {
           // no
           //search(store.state.serviceList.serviceListState);
@@ -224,7 +243,17 @@ class _FilterByCategoryState extends State<FilterByCategory> {
               subCategoryList.clear();
               l.forEach((element) {
                 if (element.parent != null && widget.categoryListIds.contains(element.parent.id)) {
-                  subCategoryList.add(element);
+                  if(widget.tourist){
+                    debugPrint('UI_U_filter_by_category => SUB CATEGORY NAME: ${element.name}');
+                    store.state.serviceList.serviceListState.forEach((service) {
+                      //debugPrint('CATAGORY ID: ${cLS.id} - CATEGORY LIST: ${service.categoryId}');
+                      if((service.categoryId.contains(element.id) /*|| service.categoryRootId.contains(element.id)*/) /*&& element.level == 0*/){
+                        createSubCategoryList(element);
+                      }
+                    });
+                  }
+                  else
+                    subCategoryList.add(element);
                 }else{
                   //categoryList.add(element); ///TODO
                   if(!widget.categoryListIds.contains(element.id)){
@@ -424,6 +453,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         ///Just show me
+                        subCategoryList.isNotEmpty ?
                         Flexible(
                           child: Container(
                             margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
@@ -465,7 +495,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                                 CategoryState category = subCategoryList.elementAt(index);
                                                 return Container(
                                                   margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 2),
-                                                  child: FindYourInspirationCardWidget(SizeConfig.screenWidth / 3 - 2, SizeConfig.screenWidth / 3 - 2, category, false, widget.tourist, widget.categoryListIds),
+                                                  child: FindYourInspirationCardWidget(SizeConfig.screenWidth / 3 - 2, SizeConfig.screenWidth / 3 - 2, category, false, widget.tourist, subCategoryListIds[category.name]),
                                                 );
                                               },
                                               childCount: subCategoryList.length,
@@ -493,13 +523,14 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                               ],
                             ),
                           ),
-                        ),
+                        ) : Container(),
 
                         ///Divider
+                        subCategoryList.isNotEmpty ?
                         Container(
                           color: BuytimeTheme.DividerGrey,
                           height: SizeConfig.safeBlockVertical * 2,
-                        ),
+                        ) : Container(),
 
                         ///Search & List
                         Flexible(

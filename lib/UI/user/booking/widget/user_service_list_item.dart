@@ -165,7 +165,7 @@ class _UserServiceListItemState extends State<UserServiceListItem> {
                               //height: 40, ///SizeConfig.safeBlockVertical * 10
                               margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * .5),
                               child: Text(
-                                DateFormat('dd MMM yyyy',Localizations.localeOf(context).languageCode).format(widget.orderState.itemList[0].date) ?? '',
+                                DateFormat('dd MMM yyyy - HH:mm',Localizations.localeOf(context).languageCode).format(widget.orderState.itemList[0].date) ?? '',
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 2,
                                 style: TextStyle(

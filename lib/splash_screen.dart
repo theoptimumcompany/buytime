@@ -34,7 +34,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stripe_payment/stripe_payment.dart';
-
+import 'package:package_info/package_info.dart';
 import 'UI/user/booking/RUI_U_notifications.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -77,14 +77,23 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
 
     StoreProvider.of<AppState>(context).dispatch(AddAutoCompleteToList(completes));
   }
+  String version = '';
+  getAppInfo()async{
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
 
+    String appName = packageInfo.appName;
+    String packageName = packageInfo.packageName;
+    version = packageInfo.version;
+    String buildNumber = packageInfo.buildNumber;
+    debugPrint('splash_screen => VERSION: $version');
+  }
 
   @override
   void initState() {
     WidgetsBinding.instance.addObserver(this);
     super.initState();
 
-
+    getAppInfo();
 
     Firebase.initializeApp().then((value) {
       final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
@@ -403,7 +412,33 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
     return Scaffold(
       backgroundColor: Color(0xFF207CC3),
       body: Center(
-        child: new Image.asset('assets/img/brand/logo_b.png', width: 200, height: 200),
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: Align(
+                alignment: Alignment.center,
+                child: Image.asset('assets/img/brand/logo_b.png', width: 200, height: 200),
+              ),
+            ),
+            Positioned.fill(
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  margin: EdgeInsets.only(bottom: 15),
+                  child: Text(
+                    '$version',
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: BuytimeTheme.TextWhite,
+                        fontFamily: BuytimeTheme.FontFamily
+                    ),
+                  ),
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
     /*Scaffold(

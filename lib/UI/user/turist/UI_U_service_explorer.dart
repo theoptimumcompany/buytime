@@ -8,6 +8,7 @@ import 'package:Buytime/UI/user/turist/widget/discover_card_widget.dart';
 import 'package:Buytime/UI/user/turist/widget/p_r_card_widget.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/area/area_list_state.dart';
+import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/model/category/category_state.dart';
 import 'package:Buytime/reblox/model/notification/notification_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
@@ -48,6 +49,7 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
   List<CategoryState> categoryList = [];
   List<OrderState> userOrderList = [];
   List<OrderState> orderList = [];
+  List<BusinessState> businessList = [];
   String sortBy = '';
   OrderState order = OrderState().toEmpty();
 
@@ -73,7 +75,6 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
     debugPrint('UI_U_service_explorer => CATEGORY SEARCH');
     setState(() {
       List<CategoryState> categoryState = list;
-
       categoryList.clear();
       if (_searchController.text.isNotEmpty) {
         categoryState.forEach((element) {
@@ -84,6 +85,18 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
           if(element.customTag != null && element.customTag.isNotEmpty && element.customTag.toLowerCase().contains(_searchController.text.toLowerCase())) {
             createCategoryList(element);
           }
+
+          businessList.forEach((business) {
+            if(business.name.toLowerCase().contains(_searchController.text.toLowerCase())){
+              if(business.id_firestore == element.businessId){
+                StoreProvider.of<AppState>(context).state.serviceList.serviceListState.forEach((service) {
+                  if((service.categoryId.contains(element.id) || service.categoryRootId.contains(element.id)) /*&& element.level == 0*/) {
+                    createCategoryList(element);
+                  }
+                });
+              }
+            }
+          });
         });
       }
       //popularList.shuffle();
@@ -94,15 +107,19 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
   void createCategoryList(CategoryState element) {
     bool found = false;
     categoryList.forEach((cL) {
-      if(cL.name == element.name)
+      if(cL.name == element.name){
+        debugPrint('UI_U_service_explorer => EQUAL CATEGORY NAME: ${element.name}');
         found = true;
+      }
     });
 
     if(!found){
       categoryList.add(element);
       categoryListIds.putIfAbsent(element.name, () => [element.id]);
     }else{
-      categoryListIds[element.name].add(element.id);
+      if(!categoryListIds[element.name].contains(element.id)){
+        categoryListIds[element.name].add(element.id);
+      }
     }
   }
 
@@ -125,6 +142,15 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
               }
             });
           }
+          businessList.forEach((business) {
+            if(business.name.toLowerCase().contains(_searchController.text.toLowerCase())){
+              if(business.id_firestore == element.businessId){
+                if(!popularList.contains(element)){
+                  popularList.add(element);
+                }
+              }
+            }
+          });
         });
       }
       popularList.shuffle();
@@ -150,6 +176,15 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
               }
             });
           }
+          businessList.forEach((business) {
+            if(business.name.toLowerCase().contains(_searchController.text.toLowerCase())){
+              if(business.id_firestore == element.businessId){
+                if(!recommendedList.contains(element)){
+                  recommendedList.add(element);
+                }
+              }
+            }
+          });
         });
       }
       recommendedList.shuffle();
@@ -266,6 +301,7 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
       onInit: (store) async {
         store.state.categoryList.categoryListState.clear();
         store.state.serviceList.serviceListState.clear();
+        businessList = store.state.businessList.businessListState;
         startRequest = true;
 
         await _getLocation();
@@ -308,6 +344,7 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                 snapshot.serviceList.serviceListState.forEach((service) {
                   //debugPrint('CATAGORY ID: ${cLS.id} - CATEGORY LIST: ${service.categoryId}');
                   if((service.categoryId.contains(cLS.id) || service.categoryRootId.contains(cLS.id)) && cLS.level == 0){
+                    debugPrint('UI_U_service_explorer => ${cLS.name}');
                     createCategoryList(cLS);
                   }
                 });

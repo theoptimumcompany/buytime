@@ -631,6 +631,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                                                         MaterialPageRoute(builder: (context) => BuytimeMap(user: false, title: snapshot.business.name,
                                                           businessState: snapshot.business,
                                                           serviceState: widget.serviceState,
+                                                          tourist: widget.tourist
                                                         )
                                                         ),
                                                       );
@@ -669,7 +670,8 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                                   //Navigator.push(context, MaterialPageRoute(builder: (context) => BuytimeMap(user: true, title: widget.orderState.itemList.length > 1 ? widget.orderState.business.name : widget.orderState.itemList.first.name, businessState: snapshot.business,)),);
                                   Navigator.push(context, MaterialPageRoute(builder: (context) => BuytimeMap(user: true, title: address,
                                     businessState: snapshot.business,
-                                      serviceState: ServiceState().toEmpty() ///TODO service address
+                                      serviceState: ServiceState().toEmpty(), ///TODO service address
+                                    tourist: widget.tourist
                                   )));
                                   //Navigator.push(context, MaterialPageRoute(builder: (context) => AnimatedScreen()));
                                 },

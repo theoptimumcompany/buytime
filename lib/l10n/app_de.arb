@@ -572,5 +572,7 @@
   "native": "Mobil-Zahlung (Apple Pay oder Google Pay)",
   "showMore": "Mehr anzeigen",
   "service": "Service",
-  "createdAt": "Erstellt bei"
+  "createdAt": "Erstellt bei",
+
+  "suppliedBy": "Supplied By"
 }

@@ -525,6 +525,7 @@ class _ExternalServiceDetailsState extends State<ExternalServiceDetails> with Si
                                                             MaterialPageRoute(builder: (context) => BuytimeMap(user: false, title: widget.externalBusinessState.name,
                                                               businessState: BusinessState.fromExternalState(widget.externalBusinessState),
                                                               serviceState: widget.serviceState,
+                                                              tourist: false,
                                                             )
                                                             ),
                                                           );
@@ -564,6 +565,7 @@ class _ExternalServiceDetailsState extends State<ExternalServiceDetails> with Si
                                       Navigator.push(context, MaterialPageRoute(builder: (context) => BuytimeMap(user: false, title: address,
                                         businessState: BusinessState.fromExternalState(widget.externalBusinessState),
                                         serviceState: widget.serviceState,
+                                        tourist: false,
                                       )),);
                                       //Navigator.push(context, MaterialPageRoute(builder: (context) => AnimatedScreen()));
                                     },

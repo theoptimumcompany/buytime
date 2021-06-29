@@ -639,7 +639,9 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
                                                             MaterialPageRoute(builder: (context) => BuytimeMap(user: true,
                                                                 title: orderDetails.itemList.length > 1 ? orderDetails.business.name : orderDetails.itemList.first.name,
                                                                 businessState: businessState,
-                                                                serviceState: serviceState) ///TODO service address
+                                                                serviceState: serviceState,
+                                                              tourist: false,
+                                                            ) ///TODO service address
                                                             ),
                                                           );
                                                         },
@@ -677,7 +679,8 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
                                     //Navigator.push(context, MaterialPageRoute(builder: (context) => BuytimeMap(user: true, title: orderDetails.itemList.length > 1 ? orderDetails.business.name : orderDetails.itemList.first.name, businessState: businessState,)),);
                                     Navigator.push(context, MaterialPageRoute(builder: (context) => BuytimeMap(user: true, title: address,
                                         businessState: businessState,
-                                        serviceState: ServiceState().toEmpty() ///TODO service address
+                                        serviceState: ServiceState().toEmpty(), ///TODO service address
+                                        tourist: false,
                                     )));
                                     //Navigator.push(context, MaterialPageRoute(builder: (context) => AnimatedScreen()));
                                   },

@@ -1,10 +1,12 @@
 import 'package:Buytime/reblox/model/app_state.dart';
+import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/model/category/category_state.dart';
 import 'package:Buytime/reblox/model/category/snippet/category_snippet_state.dart';
 import 'package:Buytime/reblox/model/file/optimum_file_to_upload.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/model/statistics_state.dart';
 import 'package:Buytime/reblox/navigation/navigation_reducer.dart';
+import 'package:Buytime/reblox/reducer/business_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_reducer.dart';
 import 'package:Buytime/reblox/model/snippet/manager.dart';
@@ -70,6 +72,7 @@ class AllCategoryListRequestService implements EpicClass<AppState> {
   StatisticsState statisticsState;
   List<CategoryState> categoryStateList;
   List<ServiceState> serviceStateList;
+  List<BusinessState> businessStateList;
 
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
@@ -77,6 +80,7 @@ class AllCategoryListRequestService implements EpicClass<AppState> {
 
     return actions.whereType<AllRequestListCategory>().asyncMap((event) async {
       QuerySnapshot businessListFromFirebase;
+      businessStateList = [];
       businessListFromFirebase = await FirebaseFirestore.instance
           /// 1 read - ? DOC
           .collection("business")
@@ -91,6 +95,7 @@ class AllCategoryListRequestService implements EpicClass<AppState> {
       List<String> tmpBusinessIdList = [];
 
       for (int i = 0; i < businessListFromFirebase.docs.length; i++) {
+        businessStateList.add(BusinessState.fromJson(businessListFromFirebase.docs[i].data()));
         QuerySnapshot snapshot = await FirebaseFirestore.instance
             /// 1 READ - ? DOC
             .collection("business")
@@ -164,6 +169,7 @@ class AllCategoryListRequestService implements EpicClass<AppState> {
       if (categoryStateList.isEmpty) categoryStateList.add(CategoryState());
       if (serviceStateList.isEmpty) serviceStateList.add(ServiceState());
     }).expand((element) => [
+        BusinessListReturned(businessStateList),
           CategoryListReturned(categoryStateList),
           ServiceListReturned(serviceStateList),
           UpdateStatistics(statisticsState),
