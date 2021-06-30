@@ -537,7 +537,7 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
                                                   OptimumFormField(
                                                     controller: _responsiblePersonEmailController,
                                                     field: "responsible_person_email",
-                                                    textInputType: TextInputType.text,
+                                                    textInputType: TextInputType.emailAddress,
                                                     minLength: 3,
                                                     label: AppLocalizations.of(context).responsibleEmail,
                                                     globalFieldKey: _formKeyResponsablePersonEmailFieldEdit,
@@ -553,7 +553,7 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
                                                     required: required,
                                                     controller: _emailController,
                                                     field: "mail",
-                                                    textInputType: TextInputType.text,
+                                                    textInputType: TextInputType.emailAddress,
                                                     minLength: 3,
                                                     label: AppLocalizations.of(context).businessEmail,
                                                     globalFieldKey: _formKeyEmailFieldEdit,
