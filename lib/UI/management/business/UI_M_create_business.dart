@@ -421,7 +421,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                       OptimumFormField(
                                                         controller: _responsiblePersonEmailController,
                                                         field: "responsible_person_email",
-                                                        textInputType: TextInputType.text,
+                                                        textInputType: TextInputType.emailAddress,
                                                         minLength: 3,
                                                         label: AppLocalizations.of(context).responsibleEmail,
                                                         globalFieldKey: _formKeyResponsablePersonEmailField,
@@ -553,7 +553,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                         required: required,
                                                         controller: _emailController,
                                                         field: "mail",
-                                                        textInputType: TextInputType.text,
+                                                        textInputType: TextInputType.emailAddress,
                                                         minLength: 3,
                                                         label: AppLocalizations.of(context).businessEmail,
                                                         globalFieldKey: _formKeyEmailField,

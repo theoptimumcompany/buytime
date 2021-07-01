@@ -264,12 +264,14 @@ class _FilterByCategoryState extends State<FilterByCategory> {
           serviceList.clear();
           s.addAll(snapshot.serviceList.serviceListState);
           s.forEach((element) {
-            element.categoryId.forEach((element2) {
-              if(widget.categoryListIds != null && widget.categoryListIds.contains(element2)) {
-                tmpServiceList.add(element);
-                serviceList.add(element);
-              }
-            });
+            if(element.categoryId != null){
+              element.categoryId.forEach((element2) {
+                if(widget.categoryListIds != null && widget.categoryListIds.contains(element2)) {
+                  tmpServiceList.add(element);
+                  serviceList.add(element);
+                }
+              });
+            }
           });
         }
 
