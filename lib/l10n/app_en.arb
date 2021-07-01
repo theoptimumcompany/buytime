@@ -575,5 +575,6 @@
   "service": "Service",
   "createdAt": "Created at",
 
+  "selectLanguage": "select language:",
   "showcase": "Showcase"
 }

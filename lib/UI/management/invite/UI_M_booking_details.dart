@@ -18,7 +18,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:intl/intl.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
-import 'package:share/share.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../environment_abstract.dart';
@@ -44,6 +44,8 @@ class _BookingDetailsState extends State<BookingDetails> {
   final TextEditingController _checkInController = TextEditingController();
   final TextEditingController _checkOutController = TextEditingController();
   final TextEditingController _numberOfGuestsController = TextEditingController();
+
+  String chosenLanguageForEmail = 'English';
 
   String fullName = '';
   String email = '';
@@ -493,6 +495,37 @@ class _BookingDetailsState extends State<BookingDetails> {
                                   ],
                                 ),
                               ),
+                              /// choose invitation language
+                              Flexible(
+                                child: Row(
+                                  children: [
+                                    Text(AppLocalizations.of(context).selectLanguage),
+                                    DropdownButton<String>(
+                                      value: chosenLanguageForEmail,
+                                      icon: const Icon(Icons.arrow_downward),
+                                      iconSize: 24,
+                                      elevation: 16,
+                                      style: const TextStyle(color: Colors.deepPurple),
+                                      underline: Container(
+                                        height: 2,
+                                        color: Colors.deepPurpleAccent,
+                                      ),
+                                      onChanged: (String newValue) {
+                                        setState(() {
+                                          chosenLanguageForEmail = newValue;
+                                        });
+                                      },
+                                      items: <String>['Catalan', 'English',  'French', 'German', 'Italian', 'Spanish']
+                                          .map<DropdownMenuItem<String>>((String value) {
+                                        return DropdownMenuItem<String>(
+                                          value: value,
+                                          child: Text(value),
+                                        );
+                                      }).toList(),
+                                    )
+                                  ],
+                                )
+                              ),
 
                               ///Send invitation
                               Flexible(
@@ -523,7 +556,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                                                   TemplateState templateState = TemplateState();
                                                   TemplateDataState templateDataState = TemplateDataState();
                                                   emailState.to = widget.bookingState != null ? widget.bookingState.user.first.email : snapshot.booking.user.first.email;
-                                                  templateState.name = 'welcome';
+                                                  templateState.name = 'welcome' + languageToShortcode(chosenLanguageForEmail);
                                                   templateDataState.name = widget.bookingState != null ? widget.bookingState.user.first.name + ' ' + widget.bookingState.user.first.surname : snapshot.booking.user.first.name + ' ' + snapshot.booking.user.first.surname;
                                                   templateDataState.link = link;
                                                   templateState.data = templateDataState;
@@ -663,5 +696,23 @@ class _BookingDetailsState extends State<BookingDetails> {
         );
       },
     );
+  }
+
+  /// 'Catalan', 'English',  'French', 'German', 'Italian', 'Spanish'
+  String languageToShortcode(String chosenLanguageForEmail) {
+    if (chosenLanguageForEmail == 'English') {
+      return '_en';
+    } else if  (chosenLanguageForEmail == 'Catalan') {
+      return '_ca';
+    } else if  (chosenLanguageForEmail == 'French') {
+      return '_fr';
+    } else if  (chosenLanguageForEmail == 'German') {
+      return '_ge';
+    } else if  (chosenLanguageForEmail == 'Italian') {
+      return '_it';
+    } else if  (chosenLanguageForEmail == 'Spanish') {
+      return '_es';
+    }
+    return '_en';
   }
 }

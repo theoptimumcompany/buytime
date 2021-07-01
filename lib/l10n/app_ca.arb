@@ -574,5 +574,6 @@
   "service": "Servei",
   "createdAt": "Creat a",
 
+  "selectLanguage": "select language:",
   "showcase": "Showcase"
 }
