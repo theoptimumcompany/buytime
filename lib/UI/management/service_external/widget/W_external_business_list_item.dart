@@ -2,18 +2,13 @@ import 'dart:math';
 
 import 'package:Buytime/UI/management/service_external/UI_M_external_service_list.dart';
 import 'package:Buytime/UI/management/service_external/UI_M_external_business_details.dart';
-import 'package:Buytime/reblox/model/booking/booking_state.dart';
-import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/model/business/external_business_state.dart';
-import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reusable/enterExitRoute.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
-import 'package:share/share.dart';
-import 'package:Buytime/UI/user/service/UI_U_service_details.dart';
 
 class ExternalBusinessListItem extends StatefulWidget {
 

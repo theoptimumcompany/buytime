@@ -9,10 +9,10 @@
 /* Begin PBXBuildFile section */
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
-		53FC69732687932200D24103 /* config in Resources */ = {isa = PBXBuildFile; fileRef = 53FC69722687932200D24103 /* config */; };
-		5AFE7A8E2444845D009F4BD9 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5AFE7A8D2444845D009F4BD9 /* GoogleService-Info.plist */; };
+		539C9D44268E07B000939AB0 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 53AC70E7268CFF8600692749 /* GoogleService-Info.plist */; };
+		53AC70EC268D00B600692749 /* GoogleService-Info.plist in dev plist to root */ = {isa = PBXBuildFile; fileRef = 53AC70E9268CFFBD00692749 /* GoogleService-Info.plist */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
-		8B00A72525163A3600F56E82 /* BuildFile in Embed Frameworks */ = {isa = PBXBuildFile; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		8B00A72525163A3600F56E82 /* (null) in Embed Frameworks */ = {isa = PBXBuildFile; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
@@ -20,13 +20,24 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		53AC70EB268D002F00692749 /* dev plist to root */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 0;
+			files = (
+				53AC70EC268D00B600692749 /* GoogleService-Info.plist in dev plist to root */,
+			);
+			name = "dev plist to root";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		9705A1C41CF9048500538489 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				8B00A72525163A3600F56E82 /* BuildFile in Embed Frameworks */,
+				8B00A72525163A3600F56E82 /* (null) in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -41,7 +52,9 @@
 		1A21CB142307C308FD271018 /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
 		28391AC0A3E62941DA1C9AD3 /* Pods-Runner.release-prod.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release-prod.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release-prod.xcconfig"; sourceTree = "<group>"; };
 		3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AppFrameworkInfo.plist; path = Flutter/AppFrameworkInfo.plist; sourceTree = "<group>"; };
-		53FC69722687932200D24103 /* config */ = {isa = PBXFileReference; lastKnownFileType = folder; path = config; sourceTree = "<group>"; };
+		53AC70E3268CFEDE00692749 /* Runner-dev copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Runner-dev copy-Info.plist"; path = "/Users/francescoromeo/Documents/THE_OPTIMUM_COMPANY/buytime_o_old/ios/Runner-dev copy-Info.plist"; sourceTree = "<absolute>"; };
+		53AC70E7268CFF8600692749 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		53AC70E9268CFFBD00692749 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; name = "GoogleService-Info.plist"; path = "configf/dev/GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
 		5AFE7A8D2444845D009F4BD9 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
 		74858FAE1ED2DC5600515810 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -91,6 +104,31 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
+		53AC70E4268CFF3D00692749 /* config */ = {
+			isa = PBXGroup;
+			children = (
+				53AC70E6268CFF7700692749 /* prod */,
+				53AC70E5268CFF6F00692749 /* dev */,
+			);
+			path = config;
+			sourceTree = "<group>";
+		};
+		53AC70E5268CFF6F00692749 /* dev */ = {
+			isa = PBXGroup;
+			children = (
+				53AC70E9268CFFBD00692749 /* GoogleService-Info.plist */,
+			);
+			path = dev;
+			sourceTree = "<group>";
+		};
+		53AC70E6268CFF7700692749 /* prod */ = {
+			isa = PBXGroup;
+			children = (
+				53AC70E7268CFF8600692749 /* GoogleService-Info.plist */,
+			);
+			path = prod;
+			sourceTree = "<group>";
+		};
 		96C4394A26A77DE61A450BA2 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -113,12 +151,13 @@
 		97C146E51CF9000F007C117D = {
 			isa = PBXGroup;
 			children = (
-				53FC69722687932200D24103 /* config */,
+				53AC70E4268CFF3D00692749 /* config */,
 				9740EEB11CF90186004384FC /* Flutter */,
 				97C146F01CF9000F007C117D /* Runner */,
 				97C146EF1CF9000F007C117D /* Products */,
 				29C0304A1E75D8BF6E0D22E7 /* Pods */,
 				96C4394A26A77DE61A450BA2 /* Frameworks */,
+				53AC70E3268CFEDE00692749 /* Runner-dev copy-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -167,7 +206,7 @@
 				9740EEB61CF901F6004384FC /* Run Script */,
 				97C146EA1CF9000F007C117D /* Sources */,
 				97C146EB1CF9000F007C117D /* Frameworks */,
-				532929922688697B00A9BEBF /* Copy GoogleService-info.plist at correct location */,
+				53AC70EB268D002F00692749 /* dev plist to root */,
 				97C146EC1CF9000F007C117D /* Resources */,
 				9705A1C41CF9048500538489 /* Embed Frameworks */,
 				3B06AD1E1E4923F5004D2608 /* Thin Binary */,
@@ -223,10 +262,9 @@
 			files = (
 				97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */,
 				3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */,
+				539C9D44268E07B000939AB0 /* GoogleService-Info.plist in Resources */,
 				97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */,
 				97C146FC1CF9000F007C117D /* Main.storyboard in Resources */,
-				53FC69732687932200D24103 /* config in Resources */,
-				5AFE7A8E2444845D009F4BD9 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -246,24 +284,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" embed_and_thin\n";
-		};
-		532929922688697B00A9BEBF /* Copy GoogleService-info.plist at correct location */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Copy GoogleService-info.plist at correct location";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "environment=\"default\"\n\n# Regex to extract the scheme name from the Build Configuration\n# We have named our Build Configurations as Debug-dev, Debug-prod etc.\n# Here, dev and prod are the scheme names. This kind of naming is required by Flutter for flavors to work.\n# We are using the $CONFIGURATION variable available in the XCode build environment to extract \n# the environment (or flavor)\n# For eg.\n# If CONFIGURATION=\"Debug-prod\", then environment will get set to \"prod\".\nif [[ $CONFIGURATION =~ -([^-]*)$ ]]; then\nenvironment=${BASH_REMATCH[1]}\nfi\n\necho $environment\n\n# Name and path of the resource we're copying\nGOOGLESERVICE_INFO_PLIST=GoogleService-Info.plist\nGOOGLESERVICE_INFO_FILE=${PROJECT_DIR}/config/${environment}/${GOOGLESERVICE_INFO_PLIST}\n\n# Make sure GoogleService-Info.plist exists\necho \"Looking for ${GOOGLESERVICE_INFO_PLIST} in ${GOOGLESERVICE_INFO_FILE}\"\nif [ ! -f $GOOGLESERVICE_INFO_FILE ]\nthen\necho \"No GoogleService-Info.plist found. Please ensure it's in the proper directory.\"\nexit 1\nfi\n\n# Get a reference to the destination location for the GoogleService-Info.plist\n# This is the default location where Firebase init code expects to find GoogleServices-Info.plist file\nPLIST_DESTINATION=${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app\necho \"Will copy ${GOOGLESERVICE_INFO_PLIST} to final destination: ${PLIST_DESTINATION}\"\n\n# Copy over the prod GoogleService-Info.plist for Release builds\ncp \"${GOOGLESERVICE_INFO_FILE}\" \"${PLIST_DESTINATION}\"\n\n";
 		};
 		9740EEB61CF901F6004384FC /* Run Script */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -945,7 +965,7 @@
 				53FC697026877C9100D24103 /* Profile-dev */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = "Release-prod";
+			defaultConfigurationName = "Release-dev";
 		};
 		97C147051CF9000F007C117D /* Build configuration list for PBXNativeTarget "Runner" */ = {
 			isa = XCConfigurationList;
@@ -958,7 +978,7 @@
 				53FC697126877C9100D24103 /* Profile-dev */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = "Release-prod";
+			defaultConfigurationName = "Release-dev";
 		};
 /* End XCConfigurationList section */
 	};

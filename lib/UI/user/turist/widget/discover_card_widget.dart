@@ -23,7 +23,6 @@ class _DiscoverCardWidgetState extends State<DiscoverCardWidget> {
   @override
   void initState() {
     super.initState();
-    //debugPrint('${widget.imageUrl}');
   }
 
   @override
