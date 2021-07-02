@@ -65,6 +65,35 @@ class Utils {
     return "${stringa[0].toUpperCase()}${stringa.substring(1)}";
   }
 
+  ///Get business type
+  static getBusinessType(dynamic businessType){
+    if(businessType != null) {
+      if (businessType is List<String>) {
+        if (businessType.isNotEmpty) {
+          return businessType.first;
+        }
+        return 'hub';
+      } else {
+        return businessType;
+      }
+    }
+    return 'hub';
+  }
+  ///set business type
+  static setBusinessType(dynamic businessType){
+    if(businessType != null) {
+      if (businessType is List<String>) {
+        if (businessType.isNotEmpty) {
+          return businessType.first;
+        }
+        return 'hub';
+      } else {
+        return businessType;
+      }
+    }
+    return 'hub';
+  }
+
 
   ///Get date
   static getDate(Timestamp date){

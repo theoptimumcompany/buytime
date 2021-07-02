@@ -5,6 +5,7 @@ import 'package:Buytime/UI/management/business/UI_M_edit_business.dart';
 import 'package:Buytime/UI/management/business/widget/W_invite_user.dart';
 import 'package:Buytime/UI/management/category/widget/W_category_list_item.dart';
 import 'package:Buytime/UI/management/service_external/UI_M_external_service_list.dart';
+import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/model/category/snippet/category_snippet_state.dart';
 import 'package:Buytime/reblox/model/role/role.dart';
 import 'package:Buytime/reblox/model/snippet/service_list_snippet_state.dart';
@@ -450,6 +451,10 @@ class _RBusinessState extends State<RBusiness> {
 
                               internalCategories.sort((b,a) => a.serviceNumberInternal.compareTo(b.serviceNumberInternal));
                               externalCategories.sort((b,a) => a.serviceNumberExternal.compareTo(b.serviceNumberExternal));
+                              BusinessState businessState = StoreProvider.of<AppState>(context).state.business;
+                              if(businessState.hub != null && businessState.hub){
+                                hotel = businessState.hub;
+                              }
                               if(hotel){
                                 if(internalCategories.length > 4){
                                   tmpInternalCategoriesTable.addAll(internalCategories.sublist(0,4));
@@ -702,7 +707,7 @@ class _RBusinessState extends State<RBusiness> {
                                                       (context, index) {
                                                     //MenuItemModel menuItem = menuItems.elementAt(index);
                                                     CategorySnippetState categoryItem = tmpExternalCategoriesTable.elementAt(index);
-                                                    return CategoryListItemWidget(categoryItem, BuytimeTheme.SymbolLime);
+                                                    return CategoryListItemWidget(categoryItem, BuytimeTheme.Indigo);
                                                     // return InkWell(
                                                     //   onTap: () {
                                                     //     debugPrint('Category Item: ${categoryItem.name.toUpperCase()} Clicked!');
@@ -753,7 +758,7 @@ class _RBusinessState extends State<RBusiness> {
                     ),
                   ),
                   InviteUser(
-                    hotel: hotel,
+                    hotel: StoreProvider.of<AppState>(context).state.business.hub,
                   ),
                   //Expanded(child: calendarButtonOrCalendar()),
                 ],
