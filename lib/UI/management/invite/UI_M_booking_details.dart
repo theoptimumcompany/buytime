@@ -701,7 +701,7 @@ class _BookingDetailsState extends State<BookingDetails> {
     } else if  (chosenLanguageForEmail == 'French') {
       return '_fr';
     } else if  (chosenLanguageForEmail == 'German') {
-      return '_ge';
+      return '_de';
     } else if  (chosenLanguageForEmail == 'Italian') {
       return '_it';
     } else if  (chosenLanguageForEmail == 'Spanish') {

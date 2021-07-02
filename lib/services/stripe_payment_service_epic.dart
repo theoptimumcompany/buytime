@@ -24,6 +24,7 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart';
 import 'package:redux_epics/redux_epics.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:stripe_payment/stripe_payment.dart';
 import 'package:stripe_sdk/stripe_sdk_ui.dart' as StripeUnofficialUI;
 import 'package:stripe_sdk/stripe_sdk.dart' as StripeUnofficial;
 import 'package:stripe_payment/stripe_payment.dart' as StripeRecommended;
@@ -288,6 +289,15 @@ class StripePaymentService {
   }
 
   Future<StripeRecommended.PaymentMethod> createPaymentMethodNative(OrderState orderState, String businessName) async {
+    String stripeKey = "pk_live_51HS20eHr13hxRBpCLHzfi0SXeqw8Efu911cWdYEE96BAV0zSOesvE83OiqqzRucKIxgCcKHUvTCJGY6cXRtkDVCm003CmGXYzy";
+    StripePayment.setOptions(
+        StripeOptions(
+            publishableKey: stripeKey,
+            merchantId: "merchant.theoptimumcompany.buytime",
+            androidPayMode: 'production'
+        ));
+
+
     StripeRecommended.PaymentMethod paymentMethod;
     initializePaymentValues(orderState, businessName);
     print('started NATIVE payment method creation...');
