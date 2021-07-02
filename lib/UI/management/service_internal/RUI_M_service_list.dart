@@ -38,7 +38,7 @@ class RServiceList extends StatefulWidget {
   Widget create(BuildContext context) {
     //final pageIndex = context.watch<Spinner>();
     return ChangeNotifierProvider<Spinner>(
-      create: (_) => Spinner([]),
+      create: (_) => Spinner([],[]),
       child: RServiceList(),
     );
   }
@@ -52,6 +52,7 @@ class RServiceListState extends State<RServiceList> {
   bool uploadServiceVisibility = false;
   List<List<ServiceSnippetState>> listOfServiceEachRoot = [];
   List<List<bool>> listDOfVisibility = [];
+  List<List<bool>> listDDOfVisibility = [];
 
   /*void setServiceLists(List<CategoryState> categoryRootList, List<ServiceState> serviceList) {
     listOfServiceEachRoot = [];
@@ -72,6 +73,7 @@ class RServiceListState extends State<RServiceList> {
   void setServiceLists(List<CategorySnippetState> categories, BuildContext context) {
     listOfServiceEachRoot = [];
     listDOfVisibility = [];
+    listDDOfVisibility = [];
     for (int c = 0; c < categories.length; c++) {
       List<ServiceSnippetState> listRoot = [];
       List<bool> internalSpinnerVisibility = [];
@@ -83,8 +85,10 @@ class RServiceListState extends State<RServiceList> {
       listRoot.sort((a, b) => a.serviceName.compareTo(b.serviceName));
       listOfServiceEachRoot.add(listRoot);
       listDOfVisibility.add(internalSpinnerVisibility);
+      listDDOfVisibility.add(internalSpinnerVisibility);
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Provider.of<Spinner>(context, listen: false).initSpinner(listDOfVisibility);
+        Provider.of<Spinner>(context, listen: false).initDuplicateSpinner(listDDOfVisibility);
       });
 
     }
@@ -157,6 +161,18 @@ class RServiceListState extends State<RServiceList> {
 
   bool canEditVisibility(){
     List<List<bool>> tmp = Provider.of<Spinner>(context, listen: false).getSpinnerList();
+    bool found = true;
+    tmp.forEach((e1) {
+      e1.forEach((e2) {
+        if(e2)
+          found = false;
+      });
+    });
+
+    return found;
+  }
+  bool canEditDuplicateVisibility(){
+    List<List<bool>> tmp = Provider.of<Spinner>(context, listen: false).getDuplicateSpinnerList();
     bool found = true;
     tmp.forEach((e1) {
       e1.forEach((e2) {
@@ -636,13 +652,6 @@ class RServiceListState extends State<RServiceList> {
                                             itemBuilder: (context, index) {
                                               canWorkerAccessService = canWorkerAccess(id(id(categories[i].categoryAbsolutePath)));
                                               Widget iconVisibility;
-                                              Widget spinner = Container(
-                                                margin: EdgeInsets.only(left:3),
-                                                width: 24,
-                                                height: 24,
-                                                child: CircularProgressIndicator(),
-                                              );
-
                                               switch (listOfServiceEachRoot[i][index].serviceVisibility) {
                                                 case 'Active':
                                                   if(spinnerState.getSpinner(i, index)){
@@ -773,6 +782,7 @@ class RServiceListState extends State<RServiceList> {
                                                                       break;
                                                                   }
                                                                   Provider.of<Spinner>(context, listen: false).updateSpinner(listDOfVisibility, i, index);
+                                                                  debugPrint('RUI_M_service_list => CALLING UPDATE SPINNER');
                                                                   debugPrint('RUI_M_service_list => SERVICE ID: ${id(listOfServiceEachRoot[i][index].serviceAbsolutePath)}');
 
                                                                   ///Aggiorno Database
@@ -815,7 +825,6 @@ class RServiceListState extends State<RServiceList> {
                                                                                 overflow: TextOverflow.ellipsis,
                                                                                 style: TextStyle(
                                                                                   fontSize: 16,
-
                                                                                   ///widget.mediaSize.height * 0.019
                                                                                   color: BuytimeTheme.TextBlack,
                                                                                   fontFamily: BuytimeTheme.FontFamily,
@@ -823,9 +832,22 @@ class RServiceListState extends State<RServiceList> {
                                                                                 ),
                                                                               )),
                                                                         ),
-                                                                        /*Container(
-                                                                          child: Icon(Icons.keyboard_arrow_right, color: BuytimeTheme.SymbolGrey, size: 24),
-                                                                        ),*/
+                                                                        Container(
+                                                                          padding: EdgeInsets.only(left: 5.0, right: 5.0),
+                                                                          child: spinnerState.getDuplicateSpinner(i, index) ?
+                                                                          Padding(
+                                                                            padding: const EdgeInsets.all(5.0),
+                                                                            child: spinner,
+                                                                          ) :
+                                                                          IconButton(
+                                                                              onPressed: () {
+                                                                                /// chiamare la epic per duplicare il servizio.
+                                                                                StoreProvider.of<AppState>(context).dispatch(DuplicateService(id(listOfServiceEachRoot[i][index].serviceAbsolutePath)));
+                                                                                /// far partire un caricamento e bloccare tutti i duplicates
+                                                                                Provider.of<Spinner>(context, listen: false).updateDuplicateSpinner(listDDOfVisibility, i, index);
+                                                                              },
+                                                                              icon: Icon(Icons.copy, color: BuytimeTheme.SymbolGrey, size: 24)),
+                                                                        ),
                                                                       ],
                                                                     ),
                                                                   ),
@@ -863,277 +885,33 @@ class RServiceListState extends State<RServiceList> {
                     );
                   }
               ),
-              /*Expanded(
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: categoryRootList.length,
-                          itemBuilder: (context, i) {
-                            return Container(
-                              //height: 56,
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  ///Category Name
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 20.0, top: 10.0),
-                                    child: Container(
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                            categoryRootList[i].name,
-                                            textAlign: TextAlign.start,
-                                            style: TextStyle(
-                                              fontSize: 18,
 
-                                              ///widget.mediaSize.height * 0.019
-                                              color: BuytimeTheme.TextBlack,
-                                              fontFamily: BuytimeTheme.FontFamily,
-                                              fontWeight: FontWeight.w800,
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-
-                                  ///Divider under category name
-                                  Divider(
-                                    indent: 30.0,
-                                    color: BuytimeTheme.DividerGrey,
-                                    thickness: 1.0,
-                                  ),
-
-                                  ///Static add service to category
-                                  Material(
-                                      color: Colors.transparent,
-                                      child: InkWell(
-                                        //borderRadius: BorderRadius.all(Radius.circular(10)),
-                                        onTap: () async {
-                                          StoreProvider.of<AppState>(context).dispatch(SetService(ServiceState().toEmpty()));
-                                          //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_CreateService(categoryId: categoryRootList[i].id)),);
-                                          Navigator.push(context, EnterExitRoute(enterPage: UI_CreateService(categoryId: categoryRootList[i].id), exitPage: UI_M_ServiceList(), from: true));
-                                        },
-                                        child: Container(
-                                          height: 56,
-                                          child: Row(
-                                            // mainAxisAlignment: MainAxisAlignment.center,
-                                            children: [
-                                              Padding(
-                                                padding: EdgeInsets.only(left: mediaWidth * 0.12, right: mediaWidth * 0.07),
-                                                child: Container(
-                                                  child: Icon(Icons.add_box_rounded, color: BuytimeTheme.ManagerPrimary.withOpacity(0.6), size: mediaWidth * 0.07),
-                                                ),
-                                              ),
-                                              Expanded(
-                                                child: Container(
-                                                  height: 56,
-                                                  decoration: BoxDecoration(
-                                                    border: Border(
-                                                      bottom: BorderSide(width: 1.0, color: BuytimeTheme.DividerGrey),
-                                                    ),
-                                                  ),
-                                                  child: Row(
-                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                    children: [
-                                                      Container(
-                                                          child: Text(
-                                                        AppLocalizations.of(context).addA + categoryRootList[i].name,
-                                                        textAlign: TextAlign.start,
-                                                        style: TextStyle(
-                                                            fontSize: 16,
-                                                            ///widget.mediaSize.height * 0.019
-                                                            color: BuytimeTheme.ManagerPrimary.withOpacity(0.6),
-                                                            fontFamily: BuytimeTheme.FontFamily,
-                                                            fontWeight: FontWeight.w600,
-                                                            letterSpacing: 0.15),
-                                                      )),
-                                                      *//*Container(
-                                                        child: Icon(Icons.keyboard_arrow_right, color: BuytimeTheme.SymbolGrey, size: 24),
-                                                      ),*//*
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      )),
-
-                                  ///Service List
-                                  serviceList.isNotEmpty
-                                      ? Container(
-                                          //height: listOfServiceEachRoot.length > 0 ? listOfServiceEachRoot[i].length * 44.00 : 50,
-                                          child: ListView.builder(
-                                            shrinkWrap: true,
-                                            physics: const NeverScrollableScrollPhysics(),
-                                            itemCount: listOfServiceEachRoot.length > 0 ? listOfServiceEachRoot[i].length : 0,
-                                            itemBuilder: (context, index) {
-                                              Widget iconVisibility;
-                                              switch (listOfServiceEachRoot[i][index].visibility) {
-                                                case 'Active':
-                                                  if (listOfServiceEachRoot[i][index].spinnerVisibility) {
-                                                    iconVisibility = Padding(
-                                                      padding: const EdgeInsets.only(left: 6.3),
-                                                      child: CircularProgressIndicator.adaptive(),
-                                                    );
-                                                  } else {
-                                                    iconVisibility = Icon(Icons.remove_red_eye, color: BuytimeTheme.SymbolGrey, size: mediaWidth * 0.07);
-                                                  }
-                                                  break;
-                                                case 'Deactivated':
-                                                  if (listOfServiceEachRoot[i][index].spinnerVisibility) {
-                                                    iconVisibility = Padding(
-                                                      padding: const EdgeInsets.only(left: 6.3),
-                                                      child: CircularProgressIndicator.adaptive(),
-                                                    );
-                                                  } else {
-                                                    iconVisibility = Icon(Icons.visibility_off, color: BuytimeTheme.SymbolGrey, size: mediaWidth * 0.07);
-                                                  }
-                                                  break;
-                                                case 'Invisible':
-                                                  if (listOfServiceEachRoot[i][index].spinnerVisibility) {
-                                                    iconVisibility = Padding(
-                                                      padding: const EdgeInsets.only(left: 6.3),
-                                                      child: CircularProgressIndicator.adaptive(),
-                                                    );
-                                                  } else {
-                                                    iconVisibility = Icon(Icons.do_disturb_alt_outlined, color: BuytimeTheme.SymbolGrey, size: mediaWidth * 0.07);
-                                                  }
-                                                  break;
-                                              }
-                                              return Material(
-                                                  color: Colors.transparent,
-                                                  child: InkWell(
-                                                    //borderRadius: BorderRadius.all(Radius.circular(10)),
-                                                    onTap: () async {},
-                                                    child: AbsorbPointer(
-                                                      absorbing: !(snapshot.user.owner || snapshot.user.admin || snapshot.user.salesman),
-                                                      child: Dismissible(
-                                                        key: UniqueKey(),
-                                                        direction: DismissDirection.endToStart,
-                                                        background: Container(
-                                                          height: 56,
-                                                          color: Colors.red,
-                                                          //margin: EdgeInsets.symmetric(horizontal: 15),
-                                                          alignment: Alignment.centerRight,
-                                                          child: Icon(
-                                                            Icons.delete,
-                                                            color: BuytimeTheme.SymbolWhite,
-                                                          ),
-                                                        ),
-                                                        onDismissed: (direction) {
-                                                          setState(() {
-                                                            ///Deleting Service
-                                                            print("Delete Service " + index.toString());
-                                                            StoreProvider.of<AppState>(context).dispatch(DeleteService(listOfServiceEachRoot[i][index].serviceId));
-                                                          });
-                                                        },
-                                                        child: Container(
-                                                          child: Row(
-                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                            children: [
-                                                              GestureDetector(
-                                                                onTap: () {
-                                                                  setState(() {
-                                                                    switch (listOfServiceEachRoot[i][index].visibility) {
-                                                                      case 'Active':
-                                                                        listOfServiceEachRoot[i][index].visibility = 'Deactivated';
-                                                                        break;
-                                                                      case 'Deactivated':
-                                                                        listOfServiceEachRoot[i][index].visibility = 'Invisible';
-                                                                        break;
-                                                                      case 'Invisible':
-                                                                        listOfServiceEachRoot[i][index].visibility = 'Active';
-                                                                        break;
-                                                                    }
-
-                                                                    ///Aggiorno Database
-                                                                    StoreProvider.of<AppState>(context).dispatch(SetServiceListVisibilityOnFirebase(listOfServiceEachRoot[i][index].serviceId, listOfServiceEachRoot[i][index].visibility));
-                                                                  });
-                                                                },
-                                                                child: Padding(
-                                                                    padding: EdgeInsets.only(left: mediaWidth * 0.12, right: mediaWidth * 0.07),
-                                                                    child: Container(
-                                                                      child: iconVisibility,
-                                                                    )),
-                                                              ),
-                                                              Expanded(
-                                                                child: GestureDetector(
-                                                                  onTap: () {
-                                                                    StoreProvider.of<AppState>(context).dispatch(SetService(listOfServiceEachRoot[i][index]));
-                                                                    //Navigator.push(context, MaterialPageRoute(builder: (context) => UI_EditService()),);
-                                                                    Navigator.push(context, EnterExitRoute(enterPage: UI_EditService(), exitPage: UI_M_ServiceList(), from: true));
-                                                                  },
-                                                                  child: Container(
-                                                                    height: 56,
-                                                                    decoration: BoxDecoration(
-                                                                      border: Border(
-                                                                        bottom: BorderSide(width: 1.0, color: BuytimeTheme.DividerGrey),
-                                                                      ),
-                                                                    ),
-                                                                    child: Row(
-                                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                      children: [
-                                                                        Flexible(
-                                                                          child: Container(
-                                                                              child: Text(
-                                                                            listOfServiceEachRoot[i][index].name,
-                                                                            textAlign: TextAlign.start,
-                                                                            overflow: TextOverflow.ellipsis,
-                                                                            style: TextStyle(
-                                                                              fontSize: 16,
-
-                                                                              ///widget.mediaSize.height * 0.019
-                                                                              color: BuytimeTheme.TextBlack,
-                                                                              fontFamily: BuytimeTheme.FontFamily,
-                                                                              fontWeight: FontWeight.w400,
-                                                                            ),
-                                                                          )),
-                                                                        ),
-                                                                        *//*Container(
-                                                                          child: Icon(Icons.keyboard_arrow_right, color: BuytimeTheme.SymbolGrey, size: 24),
-                                                                        ),*//*
-                                                                      ],
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ));
-                                            },
-                                          ),
-                                        )
-                                      : noActivity
-                                          ? Container(
-                                                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5),
-                                              child: Column(
-                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                children: [CircularProgressIndicator()],
-                                              ),
-                                  ) : Container(),
-                                ],
-                              ),
-                            );
-                          },
-                        ),
-                      ),*/
             ],
           ),
         ));
   }
 }
 
+Widget spinner = Container(
+  margin: EdgeInsets.only(left:3),
+  width: 24,
+  height: 24,
+  child: CircularProgressIndicator(),
+);
+
 class Spinner with ChangeNotifier{
   List<List<bool>> spinners;
-  Spinner(this.spinners);
+  List<List<bool>> duplicateSpinners;
+  Spinner(this.spinners, this.duplicateSpinners);
 
   initSpinner(List<List<bool>> spinnerList){
     spinners = spinnerList;
     debugPrint('SPINNER INIT');
+    notifyListeners();
+  }
+  initDuplicateSpinner(List<List<bool>> spinnerList){
+    duplicateSpinners = spinnerList;
+    debugPrint('DUPLICATE SPINNER INIT');
     notifyListeners();
   }
 
@@ -1144,10 +922,24 @@ class Spinner with ChangeNotifier{
     notifyListeners();
   }
 
+   updateDuplicateSpinner(List<List<bool>> spinnerList, int i, int index){
+    spinnerList[i][index] = true;
+    duplicateSpinners = spinnerList;
+    debugPrint('SPINNER DUPLICATE UPDATE VISIBILITY: ${duplicateSpinners[i][index]}');
+    notifyListeners();
+  }
+
   bool getSpinner(int i, int index){
-    if(spinners.isNotEmpty && spinners[i].isNotEmpty){
+    if(spinners.isNotEmpty && spinners[i].isNotEmpty && spinners[i].asMap().containsKey(index)){
       debugPrint('SPINNER GET VISIBILITY: ${spinners[i][index]}');
       return spinners[i][index];
+    }else
+      return false;
+  }
+  bool getDuplicateSpinner(int i, int index){
+    if(duplicateSpinners.isNotEmpty && duplicateSpinners[i].isNotEmpty  && duplicateSpinners[i].asMap().containsKey(index)){
+      debugPrint('DUPLICATE SPINNER GET VISIBILITY: ${duplicateSpinners[i][index]}');
+      return duplicateSpinners[i][index];
     }else
       return false;
   }
@@ -1156,4 +948,9 @@ class Spinner with ChangeNotifier{
     //debugPrint('SPINNER GET VISIBILITY: ${spinners[i][index]}');
     return spinners;
   }
+  List<List<bool>> getDuplicateSpinnerList(){
+    //debugPrint('SPINNER GET VISIBILITY: ${spinners[i][index]}');
+    return duplicateSpinners;
+  }
+
 }

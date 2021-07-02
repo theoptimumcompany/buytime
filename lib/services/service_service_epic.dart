@@ -684,6 +684,30 @@ class ServiceCreateService implements EpicClass<AppState> {
   }
 }
 
+class ServiceDuplicateService implements EpicClass<AppState> {
+  StatisticsState statisticsState;
+
+  @override
+  Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
+    return actions.whereType<DuplicateService>().asyncMap((event) async {
+      DocumentSnapshot documentGet = await FirebaseFirestore.instance.collection('service').doc(event.serviceId).get();
+      ServiceState serviceState = ServiceState.fromJson(documentGet.data());
+      serviceState.name = 'COPY_OF_' + serviceState.name;
+      DocumentReference docReference = FirebaseFirestore.instance.collection('service').doc();
+      serviceState.serviceId = docReference.id;
+      docReference.set(serviceState.toJson()).then((value) {
+        debugPrint("SERVICE_SERVICE_EPIC - ServiceDuplicateService => ServiceService has duplicated a Service! ");
+        serviceState = serviceState.copyWith();
+      }).catchError((error) {
+        debugPrint('SERVICE_SERVICE_EPIC - ServiceDuplicateService => ERROR: $error');
+      });
+    }).expand((element) => [
+          DuplicatedService(),
+          UpdateStatistics(statisticsState),
+        ]);
+  }
+}
+
 class ServiceUpdateService implements EpicClass<AppState> {
   ServiceState serviceState;
   StatisticsState statisticsState;

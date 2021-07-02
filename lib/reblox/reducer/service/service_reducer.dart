@@ -120,7 +120,12 @@ class CreateService {
 
   ServiceState get serviceState => _serviceState;
 }
-
+class DuplicateService {
+  String _serviceId;
+  DuplicateService(this._serviceId);
+  String get serviceId => _serviceId;
+}
+class DuplicatedService {}
 class CreatedService {
   ServiceState _serviceState;
 

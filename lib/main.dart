@@ -153,6 +153,7 @@ void main() {
     ServiceUpdateServiceVisibility(),
     ServiceDeleteService(),
     ServiceCreateService(),
+    ServiceDuplicateService(),
     ServiceListRequestService(),
     ServiceListAndNavigateRequestService(),
     ServiceListAndNavigateOnConfirmRequestService(),
@@ -272,7 +273,7 @@ void main() {
       MultiProvider(
         providers: [
           //ChangeNotifierProvider(create: (_) => NavigationState()),
-          ChangeNotifierProvider(create: (_) => Spinner([])),
+          ChangeNotifierProvider(create: (_) => Spinner([], [])),
         ],
         child: Buytime(store: store),
       ));
