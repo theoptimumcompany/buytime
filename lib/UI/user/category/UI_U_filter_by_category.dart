@@ -999,6 +999,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                       ///Text
                                       Text(
                                         AppLocalizations.of(context).findYourInspirationHere,
+                                        maxLines: 2,
                                         style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w400, fontSize: 18
 
                                             ///SizeConfig.safeBlockHorizontal * 4

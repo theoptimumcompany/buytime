@@ -54,7 +54,7 @@ class _UserServiceCardWidgetState extends State<UserServiceCardWidget> {
   @override
   Widget build(BuildContext context) {
     return CachedNetworkImage(
-      imageUrl: widget.orderState.itemList.first.thumbnail != null && widget.orderState.itemList.first.thumbnail.isNotEmpty ? widget.orderState.itemList.first.thumbnail : 'https://firebasestorage.googleapis.com/v0/b/buytime-458a1.appspot.com/o/general%2Fimage_placeholder_200x200_1000x1000.png?alt=media&token=082a1896-32d8-4750-b7cc-141f00bc060c',
+      imageUrl: Utils.version200(widget.orderState.itemList.first.thumbnail),
       imageBuilder: (context, imageProvider) => Container(
         margin: EdgeInsets.all(SizeConfig.safeBlockVertical * .25),
         //width: double.infinity,
