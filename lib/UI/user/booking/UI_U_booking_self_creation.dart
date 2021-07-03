@@ -250,12 +250,15 @@ class _BookingSelfCreationState extends State<BookingSelfCreation> {
                                       Row(
                                         mainAxisAlignment: MainAxisAlignment.start,
                                         children: [
-                                          Container(
-                                            margin: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 5, top: SizeConfig.blockSizeVertical * 3),
-                                            child: Text(
-                                              AppLocalizations.of(context).enterGuestDetails,
-                                              style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: Colors.black, fontWeight: FontWeight.bold, fontSize: 10, letterSpacing: 1.5),
-                                              textAlign: TextAlign.left,
+                                          Flexible(
+                                            child: Container(
+                                              margin: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 5, top: SizeConfig.blockSizeVertical * 3),
+                                              child: Text(
+                                                AppLocalizations.of(context).enterSelfDetails,
+                                                maxLines: 4,
+                                                style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: Colors.black, fontWeight: FontWeight.bold, fontSize: 10, letterSpacing: 1.5),
+                                                textAlign: TextAlign.left,
+                                              ),
                                             ),
                                           )
                                         ],
@@ -282,7 +285,7 @@ class _BookingSelfCreationState extends State<BookingSelfCreation> {
                                                       enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
                                                       focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
                                                       errorBorder: OutlineInputBorder(borderSide: BorderSide(color: BuytimeTheme.AccentRed), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                                      labelText: AppLocalizations.of(context).emailToInvite,
+                                                      labelText: AppLocalizations.of(context).emailAddress,
                                                       //hintText: "email *",
                                                       //hintStyle: TextStyle(color: Color(0xff666666)),
                                                       labelStyle: TextStyle(

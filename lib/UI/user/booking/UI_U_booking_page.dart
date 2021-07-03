@@ -1122,12 +1122,15 @@ class _BookingPageState extends State<BookingPage> {
                                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             children: [
                                               ///Text
-                                              Text(
-                                                AppLocalizations.of(context).findYourInspirationHere,
-                                                style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w500, fontSize: 18
+                                              Flexible(
+                                                child:Text(
+                                                  AppLocalizations.of(context).findYourInspirationHere,
+                                                  maxLines: 2,
+                                                  style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w500, fontSize: 18
 
-                                                  ///SizeConfig.safeBlockHorizontal * 4
-                                                ),
+                                                    ///SizeConfig.safeBlockHorizontal * 4
+                                                  ),
+                                                )
                                               ),
                                               ///Show All
                                               Container(

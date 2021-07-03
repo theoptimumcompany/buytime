@@ -50,12 +50,7 @@ class _UserServiceListItemState extends State<UserServiceListItem> {
                   children: [
                     ///Service Image
                     CachedNetworkImage(
-                      imageUrl: widget.orderState.itemList.length > 1 ?
-                        widget.orderState.business.thumbnail != null && widget.orderState.business.thumbnail.isNotEmpty ?
-                          widget.orderState.business.thumbnail :
-                          'https://firebasestorage.googleapis.com/v0/b/buytime-458a1.appspot.com/o/general%2Fimage_placeholder_200x200_1000x1000.png?alt=media&token=082a1896-32d8-4750-b7cc-141f00bc060c' :
-                      widget.orderState.itemList.first.thumbnail != null && widget.orderState.itemList.first.thumbnail.isNotEmpty ?
-                      widget.orderState.itemList.first.thumbnail :
+                      imageUrl: widget.orderState.itemList.length > 1 ? Utils.version200(widget.orderState.business.thumbnail):
                       'https://firebasestorage.googleapis.com/v0/b/buytime-458a1.appspot.com/o/general%2Fimage_placeholder_200x200_1000x1000.png?alt=media&token=082a1896-32d8-4750-b7cc-141f00bc060c',
                       imageBuilder: (context, imageProvider) => Container(
                         //margin: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 5), ///5%
