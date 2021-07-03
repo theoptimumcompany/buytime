@@ -77,6 +77,7 @@ CategoryTreeDeleteService(), */
   ServiceUpdateServiceVisibility(),
   ServiceDeleteService(),
   ServiceCreateService(),
+  ServiceDuplicateService(),
   ServiceListRequestService(),
   ServiceListAndNavigateRequestService(),
   ServiceListAndNavigateOnConfirmRequestService(),

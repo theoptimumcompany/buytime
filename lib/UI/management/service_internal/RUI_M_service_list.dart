@@ -798,7 +798,8 @@ class RServiceListState extends State<RServiceList> {
                                                                 child: GestureDetector(
                                                                   onTap: () {
                                                                     debugPrint('RUI_M_service_list => TAP SERVICE in Gesture');
-                                                                    if(StoreProvider.of<AppState>(context).state.category.categoryRootId != listOfServiceEachRoot[i][index].serviceAbsolutePath.split('/')[1]){
+                                                                    /// TODO we are not sure about this, look at the history of this if @Nipuna
+                                                                    if(StoreProvider.of<AppState>(context).state.category.id != listOfServiceEachRoot[i][index].serviceAbsolutePath.split('/')[1]){
                                                                       debugPrint('RUI_M_service_list => NOT SAME CATEGORY');
                                                                       StoreProvider.of<AppState>(context).dispatch(CategoryRequest(listOfServiceEachRoot[i][index].serviceAbsolutePath.split('/')[1]));
                                                                     }
