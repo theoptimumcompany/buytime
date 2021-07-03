@@ -549,7 +549,7 @@ class _BookingSelfCreationState extends State<BookingSelfCreation> {
                                                     debugPrint('UI_M_BookingCreation => Start date: ${bookingState.start_date}');
                                                     debugPrint('UI_M_BookingCreation => End date: ${bookingState.end_date}');
 
-                                                    bookingState.status = Utils.enumToString(BookingStatus.created);
+                                                    bookingState.status = Utils.enumToString(BookingStatus.opened);
 
                                                     bookingState.userEmail.add(_emailToInviteController.text);
 
