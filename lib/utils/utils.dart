@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:Buytime/environment_abstract.dart';
 import 'package:Buytime/reblox/enum/order_time_intervals.dart';
 import 'package:Buytime/reblox/model/area/area_list_state.dart';
 import 'package:Buytime/reblox/model/area/area_state.dart';
@@ -35,10 +36,14 @@ class Utils {
 
   ///Set image
   static String sizeImage(String image, String sizing) {
-    int lastPoint = image.lastIndexOf('.');
-    String extension = image.substring(lastPoint);
-    image = image.replaceAll(extension, '');
-    return image + sizing + extension;
+    //debugPrint('UTILS => SIZE IMAGE: $image');
+    if(image.isNotEmpty){
+      int lastPoint = image.lastIndexOf('.');
+      String extension = image.substring(lastPoint);
+      image = image.replaceAll(extension, '');
+      return image + sizing + extension;
+    }
+    return image;
   }
 
   ///Custom app bar bottom part
@@ -60,6 +65,35 @@ class Utils {
 
   static String capitalize(String stringa) {
     return "${stringa[0].toUpperCase()}${stringa.substring(1)}";
+  }
+
+  ///Get business type
+  static getBusinessType(dynamic businessType){
+    if(businessType != null) {
+      if (businessType is List<dynamic>) {
+        if (businessType.isNotEmpty) {
+          return businessType.first;
+        }
+        return 'hub';
+      } else {
+        return businessType;
+      }
+    }
+    return 'hub';
+  }
+  ///set business type
+  static setBusinessType(dynamic businessType){
+    if(businessType != null) {
+      if (businessType is List<String>) {
+        if (businessType.isNotEmpty) {
+          return businessType.first;
+        }
+        return 'hub';
+      } else {
+        return businessType;
+      }
+    }
+    return 'hub';
   }
 
 
@@ -200,7 +234,7 @@ class Utils {
           var url = Uri.https('translation.googleapis.com', '/language/translate/v2', {
             'source': '${myLocale.languageCode}',
             'target': '${language[i]}',
-            'key': '${BuytimeConfig.AndroidApiKey}',
+            'key': '${Environment().config.googleApiKey}',
             'q': '${controllers[myIndex].text}'
           });
           final http.Response response = await http.get(
@@ -557,15 +591,15 @@ class Utils {
   }
 
   static void googleSearch(BuildContext context, OnPlaceDetailsCallback detailsCallback){
-    GooglePlace googlePlace = GooglePlace(BuytimeConfig.AndroidApiKey);
+    GooglePlace googlePlace = GooglePlace(Environment().config.googleApiKey);
     List<List<String>> predictions = [];
     List<dynamic> detailsResult = [];
 
     Future<List<List<String>>> autoCompleteSearch(String value) async {
       List<List<String>> tmpPredictions = [];
       ///https://maps.googleapis.com/maps/api/place/autocomplete/xml?input=Amoeba&types=establishment&location=37.76999,-122.44696&radius=500&key=YOUR_API_KEY
-     // var url = Uri.https('maps.googleapis.com', '/maps/api/place/autocomplete/json', {'input': '$value','types': 'establishment', 'radius': '500', 'key': '${BuytimeConfig.AndroidApiKey}'});
-      var url = Uri.https('maps.googleapis.com', '/maps/api/place/autocomplete/json', {'input': '$value', 'key': '${BuytimeConfig.AndroidApiKey}'});
+     // var url = Uri.https('maps.googleapis.com', '/maps/api/place/autocomplete/json', {'input': '$value','types': 'establishment', 'radius': '500', 'key': '${Environment().config.googleApiKey}'});
+      var url = Uri.https('maps.googleapis.com', '/maps/api/place/autocomplete/json', {'input': '$value', 'key': '${Environment().config.googleApiKey}'});
       final http.Response response = await http.get(url);
       if(response.statusCode == 200){
         //debugPrint('Place Autocomplete done => response body: ${response.body}');
@@ -581,7 +615,7 @@ class Utils {
 
     void getDetails(String placeId, BuildContext bootmContext) async {
       ///https://maps.googleapis.com/maps/api/place/details/json?place_id=ChIJN1t_tDeuEmsRUsoyG83frY4&fields=name,rating,formatted_phone_number&key=YOUR_API_KEY
-      var url = Uri.https('maps.googleapis.com', '/maps/api/place/details/json', {'place_id': '$placeId', 'fields' : 'address_components,geometry,formatted_address', 'key': '${BuytimeConfig.AndroidApiKey}'});
+      var url = Uri.https('maps.googleapis.com', '/maps/api/place/details/json', {'place_id': '$placeId', 'fields' : 'address_components,geometry,formatted_address', 'key': '${Environment().config.googleApiKey}'});
       final http.Response response = await http.get(url);
       if(response.statusCode == 200){
         //debugPrint('Place Details done => response body: ${response.body}');
@@ -861,6 +895,19 @@ class Utils {
     debugPrint('calculateDistanceBetweenPoints => Distance: $tmp');
 
     return tmp;
+  }
+
+  static String version200(String imageUrl) {
+    String result = "";
+    String extension = "";
+    if (imageUrl != null && imageUrl.length > 0 && imageUrl.contains("http")) {
+      extension = imageUrl.substring(imageUrl.lastIndexOf('.'), imageUrl.length);
+      result = imageUrl.substring(0, imageUrl.lastIndexOf('.'));
+      result += "_200x200" + extension;
+    } else {
+      result = "https://firebasestorage.googleapis.com/v0/b/buytime-458a1.appspot.com/o/general%2Fimage_placeholder_200x200.png?alt=media&token=d40ccab1-7fb5-4290-91c6-634871b7a4f3";
+    }
+    return result;
   }
 
   static AreaState getCurrentArea(String userCoordinate, AreaListState areaListState) {

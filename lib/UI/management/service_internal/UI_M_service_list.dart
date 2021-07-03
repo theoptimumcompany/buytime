@@ -59,13 +59,24 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
     }
   }*/
 
+  String searchCategoryRoot(String idCategory)
+  {
+    List<dynamic> snippet = StoreProvider.of<AppState>(context).state.serviceListSnippetState.businessSnippet;
+    for (var i = 0; i < snippet.length; i++) {
+      List<String> categoryPathList = snippet[i].categoryAbsolutePath.split('/');
+      if (categoryPathList.last == idCategory) {
+        return categoryPathList[1];
+      }
+    }
+  }
+
   void setServiceLists(List<CategorySnippetState> categories) {
     listOfServiceEachRoot = [];
     for (int c = 0; c < categories.length; c++) {
       List<ServiceSnippetState> listRoot = [];
       List<bool> internalSpinnerVisibility = [];
       for (int s = 0; s < categories[c].serviceList.length; s++) {
-        debugPrint('UI_M_service_litt => ${categories[c].categoryName} - ${categories[c].serviceList[s].serviceName}');
+      //  debugPrint('UI_M_service_litt => ${categories[c].categoryName} - ${categories[c].serviceList[s].serviceName}');
         listRoot.add(categories[c].serviceList[s]);
         internalSpinnerVisibility.add(false);
       }
@@ -104,14 +115,14 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
           access = true;
       });
     }
-    debugPrint('UI_M_service_list => CAN MANAGER ACCESS THE SERVICE? $access');
+  //  debugPrint('UI_M_service_list => CAN MANAGER ACCESS THE SERVICE? $access');
 
     if(!access &&  (StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin ||
         StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman ||
         StoreProvider.of<AppState>(context).state.user.getRole() == Role.owner)){
         access = true;
     }
-    debugPrint('UI_M_service_list => CAN MANAGER|OTHERS ACCESS THE SERVICE? $access');
+  //  debugPrint('UI_M_service_list => CAN MANAGER|OTHERS ACCESS THE SERVICE? $access');
 
     return access;
   }
@@ -125,13 +136,13 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
       });
     }
 
-    debugPrint('UI_M_service_list => CAN WORKER ACCESS THE SERVICE? $access');
+   // debugPrint('UI_M_service_list => CAN WORKER ACCESS THE SERVICE? $access');
 
     if(!access && canAccess(id)){
       access = true;
     }
 
-    debugPrint('UI_M_service_list => CAN WORKER|OTHERS ACCESS THE SERVICE? $access');
+   // debugPrint('UI_M_service_list => CAN WORKER|OTHERS ACCESS THE SERVICE? $access');
 
     return access;
   }
@@ -171,8 +182,8 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
           //store.dispatch(RequestRootListCategory(store.state.business.id_firestore));
           startRequest = true;
           noActivity = false;
-          debugPrint('UI_M_service_list => no activity ON INIT: ${noActivity}');
-          debugPrint('UI_M_service_list => USER ACCESS LIST: ${store.state.user.managerAccessTo}');
+         // debugPrint('UI_M_service_list => no activity ON INIT: ${noActivity}');
+        //  debugPrint('UI_M_service_list => USER ACCESS LIST: ${store.state.user.managerAccessTo}');
         },
         //onWillChange: (store, storeNew) => setServiceLists(storeNew.categoryList.categoryListState, storeNew.serviceList.serviceListState),
         builder: (context, snapshot) {
@@ -333,7 +344,7 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                           shrinkWrap: true,
                           itemCount: categories.length,
                           itemBuilder: (context, i) {
-                            debugPrint('UI:M:service:list => CATEGORY ID: ${id(categories[i].categoryAbsolutePath)}');
+                         //   debugPrint('UI:M:service:list => CATEGORY ID: ${id(categories[i].categoryAbsolutePath)}');
                             canAccessService = canAccess(id(categories[i].categoryAbsolutePath));
                             return Container(
                               //height: 56,
@@ -459,7 +470,7 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                                             child: InkWell(
                                               //borderRadius: BorderRadius.all(Radius.circular(10)),
                                               onTap: () {
-                                                debugPrint('UI_M_service_list => TAP SERVICE in Inkwell');
+                                           //     debugPrint('UI_M_service_list => TAP SERVICE in Inkwell');
                                               },
                                               child: AbsorbPointer(
                                                 //absorbing: !(snapshot.user.owner || snapshot.user.admin || snapshot.user.salesman),
@@ -558,7 +569,7 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                                                                   break;
                                                               }
 
-                                                              debugPrint('UI_M_service_list => SERVICE ID: ${id(listOfServiceEachRoot[i][index].serviceAbsolutePath)}');
+                                                          //    debugPrint('UI_M_service_list => SERVICE ID: ${id(listOfServiceEachRoot[i][index].serviceAbsolutePath)}');
 
                                                               ///Aggiorno Database
                                                               StoreProvider.of<AppState>(context).dispatch(SetServiceListVisibilityOnFirebase(id(listOfServiceEachRoot[i][index].serviceAbsolutePath), listOfServiceEachRoot[i][index].serviceVisibility));
@@ -573,9 +584,9 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
                                                         Expanded(
                                                           child: GestureDetector(
                                                             onTap: () {
-                                                              debugPrint('UI_M_service_list => TAP SERVICE in Gesture');
-                                                              if(snapshot.category.categoryRootId != listOfServiceEachRoot[i][index].serviceAbsolutePath.split('/')[1]){
-                                                                debugPrint('UI_M_service_list => NOT SAME CATEGORY');
+                                                            //  debugPrint('UI_M_service_list => TAP SERVICE in Gesture');
+                                                              if(searchCategoryRoot(snapshot.category.id) != listOfServiceEachRoot[i][index].serviceAbsolutePath.split('/')[1]){
+                                                            //    debugPrint('UI_M_service_list => NOT SAME CATEGORY');
                                                                 StoreProvider.of<AppState>(context).dispatch(CategoryRequest(listOfServiceEachRoot[i][index].serviceAbsolutePath.split('/')[1]));
                                                               }
 

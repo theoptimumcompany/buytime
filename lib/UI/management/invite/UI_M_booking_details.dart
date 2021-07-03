@@ -18,8 +18,10 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:intl/intl.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
-import 'package:share/share.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import '../../../environment_abstract.dart';
 
 // ignore: must_be_immutable
 class BookingDetails extends StatefulWidget {
@@ -42,6 +44,8 @@ class _BookingDetailsState extends State<BookingDetails> {
   final TextEditingController _checkInController = TextEditingController();
   final TextEditingController _checkOutController = TextEditingController();
   final TextEditingController _numberOfGuestsController = TextEditingController();
+
+  String chosenLanguageForEmail = 'English';
 
   String fullName = '';
   String email = '';
@@ -71,8 +75,8 @@ class _BookingDetailsState extends State<BookingDetails> {
 
   Future<Uri> createDynamicLink(String id) async {
     final DynamicLinkParameters parameters = DynamicLinkParameters(
-      uriPrefix: 'https://buytime.page.link',
-      link: Uri.parse('https://buytime.page.link/booking/?booking=$id'),
+      uriPrefix: Environment().config.dynamicLink,
+      link: Uri.parse('${Environment().config.dynamicLink}/booking/?booking=$id'),
       androidParameters: AndroidParameters(
         packageName: 'com.theoptimumcompany.buytime',
         minimumVersion: 1,
@@ -167,7 +171,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                   child: ConstrainedBox(
                       constraints: BoxConstraints(),
                       child: Container(
-                        height: (SizeConfig.safeBlockVertical * 100) - 20,
+                        // height: (SizeConfig.safeBlockVertical * 100) - 20,
                         child: Form(
                           key: _formKey,
                           child: Column(
@@ -233,7 +237,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                                     Expanded(
                                       child: Container(
                                         margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 4, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
-                                        child: Column(
+                                        child: Row(
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             ///Full Name Text
@@ -245,17 +249,17 @@ class _BookingDetailsState extends State<BookingDetails> {
                                             ),
 
                                             ///Full Name
-                                            Flexible(
-                                                child: Container(
-                                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
+                                            Container(
+                                              margin: EdgeInsets.only(left: 8.0),
                                               child: FittedBox(
-                                                fit: BoxFit.scaleDown,
-                                                child: Text(
-                                                  '${bookingState.user.first.name} ${bookingState.user.first.surname}',
-                                                  style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextDark, fontWeight: FontWeight.w600, fontSize: 16),
-                                                ),
+                                            fit: BoxFit.scaleDown,
+                                            child: Text(
+                                              '${bookingState.user.first.name} ${bookingState.user.first.surname}',
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextDark, fontWeight: FontWeight.w600, fontSize: 16),
+                                            ),
                                               ),
-                                            ))
+                                            )
                                           ],
                                         ),
                                       ),
@@ -265,7 +269,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                                     Expanded(
                                       child: Container(
                                         margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 4, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
-                                        child: Column(
+                                        child: Row(
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             ///Email Text
@@ -277,15 +281,14 @@ class _BookingDetailsState extends State<BookingDetails> {
                                             ),
 
                                             ///Email
-                                            Flexible(
-                                              child: Container(
-                                                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
-                                                child: FittedBox(
-                                                  fit: BoxFit.scaleDown,
-                                                  child: Text(
-                                                    bookingState.user.first.email ?? 'sample@gmail.com',
-                                                    style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextDark, fontWeight: FontWeight.w600, fontSize: 16),
-                                                  ),
+                                            Container(
+                                              margin: EdgeInsets.only(left: 8.0),
+                                              child: FittedBox(
+                                                fit: BoxFit.scaleDown,
+                                                child: Text(
+                                                  bookingState.user.first.email ?? 'sample@gmail.com',
+                                                  overflow: TextOverflow.ellipsis,
+                                                  style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextDark, fontWeight: FontWeight.w600, fontSize: 16),
                                                 ),
                                               ),
                                             )
@@ -470,185 +473,211 @@ class _BookingDetailsState extends State<BookingDetails> {
                               ),
 
                               ///Qr Code
-                              Flexible(
-                                flex: 2,
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                //crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Container(
+                                    height: 130,
+                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5, bottom: SizeConfig.safeBlockVertical * 0),
+                                    //color: Colors.black,
+                                    child: QrImage(
+                                      //size: SizeConfig.safeBlockHorizontal * 50,
+                                      data: '$link',
+                                      version: QrVersions.auto,
+                                      padding: EdgeInsets.all(0),
+                                      gapless: false,
+                                    ),
+                                  )
+                                ],
+                              ),
+                              /// choose invitation language
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
-                                  //crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
-                                    Container(
-                                      //height: 500,
-                                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5, bottom: SizeConfig.safeBlockVertical * 0),
-                                      //color: Colors.black,
-                                      child: QrImage(
-                                        //size: SizeConfig.safeBlockHorizontal * 50,
-                                        data: '$link',
-                                        version: QrVersions.auto,
-                                        padding: EdgeInsets.all(0),
-                                        gapless: false,
+                                    Text(AppLocalizations.of(context).selectLanguage),
+                                    DropdownButton<String>(
+                                      value: chosenLanguageForEmail,
+                                      icon: const Icon(Icons.arrow_downward),
+                                      iconSize: 24,
+                                      elevation: 16,
+                                      style: const TextStyle(color: Colors.deepPurple),
+                                      underline: Container(
+                                        height: 2,
+                                        color: Colors.deepPurpleAccent,
                                       ),
+                                      onChanged: (String newValue) {
+                                        setState(() {
+                                          chosenLanguageForEmail = newValue;
+                                        });
+                                      },
+                                      items: <String>['Catalan', 'English',  'French', 'German', 'Italian', 'Spanish']
+                                          .map<DropdownMenuItem<String>>((String value) {
+                                        return DropdownMenuItem<String>(
+                                          value: value,
+                                          child: Text(value),
+                                        );
+                                      }).toList(),
                                     )
                                   ],
                                 ),
                               ),
 
                               ///Send invitation
-                              Flexible(
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                        width: 180,
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                      width: 180,
 
-                                        ///media.width * .5
-                                        height: 44,
-                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 4, bottom: SizeConfig.safeBlockVertical * 1),
-                                        alignment: Alignment.bottomCenter,
-                                        child: MaterialButton(
-                                          elevation: 0,
-                                          hoverElevation: 0,
-                                          focusElevation: 0,
-                                          highlightElevation: 0,
-                                          disabledColor: BuytimeTheme.SymbolGrey,
-                                          onPressed: snapshot.emailState.sent == null || snapshot.emailState.sent
-                                              ? () async {
-                                                  final RenderBox box = context.findRenderObject();
-                                                  //Uri link = await createDynamicLink(bookingState.booking_code);
-                                                  bookingState.status = Utils.enumToString(BookingStatus.sent);
-                                                  StoreProvider.of<AppState>(context).dispatch(UpdateBooking(bookingState)); //TODO: Create the booking status update epic
+                                      ///media.width * .5
+                                      height: 44,
+                                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 4, bottom: SizeConfig.safeBlockVertical * 1),
+                                      alignment: Alignment.bottomCenter,
+                                      child: MaterialButton(
+                                        elevation: 0,
+                                        hoverElevation: 0,
+                                        focusElevation: 0,
+                                        highlightElevation: 0,
+                                        disabledColor: BuytimeTheme.SymbolGrey,
+                                        onPressed: snapshot.emailState.sent == null || snapshot.emailState.sent
+                                            ? () async {
+                                                final RenderBox box = context.findRenderObject();
+                                                //Uri link = await createDynamicLink(bookingState.booking_code);
+                                                bookingState.status = Utils.enumToString(BookingStatus.sent);
+                                                StoreProvider.of<AppState>(context).dispatch(UpdateBooking(bookingState)); //TODO: Create the booking status update epic
 
-                                                  EmailState emailState = EmailState();
-                                                  TemplateState templateState = TemplateState();
-                                                  TemplateDataState templateDataState = TemplateDataState();
-                                                  emailState.to = widget.bookingState != null ? widget.bookingState.user.first.email : snapshot.booking.user.first.email;
-                                                  templateState.name = 'welcome';
-                                                  templateDataState.name = widget.bookingState != null ? widget.bookingState.user.first.name + ' ' + widget.bookingState.user.first.surname : snapshot.booking.user.first.name + ' ' + snapshot.booking.user.first.surname;
-                                                  templateDataState.link = link;
-                                                  templateState.data = templateDataState;
-                                                  emailState.template = templateState;
-                                                  emailState.sent = false;
-                                                  //StoreProvider.of<AppState>(context).dispatch(SentEmail(emailState));
-                                                  StoreProvider.of<AppState>(context).dispatch(SendEmail(emailState));
-                                                  Flushbar(
-                                                    padding: EdgeInsets.all(SizeConfig.safeBlockVertical * 2),
-                                                    margin: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2, left: SizeConfig.blockSizeHorizontal * 20, right: SizeConfig.blockSizeHorizontal * 20),
+                                                EmailState emailState = EmailState();
+                                                TemplateState templateState = TemplateState();
+                                                TemplateDataState templateDataState = TemplateDataState();
+                                                emailState.to = widget.bookingState != null ? widget.bookingState.user.first.email : snapshot.booking.user.first.email;
+                                                templateState.name = 'welcome' + languageToShortcode(chosenLanguageForEmail);
+                                                templateDataState.name = widget.bookingState != null ? widget.bookingState.user.first.name + ' ' + widget.bookingState.user.first.surname : snapshot.booking.user.first.name + ' ' + snapshot.booking.user.first.surname;
+                                                templateDataState.link = link;
+                                                templateState.data = templateDataState;
+                                                emailState.template = templateState;
+                                                emailState.sent = false;
+                                                //StoreProvider.of<AppState>(context).dispatch(SentEmail(emailState));
+                                                StoreProvider.of<AppState>(context).dispatch(SendEmail(emailState));
+                                                Flushbar(
+                                                  padding: EdgeInsets.all(SizeConfig.safeBlockVertical * 2),
+                                                  margin: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2, left: SizeConfig.blockSizeHorizontal * 20, right: SizeConfig.blockSizeHorizontal * 20),
 
-                                                    ///2% - 20% - 20%
-                                                    borderRadius: BorderRadius.all(Radius.circular(8)),
-                                                    backgroundColor: BuytimeTheme.SymbolGrey,
-                                                    boxShadows: [
-                                                      BoxShadow(
-                                                        color: Colors.black45,
-                                                        offset: Offset(3, 3),
-                                                        blurRadius: 3,
-                                                      ),
-                                                    ],
-                                                    // All of the previous Flushbars could be dismissed by swiping down
-                                                    // now we want to swipe to the sides
-                                                    //dismissDirection: FlushbarDismissDirection.HORIZONTAL,
-                                                    // The default curve is Curves.easeOut
-                                                    duration: Duration(seconds: 2),
-                                                    forwardAnimationCurve: Curves.fastLinearToSlowEaseIn,
-                                                    messageText: Text(
-                                                      AppLocalizations.of(context).sendEmail,
-                                                      style: TextStyle(color: BuytimeTheme.TextWhite, fontWeight: FontWeight.bold),
-                                                      textAlign: TextAlign.center,
+                                                  ///2% - 20% - 20%
+                                                  borderRadius: BorderRadius.all(Radius.circular(8)),
+                                                  backgroundColor: BuytimeTheme.SymbolGrey,
+                                                  boxShadows: [
+                                                    BoxShadow(
+                                                      color: Colors.black45,
+                                                      offset: Offset(3, 3),
+                                                      blurRadius: 3,
                                                     ),
-                                                  )..show(context);
-                                                  //Share.share(AppLocalizations.of(context).checkYourBuytimeApp + link, subject: AppLocalizations.of(context).takeYourTime, sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
-                                                }
-                                              : null,
-                                          textColor: snapshot.emailState.sent != null && !snapshot.emailState.sent ? BuytimeTheme.TextWhite : BuytimeTheme.TextDark,
-                                          color: BuytimeTheme.Secondary,
-                                          padding: EdgeInsets.all(media.width * 0.03),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: new BorderRadius.circular(5),
-                                          ),
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            children: [
-                                              Text(
-                                                AppLocalizations.of(context).sendInvite,
-                                                style: TextStyle(fontSize: 14, fontFamily: BuytimeTheme.FontFamily, fontWeight: FontWeight.w600, color: BuytimeTheme.TextDark, letterSpacing: 1.25),
-                                              )
-                                            ],
-                                          ),
-                                        ))
-                                  ],
-                                ),
+                                                  ],
+                                                  // All of the previous Flushbars could be dismissed by swiping down
+                                                  // now we want to swipe to the sides
+                                                  //dismissDirection: FlushbarDismissDirection.HORIZONTAL,
+                                                  // The default curve is Curves.easeOut
+                                                  duration: Duration(seconds: 2),
+                                                  forwardAnimationCurve: Curves.fastLinearToSlowEaseIn,
+                                                  messageText: Text(
+                                                    AppLocalizations.of(context).sendEmail,
+                                                    style: TextStyle(color: BuytimeTheme.TextWhite, fontWeight: FontWeight.bold),
+                                                    textAlign: TextAlign.center,
+                                                  ),
+                                                )..show(context);
+                                                //Share.share(AppLocalizations.of(context).checkYourBuytimeApp + link, subject: AppLocalizations.of(context).takeYourTime, sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
+                                              }
+                                            : null,
+                                        textColor: snapshot.emailState.sent != null && !snapshot.emailState.sent ? BuytimeTheme.TextWhite : BuytimeTheme.TextDark,
+                                        color: BuytimeTheme.Secondary,
+                                        padding: EdgeInsets.all(media.width * 0.03),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: new BorderRadius.circular(5),
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              AppLocalizations.of(context).sendInvite,
+                                              style: TextStyle(fontSize: 14, fontFamily: BuytimeTheme.FontFamily, fontWeight: FontWeight.w600, color: BuytimeTheme.TextDark, letterSpacing: 1.25),
+                                            )
+                                          ],
+                                        ),
+                                      ))
+                                ],
                               ),
-                              Flexible(
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                        width: 180,
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                      width: 180,
 
-                                        ///media.width * .5
-                                        height: 44,
-                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 2.5),
-                                        alignment: Alignment.bottomCenter,
-                                        child: MaterialButton(
-                                          elevation: 0,
-                                          hoverElevation: 0,
-                                          focusElevation: 0,
-                                          highlightElevation: 0,
-                                          onPressed: () async {
-                                            Clipboard.setData(ClipboardData(text: link));
-                                            Flushbar(
-                                              padding: EdgeInsets.all(SizeConfig.safeBlockVertical * 2),
-                                              margin: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2, left: SizeConfig.blockSizeHorizontal * 20, right: SizeConfig.blockSizeHorizontal * 20),
+                                      ///media.width * .5
+                                      height: 44,
+                                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 2.5),
+                                      alignment: Alignment.bottomCenter,
+                                      child: MaterialButton(
+                                        elevation: 0,
+                                        hoverElevation: 0,
+                                        focusElevation: 0,
+                                        highlightElevation: 0,
+                                        onPressed: () async {
+                                          Clipboard.setData(ClipboardData(text: link));
+                                          Flushbar(
+                                            padding: EdgeInsets.all(SizeConfig.safeBlockVertical * 2),
+                                            margin: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2, left: SizeConfig.blockSizeHorizontal * 20, right: SizeConfig.blockSizeHorizontal * 20),
 
-                                              ///2% - 20% - 20%
-                                              borderRadius: BorderRadius.all(Radius.circular(8)),
-                                              backgroundColor: BuytimeTheme.SymbolGrey,
-                                              boxShadows: [
-                                                BoxShadow(
-                                                  color: Colors.black45,
-                                                  offset: Offset(3, 3),
-                                                  blurRadius: 3,
-                                                ),
-                                              ],
-                                              // All of the previous Flushbars could be dismissed by swiping down
-                                              // now we want to swipe to the sides
-                                              //dismissDirection: FlushbarDismissDirection.HORIZONTAL,
-                                              // The default curve is Curves.easeOut
-                                              duration: Duration(seconds: 2),
-                                              forwardAnimationCurve: Curves.fastLinearToSlowEaseIn,
-                                              messageText: Text(
-                                                AppLocalizations.of(context).copiedToClipboard,
-                                                style: TextStyle(color: BuytimeTheme.TextWhite, fontWeight: FontWeight.bold),
-                                                textAlign: TextAlign.center,
+                                            ///2% - 20% - 20%
+                                            borderRadius: BorderRadius.all(Radius.circular(8)),
+                                            backgroundColor: BuytimeTheme.SymbolGrey,
+                                            boxShadows: [
+                                              BoxShadow(
+                                                color: Colors.black45,
+                                                offset: Offset(3, 3),
+                                                blurRadius: 3,
                                               ),
-                                            )..show(context);
-                                          },
-                                          textColor: BuytimeTheme.TextDark,
-                                          color: BuytimeTheme.Secondary,
-                                          padding: EdgeInsets.all(media.width * 0.02),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: new BorderRadius.circular(5),
-                                          ),
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            crossAxisAlignment: CrossAxisAlignment.center,
-                                            children: [
-                                              Container(
-                                                margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 2.5),
-                                                child: Icon(
-                                                  MaterialDesignIcons.insert_link,
-                                                  color: BuytimeTheme.SymbolBlack,
-                                                  size: 24,
-                                                ),
-                                              ),
-                                              Text(
-                                                AppLocalizations.of(context).copyLink,
-                                                style: TextStyle(fontSize: 14, fontFamily: BuytimeTheme.FontFamily, fontWeight: FontWeight.w600, color: BuytimeTheme.TextDark, letterSpacing: 1.25),
-                                              )
                                             ],
-                                          ),
-                                        ))
-                                  ],
-                                ),
+                                            // All of the previous Flushbars could be dismissed by swiping down
+                                            // now we want to swipe to the sides
+                                            //dismissDirection: FlushbarDismissDirection.HORIZONTAL,
+                                            // The default curve is Curves.easeOut
+                                            duration: Duration(seconds: 2),
+                                            forwardAnimationCurve: Curves.fastLinearToSlowEaseIn,
+                                            messageText: Text(
+                                              AppLocalizations.of(context).copiedToClipboard,
+                                              style: TextStyle(color: BuytimeTheme.TextWhite, fontWeight: FontWeight.bold),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          )..show(context);
+                                        },
+                                        textColor: BuytimeTheme.TextDark,
+                                        color: BuytimeTheme.Secondary,
+                                        padding: EdgeInsets.all(media.width * 0.02),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: new BorderRadius.circular(5),
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            Container(
+                                              margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 2.5),
+                                              child: Icon(
+                                                MaterialDesignIcons.insert_link,
+                                                color: BuytimeTheme.SymbolBlack,
+                                                size: 24,
+                                              ),
+                                            ),
+                                            Text(
+                                              AppLocalizations.of(context).copyLink,
+                                              style: TextStyle(fontSize: 14, fontFamily: BuytimeTheme.FontFamily, fontWeight: FontWeight.w600, color: BuytimeTheme.TextDark, letterSpacing: 1.25),
+                                            )
+                                          ],
+                                        ),
+                                      ))
+                                ],
                               )
                             ],
                           ),
@@ -661,5 +690,23 @@ class _BookingDetailsState extends State<BookingDetails> {
         );
       },
     );
+  }
+
+  /// 'Catalan', 'English',  'French', 'German', 'Italian', 'Spanish'
+  String languageToShortcode(String chosenLanguageForEmail) {
+    if (chosenLanguageForEmail == 'English') {
+      return '_en';
+    } else if  (chosenLanguageForEmail == 'Catalan') {
+      return '_ca';
+    } else if  (chosenLanguageForEmail == 'French') {
+      return '_fr';
+    } else if  (chosenLanguageForEmail == 'German') {
+      return '_de';
+    } else if  (chosenLanguageForEmail == 'Italian') {
+      return '_it';
+    } else if  (chosenLanguageForEmail == 'Spanish') {
+      return '_es';
+    }
+    return '_en';
   }
 }

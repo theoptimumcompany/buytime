@@ -356,11 +356,11 @@ class BusinessCreateService implements EpicClass<AppState> {
       actionArray.clear();
       businessState = event.businessState;
       DocumentReference docReference = FirebaseFirestore.instance.collection("business").doc();
-
+     // await FirebaseFirestore.instance.collection("defaultCategory").where("businessType", arrayContains: event.businessState.business_type).orderBy('category.level').get();
       /// 1 READ - 1 DOC
       ///
       if (businessState.business_type.isNotEmpty && businessState.business_type[0].toString().isEmpty && businessState.business_type.length > 1) {
-        businessState.business_type = businessState.business_type.sublist(1);
+        businessState.business_type = businessState.business_type;
       }
 
       businessState.id_firestore = docReference.id;
@@ -395,7 +395,9 @@ class BusinessCreateService implements EpicClass<AppState> {
         debugPrint("BUSINESS_SERVICE_EPIC - BusinessCreateService => Has created new Business!");
         actionArray.add(CreatedBusiness(businessState));
         actionArray.add(UpdateStatistics(statisticsState));
-        actionArray.add(GenerateDefaultCategory(businessState));
+        actionArray.add(NavigatePushAction(AppRoutes.businessList));
+
+       // actionArray.add(GenerateDefaultCategory(businessState));
       }).catchError((error) {
         debugPrint("BUSINESS_SERVICE_EPIC - BusinessCreateService => ERROR: $error");
       }).then((value) {
@@ -423,6 +425,7 @@ Future<UpdatedBusiness> updateBusiness(BusinessState businessState) {
   });
 }
 
+/*
 class BusinessGenerateDefaultCategoryService implements EpicClass<AppState> {
   var actionArray = [];
   DefaultCategoryState defaultCategory;
@@ -480,7 +483,7 @@ class ConvertBusinessToSnippetService implements EpicClass<AppState> {
     });
   }
 }
-
+*/
 /*class BusinessUpdateDefaultCategoryService implements EpicClass<AppState> {
   var actionArray = [];
   DefaultCategoryState defaultCategory;

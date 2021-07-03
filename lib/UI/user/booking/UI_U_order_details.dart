@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 import 'package:Buytime/UI/user/cart/UI_U_cart.dart';
+import 'package:Buytime/environment_abstract.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/area/area_list_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
@@ -27,6 +28,8 @@ import 'package:Buytime/UI/user/map/animated_screen.dart';
 import 'package:location/location.dart' as loc;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../../../environment_abstract.dart';
 
 
 class OrderDetails extends StatefulWidget {
@@ -109,9 +112,9 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
 
     String url;
     if(Platform.isIOS)
-      url = 'https://maps.googleapis.com/maps/api/staticmap?center=$lat,$lng&zoom=18&size=640x640&scale=2&markers=color:red|$lat,$lng&key=${BuytimeConfig.AndroidApiKey}';
+      url = 'https://maps.googleapis.com/maps/api/staticmap?center=$lat,$lng&zoom=18&size=640x640&scale=2&markers=color:red|$lat,$lng&key=${Environment().config.googleApiKey}';
     else
-      url = 'https://maps.googleapis.com/maps/api/staticmap?center=$lat,$lng&zoom=18&size=640x640&scale=2&markers=color:red|$lat,$lng&key=${BuytimeConfig.AndroidApiKey}';
+      url = 'https://maps.googleapis.com/maps/api/staticmap?center=$lat,$lng&zoom=18&size=640x640&scale=2&markers=color:red|$lat,$lng&key=${Environment().config.googleApiKey}';
 
     return url;
   }

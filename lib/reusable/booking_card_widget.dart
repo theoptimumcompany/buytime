@@ -2,7 +2,6 @@ import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/reducer/booking_reducer.dart';
 import 'package:Buytime/reblox/reducer/business_reducer.dart';
-import 'package:Buytime/reusable/form/optimum_form_multi_photo.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -12,6 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:intl/intl.dart';
 import 'package:share/share.dart';
+
+import '../environment_abstract.dart';
 
 typedef OnBookingCallback = void Function(bool clicked);
 class BookingCardWidget extends StatefulWidget {
@@ -66,8 +67,8 @@ class _BookingCardWidgetState extends State<BookingCardWidget> {
 
   Future<Uri> createDynamicLink(String id) async {
     final DynamicLinkParameters parameters = DynamicLinkParameters(
-      uriPrefix: 'https://buytime.page.link',
-      link: Uri.parse('https://buytime.page.link/booking/?booking=$id'),
+      uriPrefix: Environment().config.dynamicLink,
+      link: Uri.parse('${Environment().config.dynamicLink}/booking/?booking=$id'),
       androidParameters: AndroidParameters(
         packageName: 'com.theoptimumcompany.buytime',
         minimumVersion: 1,

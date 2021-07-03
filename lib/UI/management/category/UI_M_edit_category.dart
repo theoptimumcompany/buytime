@@ -22,6 +22,7 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:share/share.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../../environment_abstract.dart';
 import '../../../reusable/appbar/buytime_appbar.dart';
 
 class UI_M_EditCategory extends StatefulWidget {
@@ -35,7 +36,7 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>(); // TODO hero kacchan fix duplicates all mightaaa "There are multiple heroes that share the same tag within a subtree."
   final GlobalKey<FormState> _formInviteKey = GlobalKey<FormState>();
 
-  Parent _dropdownParentCategory = Parent(level: 0, id: "no_parent", name: "No Parent", parentRootId: "");
+  Parent _dropdownParentCategory = Parent(level: 0, id: "no_parent", name: "No Parent",);
 
   List<DropdownMenuItem<Parent>> _dropdownMenuParentCategory = [];
 
@@ -50,7 +51,6 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
   bool hasChild = false;
   bool stopBuildDropDown = false;
   Parent selectedDropValue;
-
 
   ///Managers List
   List<Manager> managerList;
@@ -84,21 +84,20 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
     }
   }
 
-  setNewCategoryParent(Parent contentSelectDrop, List<dynamic> list) {
-    if (list == null || list.length == 0) {
+  setNewCategoryParent(Parent contentSelectDrop,/* List<dynamic> list*/) {
+    /*if (list == null || list.length == 0) {
       Parent parentInitial = Parent(level: 0, id: "no_parent", name: "No Parent", parentRootId: "");
       StoreProvider.of<AppState>(context).dispatch(SetCategoryLevel(0));
       StoreProvider.of<AppState>(context).dispatch(SetCategoryParent(parentInitial));
-    } else if (list != null && list.length > 0) {
-      int nestedLevel = 0;
+    } else if (list != null && list.length > 0) {*/
+
       if (contentSelectDrop.id == 'no_parent') {
         StoreProvider.of<AppState>(context).dispatch(SetCategoryLevel(0));
       } else {
         StoreProvider.of<AppState>(context).dispatch(SetCategoryLevel(contentSelectDrop.level + 1));
-        nestedLevel = contentSelectDrop.level + 1;
       }
       StoreProvider.of<AppState>(context).dispatch(SetCategoryParent(contentSelectDrop));
-    }
+   // }
   }
 
   setNewCategoryName(String name) {
@@ -112,13 +111,46 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
   void buildDropDownMenuItemsParent(Parent item) {
     if (stopBuildDropDown == false) {
       stopBuildDropDown = true;
-      CategoryTree categoryNode = StoreProvider
-          .of<AppState>(context)
-          .state
-          .categoryTree;
+      //CategoryTree categoryNode = StoreProvider.of<AppState>(context).state.categoryTree;
       List<DropdownMenuItem<Parent>> items = [];
 
-      if (categoryNode.categoryNodeList != null) {
+      items.insert(
+        0,
+        DropdownMenuItem(
+          child: Text(
+            item.name,
+            overflow: TextOverflow.ellipsis,
+          ),
+          value: item,
+        ),
+      );
+
+
+      List<dynamic> snippet = StoreProvider.of<AppState>(context).state.serviceListSnippetState.businessSnippet;
+
+      for (var i = 0; i < snippet.length; i++) {
+        String categoryPath = snippet[i].categoryAbsolutePath;
+        List<String> categoryRoute = categoryPath.split('/');
+
+        Parent placeHolderParent = Parent(
+          name: snippet[i].categoryName,
+          id: categoryRoute.last,
+          level: categoryRoute.length - 1,
+          //parentRootId: categoryRoute[1],
+        );
+        items.insert(
+          0,
+          DropdownMenuItem(
+            child: Text(
+              placeHolderParent.name,
+              overflow: TextOverflow.ellipsis,
+            ),
+            value: placeHolderParent,
+          ),
+        );
+      }
+
+      /*  if (categoryNode.categoryNodeList != null) {
         if (categoryNode.categoryNodeList.length != 0 && categoryNode.categoryNodeList.length != null) {
           List<dynamic> list = categoryNode.categoryNodeList;
           items = openTree(list, items);
@@ -133,7 +165,7 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
           ),
           value: item,
         ),
-      );
+      );*/
       _dropdownMenuParentCategory = items;
     }
   }
@@ -157,17 +189,27 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
   int numberLevel = 0;
   bool canMoveToParent = true;
 
-  countNestedLevels(List<dynamic> list) {
-    for (int i = 0; i < list.length; i++) {
-      numberLevel++;
-      if (list[i]['nodeCategory'] != null) {
-        countNestedLevels(list[i]['nodeCategory']);
+  // countNestedLevels(List<dynamic> list) {
+  //   for (int i = 0; i < list.length; i++) {
+  //     numberLevel++;
+  //     if (list[i]['nodeCategory'] != null) {
+  //       countNestedLevels(list[i]['nodeCategory']);
+  //     }
+  //   }
+  // }
+
+  checkNumberLevelToMove(String idCategory) {
+    List<dynamic> snippet = StoreProvider.of<AppState>(context).state.serviceListSnippetState.businessSnippet;
+    for(var i = 0; i < snippet.length; i++)
+    {
+      if(snippet[i].categoryAbsolutePath.split('/').contains(idCategory))
+      {
+        numberLevel++;
       }
     }
-  }
 
-  checkNumberLevelToMove(List<dynamic> list, String idCategory) {
-    for (int i = 0; i < list.length; i++) {
+
+  /*  for (int i = 0; i < list.length; i++) {
       if (list[i]['nodeId'] == idCategory) {
         numberLevel++;
         if (list[i]['nodeCategory'] != null) {
@@ -177,9 +219,12 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
       if (list[i]['nodeCategory'] != null) {
         checkNumberLevelToMove(list[i]['nodeCategory'], idCategory);
       }
-    }
-  }
+    }*/
 
+
+
+  }
+/*
   openTree(List<dynamic> list, List<DropdownMenuItem<Parent>> items) {
     for (int i = 0; i < list.length; i++) {
       if (list[i]['nodeId'] == StoreProvider.of<AppState>(context).state.category.parent && StoreProvider.of<AppState>(context).state.category.parent != "no_parent") {
@@ -195,7 +240,7 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
       }
       if (list[i]['nodeId'] != StoreProvider.of<AppState>(context).state.category.id) {
         debugPrint('UI_M_edit_category => NODE LEVEL: ${list[i]['level']}');
-        if(list[i]['nodeName'] != StoreProvider.of<AppState>(context).state.category.name){
+        if (list[i]['nodeName'] != StoreProvider.of<AppState>(context).state.category.name) {
           Parent objectState = Parent(name: list[i]['nodeName'].toString(), id: list[i]['nodeId'], level: list[i]['level'], parentRootId: list[i]['categoryRootId']);
           items.add(
             DropdownMenuItem(
@@ -217,7 +262,7 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
     }
     return items;
   }
-
+*/
   Future<bool> _onWillPop() {
     /*Navigator.pushReplacement(
       context,
@@ -227,8 +272,8 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
 
   Future<Uri> createDynamicLink(String id, String businessId) async {
     final DynamicLinkParameters parameters = DynamicLinkParameters(
-      uriPrefix: 'https://buytime.page.link',
-      link: Uri.parse('https://buytime.page.link/categoryInvite/?categoryInvite=$id&businessId=$businessId'),
+      uriPrefix: Environment().config.dynamicLink,
+      link: Uri.parse('${Environment().config.dynamicLink}/categoryInvite/?categoryInvite=$id&businessId=$businessId'),
       androidParameters: AndroidParameters(
         packageName: 'com.theoptimumcompany.buytime',
         minimumVersion: 1,
@@ -245,31 +290,19 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
   }
 
   void sendInvitationMailDialog(context, String role) {
-    var height = MediaQuery
-        .of(context)
-        .size
-        .height;
-    var width = MediaQuery
-        .of(context)
-        .size
-        .width;
-    double wrap_width_text = MediaQuery
-        .of(context)
-        .size
-        .width * 0.6;
+    var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width;
+    double wrap_width_text = MediaQuery.of(context).size.width * 0.6;
     showDialog(
       context: context,
-      builder: (_) =>
-      new AlertDialog(
+      builder: (_) => new AlertDialog(
         actions: <Widget>[
           MaterialButton(
             elevation: 0,
             hoverElevation: 0,
             focusElevation: 0,
             highlightElevation: 0,
-            child: Text(AppLocalizations
-                .of(context)
-                .cancel),
+            child: Text(AppLocalizations.of(context).cancel),
             onPressed: () {
               Navigator.of(context).pop();
             },
@@ -281,9 +314,7 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
             hoverElevation: 0,
             focusElevation: 0,
             highlightElevation: 0,
-            child: Text(AppLocalizations
-                .of(context)
-                .invite),
+            child: Text(AppLocalizations.of(context).invite),
             onPressed: () async {
               print("Category Edit Mail to add : " + inviteMail);
 
@@ -312,12 +343,7 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                     break;
                 }
                 final RenderBox box = context.findRenderObject();
-                Share.share(AppLocalizations
-                    .of(context)
-                    .checkOutBuytimeApp + ' $link',
-                    subject: AppLocalizations
-                        .of(context)
-                        .takeYourTime, sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
+                Share.share(AppLocalizations.of(context).checkOutBuytimeApp + ' $link', subject: AppLocalizations.of(context).takeYourTime, sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
                 Navigator.of(context).pop();
               }
             },
@@ -336,9 +362,7 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                     children: [
                       Container(
                         child: Text(
-                          AppLocalizations
-                              .of(context)
-                              .inviteA + " " + role,
+                          AppLocalizations.of(context).inviteA + " " + role,
                           textAlign: TextAlign.start,
                           style: TextStyle(
                             color: BuytimeTheme.TextDark,
@@ -360,11 +384,7 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                       Container(
                         width: wrap_width_text,
                         child: Text(
-                          AppLocalizations
-                              .of(context)
-                              .typeA + " " + role + " " + AppLocalizations
-                              .of(context)
-                              .emailBelow,
+                          AppLocalizations.of(context).typeA + " " + role + " " + AppLocalizations.of(context).emailBelow,
                           textAlign: TextAlign.start,
                           style: TextStyle(
                             color: BuytimeTheme.TextDark,
@@ -389,20 +409,13 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                           child: TextFormField(
                             autofocus: true,
                             keyboardType: TextInputType.emailAddress,
-                            validator: (value) =>
-                            value.isEmpty
-                                ? AppLocalizations
-                                .of(context)
-                                .emailCannotBeBlank
+                            validator: (value) => value.isEmpty
+                                ? AppLocalizations.of(context).emailCannotBeBlank
                                 : validateEmail(value)
-                                ? duplicateMail(role, value)
-                                ? AppLocalizations
-                                .of(context)
-                                .emailExistsFor + role
-                                : null
-                                : AppLocalizations
-                                .of(context)
-                                .notAValidEmail,
+                                    ? duplicateMail(role, value)
+                                        ? AppLocalizations.of(context).emailExistsFor + role
+                                        : null
+                                    : AppLocalizations.of(context).notAValidEmail,
                             onChanged: (value) {
                               setState(() {
                                 inviteMail = value;
@@ -414,9 +427,7 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                               });
                             },
                             decoration: InputDecoration(
-                              labelText: AppLocalizations
-                                  .of(context)
-                                  .emailAddress,
+                              labelText: AppLocalizations.of(context).emailAddress,
                               border: InputBorder.none,
                               focusedBorder: InputBorder.none,
                               enabledBorder: InputBorder.none,
@@ -447,18 +458,13 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
             child: new Wrap(
               children: <Widget>[
                 new ListTile(
-                    title: new Text(AppLocalizations
-                        .of(context)
-                        .addManager),
-                    onTap: () =>
-                    {
-                      Navigator.of(context).pop(),
-                      sendInvitationMailDialog(context, 'Manager'),
-                    }),
+                    title: new Text(AppLocalizations.of(context).addManager),
+                    onTap: () => {
+                          Navigator.of(context).pop(),
+                          sendInvitationMailDialog(context, 'Manager'),
+                        }),
                 new ListTile(
-                  title: new Text(AppLocalizations
-                      .of(context)
-                      .addWorker),
+                  title: new Text(AppLocalizations.of(context).addWorker),
                   onTap: () => {Navigator.of(context).pop(), sendInvitationMailDialog(context, 'Worker')},
                 ),
               ],
@@ -503,49 +509,47 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
 
   List<Widget> listOfManagerChips(AppState snapshot) {
     List<Widget> listOfWidget = [];
-    snapshot.business.owner.name != null && snapshot.business.owner.name != '' ?
-    listOfWidget.add(
-        InputChip(
-          onPressed: (){},
-          selected: false,
-          label: Text(
-            snapshot.business.owner.name != null ? snapshot.business.owner.name : AppLocalizations.of(context).owner,
-            style: TextStyle(
-              fontSize: 13.0,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        )): null;
-
-    snapshot.business.salesman.name != null && snapshot.business.salesman.name != '' ?
-    listOfWidget.add(Padding(
-      padding: const EdgeInsets.only(left: 5.0),
-      child: InputChip(
-        selected: false,
-        label: Text(
-          snapshot.business.salesman.name != null ? snapshot.business.salesman.name : AppLocalizations.of(context).salesman,
-          style: TextStyle(
-            fontSize: 13.0,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      ),
-    ))
-        : null;
-
-    if(listOfWidget.isEmpty)
-      listOfWidget.add(
-          Container(
-            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, bottom: SizeConfig.safeBlockVertical * 1),
-            child: Text(
-              AppLocalizations.of(context).noManagerAssigned,
+    snapshot.business.owner.name != null && snapshot.business.owner.name != ''
+        ? listOfWidget.add(InputChip(
+            onPressed: () {},
+            selected: false,
+            label: Text(
+              snapshot.business.owner.name != null ? snapshot.business.owner.name : AppLocalizations.of(context).owner,
               style: TextStyle(
                 fontSize: 13.0,
                 fontWeight: FontWeight.w500,
               ),
             ),
-          )
-      );
+          ))
+        : null;
+
+    snapshot.business.salesman.name != null && snapshot.business.salesman.name != ''
+        ? listOfWidget.add(Padding(
+            padding: const EdgeInsets.only(left: 5.0),
+            child: InputChip(
+              selected: false,
+              label: Text(
+                snapshot.business.salesman.name != null ? snapshot.business.salesman.name : AppLocalizations.of(context).salesman,
+                style: TextStyle(
+                  fontSize: 13.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ))
+        : null;
+
+    if (listOfWidget.isEmpty)
+      listOfWidget.add(Container(
+        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, bottom: SizeConfig.safeBlockVertical * 1),
+        child: Text(
+          AppLocalizations.of(context).noManagerAssigned,
+          style: TextStyle(
+            fontSize: 13.0,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ));
 
     return listOfWidget;
   }
@@ -557,17 +561,15 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
     ));
   }
 
-  bool canEdit(CategoryState categoryState){
+  bool canEdit(CategoryState categoryState) {
     bool edit = false;
     debugPrint('UI_M_edit_category => USER ROLE: ${StoreProvider.of<AppState>(context).state.user.getRole()}');
-    if(StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin ||
-        StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman ||
-        StoreProvider.of<AppState>(context).state.user.getRole() == Role.owner){
+    if (StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin || StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman || StoreProvider.of<AppState>(context).state.user.getRole() == Role.owner) {
       edit = true;
       debugPrint('UI_M_edit_category => CAN EDIT ${Utils.enumToString(StoreProvider.of<AppState>(context).state.user.getRole())}');
     }
     categoryState.manager.forEach((email) {
-      if(email.mail == StoreProvider.of<AppState>(context).state.user.email){
+      if (email.mail == StoreProvider.of<AppState>(context).state.user.email) {
         edit = true;
         debugPrint('UI_M_edit_category => CAN EDIT MANAGER');
       }
@@ -578,20 +580,18 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
 
   bool hasService = false;
   bool canEditCategory = false;
+
   @override
   Widget build(BuildContext context) {
-    var media = MediaQuery
-        .of(context)
-        .size;
+    var media = MediaQuery.of(context).size;
     return StoreConnector<AppState, AppState>(
         converter: (store) => store.state,
         builder: (context, snapshot) {
           canEditCategory = canEdit(snapshot.category);
-          if(snapshot.serviceListSnippetState.businessSnippet != null){
+          if (snapshot.serviceListSnippetState.businessSnippet != null) {
             snapshot.serviceListSnippetState.businessSnippet.forEach((element) {
-              if(element.categoryAbsolutePath.split('/').last == snapshot.category.id){
-                if(element.serviceNumberInternal != 0)
-                  hasService = true;
+              if (element.categoryAbsolutePath.split('/').last == snapshot.category.id) {
+                if (element.serviceNumberInternal != 0) hasService = true;
               }
             });
           }
@@ -610,13 +610,13 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
           customTag = snapshot.category.customTag == 'showcase'
               ? CustomTag.showcase
               : snapshot.category.customTag == 'external'
-              ? CustomTag.external
-              : CustomTag.other;
+                  ? CustomTag.external
+                  : CustomTag.other;
 
           String businessName = snapshot.business.name;
 
           return GestureDetector(
-            onTap: (){
+            onTap: () {
               FocusScopeNode currentFocus = FocusScope.of(context);
 
               if (!currentFocus.hasPrimaryFocus) {
@@ -657,59 +657,66 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                                   ),
                                 ],
                               ),
+
                               ///Title
                               Utils.barTitle(AppLocalizations.of(context).editSpace + ' ' + snapshot.category.name),
-                              canEditCategory ?
-                              Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
-                                child: IconButton(
-                                    icon: const Icon(
-                                      Icons.check,
-                                      color: Colors.white,
-                                      size: 25.0,
-                                    ),
-                                    tooltip: AppLocalizations.of(context).submitNewCategory,
-                                    onPressed: !edit ? () {
-                                      if (validateAndSave()) {
-                                        /*setState(() {
+                              canEditCategory
+                                  ? Padding(
+                                      padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
+                                      child: IconButton(
+                                          icon: const Icon(
+                                            Icons.check,
+                                            color: Colors.white,
+                                            size: 25.0,
+                                          ),
+                                          tooltip: AppLocalizations.of(context).submitNewCategory,
+                                          onPressed: !edit
+                                              ? () {
+                                                  if (validateAndSave()) {
+                                                    /*setState(() {
                                           edit = true;
                                         });*/
-                                        if (canMoveToParent) {
-                                          setState(() {
-                                            bookingRequest = 'send';
-                                          });
+                                                    if (canMoveToParent) {
+                                                      setState(() {
+                                                        bookingRequest = 'send';
+                                                      });
 
-                                          Parent newCategoryParent = selectedParentCategory;
-                                          print("Aggiorno " + newCategoryParent.name);
-                                          //StoreProvider.of<AppState>(context).dispatch(ServiceListSnippetRequest(snapshot.business.id_firestore));
-                                          ///aggiorno category tree
-                                          StoreProvider.of<AppState>(context).dispatch(new UpdateCategoryTree(newCategoryParent));
-                                          ///aggiorno singola categoria
-                                          StoreProvider.of<AppState>(context).dispatch(new UpdateCategory(snapshot.category));
-                                        } else {
-                                          showDialog(
-                                            context: context,
-                                            builder: (BuildContext context) {
-                                              // return object of type Dialog
-                                              return AlertDialog(
-                                                title: new Text(AppLocalizations.of(context).caution),
-                                                content: new Text(AppLocalizations.of(context).youCannotMoveBranch),
-                                              );
-                                            },
-                                          );
-                                        }
-                                      }
-                                    } : null),
-                              ) :  SizedBox(
-                                width: 56.0,
-                              ),
+                                                      Parent newCategoryParent = selectedParentCategory;
+                                                      print("Aggiorno " + newCategoryParent.name);
+                                                      //StoreProvider.of<AppState>(context).dispatch(ServiceListSnippetRequest(snapshot.business.id_firestore));
+                                                      ///aggiorno category tree
+                                                   //   StoreProvider.of<AppState>(context).dispatch(new UpdateCategoryTree(newCategoryParent));
+
+                                                      ///aggiorno singola categoria
+                                                      StoreProvider.of<AppState>(context).dispatch(new UpdateCategory(snapshot.category));
+                                                    } else {
+                                                      showDialog(
+                                                        context: context,
+                                                        builder: (BuildContext context) {
+                                                          // return object of type Dialog
+                                                          return AlertDialog(
+                                                            title: new Text(AppLocalizations.of(context).caution),
+                                                            content: new Text(AppLocalizations.of(context).youCannotMoveBranch),
+                                                          );
+                                                        },
+                                                      );
+                                                    }
+                                                  }
+                                                }
+                                              : null),
+                                    )
+                                  : SizedBox(
+                                      width: 56.0,
+                                    ),
                             ],
                           ),
                           floatingActionButton: FloatingActionButton(
-                            onPressed: canEditCategory ? () {
-                              print("add worker/manager");
-                              _modalAddPerson(context);
-                            } : null,
+                            onPressed: canEditCategory
+                                ? () {
+                                    print("add worker/manager");
+                                    _modalAddPerson(context);
+                                  }
+                                : null,
                             child: Icon(Icons.add),
                             backgroundColor: canEditCategory ? BuytimeTheme.Secondary : BuytimeTheme.TextMedium,
                           ),
@@ -719,32 +726,60 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                               child: Padding(
                                 padding: EdgeInsets.only(top: 10.0),
                                 child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: <Widget>[
                                     ///Category Image
-                                    Container(
-                                      margin: EdgeInsets.only(left: 20 , bottom: 10),
-                                      width: SizeConfig.screenWidth,
-                                      alignment: Alignment.center,
-                                      child: OptimumFormMultiPhoto(
-                                        text: AppLocalizations.of(context).categoryImage,
-                                        remotePath: "business/" + businessName + "/category",
-                                        maxHeight: 1000,
-                                        maxPhoto: 1,
-                                        maxWidth: 800,
-                                        minHeight: 200,
-                                        minWidth: 600,
-                                        cropAspectRatioPreset: CropAspectRatioPreset.square,
-                                        image: snapshot.category.categoryImage == null || snapshot.category.categoryImage.isEmpty
-                                            ? null
-                                            : snapshot.category.categoryImage,
-                                        //Image.network(snapshot.category.categoryImage, width: media.width * 0.3),
-                                        roleAllowedArray: [Role.admin, Role.salesman],
-                                        onFilePicked: (fileToUpload) {
-                                          fileToUpload.remoteFolder = "business/" + businessName + "/category";
-                                          StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInCategory(fileToUpload, fileToUpload.state, 0));
-                                        },
-                                      ),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                          margin: EdgeInsets.only(left: 12 , bottom: 10),
+                                          width: SizeConfig.safeBlockHorizontal* 50,
+                                          alignment: Alignment.center,
+                                          child: OptimumFormMultiPhoto(
+                                            text: AppLocalizations.of(context).categoryImage,
+                                            remotePath: "business/" + businessName + "/category",
+                                            maxHeight: 1000,
+                                            maxPhoto: 1,
+                                            maxWidth: 800,
+                                            minHeight: 200,
+                                            minWidth: 600,
+                                            cropAspectRatioPreset: CropAspectRatioPreset.square,
+                                            image: snapshot.category.categoryImage == null || snapshot.category.categoryImage.isEmpty
+                                                ? null
+                                                : snapshot.category.categoryImage,
+                                            //Image.network(snapshot.category.categoryImage, width: media.width * 0.3),
+                                            roleAllowedArray: [Role.admin, Role.salesman],
+                                            onFilePicked: (fileToUpload) {
+                                              fileToUpload.remoteFolder = "business/" + businessName + "/category";
+                                              StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInCategory(fileToUpload, fileToUpload.state, 0));
+                                            },
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(top: 10.0, bottom: 10.0, left: 0.0),
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                AppLocalizations.of(context).showcase,
+                                                style: TextStyle(fontFamily: BuytimeTheme.FontFamily, fontWeight: FontWeight.w600, color: BuytimeTheme.TextGrey, fontSize: 16),
+                                              ),
+                                              Switch(
+                                                  activeColor: BuytimeTheme.ManagerPrimary,
+                                                  value: snapshot.category.showcase,
+                                                  onChanged: StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin || StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman
+                                                      ? (value) {
+                                                    debugPrint('UI_M_create_category => SHOWCASE: $value');
+                                                    setState(() {
+                                                      //isHub = value;
+                                                    });
+                                                    StoreProvider.of<AppState>(context).dispatch(SetCategoryShowcase(value));
+                                                    //snapshot.hub = value;
+                                                  }
+                                                      : (value) {}),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                     ///Category Name
                                     Padding(
@@ -757,7 +792,7 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                                               child: Padding(
                                                 padding: const EdgeInsets.only(top: 0.0, bottom: 5.0, left: 20.0, right: 20.0),
                                                 child: TextFormField(
-                                                  enabled: StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin || StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman ? true :false,
+                                                  enabled: StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin || StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman ? true : false,
                                                   validator: (value) => value.isEmpty ? AppLocalizations.of(context).categoryNameIsBlank : null,
                                                   controller: nameController,
                                                   keyboardType: TextInputType.name,
@@ -767,9 +802,7 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                                                       setNewCategoryName(value);
                                                     });
                                                   },
-                                                  style: TextStyle(
-                                                      color: StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin || StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman ? BuytimeTheme.TextBlack : BuytimeTheme.TextGrey
-                                                  ),
+                                                  style: TextStyle(color: StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin || StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman ? BuytimeTheme.TextBlack : BuytimeTheme.TextGrey),
                                                   decoration: InputDecoration(
                                                     labelText: AppLocalizations.of(context).categoryName,
                                                     enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: BuytimeTheme.DividerGrey), borderRadius: BorderRadius.all(Radius.circular(8.0))),
@@ -782,8 +815,9 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                                         ),
                                       ),
                                     ),
+
                                     ///Category Tag
-                                    Padding(
+                                    /*Padding(
                                       padding: const EdgeInsets.only(top: 5.0, bottom: 5.0, left: 20.0, right: 20.0),
                                       child: Center(
                                         child: Container(
@@ -818,21 +852,21 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                                                       value: CustomTag.other,
                                                     ),
                                                   ],
-                                                  decoration:
-                                                  InputDecoration(
-                                                      enabled: canEditCategory ? true : false,
-                                                      labelText: AppLocalizations.of(context).customTag, enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white))),
-                                                  onChanged: canEditCategory ? (value) {
-                                                    setState(() {
-                                                      customTag = value;
-                                                      setNewCategoryCustomTag(customTag);
-                                                    });
-                                                  } : null),
+                                                  decoration: InputDecoration(enabled: canEditCategory ? true : false, labelText: AppLocalizations.of(context).customTag, enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white))),
+                                                  onChanged: canEditCategory
+                                                      ? (value) {
+                                                          setState(() {
+                                                            customTag = value;
+                                                            setNewCategoryCustomTag(customTag);
+                                                          });
+                                                        }
+                                                      : null),
                                             ),
                                           ),
                                         ),
                                       ),
-                                    ),
+                                    ),*/
+
                                     ///Parent Category
                                     Padding(
                                       padding: const EdgeInsets.only(top: 10.0, bottom: 25.0, left: 20.0, right: 20.0),
@@ -847,29 +881,29 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                                                   isExpanded: true,
                                                   value: selectedParentCategory,
                                                   items: _dropdownMenuParentCategory,
-                                                  decoration: InputDecoration(
-                                                      enabled: StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin || StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman ? true : false,
-                                                      labelText: AppLocalizations.of(context).parentCategory,
-                                                      enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white))),
-                                                  onChanged: StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin || StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman ? (value) {
-                                                    setState(() {
-                                                      selectedParentCategory = value;
-                                                      checkNumberLevelToMove(snapshot.categoryTree.categoryNodeList, snapshot.category.id);
-                                                      setNewCategoryParent(selectedParentCategory, snapshot.categoryTree.categoryNodeList);
-                                                      if (selectedParentCategory.level + numberLevel < 6) {
-                                                        canMoveToParent = true;
-                                                        numberLevel = 0;
-                                                      } else {
-                                                        canMoveToParent = false;
-                                                        numberLevel = 0;
-                                                      }
-                                                    });
-                                                  } : null),
+                                                  decoration: InputDecoration(enabled: StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin || StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman ? true : false, labelText: AppLocalizations.of(context).parentCategory, enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white))),
+                                                  onChanged: StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin || StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman
+                                                      ? (value) {
+                                                          setState(() {
+                                                            selectedParentCategory = value;
+                                                            checkNumberLevelToMove(snapshot.category.id);
+                                                            setNewCategoryParent(selectedParentCategory);
+                                                            if (selectedParentCategory.level + numberLevel < 6) {
+                                                              canMoveToParent = true;
+                                                              numberLevel = 0;
+                                                            } else {
+                                                              canMoveToParent = false;
+                                                              numberLevel = 0;
+                                                            }
+                                                          });
+                                                        }
+                                                      : null),
                                             ),
                                           ),
                                         ),
                                       ),
                                     ),
+
                                     ///Manager & Worker
                                     Container(
                                       child: Column(
@@ -924,43 +958,47 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                                                       children: listOfManagerChips(snapshot),
                                                     ),
                                                   ),
-                                                  (managerList.length > 0 && managerList != null) ?
-                                                  Flexible(
-                                                    child: Container(
-                                                      // height: media.height * 0.15,
-                                                      child: Wrap(
-                                                        spacing: 5,
-                                                        children: managerList.map((e) => InputChip(
-                                                          selected: false,
-                                                          label: Text(
-                                                            e.mail,
-                                                            style: TextStyle(
-                                                              fontSize: 13.0,
-                                                              fontWeight: FontWeight.w500,
-                                                            ),
-                                                          ),
-                                                          //avatar: FlutterLogo(),
-                                                          onPressed: () {
-                                                            print('Manager is pressed');
+                                                  (managerList.length > 0 && managerList != null)
+                                                      ? Flexible(
+                                                          child: Container(
+                                                            // height: media.height * 0.15,
+                                                            child: Wrap(
+                                                              spacing: 5,
+                                                              children: managerList
+                                                                  .map((e) => InputChip(
+                                                                        selected: false,
+                                                                        label: Text(
+                                                                          e.mail,
+                                                                          style: TextStyle(
+                                                                            fontSize: 13.0,
+                                                                            fontWeight: FontWeight.w500,
+                                                                          ),
+                                                                        ),
+                                                                        //avatar: FlutterLogo(),
+                                                                        onPressed: () {
+                                                                          print('Manager is pressed');
 
-                                                            ///Vedere che fare quando si pigia il chip
-                                                            setState(() {
-                                                              //_selected = !_selected;
-                                                            });
-                                                          },
-                                                          onDeleted: canEditCategory ? () {
-                                                            Manager managerToDelete = Manager(id: "", name: "", surname: "", mail:e.mail);
-                                                            print("Mail di invito Manager da eliminare : " + e.mail);
-                                                            CategoryInviteState categoryInviteState = CategoryInviteState().toEmpty();
-                                                            categoryInviteState.role = "Manager";
-                                                            categoryInviteState.id_category = snapshot.category.id;
-                                                            categoryInviteState.mail = e.mail;
-                                                            StoreProvider.of<AppState>(context).dispatch(DeleteCategoryInvite(categoryInviteState));
-                                                            StoreProvider.of<AppState>(context).dispatch(new DeleteCategoryManager(managerToDelete));
-                                                            print('Manager is deleted');
-                                                          } : null,
-                                                        )).toList(),
-                                                        /*shrinkWrap: true,
+                                                                          ///Vedere che fare quando si pigia il chip
+                                                                          setState(() {
+                                                                            //_selected = !_selected;
+                                                                          });
+                                                                        },
+                                                                        onDeleted: canEditCategory
+                                                                            ? () {
+                                                                                Manager managerToDelete = Manager(id: "", name: "", surname: "", mail: e.mail);
+                                                                                print("Mail di invito Manager da eliminare : " + e.mail);
+                                                                                CategoryInviteState categoryInviteState = CategoryInviteState().toEmpty();
+                                                                                categoryInviteState.role = "Manager";
+                                                                                categoryInviteState.id_category = snapshot.category.id;
+                                                                                categoryInviteState.mail = e.mail;
+                                                                                StoreProvider.of<AppState>(context).dispatch(DeleteCategoryInvite(categoryInviteState));
+                                                                                StoreProvider.of<AppState>(context).dispatch(new DeleteCategoryManager(managerToDelete));
+                                                                                print('Manager is deleted');
+                                                                              }
+                                                                            : null,
+                                                                      ))
+                                                                  .toList(),
+                                                              /*shrinkWrap: true,
                                                         itemCount: managerList.length,
                                                         physics: ClampingScrollPhysics(),
                                                         itemBuilder: (context, i) {
@@ -999,13 +1037,15 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                                                             ],
                                                           );
                                                         },*/
-                                                      ),
-                                                    ),
-                                                  ) : Container()
+                                                            ),
+                                                          ),
+                                                        )
+                                                      : Container()
                                                 ],
                                               ),
                                             ),
                                           ),
+
                                           ///Worker
                                           Padding(
                                             padding: const EdgeInsets.only(top: 10.0, left: 10.0, right: 10.0),
@@ -1051,42 +1091,46 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                                                         ),
                                                       ],
                                                     ),
-                                                    (workerList.length > 0 && workerList != null) ?
-                                                    Flexible(
-                                                      child: Container(
-                                                        //height: media.height * 0.15,
-                                                        child: Wrap(
-                                                          spacing: 5,
-                                                          children: workerList.map((e) => InputChip(
-                                                            selected: false,
-                                                            label: Text(
-                                                              e.mail,
-                                                              style: TextStyle(
-                                                                fontSize: 13.0,
-                                                                fontWeight: FontWeight.w500,
-                                                              ),
-                                                            ),
-                                                            onPressed: () {
-                                                              print('Worker is pressed');
+                                                    (workerList.length > 0 && workerList != null)
+                                                        ? Flexible(
+                                                            child: Container(
+                                                              //height: media.height * 0.15,
+                                                              child: Wrap(
+                                                                spacing: 5,
+                                                                children: workerList
+                                                                    .map((e) => InputChip(
+                                                                          selected: false,
+                                                                          label: Text(
+                                                                            e.mail,
+                                                                            style: TextStyle(
+                                                                              fontSize: 13.0,
+                                                                              fontWeight: FontWeight.w500,
+                                                                            ),
+                                                                          ),
+                                                                          onPressed: () {
+                                                                            print('Worker is pressed');
 
-                                                              ///Vedere che fare quando si pigia il chip
-                                                              setState(() {
-                                                                //_selected = !_selected;
-                                                              });
-                                                            },
-                                                            onDeleted: canEditCategory ? () {
-                                                              Worker workerToDelete = Worker(id: "", name: "", surname: "", mail: e.mail);
-                                                              print("Mail di invito Worker da eliminare : " + e.mail);
-                                                              CategoryInviteState categoryInviteState = CategoryInviteState().toEmpty();
-                                                              categoryInviteState.role = "Worker";
-                                                              categoryInviteState.id_category = snapshot.category.id;
-                                                              categoryInviteState.mail = e.mail;
-                                                              StoreProvider.of<AppState>(context).dispatch(DeleteCategoryInvite(categoryInviteState));
-                                                              StoreProvider.of<AppState>(context).dispatch(new DeleteCategoryWorker(workerToDelete));
-                                                              print('Worker is deleted');
-                                                            } : null,
-                                                          )).toList(),
-                                                          /*shrinkWrap: true,
+                                                                            ///Vedere che fare quando si pigia il chip
+                                                                            setState(() {
+                                                                              //_selected = !_selected;
+                                                                            });
+                                                                          },
+                                                                          onDeleted: canEditCategory
+                                                                              ? () {
+                                                                                  Worker workerToDelete = Worker(id: "", name: "", surname: "", mail: e.mail);
+                                                                                  print("Mail di invito Worker da eliminare : " + e.mail);
+                                                                                  CategoryInviteState categoryInviteState = CategoryInviteState().toEmpty();
+                                                                                  categoryInviteState.role = "Worker";
+                                                                                  categoryInviteState.id_category = snapshot.category.id;
+                                                                                  categoryInviteState.mail = e.mail;
+                                                                                  StoreProvider.of<AppState>(context).dispatch(DeleteCategoryInvite(categoryInviteState));
+                                                                                  StoreProvider.of<AppState>(context).dispatch(new DeleteCategoryWorker(workerToDelete));
+                                                                                  print('Worker is deleted');
+                                                                                }
+                                                                              : null,
+                                                                        ))
+                                                                    .toList(),
+                                                                /*shrinkWrap: true,
                                                           itemCount: workerList.length,
                                                           itemBuilder: (context, i) {
                                                             return Row(
@@ -1123,26 +1167,26 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                                                               ],
                                                             );
                                                           },*/
-                                                        ),
-                                                      ),
-                                                    ) :
-                                                    Padding(
-                                                      padding: EdgeInsets.only(top: 0, bottom: 0),
-                                                      child: Row(
-                                                        children: [
-                                                          Container(
-                                                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, bottom: SizeConfig.safeBlockVertical * 1),
-                                                            child: Text(
-                                                              AppLocalizations.of(context).noWorkersHere,
-                                                              style: TextStyle(
-                                                                fontSize: 13.0,
-                                                                fontWeight: FontWeight.w500,
                                                               ),
                                                             ),
                                                           )
-                                                        ],
-                                                      ),
-                                                    ),
+                                                        : Padding(
+                                                            padding: EdgeInsets.only(top: 0, bottom: 0),
+                                                            child: Row(
+                                                              children: [
+                                                                Container(
+                                                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, bottom: SizeConfig.safeBlockVertical * 1),
+                                                                  child: Text(
+                                                                    AppLocalizations.of(context).noWorkersHere,
+                                                                    style: TextStyle(
+                                                                      fontSize: 13.0,
+                                                                      fontWeight: FontWeight.w500,
+                                                                    ),
+                                                                  ),
+                                                                )
+                                                              ],
+                                                            ),
+                                                          ),
                                                   ],
                                                 ),
                                               ),
@@ -1151,6 +1195,7 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                                         ],
                                       ),
                                     ),
+
                                     ///Delete
                                     Padding(
                                       padding: const EdgeInsets.only(top: 10.0),
@@ -1170,45 +1215,47 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                                               children: [
                                                 !hasChild
                                                     ? GestureDetector(
-                                                  behavior: HitTestBehavior.opaque,
-                                                  onTap: (StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin || StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman) && !hasService ? () {
-                                                    print("CategoryEdit ::: Elimino nodo categoria dall'albero");
-                                                    StoreProvider.of<AppState>(context).dispatch(DeleteCategoryTree(snapshot.category.id));
-                                                    print("CategoryEdit ::: Elimino categoria " + snapshot.category.id);
-                                                    StoreProvider.of<AppState>(context).dispatch(DeleteCategory(snapshot.category.id));
-                                                    Future.delayed(const Duration(milliseconds: 500), () {
-                                                      Navigator.pushReplacement(
-                                                        context,
-                                                        MaterialPageRoute(builder: (context) => ManageCategory(deleted: true)),
-                                                      );
-                                                    });
-                                                  }  :null,
-                                                  child: Row(
-                                                    children: [
-                                                      Container(
-                                                        child: Icon(
-                                                          Icons.delete,
-                                                          size: 25,
-                                                          color: (StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin || StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman) && !hasService ? BuytimeTheme.AccentRed : BuytimeTheme.SymbolGrey,
-                                                        ),
-                                                      ),
-                                                      Container(
-                                                        child: Padding(
-                                                          padding: const EdgeInsets.only(left: 10.0),
-                                                          child: Text(
-                                                            AppLocalizations.of(context).deleteCategory,
-                                                            textAlign: TextAlign.start,
-                                                            style: TextStyle(
-                                                              color: (StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin || StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman) && !hasService ? BuytimeTheme.AccentRed : BuytimeTheme.TextGrey,
-                                                              fontSize: 18,
-                                                              fontWeight: FontWeight.w500,
+                                                        behavior: HitTestBehavior.opaque,
+                                                        onTap: (StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin || StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman) && !hasService
+                                                            ? () {
+                                                              //  print("CategoryEdit ::: Elimino nodo categoria dall'albero");
+                                                             //   StoreProvider.of<AppState>(context).dispatch(DeleteCategoryTree(snapshot.category.id));
+                                                                print("CategoryEdit ::: Elimino categoria " + snapshot.category.id);
+                                                                StoreProvider.of<AppState>(context).dispatch(DeleteCategory(snapshot.category.id));
+                                                                Future.delayed(const Duration(milliseconds: 500), () {
+                                                                  Navigator.pushReplacement(
+                                                                    context,
+                                                                    MaterialPageRoute(builder: (context) => ManageCategory(deleted: true)),
+                                                                  );
+                                                                });
+                                                              }
+                                                            : null,
+                                                        child: Row(
+                                                          children: [
+                                                            Container(
+                                                              child: Icon(
+                                                                Icons.delete,
+                                                                size: 25,
+                                                                color: (StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin || StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman) && !hasService ? BuytimeTheme.AccentRed : BuytimeTheme.SymbolGrey,
+                                                              ),
                                                             ),
-                                                          ),
+                                                            Container(
+                                                              child: Padding(
+                                                                padding: const EdgeInsets.only(left: 10.0),
+                                                                child: Text(
+                                                                  AppLocalizations.of(context).deleteCategory,
+                                                                  textAlign: TextAlign.start,
+                                                                  style: TextStyle(
+                                                                    color: (StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin || StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman) && !hasService ? BuytimeTheme.AccentRed : BuytimeTheme.TextGrey,
+                                                                    fontSize: 18,
+                                                                    fontWeight: FontWeight.w500,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ],
                                                         ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                )
+                                                      )
                                                     : Container(),
                                               ],
                                             ),
@@ -1226,32 +1273,32 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                 ///Ripple Effect
                 bookingRequest.isNotEmpty
                     ? Positioned.fill(
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: Container(
-                        height: SizeConfig.safeBlockVertical * 100,
-                        decoration: BoxDecoration(
-                          color: BuytimeTheme.BackgroundCerulean.withOpacity(.8),
-                        ),
-                        child: Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Container(
-                                width: SizeConfig.safeBlockVertical * 20,
-                                height: SizeConfig.safeBlockVertical * 20,
-                                child: Center(
-                                  child: SpinKitRipple(
-                                    color: Colors.white,
-                                    size: SizeConfig.safeBlockVertical * 18,
-                                  ),
-                                ),
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: Container(
+                              height: SizeConfig.safeBlockVertical * 100,
+                              decoration: BoxDecoration(
+                                color: BuytimeTheme.BackgroundCerulean.withOpacity(.8),
                               ),
-                            ],
-                          ),
-                        )),
-                  ),
-                )
+                              child: Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Container(
+                                      width: SizeConfig.safeBlockVertical * 20,
+                                      height: SizeConfig.safeBlockVertical * 20,
+                                      child: Center(
+                                        child: SpinKitRipple(
+                                          color: Colors.white,
+                                          size: SizeConfig.safeBlockVertical * 18,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )),
+                        ),
+                      )
                     : Container()
               ],
             ),

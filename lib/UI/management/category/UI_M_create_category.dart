@@ -33,7 +33,7 @@ class UI_M_CreateCategoryState extends State<UI_M_CreateCategory> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final GlobalKey<FormState> _formInviteKey = GlobalKey<FormState>();
 
-  Parent _dropdownParentCategory = Parent(level: 0, id: "no_parent", name: "No Parent", parentRootId: "");
+  Parent _dropdownParentCategory = Parent(level: 0, id: "no_parent", name: "No Parent");
 
   List<DropdownMenuItem<Parent>> _dropdownMenuParentCategory = [];
 
@@ -79,12 +79,12 @@ class UI_M_CreateCategoryState extends State<UI_M_CreateCategory> {
    }
   }
 
-  setNewCategoryParent(Parent contentSelectDrop, List<dynamic> list) {
-    if (list == null || list.length == 0) {
-      Parent parentInitial = Parent(level: 0, id: "no_parent", name: "No Parent",parentRootId: "");
+  setNewCategoryParent(Parent contentSelectDrop,/* List<dynamic> list*/) {
+    if (contentSelectDrop.id == 'no_parent') {
+      Parent parentInitial = Parent(level: 0, id: "no_parent", name: "No Parent");
       StoreProvider.of<AppState>(context).dispatch(SetCategoryLevel(0));
       StoreProvider.of<AppState>(context).dispatch(SetCategoryParent(parentInitial));
-    } else if (list != null && list.length > 0) {
+    } else {
       StoreProvider.of<AppState>(context).dispatch(SetCategoryLevel(contentSelectDrop.level + 1));
       StoreProvider.of<AppState>(context).dispatch(SetCategoryParent(contentSelectDrop));
     }
@@ -102,10 +102,53 @@ class UI_M_CreateCategoryState extends State<UI_M_CreateCategory> {
   void buildDropDownMenuItemsParent(Parent item) {
     if (stopBuildDropDown == false) {
       stopBuildDropDown = true;
-      CategoryTree categoryNode = StoreProvider.of<AppState>(context).state.categoryTree;
+     // CategoryTree categoryNode = StoreProvider.of<AppState>(context).state.categoryTree;
       List<DropdownMenuItem<Parent>> items = [];
 
-      items.add(
+      // items.add(
+      //   DropdownMenuItem(
+      //     child: Text(
+      //       item.name,
+      //       overflow: TextOverflow.ellipsis,
+      //     ),
+      //     value: item,
+      //   ),
+      // );
+      //
+      // if (categoryNode.categoryNodeList != null) {
+      //   if (categoryNode.categoryNodeList.length != 0 && categoryNode.categoryNodeList.length != null) {
+      //     List<dynamic> list = categoryNode.categoryNodeList;
+      //     items = openTree(list, items);
+      //   }
+      // }
+
+
+      List<dynamic> snippet = StoreProvider.of<AppState>(context).state.serviceListSnippetState.businessSnippet;
+
+      for (var i = 0; i < snippet.length; i++) {
+        String categoryPath = snippet[i].categoryAbsolutePath;
+        List<String> categoryRoute = categoryPath.split('/');
+
+        Parent placeHolderParent = Parent(
+          name: snippet[i].categoryName,
+          id: categoryRoute.last,
+          level: categoryRoute.length - 1,
+         // parentRootId: categoryRoute[1],
+        );
+        items.insert(
+          0,
+          DropdownMenuItem(
+            child: Text(
+              placeHolderParent.name,
+              overflow: TextOverflow.ellipsis,
+            ),
+            value: placeHolderParent,
+          ),
+        );
+      }
+
+      items.insert(
+        0,
         DropdownMenuItem(
           child: Text(
             item.name,
@@ -115,17 +158,10 @@ class UI_M_CreateCategoryState extends State<UI_M_CreateCategory> {
         ),
       );
 
-      if (categoryNode.categoryNodeList != null) {
-        if (categoryNode.categoryNodeList.length != 0 && categoryNode.categoryNodeList.length != null) {
-          List<dynamic> list = categoryNode.categoryNodeList;
-          items = openTree(list, items);
-        }
-      }
-
       _dropdownMenuParentCategory = items;
     }
   }
-
+/*
   openTree(List<dynamic> list, List<DropdownMenuItem<Parent>> items) {
     for (int i = 0; i < list.length; i++) {
       if (list[i]['level'] < 4) {
@@ -149,7 +185,7 @@ class UI_M_CreateCategoryState extends State<UI_M_CreateCategory> {
     }
     return items;
   }
-
+*/
   Parent searchDropdownParent(var snapshot) {
     for (var element in _dropdownMenuParentCategory) {
       if (snapshot.category.id == element.value.id) {
@@ -249,15 +285,15 @@ class UI_M_CreateCategoryState extends State<UI_M_CreateCategory> {
                                       }
 
                                       StoreProvider.of<AppState>(context).dispatch(new CreateCategory(categoryCreate));
-                                      StoreProvider.of<AppState>(context).dispatch(new AddCategoryTree(newCategoryParent));
+                                    //  StoreProvider.of<AppState>(context).dispatch(new AddCategoryTree(newCategoryParent));
                                     } else {
                                       CategoryState categoryCreate = snapshot.category != null ? snapshot.category : CategoryState().toEmpty();
 
                                       if(categoryCreate.parent.id == 'no_parent'){
                                         categoryCreate.level = 0;
                                       }
-                                      StoreProvider.of<AppState>(context).dispatch(new CreateCategory(categoryCreate));
-                                      StoreProvider.of<AppState>(context).dispatch(new AddCategoryTree(newParent));
+                                      StoreProvider.of<AppState>(context).dispatch(CreateCategory(categoryCreate));
+                                    //  StoreProvider.of<AppState>(context).dispatch(new AddCategoryTree(newParent));
                                     }
 
                                   }
@@ -275,68 +311,37 @@ class UI_M_CreateCategoryState extends State<UI_M_CreateCategory> {
                                   ///Category Image
                                   Column(
                                     children: [
-                                      OptimumFormMultiPhoto(
-                                        text: AppLocalizations.of(context).categoryImage,
-                                        remotePath: "business/" + businessName + "/category",
-                                        maxHeight: 1000,
-                                        maxPhoto: 1,
-                                        maxWidth: 800,
-                                        minHeight: 200,
-                                        minWidth: 600,
-                                        roleAllowedArray: [Role.admin, Role.salesman],
-                                        cropAspectRatioPreset: CropAspectRatioPreset.square,
-                                        onFilePicked: (fileToUpload) {
-                                          if(fileToUpload != null){
-                                            setState(() {
-                                              errorCategoryImage = false;
-                                            });
-                                          }
-                                          fileToUpload.remoteFolder = "business/" + businessName + "/category";
-                                          StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInCategory(fileToUpload, fileToUpload.state, 0));
-                                        },
-                                      ),
-                                      ///Error message Empty CategoryList
-                                      errorCategoryImage
-                                          ? Center(
-                                              child: Text(
-                                                AppLocalizations.of(context).noCategoryImageSet,
-                                                style: TextStyle(
-                                                  fontSize: media.height * 0.018,
-                                                  color: BuytimeTheme.ErrorRed,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                              ))
-                                          : Container(),
-                                    ],
-                                  ),
-                                  ///Category Name
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
-                                    child: Center(
-                                      child: Container(
-                                        width: media.width * 0.9,
-                                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
-                                        child: Form(
-                                            key: _formKey,
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(top: 0.0, bottom: 5.0, left: 10.0, right: 10.0),
-                                              child: TextFormField(
-                                                validator: (value) => value.isEmpty ? AppLocalizations.of(context).categoryNameIsBlank : null,
-                                                initialValue: _selectedCategoryName,
-                                                onChanged: (value) {
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          ///Category Image
+                                          Container(
+                                            margin: EdgeInsets.only(left: 12 , bottom: 10),
+                                            width: SizeConfig.safeBlockHorizontal* 50,
+                                            alignment: Alignment.center,
+                                            child: OptimumFormMultiPhoto(
+                                              text: AppLocalizations.of(context).categoryImage,
+                                              remotePath: "business/" + businessName + "/category",
+                                              maxHeight: 1000,
+                                              maxPhoto: 1,
+                                              maxWidth: 800,
+                                              minHeight: 200,
+                                              minWidth: 600,
+                                              roleAllowedArray: [Role.admin, Role.salesman],
+                                              cropAspectRatioPreset: CropAspectRatioPreset.square,
+                                              onFilePicked: (fileToUpload) {
+                                                if(fileToUpload != null){
                                                   setState(() {
-                                                    _selectedCategoryName = value;
-                                                    setNewCategoryName(value);
+                                                    errorCategoryImage = false;
                                                   });
-                                                },
-                                                decoration: InputDecoration(labelText: AppLocalizations.of(context).categoryName),
-                                              ),
-                                            )),
-                                      ),
-                                    ),
-                                  ),
-                                  ///Category Tag
-                                  Padding(
+                                                }
+                                                fileToUpload.remoteFolder = "business/" + businessName + "/category";
+                                                StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInCategory(fileToUpload, fileToUpload.state, 0));
+                                              },
+                                            ),
+                                          ),
+                                          ///Category Tag
+                                          /*Padding(
                                     padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
                                     child: Center(
                                       child: Container(
@@ -382,6 +387,72 @@ class UI_M_CreateCategoryState extends State<UI_M_CreateCategory> {
                                         ),
                                       ),
                                     ),
+                                  ),*/
+                                          Padding(
+                                            padding: const EdgeInsets.only(top: 10.0, bottom: 10.0, left: 0.0),
+                                            child: Row(
+                                              children: [
+                                                Text(
+                                                  AppLocalizations.of(context).showcase,
+                                                  style: TextStyle(fontFamily: BuytimeTheme.FontFamily, fontWeight: FontWeight.w600, color: BuytimeTheme.TextGrey, fontSize: 16),
+                                                ),
+                                                Switch(
+                                                    activeColor: BuytimeTheme.ManagerPrimary,
+                                                    value: snapshot.category.showcase,
+                                                    onChanged: StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin || StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman
+                                                        ? (value) {
+                                                      debugPrint('UI_M_create_category => SHOWCASE: $value');
+                                                      setState(() {
+                                                        //isHub = value;
+                                                      });
+                                                      StoreProvider.of<AppState>(context).dispatch(SetCategoryShowcase(value));
+                                                      //snapshot.hub = value;
+                                                    }
+                                                        : (value) {}),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      ///Error message Empty CategoryList
+                                      errorCategoryImage
+                                          ? Center(
+                                              child: Text(
+                                                AppLocalizations.of(context).noCategoryImageSet,
+                                                style: TextStyle(
+                                                  fontSize: media.height * 0.018,
+                                                  color: BuytimeTheme.ErrorRed,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ))
+                                          : Container(),
+                                    ],
+                                  ),
+                                  ///Category Name
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+                                    child: Center(
+                                      child: Container(
+                                        width: media.width * 0.9,
+                                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
+                                        child: Form(
+                                            key: _formKey,
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(top: 0.0, bottom: 5.0, left: 10.0, right: 10.0),
+                                              child: TextFormField(
+                                                validator: (value) => value.isEmpty ? AppLocalizations.of(context).categoryNameIsBlank : null,
+                                                initialValue: _selectedCategoryName,
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    _selectedCategoryName = value;
+                                                    setNewCategoryName(value);
+                                                  });
+                                                },
+                                                decoration: InputDecoration(labelText: AppLocalizations.of(context).categoryName),
+                                              ),
+                                            )),
+                                      ),
+                                    ),
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
@@ -403,7 +474,7 @@ class UI_M_CreateCategoryState extends State<UI_M_CreateCategory> {
                                                     selectedParentDropValue = newValue;
                                                     newParent = newValue;
                                                     print("Drop Selezionato su onchangedrop : " + selectedParentDropValue.name);
-                                                    setNewCategoryParent(selectedParentDropValue, snapshot.categoryTree.categoryNodeList);
+                                                    setNewCategoryParent(selectedParentDropValue);
                                                   });
                                                 }),
                                           ),

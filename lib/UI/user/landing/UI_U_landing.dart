@@ -3,10 +3,12 @@ import 'dart:core';
 import 'package:Buytime/UI/management/activity/RUI_M_activity_management.dart';
 import 'package:Buytime/UI/management/activity/UI_M_activity_management.dart';
 import 'package:Buytime/UI/management/business/UI_M_business_list.dart';
+import 'package:Buytime/UI/user/booking/UI_U_booking_self_creation.dart';
 import 'package:Buytime/UI/user/booking/UI_U_my_bookings.dart';
 import 'package:Buytime/UI/user/landing/invite_guest_form.dart';
 import 'package:Buytime/UI/user/login/UI_U_home.dart';
 import 'package:Buytime/UI/user/turist/UI_U_service_explorer.dart';
+import 'package:Buytime/environment_abstract.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/model/role/role.dart';
@@ -54,6 +56,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:Buytime/UI/management/business/RUI_M_business_list.dart';
 import 'package:http/http.dart' as http;
 
+import '../../../environment_abstract.dart';
+
 class Landing extends StatefulWidget {
   static String route = '/landing';
 
@@ -72,6 +76,7 @@ class LandingState extends State<Landing> {
   bool requestingBookings = false;
 
   List<BookingState> bookingList = [];
+  String selfBookingCode = '';
   String bookingCode = '';
   String categoryCode = '';
 
@@ -104,8 +109,6 @@ class LandingState extends State<Landing> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      //initDynamicLinks();
-
       debugPrint('UI_U_Landing => initState()');
     });
     initDynamicLinks();
@@ -123,6 +126,9 @@ class LandingState extends State<Landing> {
         String bookingCodeRead = await storage.read(key: 'bookingCodeRead') ?? '';
         String categoryInviteRead = await storage.read(key: 'categoryInviteRead') ?? '';
         String orderIdRead = await storage.read(key: 'orderIdRead') ?? '';
+        await storage.write(key: 'selfBookingCodeRead', value: 'false');
+
+        String selfBookingCodeRead = await storage.read(key: 'selfBookingCodeRead') ?? '';
         if (deepLink.queryParameters.containsKey('booking') && bookingCodeRead != 'true') {
           String id = deepLink.queryParameters['booking'];
           debugPrint('UI_U_landing: booking onLink: $id');
@@ -167,6 +173,19 @@ class LandingState extends State<Landing> {
             Navigator.push(context, MaterialPageRoute(builder: (context) => UI_M_BusinessList()));
           } else
             debugPrint('UI_U_landing: USER NOT LOGGED in onLink');
+        } else if (deepLink.queryParameters.containsKey('selfBookingCode') && selfBookingCodeRead != 'true') {
+          String selfBookingCode = deepLink.queryParameters['selfBookingCode'];
+          debugPrint('UI_U_landing: selfBookingCode from dynamic link: $selfBookingCode');
+          await storage.write(key: 'selfBookingCode', value: selfBookingCode);
+          await storage.write(key: 'selfBookingCodeRead', value: 'true');
+
+          if (FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty) {
+            debugPrint('UI_U_landing: USER Is LOGGED in onLink');
+            StoreProvider.of<AppState>(context).dispatch(BusinessRequest(selfBookingCode));
+            await Future.delayed(Duration(milliseconds: 1000));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => BookingSelfCreation()));
+          } else
+            debugPrint('UI_U_landing: USER NOT LOGGED in onLink');
         }
       }
     }, onError: (OnLinkErrorException e) async {
@@ -185,6 +204,7 @@ class LandingState extends State<Landing> {
       String bookingCodeRead = await storage.read(key: 'bookingCodeRead') ?? '';
       String categoryInviteRead = await storage.read(key: 'categoryInviteRead') ?? '';
       String orderIdRead = await storage.read(key: 'orderIdRead') ?? '';
+      String selfBookingCodeRead = await storage.read(key: 'selfBookingCodeRead') ?? '';
       if (deepLink.queryParameters.containsKey('booking') && bookingCodeRead != 'true') {
         String id = deepLink.queryParameters['booking'];
         debugPrint('UI_U_landing: booking getInitialLink: $id');
@@ -198,7 +218,20 @@ class LandingState extends State<Landing> {
           Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => InviteGuestForm(id: id, fromLanding: false)), ModalRoute.withName('/landing'));
         } else
           debugPrint('UI_U_landing: USER NOT LOGGED in getInitialLink');
-      } else if (deepLink.queryParameters.containsKey('categoryInvite') && categoryInviteRead != 'true') {
+      } else if (deepLink.queryParameters.containsKey('selfBookingCode') && selfBookingCodeRead != 'true') {
+      String id = deepLink.queryParameters['selfBookingCode'];
+      debugPrint('UI_U_landing: selfBookingCode getInitialLink: $id');
+      await storage.write(key: 'selfBookingCode', value: id);
+      await storage.write(key: 'selfBookingCodeRead', value: 'true');
+
+      if (FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty) {
+        debugPrint('UI_U_landing: USER IS LOGGED in getInitialLink');
+        StoreProvider.of<AppState>(context).dispatch(BusinessRequest(selfBookingCode));
+        await Future.delayed(Duration(milliseconds: 1000));
+        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => BookingSelfCreation()), ModalRoute.withName('/bookingSelfCreation'));
+      } else
+        debugPrint('UI_U_landing: USER NOT LOGGED in getInitialLink');
+    } else if (deepLink.queryParameters.containsKey('categoryInvite') && categoryInviteRead != 'true') {
         String categoryInvite = deepLink.queryParameters['categoryInvite'];
         debugPrint('UI_U_landing: categoryInvite: $categoryInvite');
         await storage.write(key: 'categoryInvite', value: categoryInvite);
@@ -262,7 +295,6 @@ class LandingState extends State<Landing> {
             StoreProvider.of<AppState>(context).dispatch(UserBookingListRequest(snapshot.user.email, false));
 
             WidgetsBinding.instance.addPostFrameCallback((_) async {
-              //https://europe-west1-buytime-458a1.cloudfunctions.net/getCategoriesForManagerInBusiness
               if (bookingCode.isEmpty) Navigator.push(context, MaterialPageRoute(builder: (context) => RBusinessList()));
             });
           } else {
@@ -387,7 +419,7 @@ class LandingState extends State<Landing> {
                                                   child: IconButton(
                                                     onPressed: () async
                                                     {
-                                                      Share.share('${AppLocalizations.of(context).checkOutBuytimeApp} https://buytime.page.link/shareBuytime', subject: '${AppLocalizations.of(context).takeYourTime}',);
+                                                      Share.share('${AppLocalizations.of(context).checkOutBuytimeApp} ${Environment().config.dynamicLink}/shareBuytime', subject: '${AppLocalizations.of(context).takeYourTime}',);
 
                                                       //LogConsole.init();
                                                       /*final RenderBox box = context.findRenderObject();

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--<style name="LaunchTheme" parent="@android:style/Theme.Black.NoTitleBar">
+        &lt;!&ndash; Show a splash screen on the activity. Automatically removed when
+             Flutter draws its first frame &ndash;&gt;
+        &lt;!&ndash;<item name="android:windowBackground">@drawable/launch_background</item>&ndash;&gt;
+    </style>-->
+    <style name="AppFullScreenTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+    <color name="malibu">#207CC4</color>
+</resources>

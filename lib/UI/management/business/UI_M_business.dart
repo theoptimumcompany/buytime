@@ -5,6 +5,7 @@ import 'package:Buytime/UI/management/business/UI_M_edit_business.dart';
 import 'package:Buytime/UI/management/business/widget/W_invite_user.dart';
 import 'package:Buytime/UI/management/category/widget/W_category_list_item.dart';
 import 'package:Buytime/UI/management/service_external/UI_M_external_service_list.dart';
+import 'package:Buytime/environment_abstract.dart';
 import 'package:Buytime/UI/management/service_internal/RUI_M_service_list.dart';
 import 'package:Buytime/reblox/model/category/snippet/category_snippet_state.dart';
 import 'package:Buytime/reblox/model/role/role.dart';
@@ -32,6 +33,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:http/http.dart' as http;
+
+import '../../../environment_abstract.dart';
 
 
 class UI_M_Business extends StatefulWidget {
@@ -119,11 +122,9 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
         startRequest = true;
 
         WidgetsBinding.instance.addPostFrameCallback((_) async {
-          //https://europe-west1-buytime-458a1.cloudfunctions.net/getCategoriesForManagerInBusiness
-          //https://europe-west1-buytime-458a1.cloudfunctions.net/getCategoriesForWorkerInBusiness
           debugPrint('UI_M_business_list => BUSIENSS ID: ${store.state.business.id_firestore}');
-          var urlManager = Uri.https('europe-west1-buytime-458a1.cloudfunctions.net', '/getCategoriesForManagerInBusiness', {'businessId': '${store.state.business.id_firestore}', 'userEmail': '${store.state.user.email}'});
-          var urlWorker = Uri.https('europe-west1-buytime-458a1.cloudfunctions.net', '/getCategoriesForWorkerInBusiness', {'businessId': '${store.state.business.id_firestore}', 'userEmail': '${store.state.user.email}'});
+          var urlManager = Uri.https(Environment().config.cloudFunctionLink, '/getCategoriesForManagerInBusiness', {'businessId': '${store.state.business.id_firestore}', 'userEmail': '${store.state.user.email}'});
+          var urlWorker = Uri.https(Environment().config.cloudFunctionLink, '/getCategoriesForWorkerInBusiness', {'businessId': '${store.state.business.id_firestore}', 'userEmail': '${store.state.user.email}'});
           final http.Response responseManager = await http.get(urlManager);
           if(responseManager.statusCode == 200){
             debugPrint('UI_M_business_list => RESPONSE MANAGER: ${responseManager.body}');

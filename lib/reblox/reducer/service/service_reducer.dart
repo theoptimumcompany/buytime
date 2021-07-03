@@ -374,7 +374,7 @@ ServiceState serviceReducer(ServiceState state, action) {
     return serviceState;
   }
   if (action is UpdateServiceSlot) {
-    serviceState.serviceSlot[action.index] = action.serviceSlot.copyWith();
+    serviceState.serviceSlot[action.index] = action.serviceSlot;
     return serviceState;
   }
   if (action is DeleteServiceSlot) {
@@ -383,17 +383,17 @@ ServiceState serviceReducer(ServiceState state, action) {
   }
   if (action is SetServiceSelectedCategories) {
     List<String> selCat = [];
-    List<String> selRootCat = [];
+
     action.selectedCategories.forEach((element) {
       if (!selCat.contains(element.id)) {
         selCat.add(element.id);
       }
-      if (!selRootCat.contains(element.parentRootId)) {
-        selRootCat.add(element.parentRootId);
-      }
+      // if (!selRootCat.contains(element.parentRootId)) {
+      //   selRootCat.add(element.parentRootId);
+      // }
     });
     serviceState.categoryId = selCat;
-    serviceState.categoryRootId = selRootCat;
+  //  serviceState.categoryRootId = selRootCat;
     return serviceState;
   }
   if (action is ServiceChanged) {

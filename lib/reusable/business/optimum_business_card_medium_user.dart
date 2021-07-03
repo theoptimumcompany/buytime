@@ -1,4 +1,5 @@
 import 'package:Buytime/reblox/model/business/business_state.dart';
+import 'package:Buytime/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -83,7 +84,7 @@ class _OptimumBusinessCardMediumUserState
           children: [
             widget.image == null
                 ? Image.network(
-                    version200(widget.imageUrl),
+                    Utils.version200(widget.imageUrl),
                     height: widget.mediaSize != null
                         ? widget.mediaSize.height * 0.16
                         : 50.0,
@@ -181,18 +182,4 @@ class _OptimumBusinessCardMediumUserState
     );
   }
 
-  String version200(String imageUrl) {
-    String result = "";
-    String extension = "";
-    if (imageUrl != null && imageUrl.length > 0) {
-      extension =
-          imageUrl.substring(imageUrl.lastIndexOf('.'), imageUrl.length);
-      result = imageUrl.substring(0, imageUrl.lastIndexOf('.'));
-      result += "_200x200" + extension;
-    } else {
-      result =
-          "https://firebasestorage.googleapis.com/v0/b/buytime-458a1.appspot.com/o/general%2Fimage_placeholder_200x200.png?alt=media&token=d40ccab1-7fb5-4290-91c6-634871b7a4f3";
-    }
-    return result;
-  }
 }

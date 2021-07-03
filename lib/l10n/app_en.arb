@@ -575,5 +575,7 @@
   "service": "Service",
   "createdAt": "Created at",
 
-  "suppliedBy": "Supplied By"
+  "suppliedBy": "Supplied By",
+  "selectLanguage": "select language:",
+  "showcase": "Showcase"
 }

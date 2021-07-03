@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:Buytime/environment_abstract.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/model/business/external_business_state.dart';
@@ -211,9 +212,8 @@ class OrderReservableCreateService implements EpicClass<AppState> {
       orderReservableState.orderId = addedOrderReservable.id;
       //await FirebaseFirestore.instance.collection("order/").doc(addedOrderReservable.id.toString()).update(orderReservableState.toJson()); /// 1 WRITE
       //++write;
-      //final http.Response response = await http.post('https://europe-west1-buytime-458a1.cloudfunctions.net/StripePIOnOrder?orderId=' + addedOrderReservable.id);
       String addedOrderReservableId = addedOrderReservable.id;
-      var url = Uri.https('europe-west1-buytime-458a1.cloudfunctions.net', '/StripePIOnOrder', {'orderId': '$addedOrderReservableId', 'currency': 'EUR'});
+      var url = Uri.https(Environment().config.cloudFunctionLink, '/StripePIOnOrder', {'orderId': '$addedOrderReservableId', 'currency': 'EUR'});
       final http.Response response = await http.get(url);
       print("ORDER_RESERVABLE_SERVICE_EPIC - OrderReservableCreateService => OrderReservable_service epic - response is done");
       print('ORDER_RESERVABLE_SERVICE_EPIC - OrderReservableCreateService => RESPONSE: ${response.body}');
@@ -307,13 +307,12 @@ class AddingReservableStripePaymentMethodRequest implements EpicClass<AppState> 
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<AddingReservableStripePaymentMethodWithNavigation>().asyncMap((event) async {
       String userId = event.userId;
-      var stripeCustomerSetupIntentCreationReference = await FirebaseFirestore.instance.collection("stripeCustomer/" + userId + test_variable +"/setupIntent").doc() ///TODO Remember _test
+      var stripeCustomerSetupIntentCreationReference = await FirebaseFirestore.instance.collection("stripeCustomer/" + userId + Environment().config.stripeSuffix +"/setupIntent").doc() ///TODO Remember _test
         .set({ ///1 WRITE
       'status': "create request"
     });
     // now http request to create the actual setupIntent
-    //response = await http.post('https://europe-west1-buytime-458a1.cloudfunctions.net/createSetupIntent?userId=' + userId);
-      var url = Uri.https('europe-west1-buytime-458a1.cloudfunctions.net', '/createSetupIntent', {'userId': '$userId'});
+      var url = Uri.https(Environment().config.cloudFunctionLink, '/createSetupIntent', {'userId': '$userId'});
       response = await http.get(url);
       statisticsState = store.state.statistics;
       /*statisticsState = store.state.statistics;

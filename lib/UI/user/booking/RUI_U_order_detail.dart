@@ -31,6 +31,8 @@ import 'package:Buytime/UI/user/map/UI_U_map.dart';
 import 'package:location/location.dart' as loc;
 import 'package:permission_handler/permission_handler.dart';
 
+import '../../../environment_abstract.dart';
+
 class RUI_U_OrderDetail extends StatefulWidget {
   String route = '/bookingPage';
   RUI_U_OrderDetail(this.route);
@@ -101,9 +103,9 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
 
     String url;
     if(Platform.isIOS)
-      url = 'https://maps.googleapis.com/maps/api/staticmap?center=$lat,$lng&zoom=18&size=640x640&scale=2&markers=color:red|$lat,$lng&key=${BuytimeConfig.AndroidApiKey}';
+      url = 'https://maps.googleapis.com/maps/api/staticmap?center=$lat,$lng&zoom=18&size=640x640&scale=2&markers=color:red|$lat,$lng&key=${Environment().config.googleApiKey}';
     else
-      url = 'https://maps.googleapis.com/maps/api/staticmap?center=$lat,$lng&zoom=18&size=640x640&scale=2&markers=color:red|$lat,$lng&key=${BuytimeConfig.AndroidApiKey}';
+      url = 'https://maps.googleapis.com/maps/api/staticmap?center=$lat,$lng&zoom=18&size=640x640&scale=2&markers=color:red|$lat,$lng&key=${Environment().config.googleApiKey}';
 
     return url;
   }

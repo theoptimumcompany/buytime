@@ -19,7 +19,6 @@ class CategoryState {
   String id;
   int level;
   int children;
-  String categoryRootId;
   Parent parent;
   List<Manager> manager;
   List<String> managerMailList;
@@ -32,13 +31,14 @@ class CategoryState {
   OptimumFileToUpload fileToUpload;
   String categoryImage;
   String customTag;
+  @JsonKey(defaultValue: false)
+  bool showcase;
 
   CategoryState({
     this.name,
     this.id,
     this.level,
     this.children,
-    this.categoryRootId,
     this.parent,
     this.manager,
     this.managerMailList,
@@ -48,7 +48,8 @@ class CategoryState {
     this.categorySnippet,
     this.fileToUpload,
     this.categoryImage,
-    this.customTag
+    this.customTag,
+    this.showcase
   });
 
   CategoryState toEmpty() {
@@ -57,7 +58,6 @@ class CategoryState {
       id: "",
       level: 0,
       children: 0,
-      categoryRootId: "",
       parent: Parent(name: "No Parent", id: "no_parent"),
       manager: [],
       managerMailList: [],
@@ -67,7 +67,8 @@ class CategoryState {
       categorySnippet: CategorySnippetState().toEmpty(),
       fileToUpload: null,
         categoryImage: '',
-      customTag: ''
+      customTag: '',
+        showcase: false
     );
   }
 
@@ -76,7 +77,6 @@ class CategoryState {
     this.id = category.id;
     this.level = category.level;
     this.children = category.children;
-    this.categoryRootId = category.categoryRootId;
     this.parent = category.parent;
     this.manager = category.manager;
     this.managerMailList = category.managerMailList;
@@ -87,6 +87,7 @@ class CategoryState {
     this.fileToUpload = category.fileToUpload;
     this.categoryImage = category.categoryImage;
     this.customTag = category.customTag;
+    this.showcase = category.showcase;
   }
 
   CategoryState copyWith(
@@ -94,8 +95,7 @@ class CategoryState {
       String id,
       int level,
       int children,
-      String categoryRootId,
-      GenericState parent,
+      Parent parent,
       List<Manager> manager,
       List<String> managerMailList,
       String businessId,
@@ -104,14 +104,14 @@ class CategoryState {
       CategorySnippetState categorySnippet,
         OptimumFileToUpload fileToUpload,
         String categoryImage,
-        String customTag
+        String customTag,
+        String showcase
       }) {
     return CategoryState(
       name: name ?? this.name,
       id: id ?? this.id,
       level: level ?? this.level,
       children: children ?? this.children,
-      categoryRootId: categoryRootId ?? this.categoryRootId,
       parent: parent ?? this.parent,
       manager: manager ?? this.manager,
       managerMailList: managerMailList ?? this.managerMailList,
@@ -121,7 +121,8 @@ class CategoryState {
       categorySnippet: categorySnippet ?? this.categorySnippet,
       fileToUpload: fileToUpload ?? this.fileToUpload,
         categoryImage: categoryImage ?? this.categoryImage,
-        customTag:  customTag ?? this.customTag
+        customTag: customTag ?? this.customTag,
+        showcase: showcase ?? this.showcase
     );
   }
 

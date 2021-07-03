@@ -99,44 +99,22 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
   }
 
   void setCategoryList() {
-    CategoryTree categoryNode = StoreProvider.of<AppState>(context).state.categoryTree;
+    List<dynamic> snippet = StoreProvider.of<AppState>(context).state.serviceListSnippetState.businessSnippet;
     List<Parent> items = [];
 
-    if (categoryNode.categoryNodeList != null) {
-      if (categoryNode.categoryNodeList.length != 0 && categoryNode.categoryNodeList.length != null) {
-        List<dynamic> list = categoryNode.categoryNodeList;
-        items = openTree(list, items);
-      }
-    }
-
-    categoryList = items;
-  }
-
-  openTree(List<dynamic> list, List<Parent> items) {
-    for (int i = 0; i < list.length; i++) {
+    for (var i = 0; i < snippet.length; i++) {
+      String categoryPath = snippet[i].categoryAbsolutePath;
+      List<String> categoryRoute = categoryPath.split('/');
       items.add(
         Parent(
-          name: list[i]['nodeName'],
-          id: list[i]['nodeId'],
-          level: list[i]['level'],
-          parentRootId: list[i]['categoryRootId'],
+          name: snippet[i].categoryName,
+          id: categoryRoute.last,
+          level: categoryRoute.length - 1,
+          //parentRootId: categoryRoute[1],
         ),
       );
-      if (StoreProvider.of<AppState>(context).state.serviceState.categoryId != null && StoreProvider.of<AppState>(context).state.serviceState.categoryId.contains(list[i]['nodeId'])) {
-        selectedCategoryList.add(
-          Parent(
-            name: list[i]['nodeName'],
-            id: list[i]['nodeId'],
-            level: list[i]['level'],
-            parentRootId: list[i]['categoryRootId'],
-          ),
-        );
-      }
-      if (list[i]['nodeCategory'] != null) {
-        openTree(list[i]['nodeCategory'], items);
-      }
     }
-    return items;
+    categoryList = items;
   }
 
   @override
@@ -146,6 +124,17 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
     vatController.text = _serviceVAT.toString();
     // WidgetsBinding.instance
     //     .addPostFrameCallback((_) => addDefaultCategory());
+  }
+
+  String searchCategoryRoot(String idCategory)
+  {
+    List<dynamic> snippet = StoreProvider.of<AppState>(context).state.serviceListSnippetState.businessSnippet;
+    for (var i = 0; i < snippet.length; i++) {
+      List<String> categoryPathList = snippet[i].categoryAbsolutePath.split('/');
+      if (categoryPathList.last == idCategory) {
+        return categoryPathList[1];
+      }
+    }
   }
 
   _buildChoiceList() {
@@ -159,7 +148,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
           selectedColor: Theme.of(context).accentColor,
           labelStyle: TextStyle(color: selectedCategoryList.any((element) => element.id == item.id) ? BuytimeTheme.TextBlack : canAccess(item.id) ? BuytimeTheme.TextWhite : BuytimeTheme.TextBlack),
           onSelected: canAccess(item.id) ? (selected) {
-            if (widget.categoryId != null && widget.categoryId != "" && item.parentRootId != widget.categoryId) {
+            if (widget.categoryId != null && widget.categoryId != "" && searchCategoryRoot(item.id) != widget.categoryId) {
               return null;
             } else {
               setState(() {
@@ -190,14 +179,14 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
           access = true;
       });
     }
-    debugPrint('UI_M_service_list => CAN MANAGER ACCESS THE SERVICE? $access');
+   // debugPrint('UI_M_service_list => CAN MANAGER ACCESS THE SERVICE? $access');
 
     if(!access &&  (StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin ||
         StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman ||
         StoreProvider.of<AppState>(context).state.user.getRole() == Role.owner)){
       access = true;
     }
-    debugPrint('UI_M_service_list => CAN MANAGER|OTHERS ACCESS THE SERVICE? $access');
+  //  debugPrint('UI_M_service_list => CAN MANAGER|OTHERS ACCESS THE SERVICE? $access');
 
     return access;
   }
@@ -217,7 +206,6 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
       child: StoreConnector<AppState, AppState>(
           converter: (store) => store.state,
           onInit: (store) {
-            store.dispatch(CategoryTreeRequest());
             if(store.state.business.businessAddress != null && store.state.business.businessAddress.isNotEmpty)
               _serviceBusinessAddress = store.state.business.businessAddress;
             else
@@ -247,12 +235,12 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
               });
 
               if(snapshot.serviceState.name.isNotEmpty && nameController.text.isEmpty){
-                debugPrint('UI_M_create_service => Service Name: ${snapshot.serviceState.name}');
+               // debugPrint('UI_M_create_service => Service Name: ${snapshot.serviceState.name}');
                 //nameController.clear();
                 nameController.text = Utils.retriveField(myLocale.languageCode, snapshot.serviceState.name);
               }
               if(snapshot.serviceState.description.isNotEmpty && descriptionController.text.isEmpty){
-                debugPrint('UI_M_create_service => Service Description: ${snapshot.serviceState.description}');
+               // debugPrint('UI_M_create_service => Service Description: ${snapshot.serviceState.description}');
                 //descriptionController.clear();
                 descriptionController.text = Utils.retriveField(myLocale.languageCode, snapshot.serviceState.description);
               }
@@ -310,9 +298,9 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                       else
                                         tmpService.vat = _serviceVAT;
                                       tmpService.price = _servicePrice;
-                                      debugPrint('UI_M_create_service => Service Name: ${tmpService.name}');
-                                      debugPrint('UI_M_create_service => Service Description: ${tmpService.description}');
-                                      debugPrint('UI_M_create_service => Service Address: ${tmpService.serviceBusinessAddress}');
+                                    //  debugPrint('UI_M_create_service => Service Name: ${tmpService.name}');
+                                    //  debugPrint('UI_M_create_service => Service Description: ${tmpService.description}');
+                                    //  debugPrint('UI_M_create_service => Service Address: ${tmpService.serviceBusinessAddress}');
                                       StoreProvider.of<AppState>(context).dispatch(CreateService(tmpService));
                                     }
                                   }),

@@ -1,5 +1,6 @@
 import 'package:Buytime/reblox/model/business/external_business_state.dart';
 import 'package:Buytime/reblox/model/snippet/generic.dart';
+import 'package:Buytime/utils/utils.dart';
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import '../file/optimum_file_to_upload.dart';
@@ -44,7 +45,8 @@ class BusinessState {
   List<String> hasAccess;
   String wide;
   String logo;
-  List<String> business_type;
+  @JsonKey(fromJson: Utils.getBusinessType, toJson: Utils.setBusinessType)
+  String business_type;
   String description;
   String id_firestore;
   GenericState salesman;
@@ -139,7 +141,7 @@ class BusinessState {
       wide: "",
       logo: "",
       draft: true,
-      business_type: [],
+      business_type: '',
       description: "",
       id_firestore: "",
       salesman: GenericState(),
@@ -274,7 +276,7 @@ class BusinessState {
     List<String> hasAccess,
     String wide,
     String logo,
-    List<String> business_type,
+    String business_type,
     String description,
     String id_firestore,
     GenericState salesaman,

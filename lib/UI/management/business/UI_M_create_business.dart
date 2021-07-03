@@ -301,9 +301,9 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                         tag = snapshot.tag;
                                         if (snapshot.area.isEmpty) snapshot.area = ['Reception'];
                                         if (snapshot.hub != null && snapshot.business_type != null) {
-                                          if (snapshot.business_type.isNotEmpty) businessType = snapshot.business_type.first;
+                                          if (snapshot.business_type.isNotEmpty) businessType = snapshot.business_type;
                                           if (isHub != snapshot.hub) {
-                                            snapshot.business_type.clear();
+                                            snapshot.business_type = '';
                                             businessType = "";
                                             //StoreProvider.of<AppState>(context).dispatch(SetBusinessType([]));
                                             if (snapshot.hub) {
@@ -320,9 +320,6 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                             isHub = snapshot.hub;
                                           }
                                           debugPrint('UI_M_create_business => BUSINESS TYPE LENGTH: ${snapshot.business_type.length}');
-                                          snapshot.business_type.forEach((element) {
-                                            debugPrint('UI_M_create_business => BUSINESS TYPE: ${element}');
-                                          });
                                         }
                                         return Column(
                                           children: [
@@ -424,7 +421,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                       OptimumFormField(
                                                         controller: _responsiblePersonEmailController,
                                                         field: "responsible_person_email",
-                                                        textInputType: TextInputType.text,
+                                                        textInputType: TextInputType.emailAddress,
                                                         minLength: 3,
                                                         label: AppLocalizations.of(context).responsibleEmail,
                                                         globalFieldKey: _formKeyResponsablePersonEmailField,
@@ -556,7 +553,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                         required: required,
                                                         controller: _emailController,
                                                         field: "mail",
-                                                        textInputType: TextInputType.text,
+                                                        textInputType: TextInputType.emailAddress,
                                                         minLength: 3,
                                                         label: AppLocalizations.of(context).businessEmail,
                                                         globalFieldKey: _formKeyEmailField,
@@ -649,14 +646,14 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                                   chipList: hubType,
                                                                   selectedChoices: businessType,
                                                                   optimumChipListToDispatch: (String selectedChoices) {
-                                                                    StoreProvider.of<AppState>(context).dispatch(SetBusinessType([selectedChoices]));
+                                                                    StoreProvider.of<AppState>(context).dispatch(SetBusinessType(selectedChoices));
                                                                   },
                                                                 )
                                                               : OptimumChip(
                                                                   chipList: notHubType,
                                                                   selectedChoices: businessType,
                                                                   optimumChipListToDispatch: (String selectedChoices) {
-                                                                    StoreProvider.of<AppState>(context).dispatch(SetBusinessType([selectedChoices]));
+                                                                    StoreProvider.of<AppState>(context).dispatch(SetBusinessType(selectedChoices));
                                                                   },
                                                                 ),
                                                         ],

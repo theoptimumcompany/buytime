@@ -154,6 +154,14 @@ class SetCategoryName {
   String get name => _name;
 }
 
+class SetCategoryShowcase {
+  bool _showcase;
+
+  SetCategoryShowcase(this._showcase);
+
+  bool get showcase => _showcase;
+}
+
 class SetCategoryId {
   String _id;
 
@@ -230,6 +238,10 @@ CategoryState categoryReducer(CategoryState state, action) {
   CategoryState categoryState = new CategoryState.fromState(state);
   if (action is SetCategoryName) {
     categoryState.name = action.name;
+    return categoryState;
+  }
+  if (action is SetCategoryShowcase) {
+    categoryState.showcase = action.showcase;
     return categoryState;
   }
   if (action is SetCategoryId) {

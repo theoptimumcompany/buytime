@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "76896773127",
+    "project_id": "buytimedev-2e17a",
+    "storage_bucket": "buytimedev-2e17a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:76896773127:android:2f0ac9868461fa761636a2",
+        "android_client_info": {
+          "package_name": "com.theoptimumcompany.buytime"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "76896773127-u3squi0br5bfq90r64dn1hrgc7ntfmpu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA-4Vxvqrs1xSz3AxFk5QJzoL9VbRR7THY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "76896773127-u3squi0br5bfq90r64dn1hrgc7ntfmpu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

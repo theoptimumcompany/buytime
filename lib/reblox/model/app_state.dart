@@ -67,6 +67,7 @@ class AppRoutes {
   static const bookingList = "/bookingList";
   static const serviceDetails = "/serviceDetails";
   static const serviceExplorer = "/serviceExplorer";
+  static const bookingSelfCreation = "/bookingSelfCreation";
 
 }
 
