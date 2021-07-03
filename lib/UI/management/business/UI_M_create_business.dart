@@ -282,7 +282,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                       onInit: (store) {
                                         store.dispatch(new SetBusinessToEmpty());
                                         //store.state.business.business_type = [GenericState(name: 'Bar')];
-                                        hubType = ['Hotel', 'Eco', 'Center(Membership)'];
+                                        hubType = ['Hotel', 'ECO', 'Center(Membership)'];
 
                                         //hubType.sort((a,b) => a.name.compareTo(b.name));
                                         notHubType = [
