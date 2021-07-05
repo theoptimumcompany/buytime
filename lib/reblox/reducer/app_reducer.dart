@@ -112,7 +112,6 @@ AppState appReducer(AppState state, dynamic action) {
   CategoryState categoryState = categoryReducer(state.category, action);
   CategoryInviteState categoryInviteState = categoryInviteReducer(state.categoryInvite, action);
   CategoryListState categoryListState = categoryListReducer(state.categoryList, action);
-  CategoryTree categoryTree = categoryTreeReducer(state.categoryTree, action);
   ServiceState serviceState = serviceReducer(state.serviceState, action);
   ServiceListState serviceListState = serviceListReducer(state.serviceList, action);
   ServiceSlot serviceSlot = serviceSlotReducer(state.serviceSlot, action);
@@ -158,7 +157,6 @@ AppState appReducer(AppState state, dynamic action) {
       category: categoryState,
       categoryInvite: categoryInviteState,
       categoryList: categoryListState,
-      categoryTree: categoryTree,
       serviceState: serviceState,
       serviceList: serviceListState,
       serviceSlot: serviceSlot,

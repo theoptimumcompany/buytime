@@ -186,7 +186,7 @@ class RBusinessListState extends State<RBusinessList> {
                     StoreProvider.of<AppState>(context).dispatch(BusinessListReturned(businessListState));
 
 
-                    debugPrint('RUI_M_business_list => BUSINESS LENGTH: ${businessListState.length}');
+                   // debugPrint('RUI_M_business_list => BUSINESS LENGTH: ${businessListState.length}');
 
                     /*Stream<QuerySnapshot> _businessSnippetStream = FirebaseFirestore.instance.collection("business")
                         .where("businessId", whereIn: businessIdList.sublist(0, 10).doc()
@@ -226,7 +226,7 @@ class RBusinessListState extends State<RBusinessList> {
                                         //businessSnippetListState.add(serviceListSnippetState);
                                       });
 
-                                      debugPrint('RUI_M_business_list => BUSINESS SNIPPET | ${businessState.name}');
+                                    //  debugPrint('RUI_M_business_list => BUSINESS SNIPPET | ${businessState.name}');
 
                                       for(int i = 0; i < businessListState.length; i++){
                                         if(serviceListSnippetState.businessId != null) {

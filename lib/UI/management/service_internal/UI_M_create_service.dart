@@ -87,7 +87,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
   }
 
   void addDefaultCategory() {
-    if (widget.categoryId != null && widget.categoryId != "" && defaultCategory && StoreProvider.of<AppState>(context).state.categoryTree != null) {
+    if (widget.categoryId != null && widget.categoryId != "" && defaultCategory) {
       categoryList.forEach((element) {
         if (element.id == widget.categoryId) {
           selectedCategoryList.add(element);

@@ -355,7 +355,7 @@ class LandingState extends State<Landing> {
             }
           }
 
-          debugPrint('UI_U_Landing => BOOKINGS: ${bookingList.length}');
+          //debugPrint('UI_U_Landing => BOOKINGS: ${bookingList.length}');
 
           return Stack(children: [
             Positioned.fill(
@@ -633,7 +633,6 @@ class LandingState extends State<Landing> {
                                                 StoreProvider.of<AppState>(context).dispatch(SetCategoryListToEmpty());
                                                 StoreProvider.of<AppState>(context).dispatch(SetCategoryToEmpty());
                                                 StoreProvider.of<AppState>(context).dispatch(SetBusinessToEmpty());
-                                                StoreProvider.of<AppState>(context).dispatch(SetCategoryTreeToEmpty());
                                                 StoreProvider.of<AppState>(context).dispatch(SetOrderListToEmpty());
                                                 StoreProvider.of<AppState>(context).dispatch(SetOrderToEmpty(''));
                                                 StoreProvider.of<AppState>(context).dispatch(SetPipelineListToEmpty());

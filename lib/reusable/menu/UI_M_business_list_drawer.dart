@@ -375,7 +375,6 @@ class _UI_M_BusinessListDrawerState extends State<UI_M_BusinessListDrawer> {
                             StoreProvider.of<AppState>(context).dispatch(SetCategoryListToEmpty());
                             StoreProvider.of<AppState>(context).dispatch(SetCategoryToEmpty());
                             StoreProvider.of<AppState>(context).dispatch(SetBusinessToEmpty());
-                            StoreProvider.of<AppState>(context).dispatch(SetCategoryTreeToEmpty());
                             StoreProvider.of<AppState>(context).dispatch(SetOrderListToEmpty());
                             StoreProvider.of<AppState>(context).dispatch(SetOrderToEmpty(''));
                             StoreProvider.of<AppState>(context).dispatch(SetPipelineListToEmpty());

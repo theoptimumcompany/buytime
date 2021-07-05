@@ -90,7 +90,6 @@ class AppState {
   CategoryState category;
   CategoryInviteState categoryInvite;
   CategoryListState categoryList;
-  CategoryTree categoryTree;
   ServiceState serviceState;
   ServiceListState serviceList;
   ServiceSlot serviceSlot;
@@ -142,7 +141,6 @@ class AppState {
     @required this.category,
     @required this.categoryInvite,
     @required this.categoryList,
-    @required this.categoryTree,
     @required this.serviceState,
     @required this.serviceList,
     @required this.serviceSlot,
@@ -195,7 +193,6 @@ class AppState {
     category = CategoryState();
     categoryInvite = CategoryInviteState();
     categoryList = CategoryListState();
-    categoryTree = CategoryTree();
     serviceState = ServiceState();
     serviceList = ServiceListState();
     serviceSlot = ServiceSlot();
@@ -248,7 +245,6 @@ class AppState {
       CategoryState category,
       CategoryInviteState categoryInvite,
       CategoryListState categoryList,
-      CategoryTree categoryTree,
       ServiceState serviceState,
       ServiceListState serviceList,
       ServiceSlot serviceSlot,
@@ -299,7 +295,6 @@ class AppState {
     this.category = category;
     this.categoryInvite = categoryInvite;
     this.categoryList = categoryList;
-    this.categoryTree = categoryTree;
     this.serviceState = serviceState;
     this.serviceList = serviceList;
     this.serviceSlot = serviceSlot;

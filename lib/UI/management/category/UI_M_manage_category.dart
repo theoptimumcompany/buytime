@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:Buytime/UI/management/business/UI_M_business.dart';
 import 'package:Buytime/UI/management/business/UI_M_manage_business.dart';
 import 'package:Buytime/UI/management/category/UI_M_edit_category.dart';
@@ -112,7 +114,7 @@ class ManageCategoryState extends State<ManageCategory> with SingleTickerProvide
     List<dynamic> snippet = StoreProvider.of<AppState>(context).state.serviceListSnippetState.businessSnippet;
     List<dynamic> tree = [];
 
-    if(snippet != null && snippet.isNotEmpty){
+    if (snippet != null && snippet.isNotEmpty) {
       for (var i = 0; i < snippet.length; i++) {
         String categoryPath = snippet[i].categoryAbsolutePath;
         List<String> categoryRoute = categoryPath.split('/');
@@ -125,12 +127,10 @@ class ManageCategoryState extends State<ManageCategory> with SingleTickerProvide
           singleNode.categoryNodeList = [];
 
           ///Controllare che non esista già il ramo prima di aggiungere al tree
-          print("ESISTE NEL TREE??? " + searchIfExistsOnTree(categoryRoute[1], tree).toString());
           if (!searchIfExistsOnTree(categoryRoute[1], tree)) {
             addToTree(tree, singleNode, 'no_parent');
           }
-        }
-        else {
+        } else {
           ///La categoria è nodo di un ramo e ha delle foglie
           List<dynamic> placeHolder = [];
 
@@ -238,24 +238,24 @@ class ManageCategoryState extends State<ManageCategory> with SingleTickerProvide
                                 tooltip: AppLocalizations.of(context).createSubCategory,
                                 onPressed: () {
                                   StoreProvider.of<AppState>(context).dispatch(CategoryRequest(list[index].nodeId));
-                                  StoreProvider.of<AppState>(context).state.categoryTree.numberOfCategories < 100
-                                      ? Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => UI_M_CreateCategory(
-                                                    empty: false,
-                                                  )),
-                                        )
-                                      : showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            // return object of type Dialog
-                                            return AlertDialog(
-                                              title: new Text(AppLocalizations.of(context).caution),
-                                              content: new Text(AppLocalizations.of(context).maxCategories),
-                                            );
-                                          },
-                                        );
+
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => UI_M_CreateCategory(
+                                              empty: false,
+                                            )),
+                                  );
+                                  // : showDialog(
+                                  //     context: context,
+                                  //     builder: (BuildContext context) {
+                                  //       // return object of type Dialog
+                                  //       return AlertDialog(
+                                  //         title: new Text(AppLocalizations.of(context).caution),
+                                  //         content: new Text(AppLocalizations.of(context).maxCategories),
+                                  //       );
+                                  //     },
+                                  //   );
                                 },
                               )
                             : Container(),
@@ -272,7 +272,7 @@ class ManageCategoryState extends State<ManageCategory> with SingleTickerProvide
                     Flexible(
                       child: Container(
                         child: Text(
-                          list[index].nodename,
+                          list[index].nodeName,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.normal),
                         ),
@@ -288,24 +288,23 @@ class ManageCategoryState extends State<ManageCategory> with SingleTickerProvide
                             tooltip: AppLocalizations.of(context).createSubCategory,
                             onPressed: () {
                               StoreProvider.of<AppState>(context).dispatch(CategoryRequest(list[index].nodeId));
-                              StoreProvider.of<AppState>(context).state.categoryTree.numberOfCategories < 100
-                                  ? Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => UI_M_CreateCategory(
-                                                empty: false,
-                                              )),
-                                    )
-                                  : showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        // return object of type Dialog
-                                        return AlertDialog(
-                                          title: new Text(AppLocalizations.of(context).caution),
-                                          content: new Text(AppLocalizations.of(context).maxCategories),
-                                        );
-                                      },
-                                    );
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => UI_M_CreateCategory(
+                                          empty: false,
+                                        )),
+                              );
+                              // : showDialog(
+                              //     context: context,
+                              //     builder: (BuildContext context) {
+                              //       // return object of type Dialog
+                              //       return AlertDialog(
+                              //         title: new Text(AppLocalizations.of(context).caution),
+                              //         content: new Text(AppLocalizations.of(context).maxCategories),
+                              //       );
+                              //     },
+                              //   );
                             },
                           )
                         : Container(),
@@ -380,20 +379,17 @@ class ManageCategoryState extends State<ManageCategory> with SingleTickerProvide
                                       onPressed: StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin || StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman
                                           ? () {
                                               StoreProvider.of<AppState>(context).dispatch(CategoryRequest(list[index].nodeId));
-                                              StoreProvider.of<AppState>(context).state.categoryTree.numberOfCategories < 50
-                                                  ?
-                                                  //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_CreateCategory(empty: false,)),)
-                                                  Navigator.pushReplacement(context, EnterExitRoute(enterPage: UI_M_CreateCategory(empty: false), exitPage: ManageCategory(), from: true))
-                                                  : showDialog(
-                                                      context: context,
-                                                      builder: (BuildContext context) {
-                                                        // return object of type Dialog
-                                                        return AlertDialog(
-                                                          title: new Text(AppLocalizations.of(context).caution),
-                                                          content: new Text(AppLocalizations.of(context).createSubCategory),
-                                                        );
-                                                      },
-                                                    );
+                                              Navigator.pushReplacement(context, EnterExitRoute(enterPage: UI_M_CreateCategory(empty: false), exitPage: ManageCategory(), from: true));
+                                              // : showDialog(
+                                              //     context: context,
+                                              //     builder: (BuildContext context) {
+                                              //       // return object of type Dialog
+                                              //       return AlertDialog(
+                                              //         title: new Text(AppLocalizations.of(context).caution),
+                                              //         content: new Text(AppLocalizations.of(context).createSubCategory),
+                                              //       );
+                                              //     },
+                                              //   );
                                             }
                                           : null,
                                     )
@@ -456,27 +452,26 @@ class ManageCategoryState extends State<ManageCategory> with SingleTickerProvide
                                           alignment: Alignment.centerLeft,
                                           icon: Icon(
                                             Icons.my_library_add,
-                                            color: StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin || StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman ? BuytimeTheme.ManagerPrimary : BuytimeTheme.SymbolGrey,
+                                            color: StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin || StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman
+                                                ? BuytimeTheme.ManagerPrimary
+                                                : BuytimeTheme.SymbolGrey,
                                             size: 24.0,
                                           ),
                                           tooltip: AppLocalizations.of(context).createSubCategory,
                                           onPressed: StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin || StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman
                                               ? () {
                                                   StoreProvider.of<AppState>(context).dispatch(CategoryRequest(list[index].nodeId));
-                                                  StoreProvider.of<AppState>(context).state.categoryTree.numberOfCategories < 100
-                                                      ?
-                                                      //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_CreateCategory(empty: false,)),)
-                                                      Navigator.push(context, EnterExitRoute(enterPage: UI_M_CreateCategory(empty: false), exitPage: ManageCategory(), from: true))
-                                                      : showDialog(
-                                                          context: context,
-                                                          builder: (BuildContext context) {
-                                                            // return object of type Dialog
-                                                            return AlertDialog(
-                                                              title: new Text(AppLocalizations.of(context).caution),
-                                                              content: new Text(AppLocalizations.of(context).maxCategories),
-                                                            );
-                                                          },
-                                                        );
+                                                  Navigator.push(context, EnterExitRoute(enterPage: UI_M_CreateCategory(empty: false), exitPage: ManageCategory(), from: true));
+                                                  // : showDialog(
+                                                  //     context: context,
+                                                  //     builder: (BuildContext context) {
+                                                  //       // return object of type Dialog
+                                                  //       return AlertDialog(
+                                                  //         title: new Text(AppLocalizations.of(context).caution),
+                                                  //         content: new Text(AppLocalizations.of(context).maxCategories),
+                                                  //       );
+                                                  //     },
+                                                  //   );
                                                 }
                                               : null,
                                         ),
@@ -505,7 +500,6 @@ class ManageCategoryState extends State<ManageCategory> with SingleTickerProvide
 
   List<Widget> listBranchCategory() {
     List<Widget> branches = [];
-    List<dynamic> firebaseTree = StoreProvider.of<AppState>(context).state.categoryTree.categoryNodeList != null ? StoreProvider.of<AppState>(context).state.categoryTree.categoryNodeList : [];
     branches.add(SizedBox(
       height: 10,
     ));
@@ -596,20 +590,17 @@ class ManageCategoryState extends State<ManageCategory> with SingleTickerProvide
                   onTap: StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin || StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman
                       ? () {
                           StoreProvider.of<AppState>(context).dispatch(CategoryRequest(list[index].nodeId));
-                          StoreProvider.of<AppState>(context).state.categoryTree.numberOfCategories < 100
-                              ?
-                              //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_CreateCategory(empty: false,)),)
-                              Navigator.push(context, EnterExitRoute(enterPage: UI_M_CreateCategory(empty: false), exitPage: ManageCategory(), from: true))
-                              : showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    // return object of type Dialog
-                                    return AlertDialog(
-                                      title: new Text(AppLocalizations.of(context).caution),
-                                      content: new Text(AppLocalizations.of(context).createSubCategory),
-                                    );
-                                  },
-                                );
+                          Navigator.push(context, EnterExitRoute(enterPage: UI_M_CreateCategory(empty: false), exitPage: ManageCategory(), from: true));
+                          // : showDialog(
+                          //     context: context,
+                          //     builder: (BuildContext context) {
+                          //       // return object of type Dialog
+                          //       return AlertDialog(
+                          //         title: new Text(AppLocalizations.of(context).caution),
+                          //         content: new Text(AppLocalizations.of(context).createSubCategory),
+                          //       );
+                          //     },
+                          //   );
                         }
                       : null,
                 )
@@ -630,20 +621,17 @@ class ManageCategoryState extends State<ManageCategory> with SingleTickerProvide
                 onTap: StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin || StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman
                     ? () {
                         StoreProvider.of<AppState>(context).dispatch(CategoryRequest(list[index].nodeId));
-                        StoreProvider.of<AppState>(context).state.categoryTree.numberOfCategories < 100
-                            ?
-                            //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_CreateCategory(empty: false,)),)
-                            Navigator.pushReplacement(context, EnterExitRoute(enterPage: UI_M_CreateCategory(empty: false), exitPage: ManageCategory(), from: true))
-                            : showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  // return object of type Dialog
-                                  return AlertDialog(
-                                    title: new Text(AppLocalizations.of(context).caution),
-                                    content: new Text(AppLocalizations.of(context).createSubCategory),
-                                  );
-                                },
-                              );
+                        Navigator.pushReplacement(context, EnterExitRoute(enterPage: UI_M_CreateCategory(empty: false), exitPage: ManageCategory(), from: true));
+                        // : showDialog(
+                        //     context: context,
+                        //     builder: (BuildContext context) {
+                        //       // return object of type Dialog
+                        //       return AlertDialog(
+                        //         title: new Text(AppLocalizations.of(context).caution),
+                        //         content: new Text(AppLocalizations.of(context).createSubCategory),
+                        //       );
+                        //     },
+                        //   );
                       }
                     : null,
               )
@@ -725,10 +713,7 @@ class ManageCategoryState extends State<ManageCategory> with SingleTickerProvide
     return StoreConnector<AppState, AppState>(
         converter: (store) => store.state,
         onInit: (store) {
-          //store.dispatch(CategoryTreeRequest());
           store.state.categoryList.categoryListState.clear();
-          //store.state.categoryTree.categoryNodeList.clear();
-          // store.dispatch(CategoryTreeCreateIfNotExists(store.state.business.id_firestore));
         },
         builder: (context, snapshot) {
           firebaseTree.clear();
@@ -736,7 +721,8 @@ class ManageCategoryState extends State<ManageCategory> with SingleTickerProvide
           nodeBranches.clear();
 
           firebaseTree = buildTreeFromSnippet();
-          print("FIREBASE TREE DIMENSIONE : " + firebaseTree.length.toString());
+         // print(jsonEncode(firebaseTree));
+          //print("FIREBASE TREE DIMENSIONE : " + firebaseTree.length.toString());
           firebaseTree.sort((a, b) => a.nodeName.compareTo(b.nodeName));
           branches.add(SizedBox(
             height: 10,
@@ -787,18 +773,17 @@ class ManageCategoryState extends State<ManageCategory> with SingleTickerProvide
                             ),
                             tooltip: AppLocalizations.of(context).createCategory,
                             onPressed: () {
-                              snapshot.categoryTree.numberOfCategories < 100
-                                  ? Navigator.push(context, EnterExitRoute(enterPage: UI_M_CreateCategory(empty: true), exitPage: ManageCategory(), from: true))
-                                  : showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        // return object of type Dialog
-                                        return AlertDialog(
-                                          title: new Text(AppLocalizations.of(context).caution),
-                                          content: new Text(AppLocalizations.of(context).noCategoriesForBusiness),
-                                        );
-                                      },
-                                    );
+                              Navigator.push(context, EnterExitRoute(enterPage: UI_M_CreateCategory(empty: true), exitPage: ManageCategory(), from: true));
+                              // : showDialog(
+                              //     context: context,
+                              //     builder: (BuildContext context) {
+                              //       // return object of type Dialog
+                              //       return AlertDialog(
+                              //         title: new Text(AppLocalizations.of(context).caution),
+                              //         content: new Text(AppLocalizations.of(context).noCategoriesForBusiness),
+                              //       );
+                              //     },
+                              //   );
                             },
                           )
                         : SizedBox(

@@ -48,7 +48,6 @@ import 'package:Buytime/reblox/model/booking/booking_state.dart';
 var appState = AppState(
 category: CategoryState().toEmpty(),
 categoryInvite: CategoryInviteState().toEmpty(),
-categoryTree: CategoryTree().toEmpty(),
 business: BusinessState().toEmpty(),
 area: AreaState().toEmpty(),
 areaList: AreaListState().toEmpty(),

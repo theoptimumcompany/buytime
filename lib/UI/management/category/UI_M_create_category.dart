@@ -102,7 +102,6 @@ class UI_M_CreateCategoryState extends State<UI_M_CreateCategory> {
   void buildDropDownMenuItemsParent(Parent item) {
     if (stopBuildDropDown == false) {
       stopBuildDropDown = true;
-     // CategoryTree categoryNode = StoreProvider.of<AppState>(context).state.categoryTree;
       List<DropdownMenuItem<Parent>> items = [];
 
       // items.add(
@@ -285,7 +284,6 @@ class UI_M_CreateCategoryState extends State<UI_M_CreateCategory> {
                                       }
 
                                       StoreProvider.of<AppState>(context).dispatch(new CreateCategory(categoryCreate));
-                                    //  StoreProvider.of<AppState>(context).dispatch(new AddCategoryTree(newCategoryParent));
                                     } else {
                                       CategoryState categoryCreate = snapshot.category != null ? snapshot.category : CategoryState().toEmpty();
 
@@ -293,7 +291,6 @@ class UI_M_CreateCategoryState extends State<UI_M_CreateCategory> {
                                         categoryCreate.level = 0;
                                       }
                                       StoreProvider.of<AppState>(context).dispatch(CreateCategory(categoryCreate));
-                                    //  StoreProvider.of<AppState>(context).dispatch(new AddCategoryTree(newParent));
                                     }
 
                                   }

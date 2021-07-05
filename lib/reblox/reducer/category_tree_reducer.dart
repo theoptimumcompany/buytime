@@ -142,13 +142,6 @@ class SetCategoryTreeLevel {
   int get nodeLevel => _nodeLevel;
 }
 
-class SetCategoryTreeNumberOfCategories {
-  int _numberOfCategories;
-
-  SetCategoryTreeNumberOfCategories(this._numberOfCategories);
-
-  int get numberOfCategories => _numberOfCategories;
-}
 
 class SetCategoryTreeList {
   List<dynamic> _categoryNodeList;
@@ -180,10 +173,6 @@ CategoryTree categoryTreeReducer(CategoryTree state, action) {
   }
   if (action is SetCategoryTreeLevel) {
     categoryNode.nodeLevel = action.nodeLevel;
-    return categoryNode;
-  }
-  if (action is SetCategoryTreeNumberOfCategories) {
-    categoryNode.numberOfCategories = action.numberOfCategories;
     return categoryNode;
   }
   if (action is SetCategoryTreeList) {
