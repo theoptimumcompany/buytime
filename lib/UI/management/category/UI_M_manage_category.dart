@@ -112,8 +112,9 @@ class ManageCategoryState extends State<ManageCategory> with SingleTickerProvide
   ///Funzione che costruisce tree dallo snippet, senza avere gestione del tree su DB
   List<dynamic> buildTreeFromSnippet() {
     List<dynamic> snippet = StoreProvider.of<AppState>(context).state.serviceListSnippetState.businessSnippet;
-    List<dynamic> tree = [];
+    snippet.sort((a, b) => a.categoryAbsolutePath.length.compareTo(b.categoryAbsolutePath.length));
 
+    List<dynamic> tree = [];
     if (snippet != null && snippet.isNotEmpty) {
       for (var i = 0; i < snippet.length; i++) {
         String categoryPath = snippet[i].categoryAbsolutePath;
@@ -143,7 +144,7 @@ class ManageCategoryState extends State<ManageCategory> with SingleTickerProvide
                 singleNode.nodeId = categoryRoute[1];
                 singleNode.nodeLevel = 0;
                 singleNode.categoryNodeList = [];
-                addToTree(tree, singleNode, 'no_parent');
+                //addToTree(tree, singleNode, 'no_parent');
               }
             } else {
               if (!searchIfExistsOnTree(categoryRoute[y], tree)) {
@@ -173,6 +174,7 @@ class ManageCategoryState extends State<ManageCategory> with SingleTickerProvide
   void addToTree(List<dynamic> tree, CategoryTree singleNode, String idFather) {
     if (idFather == 'no_parent') {
       tree.add(singleNode);
+      print(singleNode.nodeName +  " " + singleNode.nodeId);
     } else {
       for (var i = 0; i < tree.length; i++) {
         if (tree[i].nodeId == idFather) {
@@ -719,10 +721,8 @@ class ManageCategoryState extends State<ManageCategory> with SingleTickerProvide
           firebaseTree.clear();
           branches.clear();
           nodeBranches.clear();
-
           firebaseTree = buildTreeFromSnippet();
-         // print(jsonEncode(firebaseTree));
-          //print("FIREBASE TREE DIMENSIONE : " + firebaseTree.length.toString());
+          print("FIREBASE TREE DIMENSIONE : " + firebaseTree.length.toString());
           firebaseTree.sort((a, b) => a.nodeName.compareTo(b.nodeName));
           branches.add(SizedBox(
             height: 10,
