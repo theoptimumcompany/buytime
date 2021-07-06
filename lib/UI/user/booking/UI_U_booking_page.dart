@@ -268,7 +268,7 @@ class _BookingPageState extends State<BookingPage> {
             if(element.customTag == 'showcase'){///TODO se si vuole showcase decommentare è un TODO fake ahah
               serviceListState.serviceListState.forEach((service) {
                 //debugPrint('CATAGORY ID: ${cLS.id} - CATEGORY LIST: ${service.categoryId}');
-                if(service.categoryId.contains(element.id) || service.categoryRootId.contains(element.id)){
+                if(service.categoryId.contains(element.id)){
                   if(!categoryList.contains(element)){
                     categoryList.add(element);
                   }

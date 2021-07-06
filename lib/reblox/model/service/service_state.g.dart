@@ -11,8 +11,6 @@ ServiceState _$ServiceStateFromJson(Map<String, dynamic> json) {
     serviceId: json['serviceId'] as String,
     businessId: json['businessId'] as String,
     categoryId: (json['categoryId'] as List)?.map((e) => e as String)?.toList(),
-    categoryRootId:
-        (json['categoryRootId'] as List)?.map((e) => e as String)?.toList(),
     name: json['name'] as String,
     image1: json['image1'] as String,
     image2: json['image2'] as String,
@@ -47,7 +45,6 @@ Map<String, dynamic> _$ServiceStateToJson(ServiceState instance) =>
       'serviceId': instance.serviceId,
       'businessId': instance.businessId,
       'categoryId': instance.categoryId,
-      'categoryRootId': instance.categoryRootId,
       'image1': instance.image1,
       'image2': instance.image2,
       'image3': instance.image3,

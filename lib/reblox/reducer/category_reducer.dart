@@ -178,14 +178,6 @@ class SetCategoryLevel {
   int get level => _level;
 }
 
-class SetCategoryChildren {
-  int _children;
-
-  SetCategoryChildren(this._children);
-
-  int get children => _children;
-}
-
 class SetCategoryParent {
   Parent _parent;
 
@@ -251,10 +243,6 @@ CategoryState categoryReducer(CategoryState state, action) {
   if (action is SetCategoryLevel) {
     categoryState.level = action.level;
     print("Setto livello categoria a " + action.level.toString());
-    return categoryState;
-  }
-  if (action is SetCategoryChildren) {
-    categoryState.children = action.children;
     return categoryState;
   }
   if (action is SetCategoryParent) {

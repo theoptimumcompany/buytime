@@ -90,7 +90,7 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
             if(business.name.toLowerCase().contains(_searchController.text.toLowerCase())){
               if(business.id_firestore == element.businessId){
                 StoreProvider.of<AppState>(context).state.serviceList.serviceListState.forEach((service) {
-                  if((service.categoryId.contains(element.id) || service.categoryRootId.contains(element.id)) /*&& element.level == 0*/) {
+                  if((service.categoryId.contains(element.id)) /*&& element.level == 0*/) {
                     createCategoryList(element);
                   }
                 });
@@ -343,7 +343,7 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
               snapshot.categoryList.categoryListState.forEach((cLS) {
                 snapshot.serviceList.serviceListState.forEach((service) {
                   //debugPrint('CATAGORY ID: ${cLS.id} - CATEGORY LIST: ${service.categoryId}');
-                  if((service.categoryId.contains(cLS.id) || service.categoryRootId.contains(cLS.id)) && cLS.level == 0){
+                  if((service.categoryId.contains(cLS.id) /*|| service.categoryRootId.contains(cLS.id)*/) && cLS.level == 0){
                     debugPrint('UI_U_service_explorer => ${cLS.name}');
                     createCategoryList(cLS);
                   }

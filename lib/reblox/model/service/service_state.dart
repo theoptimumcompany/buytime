@@ -9,7 +9,6 @@ class ServiceState {
   String serviceId;
   String businessId;
   List<String> categoryId;
-  List<String> categoryRootId;
   String image1;
   String image2;
   String image3;
@@ -47,7 +46,6 @@ class ServiceState {
     this.serviceId,
     this.businessId,
     this.categoryId,
-    this.categoryRootId,
     this.name,
     this.image1,
     this.image2,
@@ -77,7 +75,6 @@ class ServiceState {
       serviceId: "",
       businessId: "",
       categoryId: [],
-      categoryRootId: [],
       name: "",
       image1: "",
       image2: "",
@@ -107,7 +104,6 @@ class ServiceState {
     this.serviceId = service.serviceId;
     this.businessId = service.businessId;
     this.categoryId = service.categoryId;
-    this.categoryRootId = service.categoryRootId;
     this.name = service.name;
     this.image1 = service.image1;
     this.image2 = service.image2;
@@ -136,7 +132,6 @@ class ServiceState {
     String serviceId,
     String businessId,
     List<String> categoryId,
-    List<String> categoryRootId,
     String name,
     String image1,
     String image2,
@@ -164,7 +159,6 @@ class ServiceState {
       serviceId: serviceId ?? this.serviceId,
       businessId: businessId ?? this.businessId,
       categoryId: categoryId ?? this.categoryId,
-      categoryRootId: categoryRootId ?? this.categoryRootId,
       name: name ?? this.name,
       image1: image1 ?? this.image1,
       image2: image2 ?? this.image2,
