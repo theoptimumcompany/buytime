@@ -1,7 +1,8 @@
 import 'package:Buytime/reblox/model/stripe/stripe_card_response.dart';
 import 'package:Buytime/reblox/model/stripe/stripe_state.dart';
 import 'package:flutter/material.dart';
-import 'package:stripe_sdk/stripe_sdk_ui.dart' as StripeUnofficialUI;
+// import 'package:stripe_sdk/stripe_sdk_ui.dart' as StripeUnofficialUI;
+import 'package:flutter_stripe/flutter_stripe.dart' as StripeOfficial;
 
 
 class SetStripeState {
@@ -27,10 +28,10 @@ class CheckedStripeCustomer {
 
 class AddStripePaymentMethod
 {
-  StripeUnofficialUI.StripeCard _stripeCard;
+  StripeOfficial.Card _stripeCard;
   String _userId;
   AddStripePaymentMethod(this._stripeCard, this._userId);
-  StripeUnofficialUI.StripeCard get stripeCard => _stripeCard;
+  StripeOfficial.Card get stripeCard => _stripeCard;
   String get userId => _userId;
 }
 class CreateDisposePaymentMethodIntent

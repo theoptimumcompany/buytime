@@ -317,6 +317,11 @@ class OrderCreateCardAndPayService implements EpicClass<AppState> {
           String timeBasedId = Uuid().v1();
           orderState.orderId = timeBasedId;
 
+          debugPrint('OrderCreateCardAndPayService - creating order from card: ' + orderState.toString());
+          debugPrint('OrderCreateCardAndPayService - creating order from card: ' + orderState.toJson().toString());
+          orderState = configureOrder(event.orderState, store);
+
+
           /// send document to orders collection
           var addedOrder = await FirebaseFirestore.instance.collection("order").doc(timeBasedId).set(orderState.toJson());
 

@@ -87,12 +87,24 @@ class LandingState extends State<Landing> {
     bookingCode = await storage.read(key: 'bookingCode') ?? '';
     debugPrint('UI_U_landing: DEEP LINK EMPTY | BOOKING CODE: $bookingCode');
     await storage.delete(key: 'bookingCode');
+
     if (bookingCode.isNotEmpty)
       Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => InviteGuestForm(
                 id: bookingCode,
                 fromLanding: true,
               )));
+  }
+
+  selfCheckInFound() async {
+    bookingCode = await storage.read(key: 'bookingCode') ?? '';
+    debugPrint('UI_U_landing: DEEP LINK EMPTY | BOOKING CODE: $bookingCode');
+    await storage.delete(key: 'selfBookingCode');
+    StoreProvider.of<AppState>(context).dispatch(BusinessRequest(selfBookingCode));
+
+    if (bookingCode.isNotEmpty)
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => BookingSelfCreation()));
   }
 
   categoryInviteFound() async {
@@ -123,12 +135,13 @@ class LandingState extends State<Landing> {
       deepLink = dynamicLink?.link;
       debugPrint('UI_U_landing: DEEPLINK onLink: $deepLink');
       if (deepLink != null) {
-        String bookingCodeRead = await storage.read(key: 'bookingCodeRead') ?? '';
-        String categoryInviteRead = await storage.read(key: 'categoryInviteRead') ?? '';
-        String orderIdRead = await storage.read(key: 'orderIdRead') ?? '';
-        await storage.write(key: 'selfBookingCodeRead', value: 'false');
 
-        String selfBookingCodeRead = await storage.read(key: 'selfBookingCodeRead') ?? '';
+
+        String bookingCodeRead = await storage.containsKey(key: 'bookingCodeRead') ? await storage.read(key: 'bookingCodeRead') ?? '' : '';
+        String categoryInviteRead = await storage.containsKey(key: 'categoryInviteRead') ? await storage.read(key: 'categoryInviteRead') ?? '' : '';
+        String orderIdRead = await storage.containsKey(key: 'orderIdRead') ? await storage.read(key: 'orderIdRead') ?? '' : '';
+        debugPrint('UI_U_landing: after reading secure storage');
+
         if (deepLink.queryParameters.containsKey('booking') && bookingCodeRead != 'true') {
           String id = deepLink.queryParameters['booking'];
           debugPrint('UI_U_landing: booking onLink: $id');
@@ -173,19 +186,20 @@ class LandingState extends State<Landing> {
             Navigator.push(context, MaterialPageRoute(builder: (context) => UI_M_BusinessList()));
           } else
             debugPrint('UI_U_landing: USER NOT LOGGED in onLink');
-        } else if (deepLink.queryParameters.containsKey('selfBookingCode') && selfBookingCodeRead != 'true') {
+        } else if (deepLink.queryParameters.containsKey('selfBookingCode') && deepLink.queryParameters['selfBookingCode'].length > 5) {
           String selfBookingCode = deepLink.queryParameters['selfBookingCode'];
           debugPrint('UI_U_landing: selfBookingCode from dynamic link: $selfBookingCode');
           await storage.write(key: 'selfBookingCode', value: selfBookingCode);
-          await storage.write(key: 'selfBookingCodeRead', value: 'true');
 
           if (FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty) {
             debugPrint('UI_U_landing: USER Is LOGGED in onLink');
             StoreProvider.of<AppState>(context).dispatch(BusinessRequest(selfBookingCode));
+            await storage.write(key: 'selfBookingCode', value: '');
             await Future.delayed(Duration(milliseconds: 1000));
             Navigator.push(context, MaterialPageRoute(builder: (context) => BookingSelfCreation()));
-          } else
+          } else {
             debugPrint('UI_U_landing: USER NOT LOGGED in onLink');
+          }
         }
       }
     }, onError: (OnLinkErrorException e) async {
@@ -204,7 +218,7 @@ class LandingState extends State<Landing> {
       String bookingCodeRead = await storage.read(key: 'bookingCodeRead') ?? '';
       String categoryInviteRead = await storage.read(key: 'categoryInviteRead') ?? '';
       String orderIdRead = await storage.read(key: 'orderIdRead') ?? '';
-      String selfBookingCodeRead = await storage.read(key: 'selfBookingCodeRead') ?? '';
+
       if (deepLink.queryParameters.containsKey('booking') && bookingCodeRead != 'true') {
         String id = deepLink.queryParameters['booking'];
         debugPrint('UI_U_landing: booking getInitialLink: $id');
@@ -218,15 +232,14 @@ class LandingState extends State<Landing> {
           Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => InviteGuestForm(id: id, fromLanding: false)), ModalRoute.withName('/landing'));
         } else
           debugPrint('UI_U_landing: USER NOT LOGGED in getInitialLink');
-      } else if (deepLink.queryParameters.containsKey('selfBookingCode') && selfBookingCodeRead != 'true') {
+      } else if (deepLink.queryParameters.containsKey('selfBookingCode') && deepLink.queryParameters['selfBookingCode'].length > 5) {
       String id = deepLink.queryParameters['selfBookingCode'];
       debugPrint('UI_U_landing: selfBookingCode getInitialLink: $id');
       await storage.write(key: 'selfBookingCode', value: id);
-      await storage.write(key: 'selfBookingCodeRead', value: 'true');
 
       if (FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty) {
         debugPrint('UI_U_landing: USER IS LOGGED in getInitialLink');
-        StoreProvider.of<AppState>(context).dispatch(BusinessRequest(selfBookingCode));
+        StoreProvider.of<AppState>(context).dispatch(BusinessRequest(id));
         await Future.delayed(Duration(milliseconds: 1000));
         Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => BookingSelfCreation()), ModalRoute.withName('/bookingSelfCreation'));
       } else
@@ -274,7 +287,10 @@ class LandingState extends State<Landing> {
         converter: (store) => store.state,
         distinct: true,
         onInit: (store) {
+          /// Used for android to get the code
           bookingCodeFound();
+          selfCheckInFound();
+          categoryInviteFound();
 
           //debugPrint('UI_U_Landing => Booking code: ${store.state.booking.booking_code}');
           debugPrint('UI_U_Landing => onInit()');
@@ -719,6 +735,26 @@ class LandingState extends State<Landing> {
           ]);
         });
   }
+}
+
+/// TODO create dynamic link
+Future<Uri> createDynamicLink(String id) async {
+  final DynamicLinkParameters parameters = DynamicLinkParameters(
+    uriPrefix: Environment().config.dynamicLink,
+    link: Uri.parse('${Environment().config.dynamicLink}/booking/?booking=$id'),
+    androidParameters: AndroidParameters(
+      packageName: 'com.theoptimumcompany.buytime',
+      minimumVersion: 1,
+    ),
+    iosParameters: IosParameters(
+      bundleId: 'com.theoptimumcompany.buytime',
+      minimumVersion: '1',
+      appStoreId: '1508552491',
+    ),
+  );
+  var dynamicUrl = await parameters.buildUrl();
+  print("Link dinamico creato " + dynamicUrl.toString());
+  return dynamicUrl;
 }
 
 class _OpenContainerWrapper extends StatelessWidget {

@@ -26,7 +26,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:stripe_payment/stripe_payment.dart' as StripeRecommended;
+// import 'package:stripe_payment/stripe_payment.dart' as StripeRecommended;
+import 'package:flutter_stripe/flutter_stripe.dart';
 
 class ConfirmOrder extends StatefulWidget {
   final String title = 'confirmOrder';
@@ -710,7 +711,8 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
 
   Future<void> confirmationNative(BuildContext context, AppState snapshot) async {
     StoreProvider.of<AppState>(context).dispatch(CreatingOrder());
-    StripeRecommended.PaymentMethod paymentMethod;
+    // StripeRecommended.PaymentMethod paymentMethod;
+    PaymentMethod paymentMethod;
     /// 1: create the payment method
     StripePaymentService stripePaymentService = StripePaymentService();
     if (widget.reserve != null && widget.reserve) {

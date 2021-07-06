@@ -44,7 +44,7 @@ android {
 
     defaultConfig {
         applicationId "com.theoptimumcompany.buytime"
-        minSdkVersion 21
+        minSdkVersion 24
         targetSdkVersion 29
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName

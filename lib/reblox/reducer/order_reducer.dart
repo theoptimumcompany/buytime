@@ -4,8 +4,9 @@ import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/stripe/stripe_state.dart';
 import 'package:Buytime/utils/utils.dart';
 import 'package:flutter/widgets.dart';
-import 'package:stripe_payment/stripe_payment.dart' as StripeRecommended;
+// import 'package:stripe_payment/stripe_payment.dart' as StripeRecommended;
 import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 
 class RefundOrderByUser {
   String _orderStateId;
@@ -81,14 +82,14 @@ class CreateOrderCardAndPay {
 }
 class CreateOrderNativeAndPay {
   OrderState _orderState;
-  StripeRecommended.PaymentMethod _paymentMethod;
+  PaymentMethod _paymentMethod;
   PaymentType _paymentType;
   String _businessStripeAccount;
   BuildContext _context;
   CreateOrderNativeAndPay(this._orderState, this._paymentMethod, this._paymentType, this._context, this._businessStripeAccount);
   OrderState get orderState => _orderState;
   PaymentType get paymentType => _paymentType;
-  StripeRecommended.PaymentMethod get paymentMethod => _paymentMethod;
+  PaymentMethod get paymentMethod => _paymentMethod;
   BuildContext get context => _context;
   String get businessStripeAccount => _businessStripeAccount;
 }
@@ -120,12 +121,12 @@ class CreateOrderCardPending {
 }
 class CreateOrderNativePending {
   OrderState _orderState;
-  StripeRecommended.PaymentMethod _paymentMethod;
+  PaymentMethod _paymentMethod;
   PaymentType _paymentType;
   CreateOrderNativePending(this._orderState, this._paymentMethod, this._paymentType);
   OrderState get orderState => _orderState;
   PaymentType get paymentType => _paymentType;
-  StripeRecommended.PaymentMethod get paymentMethod => _paymentMethod;
+  PaymentMethod get paymentMethod => _paymentMethod;
 }
 class CreateOrderRoomPending {
   OrderState _orderState;
@@ -183,9 +184,9 @@ class SetOrderOrderId
 
 class SetOrderPaymentMethod
 {
-  StripeRecommended.PaymentMethod _paymentMethod;
+  PaymentMethod _paymentMethod;
   SetOrderPaymentMethod(this._paymentMethod);
-  StripeRecommended.PaymentMethod get paymentMethod => _paymentMethod;
+  PaymentMethod get paymentMethod => _paymentMethod;
 }
 class SetOrderCartCounter
 {

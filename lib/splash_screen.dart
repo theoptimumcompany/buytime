@@ -30,10 +30,11 @@ import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/services.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:stripe_payment/stripe_payment.dart';
+// import 'package:stripe_payment/stripe_payment.dart';
 import 'package:package_info/package_info.dart';
 import 'UI/user/booking/RUI_U_notifications.dart';
 
@@ -226,20 +227,21 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
 
   void checkIfNativePayReady() async {
     // String stripeTestKey = "pk_test_51HS20eHr13hxRBpCZl1V0CKFQ7XzJbku7UipKLLIcuNGh3rp4QVsEDCThtV0l2AQ3jMtLsDN2zdC0fQ4JAK6yCOp003FIf3Wjz";
-    String stripeKey = "pk_live_51HS20eHr13hxRBpCLHzfi0SXeqw8Efu911cWdYEE96BAV0zSOesvE83OiqqzRucKIxgCcKHUvTCJGY6cXRtkDVCm003CmGXYzy";
-    StripePayment.setOptions(
-        StripeOptions(
-          publishableKey: stripeKey,
-          merchantId: "merchant.theoptimumcompany.buytime",
-          androidPayMode: 'production'
-        ));
-
-    debugPrint('splash_screen: started to check if native pay ready');
-    bool deviceSupportNativePay = await StripePayment.deviceSupportsNativePay();
-    bool isNativeReady = await StripePayment.canMakeNativePayPayments(['american_express', 'visa', 'maestro', 'master_card']);
-    debugPrint('splash_screen: deviceSupportNativePay: ' + deviceSupportNativePay.toString() + ' - isNativeReady: ' + isNativeReady.toString());
-
-    // deviceSupportNativePay && isNativeReady ? createPaymentMethodNative() : createPaymentMethod();
+    // String stripeKey = "pk_live_51HS20eHr13hxRBpCLHzfi0SXeqw8Efu911cWdYEE96BAV0zSOesvE83OiqqzRucKIxgCcKHUvTCJGY6cXRtkDVCm003CmGXYzy";
+    Stripe.publishableKey = "pk_live_51HS20eHr13hxRBpCLHzfi0SXeqw8Efu911cWdYEE96BAV0zSOesvE83OiqqzRucKIxgCcKHUvTCJGY6cXRtkDVCm003CmGXYzy";
+    Stripe.merchantIdentifier = "merchant.theoptimumcompany.buytime";
+    // StripePayment.setOptions(
+    //     StripeOptions(
+    //       publishableKey: stripeKey,
+    //       merchantId: "merchant.theoptimumcompany.buytime",
+    //       androidPayMode: 'production'
+    //     ));
+    //
+    // debugPrint('splash_screen: started to check if native pay ready');
+    Stripe.instance.isApplePaySupported.addListener(() {
+    });
+    bool isApplePaySupported = await Stripe.instance.checkApplePaySupport();
+    debugPrint('splash_screen: isApplePaySupported, ' + isApplePaySupported.toString() );
   }
 
 

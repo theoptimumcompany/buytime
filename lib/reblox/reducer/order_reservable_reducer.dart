@@ -5,8 +5,9 @@ import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
 import 'package:Buytime/reblox/model/stripe/stripe_state.dart';
 import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:stripe_payment/stripe_payment.dart' as StripeRecommended;
+// import 'package:stripe_payment/stripe_payment.dart' as StripeRecommended;
 
+import 'package:flutter_stripe/flutter_stripe.dart';
 
 class CreateOrderReservableCardAndPay {
   BuildContext _context;
@@ -88,53 +89,53 @@ class CreateOrderReservableCardPending {
 }
 class CreateOrderReservableNativeAndPay {
   OrderReservableState _orderReservableState;
-  StripeRecommended.PaymentMethod _paymentMethod;
+  PaymentMethod _paymentMethod;
   PaymentType _paymentType;
   String _businessStripeAccount;
   BuildContext _context;
   CreateOrderReservableNativeAndPay(this._orderReservableState, this._paymentMethod, this._paymentType, this._context, this._businessStripeAccount);
   OrderReservableState get orderReservableState => _orderReservableState;
   PaymentType get paymentType => _paymentType;
-  StripeRecommended.PaymentMethod get paymentMethod => _paymentMethod;
+  PaymentMethod get paymentMethod => _paymentMethod;
   BuildContext get context => _context;
   String get businessStripeAccount => _businessStripeAccount;
 }
 class CreateOrderReservableNativeAndHold {
   OrderReservableState _orderReservableState;
-  StripeRecommended.PaymentMethod _paymentMethod;
+  PaymentMethod _paymentMethod;
   PaymentType _paymentType;
   String _businessStripeAccount;
   BuildContext _context;
   CreateOrderReservableNativeAndHold(this._orderReservableState, this._paymentMethod, this._paymentType, this._context, this._businessStripeAccount);
   OrderReservableState get orderReservableState => _orderReservableState;
   PaymentType get paymentType => _paymentType;
-  StripeRecommended.PaymentMethod get paymentMethod => _paymentMethod;
+  PaymentMethod get paymentMethod => _paymentMethod;
   BuildContext get context => _context;
   String get businessStripeAccount => _businessStripeAccount;
 }
 class CreateOrderReservableNativeAndReminder {
   OrderReservableState _orderReservableState;
-  StripeRecommended.PaymentMethod _paymentMethod;
+  PaymentMethod _paymentMethod;
   PaymentType _paymentType;
   String _businessStripeAccount;
   BuildContext _context;
   CreateOrderReservableNativeAndReminder(this._orderReservableState, this._paymentMethod, this._paymentType, this._context, this._businessStripeAccount);
   OrderReservableState get orderReservableState => _orderReservableState;
   PaymentType get paymentType => _paymentType;
-  StripeRecommended.PaymentMethod get paymentMethod => _paymentMethod;
+  PaymentMethod get paymentMethod => _paymentMethod;
   BuildContext get context => _context;
   String get businessStripeAccount => _businessStripeAccount;
 }
 class CreateOrderReservableNativePending {
   OrderReservableState _orderReservableState;
-  StripeRecommended.PaymentMethod _paymentMethod;
+  PaymentMethod _paymentMethod;
   PaymentType _paymentType;
   String _businessStripeAccount;
   BuildContext _context;
   CreateOrderReservableNativePending(this._orderReservableState, this._paymentMethod, this._paymentType, this._context, this._businessStripeAccount);
   OrderReservableState get orderReservableState => _orderReservableState;
   PaymentType get paymentType => _paymentType;
-  StripeRecommended.PaymentMethod get paymentMethod => _paymentMethod;
+  PaymentMethod get paymentMethod => _paymentMethod;
   BuildContext get context => _context;
   String get businessStripeAccount => _businessStripeAccount;
 }
@@ -161,9 +162,9 @@ class CreateOrderReservableRoomPending {
 
 class SetOrderReservablePaymentMethod
 {
-  StripeRecommended.PaymentMethod _paymentMethod;
+  PaymentMethod _paymentMethod;
   SetOrderReservablePaymentMethod(this._paymentMethod);
-  StripeRecommended.PaymentMethod get paymentMethod => _paymentMethod;
+  PaymentMethod get paymentMethod => _paymentMethod;
 }
 
 

@@ -30,6 +30,10 @@ OrderState configureOrder(OrderState orderStateFromEvent, EpicStore<AppState> st
   } else {
     orderState.businessId = store.state.business.id_firestore;
     orderState.business.thumbnail = store.state.business.wide;
+    if( orderState.businessId.isEmpty || orderState.businessId == '') {
+      orderState.businessId = orderState.itemList.first.id_business;
+      orderState.business.id = orderState.itemList.first.id_business;
+    }
   }
 
   store.state.cardListState.cardList.forEach((element) {

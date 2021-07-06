@@ -1,4 +1,4 @@
-import 'package:stripe_payment/stripe_payment.dart' as StripeRecommended;
+// import 'package:stripe_payment/stripe_payment.dart' as StripeRecommended;
 import 'package:Buytime/reblox/model/business/snippet/order_business_snippet_state.dart';
 import 'package:Buytime/reblox/model/order/order_entry.dart';
 import 'package:Buytime/reblox/model/order/selected_entry.dart';
@@ -8,6 +8,7 @@ import 'package:Buytime/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 
 part 'order_reservable_state.g.dart';
 
@@ -42,7 +43,7 @@ class OrderReservableState {
   @JsonKey(ignore: true)
   bool confirmOrderWait = false;
   @JsonKey(ignore: true)
-  StripeRecommended.PaymentMethod paymentMethod;
+  PaymentMethod paymentMethod;
   String location;
   String openUntil;
   String cancellationReason;
@@ -136,7 +137,7 @@ class OrderReservableState {
     String cardType,
     String cardLast4Digit,
     bool confirmOrderWait,
-    StripeRecommended.PaymentMethod paymentMethodRequest,
+    PaymentMethod paymentMethodRequest,
     String location,
     String openUntil,
     String cancellationReason,
