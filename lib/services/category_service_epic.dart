@@ -4,6 +4,7 @@ import 'package:Buytime/reblox/model/category/category_state.dart';
 import 'package:Buytime/reblox/model/category/snippet/category_snippet_state.dart';
 import 'package:Buytime/reblox/model/file/optimum_file_to_upload.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
+import 'package:Buytime/reblox/model/snippet/service_list_snippet_state.dart';
 import 'package:Buytime/reblox/model/statistics_state.dart';
 import 'package:Buytime/reblox/navigation/navigation_reducer.dart';
 import 'package:Buytime/reblox/reducer/business_list_reducer.dart';
@@ -13,6 +14,7 @@ import 'package:Buytime/reblox/model/snippet/manager.dart';
 import 'package:Buytime/reblox/model/snippet/worker.dart';
 import 'package:Buytime/reblox/reducer/category_tree_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/service_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/service_list_snippet_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/service_list_snippet_reducer.dart';
 import 'package:Buytime/reblox/reducer/statistics_reducer.dart';
 import 'package:Buytime/services/file_upload_service.dart';
@@ -73,17 +75,17 @@ class AllCategoryListRequestService implements EpicClass<AppState> {
   List<CategoryState> categoryStateList;
   List<ServiceState> serviceStateList;
   List<BusinessState> businessStateList;
+  List<ServiceListSnippetState> serviceListSnippetListState;
 
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     debugPrint("AllCategoryListRequestService - AllCategoryListRequestService => CATCHED ACTION");
     return actions.whereType<AllRequestListCategory>().asyncMap((event) async {
-
       QuerySnapshot businessListFromFirebase;
       businessStateList = [];
 
-
       businessListFromFirebase = await FirebaseFirestore.instance
+
           /// 1 read - ? DOC
           .collection("business")
           .where("draft", isEqualTo: false)
@@ -93,14 +95,14 @@ class AllCategoryListRequestService implements EpicClass<AppState> {
       int read = 0;
       categoryStateList = [];
       serviceStateList = [];
+      serviceListSnippetListState = [];
       int snapshotDocs = 0;
       List<String> tmpBusinessIdList = [];
-
-
 
       for (int i = 0; i < businessListFromFirebase.docs.length; i++) {
         businessStateList.add(BusinessState.fromJson(businessListFromFirebase.docs[i].data()));
         QuerySnapshot snapshot = await FirebaseFirestore.instance
+
             /// 1 READ - ? DOC
             .collection("business")
             .doc(businessListFromFirebase.docs[i].id)
@@ -152,6 +154,11 @@ class AllCategoryListRequestService implements EpicClass<AppState> {
           read++;
         }
         tmpBusinessIdList.add(businessListFromFirebase.docs[i].id);
+
+
+        var servicesFirebaseShadow = await FirebaseFirestore.instance.collection("business").doc(businessListFromFirebase.docs[i].id).collection('service_list_snippet').get();
+
+        if (servicesFirebaseShadow.docs.isNotEmpty) serviceListSnippetListState.add(ServiceListSnippetState.fromJson(servicesFirebaseShadow.docs.first.data()));
       }
 
       debugPrint('CATEGORY_SERVICE_EPIC - AllCategoryListRequestService => CATEGORY LENGHT: ${categoryStateList.length}');
@@ -173,9 +180,10 @@ class AllCategoryListRequestService implements EpicClass<AppState> {
       if (categoryStateList.isEmpty) categoryStateList.add(CategoryState());
       if (serviceStateList.isEmpty) serviceStateList.add(ServiceState());
     }).expand((element) => [
-        BusinessListReturned(businessStateList),
+          BusinessListReturned(businessStateList),
           CategoryListReturned(categoryStateList),
           ServiceListReturned(serviceStateList),
+          ServiceListSnippetListRequestResponse(serviceListSnippetListState),
           UpdateStatistics(statisticsState),
         ]);
   }
@@ -752,7 +760,14 @@ class CategoryCreateService implements EpicClass<AppState> {
       await docReference.set(categoryState.toJson()).then((value) async {
         /// 1 WRITE
         debugPrint("CATEGORY_SERVICE_EPIC - CategoryCreateService => CategoryService has created new category " + docReference.id);
-        store.state.serviceListSnippetState.businessSnippet.add(CategorySnippetState(categoryAbsolutePath: store.state.business.id_firestore + '/' + categoryState.id, categoryName: categoryState.name, categoryImage: categoryState.categoryImage, serviceNumberExternal: 0, serviceNumberInternal: 0, serviceList: [], tags: [categoryState.customTag]));
+        store.state.serviceListSnippetState.businessSnippet.add(CategorySnippetState(
+            categoryAbsolutePath: store.state.business.id_firestore + '/' + categoryState.id,
+            categoryName: categoryState.name,
+            categoryImage: categoryState.categoryImage,
+            serviceNumberExternal: 0,
+            serviceNumberInternal: 0,
+            serviceList: [],
+            tags: [categoryState.customTag]));
       }).catchError((error) {
         debugPrint('CATEGORY_SERVICE_EPIC - CategoryCreateService => ERROR: $error');
       }).then((value) {

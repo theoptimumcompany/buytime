@@ -1,10 +1,14 @@
 import 'package:Buytime/UI/user/category/UI_U_filter_by_category.dart';
+import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/category/category_state.dart';
+import 'package:Buytime/reblox/model/snippet/service_list_snippet_state.dart';
+import 'package:Buytime/reblox/reducer/service_list_snippet_reducer.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 
 class DiscoverCardWidget extends StatefulWidget {
 
@@ -50,6 +54,13 @@ class _DiscoverCardWidgetState extends State<DiscoverCardWidget> {
           child: InkWell(
             splashColor: Colors.black.withOpacity(.3),
             onTap: (){
+              List<ServiceListSnippetState> serviceListSnippetListState = StoreProvider.of<AppState>(context).state.serviceListSnippetListState.serviceListSnippetListState;
+              for (var z = 0; z < serviceListSnippetListState.length; z++) {
+                  if(widget.categoryState.businessId == serviceListSnippetListState[z].businessId)
+                  {
+                    StoreProvider.of<AppState>(context).dispatch(ServiceListSnippetRequestResponse(serviceListSnippetListState[z]));
+                  }
+              }
               widget.fromBookingPage ?
               Navigator.push(context, MaterialPageRoute(builder: (context) => FilterByCategory(fromBookingPage: true, categoryState: widget.categoryState, tourist: true, categoryListIds: widget.categoryListIds,))) :
               Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => FilterByCategory(fromBookingPage: false,categoryState: widget.categoryState, tourist: true, categoryListIds: widget.categoryListIds,)));

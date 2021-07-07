@@ -9,6 +9,7 @@ import 'package:Buytime/reblox/model/order/order_entry.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/role/role.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
+import 'package:Buytime/reblox/model/snippet/service_list_snippet_state.dart';
 import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reservable_list_reducer.dart';
@@ -63,25 +64,43 @@ class _FilterByCategoryState extends State<FilterByCategory> {
   Map<String, List<String>> categoryListIds = Map();
   Map<String, List<String>> subCategoryListIds = Map();
 
-  String categoryRootId = '';
-
   @override
   void initState() {
     super.initState();
   }
 
-  void searchCategoryRootId(String categoryId) {
-    List<dynamic> snippet = StoreProvider.of<AppState>(context).state.serviceListSnippetState.businessSnippet;
-    if (snippet != null && snippet.isNotEmpty) {
-      for (var i = 0; i < snippet.length; i++) {
-        String categoryPath = snippet[i].categoryAbsolutePath;
-        List<String> categoryRoute = categoryPath.split('/');
-        if (categoryRoute.contains(categoryId)) {
-          categoryRootId = categoryRoute[1];
+  String searchCategoryRootId(String categoryId, String serviceId) {
+    ServiceListSnippetState serviceListSnippetState = StoreProvider.of<AppState>(context).state.serviceListSnippetState;
+      for (var w = 0; w < serviceListSnippetState.businessSnippet.length; w++) {
+        for (var y = 0; y < serviceListSnippetState.businessSnippet[w].serviceList.length; y++) {
+          //debugPrint('INSIDE SERVICE PATH  => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath}');
+          if (serviceListSnippetState.businessSnippet[w].serviceList[y].serviceAbsolutePath.contains(categoryId)  &&  serviceListSnippetState.businessSnippet[w].serviceList[y].serviceAbsolutePath.contains(serviceId)) {
+            return serviceListSnippetState.businessSnippet[w].serviceList[y].serviceAbsolutePath.split('/')[1];
+           // debugPrint('searchCategoryRootId SERVICE PATH  => ${serviceListSnippetState.businessSnippet[w].serviceList[y].serviceAbsolutePath}');
+          }
+        }
+      }
+
+  }
+
+  bool searchCategoryAndServiceOnSnippetList(String serviceId, String categoryId) {
+    bool sub = false;
+    List<ServiceListSnippetState> serviceListSnippetListState = StoreProvider.of<AppState>(context).state.serviceListSnippetListState.serviceListSnippetListState;
+    for (var z = 0; z < serviceListSnippetListState.length; z++) {
+      for (var w = 0; w < serviceListSnippetListState[z].businessSnippet.length; w++) {
+        for (var y = 0; y < serviceListSnippetListState[z].businessSnippet[w].serviceList.length; y++) {
+          //debugPrint('INSIDE SERVICE PATH  => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath}');
+          if (serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath.contains(serviceId) && serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath.contains(categoryId)) {
+            //  debugPrint('INSIDE CATEGORY ROOT => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceName}');
+            //debugPrint('INSIDE SERVICE PATH  => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath}');
+            sub = true;
+          }
         }
       }
     }
+    return sub;
   }
+
 
   void undoDeletion(index, item) {
     /*
@@ -297,7 +316,8 @@ class _FilterByCategoryState extends State<FilterByCategory> {
               });
             }
           });
-          grid(categoryList);
+          if(categoryList.isNotEmpty)
+               grid(categoryList);
         });
         /*categoryListState = store.state.categoryList;
         categoryList.addAll(categoryListState.categoryListState);
@@ -321,8 +341,10 @@ class _FilterByCategoryState extends State<FilterByCategory> {
               });
 
               if (!tmpServiceList.contains(element) && !serviceList.contains(element)) {
-                searchCategoryRootId(element.categoryId.first);
-                  if (widget.categoryListIds != null && widget.categoryListIds.contains(categoryRootId)) {
+
+            //    debugPrint('categoryListIds   => ${widget.categoryListIds}');
+
+                if (widget.categoryListIds != null && widget.categoryListIds.contains(searchCategoryRootId(element.categoryId.first, element.serviceId))) {
                     tmpServiceList.add(element);
                     serviceList.add(element);
                   }
