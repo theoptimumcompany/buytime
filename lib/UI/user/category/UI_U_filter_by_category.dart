@@ -30,6 +30,7 @@ class FilterByCategory extends StatefulWidget {
   CategoryState categoryState;
   List<String> categoryListIds;
   bool tourist;
+
   FilterByCategory({Key key, this.fromBookingPage, this.categoryState, this.tourist, this.categoryListIds}) : super(key: key);
 
   @override
@@ -62,9 +63,24 @@ class _FilterByCategoryState extends State<FilterByCategory> {
   Map<String, List<String>> categoryListIds = Map();
   Map<String, List<String>> subCategoryListIds = Map();
 
+  String categoryRootId = '';
+
   @override
   void initState() {
     super.initState();
+  }
+
+  void searchCategoryRootId(String categoryId) {
+    List<dynamic> snippet = StoreProvider.of<AppState>(context).state.serviceListSnippetState.businessSnippet;
+    if (snippet != null && snippet.isNotEmpty) {
+      for (var i = 0; i < snippet.length; i++) {
+        String categoryPath = snippet[i].categoryAbsolutePath;
+        List<String> categoryRoute = categoryPath.split('/');
+        if (categoryRoute.contains(categoryId)) {
+          categoryRootId = categoryRoute[1];
+        }
+      }
+    }
   }
 
   void undoDeletion(index, item) {
@@ -86,10 +102,10 @@ class _FilterByCategoryState extends State<FilterByCategory> {
           if (element.name.toLowerCase().contains(_searchController.text.toLowerCase())) {
             tmpServiceList.add(element);
           }
-          if(element.tag != null && element.tag.isNotEmpty){
+          if (element.tag != null && element.tag.isNotEmpty) {
             element.tag.forEach((tag) {
               if (tag.toLowerCase().contains(_searchController.text.toLowerCase())) {
-                if(!tmpServiceList.contains(element)){
+                if (!tmpServiceList.contains(element)) {
                   tmpServiceList.add(element);
                 }
               }
@@ -160,12 +176,12 @@ class _FilterByCategoryState extends State<FilterByCategory> {
     List<String> i1 = [];
     List<String> i2 = [];
     List<String> i3 = [];
-    for(int i = 0; i< list.length; i++){
+    for (int i = 0; i < list.length; i++) {
       categoryListIds.forEach((key, value) {
-        if(key == list[i].name){
-          if(i == 0)
+        if (key == list[i].name) {
+          if (i == 0)
             i1 = value;
-          else if(i == 1)
+          else if (i == 1)
             i2 = value;
           else
             i3 = value;
@@ -179,8 +195,8 @@ class _FilterByCategoryState extends State<FilterByCategory> {
         list.length >= 1
             ? Flexible(
                 flex: 1,
-                child: FindYourInspirationCardWidget(list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2,
-                    list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2, list[0], false, widget.tourist, i1),
+                child: FindYourInspirationCardWidget(
+                    list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2, list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2, list[0], false, widget.tourist, i1),
               )
             : Container(),
 
@@ -188,8 +204,8 @@ class _FilterByCategoryState extends State<FilterByCategory> {
         list.length >= 2
             ? Flexible(
                 flex: 1,
-                child: FindYourInspirationCardWidget(list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2,
-                    list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2, list[1], false, widget.tourist,  i2),
+                child: FindYourInspirationCardWidget(
+                    list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2, list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2, list[1], false, widget.tourist, i2),
               )
             : Container(),
 
@@ -197,8 +213,8 @@ class _FilterByCategoryState extends State<FilterByCategory> {
         list.length == 3
             ? Flexible(
                 flex: 1,
-                child: FindYourInspirationCardWidget(list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2,
-                    list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2, list[2], false, widget.tourist,  i3),
+                child: FindYourInspirationCardWidget(
+                    list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2, list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2, list[2], false, widget.tourist, i3),
               )
             : Container(),
       ],
@@ -208,15 +224,14 @@ class _FilterByCategoryState extends State<FilterByCategory> {
   void createSubCategoryList(CategoryState element) {
     bool found = false;
     subCategoryList.forEach((cL) {
-      if(cL.name == element.name)
-        found = true;
+      if (cL.name == element.name) found = true;
     });
 
-    if(!found){
+    if (!found) {
       subCategoryList.add(element);
       subCategoryListIds.putIfAbsent(element.name, () => [element.id]);
-    }else{
-      if(!subCategoryListIds[element.name].contains(element.id)){
+    } else {
+      if (!subCategoryListIds[element.name].contains(element.id)) {
         subCategoryListIds[element.name].add(element.id);
       }
     }
@@ -243,45 +258,42 @@ class _FilterByCategoryState extends State<FilterByCategory> {
               subCategoryList.clear();
               l.forEach((element) {
                 if (element.parent != null && widget.categoryListIds.contains(element.parent.id)) {
-                  if(widget.tourist){
+                  if (widget.tourist) {
                     debugPrint('UI_U_filter_by_category => SUB CATEGORY NAME: ${element.name}');
                     store.state.serviceList.serviceListState.forEach((service) {
                       //debugPrint('CATAGORY ID: ${cLS.id} - CATEGORY LIST: ${service.categoryId}');
-                      if((service.categoryId.contains(element.id) /*|| service.categoryRootId.contains(element.id)*/) /*&& element.level == 0*/){
+                      if ((service.categoryId.contains(element.id) /*||  TODO service.categoryRootId.contains(element.id)*/) /*&& element.level == 0*/) {
                         createSubCategoryList(element);
                       }
                     });
-                  }
-                  else
+                  } else
                     subCategoryList.add(element);
-                }else{
+                } else {
                   //categoryList.add(element); ///TODO
-                  if(!widget.categoryListIds.contains(element.id)){
+                  if (!widget.categoryListIds.contains(element.id)) {
                     bool found = false;
                     categoryList.forEach((cL) {
-                      if(cL.name.trim() == element.name.trim())
-                        found = true;
+                      if (cL.name.trim() == element.name.trim()) found = true;
                     });
 
-                    if(!found){
+                    if (!found) {
                       debugPrint('UI_U_filter_by_category => CATEGORY NAME: ${element.name}');
-                      if(element.customTag == 'showcase'){
+                      if (element.customTag == 'showcase') {
                         store.state.serviceList.serviceListState.forEach((service) {
                           //debugPrint('CATAGORY ID: ${cLS.id} - CATEGORY LIST: ${service.categoryId}');
-                          if(service.categoryId.contains(element.id) && element.level == 0){
-                            if(!categoryList.contains(element)){
+                          if (service.categoryId.contains(element.id) && element.level == 0) {
+                            if (!categoryList.contains(element)) {
                               categoryList.add(element);
                             }
                           }
                         });
                         categoryListIds.putIfAbsent(element.name, () => [element.id]);
                       }
-                    }else{
+                    } else {
                       categoryListIds[element.name].add(element.id);
                     }
                   }
-                  }
-
+                }
               });
             }
           });
@@ -295,29 +307,25 @@ class _FilterByCategoryState extends State<FilterByCategory> {
       builder: (context, snapshot) {
         List<ServiceState> s = [];
 
-        if(_searchController.text.isEmpty) {
+        if (_searchController.text.isEmpty) {
           tmpServiceList.clear();
           serviceList.clear();
           s.addAll(snapshot.serviceList.serviceListState);
           s.forEach((element) {
-            if(element.categoryId != null) {
+            if (element.categoryId != null) {
               element.categoryId.forEach((element2) {
-                if (widget.categoryListIds != null &&
-                    widget.categoryListIds.contains(element2)) {
+                if (widget.categoryListIds != null && widget.categoryListIds.contains(element2)) {
                   tmpServiceList.add(element);
                   serviceList.add(element);
                 }
               });
 
-              if (!tmpServiceList.contains(element) &&
-                  !serviceList.contains(element)) {
-            //    element.categoryRootId.forEach((element2) {
-                //   if (widget.categoryListIds != null &&
-                //       widget.categoryListIds.contains(element2)) {
-                //     tmpServiceList.add(element);
-                //     serviceList.add(element);
-                //   }
-                // });
+              if (!tmpServiceList.contains(element) && !serviceList.contains(element)) {
+                searchCategoryRootId(element.categoryId.first);
+                  if (widget.categoryListIds != null && widget.categoryListIds.contains(categoryRootId)) {
+                    tmpServiceList.add(element);
+                    serviceList.add(element);
+                  }
               }
             }
           });
@@ -399,7 +407,10 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                     // go to the cart page
                                     Navigator.push(
                                       context,
-                                      MaterialPageRoute(builder: (context) => Cart(tourist: widget.tourist,)),
+                                      MaterialPageRoute(
+                                          builder: (context) => Cart(
+                                                tourist: widget.tourist,
+                                              )),
                                     );
                                   } else {
                                     showDialog(
@@ -457,84 +468,86 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         ///Just show me
-                        subCategoryList.isNotEmpty ?
-                        Flexible(
-                          child: Container(
-                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
-                            padding: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2),
-                            height: subCategoryList.isNotEmpty ? SizeConfig.safeBlockVertical * 28 : SizeConfig.safeBlockVertical * 19,
-                            color: BuytimeTheme.BackgroundWhite,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                ///Just show me
-                                Container(
-                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1),
-                                  child: Text(
-                                    AppLocalizations.of(context).justShowMe,
-                                    style: TextStyle(
-                                        //letterSpacing: SizeConfig.safeBlockVertical * .4,
-                                        fontFamily: BuytimeTheme.FontFamily,
-                                        color: BuytimeTheme.TextBlack,
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 18
+                        subCategoryList.isNotEmpty
+                            ? Flexible(
+                                child: Container(
+                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
+                                  padding: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2),
+                                  height: subCategoryList.isNotEmpty ? SizeConfig.safeBlockVertical * 28 : SizeConfig.safeBlockVertical * 19,
+                                  color: BuytimeTheme.BackgroundWhite,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      ///Just show me
+                                      Container(
+                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1),
+                                        child: Text(
+                                          AppLocalizations.of(context).justShowMe,
+                                          style: TextStyle(
+                                              //letterSpacing: SizeConfig.safeBlockVertical * .4,
+                                              fontFamily: BuytimeTheme.FontFamily,
+                                              color: BuytimeTheme.TextBlack,
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: 18
 
-                                        ///SizeConfig.safeBlockHorizontal * 4
+                                              ///SizeConfig.safeBlockHorizontal * 4
+                                              ),
                                         ),
+                                      ),
+                                      subCategoryList.isNotEmpty
+                                          ?
+
+                                          ///List
+                                          Container(
+                                              height: SizeConfig.screenWidth / 3,
+                                              width: double.infinity,
+                                              child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
+                                                SliverList(
+                                                  delegate: SliverChildBuilderDelegate(
+                                                    (context, index) {
+                                                      //MenuItemModel menuItem = menuItems.elementAt(index);
+                                                      CategoryState category = subCategoryList.elementAt(index);
+                                                      return Container(
+                                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 2),
+                                                        child: FindYourInspirationCardWidget(SizeConfig.screenWidth / 3 - 2, SizeConfig.screenWidth / 3 - 2, category, false, widget.tourist, subCategoryListIds[category.name]),
+                                                      );
+                                                    },
+                                                    childCount: subCategoryList.length,
+                                                  ),
+                                                ),
+                                              ]),
+                                            )
+                                          :
+
+                                          ///No List
+                                          Container(
+                                              height: SizeConfig.safeBlockVertical * 8,
+                                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                              decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
+                                              child: Center(
+                                                  child: Container(
+                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 4),
+                                                alignment: Alignment.centerLeft,
+                                                child: Text(
+                                                  AppLocalizations.of(context).noSubCategoryFound,
+                                                  style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextGrey, fontWeight: FontWeight.w500, fontSize: 16),
+                                                ),
+                                              )),
+                                            ),
+                                    ],
                                   ),
                                 ),
-                                subCategoryList.isNotEmpty
-                                    ?
-
-                                    ///List
-                                    Container(
-                                        height: SizeConfig.screenWidth / 3,
-                                        width: double.infinity,
-                                        child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
-                                          SliverList(
-                                            delegate: SliverChildBuilderDelegate(
-                                              (context, index) {
-                                                //MenuItemModel menuItem = menuItems.elementAt(index);
-                                                CategoryState category = subCategoryList.elementAt(index);
-                                                return Container(
-                                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 2),
-                                                  child: FindYourInspirationCardWidget(SizeConfig.screenWidth / 3 - 2, SizeConfig.screenWidth / 3 - 2, category, false, widget.tourist, subCategoryListIds[category.name]),
-                                                );
-                                              },
-                                              childCount: subCategoryList.length,
-                                            ),
-                                          ),
-                                        ]),
-                                      )
-                                    :
-
-                                    ///No List
-                                    Container(
-                                        height: SizeConfig.safeBlockVertical * 8,
-                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
-                                        decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
-                                        child: Center(
-                                            child: Container(
-                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 4),
-                                          alignment: Alignment.centerLeft,
-                                          child: Text(
-                                            AppLocalizations.of(context).noSubCategoryFound,
-                                            style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextGrey, fontWeight: FontWeight.w500, fontSize: 16),
-                                          ),
-                                        )),
-                                      ),
-                              ],
-                            ),
-                          ),
-                        ) : Container(),
+                              )
+                            : Container(),
 
                         ///Divider
-                        subCategoryList.isNotEmpty ?
-                        Container(
-                          color: BuytimeTheme.DividerGrey,
-                          height: SizeConfig.safeBlockVertical * 2,
-                        ) : Container(),
+                        subCategoryList.isNotEmpty
+                            ? Container(
+                                color: BuytimeTheme.DividerGrey,
+                                height: SizeConfig.safeBlockVertical * 2,
+                              )
+                            : Container(),
 
                         ///Search & List
                         Flexible(
@@ -708,7 +721,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                                       setState(() {
                                                         tmpServiceList.removeAt(index);
                                                       });
-                                                      if(StoreProvider.of<AppState>(context).state.user.getRole() == Role.user){
+                                                      if (StoreProvider.of<AppState>(context).state.user.getRole() == Role.user) {
                                                         if (direction == DismissDirection.startToEnd) {
                                                           debugPrint('UI_U_SearchPage => DX to DELETE');
                                                           // Show a snackbar. This snackbar could also contain "Undo" actions.
@@ -742,49 +755,49 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                                               showDialog(
                                                                   context: context,
                                                                   builder: (_) => AlertDialog(
-                                                                    title: Text(AppLocalizations.of(context).doYouWantToPerformAnotherOrder),
-                                                                    content: Text(AppLocalizations.of(context).youAreAboutToPerformAnotherOrder),
-                                                                    actions: <Widget>[MaterialButton(
-                                                                      elevation: 0,
-                                                                      hoverElevation: 0,
-                                                                      focusElevation: 0,
-                                                                      highlightElevation: 0,
-                                                                      child: Text(AppLocalizations.of(context).cancel),
-                                                                      onPressed: () {
-                                                                        Navigator.of(context).pop();
-                                                                      },
-                                                                    ),
-                                                                      MaterialButton(
-                                                                        elevation: 0,
-                                                                        hoverElevation: 0,
-                                                                        focusElevation: 0,
-                                                                        highlightElevation: 0,
-                                                                        child: Text(AppLocalizations.of(context).ok),
-                                                                        onPressed: () {
-                                                                          /// svuotare il carrello
-                                                                          // StoreProvider.of<AppState>(context).dispatch(());
-                                                                          /// fare la nuova add
-                                                                          for (int i = 0; i < order.itemList.length; i++) {
-                                                                            order.removeItem(order.itemList[i]);
-                                                                          }
-                                                                          order.itemList = [];
-                                                                          order.cartCounter = 0;
-                                                                          order.addItem(service, snapshot.business.ownerId, context);
-                                                                          order.cartCounter = 1;
-                                                                          Navigator.of(context).pop();
-                                                                        },
-                                                                      )
-                                                                    ],
-                                                                  ));
+                                                                        title: Text(AppLocalizations.of(context).doYouWantToPerformAnotherOrder),
+                                                                        content: Text(AppLocalizations.of(context).youAreAboutToPerformAnotherOrder),
+                                                                        actions: <Widget>[
+                                                                          MaterialButton(
+                                                                            elevation: 0,
+                                                                            hoverElevation: 0,
+                                                                            focusElevation: 0,
+                                                                            highlightElevation: 0,
+                                                                            child: Text(AppLocalizations.of(context).cancel),
+                                                                            onPressed: () {
+                                                                              Navigator.of(context).pop();
+                                                                            },
+                                                                          ),
+                                                                          MaterialButton(
+                                                                            elevation: 0,
+                                                                            hoverElevation: 0,
+                                                                            focusElevation: 0,
+                                                                            highlightElevation: 0,
+                                                                            child: Text(AppLocalizations.of(context).ok),
+                                                                            onPressed: () {
+                                                                              /// svuotare il carrello
+                                                                              // StoreProvider.of<AppState>(context).dispatch(());
+                                                                              /// fare la nuova add
+                                                                              for (int i = 0; i < order.itemList.length; i++) {
+                                                                                order.removeItem(order.itemList[i]);
+                                                                              }
+                                                                              order.itemList = [];
+                                                                              order.cartCounter = 0;
+                                                                              order.addItem(service, snapshot.business.ownerId, context);
+                                                                              order.cartCounter = 1;
+                                                                              Navigator.of(context).pop();
+                                                                            },
+                                                                          )
+                                                                        ],
+                                                                      ));
                                                             }
                                                             //StoreProvider.of<AppState>(context).dispatch(SetOrderCartCounter(order.cartCounter));
                                                           }
                                                           undoDeletion(index, service);
                                                         }
-                                                      }else{
+                                                      } else {
                                                         if (direction == DismissDirection.startToEnd) {
                                                           debugPrint('UI_U_SearchPage => DX to DELETE');
-
                                                         } else {
                                                           debugPrint('UI_U_SearchPage => SX to BOOK');
                                                           undoDeletion(index, service);
@@ -988,11 +1001,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                     ),
                                   )*/
                                 Container(
-                                  margin: EdgeInsets.only(
-                                      left: SizeConfig.safeBlockHorizontal * 5,
-                                      right: SizeConfig.safeBlockHorizontal * 5,
-                                      top: SizeConfig.safeBlockVertical * 3,
-                                      bottom: SizeConfig.safeBlockVertical * 2),
+                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 3, bottom: SizeConfig.safeBlockVertical * 2),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
@@ -1028,12 +1037,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                                   child: Text(
                                                     AppLocalizations.of(context).showMore,
                                                     // !showAll ? AppLocalizations.of(context).showAll : AppLocalizations.of(context).showLess,
-                                                    style: TextStyle(
-                                                        letterSpacing: SizeConfig.safeBlockHorizontal * .2,
-                                                        fontFamily: BuytimeTheme.FontFamily,
-                                                        color: BuytimeTheme.UserPrimary,
-                                                        fontWeight: FontWeight.w400,
-                                                        fontSize: 16
+                                                    style: TextStyle(letterSpacing: SizeConfig.safeBlockHorizontal * .2, fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.UserPrimary, fontWeight: FontWeight.w400, fontSize: 16
 
                                                         ///SizeConfig.safeBlockHorizontal * 4
                                                         ),
@@ -1061,7 +1065,9 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                             // showAll && row3.isNotEmpty ? inspiration(row3) : Container(),
                                             // showAll && row4.isNotEmpty ? inspiration(row4) : Container(),
                                           ],
-                                        )) :
+                                        ))
+                                    :
+
                                     ///No Category
                                     Container(
                                         height: SizeConfig.safeBlockVertical * 8,
