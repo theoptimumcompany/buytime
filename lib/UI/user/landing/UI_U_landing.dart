@@ -100,11 +100,11 @@ class LandingState extends State<Landing> {
     bookingCode = await storage.read(key: 'bookingCode') ?? '';
     debugPrint('UI_U_landing: DEEP LINK EMPTY | BOOKING CODE: $bookingCode');
     await storage.delete(key: 'selfBookingCode');
-    StoreProvider.of<AppState>(context).dispatch(BusinessRequest(selfBookingCode));
 
-    if (bookingCode.isNotEmpty)
-      Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => BookingSelfCreation()));
+    if (bookingCode.isNotEmpty) {
+      StoreProvider.of<AppState>(context).dispatch(BusinessRequest(selfBookingCode));
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => BookingSelfCreation()));
+    }
   }
 
   categoryInviteFound() async {
@@ -135,8 +135,6 @@ class LandingState extends State<Landing> {
       deepLink = dynamicLink?.link;
       debugPrint('UI_U_landing: DEEPLINK onLink: $deepLink');
       if (deepLink != null) {
-
-
         String bookingCodeRead = await storage.containsKey(key: 'bookingCodeRead') ? await storage.read(key: 'bookingCodeRead') ?? '' : '';
         String categoryInviteRead = await storage.containsKey(key: 'categoryInviteRead') ? await storage.read(key: 'categoryInviteRead') ?? '' : '';
         String orderIdRead = await storage.containsKey(key: 'orderIdRead') ? await storage.read(key: 'orderIdRead') ?? '' : '';
@@ -233,18 +231,18 @@ class LandingState extends State<Landing> {
         } else
           debugPrint('UI_U_landing: USER NOT LOGGED in getInitialLink');
       } else if (deepLink.queryParameters.containsKey('selfBookingCode') && deepLink.queryParameters['selfBookingCode'].length > 5) {
-      String id = deepLink.queryParameters['selfBookingCode'];
-      debugPrint('UI_U_landing: selfBookingCode getInitialLink: $id');
-      await storage.write(key: 'selfBookingCode', value: id);
+        String id = deepLink.queryParameters['selfBookingCode'];
+        debugPrint('UI_U_landing: selfBookingCode getInitialLink: $id');
+        await storage.write(key: 'selfBookingCode', value: id);
 
-      if (FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty) {
-        debugPrint('UI_U_landing: USER IS LOGGED in getInitialLink');
-        StoreProvider.of<AppState>(context).dispatch(BusinessRequest(id));
-        await Future.delayed(Duration(milliseconds: 1000));
-        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => BookingSelfCreation()), ModalRoute.withName('/bookingSelfCreation'));
-      } else
-        debugPrint('UI_U_landing: USER NOT LOGGED in getInitialLink');
-    } else if (deepLink.queryParameters.containsKey('categoryInvite') && categoryInviteRead != 'true') {
+        if (FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty) {
+          debugPrint('UI_U_landing: USER IS LOGGED in getInitialLink');
+          StoreProvider.of<AppState>(context).dispatch(BusinessRequest(id));
+          await Future.delayed(Duration(milliseconds: 1000));
+          Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => BookingSelfCreation()), ModalRoute.withName('/bookingSelfCreation'));
+        } else
+          debugPrint('UI_U_landing: USER NOT LOGGED in getInitialLink');
+      } else if (deepLink.queryParameters.containsKey('categoryInvite') && categoryInviteRead != 'true') {
         String categoryInvite = deepLink.queryParameters['categoryInvite'];
         debugPrint('UI_U_landing: categoryInvite: $categoryInvite');
         await storage.write(key: 'categoryInvite', value: categoryInvite);
@@ -433,9 +431,11 @@ class LandingState extends State<Landing> {
                                                   alignment: Alignment.topRight,
                                                   margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 6, right: SizeConfig.safeBlockHorizontal * 4),
                                                   child: IconButton(
-                                                    onPressed: () async
-                                                    {
-                                                      Share.share('${AppLocalizations.of(context).checkOutBuytimeApp} ${Environment().config.dynamicLink}/shareBuytime', subject: '${AppLocalizations.of(context).takeYourTime}',);
+                                                    onPressed: () async {
+                                                      Share.share(
+                                                        '${AppLocalizations.of(context).checkOutBuytimeApp} ${Environment().config.dynamicLink}/shareBuytime',
+                                                        subject: '${AppLocalizations.of(context).takeYourTime}',
+                                                      );
 
                                                       //LogConsole.init();
                                                       /*final RenderBox box = context.findRenderObject();
