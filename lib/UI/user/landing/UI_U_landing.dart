@@ -97,8 +97,8 @@ class LandingState extends State<Landing> {
   }
 
   selfCheckInFound() async {
-    bookingCode = await storage.read(key: 'bookingCode') ?? '';
-    debugPrint('UI_U_landing: DEEP LINK EMPTY | BOOKING CODE: $bookingCode');
+    selfBookingCode = await storage.read(key: 'selfBookingCode') ?? '';
+    debugPrint('UI_U_landing: DEEP LINK EMPTY | selfBookingCode : $selfBookingCode');
     await storage.delete(key: 'selfBookingCode');
 
     if (bookingCode.isNotEmpty) {
