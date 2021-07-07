@@ -305,8 +305,9 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
         startRequest = true;
 
         await _getLocation();
+        debugPrint('Service Explorer : OnInit Before AllRequestListCategory');
 
-        store.dispatch(AllRequestListCategory());
+        store.dispatch(AllRequestListCategory(''));
         store.dispatch(UserOrderListRequest());
         store.state.notificationListState.notificationListState.clear();
         store.dispatch(RequestNotificationList(store.state.user.uid, store.state.business.id_firestore));

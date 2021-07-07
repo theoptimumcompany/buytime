@@ -77,10 +77,12 @@ class AllCategoryListRequestService implements EpicClass<AppState> {
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     debugPrint("AllCategoryListRequestService - AllCategoryListRequestService => CATCHED ACTION");
-
     return actions.whereType<AllRequestListCategory>().asyncMap((event) async {
+
       QuerySnapshot businessListFromFirebase;
       businessStateList = [];
+
+
       businessListFromFirebase = await FirebaseFirestore.instance
           /// 1 read - ? DOC
           .collection("business")
@@ -93,6 +95,8 @@ class AllCategoryListRequestService implements EpicClass<AppState> {
       serviceStateList = [];
       int snapshotDocs = 0;
       List<String> tmpBusinessIdList = [];
+
+
 
       for (int i = 0; i < businessListFromFirebase.docs.length; i++) {
         businessStateList.add(BusinessState.fromJson(businessListFromFirebase.docs[i].data()));
@@ -112,7 +116,6 @@ class AllCategoryListRequestService implements EpicClass<AppState> {
           categoryState.id = element.id;
           categoryStateList.add(categoryState);
         });
-        debugPrint("AllCategoryListRequestService - category list lenght " + categoryStateList.length.toString());
 
         if (!tmpBusinessIdList.contains(businessListFromFirebase.docs[i].id)) {
           CollectionReference servicesFirebase = FirebaseFirestore.instance.collection("service");

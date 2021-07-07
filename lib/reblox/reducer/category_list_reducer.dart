@@ -9,7 +9,9 @@ class RequestListCategory {
   String get businessId => _businessId;
 }
 class AllRequestListCategory {
-  AllRequestListCategory();
+  String _empty;
+  AllRequestListCategory(this._empty);
+  String get empty => _empty;
 }
 
 class UserRequestListCategory {
