@@ -86,7 +86,6 @@ class AllCategoryListRequestService implements EpicClass<AppState> {
           .collection("business")
           .where("draft", isEqualTo: false)
           .get();
-      debugPrint("AllCategoryListRequestService - category list lenght " + categoryStateList.length.toString());
 
       List<QuerySnapshot> queryList = [];
       int read = 0;
