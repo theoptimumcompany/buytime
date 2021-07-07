@@ -101,6 +101,7 @@ class LandingState extends State<Landing> {
     debugPrint('UI_U_landing: DEEP LINK EMPTY | selfBookingCode : $selfBookingCode');
     await storage.delete(key: 'selfBookingCode');
 
+
     if (bookingCode.isNotEmpty) {
       StoreProvider.of<AppState>(context).dispatch(BusinessRequest(selfBookingCode));
       Navigator.of(context).push(MaterialPageRoute(builder: (context) => BookingSelfCreation()));
