@@ -17,6 +17,7 @@ import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/role/role.dart';
 import 'package:Buytime/reblox/model/service/service_list_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
+import 'package:Buytime/reblox/model/snippet/service_list_snippet_state.dart';
 import 'package:Buytime/reblox/reducer/business_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/notification_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_list_reducer.dart';
@@ -90,6 +91,24 @@ class _BookingPageState extends State<BookingPage> {
   @override
   void initState() {
     super.initState();
+  }
+
+  bool searchCategoryAndServiceOnSnippetList(String serviceId, String categoryId) {
+    bool sub = false;
+    List<ServiceListSnippetState> serviceListSnippetListState = StoreProvider.of<AppState>(context).state.serviceListSnippetListState.serviceListSnippetListState;
+    for (var z = 0; z < serviceListSnippetListState.length; z++) {
+      for (var w = 0; w < serviceListSnippetListState[z].businessSnippet.length; w++) {
+        for (var y = 0; y < serviceListSnippetListState[z].businessSnippet[w].serviceList.length; y++) {
+          //debugPrint('INSIDE SERVICE PATH  => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath}');
+          if (serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath.contains(serviceId) && serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath.contains(categoryId)) {
+            //  debugPrint('INSIDE CATEGORY ROOT => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceName}');
+            //debugPrint('INSIDE SERVICE PATH  => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath}');
+            sub = true;
+          }
+        }
+      }
+    }
+    return sub;
   }
 
   String version1000(String imageUrl) {
@@ -265,10 +284,10 @@ class _BookingPageState extends State<BookingPage> {
             debugPrint('UI_U_booking_page => ALL CATEGORIES: ${element.name}');
           });
           categoryListState.categoryListState.forEach((element) {
-            if(element.customTag == 'showcase'){///TODO se si vuole showcase decommentare è un TODO fake ahah
+            if(element.customTag == 'showcase' || element.showcase){
               serviceListState.serviceListState.forEach((service) {
                 //debugPrint('CATAGORY ID: ${cLS.id} - CATEGORY LIST: ${service.categoryId}');
-                if(service.categoryId.contains(element.id)){
+                if(service.categoryId.contains(element.id) || searchCategoryAndServiceOnSnippetList(service.serviceId, element.id)){
                   if(!categoryList.contains(element)){
                     categoryList.add(element);
                   }

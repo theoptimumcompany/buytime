@@ -297,10 +297,10 @@ class _FilterByCategoryState extends State<FilterByCategory> {
 
                     if (!found) {
                       debugPrint('UI_U_filter_by_category => CATEGORY NAME: ${element.name}');
-                      if (element.customTag == 'showcase') {
+                      if (element.customTag == 'showcase' || element.showcase) {
                         store.state.serviceList.serviceListState.forEach((service) {
                           //debugPrint('CATAGORY ID: ${cLS.id} - CATEGORY LIST: ${service.categoryId}');
-                          if (service.categoryId.contains(element.id) && element.level == 0) {
+                          if (service.categoryId.contains(element.id) || searchCategoryAndServiceOnSnippetList(service.serviceId, element.id)) {
                             if (!categoryList.contains(element)) {
                               categoryList.add(element);
                             }
