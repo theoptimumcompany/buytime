@@ -221,7 +221,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
   Widget buildTabsBeforeConfirmation(String bookingCode, CardListState cardListState) {
     if (_controller.index == 0) {
       debugPrint('buildTabsBeforeConfirmation ' + cardListState.cardList.length.toString() + ' ' + cardWidgetList.length.toString());
-      if (cardListState.cardList.length > 0) {
+      if (cardWidgetList.length > 0) {
         return cardWidgetList[0];
       }
       return Column(
