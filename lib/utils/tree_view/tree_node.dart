@@ -53,6 +53,7 @@ class _TreeNodeState extends State<TreeNode>
 
   @override
   void didChangeDependencies() {
+    debugPrint('EXPANDED 1');
     super.didChangeDependencies();
     TreeView _treeView = TreeView.of(context);
     _controller.duration = _treeView.theme.expandSpeed;
@@ -66,6 +67,7 @@ class _TreeNodeState extends State<TreeNode>
 
   @override
   void didUpdateWidget(TreeNode oldWidget) {
+    debugPrint('EXPANDED 2');
     if (widget.node.expanded != oldWidget.node.expanded) {
       setState(() {
         _isExpanded = widget.node.expanded;
@@ -85,6 +87,7 @@ class _TreeNodeState extends State<TreeNode>
   }
 
   void _handleExpand() {
+    debugPrint('EXPANDED 3');
     TreeView _treeView = TreeView.of(context);
     assert(_treeView != null, 'TreeView must exist in context');
     setState(() {
@@ -103,6 +106,7 @@ class _TreeNodeState extends State<TreeNode>
   }
 
   void _handleTap() {
+    debugPrint('EXPANDED 4');
     TreeView _treeView = TreeView.of(context);
     assert(_treeView != null, 'TreeView must exist in context');
     if (_treeView.onNodeTap != null) {
@@ -111,6 +115,7 @@ class _TreeNodeState extends State<TreeNode>
   }
 
   void _handleDoubleTap() {
+    debugPrint('EXPANDED 5');
     TreeView _treeView = TreeView.of(context);
     assert(_treeView != null, 'TreeView must exist in context');
     if (_treeView.onNodeDoubleTap != null) {
@@ -119,6 +124,7 @@ class _TreeNodeState extends State<TreeNode>
   }
 
   Widget _buildNodeExpander() {
+    debugPrint('EXPANDED 6');
     TreeView _treeView = TreeView.of(context);
     assert(_treeView != null, 'TreeView must exist in context');
     TreeViewTheme _theme = _treeView.theme;
@@ -137,6 +143,7 @@ class _TreeNodeState extends State<TreeNode>
   }
 
   Widget _buildNodeIcon() {
+    debugPrint('EXPANDED 7');
     TreeView _treeView = TreeView.of(context);
     assert(_treeView != null, 'TreeView must exist in context');
     TreeViewTheme _theme = _treeView.theme;
@@ -159,6 +166,7 @@ class _TreeNodeState extends State<TreeNode>
   }
 
   Widget _buildNodeLabel() {
+    debugPrint('EXPANDED 8');
     TreeView _treeView = TreeView.of(context);
     assert(_treeView != null, 'TreeView must exist in context');
     TreeViewTheme _theme = _treeView.theme;
@@ -327,6 +335,7 @@ class _TreeNodeState extends State<TreeNode>
   }
 
   Widget _buildNodeWidget() {
+    debugPrint('EXPANDED 9');
     TreeView _treeView = TreeView.of(context);
     assert(_treeView != null, 'TreeView must exist in context');
     TreeViewTheme _theme = _treeView.theme;
@@ -409,10 +418,12 @@ class _TreeNodeState extends State<TreeNode>
     final bool closed =
         (!_isExpanded || !widget.node.expanded) && _controller.isDismissed;
     final nodeWidget = _buildNodeWidget();
+    debugPrint('EXPANDED 10');
     return widget.node.isParent
         ? AnimatedBuilder(
       animation: _controller.view,
       builder: (BuildContext context, Widget child) {
+        debugPrint('EXPANDED 10-1');
         return Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
@@ -435,6 +446,7 @@ class _TreeNodeState extends State<TreeNode>
         child: Column(
             mainAxisSize: MainAxisSize.min,
             children: widget.node.children.map((Node node) {
+              debugPrint('EXPANDED 10-2');
               return Container(
                   padding: EdgeInsets.only(top: 0.0, left: 0),
                   child: TreeNode(node: node)

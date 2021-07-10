@@ -50,7 +50,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
   void initState() {
     super.initState();
     serviceState = widget.serviceState;
-    debugPrint('image: ${serviceState.image1}');
+    debugPrint('image: ${widget.serviceState.image1}');
   }
 
   @override
@@ -122,8 +122,8 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
             }
           });
         } else {
-          price = serviceState.price != null
-              ? '${AppLocalizations.of(context).currencySpace} ' + serviceState.price.toString() + AppLocalizations.of(context).slashOneUnit
+          price = widget.serviceState.price != null
+              ? '${AppLocalizations.of(context).currencySpace} ' + widget.serviceState.price.toString() + AppLocalizations.of(context).slashOneUnit
               : AppLocalizations.of(context).currencyNoPrice + AppLocalizations.of(context).hour;
         }
 
@@ -148,6 +148,13 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
           if(widget.serviceState.businessId == element.id_firestore)
             bussinessName = element.name;
         });
+
+        if(store.state.business.id_firestore.isNotEmpty){
+          debugPrint('BUSINESS NAME: ${store.state.business.name}');
+          bussinessName = store.state.business.name;
+        }
+        debugPrint('BUSINESS NAME: $bussinessName');
+
       },
       builder: (context, snapshot) {
         debugPrint('UI_U_ServiceDetails => SNAPSHOT CART COUNT: ${snapshot.order}');
@@ -338,8 +345,8 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                                           Container(
                                                             margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2.5),
                                                             child: Text(
-                                                              serviceState.name != null
-                                                                  ? Utils.retriveField(Localizations.localeOf(context).languageCode, serviceState.name)
+                                                              widget.serviceState.name != null
+                                                                  ? Utils.retriveField(Localizations.localeOf(context).languageCode, widget.serviceState.name)
                                                                   : AppLocalizations.of(context).serviceName,
                                                               style: TextStyle(
                                                                   fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextWhite, fontWeight: FontWeight.w700, fontSize: 18
@@ -352,7 +359,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                 Container(
                                   margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1.5),
                                   child: Text(
-                                    serviceState.name ?? AppLocalizations.of(context).serviceName,
+                                    widget.serviceState.name ?? AppLocalizations.of(context).serviceName,
                                     style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w400, fontSize: 14
 
                                       ///SizeConfig.safeBlockHorizontal * 4
@@ -422,8 +429,8 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                                 Container(
                                                   margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2.5),
                                                   child: Text(
-                                                    serviceState.name != null
-                                                        ? Utils.retriveField(Localizations.localeOf(context).languageCode, serviceState.name)
+                                                    widget.serviceState.name != null
+                                                        ? Utils.retriveField(Localizations.localeOf(context).languageCode, widget.serviceState.name)
                                                         : AppLocalizations.of(context).serviceName,
                                                     style: TextStyle(
                                                         fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextWhite, fontWeight: FontWeight.w700, fontSize: 18
@@ -436,7 +443,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                 Container(
                                   margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1.5),
                                   child: Text(
-                                    serviceState.name ?? AppLocalizations.of(context).serviceName,
+                                    widget.serviceState.name ?? AppLocalizations.of(context).serviceName,
                                     style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w400, fontSize: 14
 
                                       ///SizeConfig.safeBlockHorizontal * 4
@@ -829,7 +836,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                         Container(
                                           margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 2),
                                           child: Text(
-                                            serviceState.description.isNotEmpty
+                                            widget.serviceState.description.isNotEmpty
                                                 ? Utils.retriveField(Localizations.localeOf(context).languageCode, widget.serviceState.description)
                                                 : AppLocalizations.of(context).loreIpsum,
                                             style: TextStyle(
@@ -851,7 +858,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                           ],
                         ),
                       ),
-                      !serviceState.switchSlots
+                      !widget.serviceState.switchSlots
                           ?
 
                           ///Add a cart & Buy
@@ -1096,7 +1103,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                              builder: (context) => ServiceReserve(serviceState: serviceState, tourist: widget.tourist)),
+                                              builder: (context) => ServiceReserve(serviceState: widget.serviceState, tourist: widget.tourist)),
                                         );
                                       }
                                     : null,
