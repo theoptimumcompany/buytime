@@ -153,44 +153,42 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                           // mainAxisSize: MainAxisSize.min,
                           children: [
                             ///Cart Details & Confirm Details
-                            Expanded(
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  ///Recap
-                                  buildOrderRecap(context, snapshot, media),
+                            Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                ///Recap
+                                buildOrderRecap(context, snapshot, media),
 
-                                  ///Divider
-                                  Container(
-                                    color: BuytimeTheme.BackgroundLightGrey,
-                                    height: SizeConfig.safeBlockVertical * 2,
-                                  ),
+                                ///Divider
+                                Container(
+                                  color: BuytimeTheme.BackgroundLightGrey,
+                                  height: SizeConfig.safeBlockVertical * 2,
+                                ),
 
-                                  ///Tab bar
-                                  PreferredSize(
-                                    preferredSize: Size.fromHeight(kToolbarHeight),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: widget.tourist != null && widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.black87.withOpacity(.3),
-                                            spreadRadius: 1,
-                                            blurRadius: 1,
-                                            offset: Offset(0, 2), // changes position of shadow
-                                          ),
-                                        ],
-                                      ),
-                                      child: buildTabBar(context),
+                                ///Tab bar
+                                PreferredSize(
+                                  preferredSize: Size.fromHeight(kToolbarHeight),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: widget.tourist != null && widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black87.withOpacity(.3),
+                                          spreadRadius: 1,
+                                          blurRadius: 1,
+                                          offset: Offset(0, 2), // changes position of shadow
+                                        ),
+                                      ],
                                     ),
+                                    child: buildTabBar(context),
                                   ),
+                                ),
 
-                                  ///Tab value
-                                  (() {
-                                    return buildTabsBeforeConfirmation(snapshot.booking.booking_code, snapshot.cardListState);
-                                  }())
-                                ],
-                              ),
+                                ///Tab value
+                                (() {
+                                  return buildTabsBeforeConfirmation(snapshot.booking.booking_code, snapshot.cardListState);
+                                }())
+                              ],
                             ),
                             Center(
                               child: (() {
@@ -220,8 +218,8 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
 
   Widget buildTabsBeforeConfirmation(String bookingCode, CardListState cardListState) {
     if (_controller.index == 0) {
-      debugPrint('buildTabsBeforeConfirmation ' + cardListState.cardList.length.toString() + ' ' + cardWidgetList.length.toString());
-      if (cardWidgetList.length > 0) {
+      debugPrint('buildTabsBeforeConfirmation ' + cardListState.cardList?.length.toString() + ' ' + cardWidgetList.length.toString());
+      if (cardWidgetList?.length > 0) {
         return cardWidgetList[0];
       }
       return Column(
@@ -229,10 +227,11 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
           Padding(
             padding: const EdgeInsets.all(10.0),
             child: CardField(
+
               onCardChanged: (card) {
-                setState(() {
-                  _card = card;
-                });
+                // setState(() {
+                //   _card = card;
+                // });
               },
             ),
           ),
@@ -381,7 +380,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
           mainAxisAlignment: MainAxisAlignment.end,
           mainAxisSize: MainAxisSize.min,
           children: [
-            snapshot.cardListState.cardList.length > 0 ? Container() : LoadingButton(onPressed: _requestSaveCard, text: AppLocalizations.of(context).saveYourCard),
+            snapshot.cardListState.cardList != null && snapshot.cardListState.cardList.length > 0 ? Container() : LoadingButton(onPressed: _requestSaveCard, text: AppLocalizations.of(context).saveYourCard),
             ///Confirm button
             Container(
                 margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5, bottom: SizeConfig.safeBlockVertical * 4),
