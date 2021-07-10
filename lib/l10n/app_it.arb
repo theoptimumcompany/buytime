@@ -577,5 +577,8 @@
   "suppliedBy": "Supplied By",
   "selectLanguage": "select language:",
   "enterSelfDetails": "INSERISCI I TUOI DATI PER ENTRARE NELLA TUA PRENOTAZIONE",
+  "saveYourCard": "Salva la carta",
+  "saveYourCardSuccess": "Success: Card has been saved.",
+  "saveYourCardError": "Error while saving payment, try another card. Have you used a virtual card?",
   "showcase": "Showcase"
 }

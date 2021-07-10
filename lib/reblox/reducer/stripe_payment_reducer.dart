@@ -29,10 +29,12 @@ class CheckedStripeCustomer {
 class AddStripePaymentMethod
 {
   StripeOfficial.Card _stripeCard;
+  String _paymentMethodId;
   String _userId;
-  AddStripePaymentMethod(this._stripeCard, this._userId);
+  AddStripePaymentMethod(this._stripeCard, this._userId, this._paymentMethodId);
   StripeOfficial.Card get stripeCard => _stripeCard;
   String get userId => _userId;
+  String get paymentMethodId => _paymentMethodId;
 }
 class CreateDisposePaymentMethodIntent
 {

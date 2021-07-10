@@ -577,5 +577,8 @@
   "suppliedBy": "Supplied By",
   "selectLanguage": "select language:",
   "enterSelfDetails": "INSERT YOUR DATA TO ENTER IN YOUR BOOKING",
+  "saveYourCard": "Save card",
+  "saveYourCardSuccess": "Success: Card has been saved.",
+  "saveYourCardError": "Error while saving payment, try another card. Have you used a virtual card?",
   "showcase": "Showcase"
 }

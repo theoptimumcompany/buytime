@@ -168,175 +168,165 @@ class OrderReservableUpdateService implements EpicClass<AppState> {
   }
 }
 
-class OrderReservableCreateService implements EpicClass<AppState> {
-  // String stripeTestKey = "pk_test_51HS20eHr13hxRBpCZl1V0CKFQ7XzJbku7UipKLLIcuNGh3rp4QVsEDCThtV0l2AQ3jMtLsDN2zdC0fQ4JAK6yCOp003FIf3Wjz";
-  String stripeKey = "pk_live_51HS20eHr13hxRBpCLHzfi0SXeqw8Efu911cWdYEE96BAV0zSOesvE83OiqqzRucKIxgCcKHUvTCJGY6cXRtkDVCm003CmGXYzy";
-  StatisticsState statisticsState;
-  String state = '';
-  @override
-  Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-     return actions.whereType<CreateOrderReservable>().asyncMap((event) async {
-      OrderReservableState orderReservableState = event.orderReservableState;
-      // add needed data to the order state
-      bool isExternal = false;
-      ExternalBusinessState externalBusinessState;
-      store.state.externalBusinessList.externalBusinessListState.forEach((eBL) {
-        if(eBL.id_firestore == event.orderReservableState.itemList.first.id_business){
-          isExternal = true;
-          externalBusinessState = eBL;
-        }
-      });
+// class OrderReservableCreateService implements EpicClass<AppState> {
+//   // String stripeTestKey = "pk_test_51HS20eHr13hxRBpCZl1V0CKFQ7XzJbku7UipKLLIcuNGh3rp4QVsEDCThtV0l2AQ3jMtLsDN2zdC0fQ4JAK6yCOp003FIf3Wjz";
+//   String stripeKey = "pk_live_51HS20eHr13hxRBpCLHzfi0SXeqw8Efu911cWdYEE96BAV0zSOesvE83OiqqzRucKIxgCcKHUvTCJGY6cXRtkDVCm003CmGXYzy";
+//   StatisticsState statisticsState;
+//   String state = '';
+//   @override
+//   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
+//      return actions.whereType<CreateOrderReservable>().asyncMap((event) async {
+//       OrderReservableState orderReservableState = event.orderReservableState;
+//       // add needed data to the order state
+//       bool isExternal = false;
+//       ExternalBusinessState externalBusinessState;
+//       store.state.externalBusinessList.externalBusinessListState.forEach((eBL) {
+//         if(eBL.id_firestore == event.orderReservableState.itemList.first.id_business){
+//           isExternal = true;
+//           externalBusinessState = eBL;
+//         }
+//       });
+//
+//       int write = 0;
+//       orderReservableState.user = UserSnippet();
+//       orderReservableState.user.id = store.state.user.uid;
+//       orderReservableState.user.name = store.state.user.name;
+//       orderReservableState.userId = store.state.user.uid;
+//
+//       if(isExternal){
+//         orderReservableState.businessId = externalBusinessState.id_firestore;
+//         orderReservableState.business.thumbnail = externalBusinessState.wide;
+//       }else{
+//         orderReservableState.businessId = store.state.business.id_firestore;
+//         orderReservableState.business.thumbnail = store.state.business.wide;
+//       }
+//
+//       store.state.cardListState.cardList.forEach((element) {
+//         if(element.selected){
+//           orderReservableState.cardType = element.stripeState.stripeCard.brand;
+//           orderReservableState.cardLast4Digit = element.stripeState.stripeCard.last4;
+//         }
+//       });
+//       // send document to orders collection
+//       var addedOrderReservable = await FirebaseFirestore.instance.collection("order/").add(orderReservableState.toJson());
+//       orderReservableState.orderId = addedOrderReservable.id;
+//       //await FirebaseFirestore.instance.collection("order/").doc(addedOrderReservable.id.toString()).update(orderReservableState.toJson()); /// 1 WRITE
+//       //++write;
+//       String addedOrderReservableId = addedOrderReservable.id;
+//       var url = Uri.https(Environment().config.cloudFunctionLink, '/StripePIOnOrder', {'orderId': '$addedOrderReservableId', 'currency': 'EUR'});
+//       final http.Response response = await http.get(url);
+//       print("ORDER_RESERVABLE_SERVICE_EPIC - OrderReservableCreateService => OrderReservable_service epic - response is done");
+//       print('ORDER_RESERVABLE_SERVICE_EPIC - OrderReservableCreateService => RESPONSE: ${response.body}');
+//       if (response != null && response.body == "Error: could not handle the request\n") {
+//         // verify why this happens.
+//         var updatedOrderReservable = await FirebaseFirestore.instance /// 1 WRITE
+//             .collection("order/").doc(addedOrderReservable.id.toString()).update({
+//           'progress': "paid",
+//           'orderId': addedOrderReservable.id
+//         });
+//         state = 'paid';
+//         //return SetOrderReservableProgress("paid");
+//       } else {
+//         var jsonResponse;
+//         try{
+//           jsonResponse = jsonDecode(response.body);
+//         }catch(e){
+//           debugPrint('order_reservable_service_epic => ERROR: $e');
+//           state = 'failed';
+//         }
+//         /*var jsonResponse;
+//         if(response.body == 'error'){
+//           state = 'failed';
+//         }else{
+//           var jsonResponse = jsonDecode(response.body);
+//         }*/
+//         //jsonResponse = jsonDecode(response.body);
+//         if(jsonResponse!= null && response.body != "error") {
+//           print('ORDER_RESERVABLE_SERVICE_EPIC - OrderReservableCreateService => JSON RESPONSE: $jsonResponse');
+//           // if an action is required, send the user to the confirmation link
+//           if (jsonResponse != null && jsonResponse["next_action_url"] != null ) {
+//             // final Stripe stripe = Stripe(
+//             //   stripeKey, // our publishable key
+//             //   stripeAccount: jsonResponse["stripeAccount"], // the connected account
+//             //   returnUrlForSca: "stripesdk://3ds.stripesdk.io", //Return URL for SCA
+//             // );
+//             var clientSecret = jsonResponse["client_secret"];
+//             // var paymentIntentRes = await confirmPayment3DSecure(clientSecret, jsonResponse["payment_method_id"], stripe);
+//             // if (paymentIntentRes["status"] == "succeeded") {
+//             //   ++write;
+//             //   var updatedOrderReservable = await FirebaseFirestore.instance.collection("order/").doc(addedOrderReservable.id.toString()).update({ /// 1 WRITE
+//             //     'progress': "paid",
+//             //     'orderId': addedOrderReservable.id
+//             //   });
+//             //   state = 'paid';
+//             //   //return SetOrderReservableProgress("paid");
+//             // } else {
+//             //   state = 'failed';
+//             //   //return SetOrderReservableProgress("failed");
+//             // }
+//           } else {
+//             ++write;
+//             var updatedOrderReservable = await FirebaseFirestore.instance.collection("order/").doc(addedOrderReservable.id.toString()).update({ /// 1 WRITE
+//               'progress': "paid",
+//               'orderId': addedOrderReservable.id
+//             });
+//             state = 'paid';
+//             //return SetOrderReservableProgress("paid");
+//           }
+//         }
+//         else {
+//           state = 'failed';
+//           //return SetOrderReservableProgress("failed");
+//         }
+//       }
+//
+//       statisticsState = store.state.statistics;
+//       int reads = statisticsState.orderCreateServiceRead;
+//       int writes = statisticsState.orderCreateServiceWrite;
+//       int documents = statisticsState.orderCreateServiceDocuments;
+//       debugPrint('ORDER_RESERVABLE_SERVICE_EPIC - OrderReservableCreateService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+//       writes = writes + write;
+//       debugPrint('ORDER_RESERVABLE_SERVICE_EPIC - OrderReservableCreateService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+//       statisticsState.orderCreateServiceRead = reads;
+//       statisticsState.orderCreateServiceWrite = writes;
+//       statisticsState.orderCreateServiceDocuments = documents;
+//
+//      }).expand((element) => [
+//        SetOrderReservableProgress(state),
+//        UpdateStatistics(statisticsState),
+//      ]);
+//   }
+// }
 
-      int write = 0;
-      orderReservableState.user = UserSnippet();
-      orderReservableState.user.id = store.state.user.uid;
-      orderReservableState.user.name = store.state.user.name;
-      orderReservableState.userId = store.state.user.uid;
-
-      if(isExternal){
-        orderReservableState.businessId = externalBusinessState.id_firestore;
-        orderReservableState.business.thumbnail = externalBusinessState.wide;
-      }else{
-        orderReservableState.businessId = store.state.business.id_firestore;
-        orderReservableState.business.thumbnail = store.state.business.wide;
-      }
-
-      store.state.cardListState.cardList.forEach((element) {
-        if(element.selected){
-          orderReservableState.cardType = element.stripeState.stripeCard.brand;
-          orderReservableState.cardLast4Digit = element.stripeState.stripeCard.last4;
-        }
-      });
-      // send document to orders collection
-      var addedOrderReservable = await FirebaseFirestore.instance.collection("order/").add(orderReservableState.toJson());
-      orderReservableState.orderId = addedOrderReservable.id;
-      //await FirebaseFirestore.instance.collection("order/").doc(addedOrderReservable.id.toString()).update(orderReservableState.toJson()); /// 1 WRITE
-      //++write;
-      String addedOrderReservableId = addedOrderReservable.id;
-      var url = Uri.https(Environment().config.cloudFunctionLink, '/StripePIOnOrder', {'orderId': '$addedOrderReservableId', 'currency': 'EUR'});
-      final http.Response response = await http.get(url);
-      print("ORDER_RESERVABLE_SERVICE_EPIC - OrderReservableCreateService => OrderReservable_service epic - response is done");
-      print('ORDER_RESERVABLE_SERVICE_EPIC - OrderReservableCreateService => RESPONSE: ${response.body}');
-      if (response != null && response.body == "Error: could not handle the request\n") {
-        // verify why this happens.
-        var updatedOrderReservable = await FirebaseFirestore.instance /// 1 WRITE
-            .collection("order/").doc(addedOrderReservable.id.toString()).update({
-          'progress': "paid",
-          'orderId': addedOrderReservable.id
-        });
-        state = 'paid';
-        //return SetOrderReservableProgress("paid");
-      } else {
-        var jsonResponse;
-        try{
-          jsonResponse = jsonDecode(response.body);
-        }catch(e){
-          debugPrint('order_reservable_service_epic => ERROR: $e');
-          state = 'failed';
-        }
-        /*var jsonResponse;
-        if(response.body == 'error'){
-          state = 'failed';
-        }else{
-          var jsonResponse = jsonDecode(response.body);
-        }*/
-        //jsonResponse = jsonDecode(response.body);
-        if(jsonResponse!= null && response.body != "error") {
-          print('ORDER_RESERVABLE_SERVICE_EPIC - OrderReservableCreateService => JSON RESPONSE: $jsonResponse');
-          // if an action is required, send the user to the confirmation link
-          if (jsonResponse != null && jsonResponse["next_action_url"] != null ) {
-            // final Stripe stripe = Stripe(
-            //   stripeKey, // our publishable key
-            //   stripeAccount: jsonResponse["stripeAccount"], // the connected account
-            //   returnUrlForSca: "stripesdk://3ds.stripesdk.io", //Return URL for SCA
-            // );
-            var clientSecret = jsonResponse["client_secret"];
-            // var paymentIntentRes = await confirmPayment3DSecure(clientSecret, jsonResponse["payment_method_id"], stripe);
-            // if (paymentIntentRes["status"] == "succeeded") {
-            //   ++write;
-            //   var updatedOrderReservable = await FirebaseFirestore.instance.collection("order/").doc(addedOrderReservable.id.toString()).update({ /// 1 WRITE
-            //     'progress': "paid",
-            //     'orderId': addedOrderReservable.id
-            //   });
-            //   state = 'paid';
-            //   //return SetOrderReservableProgress("paid");
-            // } else {
-            //   state = 'failed';
-            //   //return SetOrderReservableProgress("failed");
-            // }
-          } else {
-            ++write;
-            var updatedOrderReservable = await FirebaseFirestore.instance.collection("order/").doc(addedOrderReservable.id.toString()).update({ /// 1 WRITE
-              'progress': "paid",
-              'orderId': addedOrderReservable.id
-            });
-            state = 'paid';
-            //return SetOrderReservableProgress("paid");
-          }
-        }
-        else {
-          state = 'failed';
-          //return SetOrderReservableProgress("failed");
-        }
-      }
-
-      statisticsState = store.state.statistics;
-      int reads = statisticsState.orderCreateServiceRead;
-      int writes = statisticsState.orderCreateServiceWrite;
-      int documents = statisticsState.orderCreateServiceDocuments;
-      debugPrint('ORDER_RESERVABLE_SERVICE_EPIC - OrderReservableCreateService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
-      writes = writes + write;
-      debugPrint('ORDER_RESERVABLE_SERVICE_EPIC - OrderReservableCreateService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
-      statisticsState.orderCreateServiceRead = reads;
-      statisticsState.orderCreateServiceWrite = writes;
-      statisticsState.orderCreateServiceDocuments = documents;
-
-     }).expand((element) => [
-       SetOrderReservableProgress(state),
-       UpdateStatistics(statisticsState),
-     ]);
-  }
-}
-
-class AddingReservableStripePaymentMethodRequest implements EpicClass<AppState> {
-  StatisticsState statisticsState;
-  String state = '';
-  http.Response response;
-
-  @override
-  Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    return actions.whereType<AddingReservableStripePaymentMethodWithNavigation>().asyncMap((event) async {
-      String userId = event.userId;
-      var stripeCustomerSetupIntentCreationReference = await FirebaseFirestore.instance.collection("stripeCustomer/" + userId + Environment().config.stripeSuffix +"/setupIntent").doc() ///TODO Remember _test
-        .set({ ///1 WRITE
-      'status': "create request"
-    });
-    // now http request to create the actual setupIntent
-      var url = Uri.https(Environment().config.cloudFunctionLink, '/createSetupIntent', {'userId': '$userId'});
-      response = await http.get(url);
-      statisticsState = store.state.statistics;
-      /*statisticsState = store.state.statistics;
-      int reads = statisticsState.orderCreateServiceRead;
-      int writes = statisticsState.orderCreateServiceWrite;
-      int documents = statisticsState.orderCreateServiceDocuments;
-      debugPrint('ORDER_RESERVABLE_SERVICE_EPIC - OrderReservableCreateService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
-      ++writes;
-      debugPrint('ORDER_RESERVABLE_SERVICE_EPIC - OrderReservableCreateService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
-      statisticsState.orderCreateServiceRead = reads;
-      statisticsState.orderCreateServiceWrite = writes;
-      statisticsState.orderCreateServiceDocuments = documents;*/
-
-      debugPrint('order_service_epic: RESPONSE: ${response.statusCode}');
-
-    }).expand((element) => [
-      //SetOrderReservableProgress(state),,
-      if (response.statusCode == 200) AddedReservableStripePaymentMethodAndNavigate() else AddedReservableStripePaymentMethod(),
-      UpdateStatistics(statisticsState),
-      //response.statusCode == 200 ? NavigatePopAction() : AddedStripePaymentMethod(),
-
-    ]);
-  }
-}
+// class AddingReservableStripePaymentMethodRequest implements EpicClass<AppState> {
+//   StatisticsState statisticsState;
+//   String state = '';
+//   http.Response response;
+//
+//   @override
+//   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
+//     return actions.whereType<AddingReservableStripePaymentMethodWithNavigation>().asyncMap((event) async {
+//       String userId = event.userId;
+//       var stripeCustomerSetupIntentCreationReference = await FirebaseFirestore.instance.collection("stripeCustomer/" + userId + Environment().config.stripeSuffix +"/setupIntent").doc() ///TODO Remember _test
+//         .set({ ///1 WRITE
+//       'status': "create request"
+//     });
+//     // now http request to create the actual setupIntent
+//       var url = Uri.https(Environment().config.cloudFunctionLink, '/createSetupIntent', {'userId': '$userId'});
+//       response = await http.get(url);
+//       statisticsState = store.state.statistics;
+//
+//       debugPrint('order_service_epic: RESPONSE: ${response.statusCode}');
+//
+//     }).expand((element) => [
+//       //SetOrderReservableProgress(state),,
+//       if (response.statusCode == 200) AddedReservableStripePaymentMethodAndNavigate() else AddedReservableStripePaymentMethod(),
+//       UpdateStatistics(statisticsState),
+//       //response.statusCode == 200 ? NavigatePopAction() : AddedStripePaymentMethod(),
+//
+//     ]);
+//   }
+// }
 
 /// an order always have to be created with a payment method attached in its subcollection
 /// TODO: research if there is a way to make this two operations in an atomic way

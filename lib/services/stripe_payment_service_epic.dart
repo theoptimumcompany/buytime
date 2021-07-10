@@ -10,6 +10,7 @@ import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/statistics_state.dart';
 import 'package:Buytime/reblox/model/stripe/stripe_card_response.dart';
 import 'package:Buytime/reblox/model/stripe/stripe_state.dart';
+import 'package:Buytime/reblox/navigation/navigation_reducer.dart';
 import 'package:Buytime/reblox/reducer/app_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/card_list_reducer.dart';
@@ -21,16 +22,11 @@ import 'package:Buytime/services/statistic/util.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:http/http.dart';
 import 'package:redux_epics/redux_epics.dart';
 import 'package:rxdart/rxdart.dart';
-// import 'package:stripe_payment/stripe_payment.dart';
-// import 'package:stripe_sdk/stripe_sdk_ui.dart' as StripeUnofficialUI;
-// import 'package:stripe_sdk/stripe_sdk.dart' as StripeUnofficial;
-// import 'package:stripe_payment/stripe_payment.dart' as StripeRecommended;
 import 'package:flutter_stripe/flutter_stripe.dart';
+
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
 import 'package:Buytime/utils/utils.dart';
 
@@ -42,6 +38,81 @@ import 'package:Buytime/utils/utils.dart';
 
 const StripeRecommended = null;
 
+// /// SAVE A CREDIT CARD
+// class StripePaymentAddPaymentMethod implements EpicClass<AppState> {
+//   String userId = '';
+//   StatisticsState statisticsState;
+//   String error;
+//
+//   @override
+//   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
+//     return actions.whereType<AddStripePaymentMethod>().asyncMap((event) async {
+//       /// request the creation of the payment method
+//       Map<String, dynamic> stripePaymentMethod = await StripePaymentService.createPaymentMethodFromCard(event.stripeCard);
+//       debugPrint("STRIPE_PAYMENT_SERVICE_EPIC - StripePaymentAddPaymentMethod => USER ID: ${event.userId}");
+//       userId = event.userId;
+//       if (userId.isNotEmpty) {
+//         try {
+//           /// create setupIntent on the user
+//           await FirebaseFirestore.instance
+//               .collection("stripeCustomer/" + userId + Environment().config.stripeSuffix + "/setupIntent")
+//               .doc()
+//               .set({'status': "create request"}).then((value) async {
+//             var url = Uri.https(Environment().config.cloudFunctionLink, '/createSetupIntent', {'userId': '$userId'});
+//             final http.Response response = await http.get(url);
+//             if (response.statusCode == 200 && !response.body.contains('error')) {
+//               /// requesting back the secretKey (aka the setupIntent)
+//               DocumentSnapshot stripeCustomerReference = await FirebaseFirestore.instance.collection("stripeCustomer/").doc(userId + Environment().config.stripeSuffix).get();
+//               debugPrint("STRIPE_PAYMENT_SERVICE_EPIC - StripePaymentAddPaymentMethod => SetupIntentSecret got from firestore");
+//               String customerSecret = stripeCustomerReference.get("stripeCustomerSecret");
+//
+//               /// saving payment method on firebase TODO: store only the payment method ID as soon as the libraries allow that
+//               await FirebaseFirestore.instance.collection("stripeCustomer/" + userId + Environment().config.stripeSuffix + "/token/").doc().set(stripePaymentMethod);
+//               debugPrint("STRIPE_PAYMENT_SERVICE_EPIC - StripePaymentAddPaymentMethod => Added to firestore"); // this will trigger the creation of a new stripeIntent to be used in the next request
+//               String paymentMethodId = stripePaymentMethod["id"];
+//
+//               /// confirm the setupIntent (and in doing so add the card to stripe)
+//
+//               PaymentMethodParams paymentMethodParams = PaymentMethodParams.cardFromMethodId(paymentMethodId: paymentMethodId);
+//
+//               var confirmationResultResolved = await Stripe.instance.confirmSetupIntent(customerSecret, paymentMethodParams);
+//               // save the card also on firestore
+//               var cardSavingResult = await FirebaseFirestore.instance.collection("stripeCustomer/" + userId + Environment().config.stripeSuffix + "/card/")
+//                   .doc()
+//                   .set(confirmationResultResolved.toJson());
+//               debugPrint("STRIPE_PAYMENT_SERVICE_EPIC - StripePaymentAddPaymentMethod => card should be added in firestore ");
+//               statisticsComputation();
+//             } else {
+//               debugPrint("STRIPE_PAYMENT_SERVICE_EPIC - StripePaymentAddPaymentMethod => error in the setup intent creation: " + response.body);
+//               error = "error in the setup intent creation";
+//             }
+//           }).catchError((onError) {
+//             debugPrint("STRIPE_PAYMENT_SERVICE_EPIC - StripePaymentAddPaymentMethod => error  creating the setupIntent document on firebase" +
+//                 onError.toString());
+//             error = "error in the setup intent creation on firebase";
+//           });
+//         } catch (errorCatched) {
+//           debugPrint("STRIPE_PAYMENT_SERVICE_EPIC - StripePaymentAddPaymentMethod => error in the saving of the card");
+//           error = "error saving the card " + errorCatched.toString();
+//         }
+//       } else {
+//         debugPrint("STRIPE_PAYMENT_SERVICE_EPIC - StripePaymentAddPaymentMethod => USER ID is empty, cannot create payment method");
+//         error = "USER ID is empty, cannot create payment method";
+//       }
+//       debugPrint('STRIPE_PAYMENT_SERVICE_EPIC - StripePaymentAddPaymentMethod => the card has been added');
+//     }).expand((element) {
+//       var actionArray = [];
+//       if (error != null) {
+//         actionArray.add(ErrorAction(error));
+//       } else {
+//         actionArray.add(StripeCardListRequestAndNavigate('${userId}${Environment().config.stripeSuffix}'));
+//       }
+//       actionArray.add(UpdateStatistics(statisticsState));
+//       return actionArray;
+//     });
+//   }
+// }
+
 /// SAVE A CREDIT CARD
 class StripePaymentAddPaymentMethod implements EpicClass<AppState> {
   String userId = '';
@@ -52,50 +123,23 @@ class StripePaymentAddPaymentMethod implements EpicClass<AppState> {
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<AddStripePaymentMethod>().asyncMap((event) async {
       /// request the creation of the payment method
-      // Map<String, dynamic> stripePaymentMethod = await StripePaymentService.createPaymentMethodFromCard(event.stripeCard);
-      Map<String, dynamic> stripePaymentMethod = null;
+      // Map<String, dynamic> stripePaymentMethod = ;
       debugPrint("STRIPE_PAYMENT_SERVICE_EPIC - StripePaymentAddPaymentMethod => USER ID: ${event.userId}");
       userId = event.userId;
       if (userId.isNotEmpty) {
         try {
           /// create setupIntent on the user
-          await FirebaseFirestore.instance
-              .collection("stripeCustomer/" + userId + Environment().config.stripeSuffix + "/setupIntent")
-              .doc()
-              .set({'status': "create request"}).then((value) async {
-            var url = Uri.https(Environment().config.cloudFunctionLink, '/createSetupIntent', {'userId': '$userId'});
-            final http.Response response = await http.get(url);
-            if (response.statusCode == 200 && !response.body.contains('error')) {
-              /// requesting back the secretKey (aka the setupIntent)
-              DocumentSnapshot stripeCustomerReference = await FirebaseFirestore.instance.collection("stripeCustomer/").doc(userId + Environment().config.stripeSuffix).get();
-              debugPrint("STRIPE_PAYMENT_SERVICE_EPIC - StripePaymentAddPaymentMethod => SetupIntentSecret got from firestore");
-              String customerSecret = stripeCustomerReference.get("stripeCustomerSecret");
-
-              /// saving payment method on firebase TODO: store only the payment method ID as soon as the libraries allow that
-              await FirebaseFirestore.instance.collection("stripeCustomer/" + userId + Environment().config.stripeSuffix + "/token/").doc().set(stripePaymentMethod);
-              debugPrint("STRIPE_PAYMENT_SERVICE_EPIC - StripePaymentAddPaymentMethod => Added to firestore"); // this will trigger the creation of a new stripeIntent to be used in the next request
-              String paymentMethodId = stripePaymentMethod["id"];
-
-              /// confirm the setupIntent (and in doing so add the card to stripe)
-
-              PaymentMethodParams paymentMethodParams = PaymentMethodParams.cardFromMethodId(paymentMethodId: paymentMethodId);
-
-              var confirmationResultResolved = await Stripe.instance.confirmSetupIntent(customerSecret, paymentMethodParams);
-              // save the card also on firestore
-              var cardSavingResult = await FirebaseFirestore.instance.collection("stripeCustomer/" + userId + Environment().config.stripeSuffix + "/card/")
-                  .doc()
-                  .set(confirmationResultResolved.toJson());
-              debugPrint("STRIPE_PAYMENT_SERVICE_EPIC - StripePaymentAddPaymentMethod => card should be added in firestore ");
-              statisticsComputation();
-            } else {
-              debugPrint("STRIPE_PAYMENT_SERVICE_EPIC - StripePaymentAddPaymentMethod => error in the setup intent creation: " + response.body);
-              error = "error in the setup intent creation";
-            }
-          }).catchError((onError) {
-            debugPrint("STRIPE_PAYMENT_SERVICE_EPIC - StripePaymentAddPaymentMethod => error  creating the setupIntent document on firebase" +
-                onError.toString());
-            error = "error in the setup intent creation on firebase";
+          debugPrint("STRIPE_PAYMENT_SERVICE_EPIC - StripePaymentAddPaymentMethod => Added to firestore"); // this will trigger the creation of a new stripeIntent to be used in the next request
+          // save the card also on firestore
+          var cardToUpload = event.stripeCard.toJson();
+          cardToUpload.addAll({
+            'paymentMethodId': event.paymentMethodId
           });
+          await FirebaseFirestore.instance.collection("stripeCustomer/" + userId + Environment().config.stripeSuffix + "/card/")
+              .doc()
+              .set(cardToUpload);
+          debugPrint("STRIPE_PAYMENT_SERVICE_EPIC - StripePaymentAddPaymentMethod => card should be added in firestore ");
+          statisticsComputation();
         } catch (errorCatched) {
           debugPrint("STRIPE_PAYMENT_SERVICE_EPIC - StripePaymentAddPaymentMethod => error in the saving of the card");
           error = "error saving the card " + errorCatched.toString();
@@ -143,10 +187,10 @@ class CheckStripeCustomerService implements EpicClass<AppState> {
         }
       }
     }).expand((element) => [
-          CheckedStripeCustomer(stripeCustomerCreated),
-          UpdateStatistics(statisticsState),
-          if (stripeCustomerCreated && updateCardList) StripeCardListRequest('${userId}${Environment().config.stripeSuffix}') else null,
-        ]);
+      CheckedStripeCustomer(stripeCustomerCreated),
+      UpdateStatistics(statisticsState),
+      if (stripeCustomerCreated && updateCardList) StripeCardListRequest('${userId}${Environment().config.stripeSuffix}') else null,
+    ]);
   }
 }
 
@@ -188,6 +232,7 @@ class StripeCardListRequestAndNavigateService implements EpicClass<AppState> {
       actionArray.add(AddCardToList(cardList));
       actionArray.add(AddedStripePaymentMethod());
       actionArray.add(UpdateStatistics(statisticsState));
+      actionArray.add(NavigateReplaceAction(AppRoutes.confirmOrder));
       return actionArray;
     });
   }
@@ -283,50 +328,53 @@ class StripePaymentService {
   }
 
   Future<PaymentMethod> createPaymentMethodNative(OrderState orderState, String businessName) async {
-    // Stripe.publishableKey = "pk_live_51HS20eHr13hxRBpCLHzfi0SXeqw8Efu911cWdYEE96BAV0zSOesvE83OiqqzRucKIxgCcKHUvTCJGY6cXRtkDVCm003CmGXYzy";
-    // Stripe.merchantIdentifier = "merchant.theoptimumcompany.buytime";
-    // // StripePayment.setOptions(
-    // //     StripeOptions(
-    // //         publishableKey: stripeKey,
-    // //         merchantId: "merchant.theoptimumcompany.buytime",
-    // //         androidPayMode: 'production'
-    // //     ));
-    //
-    //
-    // PaymentMethod paymentMethod;
-    // initializePaymentValues(orderState, businessName);
-    // print('started NATIVE payment method creation...');
-    //
-    // /// why setting the account to null????? TODO: discover why
-    // /// StripeRecommended.StripePayment.setStripeAccount(null);
-    //
-    // List<ApplePayCartSummaryItem> items = [];
-    // for (int i = 0; i < orderState.itemList.length; i++) {
-    //   OrderEntry orderEntry = orderState.itemList[i];
-    //   String totalItemPrice = (orderEntry.price * orderEntry.number).toString();
-    //   ApplePayCartSummaryItem item = ApplePayCartSummaryItem(label: Utils.retriveField("en", orderEntry.name), amount: totalItemPrice);
-    //   items.add(item);
-    // }
-    // OrderEntry orderEntry = OrderEntry(
-    //     number: 1, name: '', description: '', price: orderState.total, thumbnail: '', id: '', id_business: '', id_owner: '', id_category: '');
-    // String totalItemPrice = (orderEntry.price * orderEntry.number).toString();
-    // ApplePayCartSummaryItem item = ApplePayCartSummaryItem(label: Utils.retriveField("en", orderEntry.name), amount: totalItemPrice);
-    // items.add(item);
-    //
-    // /// add total item???
+    Stripe.publishableKey = "pk_live_51HS20eHr13hxRBpCLHzfi0SXeqw8Efu911cWdYEE96BAV0zSOesvE83OiqqzRucKIxgCcKHUvTCJGY6cXRtkDVCm003CmGXYzy";
+    Stripe.merchantIdentifier = "merchant.theoptimumcompany.buytime";
+    // StripePayment.setOptions(
+    //     StripeOptions(
+    //         publishableKey: stripeKey,
+    //         merchantId: "merchant.theoptimumcompany.buytime",
+    //         androidPayMode: 'production'
+    //     ));
+
+
+    PaymentMethod paymentMethod;
+    initializePaymentValues(orderState, businessName);
+    print('started NATIVE payment method creation...');
+
+    /// why setting the account to null????? TODO: discover why
+    /// StripeRecommended.StripePayment.setStripeAccount(null);
+
+    List<ApplePayCartSummaryItem> items = [];
+    for (int i = 0; i < orderState.itemList.length; i++) {
+      OrderEntry orderEntry = orderState.itemList[i];
+      String totalItemPrice = (orderEntry.price * orderEntry.number).toString();
+      ApplePayCartSummaryItem item = ApplePayCartSummaryItem(label: Utils.retriveField("en", orderEntry.name), amount: totalItemPrice);
+      items.add(item);
+    }
+    OrderEntry orderEntry = OrderEntry(
+        number: 1, name: '', description: '', price: orderState.total, thumbnail: '', id: '', id_business: '', id_owner: '', id_category: '');
+    String totalItemPrice = (orderEntry.price * orderEntry.number).toString();
+    ApplePayCartSummaryItem item = ApplePayCartSummaryItem(label: Utils.retriveField("en", orderEntry.name), amount: totalItemPrice);
+    items.add(item);
+
+    /// add total item???
     // try {
-    //   //step 1: add card
-    //   var token = await Stripe.instance.paymentRequestWithNativePay(
-    //     androidPayOptions: StripeRecommended.AndroidPayPaymentRequest(
-    //       totalPrice: (totalCost + tip).toStringAsFixed(2),
-    //       currencyCode: currency,
-    //     ),
-    //     applePayOptions: StripeRecommended.ApplePayPaymentOptions(
-    //       countryCode: country,
-    //       currencyCode: currency,
-    //       items: items,
-    //     ),
-    //   );
+    //step 1: add card
+    // var token = await Stripe.instance.paymentRequestWithNativePay(
+    //   androidPayOptions: StripeRecommended.AndroidPayPaymentRequest(
+    //     totalPrice: (totalCost + tip).toStringAsFixed(2),
+    //     currencyCode: currency,
+    //   ),
+    //   applePayOptions: StripeRecommended.ApplePayPaymentOptions(
+    //     countryCode: country,
+    //     currencyCode: currency,
+    //     items: items,
+    //   ),
+    // );
+    PaymentMethod token = await Stripe.instance.createPaymentMethod(PaymentMethodParams.card());
+    debugPrint("stripe_payment_service_epic createPaymentServiceNative");
+    //
     //   const MethodChannel channel = const MethodChannel('stripe_payment');
     //
     //   debugPrint('UI_U_ConfirmOrder => token received:' + token.toString());
@@ -413,105 +461,38 @@ class StripePaymentService {
   }
 
   Future<String> processPaymentAsDirectCharge(String orderId, String StripeConnectedBusinessId) async {
-    // var url = Uri.https(cloudAddress, cloudFunctionPathPay, {'orderId': '$orderId', 'currency': currency});
-    // final http.Response response = await http.get(url);
-    // debugPrint('processPaymentAsDirectCharge: Now i decode');
-    // if (response.body != null && response.body != 'error') {
-    //   final paymentIntentX = jsonDecode(response.body);
-    //   final status = paymentIntentX['status'];
-    //   final nextAction = paymentIntentX['next_action'];
-    //   //step 3: check if payment was succesfully confirmed
-    //   if (status == 'succeeded' && nextAction == null) {
-    //     //payment was confirmed by the server without need for futher authentification
-    //     StripeRecommended.StripePayment.completeNativePayRequest();
-    //     debugPrint('processPaymentAsDirectCharge:  Payment completed. ${paymentIntentX['amount'].toString()} successfully charged');
-    //     return "success";
-    //
-    //     /// stop spinner
-    //   } else {
-    //     //step 4: there is a need to authenticate
-    //     /// set stripe account of connected business
-    //     if (nextAction != null) {
-    //       await StripeUnofficial.Stripe.instance.authenticatePaymentWithNextAction(nextAction);
-    //     }
-    //     StripeRecommended.StripePayment.setStripeAccount(StripeConnectedBusinessId);
-    //     StripeRecommended.PaymentIntentResult paymentIntentResult = await StripeRecommended.StripePayment.confirmPaymentIntent(
-    //         StripeRecommended.PaymentIntent(paymentMethodId: paymentIntentX['payment_method'], clientSecret: paymentIntentX['client_secret']));
-    //     //This code will be executed if the authentication is successful
-    //     //step 5: request the server to confirm the payment with
-    //     final statusFinal = paymentIntentResult.status;
-    //     if (statusFinal == 'succeeded') {
-    //       StripeRecommended.StripePayment.completeNativePayRequest();
-    //
-    //       /// stop spinner
-    //       debugPrint('processPaymentAsDirectCharge:  Payment success');
-    //       return "success";
-    //     } else if (statusFinal == 'processing') {
-    //       StripeRecommended.StripePayment.cancelNativePayRequest();
-    //
-    //       /// stop spinner
-    //       debugPrint('processPaymentAsDirectCharge:  processing. this is weird');
-    //       return "trouble";
-    //     } else {
-    //       StripeRecommended.StripePayment.cancelNativePayRequest();
-    //
-    //       /// stop spinner
-    //       debugPrint('processPaymentAsDirectCharge:  Payment error. canceling.');
-    //       return "error";
-    //     }
-    //   }
-    // } else {
-    //   //case A
-    //   StripeRecommended.StripePayment.cancelNativePayRequest();
-    //
-    //   /// stop spinner
-    //   debugPrint('processPaymentAsDirectCharge:  Payment error. canceling.');
-    //   return "error";
-    // }
+    var url = Uri.https(cloudAddress, cloudFunctionPathPay, {'orderId': '$orderId', 'currency': currency});
+    final http.Response response = await http.get(url);
+    debugPrint('processPaymentAsDirectCharge: Now i decode');
+    if (response.body != null && response.body != 'error') {
+        final paymentIntentX = jsonDecode(response.body);
+        String clientSecret = paymentIntentX['client_secret'];
+        debugPrint('processPaymentAsDirectCharge clientSecret: ' + clientSecret);
+      // final paymentIntent = await Stripe.instance.retrievePaymentIntent(clientSecret);
+    } else {
+      //case A
+      StripeRecommended.StripePayment.cancelNativePayRequest();
+      debugPrint('processPaymentAsDirectCharge:  Payment error. canceling.');
+      return "error";
+    }
   }
 
   Future<String> processHoldCharge(String orderId, String StripeConnectedBusinessId, BuildContext context) async {
-    // var url = Uri.https(cloudAddress, cloudFunctionPathHold, {'orderId': '$orderId', 'currency': currency});
-    // final http.Response response = await http.get(url);
-    // if (response.body != null && response.body != 'error') {
-    //   final paymentIntentX = jsonDecode(response.body);
-    //   final status = paymentIntentX['status'];
-    //   final nextAction = paymentIntentX['next_action'];
-    //   if (status == 'succeeded' && nextAction == null) {
-    //     //payment was confirmed by the server without need for futher authentification
-    //     StripeRecommended.StripePayment.completeNativePayRequest();
-    //     debugPrint('processPaymentAsDirectCharge:  Payment completed. ${paymentIntentX['amount'].toString()} successfully charged');
-    //     return "success";
-    //
-    //     /// stop spinner
-    //   } else {
-    //     /// set stripe account of connected business
-    //     StripeRecommended.StripePayment.setStripeAccount(StripeConnectedBusinessId);
-    //     StripeRecommended.PaymentIntentResult paymentIntentResult =
-    //         await StripeRecommended.StripePayment.authenticatePaymentIntent(clientSecret: paymentIntentX['client_secret']);
-    //     // confirmPaymentIntent(StripeRecommended.PaymentIntent(
-    //     //     paymentMethodId: paymentIntentX['payment_method'],
-    //     //     clientSecret: paymentIntentX['client_secret']
-    //     // ));
-    //     final statusFinal = paymentIntentResult.status;
-    //     if (statusFinal == 'requires_capture' || statusFinal == 'requires_confirmation') {
-    //       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context).holdingConfirmed)));
-    //       debugPrint('processPaymentAsDirectCharge:  Payment success');
-    //       return "success";
-    //     } else {
-    //       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context).holdingError)));
-    //       debugPrint('processPaymentAsDirectCharge:  Payment error. canceling.');
-    //       return "error";
-    //     }
-    //   }
-    // } else {
-    //   //case A
-    //   StripeRecommended.StripePayment.cancelNativePayRequest();
-    //
-    //   /// stop spinner
-    //   debugPrint('processPaymentAsDirectCharge:  Payment error. canceling.');
-    //   return "error";
-    // }
+    var url = Uri.https(cloudAddress, cloudFunctionPathHold, {'orderId': '$orderId', 'currency': currency});
+    final http.Response response = await http.get(url);
+    if (response.body != null && response.body != 'error') {
+      final paymentIntentX = jsonDecode(response.body);
+      String clientSecret = paymentIntentX['client_secret'];
+      debugPrint('processPaymentAsDirectCharge clientSecret: ' + clientSecret);
+      // final paymentIntent = await Stripe.instance.retrievePaymentIntent(clientSecret);
+    } else {
+      //case A
+      StripeRecommended.StripePayment.cancelNativePayRequest();
+
+      /// stop spinner
+      debugPrint('processPaymentAsDirectCharge:  Payment error. canceling.');
+      return "error";
+    }
   }
 
   Future<String> confirmPaymentIntent(BuildContext context, String paymentIntentClientSecret, String paymentMethodId) async {
@@ -534,8 +515,8 @@ class StripePaymentService {
     return result;
   }
 
-  // static Future<Map<String, dynamic>> createPaymentMethodFromCard(StripeUnofficialUI.StripeCard stripeCard) async {
-  //   Map<String, dynamic> paymentMethod = await stripeSDK.api.createPaymentMethodFromCard(stripeCard);
-  //   return paymentMethod;
-  // }
+// static Future<Map<String, dynamic>> createPaymentMethodFromCard(StripeUnofficialUI.StripeCard stripeCard) async {
+//   Map<String, dynamic> paymentMethod = await stripeSDK.api.createPaymentMethodFromCard(stripeCard);
+//   return paymentMethod;
+// }
 }

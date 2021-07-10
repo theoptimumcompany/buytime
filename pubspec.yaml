@@ -49,12 +49,14 @@ dependencies:
   uuid: ^3.0.4
   crop: ^0.5.0
   mime: ^1.0.0
-  flutter_svg: ^0.21.0+1
+  flutter_svg: ^0.22.0
   badges: ^1.2.0
   url_launcher: ^6.0.3
 #  stripe_payment: ^1.1.0
 #  stripe_sdk: ^5.0.0-nullsafety.0
   flutter_stripe: ^1.1.0
+  pay: ^1.0.1
+  pay_android: ^1.0.1
   credit_card_input_form: ^2.3.0
   http: ^0.13.0
 #  modal_progress_hud: ^0.1.3

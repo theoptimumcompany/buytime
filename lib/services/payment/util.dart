@@ -27,34 +27,26 @@ Future <List<CardState>> stripeCardListMaker(dynamic event, List<StripeState> st
   debugPrint("util - stripeCardListMaker => StripePaymentCardListRequest => USER ID: ${event.firebaseUserId}");
   String userId = event.firebaseUserId;
   QuerySnapshot snapshotCard = await FirebaseFirestore.instance.collection("stripeCustomer/" + userId + "/card/").limit(10).get();
-  QuerySnapshot snapshotToken = await FirebaseFirestore.instance.collection("stripeCustomer/" + userId + "/token/").limit(10).get();
   bool snapshotCardAvailable = snapshotCard != null && snapshotCard.docs != null && snapshotCard.docs.isNotEmpty;
-  bool snapshotTokenAvailable = snapshotToken != null && snapshotToken.docs != null && snapshotToken.docs.isNotEmpty;
-  if (snapshotTokenAvailable && snapshotCardAvailable) {
+  if (snapshotCardAvailable) {
     debugPrint('util - stripeCardListMaker => CARD LENGTH: ${snapshotCard.docs.length} TOKEN LENGTH: ${snapshotCard.docs.length}');
     snapshotCard.docs.forEach((element) {
       debugPrint('util - stripeCardListMaker => CARD ID: ${element.id}');
     });
-    int counter = 0;
-    snapshotToken.docs.forEach((tokenData) {
-      if (snapshotCard?.docs != null && snapshotCard.docs.length > counter) {
-        snapshotCard.docs.forEach((cardData) {
-          if ( cardData['payment_method'] == tokenData['id']) {
-            stripeStateList.add(StripeState(
-                stripeCard: StripeCardResponse(
-                  firestore_id: cardData.id,
-                  last4: tokenData['card']['last4'],
-                  expYear: tokenData['card']['exp_year'],
-                  expMonth: tokenData['card']['exp_month'],
-                  brand: tokenData['card']['brand'],
-                  paymentMethodId: tokenData['id'],
-                  country: '' // cardData.get('country') ?? ''
-                )));
-          }
-        });
-      }
-      counter++;
-    });
+    if (snapshotCard?.docs != null) {
+      snapshotCard.docs.forEach((cardData) {
+        stripeStateList.add(StripeState(
+            stripeCard: StripeCardResponse(
+                firestore_id: cardData.id,
+                last4: cardData['last4'],
+                expYear: cardData['expYear'],
+                expMonth: cardData['expMonth'],
+                brand: cardData['brand'],
+                paymentMethodId: cardData['paymentMethodId'],
+                country: '' // cardData.get('country') ?? ''
+            )));
+      });
+    }
     return stripeStateToCardState(stripeStateList);
   }
   statisticsComputation();

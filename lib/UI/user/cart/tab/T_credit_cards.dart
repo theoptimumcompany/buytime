@@ -45,9 +45,9 @@ class CreditCards extends StatelessWidget {
                   initializeCardList(snapshot);
                   return Flexible(
                     flex: 1,
-                    child: ListView(
+                    child: cardWidgetList.length > 0 ? ListView(
                       children: cardWidgetList,
-                    )
+                    ) : Container()
                   );
                 }
             ),
