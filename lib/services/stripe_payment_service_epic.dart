@@ -266,7 +266,7 @@ class StripeDetachPaymentMethodRequest implements EpicClass<AppState> {
         actionArray.add(ErrorDisposePaymentMethodIntent(response.body));
       } else {
         actionArray.add(CheckStripeCustomer(true));
-        // actionArray.add(DeleteStripePaymentMethodLocally(firestoreCardId));
+        actionArray.add(DeleteStripePaymentMethodLocally(firestoreCardId));
       }
       actionArray.add(DeletedStripePaymentMethod());
       actionArray.add(UpdateStatistics(statisticsState));

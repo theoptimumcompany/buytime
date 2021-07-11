@@ -31,6 +31,7 @@ class _CreditCardSimpleListElementState extends State<CreditCardSimpleListElemen
   String cardName = '';
   String cardEndWith = '';
   String firestoreCardId = '';
+  bool deleting = false;
 
   @override
   void initState() {
@@ -45,6 +46,7 @@ class _CreditCardSimpleListElementState extends State<CreditCardSimpleListElemen
 
   @override
   Widget build(BuildContext context) {
+    deleting = false;
     return Container(
       height: SizeConfig.safeBlockVertical * 10,
       width: SizeConfig.screenWidth,
@@ -58,10 +60,11 @@ class _CreditCardSimpleListElementState extends State<CreditCardSimpleListElemen
               child: Material(
                 color: Colors.transparent,
                 child: InkWell(
-                    onTap: (){
+                    onTap: !deleting ? (){
+                      deleting = true;
                       StoreProvider.of<AppState>(context).dispatch(DeletingStripePaymentMethod());
                       StoreProvider.of<AppState>(context).dispatch(CreateDisposePaymentMethodIntent(firestoreCardId, StoreProvider.of<AppState>(context).state.user.uid));
-                    },
+                    } : null,
                     borderRadius: BorderRadius.all(Radius.circular(5.0)),
                     child: Container(
                       child: Row(
