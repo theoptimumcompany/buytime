@@ -13,6 +13,7 @@ import 'package:Buytime/reblox/reducer/auto_complete_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/notification_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/card_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/stripe_list_payment_reducer.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
@@ -392,6 +393,7 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
         StoreProvider.of<AppState>(context).dispatch(new UpdateUserDevice(device));
         TokenB token = TokenB(name: "token", id: serverToken, user_uid: user.uid);
         StoreProvider.of<AppState>(context).dispatch(new UpdateUserToken(token));
+        StoreProvider.of<AppState>(context).dispatch(StripeCardListRequest(user.uid));
 
         //StoreProvider.of<AppState>(context).dispatch(new UserBookingRequest(user.email));
         Navigator.push(context, MaterialPageRoute(builder: (context) => Landing()));
