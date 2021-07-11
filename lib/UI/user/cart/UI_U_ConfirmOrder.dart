@@ -922,7 +922,9 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
         PaymentMethodParams.card(
           billingDetails: billingDetails,
         ), {}
-      );
+      ).catchError((error) {
+        debugPrint('Setup Intent confirmed $error');
+      });
       debugPrint('Setup Intent confirmed $setupIntentResult');
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context).saveYourCardSuccess)));
       setState(() {
