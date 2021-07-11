@@ -120,11 +120,10 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
               }
             } else {
               orderState = snapshot.order;
-              if (widget.tourist ||
-                  snapshot.booking != null &&
-                      snapshot.booking.business_id != null &&
-                      snapshot.booking.business_id.isNotEmpty &&
-                      (snapshot.order != null && snapshot.order.itemList.isNotEmpty && snapshot.order.itemList[0].id_business != snapshot.booking.business_id)) {
+              if ( (widget != null && widget.tourist != null && widget.tourist) ||
+                  ((snapshot.booking != null && snapshot.booking.business_id != null && snapshot.booking.business_id.isNotEmpty) &&
+                   (snapshot.order != null && snapshot.order.itemList.isNotEmpty && snapshot.order.itemList[0].id_business != snapshot.booking.business_id))
+              ) {
                 disableRoomPayment = true;
               } else {
                 disableRoomPayment = false;
@@ -253,7 +252,9 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
         ],
       );
     // } else if (_controller.index == 1) {
-    //   return Platform.isAndroid ? NativeGoogle() : NativeApple();
+    //   return Container(
+    //     child: buildMobilePay(),
+    //   );
     } else if (_controller.index == 1) {
       if (disableRoomPayment) {
         return RoomDisabled();
@@ -261,6 +262,62 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
       return Room(tourist: widget.tourist, bookingCode: bookingCode);
     }
     return Container();
+  }
+
+  Column buildMobilePay() {
+    return Column(
+        children: [
+          if (Stripe.instance.isApplePaySupported.value)
+            Padding(
+              padding: EdgeInsets.all(16),
+              child: ApplePayButton(
+                onPressed: _handlePayPress,
+              ),
+            )
+          else
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: Text('Apple Pay is not available in this device'),
+            ),
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: pay.GooglePayButton(
+              paymentConfigurationAsset: 'google_pay_payment_profile.json',
+              paymentItems: buildGoogleItems(),
+              margin: const EdgeInsets.only(top: 15),
+              onPaymentResult: onGooglePayResult,
+              loadingIndicator: const Center(
+                child: CircularProgressIndicator(),
+              ),
+              onPressed: () async {
+                // 1. Add your stripe publishable key to assets/google_pay_payment_profile.json
+                // await debugChangedStripePublishableKey();
+              },
+              onError: (e) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text(
+                        'There was an error while trying to perform the payment'),
+                  ),
+                );
+              },
+            ),
+          )
+
+        ],
+      );
+  }
+
+  List<pay.PaymentItem> buildGoogleItems() {
+    List<pay.PaymentItem> paymentItemArray = [];
+    for (int i = 0; i < orderState.itemList.length; i++) {
+      paymentItemArray.add(pay.PaymentItem(
+        label: orderState.itemList[i].name,
+        amount: orderState.itemList[i].price.toString(),
+        status: pay.PaymentItemStatus.final_price,
+      ));
+    }
+    return paymentItemArray;
   }
 
   Padding buildCreating(AppState snapshot, BuildContext context) {
@@ -479,10 +536,8 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
         //       FontAwesome5Brands.apple_pay,
         //       size: 40.0,
         //     )),
-
-        Tab(
-          text: AppLocalizations.of(context).roomSimple,
-        ),
+        // Tab(text: AppLocalizations.of(context).mobilePay),
+        Tab(text: AppLocalizations.of(context).roomSimple,),
       ],
     );
   }
@@ -759,7 +814,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
     /// 1: create the payment method
     StripePaymentService stripePaymentService = StripePaymentService();
     if (widget.reserve != null && widget.reserve) {
-      // paymentMethod = await stripePaymentService.createPaymentMethodNative(OrderState.fromReservableState(snapshot.orderReservable), snapshot.business.name);
+      paymentMethod = await stripePaymentService.createPaymentMethodNative(OrderState.fromReservableState(snapshot.orderReservable), snapshot.business.name);
 
       /// Reservable payment process starts with Native Method
       StoreProvider.of<AppState>(context).dispatch(SetOrderReservablePaymentMethod(paymentMethod));
@@ -868,7 +923,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
           billingDetails: billingDetails,
         ), {}
       );
-      debugPrint('Setup Intent created $setupIntentResult');
+      debugPrint('Setup Intent confirmed $setupIntentResult');
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context).saveYourCardSuccess)));
       setState(() {
         _setupIntentResult = setupIntentResult;
@@ -905,6 +960,128 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
         print("UI_U_ConfirmOrder initializeCardList => Attributes[0]:${newStore.cardList[0].stripeState.stripeCard.paymentMethodId} - ${newStore.cardList[0].stripeState.stripeCard.last4} - ${newStore.cardList[0].stripeState.stripeCard.brand} - ${newStore.cardList[0].stripeState.stripeCard.expMonth}- ${newStore.cardList[0].stripeState.stripeCard.expYear}- ${newStore.cardList[0].stripeState.stripeCard.expYear}");
       }
     }
+  }
+
+  /// APPLE PAY FUNCTIONS
+  Future<void> _handlePayPress() async {
+    try {
+      // 1. Present Apple Pay sheet
+      await Stripe.instance.presentApplePay(
+        ApplePayPresentParams(
+          cartItems: [
+            ApplePayCartSummaryItem(
+              label: 'Product Test',
+              amount: '20',
+            ),
+          ],
+          country: 'Es',
+          currency: 'EUR',
+        ),
+      );
+
+      // 2. fetch Intent Client Secret from backend
+      final response = await fetchPaymentIntentClientSecret();
+      final clientSecret = response['clientSecret'];
+      // 2. Confirm apple pay payment
+      await Stripe.instance.confirmApplePayPayment(clientSecret);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text('Apple Pay payment succesfully completed')),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: $e')),
+      );
+    }
+  }
+
+  Future<Map<String, dynamic>> fetchPaymentIntentClientSecret() async {
+    final url = Uri.parse('${Environment().config.cloudFunctionLink}/create-payment-intent');
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: json.encode({
+        'email': _email,
+        'currency': 'EUR',
+        'items': [
+          {'id': 'id'}
+        ],
+        'request_three_d_secure': 'any',
+      }),
+    );
+    return json.decode(response.body);
+  }
+
+  /// google pay functions
+
+  Future<void> onGooglePayResult(paymentResult) async {
+    try {
+      // 1. Add your stripe publishable key to assets/google_pay_payment_profile.json
+
+      debugPrint(paymentResult.toString());
+      // 2. fetch Intent Client Secret from backend
+      final response = await fetchPaymentIntentClientSecretGoogle();
+      final clientSecret = response['clientSecret'];
+      final token =
+      paymentResult['paymentMethodData']['tokenizationData']['token'];
+      final tokenJson = Map.castFrom(json.decode(token));
+      print(tokenJson);
+
+      final params = PaymentMethodParams.cardFromToken(
+        token: tokenJson['id'], // TODO extract the actual token
+      );
+
+      // 3. Confirm Google pay payment method
+      await Stripe.instance.confirmPaymentMethod(
+        clientSecret,
+        params,
+      );
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text('Google Pay payment succesfully completed')),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: $e')),
+      );
+    }
+  }
+
+  Future<Map<String, dynamic>> fetchPaymentIntentClientSecretGoogle() async {
+    final url = Uri.parse('${Environment().config.cloudFunctionLink}/create-payment-intent');
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: json.encode({
+        'email': 'example@gmail.com',
+        'currency': 'usd',
+        'items': [
+          {'id': 'id'}
+        ],
+        'request_three_d_secure': 'any',
+      }),
+    );
+    return json.decode(response.body);
+  }
+
+  Future<void> debugChangedStripePublishableKey() async {
+    // if (kDebugMode) {
+    //   final profile = await rootBundle.loadString('assets/google_pay_payment_profile.json');
+    //   final isValidKey = !profile.contains('<ADD_YOUR_KEY_HERE>');
+    //   assert(
+    //   isValidKey,
+    //   'No stripe publishable key added to assets/google_pay_payment_profile.json',
+    //   );
+    // }
+    assert(
+    true,
+    'No stripe publishable key added to assets/google_pay_payment_profile.json',
+    );
   }
 
 }
