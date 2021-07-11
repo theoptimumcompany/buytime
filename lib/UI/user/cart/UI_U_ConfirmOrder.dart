@@ -11,6 +11,7 @@ import 'package:Buytime/UI/user/cart/widget/W_loading_button.dart';
 import 'package:Buytime/reblox/enum/order_time_intervals.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/model/card/card_list_state.dart';
+import 'package:Buytime/reblox/reducer/stripe_list_payment_reducer.dart';
 import 'package:Buytime/reblox/reducer/stripe_payment_reducer.dart';
 import 'package:pay/pay.dart' as pay;
 import 'package:Buytime/reblox/model/card/card_state.dart';

@@ -31,6 +31,7 @@ import 'package:Buytime/reblox/reducer/pipeline_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/service_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/service_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/service_slot_time_reducer.dart';
+import 'package:Buytime/reblox/reducer/stripe_list_payment_reducer.dart';
 import 'package:Buytime/reblox/reducer/stripe_payment_reducer.dart';
 import 'package:Buytime/reblox/reducer/user_reducer.dart';
 import 'package:Buytime/reusable/custom_bottom_button_widget.dart';
@@ -290,6 +291,7 @@ class LandingState extends State<Landing> {
           bookingCodeFound();
           selfCheckInFound();
           categoryInviteFound();
+          store?.dispatch(StripeCardListRequest(store.state.user.uid));
 
           //debugPrint('UI_U_Landing => Booking code: ${store.state.booking.booking_code}');
           debugPrint('UI_U_Landing => onInit()');
