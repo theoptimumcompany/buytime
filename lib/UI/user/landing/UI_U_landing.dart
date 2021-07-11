@@ -291,8 +291,6 @@ class LandingState extends State<Landing> {
           bookingCodeFound();
           selfCheckInFound();
           categoryInviteFound();
-          store?.dispatch(StripeCardListRequest(store.state.user.uid));
-
           //debugPrint('UI_U_Landing => Booking code: ${store.state.booking.booking_code}');
           debugPrint('UI_U_Landing => onInit()');
           debugPrint('UI_U_Landing => store on init()');
