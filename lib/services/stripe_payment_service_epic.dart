@@ -371,7 +371,13 @@ class StripePaymentService {
     //     items: items,
     //   ),
     // );
-    PaymentMethod token = await Stripe.instance.createPaymentMethod(PaymentMethodParams.card());
+    await Stripe.instance.presentApplePay(
+      ApplePayPresentParams(
+        cartItems: items,
+        country: 'IT',
+        currency: 'EUR',
+      ),
+    );
     debugPrint("stripe_payment_service_epic createPaymentServiceNative");
     //
     //   const MethodChannel channel = const MethodChannel('stripe_payment');

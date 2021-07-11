@@ -218,8 +218,8 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
 
   Widget buildTabsBeforeConfirmation(String bookingCode, CardListState cardListState) {
     if (_controller.index == 0) {
-      debugPrint('buildTabsBeforeConfirmation ' + cardListState.cardList.length.toString() + ' ' + cardWidgetList.length.toString());
-      if (cardWidgetList.length > 0) {
+      debugPrint('buildTabsBeforeConfirmation ' + cardListState.cardList?.length.toString() + ' ' + cardWidgetList?.length.toString());
+      if (cardWidgetList != null && cardWidgetList.length > 0) {
         return cardWidgetList[0];
       }
       return Column(
@@ -249,7 +249,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
               ),
             ),
           ),
-          cardListState.cardList.length > 0 ? Container() : LoadingButton(onPressed: _requestSaveCard, text: AppLocalizations.of(context).saveYourCard),
+          (cardListState.cardList != null && cardListState.cardList.length > 0) ? Container() : LoadingButton(onPressed: _requestSaveCard, text: AppLocalizations.of(context).saveYourCard),
         ],
       );
     // } else if (_controller.index == 1) {
@@ -760,8 +760,6 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
     StripePaymentService stripePaymentService = StripePaymentService();
     if (widget.reserve != null && widget.reserve) {
       // paymentMethod = await stripePaymentService.createPaymentMethodNative(OrderState.fromReservableState(snapshot.orderReservable), snapshot.business.name);
-
-
 
       /// Reservable payment process starts with Native Method
       StoreProvider.of<AppState>(context).dispatch(SetOrderReservablePaymentMethod(paymentMethod));
