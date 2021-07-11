@@ -579,6 +579,7 @@
   "enterSelfDetails": "INSERISCI I TUOI DATI PER ENTRARE NELLA TUA PRENOTAZIONE",
   "saveYourCard": "Salva la carta",
   "saveYourCardSuccess": "Success: Card has been saved.",
-  "saveYourCardError": "Error while saving payment, try another card. Have you used a virtual card?",
+  "virtualAndPrepaidNotSupported": "We accept credit and debit cards. Virtual and Prepaid cards may not be supported in this country.",
+  "saveYourCardError": "Error. Try another card. Have you used a VIRTUAL or PREPAID card?",
   "showcase": "Showcase"
 }

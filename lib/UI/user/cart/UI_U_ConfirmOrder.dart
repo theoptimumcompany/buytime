@@ -218,8 +218,8 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
 
   Widget buildTabsBeforeConfirmation(String bookingCode, CardListState cardListState) {
     if (_controller.index == 0) {
-      debugPrint('buildTabsBeforeConfirmation ' + cardListState.cardList?.length.toString() + ' ' + cardWidgetList.length.toString());
-      if (cardWidgetList?.length > 0) {
+      debugPrint('buildTabsBeforeConfirmation ' + cardListState.cardList.length.toString() + ' ' + cardWidgetList.length.toString());
+      if (cardWidgetList.length > 0) {
         return cardWidgetList[0];
       }
       return Column(
@@ -227,23 +227,29 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
           Padding(
             padding: const EdgeInsets.all(10.0),
             child: CardField(
-
               onCardChanged: (card) {
-                // setState(() {
-                //   _card = card;
-                // });
+                setState(() {
+                  _card = card;
+                });
               },
             ),
           ),
-          // CheckboxListTile(
-          //   value: _saveCard,
-          //   onChanged: (value) {
-          //     setState(() {
-          //       _saveCard = value;
-          //     });
-          //   },
-          //   title: Text(AppLocalizations.of(context).saveYourCard),
-          // ),
+          Container(
+            padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+            child: Text(AppLocalizations.of(context).virtualAndPrepaidNotSupported,
+              softWrap: true,
+              overflow: TextOverflow.clip,
+              style: TextStyle(
+                // letterSpacing: 1.25,
+                  fontStyle: FontStyle.italic,
+                  fontFamily: BuytimeTheme.FontFamily,
+                  color:  BuytimeTheme.TextGrey,
+                  fontWeight: FontWeight.w400,
+                  fontSize: 14
+              ),
+            ),
+          ),
+          cardListState.cardList.length > 0 ? Container() : LoadingButton(onPressed: _requestSaveCard, text: AppLocalizations.of(context).saveYourCard),
         ],
       );
     // } else if (_controller.index == 1) {
@@ -380,7 +386,6 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
           mainAxisAlignment: MainAxisAlignment.end,
           mainAxisSize: MainAxisSize.min,
           children: [
-            snapshot.cardListState.cardList != null && snapshot.cardListState.cardList.length > 0 ? Container() : LoadingButton(onPressed: _requestSaveCard, text: AppLocalizations.of(context).saveYourCard),
             ///Confirm button
             Container(
                 margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5, bottom: SizeConfig.safeBlockVertical * 4),
@@ -392,7 +397,13 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                   hoverElevation: 0,
                   focusElevation: 0,
                   highlightElevation: 0,
-                  onPressed: _selectedIndex == 0 ? () { ///L'avevo messo apposto, non so come ma era ritornata comera prima, se non va bene messo cosi ditemelo, comera messo prima il bottono non rimaneva bloccavta
+                  onPressed:
+                      _selectedIndex == 0 &&
+                      snapshot.cardListState.cardList != null &&
+                      snapshot.cardListState.cardList.length > 0
+                    ? () {
+                    ///L'avevo messo apposto, non so come ma era ritornata comera prima,
+                    ///se non va bene messo cosi ditemelo, comera messo prima il bottono non rimaneva bloccavta
                     ///finche non selezionavi la carta
                     debugPrint("UI_U_ConfirmOrder  confirmation CREDIT CARD");
                     confirmationCard(context, snapshot,
@@ -401,7 +412,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                         snapshot.cardListState.cardList[0].stripeState.stripeCard.country,
                         snapshot.cardListState.cardList[0].stripeState.stripeCard.paymentMethodId);
                   } : _selectedIndex == 1 ? () async {
-                    PaymentMethod token = await Stripe.instance.createPaymentMethod(PaymentMethodParams.card());
+                    // confirmationNative();
                     debugPrint("UI_U_ConfirmOrder confirmation NATIVE");
                     // confirmationNative(context, snapshot);
                   } :  _selectedIndex == 2 && !disableRoomPayment ? (){
@@ -544,21 +555,18 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ///Location text
-                  Expanded(
-                    flex: 1,
-                    child: Container(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        AppLocalizations.of(context).location,
-                        style: TextStyle(
-                            fontFamily: BuytimeTheme.FontFamily,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 16,
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      AppLocalizations.of(context).location,
+                      style: TextStyle(
+                          fontFamily: BuytimeTheme.FontFamily,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16,
 
-                            ///SizeConfig.safeBlockHorizontal * 4
-                            color: BuytimeTheme.TextMedium,
-                            letterSpacing: 0.25),
-                      ),
+                          ///SizeConfig.safeBlockHorizontal * 4
+                          color: BuytimeTheme.TextMedium,
+                          letterSpacing: 0.25),
                     ),
                   ),
 

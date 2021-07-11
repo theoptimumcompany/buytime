@@ -248,8 +248,7 @@ class StripeDetachPaymentMethodRequest implements EpicClass<AppState> {
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<CreateDisposePaymentMethodIntent>().asyncMap((event) async {
-      debugPrint(
-          "STRIPE_PAYMENT_SERVICE_EPIC - StripeDetachPaymentMethodRequest => USER ID: ${event.userId} FIRESTORE CARD ID: ${event.firestoreCardId}");
+      debugPrint("STRIPE_PAYMENT_SERVICE_EPIC - StripeDetachPaymentMethodRequest => USER ID: ${event.userId} FIRESTORE CARD ID: ${event.firestoreCardId}");
       userId = event.userId;
       firestoreCardId = event.firestoreCardId;
       await FirebaseFirestore.instance
