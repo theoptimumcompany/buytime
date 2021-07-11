@@ -135,7 +135,7 @@ class StripePaymentAddPaymentMethod implements EpicClass<AppState> {
           cardToUpload.addAll({
             'paymentMethodId': event.paymentMethodId
           });
-          await FirebaseFirestore.instance.collection("stripeCustomer/" + userId + Environment().config.stripeSuffix + "/card/")
+          await FirebaseFirestore.instance.collection("stripeCustomer").doc(userId + Environment().config.stripeSuffix).collection("card")
               .doc()
               .set(cardToUpload);
           debugPrint("STRIPE_PAYMENT_SERVICE_EPIC - StripePaymentAddPaymentMethod => card should be added in firestore ");
@@ -178,7 +178,7 @@ class CheckStripeCustomerService implements EpicClass<AppState> {
       userId = store.state.user.uid;
       debugPrint("stripe_payment_service_epic: CheckStripeCustomerService - searching for a stripe customer");
       if (userId.isNotEmpty) {
-        DocumentSnapshot stripeCustomerReference = await FirebaseFirestore.instance.collection("stripeCustomer/").doc(userId).get();
+        DocumentSnapshot stripeCustomerReference = await FirebaseFirestore.instance.collection("stripeCustomer").doc(userId).get();
         statisticsState = store.state.statistics;
         statisticsState.stripeCheckCustomerRead = statisticsState.stripeCheckCustomerRead + 1;
         if (stripeCustomerReference.exists) {
@@ -252,7 +252,7 @@ class StripeDetachPaymentMethodRequest implements EpicClass<AppState> {
       userId = event.userId;
       firestoreCardId = event.firestoreCardId;
       await FirebaseFirestore.instance
-          .collection("stripeCustomer/" + event.userId + Environment().config.stripeSuffix + "/detach/")
+          .collection("stripeCustomer").doc(event.userId + Environment().config.stripeSuffix).collection("detach")
           .doc()
           .set({'firestore_id': event.firestoreCardId});
       debugPrint("STRIPE_PAYMENT_SERVICE_EPIC - StripeDetachPaymentMethodRequest => Detach document created");

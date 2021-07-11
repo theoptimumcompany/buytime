@@ -243,7 +243,7 @@ class OrderCreateNativeAndPayService implements EpicClass<AppState> {
           var addedOrder = await FirebaseFirestore.instance.collection("order").doc(timeBasedId).set(orderState.toJson());
 
           /// add the payment method to the order sub collection on firebase
-          var addedPaymentMethod = await FirebaseFirestore.instance.collection("order/" + orderState.orderId + "/orderPaymentMethod").add({
+          var addedPaymentMethod = await FirebaseFirestore.instance.collection("order").doc(orderState.orderId).collection("orderPaymentMethod").add({
             'paymentMethodId': event.paymentMethod.id,
             'last4': event.paymentMethod.card.last4 ?? '',
             'brand': event.paymentMethod.card.brand ?? '',

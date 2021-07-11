@@ -162,7 +162,7 @@ class ExternalBusinessServiceSnippetListRequestService implements EpicClass<AppS
       int serviceSnippetListFromFirebaseDocs = 0;
       businessServiceSnippetList = [];
       QuerySnapshot serviceSnippetListFromFirebase = await FirebaseFirestore.instance 
-            .collection("business/" + event.businessId + "serviceListSnapshot")
+            .collection("business").doc(event.businessId).collection("serviceListSnapshot")
             .limit(1)
             .get();
 
