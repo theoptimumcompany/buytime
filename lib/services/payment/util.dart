@@ -26,7 +26,7 @@ List<CardState> stripeStateToCardState( List<StripeState> stripeListState) {
 Future <List<CardState>> stripeCardListMaker(dynamic event, List<StripeState> stripeStateList, List<CardState> cardList, StripeCardResponse stripeCardResponse) async {
   debugPrint("util - stripeCardListMaker => StripePaymentCardListRequest => USER ID: ${event.firebaseUserId}");
   String userId = event.firebaseUserId;
-  QuerySnapshot snapshotCard = await FirebaseFirestore.instance.collection("stripeCustomer/" + userId + "/card/").limit(10).get();
+  QuerySnapshot snapshotCard = await FirebaseFirestore.instance.collection("stripeCustomer").doc(userId).collection("card").limit(10).get();
   bool snapshotCardAvailable = snapshotCard != null && snapshotCard.docs != null && snapshotCard.docs.isNotEmpty;
   if (snapshotCardAvailable) {
     debugPrint('util - stripeCardListMaker => CARD LENGTH: ${snapshotCard.docs.length} TOKEN LENGTH: ${snapshotCard.docs.length}');
