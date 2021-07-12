@@ -542,7 +542,7 @@ class _RBusinessState extends State<RBusiness> {
                                             ),
 
                                             ///Most popular text
-                                            Expanded(
+                                            /*Expanded(
                                               flex: 1,
                                               child: Container(
                                                 child: Text(
@@ -550,7 +550,7 @@ class _RBusinessState extends State<RBusiness> {
                                                   style: TextStyle(fontWeight: FontWeight.w600, fontFamily: BuytimeTheme.FontFamily, fontSize: 10, color: BuytimeTheme.TextBlack, letterSpacing: 1.5),
                                                 ),
                                               ),
-                                            )
+                                            )*/
 
                                           ],
                                         ),
@@ -671,7 +671,7 @@ class _RBusinessState extends State<RBusiness> {
                                             ),
 
                                             ///Most popular text
-                                            Expanded(
+                                            /*Expanded(
                                               flex: 1,
                                               child: Container(
                                                 child: Text(
@@ -679,7 +679,7 @@ class _RBusinessState extends State<RBusiness> {
                                                   style: TextStyle(fontWeight: FontWeight.w600, fontFamily: BuytimeTheme.FontFamily, fontSize: 10, color: BuytimeTheme.TextBlack, letterSpacing: 1.5),
                                                 ),
                                               ),
-                                            )
+                                            )*/
 
                                           ],
                                         ),

@@ -485,6 +485,7 @@ class Utils {
                                     //initialValue: _serviceName,
                                       controller: controllers.elementAt(index),
                                       keyboardType: TextInputType.multiline,
+                                      textInputAction: TextInputAction.done,
                                       maxLines: null,
                                       validator: (value) => value.isEmpty ? AppLocalizations.of(context).serviceNameBlank : null,
                                       onChanged: (value) {
