@@ -11,7 +11,7 @@ description: Give you a star!
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 2.8.0
+version: 2.8.2
 
 environment:
   sdk: ">=2.10.0 <3.0.0"
@@ -54,7 +54,13 @@ dependencies:
   url_launcher: ^6.0.3
 #  stripe_payment: ^1.1.0
 #  stripe_sdk: ^5.0.0-nullsafety.0
+#  stripe_android: ^1.1.0
+#  stripe_ios: ^1.1.0
+#  stripe_platform_interface: ^1.1.0
   flutter_stripe: ^1.1.0
+#    git:
+#      url: git://github.com/flutter-stripe/flutter_stripe.git
+#      path: packages/stripe
   pay: ^1.0.1
   pay_android: ^1.0.1
   credit_card_input_form: ^2.3.0
