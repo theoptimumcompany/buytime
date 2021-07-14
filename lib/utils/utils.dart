@@ -912,6 +912,19 @@ class Utils {
     return result;
   }
 
+  static String version1000(String imageUrl) {
+    String result = "";
+    String extension = "";
+    if (imageUrl != null && imageUrl.length > 0 && imageUrl.contains("http")) {
+      extension = imageUrl.substring(imageUrl.lastIndexOf('.'), imageUrl.length);
+      result = imageUrl.substring(0, imageUrl.lastIndexOf('.'));
+      result += "_1000x1000" + extension;
+    } else {
+      result = "https://firebasestorage.googleapis.com/v0/b/buytime-458a1.appspot.com/o/general%2Fimage_placeholder_200x200.png?alt=media&token=d40ccab1-7fb5-4290-91c6-634871b7a4f3";
+    }
+    return result;
+  }
+
   static AreaState getCurrentArea(String userCoordinate, AreaListState areaListState) {
     AreaState areaFound = AreaState().toEmpty();
     if (userCoordinate != null && userCoordinate.isNotEmpty) {
