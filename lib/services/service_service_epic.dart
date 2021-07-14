@@ -214,7 +214,8 @@ class ServiceListRequestService implements EpicClass<AppState> {
         });
 
         read = 2;
-      } else {
+      }
+      else {
         CollectionReference servicesFirebase = FirebaseFirestore.instance.collection("service");
         Query query = servicesFirebase.where("businessId", isEqualTo: event.businessId);
 

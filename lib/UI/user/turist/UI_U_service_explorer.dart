@@ -322,6 +322,8 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
     // }
   }
 
+  bool first = false;
+
   @override
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
@@ -349,7 +351,7 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
       builder: (context, snapshot) {
         businessList = snapshot.businessList.businessListState;
 
-        if (_searchController.text.isEmpty) {
+        if (_searchController.text.isEmpty && !first) {
           categoryList.clear();
           popularList.clear();
           recommendedList.clear();
@@ -400,6 +402,7 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
               }
               popularList.shuffle();
               recommendedList.shuffle();
+              first = true;
             }
             if (categoryList.isNotEmpty && categoryList.first.name == null) categoryList.removeLast();
             if (popularList.isNotEmpty && popularList.first.name == null) popularList.removeLast();

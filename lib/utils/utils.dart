@@ -226,13 +226,13 @@ class Utils {
     return tmp;
   }
 
-  static Future<List<TextEditingController>> googleTranslate(List<String> language, Locale myLocale, List<TextEditingController> controllers, List<String> flags, int myIndex) async {
+  static Future<List<TextEditingController>> googleTranslate(List<String> language, String myLanguage, List<TextEditingController> controllers, List<String> flags, int myIndex) async {
     for (int i = 0; i < language.length; i++) {
       if (controllers[i].text.isEmpty) {
-        if (language[i] != myLocale.languageCode) {
+        if (language[i] != myLanguage) {
           debugPrint('LanguageCode: ${language[i]} | Flag: ${flags[i]}');
           var url = Uri.https('translation.googleapis.com', '/language/translate/v2', {
-            'source': '${myLocale.languageCode}',
+            'source': '${myLanguage}',
             'target': '${language[i]}',
             'key': '${Environment().config.googleApiKey}',
             'q': '${controllers[myIndex].text}'
@@ -295,24 +295,25 @@ class Utils {
   static void multiLingualTranslate(BuildContext context, List<String> flags, List<String> language, String field, String stateField, FocusScopeNode node, OnTranslatingCallback translatingCallback) async{
 
     Locale myLocale = Localizations.localeOf(context);
-    debugPrint('UI_M_create_service => My locale: ${myLocale.languageCode}');
+    String myLanguage = myLocale.languageCode.substring(0,2);
+    debugPrint('Utils => My locale: ${myLanguage}');
 
     language.forEach((element) {
-      debugPrint('UI_M_create_service => locale: $element');
+      debugPrint('Utils => locale: $element');
     });
 
     //FocusScopeNode node = FocusScope.of(context);
     String myLocaleCharCode = '';
-    if(myLocale.languageCode == 'en')
+    if(myLanguage == 'en')
       myLocaleCharCode = 'gb'.toUpperCase().replaceAllMapped(RegExp(r'[A-Z]'), (match) => String.fromCharCode(match.group(0).codeUnitAt(0) + 127397));
     else
-      myLocaleCharCode = myLocale.languageCode.toUpperCase().replaceAllMapped(RegExp(r'[A-Z]'), (match) => String.fromCharCode(match.group(0).codeUnitAt(0) + 127397));
+      myLocaleCharCode = myLanguage.toUpperCase().replaceAllMapped(RegExp(r'[A-Z]'), (match) => String.fromCharCode(match.group(0).codeUnitAt(0) + 127397));
 
     List<TextEditingController> controllers = List.generate(flags.length, (index) => TextEditingController());
     int myIndex = 0;
     List<String> stateFiledList = stateField.split('|');
     debugPrint('UI_M_create_service => State field list: $stateFiledList');
-    //nameController.text = Utils.retriveFiled(myLocale.languageCode, snapshot.serviceState.name);
+    //nameController.text = Utils.retriveFiled(myLanguage, snapshot.serviceState.name);
     for(int i = 0; i < flags.length; i++){
       if(myLocaleCharCode == flags[i])
         myIndex = i;
@@ -333,11 +334,11 @@ class Utils {
 
     if(isName){
       debugPrint('Field of the Name');
-      if(retriveField(myLocale.languageCode, stateField) != retriveField(myLocale.languageCode, StoreProvider.of<AppState>(context).state.serviceState.name))
+      if(retriveField(myLanguage, stateField) != retriveField(myLanguage, StoreProvider.of<AppState>(context).state.serviceState.name))
         fieldIsEqual = false;
     }else{
       debugPrint('Field of the Description');
-      if(retriveField(myLocale.languageCode, stateField) != retriveField(myLocale.languageCode, StoreProvider.of<AppState>(context).state.serviceState.description))
+      if(retriveField(myLanguage, stateField) != retriveField(myLanguage, StoreProvider.of<AppState>(context).state.serviceState.description))
         fieldIsEqual = false;
     }
 
@@ -351,7 +352,7 @@ class Utils {
       debugPrint('Fields are equal');
     }
 
-    controllers = await googleTranslate(language, myLocale, controllers, flags, myIndex);
+    controllers = await googleTranslate(language, myLanguage, controllers, flags, myIndex);
 
     bool allTranslated = true;
     controllers.forEach((element) {
@@ -430,7 +431,7 @@ class Utils {
                               if(i != myIndex)
                                 controllers[i].clear();
                             }
-                            controllers = await googleTranslate(language, myLocale, controllers, flags, myIndex);
+                            controllers = await googleTranslate(language, myLanguage, controllers, flags, myIndex);
                           },
                           style: TextStyle(
                               color: BuytimeTheme.TextGrey,
