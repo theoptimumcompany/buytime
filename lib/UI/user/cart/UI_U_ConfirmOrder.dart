@@ -1,27 +1,17 @@
 import 'dart:convert';
-import 'dart:io';
-import 'package:Buytime/UI/user/cart/tab/T_native_apple.dart';
-import 'package:Buytime/UI/user/cart/tab/T_native_google.dart';
-import 'package:Buytime/UI/user/cart/tab/T_credit_cards.dart';
 import 'package:Buytime/UI/user/cart/tab/T_room.dart';
 import 'package:Buytime/UI/user/cart/tab/T_room_disabled.dart';
-import 'package:Buytime/UI/user/cart/widget/W_credit_card.dart';
 import 'package:Buytime/UI/user/cart/widget/W_credit_card_simple.dart';
 import 'package:Buytime/UI/user/cart/widget/W_loading_button.dart';
 import 'package:Buytime/reblox/enum/order_time_intervals.dart';
-import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/model/card/card_list_state.dart';
-import 'package:Buytime/reblox/reducer/stripe_list_payment_reducer.dart';
 import 'package:Buytime/reblox/reducer/stripe_payment_reducer.dart';
 import 'package:pay/pay.dart' as pay;
-import 'package:Buytime/reblox/model/card/card_state.dart';
 import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
 import 'package:Buytime/reblox/model/stripe/stripe_state.dart';
 import 'package:Buytime/reblox/reducer/order_reservable_reducer.dart';
-import 'package:Buytime/reusable/stripe/show_dialog_to_dismiss.dart';
 import 'package:Buytime/services/stripe_payment_service_epic.dart';
 import 'package:Buytime/utils/utils.dart';
-import 'package:flutter_icons/flutter_icons.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
@@ -469,11 +459,11 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                         snapshot.cardListState.cardList[0].stripeState.stripeCard.brand,
                         snapshot.cardListState.cardList[0].stripeState.stripeCard.country,
                         snapshot.cardListState.cardList[0].stripeState.stripeCard.paymentMethodId);
-                  } : _selectedIndex == 1 ? () async {
-                    // confirmationNative();
-                    debugPrint("UI_U_ConfirmOrder confirmation NATIVE");
+                  // } : _selectedIndex == 1 ? () async {
+                  //   // confirmationNative();
+                  //   debugPrint("UI_U_ConfirmOrder confirmation NATIVE");
                     // confirmationNative(context, snapshot);
-                  } :  _selectedIndex == 2 && !disableRoomPayment ? (){
+                  } :  _selectedIndex == 1 && !disableRoomPayment ? (){
                     debugPrint("UI_U_ConfirmOrder confirmation ROOM");
                     confirmationRoom(context, snapshot);
                   } : null,
@@ -904,15 +894,15 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
       // 2. Gather customer billing information (ex. email)
       final billingDetails = BillingDetails(
         email: _email,
-        phone: '',
-        name : '',
+        phone: '+48888000888',
+        name : 'Giorgio Chiellini',
         address: Address(
-          city: '',
-          country: '',
-          line1: '',
+          city: 'Houston',
+          country: 'US',
+          line1: '1459  Circle Drive',
           line2: '',
-          state: '',
-          postalCode: '',
+          state: 'Texas',
+          postalCode: '77063',
         ),
       ); // mo/ mocked data for tests
 
