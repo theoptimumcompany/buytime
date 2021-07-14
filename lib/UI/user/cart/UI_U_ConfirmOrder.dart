@@ -895,7 +895,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
       final billingDetails = BillingDetails(
         email: _email,
         phone: '+48888000888',
-        name : 'Giorgio Chiellini',
+        name : 'John Doe',
         address: Address(
           city: 'Houston',
           country: 'US',
