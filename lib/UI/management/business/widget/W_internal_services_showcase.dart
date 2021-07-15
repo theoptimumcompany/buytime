@@ -1,5 +1,6 @@
 import 'package:Buytime/UI/management/business/UI_M_business.dart';
 import 'package:Buytime/UI/management/category/widget/W_category_list_item.dart';
+import 'package:Buytime/UI/management/service_internal/RUI_M_service_list.dart';
 import 'package:Buytime/UI/management/service_internal/UI_M_service_list.dart';
 import 'package:Buytime/reblox/model/category/category_state.dart';
 import 'package:Buytime/reusable/enterExitRoute.dart';
@@ -45,7 +46,7 @@ class InternalServiceShowcaseState extends State<InternalServiceShowcase> {
                   ///Manage Internal Services
                   InkWell(
                     onTap: () {
-                      Navigator.push(context, EnterExitRoute(enterPage: UI_M_ServiceList(), exitPage: UI_M_Business(), from: true));
+                      Navigator.push(context, EnterExitRoute(enterPage: RServiceList(), exitPage: UI_M_Business(), from: true));
                     },
                     borderRadius: BorderRadius.all(Radius.circular(5.0)),
                     child: Container(

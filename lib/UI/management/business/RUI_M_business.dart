@@ -5,6 +5,7 @@ import 'package:Buytime/UI/management/business/UI_M_edit_business.dart';
 import 'package:Buytime/UI/management/business/widget/W_invite_user.dart';
 import 'package:Buytime/UI/management/category/widget/W_category_list_item.dart';
 import 'package:Buytime/UI/management/service_external/UI_M_external_service_list.dart';
+import 'package:Buytime/UI/management/service_internal/RUI_M_service_list.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/model/category/snippet/category_snippet_state.dart';
 import 'package:Buytime/reblox/model/role/role.dart';
@@ -511,7 +512,7 @@ class _RBusinessState extends State<RBusiness> {
                                               ///Manage Internal Services
                                               InkWell(
                                                 onTap: () {
-                                                  Navigator.push(context, EnterExitRoute(enterPage: UI_M_ServiceList(), exitPage: RBusiness(), from: true));
+                                                  Navigator.push(context, EnterExitRoute(enterPage: RServiceList(), exitPage: RBusiness(), from: true));
                                                 },
                                                 borderRadius: BorderRadius.all(Radius.circular(5.0)),
                                                 child: Container(

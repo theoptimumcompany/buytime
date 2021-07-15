@@ -78,7 +78,7 @@ class RServiceListState extends State<RServiceList> {
       List<ServiceSnippetState> listRoot = [];
       List<bool> internalSpinnerVisibility = [];
       for (int s = 0; s < categories[c].serviceList.length; s++) {
-        debugPrint('UI_M_service_litt => ${categories[c].categoryName} - ${categories[c].serviceList[s].serviceName}');
+        debugPrint('RUI_M_service_litt => ${categories[c].categoryName} - ${categories[c].serviceList[s].serviceName}');
         listRoot.add(categories[c].serviceList[s]);
         internalSpinnerVisibility.add(false);
       }
@@ -193,6 +193,7 @@ class RServiceListState extends State<RServiceList> {
     final Stream<QuerySnapshot> _businessStream =  FirebaseFirestore.instance.collection("business")
         .doc(StoreProvider.of<AppState>(context).state.business.id_firestore)
         .collection('service_list_snippet').snapshots(includeMetadataChanges: true);
+
     return  WillPopScope(
         onWillPop: () async {
           ///Block iOS Back Swipe
@@ -276,29 +277,29 @@ class RServiceListState extends State<RServiceList> {
                     }
                     ServiceListSnippetState serviceListSnippetState = ServiceListSnippetState.fromJson(businessSnapshot.data.docs.first.data());
                     StoreProvider.of<AppState>(context).dispatch(ServiceListSnippetRequestResponse(serviceListSnippetState));
-                    print("RUI_M_business => Business Id from snippet: ${serviceListSnippetState.businessId}");
+                    //print("RUI_M_business => Business Id from snippet: ${serviceListSnippetState.businessId}");
                     categories.clear();
                     List<CategorySnippetState> tmpCategories = serviceListSnippetState.businessSnippet;
                     tmpCategories.forEach((element) {
                       if(element.categoryAbsolutePath.split('/').length == 2 && element.categoryAbsolutePath.split('/').first == StoreProvider.of<AppState>(context).state.business.id_firestore)
                         categories.add(element);
                     });
-                    print("RUI_M_service_list => AFTER | Categories length: ${categories.length}");
+                    //print("RUI_M_service_list => AFTER | Categories length: ${categories.length}");
                     tmpCategories.forEach((allC) {
                       //print("UI_M_Business => Category: ${allC.categoryName} | Category services: ${allC.serviceList.length}");
                       if(allC.categoryAbsolutePath.split('/').first == StoreProvider.of<AppState>(context).state.business.id_firestore){
                         categories.forEach((c) {
                           //print("UI_M_Business => Category: ${c.categoryName} | Category services: ${c.serviceList.length}");
                           if(allC.categoryAbsolutePath != c.categoryAbsolutePath && allC.categoryAbsolutePath.split('/').contains(c.categoryAbsolutePath.split('/').last)){
-                            print("RUI_M_service_list => Main category: ${c.categoryName}");
-                            print("RUI_M_service_list => Sub category: ${allC.categoryName}");
-                            print("RUI_M_service_list => Sub category service list length: ${allC.serviceList.length}");
-                            print("RUI_M_service_list => BEFORE | Main category service list length: ${c.serviceList.length}");
+                            //print("RUI_M_service_list => Main category: ${c.categoryName}");
+                            //print("RUI_M_service_list => Sub category: ${allC.categoryName}");
+                            //print("RUI_M_service_list => Sub category service list length: ${allC.serviceList.length}");
+                            //print("RUI_M_service_list => BEFORE | Main category service list length: ${c.serviceList.length}");
                             allC.serviceList.forEach((s) {
                               if(!c.serviceList.contains(s) && s.serviceAbsolutePath.split('/').first == StoreProvider.of<AppState>(context).state.business.id_firestore)
                                 c.serviceList.add(s);
                             });
-                            print("RUI_M_service_list => AFTER | Main category service list length: ${c.serviceList.length}");
+                            //print("RUI_M_service_list => AFTER | Main category service list length: ${c.serviceList.length}");
                             c.serviceNumberInternal = c.serviceList.length;
                           }
                         });
@@ -318,7 +319,7 @@ class RServiceListState extends State<RServiceList> {
                               shrinkWrap: true,
                               itemCount: categories.length,
                               itemBuilder: (context, i) {
-                                debugPrint('UI:M:service:list => CATEGORY ID: ${id(categories[i].categoryAbsolutePath)}');
+                                debugPrint('RUI_M_service_list => CATEGORY ID: ${id(categories[i].categoryAbsolutePath)}');
                                 canAccessService = canAccess(id(categories[i].categoryAbsolutePath));
                                 return Container(
                                   //height: 56,
@@ -650,6 +651,7 @@ class RServiceListState extends State<RServiceList> {
                                             physics: const NeverScrollableScrollPhysics(),
                                             itemCount: listOfServiceEachRoot.length > 0 ? listOfServiceEachRoot[i].length : 0,
                                             itemBuilder: (context, index) {
+                                              debugPrint('RUI_M_service_list => SERVICE NAME: ${listOfServiceEachRoot[i][index].serviceName}');
                                               canWorkerAccessService = canWorkerAccess(id(id(categories[i].categoryAbsolutePath)));
                                               Widget iconVisibility;
                                               switch (listOfServiceEachRoot[i][index].serviceVisibility) {

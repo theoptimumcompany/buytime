@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:Buytime/UI/management/business/UI_M_business.dart';
 import 'package:Buytime/UI/management/business/UI_M_manage_business.dart';
 import 'package:Buytime/UI/management/category/UI_M_edit_category.dart';
+import 'package:Buytime/UI/management/service_internal/RUI_M_service_list.dart';
 import 'package:Buytime/UI/management/service_internal/UI_M_service_list.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/UI/management/category/UI_M_create_category.dart';
@@ -757,7 +758,7 @@ class ManageCategoryState extends State<ManageCategory> with SingleTickerProvide
                       onPressed: () {
                         snapshot.serviceListSnippetState = ServiceListSnippetState();
                         StoreProvider.of<AppState>(context).dispatch(ServiceListSnippetRequest(snapshot.business.id_firestore));
-                        Navigator.pushReplacement(context, EnterExitRoute(enterPage: UI_M_ServiceList(), exitPage: ManageCategory(), from: false));
+                        Navigator.pushReplacement(context, EnterExitRoute(enterPage: RServiceList(), exitPage: ManageCategory(), from: false));
                         //Navigator.of(context).pop();
                       },
                     ),
