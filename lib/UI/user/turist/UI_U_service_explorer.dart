@@ -667,6 +667,7 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                                           onPressed: () {
                                             setState(() {
                                               _searchController.clear();
+                                              first = false;
                                             });
                                           },
                                         ),
