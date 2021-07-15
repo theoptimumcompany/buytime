@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:Buytime/environment_abstract.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
@@ -18,33 +21,32 @@ import 'app_state.dart';
 import 'combined_epics.dart';
 
 void main() {
-  final epics = combinedEpics;
-  final _initialState = appState;
-  final store = new Store<AppState>(
-    appReducer,
-    initialState: _initialState,
-    middleware: createNavigationMiddleware(epics),
-  );
-
-  // Ensure that plugin services are initialized so that `availableCameras()`
-// can be called before `runApp()`
-  WidgetsFlutterBinding.ensureInitialized();
-  const String environment = String.fromEnvironment(
-    'ENVIRONMENT',
-    defaultValue: Environment.PROD,
-  );
-
-  Environment().initConfig(environment);
-
-  runApp(
-      MultiProvider(
-        providers: [
-          //ChangeNotifierProvider(create: (_) => NavigationState()),
-          ChangeNotifierProvider(create: (_) => Spinner([], [])),
-        ],
-        child: Buytime(store: store),
-      ));
-  //log();
+  // runZonedGuarded(() async {
+    final epics = combinedEpics;
+    final _initialState = appState;
+    final store = new Store<AppState>(
+      appReducer,
+      initialState: _initialState,
+      middleware: createNavigationMiddleware(epics),
+    );
+    WidgetsFlutterBinding.ensureInitialized();
+    const String environment = String.fromEnvironment(
+      'ENVIRONMENT',
+      defaultValue: Environment.PROD,
+    );
+    Environment().initConfig(environment);
+    runApp(
+        MultiProvider(
+          providers: [
+            //ChangeNotifierProvider(create: (_) => NavigationState()),
+            ChangeNotifierProvider(create: (_) => Spinner([], [])),
+          ],
+          child: Buytime(store: store),
+        ));
+  // }, (Object error, StackTrace stack) {
+  //   Container(child: Text(error.toString() + stack.toString()),);
+  //   exit(1);
+  // });
 }
 
 class Buytime extends StatelessWidget {

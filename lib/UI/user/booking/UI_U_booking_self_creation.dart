@@ -2,19 +2,14 @@ import 'dart:async';
 
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
-import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
 import 'package:Buytime/reblox/reducer/booking_reducer.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
-import 'package:Buytime/reusable/form/optimum_form_multi_photo.dart';
-import 'package:Buytime/reusable/menu/UI_M_business_list_drawer.dart';
-import 'package:Buytime/services/business_service_epic.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/utils/utils.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_pro/carousel_pro.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -528,6 +523,7 @@ class _BookingSelfCreationState extends State<BookingSelfCreation> {
                                                 focusElevation: 0,
                                                 highlightElevation: 0,
                                                 onPressed: () {
+
                                                   if (_formKey.currentState.validate()) {
                                                     setState(() {
                                                       bookingRequest = 'send';
@@ -555,11 +551,11 @@ class _BookingSelfCreationState extends State<BookingSelfCreation> {
 
                                                     StoreProvider.of<AppState>(context).dispatch(CreateSelfBookingRequest(bookingState, StoreProvider.of<AppState>(context).state.business.id_firestore));
 
-                                                    Timer(Duration(seconds: 1), () {
-                                                      setState(() {
-                                                        bookingRequest = '';
-                                                      });
-                                                    });
+                                                    // Timer(Duration(seconds: 1), () {
+                                                    //   setState(() {
+                                                    //     bookingRequest = '';
+                                                    //   });
+                                                    // });
                                                     //Navigator.push(context, MaterialPageRoute(builder: (context) => BookingDetails(bookingState: bookingState)));
 
                                                   }

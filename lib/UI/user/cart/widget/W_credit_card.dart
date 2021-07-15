@@ -25,6 +25,7 @@ class _CreditCardListElementState extends State<CreditCardListElement> {
 
   String bookingStatus = '';
   bool selected = false;
+  bool askedForCancelation = false;
   String card = '';
   List<String> cc = ['v','mc'];
 
@@ -36,6 +37,7 @@ class _CreditCardListElementState extends State<CreditCardListElement> {
   @override
   void initState() {
     super.initState();
+    askedForCancelation = false;
     card = widget.cardState.stripeState.stripeCard.brand.toLowerCase().substring(0,1) == 'v' ? 'v' : 'mc';
     //card = 'v';
     ownerCard = widget.cardState.cardOwner ?? '';
@@ -62,9 +64,14 @@ class _CreditCardListElementState extends State<CreditCardListElement> {
                 color: Colors.transparent,
                 child: InkWell(
                     onTap: (){
-                      StoreProvider.of<AppState>(context).dispatch(DeletingStripePaymentMethod());
-                      StoreProvider.of<AppState>(context).dispatch(CreateDisposePaymentMethodIntent(firestoreCardId, StoreProvider.of<AppState>(context).state.user.uid));
-                      //StoreProvider.of<AppState>(context).dispatch(AddCardToList(tmpList));
+                      if (!askedForCancelation) {
+                        askedForCancelation = true;
+                        debugPrint("Asked cancelation of credit card");
+                        StoreProvider.of<AppState>(context).dispatch(DeletingStripePaymentMethod());
+                        StoreProvider.of<AppState>(context).dispatch(CreateDisposePaymentMethodIntent(firestoreCardId, StoreProvider.of<AppState>(context).state.user.uid));
+                        //StoreProvider.of<AppState>(context).dispatch(AddCardToList(tmpList));
+                      }
+
                     },
                     borderRadius: BorderRadius.all(Radius.circular(5.0)),
                     child: Container(
