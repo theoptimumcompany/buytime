@@ -581,6 +581,7 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
                                                   ),
 
                                                   ///Type Of Business
+                                                  StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin || StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman ?
                                                   Row(
                                                     mainAxisAlignment: MainAxisAlignment.start,
                                                     children: [
@@ -609,7 +610,7 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
                                                                     }
                                                                   : (value) {}),
                                                     ],
-                                                  ),
+                                                  ) : Container(),
 
                                                   ///Business Type
                                                   Column(
