@@ -31,16 +31,14 @@ class CategoryListRequestService implements EpicClass<AppState> {
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     debugPrint("CATEGORY_SERVICE_EPIC - CategoryListRequestService => CATCHED ACTION");
     return actions.whereType<RequestListCategory>().asyncMap((event) async {
-      QuerySnapshot snapshot = await FirebaseFirestore.instance
 
-          /// 1 READ - ? DOC
+
+      QuerySnapshot snapshot = await FirebaseFirestore.instance
           .collection("business")
           .doc(event.businessId)
           .collection("category")
           .get();
-
       int snapshotDocs = snapshot.docs.length;
-
       categoryStateList = [];
       snapshot.docs.forEach((element) {
         CategoryState categoryState = CategoryState.fromJson(element.data());
@@ -83,26 +81,37 @@ class AllCategoryListRequestService implements EpicClass<AppState> {
     return actions.whereType<AllRequestListCategory>().asyncMap((event) async {
       QuerySnapshot businessListFromFirebase;
       businessStateList = [];
-
       businessListFromFirebase = await FirebaseFirestore.instance
-
-          /// 1 read - ? DOC
           .collection("business")
           .where("draft", isEqualTo: false)
           .get();
-
       List<QuerySnapshot> queryList = [];
-      int read = 0;
       categoryStateList = [];
       serviceStateList = [];
       serviceListSnippetListState = [];
-      int snapshotDocs = 0;
       List<String> tmpBusinessIdList = [];
 
+      CollectionReference servicesFirebase = FirebaseFirestore.instance.collection("service");
+      Query query;
+      if (store.state.area != null && store.state.area.areaId != null && store.state.area.areaId.isNotEmpty) {
+        query = servicesFirebase
+            .where("tag", arrayContains: store.state.area.areaId)
+            .where("visibility", isEqualTo: 'Active');
+      } else {
+        query = servicesFirebase
+            .where("visibility", isEqualTo: 'Active');
+      }
+      await query.get().then((value) {
+        value.docs.forEach((element) {
+          ServiceState serviceState = ServiceState.fromJson(element.data());
+          serviceStateList.add(serviceState);
+        });
+      });
+
       for (int i = 0; i < businessListFromFirebase.docs.length; i++) {
+        /// TODO: replace with category from snippet
         businessStateList.add(BusinessState.fromJson(businessListFromFirebase.docs[i].data()));
         QuerySnapshot snapshot = await FirebaseFirestore.instance
-
             /// 1 READ - ? DOC
             .collection("business")
             .doc(businessListFromFirebase.docs[i].id)
@@ -110,73 +119,19 @@ class AllCategoryListRequestService implements EpicClass<AppState> {
             //.where("level", isEqualTo: 0)
             .limit(10)
             .get();
-        read++;
-        snapshotDocs += snapshot.docs.length;
         snapshot.docs.forEach((element) {
           CategoryState categoryState = CategoryState.fromJson(element.data());
           categoryState.businessId = businessListFromFirebase.docs[i].id;
           categoryState.id = element.id;
           categoryStateList.add(categoryState);
         });
-
-        if (!tmpBusinessIdList.contains(businessListFromFirebase.docs[i].id)) {
-          CollectionReference servicesFirebase = FirebaseFirestore.instance.collection("service");
-          Query query;
-          if (store.state.area != null && store.state.area.areaId != null && store.state.area.areaId.isNotEmpty) {
-            query = servicesFirebase
-                .where("businessId", isEqualTo: businessListFromFirebase.docs[i].id)
-                .where("tag", arrayContains: store.state.area.areaId)
-                //.where("serviceCrossSell", isEqualTo: true)
-                .where("visibility", isEqualTo: 'Active')
-                .limit(20);
-          } else {
-            query = servicesFirebase
-                .where("businessId", isEqualTo: businessListFromFirebase.docs[i].id)
-                //.where("serviceCrossSell", isEqualTo: true)
-                .where("visibility", isEqualTo: 'Active')
-                .limit(20);
-          }
-
-          /// 1 READ - ? DOC
-          //   query = query.where("id_category", isEqualTo: categoryInviteState.id_category);
-          //serviceStateList.clear();
-          // debugPrint("CATEGORY_SERVICE_EPIC - evaluating service with id =>" );
-
-          await query.get().then((value) {
-            snapshotDocs += value.docs.length;
-            value.docs.forEach((element) {
-              // debugPrint("CATEGORY_SERVICE_EPIC - evaluating service with id =>" + element.data()['serviceId']);
-              ServiceState serviceState = ServiceState.fromJson(element.data());
-              serviceStateList.add(serviceState);
-            });
-          });
-
-          read++;
-        }
+        /// END TODO
         tmpBusinessIdList.add(businessListFromFirebase.docs[i].id);
-
-
         var servicesFirebaseShadow = await FirebaseFirestore.instance.collection("business").doc(businessListFromFirebase.docs[i].id).collection('service_list_snippet').get();
-
         if (servicesFirebaseShadow.docs.isNotEmpty) serviceListSnippetListState.add(ServiceListSnippetState.fromJson(servicesFirebaseShadow.docs.first.data()));
       }
-
       debugPrint('CATEGORY_SERVICE_EPIC - AllCategoryListRequestService => CATEGORY LENGHT: ${categoryStateList.length}');
       debugPrint("CATEGORY_SERVICE_EPIC - AllCategoryListRequestService => Return list with ${categoryStateList.length}");
-
-      statisticsState = store.state.statistics;
-      int reads = statisticsState.categoryListRequestServiceRead;
-      int writes = statisticsState.categoryListRequestServiceWrite;
-      int documents = statisticsState.categoryListRequestServiceDocuments;
-      debugPrint('CATEGORY_SERVICE_EPIC - AllCategoryListRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
-      reads = reads + read;
-      documents = documents + snapshotDocs;
-      debugPrint('CATEGORY_SERVICE_EPIC - AllCategoryListRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
-      statisticsState.categoryListRequestServiceRead = reads;
-      statisticsState.categoryListRequestServiceWrite = writes;
-      statisticsState.categoryListRequestServiceDocuments = documents;
-      //categoryStateList.clear();
-      //serviceStateList.clear();
       if (categoryStateList.isEmpty) categoryStateList.add(CategoryState());
       if (serviceStateList.isEmpty) serviceStateList.add(ServiceState());
     }).expand((element) => [
