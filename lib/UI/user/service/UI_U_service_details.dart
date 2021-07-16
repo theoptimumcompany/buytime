@@ -62,7 +62,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
   bool isExternal = false;
   ExternalBusinessState externalBusinessState = ExternalBusinessState().toEmpty();
   String address = '';
-  String bussinessName = '';
+  String bussinessName = '-';
 
   @override
   Widget build(BuildContext context) {
