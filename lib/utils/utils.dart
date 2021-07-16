@@ -152,10 +152,10 @@ class Utils {
     );
   }
 
-  static Widget textShimmer(){
+  static Widget textShimmer(double width, double height){
     return SizedBox(
-      width: 150,
-      height: 10,
+      width: width,
+      height: height,
       child: Shimmer.fromColors(
         baseColor: Colors.grey[300],
         highlightColor: Colors.grey[100],
@@ -163,8 +163,8 @@ class Utils {
           margin: EdgeInsets.all(SizeConfig.safeBlockVertical*.0),
           //width: double.infinity,
           //height: double.infinity,
-          width: 150,
-          height: 5,
+          width: width,
+          height: height,
           //color: Colors.black,
           decoration: BoxDecoration(
             color: Colors.black,

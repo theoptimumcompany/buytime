@@ -474,16 +474,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                               ),
                             ),
                           ),
-                          placeholder: (context, url) => Container(
-                            // width: 200, ///SizeConfig.safeBlockVertical * widget.width
-                            height: 100, ///SizeConfig.safeBlockVertical * widget.width
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                CircularProgressIndicator()
-                              ],
-                            ),
-                          ),
+                          placeholder: (context, url) => Utils.imageShimmer(double.infinity, 375),
                           errorWidget: (context, url, error) => Icon(Icons.error),
                         ),
                         ///Address & Map
@@ -707,16 +698,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                                         ),
                                       ),
                                     ),
-                                    placeholder: (context, url) => Container(
-                                      // width: 200, ///SizeConfig.safeBlockVertical * widget.width
-                                      height: 100, ///SizeConfig.safeBlockVertical * widget.width
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          CircularProgressIndicator()
-                                        ],
-                                      ),
-                                    ),
+                                    placeholder: (context, url) => Utils.imageShimmer(174, 125),
                                     errorWidget: (context, url, error) => Icon(Icons.error),
                                   ),
                                 ),

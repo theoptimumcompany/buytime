@@ -385,7 +385,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                                       ),
                                                     ),
                                                   ),
-                                                  placeholder: (context, url) => Container(
+                                                  placeholder: (context, url) => /*Container(
                                                     height: SizeConfig.safeBlockVertical * 55,
                                                     width: double.infinity,
                                                     child: Row(
@@ -399,7 +399,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                                         )
                                                       ],
                                                     ),
-                                                  ),
+                                                  )*/Utils.imageShimmer(double.infinity, SizeConfig.safeBlockVertical * 55),
                                                   errorWidget: (context, url, error) => Icon(Icons.error),
                                                 ))
                                             .toList(),
@@ -469,21 +469,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                             ),
                                           ),
                                         ),
-                                        placeholder: (context, url) => Container(
-                                          height: SizeConfig.safeBlockVertical * 55,
-                                          width: double.infinity,
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            children: [
-                                              Container(
-                                                //padding: EdgeInsets.only(top: 80, bottom: 80, left: 50, right: 50),
-                                                child: CircularProgressIndicator(
-                                                    //valueColor: new AlwaysStoppedAnimation<Color>(BuytimeTheme.ManagerPrimary),
-                                                    ),
-                                              )
-                                            ],
-                                          ),
-                                        ),
+                                        placeholder: (context, url) => Utils.imageShimmer(double.infinity, SizeConfig.safeBlockVertical * 55),
                                         errorWidget: (context, url, error) => Icon(Icons.error),
                                       )),
 

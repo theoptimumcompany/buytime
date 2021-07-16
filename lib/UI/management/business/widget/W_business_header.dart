@@ -2,6 +2,7 @@ import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/category/category_state.dart';
 import 'package:Buytime/reblox/model/snippet/service_list_snippet_state.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
+import 'package:Buytime/utils/utils.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -106,21 +107,7 @@ class BusinessHeaderState extends State<BusinessHeader> {
                                         fit: BoxFit.cover,
                                       )),
                                 ),
-                                placeholder: (context, url) => Container(
-                                  height: 140,
-                                  width: 140,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                        //padding: EdgeInsets.only(top: 80, bottom: 80, left: 50, right: 50),
-                                        child: CircularProgressIndicator(
-                                          //valueColor: new AlwaysStoppedAnimation<Color>(BuytimeTheme.ManagerPrimary),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
+                                placeholder: (context, url) => Utils.imageShimmer(140, 140),
                                 errorWidget: (context, url, error) => Icon(Icons.error),
                               )
 

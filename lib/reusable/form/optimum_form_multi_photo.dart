@@ -6,6 +6,7 @@ import 'package:Buytime/reblox/model/file/optimum_file_to_upload.dart';
 import 'package:Buytime/reblox/model/role/role.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
+import 'package:Buytime/utils/utils.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_redux/flutter_redux.dart';
@@ -258,9 +259,7 @@ class OptimumFormMultiPhotoState extends State<OptimumFormMultiPhoto> {
                                 //borderRadius: BorderRadius.all(Radius.circular(SizeConfig.blockSizeHorizontal * 5)), ///12.5%
                                 image: DecorationImage(image: imageProvider, fit: BoxFit.fitHeight)),
                           ),
-                          placeholder: (context, url) => CircularProgressIndicator(
-                              //valueColor: new AlwaysStoppedAnimation<Color>(BuytimeTheme.ManagerPrimary),
-                              ),
+                          placeholder: (context, url) => Utils.imageShimmer(widget.isWide ? 280 : 156, 156),
                           errorWidget: (context, url, error) => croppedImage == null ? Image(width: widget.isWide ? 280 : null, image: widget.isWide ? assetWide : assetSquare) : croppedImage,
                         )
                       : croppedImage == null

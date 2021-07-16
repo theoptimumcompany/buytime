@@ -52,21 +52,7 @@ class _BookingListServiceListItemState extends State<BookingListServiceListItem>
                           //borderRadius: BorderRadius.all(Radius.circular(SizeConfig.blockSizeHorizontal * 5)), ///12.5%
                             image: DecorationImage(image: imageProvider, fit: BoxFit.cover,)),
                       ),
-                      placeholder: (context, url) => Container(
-                        height: 91,
-                        width: 91,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              //padding: EdgeInsets.only(top: 80, bottom: 80, left: 50, right: 50),
-                              child: CircularProgressIndicator(
-                                //valueColor: new AlwaysStoppedAnimation<Color>(BuytimeTheme.ManagerPrimary),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
+                      placeholder: (context, url) => Utils.imageShimmer(91, 91),
                       errorWidget: (context, url, error) => Icon(Icons.error),
                     ),
                     /*Container(

@@ -116,14 +116,7 @@ class _OptimumBusinessCardMediumManagerState extends State<OptimumBusinessCardMe
                     placeholder: (context, url) => Container(
                           height: 100,
                           width: 100,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              CircularProgressIndicator(
-                          valueColor: new AlwaysStoppedAnimation<Color>(BuytimeTheme.Secondary),
-                              )
-                            ],
-                          )
+                          child: Utils.imageShimmer(100, 100)
                     ),
                     errorWidget: (context, url, error) => Icon(Icons.error),
                   ),

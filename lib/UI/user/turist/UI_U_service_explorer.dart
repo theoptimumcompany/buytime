@@ -990,7 +990,7 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                                                               width: 180,
                                                               alignment: Alignment.topLeft,
                                                               margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 1, left: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1.5),
-                                                              child: Utils.textShimmer(),
+                                                              child: Utils.textShimmer(150, 10),
                                                             )
                                                           ],
                                                         );
@@ -1143,7 +1143,7 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                                                               width: 180,
                                                               alignment: Alignment.topLeft,
                                                               margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 1, left: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1.5),
-                                                              child: Utils.textShimmer(),
+                                                              child: Utils.textShimmer(150, 10),
                                                             )
                                                           ],
                                                         );

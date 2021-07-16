@@ -1,11 +1,13 @@
 import 'dart:math' show pi;
 
+import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/utils/tree_view/tree_view.dart';
 import 'package:Buytime/utils/tree_view/tree_view_theme.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
+import '../utils.dart';
 import 'expander_theme_data.dart';
 import 'models/node.dart';
 
@@ -248,15 +250,8 @@ class _TreeNodeState extends State<TreeNode>
         ),
       ),
       placeholder: (context, url) => Container(
-        margin: EdgeInsets.only(right: 0, top: 10, bottom: 10),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CircularProgressIndicator(
-              //valueColor: new AlwaysStoppedAnimation<Color>(BuytimeTheme.ManagerPrimary.withOpacity(0.5)),
-            )
-          ],
-        ),
+        //margin: EdgeInsets.only(right: 0, top: 10, bottom: 10),
+        child: Utils.imageShimmer(SizeConfig.safeBlockVertical * 90, 60)
       ),
       errorWidget: (context, url, error) => Icon(Icons.error),
     )

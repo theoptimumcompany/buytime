@@ -213,9 +213,58 @@ class RBusinessListState extends State<RBusinessList> {
 
                                       if (businessSnippetSnapshot.hasError || businessSnippetSnapshot.connectionState == ConnectionState.waiting) {
                                         return Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
-                                            CircularProgressIndicator()
+                                            Utils.imageShimmer(100, 100),
+                                            SizedBox(
+                                              width: media.width * 0.025,
+                                            ),
+                                            Expanded(
+                                              child: Container(
+                                                height: 100,//mediaSize.height * 0.13,
+                                                decoration: BoxDecoration(
+                                                  border: Border(
+                                                    bottom: BorderSide(
+                                                        width: 1.0, color: Color.fromRGBO(33, 33, 33, 0.1)),
+                                                  ),
+                                                ),
+                                                child: Column(
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  children: [
+                                                    Row(
+                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                      children: [
+                                                        Expanded(
+                                                          child: Column(
+                                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                                            children: [
+                                                              Padding(
+                                                                padding: const EdgeInsets.only(bottom: 10.0),
+                                                                child: Utils.textShimmer(150, 12.5),
+                                                              ),
+                                                              Utils.textShimmer(100, 10),
+                                                              Padding(
+                                                                padding: const EdgeInsets.only(top: 6.0),
+                                                                child: Utils.textShimmer(125, 10),
+                                                              )
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        Column(
+                                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                                          children: [
+                                                            Icon(
+                                                              Icons.keyboard_arrow_right,
+                                                              size: media.height * 0.035,
+                                                              color: Colors.black.withOpacity(0.6),
+                                                            )
+                                                          ],
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
                                           ],
                                         );
                                       }

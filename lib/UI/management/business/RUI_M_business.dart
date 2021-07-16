@@ -346,17 +346,7 @@ class _RBusinessState extends State<RBusiness> {
                                                 placeholder: (context, url) => Container(
                                                   height: 140,
                                                   width: 140,
-                                                  child: Row(
-                                                    mainAxisAlignment: MainAxisAlignment.center,
-                                                    children: [
-                                                      Container(
-                                                        //padding: EdgeInsets.only(top: 80, bottom: 80, left: 50, right: 50),
-                                                        child: CircularProgressIndicator(
-                                                          //valueColor: new AlwaysStoppedAnimation<Color>(BuytimeTheme.ManagerPrimary),
-                                                        ),
-                                                      )
-                                                    ],
-                                                  ),
+                                                  child: Utils.imageShimmer(140, 140),
                                                 ),
                                                 errorWidget: (context, url, error) => Icon(Icons.error),
                                               )

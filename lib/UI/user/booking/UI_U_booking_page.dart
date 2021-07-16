@@ -582,10 +582,7 @@ class _BookingPageState extends State<BookingPage> {
                                           ),
                                         ),
                                       ),
-                                      placeholder: (context, url) => Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [CircularProgressIndicator()],
-                                      ),
+                                      placeholder: (context, url) => Utils.imageShimmer(125, 125),
                                       errorWidget: (context, url, error) => Icon(Icons.error),
                                     ),
                                   ),

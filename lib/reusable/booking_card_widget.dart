@@ -4,6 +4,7 @@ import 'package:Buytime/reblox/reducer/booking_reducer.dart';
 import 'package:Buytime/reblox/reducer/business_reducer.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
+import 'package:Buytime/utils/utils.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -229,21 +230,7 @@ class _BookingCardWidgetState extends State<BookingCardWidget> {
             ),
           ),
         ),
-        placeholder: (context, url) => Container(
-          height: 200, ///SizeConfig.safeBlockVertical * 28
-          width: 310, ///SizeConfig.safeBlockHorizontal * 80
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                //padding: EdgeInsets.only(top: 80, bottom: 80, left: 50, right: 50),
-                child: CircularProgressIndicator(
-                  //valueColor: new AlwaysStoppedAnimation<Color>(BuytimeTheme.ManagerPrimary),
-                ),
-              )
-            ],
-          ),
-        ),
+        placeholder: (context, url) => Utils.imageShimmer(310, 200),
         errorWidget: (context, url, error) => Icon(Icons.error),
       )
     );

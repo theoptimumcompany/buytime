@@ -113,7 +113,8 @@ class ManageCategoryState extends State<ManageCategory> with SingleTickerProvide
   ///Funzione che costruisce tree dallo snippet, senza avere gestione del tree su DB
   List<dynamic> buildTreeFromSnippet() {
     List<dynamic> snippet = StoreProvider.of<AppState>(context).state.serviceListSnippetState.businessSnippet;
-    snippet.sort((a, b) => a.categoryAbsolutePath.length.compareTo(b.categoryAbsolutePath.length));
+    if(snippet.isNotEmpty)
+      snippet.sort((a, b) => a.categoryAbsolutePath.length.compareTo(b.categoryAbsolutePath.length));
 
     List<dynamic> tree = [];
     if (snippet != null && snippet.isNotEmpty) {
@@ -724,7 +725,8 @@ class ManageCategoryState extends State<ManageCategory> with SingleTickerProvide
           nodeBranches.clear();
           firebaseTree = buildTreeFromSnippet();
           print("FIREBASE TREE DIMENSIONE : " + firebaseTree.length.toString());
-          firebaseTree.sort((a, b) => a.nodeName.compareTo(b.nodeName));
+          if(firebaseTree.isNotEmpty)
+            firebaseTree.sort((a, b) => a.nodeName.compareTo(b.nodeName));
           branches.add(SizedBox(
             height: 10,
           ));

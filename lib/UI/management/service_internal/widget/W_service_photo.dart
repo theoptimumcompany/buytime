@@ -256,9 +256,7 @@ class WidgetServicePhotoState extends State<WidgetServicePhoto> {
                   //borderRadius: BorderRadius.all(Radius.circular(SizeConfig.blockSizeHorizontal * 5)), ///12.5%
                     image: DecorationImage(image: imageProvider, fit: BoxFit.cover)),
               ),
-              placeholder: (context, url) => CircularProgressIndicator(
-                //valueColor: new AlwaysStoppedAnimation<Color>(BuytimeTheme.ManagerPrimary),
-              ),
+              placeholder: (context, url) => Utils.imageShimmer(remotePath.endsWith('1') ? 300 : 150, remotePath.endsWith('1') ? 300 : 150),
               errorWidget: (context, url, error) => croppedImage == null ? Image(width: SizeConfig.blockSizeHorizontal * 100, image: assetImage) : croppedImage,
             ) : Image(width: SizeConfig.blockSizeHorizontal * 100, image: assetImage)),
             onTap: canEdit() ? () {

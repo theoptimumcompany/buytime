@@ -154,16 +154,7 @@ class _UserServiceCardWidgetState extends State<UserServiceCardWidget> {
           ),
         ),
       ),
-      placeholder: (context, url) => Container(
-        // width: 200, ///SizeConfig.safeBlockVertical * widget.width
-        height: 100,
-
-        ///SizeConfig.safeBlockVertical * widget.width
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [CircularProgressIndicator()],
-        ),
-      ),
+      placeholder: (context, url) => Utils.imageShimmer(200, 100),
       errorWidget: (context, url, error) => Icon(Icons.error),
     );
   }
