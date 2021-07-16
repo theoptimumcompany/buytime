@@ -598,6 +598,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                                 ],
                                                               ),
                                                             ),*/
+                                                      StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin || StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman ?
                                                       Row(
                                                         children: [
                                                           Text(
@@ -618,7 +619,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                                     }
                                                                   : (value) {}),
                                                         ],
-                                                      ),
+                                                      ) : Container(),
 
                                                       ///Business Type
                                                       Column(
