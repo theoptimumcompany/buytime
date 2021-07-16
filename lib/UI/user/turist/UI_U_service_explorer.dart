@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:Buytime/UI/user/booking/RUI_U_notifications.dart';
 import 'package:Buytime/UI/user/booking/RUI_notification_bell.dart';
 import 'package:Buytime/UI/user/booking/UI_U_all_bookings.dart';
@@ -33,13 +35,15 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:location/location.dart' as loc;
+import 'package:video_player/video_player.dart';
 
 class ServiceExplorer extends StatefulWidget {
   static String route = '/serviceExplorer';
   bool fromBookingPage;
   String searched;
+  VideoPlayerController controller;
 
-  ServiceExplorer({Key key, this.fromBookingPage, this.searched}) : super(key: key);
+  ServiceExplorer({Key key, this.fromBookingPage, this.searched, this.controller}) : super(key: key);
 
   @override
   _ServiceExplorerState createState() => _ServiceExplorerState();
@@ -58,10 +62,13 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
   String sortBy = '';
   OrderState order = OrderState().toEmpty();
 
+
+
   @override
   void initState() {
     super.initState();
     _searchController.text = widget.searched;
+
   }
 
   /*void undoDeletion(index, item) {
@@ -331,6 +338,8 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
     return StoreConnector<AppState, AppState>(
       converter: (store) => store.state,
       onInit: (store) async {
+
+
         store.state.categoryList.categoryListState.clear();
         store.state.serviceList.serviceListState.clear();
         startRequest = true;
@@ -407,6 +416,7 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
             if (categoryList.isNotEmpty && categoryList.first.name == null) categoryList.removeLast();
             if (popularList.isNotEmpty && popularList.first.name == null) popularList.removeLast();
             if (recommendedList.isNotEmpty && recommendedList.first.name == null) recommendedList.removeLast();
+            widget.controller.pause();
             noActivity = false;
             //categoryList.shuffle();
             //popularList.shuffle();
@@ -442,523 +452,550 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
           },
           child: WillPopScope(
             onWillPop: () async => false,
-            child: Scaffold(
-              appBar: BuytimeAppbar(
-                background: BuytimeTheme.BackgroundCerulean,
-                width: media.width,
-                children: [
-                  ///Back Button
-                  Expanded(
-                    flex: 1,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
-                          child: IconButton(
-                            icon: const Icon(
-                              Icons.keyboard_arrow_left,
-                              color: Colors.white,
-                              size: 25.0,
-                            ),
-                            tooltip: AppLocalizations.of(context).comeBack,
-                            onPressed: () {
-                              //widget.fromConfirm != null ? Navigator.of(context).pop() : Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Landing()),);
-                              Future.delayed(Duration.zero, () {
-                                Navigator.of(context).pop();
-                              });
-                            },
+            child: Stack(
+              children: [
+                Positioned.fill(
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: widget.controller.value.isInitialized
+                        ? SizedBox.expand(
+                      child: FittedBox(
+// If your background video doesn't look right, try changing the BoxFit property.
+// BoxFit.fill created the look I was going for.
+                        fit: BoxFit.cover,
+                        child: SizedBox(
+                          width: widget.controller.value.size?.width ?? 0,
+                          height: widget.controller.value.size?.height ?? 0,
+                          child: VideoPlayer(
+                            widget.controller,
                           ),
                         ),
-                      ],
+                      ),
+                    )
+                        : Container(
+                      color: BuytimeTheme.TextWhite,
                     ),
                   ),
-
-                  ///Title
-                  Expanded(flex: 2, child: Utils.barTitle(AppLocalizations.of(context).buytime)),
-
-                  ///Cart
-                  ///Notification & Cart
-                  Expanded(
-                    flex: 1,
-                    child: Container(
-                      width: 100,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                ),
+                categoryList.isNotEmpty ?
+                Positioned.fill(
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Scaffold(
+                      appBar: BuytimeAppbar(
+                        background: BuytimeTheme.BackgroundCerulean,
+                        width: media.width,
                         children: [
-                          ///Notification
-                          Flexible(
-                              child: snapshot.user.uid != null && snapshot.user.uid.isNotEmpty
-                                  ? RNotificationBell(
-                                      orderList: orderList,
-                                      userId: snapshot.user.uid,
-                                      tourist: true,
-                                    )
-                                  : Container()),
-
-                          ///Cart
-                          Flexible(
-                              child: Container(
-                            margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 2.5),
-                            child: Stack(
-                              children: [
-                                Positioned.fill(
-                                  child: Align(
-                                    alignment: Alignment.center,
-                                    child: IconButton(
-                                      icon: Icon(
-                                        BuytimeIcons.shopping_cart,
-                                        color: BuytimeTheme.TextWhite,
-                                        size: 24.0,
-                                      ),
-                                      onPressed: () {
-                                        if (order.cartCounter > 0) {
-                                          // dispatch the order
-                                          StoreProvider.of<AppState>(context).dispatch(SetOrder(order));
-                                          // go to the cart page
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) => Cart(
-                                                      tourist: true,
-                                                    )),
-                                          );
-                                        } else {
-                                          showDialog(
-                                              context: context,
-                                              builder: (_) => new AlertDialog(
-                                                    title: new Text(AppLocalizations.of(context).warning),
-                                                    content: new Text(AppLocalizations.of(context).emptyCart),
-                                                    actions: <Widget>[
-                                                      MaterialButton(
-                                                        elevation: 0,
-                                                        hoverElevation: 0,
-                                                        focusElevation: 0,
-                                                        highlightElevation: 0,
-                                                        child: Text(AppLocalizations.of(context).ok),
-                                                        onPressed: () {
-                                                          Navigator.of(context).pop();
-                                                        },
-                                                      )
-                                                    ],
-                                                  ));
-                                        }
-                                      },
-                                    ),
-                                  ),
-                                ),
-                                order.cartCounter > 0
-                                    ? Positioned.fill(
-                                        bottom: 20,
-                                        left: 3,
-                                        child: Align(
-                                          alignment: Alignment.center,
-                                          child: Text(
-                                            '${order.cartCounter}',
-                                            textAlign: TextAlign.start,
-                                            style: TextStyle(
-                                              fontSize: SizeConfig.safeBlockHorizontal * 3,
-                                              color: BuytimeTheme.TextWhite,
-                                              fontWeight: FontWeight.w400,
-                                            ),
-                                          ),
-                                        ),
-                                      )
-                                    : Container(),
-                              ],
-                            ),
-                          ))
-                        ],
-                      ),
-                    ),
-                  )
-                ],
-              ),
-              body: SafeArea(
-                child: SingleChildScrollView(
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(),
-                    child: Container(
-                      width: double.infinity,
-                      //color: BuytimeTheme.DividerGrey,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          ///Search
-                          Container(
-                            margin: EdgeInsets.only(
-                                top: SizeConfig.safeBlockVertical * 3,
-                                left: SizeConfig.safeBlockHorizontal * 5,
-                                bottom: SizeConfig.safeBlockVertical * 1,
-                                right: _searchController.text.isNotEmpty ? SizeConfig.safeBlockHorizontal * .5 : SizeConfig.safeBlockHorizontal * 5),
+                          ///Back Button
+                          Expanded(
+                            flex: 1,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                ///Search
-                                Flexible(
-                                  child: Container(
-                                    //width: SizeConfig.safeBlockHorizontal * 60,
-                                    // decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
-                                    child: TextFormField(
-                                      controller: _searchController,
-                                      textAlign: TextAlign.start,
-                                      textInputAction: TextInputAction.search,
-                                      decoration: InputDecoration(
-                                        enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                        focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                        errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                        labelText: AppLocalizations.of(context).whatAreYouLookingFor,
-                                        helperText: AppLocalizations.of(context).searchForServicesAndIdeasAroundYou,
-                                        //hintText: "email *",
-                                        //hintStyle: TextStyle(color: Color(0xff666666)),
-                                        labelStyle: TextStyle(
-                                          fontFamily: BuytimeTheme.FontFamily,
-                                          color: Color(0xff666666),
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                        helperStyle: TextStyle(
-                                          fontFamily: BuytimeTheme.FontFamily,
-                                          color: Color(0xff666666),
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                        suffixIcon: InkWell(
-                                          onTap: () {
-                                            debugPrint('done');
-                                            FocusScope.of(context).unfocus();
-                                            searchedList.clear();
-                                            searchCategory(snapshot.categoryList.categoryListState);
-                                            searchPopular(snapshot.serviceList.serviceListState);
-                                            searchRecommended(snapshot.serviceList.serviceListState);
-                                          },
-                                          child: Icon(
-                                            // Based on passwordVisible state choose the icon
-                                            Icons.search,
-                                            color: Color(0xff666666),
-                                          ),
-                                        ),
-                                      ),
-                                      style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextMedium, fontWeight: FontWeight.w400, fontSize: 16),
-                                      onEditingComplete: () {
-                                        debugPrint('done');
-                                        FocusScope.of(context).unfocus();
-                                        searchedList.clear();
-                                        searchCategory(snapshot.categoryList.categoryListState);
-                                        searchPopular(snapshot.serviceList.serviceListState);
-                                        searchRecommended(snapshot.serviceList.serviceListState);
-                                      },
-                                      onTap: () {
-                                        setState(() {
-                                          searching = !searching;
-                                        });
-                                      },
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
+                                  child: IconButton(
+                                    icon: const Icon(
+                                      Icons.keyboard_arrow_left,
+                                      color: Colors.white,
+                                      size: 25.0,
                                     ),
+                                    tooltip: AppLocalizations.of(context).comeBack,
+                                    onPressed: () {
+                                      //widget.fromConfirm != null ? Navigator.of(context).pop() : Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Landing()),);
+                                      Future.delayed(Duration.zero, () {
+                                        Navigator.of(context).pop();
+                                      });
+                                    },
                                   ),
                                 ),
-                                _searchController.text.isNotEmpty
-                                    ? Container(
-                                        margin: EdgeInsets.only(bottom: 20),
-                                        child: IconButton(
-                                          icon: Icon(
-                                            // Based on passwordVisible state choose the icon
-                                            BuytimeIcons.remove,
-                                            color: Color(0xff666666),
-                                          ),
-                                          onPressed: () {
-                                            setState(() {
-                                              _searchController.clear();
-                                              first = false;
-                                            });
-                                          },
-                                        ),
-                                      )
-                                    : Container()
                               ],
                             ),
                           ),
 
-                          ///My bookings & View all
-                          _searchController.text.isEmpty && userOrderList.isNotEmpty
-                              ? Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        ///My bookings
-                                        Container(
-                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1.5, bottom: SizeConfig.safeBlockVertical * 1),
-                                          child: Text(
-                                            AppLocalizations.of(context).myReservation,
-                                            style: TextStyle(
-                                                //letterSpacing: SizeConfig.safeBlockVertical * .4,
-                                                fontFamily: BuytimeTheme.FontFamily,
-                                                color: BuytimeTheme.TextBlack,
-                                                fontWeight: FontWeight.w400,
-                                                fontSize: 18
+                          ///Title
+                          Expanded(flex: 2, child: Utils.barTitle(AppLocalizations.of(context).buytime)),
 
-                                                ///SizeConfig.safeBlockHorizontal * 4
-                                                ),
-                                          ),
-                                        ),
+                          ///Cart
+                          ///Notification & Cart
+                          Expanded(
+                            flex: 1,
+                            child: Container(
+                              width: 100,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  ///Notification
+                                  Flexible(
+                                      child: snapshot.user.uid != null && snapshot.user.uid.isNotEmpty
+                                          ? RNotificationBell(
+                                        orderList: orderList,
+                                        userId: snapshot.user.uid,
+                                        tourist: true,
+                                      )
+                                          : Container()),
 
-                                        ///View All
-                                        Container(
-                                            margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 2.5),
-                                            alignment: Alignment.center,
-                                            child: Material(
-                                              color: Colors.transparent,
-                                              child: InkWell(
-                                                  onTap: () {
-                                                    Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(builder: (context) => AllBookings(orderStateList: orderList, tourist: true)),
-                                                    );
-                                                  },
-                                                  borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                                                  child: Container(
-                                                    padding: EdgeInsets.all(5.0),
-                                                    child: Text(
-                                                      AppLocalizations.of(context).viewAll,
-                                                      style: TextStyle(letterSpacing: SizeConfig.safeBlockHorizontal * .2, fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.UserPrimary, fontWeight: FontWeight.w400, fontSize: 16
-
-                                                          ///SizeConfig.safeBlockHorizontal * 4
-                                                          ),
-                                                    ),
-                                                  )),
-                                            ))
-                                      ],
-                                    ),
-                                    userOrderList.isNotEmpty
-                                        ?
-
-                                        ///List
-                                        Container(
-                                            height: 120,
-                                            width: double.infinity,
-                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
-                                            child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
-                                              SliverList(
-                                                delegate: SliverChildBuilderDelegate(
-                                                  (context, index) {
-                                                    //MenuItemModel menuItem = menuItems.elementAt(index);
-                                                    OrderState order = userOrderList.elementAt(index);
-                                                    ServiceState service = ServiceState().toEmpty();
-                                                    StoreProvider.of<AppState>(context).state.notificationListState.notificationListState.forEach((element) {
-                                                      if (element.notificationId != null && element.notificationId.isNotEmpty && order.orderId.isNotEmpty && order.orderId == element.data.state.orderId) {
-                                                        snapshot.serviceList.serviceListState.forEach((s) {
-                                                          if (element.data.state.serviceId == s.serviceId) service = s;
-                                                        });
-                                                      }
-                                                    });
-                                                    return Container(
-                                                      width: 151,
-                                                      height: 100,
-                                                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1, right: SizeConfig.safeBlockHorizontal * 1),
-                                                      child: UserServiceCardWidget(order, true, service),
-                                                    );
-                                                  },
-                                                  childCount: userOrderList.length,
-                                                ),
-                                              ),
-                                            ]),
-                                          )
-                                        : Container(),
-                                  ],
-                                )
-                              : Container(),
-
-                          ///Discover & Popular & Recommended & Log out
-                          _searchController.text.isEmpty
-                              ? Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    ///Discover
-                                    Flexible(
+                                  ///Cart
+                                  Flexible(
                                       child: Container(
-                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 5),
-                                        padding: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2),
-                                        height: categoryList.isNotEmpty ? 155 : 160,
-                                        width: double.infinity,
-                                        color: BuytimeTheme.BackgroundWhite,
-                                        child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                        margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 2.5),
+                                        child: Stack(
                                           children: [
-                                            ///Discover
-                                            Container(
-                                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 0, top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1),
-                                              child: Text(
-                                                AppLocalizations.of(context).discover,
-                                                style: TextStyle(
-                                                    //letterSpacing: SizeConfig.safeBlockVertical * .4,
-                                                    fontFamily: BuytimeTheme.FontFamily,
-                                                    color: BuytimeTheme.TextBlack,
-                                                    fontWeight: FontWeight.w700,
-                                                    fontSize: 32
-
-                                                    ///SizeConfig.safeBlockHorizontal * 4
-                                                    ),
+                                            Positioned.fill(
+                                              child: Align(
+                                                alignment: Alignment.center,
+                                                child: IconButton(
+                                                  icon: Icon(
+                                                    BuytimeIcons.shopping_cart,
+                                                    color: BuytimeTheme.TextWhite,
+                                                    size: 24.0,
+                                                  ),
+                                                  onPressed: () {
+                                                    if (order.cartCounter > 0) {
+                                                      // dispatch the order
+                                                      StoreProvider.of<AppState>(context).dispatch(SetOrder(order));
+                                                      // go to the cart page
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) => Cart(
+                                                              tourist: true,
+                                                            )),
+                                                      );
+                                                    } else {
+                                                      showDialog(
+                                                          context: context,
+                                                          builder: (_) => new AlertDialog(
+                                                            title: new Text(AppLocalizations.of(context).warning),
+                                                            content: new Text(AppLocalizations.of(context).emptyCart),
+                                                            actions: <Widget>[
+                                                              MaterialButton(
+                                                                elevation: 0,
+                                                                hoverElevation: 0,
+                                                                focusElevation: 0,
+                                                                highlightElevation: 0,
+                                                                child: Text(AppLocalizations.of(context).ok),
+                                                                onPressed: () {
+                                                                  Navigator.of(context).pop();
+                                                                },
+                                                              )
+                                                            ],
+                                                          ));
+                                                    }
+                                                  },
+                                                ),
                                               ),
                                             ),
-                                            categoryList.isNotEmpty
-                                                ?
-
-                                                ///List
-                                                Flexible(
-                                                    child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
-                                                      SliverList(
-                                                        delegate: SliverChildBuilderDelegate(
-                                                          (context, index) {
-                                                            //MenuItemModel menuItem = menuItems.elementAt(index);
-                                                            CategoryState category = categoryList.elementAt(index);
-                                                            debugPrint('UI_U_service_explorer => ${category.name}: ${categoryListIds[category.name]}');
-                                                            return Container(
-                                                              width: 80,
-                                                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0, right: SizeConfig.safeBlockHorizontal * 1),
-                                                              child: DiscoverCardWidget(80, 80, category, true, categoryListIds[category.name]),
-                                                            );
-                                                          },
-                                                          childCount: categoryList.length,
-                                                        ),
-                                                      ),
-                                                    ]),
-                                                  )
-                                                : noActivity
-                                                    ? Row(
-                                                        mainAxisAlignment: MainAxisAlignment.center,
-                                                        children: [
-                                                          Container(
-                                                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5),
-                                                            child: CircularProgressIndicator(),
-                                                          )
-                                                        ],
-                                                      )
-                                                    :
-
-                                                    ///No List
-                                                    Container(
-                                                        height: SizeConfig.safeBlockVertical * 8,
-                                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
-                                                        decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
-                                                        child: Center(
-                                                            child: Container(
-                                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 4),
-                                                          alignment: Alignment.centerLeft,
-                                                          child: Text(
-                                                            AppLocalizations.of(context).noCategoryFound,
-                                                            style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextGrey, fontWeight: FontWeight.w500, fontSize: 16),
-                                                          ),
-                                                        )),
-                                                      ),
+                                            order.cartCounter > 0
+                                                ? Positioned.fill(
+                                              bottom: 20,
+                                              left: 3,
+                                              child: Align(
+                                                alignment: Alignment.center,
+                                                child: Text(
+                                                  '${order.cartCounter}',
+                                                  textAlign: TextAlign.start,
+                                                  style: TextStyle(
+                                                    fontSize: SizeConfig.safeBlockHorizontal * 3,
+                                                    color: BuytimeTheme.TextWhite,
+                                                    fontWeight: FontWeight.w400,
+                                                  ),
+                                                ),
+                                              ),
+                                            )
+                                                : Container(),
                                           ],
                                         ),
-                                      ),
+                                      ))
+                                ],
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                      body: SafeArea(
+                        child: SingleChildScrollView(
+                          child: ConstrainedBox(
+                            constraints: BoxConstraints(),
+                            child: Container(
+                              width: double.infinity,
+                              //color: BuytimeTheme.DividerGrey,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  ///Search
+                                  Container(
+                                    margin: EdgeInsets.only(
+                                        top: SizeConfig.safeBlockVertical * 3,
+                                        left: SizeConfig.safeBlockHorizontal * 5,
+                                        bottom: SizeConfig.safeBlockVertical * 1,
+                                        right: _searchController.text.isNotEmpty ? SizeConfig.safeBlockHorizontal * .5 : SizeConfig.safeBlockHorizontal * 5),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        ///Search
+                                        Flexible(
+                                          child: Container(
+                                            //width: SizeConfig.safeBlockHorizontal * 60,
+                                            // decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
+                                            child: TextFormField(
+                                              controller: _searchController,
+                                              textAlign: TextAlign.start,
+                                              textInputAction: TextInputAction.search,
+                                              decoration: InputDecoration(
+                                                enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                                focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                                errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                                labelText: AppLocalizations.of(context).whatAreYouLookingFor,
+                                                helperText: AppLocalizations.of(context).searchForServicesAndIdeasAroundYou,
+                                                //hintText: "email *",
+                                                //hintStyle: TextStyle(color: Color(0xff666666)),
+                                                labelStyle: TextStyle(
+                                                  fontFamily: BuytimeTheme.FontFamily,
+                                                  color: Color(0xff666666),
+                                                  fontWeight: FontWeight.w400,
+                                                ),
+                                                helperStyle: TextStyle(
+                                                  fontFamily: BuytimeTheme.FontFamily,
+                                                  color: Color(0xff666666),
+                                                  fontWeight: FontWeight.w400,
+                                                ),
+                                                suffixIcon: InkWell(
+                                                  onTap: () {
+                                                    debugPrint('done');
+                                                    FocusScope.of(context).unfocus();
+                                                    searchedList.clear();
+                                                    searchCategory(snapshot.categoryList.categoryListState);
+                                                    searchPopular(snapshot.serviceList.serviceListState);
+                                                    searchRecommended(snapshot.serviceList.serviceListState);
+                                                  },
+                                                  child: Icon(
+                                                    // Based on passwordVisible state choose the icon
+                                                    Icons.search,
+                                                    color: Color(0xff666666),
+                                                  ),
+                                                ),
+                                              ),
+                                              style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextMedium, fontWeight: FontWeight.w400, fontSize: 16),
+                                              onEditingComplete: () {
+                                                debugPrint('done');
+                                                FocusScope.of(context).unfocus();
+                                                searchedList.clear();
+                                                searchCategory(snapshot.categoryList.categoryListState);
+                                                searchPopular(snapshot.serviceList.serviceListState);
+                                                searchRecommended(snapshot.serviceList.serviceListState);
+                                              },
+                                              onTap: () {
+                                                setState(() {
+                                                  searching = !searching;
+                                                });
+                                              },
+                                            ),
+                                          ),
+                                        ),
+                                        _searchController.text.isNotEmpty
+                                            ? Container(
+                                          margin: EdgeInsets.only(bottom: 20),
+                                          child: IconButton(
+                                            icon: Icon(
+                                              // Based on passwordVisible state choose the icon
+                                              BuytimeIcons.remove,
+                                              color: Color(0xff666666),
+                                            ),
+                                            onPressed: () {
+                                              setState(() {
+                                                _searchController.clear();
+                                                first = false;
+                                              });
+                                            },
+                                          ),
+                                        )
+                                            : Container()
+                                      ],
                                     ),
+                                  ),
 
-                                    ///Popular
-                                    Flexible(
-                                      child: Container(
-                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0),
-                                        padding: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2),
-                                        height: popularList.isNotEmpty ? 310 : 200,
-                                        color: Color(0xff1E3C4F),
-                                        child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            ///Popular
-                                            Container(
-                                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: 20, bottom: SizeConfig.safeBlockVertical * 0.5),
-                                              child: Text(
-                                                AppLocalizations.of(context).popular,
-                                                style: TextStyle(
-                                                    //letterSpacing: SizeConfig.safeBlockVertical * .4,
-                                                    fontFamily: BuytimeTheme.FontFamily,
-                                                    color: BuytimeTheme.TextWhite,
-                                                    fontWeight: FontWeight.w700,
-                                                    fontSize: 18
+                                  ///My bookings & View all
+                                  _searchController.text.isEmpty && userOrderList.isNotEmpty
+                                      ? Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          ///My bookings
+                                          Container(
+                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1.5, bottom: SizeConfig.safeBlockVertical * 1),
+                                            child: Text(
+                                              AppLocalizations.of(context).myReservation,
+                                              style: TextStyle(
+                                                //letterSpacing: SizeConfig.safeBlockVertical * .4,
+                                                  fontFamily: BuytimeTheme.FontFamily,
+                                                  color: BuytimeTheme.TextBlack,
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 18
 
-                                                    ///SizeConfig.safeBlockHorizontal * 4
-                                                    ),
+                                                ///SizeConfig.safeBlockHorizontal * 4
                                               ),
                                             ),
+                                          ),
 
-                                            ///Text
-                                            Container(
-                                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * .5, bottom: SizeConfig.safeBlockVertical * .5),
-                                              child: Text(
-                                                AppLocalizations.of(context).popularSlogan,
-                                                style: TextStyle(
-                                                    //letterSpacing: SizeConfig.safeBlockVertical * .4,
-                                                    fontFamily: BuytimeTheme.FontFamily,
-                                                    color: BuytimeTheme.TextWhite,
-                                                    fontWeight: FontWeight.w500,
-                                                    fontSize: 14
+                                          ///View All
+                                          Container(
+                                              margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 2.5),
+                                              alignment: Alignment.center,
+                                              child: Material(
+                                                color: Colors.transparent,
+                                                child: InkWell(
+                                                    onTap: () {
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(builder: (context) => AllBookings(orderStateList: orderList, tourist: true)),
+                                                      );
+                                                    },
+                                                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                                    child: Container(
+                                                      padding: EdgeInsets.all(5.0),
+                                                      child: Text(
+                                                        AppLocalizations.of(context).viewAll,
+                                                        style: TextStyle(letterSpacing: SizeConfig.safeBlockHorizontal * .2, fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.UserPrimary, fontWeight: FontWeight.w400, fontSize: 16
 
-                                                    ///SizeConfig.safeBlockHorizontal * 4
-                                                    ),
-                                              ),
-                                            ),
-                                            popularList.isNotEmpty
-                                                ?
-
-                                                ///List
-                                                Container(
-                                                    height: 220,
-                                                    width: double.infinity,
-                                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 0),
-                                                    child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
-                                                      SliverList(
-                                                        delegate: SliverChildBuilderDelegate(
-                                                          (context, index) {
-                                                            //MenuItemModel menuItem = menuItems.elementAt(index);
-                                                            ServiceState service = popularList.elementAt(index);
-                                                            return Column(
-                                                              mainAxisAlignment: MainAxisAlignment.start,
-                                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                                              children: [
-                                                                Container(
-                                                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 2),
-                                                                  child: PRCardWidget(182, 182, service, false),
-                                                                ),
-                                                                Container(
-                                                                  width: 180,
-                                                                  alignment: Alignment.topLeft,
-                                                                  margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 1, left: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1),
-                                                                  child: FittedBox(
-                                                                    fit: BoxFit.scaleDown,
-                                                                    child: Text(
-                                                                      Utils.retriveField(Localizations.localeOf(context).languageCode, service.name),
-                                                                      style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextWhite, fontWeight: FontWeight.w400, fontSize: 14
-
-                                                                          ///SizeConfig.safeBlockHorizontal * 4
-                                                                          ),
-                                                                    ),
-                                                                  ),
-                                                                )
-                                                              ],
-                                                            );
-                                                          },
-                                                          childCount: popularList.length,
+                                                          ///SizeConfig.safeBlockHorizontal * 4
                                                         ),
                                                       ),
-                                                    ]),
+                                                    )),
+                                              ))
+                                        ],
+                                      ),
+                                      userOrderList.isNotEmpty
+                                          ?
+
+                                      ///List
+                                      Container(
+                                        height: 120,
+                                        width: double.infinity,
+                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
+                                        child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
+                                          SliverList(
+                                            delegate: SliverChildBuilderDelegate(
+                                                  (context, index) {
+                                                //MenuItemModel menuItem = menuItems.elementAt(index);
+                                                OrderState order = userOrderList.elementAt(index);
+                                                ServiceState service = ServiceState().toEmpty();
+                                                StoreProvider.of<AppState>(context).state.notificationListState.notificationListState.forEach((element) {
+                                                  if (element.notificationId != null && element.notificationId.isNotEmpty && order.orderId.isNotEmpty && order.orderId == element.data.state.orderId) {
+                                                    snapshot.serviceList.serviceListState.forEach((s) {
+                                                      if (element.data.state.serviceId == s.serviceId) service = s;
+                                                    });
+                                                  }
+                                                });
+                                                return Container(
+                                                  width: 151,
+                                                  height: 100,
+                                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1, right: SizeConfig.safeBlockHorizontal * 1),
+                                                  child: UserServiceCardWidget(order, true, service),
+                                                );
+                                              },
+                                              childCount: userOrderList.length,
+                                            ),
+                                          ),
+                                        ]),
+                                      )
+                                          : Container(),
+                                    ],
+                                  )
+                                      : Container(),
+
+                                  ///Discover & Popular & Recommended & Log out
+                                  _searchController.text.isEmpty
+                                      ? Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      ///Discover
+                                      Flexible(
+                                        child: Container(
+                                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 5),
+                                          padding: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2),
+                                          height: categoryList.isNotEmpty ? 155 : 160,
+                                          width: double.infinity,
+                                          color: BuytimeTheme.BackgroundWhite,
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              ///Discover
+                                              Container(
+                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 0, top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1),
+                                                child: Text(
+                                                  AppLocalizations.of(context).discover,
+                                                  style: TextStyle(
+                                                    //letterSpacing: SizeConfig.safeBlockVertical * .4,
+                                                      fontFamily: BuytimeTheme.FontFamily,
+                                                      color: BuytimeTheme.TextBlack,
+                                                      fontWeight: FontWeight.w700,
+                                                      fontSize: 32
+
+                                                    ///SizeConfig.safeBlockHorizontal * 4
+                                                  ),
+                                                ),
+                                              ),
+                                              categoryList.isNotEmpty ?
+                                              ///List
+                                              Flexible(
+                                                child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
+                                                  SliverList(
+                                                    delegate: SliverChildBuilderDelegate(
+                                                          (context, index) {
+                                                        //MenuItemModel menuItem = menuItems.elementAt(index);
+                                                        CategoryState category = categoryList.elementAt(index);
+                                                        debugPrint('UI_U_service_explorer => ${category.name}: ${categoryListIds[category.name]}');
+                                                        return Container(
+                                                          width: 80,
+                                                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0, right: SizeConfig.safeBlockHorizontal * 1),
+                                                          child: DiscoverCardWidget(80, 80, category, true, categoryListIds[category.name]),
+                                                        );
+                                                      },
+                                                      childCount: categoryList.length,
+                                                    ),
+                                                  ),
+                                                ]),
+                                              )
+                                                  : noActivity
+                                                  ? Row(
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                children: [
+                                                  Container(
+                                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5),
+                                                    child: CircularProgressIndicator(),
                                                   )
-                                                : noActivity
-                                                    ? Row(
-                                                        mainAxisAlignment: MainAxisAlignment.center,
-                                                        children: [
-                                                          Container(
-                                                            margin: EdgeInsets.only(top: 200 / 4),
-                                                            child: CircularProgressIndicator(),
-                                                          )
-                                                        ],
-                                                      )
-                                                    :
-                                                    /*_searchController.text.isNotEmpty
+                                                ],
+                                              )
+                                                  :
+
+                                              ///No List
+                                              Container(
+                                                height: SizeConfig.safeBlockVertical * 8,
+                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                                decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
+                                                child: Center(
+                                                    child: Container(
+                                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 4),
+                                                      alignment: Alignment.centerLeft,
+                                                      child: Text(
+                                                        AppLocalizations.of(context).noCategoryFound,
+                                                        style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextGrey, fontWeight: FontWeight.w500, fontSize: 16),
+                                                      ),
+                                                    )),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+
+                                      ///Popular
+                                      Flexible(
+                                        child: Container(
+                                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0),
+                                          padding: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2),
+                                          height: popularList.isNotEmpty ? 310 : 200,
+                                          color: Color(0xff1E3C4F),
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              ///Popular
+                                              Container(
+                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: 20, bottom: SizeConfig.safeBlockVertical * 0.5),
+                                                child: Text(
+                                                  AppLocalizations.of(context).popular,
+                                                  style: TextStyle(
+                                                    //letterSpacing: SizeConfig.safeBlockVertical * .4,
+                                                      fontFamily: BuytimeTheme.FontFamily,
+                                                      color: BuytimeTheme.TextWhite,
+                                                      fontWeight: FontWeight.w700,
+                                                      fontSize: 18
+
+                                                    ///SizeConfig.safeBlockHorizontal * 4
+                                                  ),
+                                                ),
+                                              ),
+
+                                              ///Text
+                                              Container(
+                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * .5, bottom: SizeConfig.safeBlockVertical * .5),
+                                                child: Text(
+                                                  AppLocalizations.of(context).popularSlogan,
+                                                  style: TextStyle(
+                                                    //letterSpacing: SizeConfig.safeBlockVertical * .4,
+                                                      fontFamily: BuytimeTheme.FontFamily,
+                                                      color: BuytimeTheme.TextWhite,
+                                                      fontWeight: FontWeight.w500,
+                                                      fontSize: 14
+
+                                                    ///SizeConfig.safeBlockHorizontal * 4
+                                                  ),
+                                                ),
+                                              ),
+                                              popularList.isNotEmpty
+                                                  ?
+
+                                              ///List
+                                              Container(
+                                                height: 220,
+                                                width: double.infinity,
+                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 0),
+                                                child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
+                                                  SliverList(
+                                                    delegate: SliverChildBuilderDelegate(
+                                                          (context, index) {
+                                                        //MenuItemModel menuItem = menuItems.elementAt(index);
+                                                        ServiceState service = popularList.elementAt(index);
+                                                        return Column(
+                                                          mainAxisAlignment: MainAxisAlignment.start,
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                          children: [
+                                                            Container(
+                                                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 2),
+                                                              child: PRCardWidget(182, 182, service, false),
+                                                            ),
+                                                            Container(
+                                                              width: 180,
+                                                              alignment: Alignment.topLeft,
+                                                              margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 1, left: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1),
+                                                              child: FittedBox(
+                                                                fit: BoxFit.scaleDown,
+                                                                child: Text(
+                                                                  Utils.retriveField(Localizations.localeOf(context).languageCode, service.name),
+                                                                  style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextWhite, fontWeight: FontWeight.w400, fontSize: 14
+
+                                                                    ///SizeConfig.safeBlockHorizontal * 4
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            )
+                                                          ],
+                                                        );
+                                                      },
+                                                      childCount: popularList.length,
+                                                    ),
+                                                  ),
+                                                ]),
+                                              )
+                                                  : noActivity
+                                                  ? Row(
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                children: [
+                                                  Container(
+                                                    margin: EdgeInsets.only(top: 200 / 4),
+                                                    child: CircularProgressIndicator(),
+                                                  )
+                                                ],
+                                              )
+                                                  :
+                                              /*_searchController.text.isNotEmpty
                                           ? Container(
                                         height: SizeConfig.safeBlockVertical * 8,
                                         margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
@@ -989,126 +1026,126 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                                             )),
                                       ) :*/
 
-                                                    ///No List
-                                                    Container(
-                                                        height: SizeConfig.safeBlockVertical * 8,
-                                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 3),
-                                                        decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
-                                                        child: Center(
-                                                            child: Container(
-                                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 4),
-                                                          alignment: Alignment.centerLeft,
-                                                          child: Text(
-                                                            AppLocalizations.of(context).noServiceFound,
-                                                            style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextWhite, fontWeight: FontWeight.w500, fontSize: 16),
-                                                          ),
-                                                        )),
+                                              ///No List
+                                              Container(
+                                                height: SizeConfig.safeBlockVertical * 8,
+                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 3),
+                                                decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
+                                                child: Center(
+                                                    child: Container(
+                                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 4),
+                                                      alignment: Alignment.centerLeft,
+                                                      child: Text(
+                                                        AppLocalizations.of(context).noServiceFound,
+                                                        style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextWhite, fontWeight: FontWeight.w500, fontSize: 16),
                                                       ),
-                                          ],
+                                                    )),
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ),
-                                    ),
 
-                                    ///Recommended
-                                    Flexible(
-                                      child: Container(
-                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0),
-                                        padding: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2),
-                                        height: recommendedList.isNotEmpty ? 310 : 200,
-                                        color: BuytimeTheme.BackgroundWhite,
-                                        child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            ///Recommended
-                                            Container(
-                                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: 20, bottom: SizeConfig.safeBlockVertical * 0.5),
-                                              child: Text(
-                                                AppLocalizations.of(context).recommended,
-                                                style: TextStyle(
+                                      ///Recommended
+                                      Flexible(
+                                        child: Container(
+                                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0),
+                                          padding: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2),
+                                          height: recommendedList.isNotEmpty ? 310 : 200,
+                                          color: BuytimeTheme.BackgroundWhite,
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              ///Recommended
+                                              Container(
+                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: 20, bottom: SizeConfig.safeBlockVertical * 0.5),
+                                                child: Text(
+                                                  AppLocalizations.of(context).recommended,
+                                                  style: TextStyle(
                                                     //letterSpacing: SizeConfig.safeBlockVertical * .4,
-                                                    fontFamily: BuytimeTheme.FontFamily,
-                                                    color: BuytimeTheme.TextBlack,
-                                                    fontWeight: FontWeight.w700,
-                                                    fontSize: 18
+                                                      fontFamily: BuytimeTheme.FontFamily,
+                                                      color: BuytimeTheme.TextBlack,
+                                                      fontWeight: FontWeight.w700,
+                                                      fontSize: 18
 
                                                     ///SizeConfig.safeBlockHorizontal * 4
-                                                    ),
+                                                  ),
+                                                ),
                                               ),
-                                            ),
 
-                                            ///Text
-                                            Container(
-                                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * .5, bottom: SizeConfig.safeBlockVertical * .5),
-                                              child: Text(
-                                                AppLocalizations.of(context).recommendedSlogan,
-                                                style: TextStyle(
+                                              ///Text
+                                              Container(
+                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * .5, bottom: SizeConfig.safeBlockVertical * .5),
+                                                child: Text(
+                                                  AppLocalizations.of(context).recommendedSlogan,
+                                                  style: TextStyle(
                                                     //letterSpacing: SizeConfig.safeBlockVertical * .4,
-                                                    fontFamily: BuytimeTheme.FontFamily,
-                                                    color: BuytimeTheme.TextBlack,
-                                                    fontWeight: FontWeight.w500,
-                                                    fontSize: 14
+                                                      fontFamily: BuytimeTheme.FontFamily,
+                                                      color: BuytimeTheme.TextBlack,
+                                                      fontWeight: FontWeight.w500,
+                                                      fontSize: 14
 
                                                     ///SizeConfig.safeBlockHorizontal * 4
-                                                    ),
+                                                  ),
+                                                ),
                                               ),
-                                            ),
-                                            recommendedList.isNotEmpty
-                                                ?
+                                              recommendedList.isNotEmpty
+                                                  ?
 
-                                                ///List
-                                                Container(
-                                                    height: 220,
-                                                    width: double.infinity,
-                                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 0),
-                                                    child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
-                                                      SliverList(
-                                                        delegate: SliverChildBuilderDelegate(
+                                              ///List
+                                              Container(
+                                                height: 220,
+                                                width: double.infinity,
+                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 0),
+                                                child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
+                                                  SliverList(
+                                                    delegate: SliverChildBuilderDelegate(
                                                           (context, index) {
-                                                            //MenuItemModel menuItem = menuItems.elementAt(index);
-                                                            ServiceState service = recommendedList.elementAt(index);
-                                                            return Column(
-                                                              mainAxisAlignment: MainAxisAlignment.start,
-                                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                                              children: [
-                                                                Container(
-                                                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 2),
-                                                                  child: PRCardWidget(182, 182, service, false),
-                                                                ),
-                                                                Container(
-                                                                  width: 180,
-                                                                  alignment: Alignment.topLeft,
-                                                                  margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 1, left: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1),
-                                                                  child: FittedBox(
-                                                                    fit: BoxFit.scaleDown,
-                                                                    child: Text(
-                                                                      Utils.retriveField(Localizations.localeOf(context).languageCode, service.name),
-                                                                      style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w400, fontSize: 14
+                                                        //MenuItemModel menuItem = menuItems.elementAt(index);
+                                                        ServiceState service = recommendedList.elementAt(index);
+                                                        return Column(
+                                                          mainAxisAlignment: MainAxisAlignment.start,
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                          children: [
+                                                            Container(
+                                                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 2),
+                                                              child: PRCardWidget(182, 182, service, false),
+                                                            ),
+                                                            Container(
+                                                              width: 180,
+                                                              alignment: Alignment.topLeft,
+                                                              margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 1, left: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1),
+                                                              child: FittedBox(
+                                                                fit: BoxFit.scaleDown,
+                                                                child: Text(
+                                                                  Utils.retriveField(Localizations.localeOf(context).languageCode, service.name),
+                                                                  style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w400, fontSize: 14
 
-                                                                          ///SizeConfig.safeBlockHorizontal * 4
-                                                                          ),
-                                                                    ),
+                                                                    ///SizeConfig.safeBlockHorizontal * 4
                                                                   ),
-                                                                )
-                                                              ],
-                                                            );
-                                                          },
-                                                          childCount: recommendedList.length,
-                                                        ),
-                                                      ),
-                                                    ]),
+                                                                ),
+                                                              ),
+                                                            )
+                                                          ],
+                                                        );
+                                                      },
+                                                      childCount: recommendedList.length,
+                                                    ),
+                                                  ),
+                                                ]),
+                                              )
+                                                  : noActivity
+                                                  ? Row(
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                children: [
+                                                  Container(
+                                                    margin: EdgeInsets.only(top: 200 / 4),
+                                                    child: CircularProgressIndicator(),
                                                   )
-                                                : noActivity
-                                                    ? Row(
-                                                        mainAxisAlignment: MainAxisAlignment.center,
-                                                        children: [
-                                                          Container(
-                                                            margin: EdgeInsets.only(top: 200 / 4),
-                                                            child: CircularProgressIndicator(),
-                                                          )
-                                                        ],
-                                                      )
-                                                    /*:
+                                                ],
+                                              )
+                                              /*:
                                       _searchController.text.isNotEmpty
                                           ? Container(
                                         height: SizeConfig.safeBlockVertical * 8,
@@ -1139,30 +1176,30 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                                               ),
                                             )),
                                       )*/
-                                                    :
+                                                  :
 
-                                                    ///No List
-                                                    Container(
-                                                        height: SizeConfig.safeBlockVertical * 8,
-                                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 3),
-                                                        decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
-                                                        child: Center(
-                                                            child: Container(
-                                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 4),
-                                                          alignment: Alignment.centerLeft,
-                                                          child: Text(
-                                                            AppLocalizations.of(context).noServiceFound,
-                                                            style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextGrey, fontWeight: FontWeight.w500, fontSize: 16),
-                                                          ),
-                                                        )),
+                                              ///No List
+                                              Container(
+                                                height: SizeConfig.safeBlockVertical * 8,
+                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 3),
+                                                decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
+                                                child: Center(
+                                                    child: Container(
+                                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 4),
+                                                      alignment: Alignment.centerLeft,
+                                                      child: Text(
+                                                        AppLocalizations.of(context).noServiceFound,
+                                                        style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextGrey, fontWeight: FontWeight.w500, fontSize: 16),
                                                       ),
-                                          ],
+                                                    )),
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ),
-                                    ),
 
-                                    ///Log out
-                                    /*Container(
+                                      ///Log out
+                                      /*Container(
                                 color: Colors.white,
                                 height: 64,
                                 //padding: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 1),
@@ -1230,98 +1267,103 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                                   ),
                                 ),
                               ),*/
-                                  ],
-                                )
-                              :
+                                    ],
+                                  )
+                                      :
 
-                              ///Searched list
-                              categoryList.isNotEmpty || popularList.isNotEmpty || recommendedList.isNotEmpty
-                                  ? Flexible(
-                                      child: Container(
-                                          height: SizeConfig.safeBlockVertical * 80,
-                                          margin: EdgeInsets.only(
-                                            top: SizeConfig.safeBlockVertical * 0,
-                                            left: SizeConfig.safeBlockHorizontal * 0,
-                                          ),
-                                          child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.vertical, slivers: [
-                                            SliverList(
-                                              delegate: SliverChildBuilderDelegate(
-                                                (context, index) {
-                                                  //MenuItemModel menuItem = menuItems.elementAt(index);
-                                                  if (index == 0) {
-                                                    return Container(
-                                                      height: categoryList.isEmpty ? 0 : 80,
-                                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 4.5, bottom: SizeConfig.safeBlockVertical * 1),
-                                                      child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
-                                                        SliverList(
-                                                          delegate: SliverChildBuilderDelegate(
-                                                            (context, index) {
-                                                              //MenuItemModel menuItem = menuItems.elementAt(index);
-                                                              CategoryState category = categoryList.elementAt(index);
-                                                              debugPrint('UI_U_service_explorer => ${categoryListIds[category.name]}');
-                                                              return Container(
-                                                                width: 80,
-                                                                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0, right: SizeConfig.safeBlockHorizontal * 1),
-                                                                child: DiscoverCardWidget(80, 80, category, true, categoryListIds[category.name]),
-                                                              );
-                                                            },
-                                                            childCount: categoryList.length,
-                                                          ),
-                                                        ),
-                                                      ]),
-                                                    );
-                                                  } else {
-                                                    List<ServiceState> serviceList = searchedList.elementAt(index);
-                                                    debugPrint('searched index: $index | service list: ${serviceList.length}');
-                                                    return CustomScrollView(shrinkWrap: true, physics: NeverScrollableScrollPhysics(), scrollDirection: Axis.vertical, slivers: [
+                                  ///Searched list
+                                  categoryList.isNotEmpty || popularList.isNotEmpty || recommendedList.isNotEmpty
+                                      ? Flexible(
+                                    child: Container(
+                                        height: SizeConfig.safeBlockVertical * 80,
+                                        margin: EdgeInsets.only(
+                                          top: SizeConfig.safeBlockVertical * 0,
+                                          left: SizeConfig.safeBlockHorizontal * 0,
+                                        ),
+                                        child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.vertical, slivers: [
+                                          SliverList(
+                                            delegate: SliverChildBuilderDelegate(
+                                                  (context, index) {
+                                                //MenuItemModel menuItem = menuItems.elementAt(index);
+                                                if (index == 0) {
+                                                  return Container(
+                                                    height: categoryList.isEmpty ? 0 : 80,
+                                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 4.5, bottom: SizeConfig.safeBlockVertical * 1),
+                                                    child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
                                                       SliverList(
                                                         delegate: SliverChildBuilderDelegate(
-                                                          (context, index) {
+                                                              (context, index) {
                                                             //MenuItemModel menuItem = menuItems.elementAt(index);
-                                                            ServiceState service = serviceList.elementAt(index);
-                                                            return Column(
-                                                              children: [
-                                                                BookingListServiceListItem(service, true),
-                                                                Container(
-                                                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 30),
-                                                                  height: SizeConfig.safeBlockVertical * .2,
-                                                                  color: BuytimeTheme.DividerGrey,
-                                                                )
-                                                              ],
+                                                            CategoryState category = categoryList.elementAt(index);
+                                                            debugPrint('UI_U_service_explorer => ${categoryListIds[category.name]}');
+                                                            return Container(
+                                                              width: 80,
+                                                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0, right: SizeConfig.safeBlockHorizontal * 1),
+                                                              child: DiscoverCardWidget(80, 80, category, true, categoryListIds[category.name]),
                                                             );
                                                           },
-                                                          childCount: serviceList.length,
+                                                          childCount: categoryList.length,
                                                         ),
                                                       ),
-                                                    ]);
-                                                    //return Container();
-                                                  }
-                                                },
-                                                childCount: searchedList.length,
-                                              ),
+                                                    ]),
+                                                  );
+                                                } else {
+                                                  List<ServiceState> serviceList = searchedList.elementAt(index);
+                                                  debugPrint('searched index: $index | service list: ${serviceList.length}');
+                                                  return CustomScrollView(shrinkWrap: true, physics: NeverScrollableScrollPhysics(), scrollDirection: Axis.vertical, slivers: [
+                                                    SliverList(
+                                                      delegate: SliverChildBuilderDelegate(
+                                                            (context, index) {
+                                                          //MenuItemModel menuItem = menuItems.elementAt(index);
+                                                          ServiceState service = serviceList.elementAt(index);
+                                                          return Column(
+                                                            children: [
+                                                              BookingListServiceListItem(service, true),
+                                                              Container(
+                                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 30),
+                                                                height: SizeConfig.safeBlockVertical * .2,
+                                                                color: BuytimeTheme.DividerGrey,
+                                                              )
+                                                            ],
+                                                          );
+                                                        },
+                                                        childCount: serviceList.length,
+                                                      ),
+                                                    ),
+                                                  ]);
+                                                  //return Container();
+                                                }
+                                              },
+                                              childCount: searchedList.length,
                                             ),
-                                          ])),
-                                    )
-                                  : Container(
-                                      height: SizeConfig.safeBlockVertical * 8,
-                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
-                                      decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
-                                      child: Center(
-                                          child: Container(
-                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 4),
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          AppLocalizations.of(context).noResultsFor + ' \"${_searchController.text}\"',
-                                          style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextGrey, fontWeight: FontWeight.w500, fontSize: 16),
-                                        ),
-                                      )),
-                                    ),
-                        ],
+                                          ),
+                                        ])),
+                                  )
+                                      : Container(
+                                    height: SizeConfig.safeBlockVertical * 8,
+                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                    decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
+                                    child: Center(
+                                        child: Container(
+                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 4),
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            AppLocalizations.of(context).noResultsFor + ' \"${_searchController.text}\"',
+                                            style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextGrey, fontWeight: FontWeight.w500, fontSize: 16),
+                                          ),
+                                        )),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                   ),
+                ) : Container(
                 ),
-              ),
+              ],
             ),
           ),
         );
@@ -1329,3 +1371,5 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
     );
   }
 }
+
+

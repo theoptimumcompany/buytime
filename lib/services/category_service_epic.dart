@@ -4,6 +4,7 @@ import 'package:Buytime/reblox/model/category/category_state.dart';
 import 'package:Buytime/reblox/model/category/snippet/category_snippet_state.dart';
 import 'package:Buytime/reblox/model/file/optimum_file_to_upload.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
+import 'package:Buytime/reblox/model/snippet/parent.dart';
 import 'package:Buytime/reblox/model/snippet/service_list_snippet_state.dart';
 import 'package:Buytime/reblox/model/statistics_state.dart';
 import 'package:Buytime/reblox/navigation/navigation_reducer.dart';
@@ -110,8 +111,9 @@ class AllCategoryListRequestService implements EpicClass<AppState> {
 
       for (int i = 0; i < businessListFromFirebase.docs.length; i++) {
         /// TODO: replace with category from snippet
-        businessStateList.add(BusinessState.fromJson(businessListFromFirebase.docs[i].data()));
-        QuerySnapshot snapshot = await FirebaseFirestore.instance
+        BusinessState businessState = BusinessState.fromJson(businessListFromFirebase.docs[i].data());
+        businessStateList.add(businessState);
+        /*QuerySnapshot snapshot = await FirebaseFirestore.instance
             /// 1 READ - ? DOC
             .collection("business")
             .doc(businessListFromFirebase.docs[i].id)
@@ -124,11 +126,34 @@ class AllCategoryListRequestService implements EpicClass<AppState> {
           categoryState.businessId = businessListFromFirebase.docs[i].id;
           categoryState.id = element.id;
           categoryStateList.add(categoryState);
-        });
+        });*/
         /// END TODO
         tmpBusinessIdList.add(businessListFromFirebase.docs[i].id);
         var servicesFirebaseShadow = await FirebaseFirestore.instance.collection("business").doc(businessListFromFirebase.docs[i].id).collection('service_list_snippet').get();
-        if (servicesFirebaseShadow.docs.isNotEmpty) serviceListSnippetListState.add(ServiceListSnippetState.fromJson(servicesFirebaseShadow.docs.first.data()));
+        if (servicesFirebaseShadow.docs.isNotEmpty){
+          ServiceListSnippetState tmp = ServiceListSnippetState.fromJson(servicesFirebaseShadow.docs.first.data());
+          serviceListSnippetListState.add(tmp);
+          tmp.businessSnippet.forEach((category) {
+            //String categoryId = category.categoryAbsolutePath.split('/')[1];
+            String businessId = category.categoryAbsolutePath.split('/')[0];
+            if(businessId == businessState.id_firestore){
+              CategoryState categoryState = CategoryState().toEmpty();
+              categoryState.businessId = businessId;
+              categoryState.id = category.categoryAbsolutePath.split('/').last;
+              categoryState.name = category.categoryName;
+              categoryState.categoryImage = category.categoryImage;
+              if(category.categoryAbsolutePath.split('/').length == 2){
+                categoryState.level = 0;
+                categoryState.parent = Parent(id: 'no_parent');
+              }else{
+                categoryState.level = 1;
+                categoryState.parent = Parent(id: category.categoryAbsolutePath.split('/')[1]);
+              }
+              categoryState.customTag = category.tags.isNotEmpty ? category.tags.first : '';
+              categoryStateList.add(categoryState);
+            }
+          });
+        }
       }
       debugPrint('CATEGORY_SERVICE_EPIC - AllCategoryListRequestService => CATEGORY LENGHT: ${categoryStateList.length}');
       debugPrint("CATEGORY_SERVICE_EPIC - AllCategoryListRequestService => Return list with ${categoryStateList.length}");

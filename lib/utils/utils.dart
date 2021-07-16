@@ -21,6 +21,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:google_place/google_place.dart';
 import 'package:html_unescape/html_unescape.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart'as http;
 
@@ -131,6 +132,29 @@ class Utils {
     return tmp;
   }
 
+  ///Shimmer
+  static Widget imageShimmer(double width, double heigth){
+    return SizedBox(
+      width: width,
+      height: heigth,
+      child: Shimmer.fromColors(
+        baseColor: Colors.grey[300],
+        highlightColor: Colors.grey[100],
+        child: Container(
+          margin: EdgeInsets.all(SizeConfig.safeBlockVertical*.0),
+          //width: double.infinity,
+          //height: double.infinity,
+          width: width, ///SizeConfig.safeBlockVertical * widget.width
+          height: heigth, ///SizeConfig.safeBlockVertical * widget.width,
+          decoration: BoxDecoration(
+            color: Colors.black,
+            borderRadius: BorderRadius.all(Radius.circular(5)),
+            //color: Colors.black.withOpacity(.2)
+          ),
+        ),
+      ),
+    );
+  }
 
   ///Convert enum to string
   static String enumToString(dynamic enumToTranslate){

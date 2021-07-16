@@ -6,6 +6,7 @@ import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:shimmer/shimmer.dart';
 
 class PRCardWidget extends StatefulWidget {
 
@@ -69,16 +70,7 @@ class _PRCardWidgetState extends State<PRCardWidget> {
               ),
             ),
           ),
-      placeholder: (context, url) => Container(
-        width: widget.width, ///SizeConfig.safeBlockVertical * widget.width
-        height: widget.heigth, ///SizeConfig.safeBlockVertical * widget.width
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CircularProgressIndicator()
-          ],
-        ),
-      ),
+      placeholder: (context, url) => Utils.imageShimmer(widget.width, widget.heigth),
       errorWidget: (context, url, error) => Icon(Icons.error),
     );
   }

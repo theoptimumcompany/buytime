@@ -106,6 +106,7 @@ dependencies:
   provider: ^5.0.0
   html_unescape: ^2.0.0
   package_info: ^2.0.2
+  shimmer: ^2.0.0
 
 
 dependency_overrides:
