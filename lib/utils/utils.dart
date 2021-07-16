@@ -134,9 +134,28 @@ class Utils {
 
   ///Shimmer
   static Widget imageShimmer(double width, double heigth){
+    return Shimmer.fromColors(
+      baseColor: Colors.grey[300],
+      highlightColor: Colors.grey[100],
+      child: Container(
+        margin: EdgeInsets.all(SizeConfig.safeBlockVertical*.0),
+        //width: double.infinity,
+        //height: double.infinity,
+        width: width, ///SizeConfig.safeBlockVertical * widget.width
+        height: heigth, ///SizeConfig.safeBlockVertical * widget.width,
+        decoration: BoxDecoration(
+          color: Colors.black,
+          borderRadius: BorderRadius.all(Radius.circular(5)),
+          //color: Colors.black.withOpacity(.2)
+        ),
+      ),
+    );
+  }
+
+  static Widget textShimmer(){
     return SizedBox(
-      width: width,
-      height: heigth,
+      width: 150,
+      height: 10,
       child: Shimmer.fromColors(
         baseColor: Colors.grey[300],
         highlightColor: Colors.grey[100],
@@ -144,13 +163,15 @@ class Utils {
           margin: EdgeInsets.all(SizeConfig.safeBlockVertical*.0),
           //width: double.infinity,
           //height: double.infinity,
-          width: width, ///SizeConfig.safeBlockVertical * widget.width
-          height: heigth, ///SizeConfig.safeBlockVertical * widget.width,
+          width: 150,
+          height: 5,
+          //color: Colors.black,
           decoration: BoxDecoration(
             color: Colors.black,
-            borderRadius: BorderRadius.all(Radius.circular(5)),
+            borderRadius: BorderRadius.all(Radius.circular(1)),
             //color: Colors.black.withOpacity(.2)
           ),
+          child: Text('sample'),
         ),
       ),
     );

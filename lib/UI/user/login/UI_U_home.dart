@@ -181,6 +181,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     // the media containing information on width and height
     var media = MediaQuery.of(context).size;
     _animationController.forward();
+    _controller.play();
 
     SizeConfig().init(context);
     //ScreenUtil.init(context);
@@ -495,6 +496,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                               focusElevation: 0,
                               highlightElevation: 0,
                               onPressed: () {
+                                _controller.pause();
                                 //Navigator.push(context, MaterialPageRoute(builder: (context) => Registration()),);
                                 Navigator.of(context).pushNamed(Registration.route);
                               },
@@ -546,6 +548,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                   );
                                 },*/
                               onPressed: () {
+                                _controller.pause();
                                 //Navigator.push(context, MaterialPageRoute(builder: (context) => Login()),;
                                 Navigator.of(context).pushNamed(Login.route);
                               },

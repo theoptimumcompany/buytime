@@ -33,6 +33,7 @@ import 'package:Buytime/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:location/location.dart' as loc;
 import 'package:video_player/video_player.dart';
@@ -41,9 +42,8 @@ class ServiceExplorer extends StatefulWidget {
   static String route = '/serviceExplorer';
   bool fromBookingPage;
   String searched;
-  VideoPlayerController controller;
 
-  ServiceExplorer({Key key, this.fromBookingPage, this.searched, this.controller}) : super(key: key);
+  ServiceExplorer({Key key, this.fromBookingPage, this.searched}) : super(key: key);
 
   @override
   _ServiceExplorerState createState() => _ServiceExplorerState();
@@ -416,7 +416,6 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
             if (categoryList.isNotEmpty && categoryList.first.name == null) categoryList.removeLast();
             if (popularList.isNotEmpty && popularList.first.name == null) popularList.removeLast();
             if (recommendedList.isNotEmpty && recommendedList.first.name == null) recommendedList.removeLast();
-            widget.controller.pause();
             noActivity = false;
             //categoryList.shuffle();
             //popularList.shuffle();
@@ -454,7 +453,7 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
             onWillPop: () async => false,
             child: Stack(
               children: [
-                Positioned.fill(
+                /*Positioned.fill(
                   child: Align(
                     alignment: Alignment.center,
                     child: widget.controller.value.isInitialized
@@ -476,8 +475,8 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                       color: BuytimeTheme.TextWhite,
                     ),
                   ),
-                ),
-                categoryList.isNotEmpty ?
+                ),*/
+
                 Positioned.fill(
                   child: Align(
                     alignment: Alignment.center,
@@ -864,14 +863,23 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                                                 ]),
                                               )
                                                   : noActivity
-                                                  ? Row(
-                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                children: [
-                                                  Container(
-                                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5),
-                                                    child: CircularProgressIndicator(),
-                                                  )
-                                                ],
+                                                  ? Flexible(
+                                                child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
+                                                  SliverList(
+                                                    delegate: SliverChildBuilderDelegate(
+                                                          (context, index) {
+                                                        //MenuItemModel menuItem = menuItems.elementAt(index);
+                                                        CategoryState category = CategoryState().toEmpty();
+                                                        debugPrint('UI_U_service_explorer => ${category.name}: ${categoryListIds[category.name]}');
+                                                        return  Container(
+                                                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0, right: SizeConfig.safeBlockHorizontal * 1),
+                                                          child: Utils.imageShimmer(80, 80),
+                                                        );
+                                                      },
+                                                      childCount: 10,
+                                                    ),
+                                                  ),
+                                                ]),
                                               )
                                                   :
 
@@ -900,7 +908,7 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                                         child: Container(
                                           margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0),
                                           padding: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2),
-                                          height: popularList.isNotEmpty ? 310 : 200,
+                                          height: 310,
                                           color: Color(0xff1E3C4F),
                                           child: Column(
                                             mainAxisAlignment: MainAxisAlignment.start,
@@ -922,7 +930,6 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                                                   ),
                                                 ),
                                               ),
-
                                               ///Text
                                               Container(
                                                 margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * .5, bottom: SizeConfig.safeBlockVertical * .5),
@@ -939,9 +946,7 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                                                   ),
                                                 ),
                                               ),
-                                              popularList.isNotEmpty
-                                                  ?
-
+                                              popularList.isNotEmpty ?
                                               ///List
                                               Container(
                                                 height: 220,
@@ -953,30 +958,8 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                                                           (context, index) {
                                                         //MenuItemModel menuItem = menuItems.elementAt(index);
                                                         ServiceState service = popularList.elementAt(index);
-                                                        return Column(
-                                                          mainAxisAlignment: MainAxisAlignment.start,
-                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                          children: [
-                                                            Container(
-                                                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 2),
-                                                              child: PRCardWidget(182, 182, service, false),
-                                                            ),
-                                                            Container(
-                                                              width: 180,
-                                                              alignment: Alignment.topLeft,
-                                                              margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 1, left: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1),
-                                                              child: FittedBox(
-                                                                fit: BoxFit.scaleDown,
-                                                                child: Text(
-                                                                  Utils.retriveField(Localizations.localeOf(context).languageCode, service.name),
-                                                                  style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextWhite, fontWeight: FontWeight.w400, fontSize: 14
-
-                                                                    ///SizeConfig.safeBlockHorizontal * 4
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            )
-                                                          ],
+                                                        return Container(
+                                                          child: PRCardWidget(182, 182, service, false, false),
                                                         );
                                                       },
                                                       childCount: popularList.length,
@@ -985,14 +968,37 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                                                 ]),
                                               )
                                                   : noActivity
-                                                  ? Row(
-                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                children: [
-                                                  Container(
-                                                    margin: EdgeInsets.only(top: 200 / 4),
-                                                    child: CircularProgressIndicator(),
-                                                  )
-                                                ],
+                                                  ? Container(
+                                                height: 220,
+                                                width: double.infinity,
+                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 0),
+                                                child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
+                                                  SliverList(
+                                                    delegate: SliverChildBuilderDelegate(
+                                                          (context, index) {
+                                                        //MenuItemModel menuItem = menuItems.elementAt(index);
+                                                        //ServiceState service = popularList.elementAt(index);
+                                                        return Column(
+                                                          mainAxisAlignment: MainAxisAlignment.start,
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                          children: [
+                                                            Container(
+                                                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 2),
+                                                              child: Utils.imageShimmer(182, 182),
+                                                            ),
+                                                            Container(
+                                                              width: 180,
+                                                              alignment: Alignment.topLeft,
+                                                              margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 1, left: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1.5),
+                                                              child: Utils.textShimmer(),
+                                                            )
+                                                          ],
+                                                        );
+                                                      },
+                                                      childCount: 10,
+                                                    ),
+                                                  ),
+                                                ]),
                                               )
                                                   :
                                               /*_searchController.text.isNotEmpty
@@ -1051,7 +1057,7 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                                         child: Container(
                                           margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0),
                                           padding: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2),
-                                          height: recommendedList.isNotEmpty ? 310 : 200,
+                                          height: 310,
                                           color: BuytimeTheme.BackgroundWhite,
                                           child: Column(
                                             mainAxisAlignment: MainAxisAlignment.start,
@@ -1104,30 +1110,9 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                                                           (context, index) {
                                                         //MenuItemModel menuItem = menuItems.elementAt(index);
                                                         ServiceState service = recommendedList.elementAt(index);
-                                                        return Column(
-                                                          mainAxisAlignment: MainAxisAlignment.start,
-                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                          children: [
-                                                            Container(
-                                                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 2),
-                                                              child: PRCardWidget(182, 182, service, false),
-                                                            ),
-                                                            Container(
-                                                              width: 180,
-                                                              alignment: Alignment.topLeft,
-                                                              margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 1, left: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1),
-                                                              child: FittedBox(
-                                                                fit: BoxFit.scaleDown,
-                                                                child: Text(
-                                                                  Utils.retriveField(Localizations.localeOf(context).languageCode, service.name),
-                                                                  style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w400, fontSize: 14
-
-                                                                    ///SizeConfig.safeBlockHorizontal * 4
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            )
-                                                          ],
+                                                        return Container(
+                                                          //margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 2),
+                                                          child: PRCardWidget(182, 182, service, false, true),
                                                         );
                                                       },
                                                       childCount: recommendedList.length,
@@ -1136,14 +1121,37 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                                                 ]),
                                               )
                                                   : noActivity
-                                                  ? Row(
-                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                children: [
-                                                  Container(
-                                                    margin: EdgeInsets.only(top: 200 / 4),
-                                                    child: CircularProgressIndicator(),
-                                                  )
-                                                ],
+                                                  ? Container(
+                                                height: 220,
+                                                width: double.infinity,
+                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 0),
+                                                child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
+                                                  SliverList(
+                                                    delegate: SliverChildBuilderDelegate(
+                                                          (context, index) {
+                                                        //MenuItemModel menuItem = menuItems.elementAt(index);
+                                                        //ServiceState service = popularList.elementAt(index);
+                                                        return Column(
+                                                          mainAxisAlignment: MainAxisAlignment.start,
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                          children: [
+                                                            Container(
+                                                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 2),
+                                                              child: Utils.imageShimmer(182, 182),
+                                                            ),
+                                                            Container(
+                                                              width: 180,
+                                                              alignment: Alignment.topLeft,
+                                                              margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 1, left: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1.5),
+                                                              child: Utils.textShimmer(),
+                                                            )
+                                                          ],
+                                                        );
+                                                      },
+                                                      childCount: 10,
+                                                    ),
+                                                  ),
+                                                ]),
                                               )
                                               /*:
                                       _searchController.text.isNotEmpty
@@ -1361,8 +1369,37 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                       ),
                     ),
                   ),
-                ) : Container(
                 ),
+                /*categoryList.isEmpty ?
+                Positioned.fill(
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Container(
+                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3),
+                        height: double.infinity,
+                        decoration: BoxDecoration(
+                          color: BuytimeTheme.BackgroundCerulean.withOpacity(.8),
+                        ),
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Container(
+                                width: SizeConfig.safeBlockVertical * 20,
+                                height: SizeConfig.safeBlockVertical * 20,
+                                child: Center(
+                                  child: SpinKitRipple(
+                                    color: Colors.white,
+                                    size: SizeConfig.safeBlockVertical * 18,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        )),
+                  ),
+                ) :
+                    Container()*/
               ],
             ),
           ),

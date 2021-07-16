@@ -69,7 +69,6 @@ class Landing extends StatefulWidget {
 }
 
 bool switchToClient = false;
-VideoPlayerController _controller;
 class LandingState extends State<Landing> {
   List<LandingCardWidget> cards = new List();
 
@@ -120,23 +119,10 @@ class LandingState extends State<Landing> {
       Navigator.push(context, MaterialPageRoute(builder: (context) => UI_M_BusinessList()));
     }
   }
-
-  VideoPlayerOptions videoPlayerOptions = VideoPlayerOptions(mixWithOthers: true);
+  ///List
   @override
   void initState() {
     super.initState();
-    Random random = new Random();
-    int randomNumber = random.nextInt(400);
-    _controller = VideoPlayerController.asset("assets/video/slidesHD.mp4", videoPlayerOptions: videoPlayerOptions)
-      ..initialize().then((_) {
-        _controller.play();
-        _controller.setLooping(true);
-        _controller.setVolume(0.0);
-        _controller.setPlaybackSpeed(2.5);
-        _controller.seekTo(Duration(seconds: randomNumber));
-        // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
-        setState(() {});
-      });
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       debugPrint('UI_U_Landing => initState()');
     });
@@ -343,7 +329,7 @@ class LandingState extends State<Landing> {
                 snapshot.bookingList.bookingListState.removeLast();
                 bookingList.removeLast();
                 WidgetsBinding.instance.addPostFrameCallback((_) async {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => ServiceExplorer(controller: _controller,)));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => ServiceExplorer()));
                 });
               } else {
                 DateTime currentTime = DateTime.now();
@@ -799,8 +785,7 @@ class _OpenContainerWrapper extends StatelessWidget {
               fromLanding: true,
             );
         } else {
-          _controller.play();
-          return ServiceExplorer(controller: _controller,);
+          return ServiceExplorer();
         }
       },
       onClosed: onClosed,
