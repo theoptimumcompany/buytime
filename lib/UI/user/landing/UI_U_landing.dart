@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:core';
+import 'dart:math';
 import 'package:Buytime/UI/management/activity/RUI_M_activity_management.dart';
 import 'package:Buytime/UI/management/activity/UI_M_activity_management.dart';
 import 'package:Buytime/UI/management/business/UI_M_business_list.dart';
@@ -56,6 +57,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:Buytime/UI/management/business/RUI_M_business_list.dart';
 import 'package:http/http.dart' as http;
+import 'package:video_player/video_player.dart';
 
 import '../../../environment_abstract.dart';
 
@@ -67,7 +69,6 @@ class Landing extends StatefulWidget {
 }
 
 bool switchToClient = false;
-
 class LandingState extends State<Landing> {
   List<LandingCardWidget> cards = new List();
 
@@ -118,7 +119,7 @@ class LandingState extends State<Landing> {
       Navigator.push(context, MaterialPageRoute(builder: (context) => UI_M_BusinessList()));
     }
   }
-
+  ///List
   @override
   void initState() {
     super.initState();
@@ -327,10 +328,12 @@ class LandingState extends State<Landing> {
               if (bookingList.first.business_id == null) {
                 snapshot.bookingList.bookingListState.removeLast();
                 bookingList.removeLast();
+                WidgetsBinding.instance.addPostFrameCallback((_) async {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => ServiceExplorer()));
+                });
               } else {
                 DateTime currentTime = DateTime.now();
                 currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0);
-
                 DateTime endTime = DateTime.now();
                 //DateTime startTime = DateTime.now();
                 endTime = new DateTime(bookingList.first.end_date.year, bookingList.first.end_date.month, bookingList.first.end_date.day, 0, 0, 0, 0, 0);

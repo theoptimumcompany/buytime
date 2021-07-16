@@ -91,16 +91,7 @@ class _DiscoverCardWidgetState extends State<DiscoverCardWidget> {
           ),
         ),
       ),
-      placeholder: (context, url) => Container(
-        width: widget.width, ///SizeConfig.safeBlockVertical * widget.width
-        height: widget.heigth, ///SizeConfig.safeBlockVertical * widget.width
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CircularProgressIndicator()
-          ],
-        ),
-      ),
+      placeholder: (context, url) => Utils.imageShimmer(widget.width, widget.heigth),
       errorWidget: (context, url, error) => Icon(Icons.error),
     );
   }
