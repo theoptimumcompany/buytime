@@ -113,7 +113,7 @@ class ManageCategoryState extends State<ManageCategory> with SingleTickerProvide
   ///Funzione che costruisce tree dallo snippet, senza avere gestione del tree su DB
   List<dynamic> buildTreeFromSnippet() {
     List<dynamic> snippet = StoreProvider.of<AppState>(context).state.serviceListSnippetState.businessSnippet;
-    if(snippet.isNotEmpty)
+    if(snippet != null && snippet.isNotEmpty)
       snippet.sort((a, b) => a.categoryAbsolutePath.length.compareTo(b.categoryAbsolutePath.length));
 
     List<dynamic> tree = [];
