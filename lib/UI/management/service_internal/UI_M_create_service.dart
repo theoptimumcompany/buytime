@@ -101,18 +101,19 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
   void setCategoryList() {
     List<dynamic> snippet = StoreProvider.of<AppState>(context).state.serviceListSnippetState.businessSnippet;
     List<Parent> items = [];
-
-    for (var i = 0; i < snippet.length; i++) {
-      String categoryPath = snippet[i].categoryAbsolutePath;
-      List<String> categoryRoute = categoryPath.split('/');
-      items.add(
-        Parent(
-          name: snippet[i].categoryName,
-          id: categoryRoute.last,
-          level: categoryRoute.length - 1,
-          //parentRootId: categoryRoute[1],
-        ),
-      );
+      for (var i = 0; i < snippet.length; i++) {
+        String categoryPath = snippet[i].categoryAbsolutePath;
+        List<String> categoryRoute = categoryPath.split('/');
+        if (categoryRoute.first == StoreProvider.of<AppState>(context).state.serviceListSnippetState.businessId) {
+        items.add(
+          Parent(
+            name: snippet[i].categoryName,
+            id: categoryRoute.last,
+            level: categoryRoute.length - 1,
+            //parentRootId: categoryRoute[1],
+          ),
+        );
+      }
     }
     categoryList = items;
   }

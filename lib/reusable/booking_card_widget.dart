@@ -230,7 +230,10 @@ class _BookingCardWidgetState extends State<BookingCardWidget> {
             ),
           ),
         ),
-        placeholder: (context, url) => Utils.imageShimmer(310, 200),
+        placeholder: (context, url) => Container(
+            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * .5, left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 2.5),
+            child: Utils.imageShimmer(310, 200)
+        ),
         errorWidget: (context, url, error) => Icon(Icons.error),
       )
     );

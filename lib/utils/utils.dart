@@ -138,7 +138,7 @@ class Utils {
       baseColor: Colors.grey[300],
       highlightColor: Colors.grey[100],
       child: Container(
-        margin: EdgeInsets.all(SizeConfig.safeBlockVertical*.0),
+        //margin: EdgeInsets.all(SizeConfig.safeBlockVertical*.0),
         //width: double.infinity,
         //height: double.infinity,
         width: width, ///SizeConfig.safeBlockVertical * widget.width
@@ -172,6 +172,27 @@ class Utils {
             //color: Colors.black.withOpacity(.2)
           ),
           child: Text('sample'),
+        ),
+      ),
+    );
+  }
+
+  static Widget iconShimmer(Widget icon){
+    return SizedBox(
+      child: Shimmer.fromColors(
+        baseColor: Colors.grey[300],
+        highlightColor: Colors.grey[100],
+        child: Container(
+          margin: EdgeInsets.all(SizeConfig.safeBlockVertical*.0),
+          //width: double.infinity,
+          //height: double.infinity,
+          //color: Colors.black,
+          decoration: BoxDecoration(
+            color: Colors.black,
+            borderRadius: BorderRadius.all(Radius.circular(1)),
+            //color: Colors.black.withOpacity(.2)
+          ),
+          child: icon,
         ),
       ),
     );

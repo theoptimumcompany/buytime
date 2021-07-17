@@ -818,7 +818,7 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                                         child: Container(
                                           margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 5),
                                           padding: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2),
-                                          height: categoryList.isNotEmpty ? 155 : 160,
+                                          height: 155,
                                           width: double.infinity,
                                           color: BuytimeTheme.BackgroundWhite,
                                           child: Column(
