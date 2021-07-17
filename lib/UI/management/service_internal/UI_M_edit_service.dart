@@ -112,7 +112,6 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
     }
   }
 
-
   void setCategoryList() {
     List<dynamic> snippet = StoreProvider.of<AppState>(context).state.serviceListSnippetState.businessSnippet;
     List<Parent> items = [];
@@ -120,23 +119,25 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
     for (var i = 0; i < snippet.length; i++) {
       String categoryPath = snippet[i].categoryAbsolutePath;
       List<String> categoryRoute = categoryPath.split('/');
-      items.add(
-        Parent(
-          name: snippet[i].categoryName,
-          id: categoryRoute.last,
-          level: categoryRoute.length - 1,
-         // parentRootId: categoryRoute[1],
-        ),
-      );
-      if (StoreProvider.of<AppState>(context).state.serviceState.categoryId.contains(categoryRoute.last)) {
-        selectedCategoryList.add(
+      if (categoryRoute.first == StoreProvider.of<AppState>(context).state.serviceListSnippetState.businessId) {
+        items.add(
           Parent(
             name: snippet[i].categoryName,
             id: categoryRoute.last,
             level: categoryRoute.length - 1,
-           // parentRootId: categoryRoute[1],
+            // parentRootId: categoryRoute[1],
           ),
         );
+        if (StoreProvider.of<AppState>(context).state.serviceState.categoryId.contains(categoryRoute.last)) {
+          selectedCategoryList.add(
+            Parent(
+              name: snippet[i].categoryName,
+              id: categoryRoute.last,
+              level: categoryRoute.length - 1,
+              // parentRootId: categoryRoute[1],
+            ),
+          );
+        }
       }
     }
     categoryList = items;
@@ -361,7 +362,8 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                     submit = true;
                                                   });
                                                   if (nameController.text.isNotEmpty) StoreProvider.of<AppState>(context).dispatch(SetServiceName(Utils.saveField(myLocale.languageCode, nameController.text, snapshot.serviceState.name)));
-                                                  if (descriptionController.text.isNotEmpty) StoreProvider.of<AppState>(context).dispatch(SetServiceDescription(Utils.saveField(myLocale.languageCode, descriptionController.text, snapshot.serviceState.description)));
+                                                  if (descriptionController.text.isNotEmpty)
+                                                    StoreProvider.of<AppState>(context).dispatch(SetServiceDescription(Utils.saveField(myLocale.languageCode, descriptionController.text, snapshot.serviceState.description)));
                                                   if (validateReservableService() && validateChosenCategories() && validateAndSave() && validatePrice(_servicePrice.toString())) {
                                                     setState(() {
                                                       rippleLoading = true;
@@ -373,7 +375,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                     tmpService.serviceBusinessAddress = _serviceBusinessAddress;
                                                     tmpService.serviceCoordinates = _serviceCoordinates;
                                                     tmpService.serviceBusinessCoordinates = _serviceBusinessCoordinates;
-                                                    if(_serviceVAT == 0)
+                                                    if (_serviceVAT == 0)
                                                       tmpService.vat = 22;
                                                     else
                                                       tmpService.vat = _serviceVAT;
@@ -742,7 +744,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                                   style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: canEditService ? BuytimeTheme.TextBlack : BuytimeTheme.TextGrey),
                                                                   decoration: InputDecoration(
                                                                     suffixText: '%',
-                                                                    suffixStyle: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextGrey,fontSize: 16),
+                                                                    suffixStyle: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextGrey, fontSize: 16),
                                                                     labelText: AppLocalizations.of(context).serviceVAT,
                                                                     enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
                                                                     border: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
@@ -1292,7 +1294,9 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                                                           Row(
                                                                                             children: [
                                                                                               Text(
-                                                                                                snapshot.serviceState.serviceSlot[index].price.toString().split('.')[1] == '0' ? snapshot.serviceState.serviceSlot[index].price.toString().split('.')[0] + ' ${AppLocalizations.of(context).spaceEuro}' : snapshot.serviceState.serviceSlot[index].price.toStringAsFixed(2) + ' ${AppLocalizations.of(context).spaceEuro}',
+                                                                                                snapshot.serviceState.serviceSlot[index].price.toString().split('.')[1] == '0'
+                                                                                                    ? snapshot.serviceState.serviceSlot[index].price.toString().split('.')[0] + ' ${AppLocalizations.of(context).spaceEuro}'
+                                                                                                    : snapshot.serviceState.serviceSlot[index].price.toStringAsFixed(2) + ' ${AppLocalizations.of(context).spaceEuro}',
                                                                                                 style: TextStyle(
                                                                                                   fontSize: 14,
                                                                                                   color: BuytimeTheme.TextBlack,
@@ -1335,7 +1339,11 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                                               margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 1),
                                                                               alignment: Alignment.center,
                                                                               child: Text(
-                                                                                (snapshot.serviceState.name != null && snapshot.serviceState.name != "" ? Utils.retriveField(Localizations.localeOf(context).languageCode, snapshot.serviceState.name) : AppLocalizations.of(context).theService) + ' ' + AppLocalizations.of(context).spaceHasNotReservableSlots,
+                                                                                (snapshot.serviceState.name != null && snapshot.serviceState.name != ""
+                                                                                        ? Utils.retriveField(Localizations.localeOf(context).languageCode, snapshot.serviceState.name)
+                                                                                        : AppLocalizations.of(context).theService) +
+                                                                                    ' ' +
+                                                                                    AppLocalizations.of(context).spaceHasNotReservableSlots,
                                                                                 style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextGrey, fontWeight: FontWeight.w500, fontSize: 14),
                                                                               ),
                                                                             )),

@@ -396,8 +396,6 @@ class BusinessCreateService implements EpicClass<AppState> {
         actionArray.add(CreatedBusiness(businessState));
         actionArray.add(UpdateStatistics(statisticsState));
         actionArray.add(NavigatePushAction(AppRoutes.businessList));
-
-       // actionArray.add(GenerateDefaultCategory(businessState));
       }).catchError((error) {
         debugPrint("BUSINESS_SERVICE_EPIC - BusinessCreateService => ERROR: $error");
       }).then((value) {
@@ -424,86 +422,3 @@ Future<UpdatedBusiness> updateBusiness(BusinessState businessState) {
     return new UpdatedBusiness(businessState);
   });
 }
-
-/*
-class BusinessGenerateDefaultCategoryService implements EpicClass<AppState> {
-  var actionArray = [];
-  DefaultCategoryState defaultCategory;
-  BuildContext context;
-
-  @override
-  Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    return actions.whereType<GenerateDefaultCategory>().asyncMap((event) async {
-      actionArray.clear();
-      DefaultCategoryState defaultCategory;
-      await FirebaseFirestore.instance.collection("defaultCategory").where("businessType", arrayContainsAny: event.businessState.business_type).orderBy('category.level').get().then((querySnapshot) => {
-            actionArray.add(CategoryTreeCreateIfNotExists(event.businessState.id_firestore)),
-            for (var z = 0; z < querySnapshot.docs.length; z++)
-              {
-                defaultCategory = DefaultCategoryState.fromJson(querySnapshot.docs[z].data()),
-                actionArray.add(CreateDefaultCategory(defaultCategory.category, event.businessState.id_firestore)),
-              },
-          });
-
-      actionArray.add(BeforeConvertBusinessToSnippet(event.businessState));
-      
-    }).expand((element) {
-      return actionArray;
-    });
-  }
-}
-
-class BeforeConvertBusinessToSnippetService implements EpicClass<AppState> {
-  var actionArray = [];
-  @override
-  Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    return actions.whereType<BeforeConvertBusinessToSnippet>().asyncMap((event) async {
-      actionArray.clear();
-      actionArray.add(ConvertBusinessToSnippet(event.business));
-
-    }).expand((element) {
-      return actionArray;
-    }).delay(Duration(seconds: 7));
-  }
-}
-
-
-class ConvertBusinessToSnippetService implements EpicClass<AppState> {
-  var actionArray = [];
-  @override
-  Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    return actions.whereType<ConvertBusinessToSnippet>().asyncMap((event) async {
-      actionArray.clear();
-      print("START EPIC CONVERTING BUSINESS TO SNIPPET");
-      await FirebaseFirestore.instance.collection("convertionTrigger").doc("convertionTriggerDocument").update({'businessIdToSnippet': event.business.id_firestore,'businessNameToSnippet': event.business.name,'businessProfileToSnippet': event.business.profile});
-      actionArray.add(NavigatePushAction(AppRoutes.businessList));
-
-    }).expand((element) {
-      return actionArray;
-    });
-  }
-}
-*/
-/*class BusinessUpdateDefaultCategoryService implements EpicClass<AppState> {
-  var actionArray = [];
-  DefaultCategoryState defaultCategory;
-
-  @override
-  Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    return actions.whereType<UpdateDefaultCategory>().asyncMap((event) async {
-      DefaultCategoryState defaultCategory;
-      await FirebaseFirestore.instance.collection("defaultCategory").where("businessType", arrayContainsAny: event.businessState.business_type).orderBy('category.level').get().then((querySnapshot) => {
-            for (var z = 0; z < querySnapshot.docs.length; z++)
-              {
-                defaultCategory = DefaultCategoryState.fromJson(querySnapshot.docs[z].data()),
-                // actionArray.add(CreateDefaultCategory(defaultCategory.category, event.businessState.id_firestore)),
-              },
-          });
-
-      // actionArray.add(ConvertBusinessToSnippet(event.businessState.id_firestore));
-    }).expand((element) {
-      return actionArray;
-    });
-  }
-}
-*/
