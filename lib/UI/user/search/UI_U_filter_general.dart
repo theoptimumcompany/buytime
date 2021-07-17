@@ -16,6 +16,7 @@ import 'package:Buytime/reusable/material_design_icons.dart';
 import 'package:Buytime/utils/globals.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
+import 'package:Buytime/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -91,6 +92,7 @@ class _FilterGeneralState extends State<FilterGeneral> {
         });
       },
       builder: (context, snapshot) {
+        Locale myLocale = Localizations.localeOf(context);
         order = snapshot.order.itemList != null ? (snapshot.order.itemList.length > 0 ? snapshot.order : OrderState().toEmpty()) : OrderState().toEmpty();
         return GestureDetector(
           onTap: () {
@@ -228,54 +230,88 @@ class _FilterGeneralState extends State<FilterGeneral> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
                         children: [
+
                           ///Search
                           Container(
-                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5),
-                            height: SizeConfig.safeBlockHorizontal * 20,
-                            child: TextFormField(
-                              controller: _searchController,
-                              textAlign: TextAlign.start,
-                              textInputAction: TextInputAction.search,
-                              decoration: InputDecoration(
-                                enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                labelText: AppLocalizations.of(context).whatAreYouLookingFor,
-                                helperText: AppLocalizations.of(context).searchForServicesAndIdeasAroundYou,
-                                //hintText: "email *",
-                                //hintStyle: TextStyle(color: Color(0xff666666)),
-                                labelStyle: TextStyle(
-                                  fontFamily: BuytimeTheme.FontFamily,
-                                  color: Color(0xff666666),
-                                  fontWeight: FontWeight.w400,
-                                ),
-                                helperStyle: TextStyle(
-                                  fontFamily: BuytimeTheme.FontFamily,
-                                  color: Color(0xff666666),
-                                  fontWeight: FontWeight.w400,
-                                ),
-                                suffixIcon: InkWell(
-                                  onTap: () {
-                                    debugPrint('done');
-                                    FocusScope.of(context).unfocus();
-                                    search(snapshot.serviceList.serviceListState);
-                                  },
-                                  child: Icon(
-                                    // Based on passwordVisible state choose the icon
-                                    Icons.search,
-                                    color: Color(0xff666666),
+                            margin: EdgeInsets.only(
+                                top: SizeConfig.safeBlockVertical * 3,
+                                left: SizeConfig.safeBlockHorizontal * 5,
+                                bottom: SizeConfig.safeBlockVertical * 1,
+                                right: _searchController.text.isNotEmpty ? SizeConfig.safeBlockHorizontal * .5 : SizeConfig.safeBlockHorizontal * 5),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                ///Search
+                                Flexible(
+                                  child: Container(
+                                    //width: SizeConfig.safeBlockHorizontal * 60,
+                                    // decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
+                                    child: TextFormField(
+                                      controller: _searchController,
+                                      textAlign: TextAlign.start,
+                                      textInputAction: TextInputAction.search,
+                                      decoration: InputDecoration(
+                                        enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                        focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                        errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                        labelText: AppLocalizations.of(context).whatAreYouLookingFor,
+                                        helperText: AppLocalizations.of(context).searchForServicesAndIdeasAroundYou,
+                                        //hintText: "email *",
+                                        //hintStyle: TextStyle(color: Color(0xff666666)),
+                                        labelStyle: TextStyle(
+                                          fontFamily: BuytimeTheme.FontFamily,
+                                          color: Color(0xff666666),
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                        helperStyle: TextStyle(
+                                          fontFamily: BuytimeTheme.FontFamily,
+                                          color: Color(0xff666666),
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                        suffixIcon: InkWell(
+                                          onTap: () {
+                                            debugPrint('done');
+                                            FocusScope.of(context).unfocus();
+                                            search(snapshot.serviceList.serviceListState);
+                                          },
+                                          child: Icon(
+                                            // Based on passwordVisible state choose the icon
+                                            Icons.search,
+                                            color: Color(0xff666666),
+                                          ),
+                                        ),
+                                      ),
+                                      style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextMedium, fontWeight: FontWeight.w400, fontSize: 16),
+                                      onEditingComplete: () {
+                                        debugPrint('done');
+                                        FocusScope.of(context).unfocus();
+                                        search(snapshot.serviceList.serviceListState);
+                                      },
+                                    ),
                                   ),
                                 ),
-                              ),
-                              style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextMedium, fontWeight: FontWeight.w400, fontSize: 16),
-                              onEditingComplete: () {
-                                debugPrint('done');
-                                FocusScope.of(context).unfocus();
-                                search(snapshot.serviceList.serviceListState);
-                              },
+                                _searchController.text.isNotEmpty
+                                    ? Container(
+                                  margin: EdgeInsets.only(bottom: 20),
+                                  child: IconButton(
+                                    icon: Icon(
+                                      // Based on passwordVisible state choose the icon
+                                      BuytimeIcons.remove,
+                                      color: Color(0xff666666),
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        _searchController.clear();
+                                        search(snapshot.serviceList.serviceListState);
+                                        //first = false;
+                                      });
+                                    },
+                                  ),
+                                )
+                                    : Container()
+                              ],
                             ),
                           ),
-
                           ///Sort By
                           Container(
                             //width: SizeConfig.safeBlockHorizontal * 20,
@@ -307,6 +343,22 @@ class _FilterGeneralState extends State<FilterGeneral> {
                                                 ///SizeConfig.safeBlockHorizontal * 4
                                                 color: BuytimeTheme.TextMedium,
                                                 fontWeight: FontWeight.w400,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        Container(
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(left: 4),
+                                            child: Text(
+                                              sortBy,
+                                              textAlign: TextAlign.start,
+                                              style: TextStyle(
+                                                fontSize: 14,
+
+                                                ///SizeConfig.safeBlockHorizontal * 4
+                                                color: BuytimeTheme.TextBlack,
+                                                fontWeight: FontWeight.bold,
                                               ),
                                             ),
                                           ),
@@ -355,9 +407,9 @@ class _FilterGeneralState extends State<FilterGeneral> {
                                           //_dropDownValue = val;
                                           sortBy = val;
                                           if (sortBy == 'A-Z') {
-                                            tmpServiceList.sort((a, b) => a.name.compareTo(b.name));
+                                            tmpServiceList.sort((a, b) => (Utils.retriveField(myLocale.languageCode, a.name)).compareTo(Utils.retriveField(myLocale.languageCode, b.name)));
                                           } else {
-                                            tmpServiceList.sort((a, b) => b.name.compareTo(a.name));
+                                            tmpServiceList.sort((a, b) => (Utils.retriveField(myLocale.languageCode, b.name)).compareTo(Utils.retriveField(myLocale.languageCode, a.name)));
                                           }
                                         },
                                       );
@@ -410,7 +462,7 @@ class _FilterGeneralState extends State<FilterGeneral> {
                                                       StoreProvider.of<AppState>(context).dispatch(OrderReservableListRequest(service.serviceId));
                                                       Navigator.push(
                                                         context,
-                                                        MaterialPageRoute(builder: (context) => ServiceReserve(serviceState: service)),
+                                                        MaterialPageRoute(builder: (context) => ServiceReserve(serviceState: service, tourist: false,)),
                                                       );
                                                     } else {
                                                       order.business.name = snapshot.business.name;

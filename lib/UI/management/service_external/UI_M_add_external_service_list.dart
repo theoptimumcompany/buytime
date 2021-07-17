@@ -134,6 +134,7 @@ class AddExternalServiceListState extends State<AddExternalServiceList> {
         converter: (store) => store.state,
         onInit: (store){
           if(widget.fromMy){
+            noActivity = true;
             store.state.externalBusinessList.externalBusinessListState.clear();
             store.state.serviceListSnippetListState.serviceListSnippetListState.clear();
             store.dispatch(ExternalBusinessListRequest('any', store.state.user.getRole()));
@@ -678,10 +679,74 @@ class AddExternalServiceListState extends State<AddExternalServiceList> {
                       ) : externalBuinessList.isEmpty
                           ? noActivity ?
                       Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            CircularProgressIndicator()
+                        child: CustomScrollView(
+                          shrinkWrap: true,
+                          slivers: [
+                            SliverList(
+                              delegate: SliverChildBuilderDelegate((context, index){
+                                //ExternalBusinessState item = externalBuinessList.elementAt(index);
+                                return Column(
+                                  children: [
+                                    Container(
+                                      //margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 4, right: SizeConfig.safeBlockHorizontal * 4),
+                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 0),
+                                        child: Container(
+                                          height: 91,  ///SizeConfig.safeBlockVertical * 15
+                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 2.5, top: 1, bottom: 1),
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  ///Service Image
+                                                  Utils.imageShimmer(91, 91),
+                                                  ///Service Name & Description
+                                                  Container(
+                                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1),
+                                                    child:  Column(
+                                                      mainAxisAlignment: MainAxisAlignment.start,
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        ///Service Name
+                                                        FittedBox(
+                                                          fit: BoxFit.scaleDown,
+                                                          child: Container(
+                                                            width: SizeConfig.safeBlockHorizontal * 50,
+                                                            child: Utils.textShimmer(150, 12.5)
+                                                          ),
+                                                        ),
+                                                        ///Description
+                                                        FittedBox(
+                                                          fit: BoxFit.fitHeight,
+                                                          child: Container(
+                                                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
+                                                            child: Utils.textShimmer(25, 10)
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              /*Icon(
+                      Icons.arrow_forward_ios,
+                      color: BuytimeTheme.SymbolLightGrey,
+                    )*/
+                                            ],
+                                          ),
+                                        )
+                                    ),
+                                    Container(
+                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 30),
+                                      height: SizeConfig.safeBlockVertical * .2,
+                                      color: BuytimeTheme.DividerGrey,
+                                    )
+                                  ],
+                                );
+                              },
+                                childCount: 10,
+                              ),
+                            ),
                           ],
                         ),
                       ) : Container(

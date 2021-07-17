@@ -41,6 +41,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:intl/intl.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../../environment_abstract.dart';
 
@@ -525,17 +526,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                       children: [
                         ///Image
                         noActivity ?
-                          Container(
-                          margin: EdgeInsets.only(top: 0),
-                          //color: BuytimeTheme.ManagerPrimary.withOpacity(0.1),
-                          height: 275,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              CircularProgressIndicator()
-                            ],
-                          ),
-                        ):
+                        Utils.imageShimmer(double.infinity, 275):
                         CachedNetworkImage(
                           imageUrl:  version1000(widget.externalBusinessState.wide),
                           imageBuilder: (context, imageProvider) => Container(
@@ -614,7 +605,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                         ),
                         ///Address & Map
                         noActivity ?
-                        Container(
+                        /*Container(
                           height: 100,
                           margin: EdgeInsets.only(top: 10, bottom: 10),
                           child: Row(
@@ -623,6 +614,144 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                               CircularProgressIndicator()
                             ],
                           ),
+                        )*/
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Flexible(
+                              flex: 3,
+                              child: Container(
+                                height: 125,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    ///Address
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        ///Address text
+                                        Container(
+                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                          child: FittedBox(
+                                            fit: BoxFit.scaleDown,
+                                            child: Text(
+                                              AppLocalizations.of(context).address.toUpperCase(),
+                                              style: TextStyle(
+                                                  letterSpacing: 1.5,
+                                                  fontFamily: BuytimeTheme.FontFamily,
+                                                  color: BuytimeTheme.TextMedium,
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 10 ///SizeConfig.safeBlockHorizontal * 4
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        ///Address value
+                                        Container(
+                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
+                                            child: Utils.textShimmer(200, 15)
+                                        ),
+                                      ],
+                                    ),
+                                    ///Hour text
+                                    /*Container(
+                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                      child: FittedBox(
+                                        fit: BoxFit.scaleDown,
+                                        child: Text(
+                                          AppLocalizations.of(context).hours.toUpperCase(),
+                                          style: TextStyle(
+                                              letterSpacing: 1.5,
+                                              fontFamily: BuytimeTheme.FontFamily,
+                                              color: BuytimeTheme.TextMedium,
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 10 ///SizeConfig.safeBlockHorizontal * 4
+                                          ),
+                                        ),
+                                      ),
+                                    ),*/
+                                    ///Open until value
+                                    /*Container(
+                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
+                                      child: FittedBox(
+                                        fit: BoxFit.scaleDown,
+                                        child: Text(
+                                          //AppLocalizations.of(context).openUntil + ' ...',
+                                          '',
+                                          style: TextStyle(
+                                              letterSpacing: 0.15,
+                                              fontFamily: BuytimeTheme.FontFamily,
+                                              color: BuytimeTheme.TextBlack,
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 16 ///SizeConfig.safeBlockHorizontal * 4
+                                          ),
+                                        ),
+                                      ),
+                                    ),*/
+                                    ///Directions
+                                    Container(
+                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                      child: Row(
+                                        children: [
+                                          Icon(
+                                            Icons.location_pin,
+                                            size: 14,
+                                            color: BuytimeTheme.SymbolGrey,
+                                          ),
+                                          ///Min
+                                          Container(
+                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * .5, right: SizeConfig.safeBlockHorizontal * 1, top: SizeConfig.safeBlockVertical * 0),
+                                            child: Utils.textShimmer(50, 10)
+                                          ),
+                                          ///Directions
+                                          Container(
+                                              margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 2.5),
+                                              alignment: Alignment.center,
+                                              child: Material(
+                                                color: Colors.transparent,
+                                                child: InkWell(
+                                                    onTap: () {
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(builder: (context) => BuytimeMap(user: false, title: widget.externalBusinessState.name,
+                                                          businessState: BusinessState.fromExternalState(widget.externalBusinessState),
+                                                          serviceState: ServiceState().toEmpty(),
+                                                          tourist: false,
+                                                        )
+                                                        ),
+                                                      );
+                                                    },
+                                                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                                    child: Container(
+                                                      padding: EdgeInsets.all(5.0),
+                                                      child: Text(
+                                                        AppLocalizations.of(context).directions,
+                                                        style: TextStyle(
+                                                            letterSpacing: SizeConfig.safeBlockHorizontal * .2,
+                                                            fontFamily: BuytimeTheme.FontFamily,
+                                                            color: BuytimeTheme.UserPrimary,
+                                                            fontWeight: FontWeight.w400,
+                                                            fontSize: 14
+
+                                                          ///SizeConfig.safeBlockHorizontal * 4
+                                                        ),
+                                                      ),
+                                                    )),
+                                              ))
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                            ///Map
+                            Flexible(
+                              flex: 2,
+                              child: Utils.imageShimmer(174, 125),
+                            ),
+                          ],
                         ):
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -952,14 +1081,95 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                             );
                                           }).toList(),
                                         ) : noActivity ?
-                                        Container(
-                                          margin: EdgeInsets.only(top: 10),
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            children: [
-                                              CircularProgressIndicator()
-                                            ],
-                                          ),
+                                        Column(
+                                          children: [0,0,0,0,0]
+                                              .map((int service) {
+                                            return Column(
+                                              children: [
+                                                Container(
+                                                    //margin: EdgeInsets.only(top: 10),
+                                                    child: Container(
+                                                      //margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 4, right: SizeConfig.safeBlockHorizontal * 4),
+                                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 0),
+                                                        child: Container(
+                                                          height: 91,  ///SizeConfig.safeBlockVertical * 15
+                                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 2.5, top: 1, bottom: 1),
+                                                          child: Row(
+                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                            children: [
+                                                              Row(
+                                                                children: [
+                                                                  ///Service Image
+                                                                  Utils.imageShimmer(91, 91),
+                                                                  ///Service Name & Description
+                                                                  Container(
+                                                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1),
+                                                                    child:  Column(
+                                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                                      children: [
+                                                                        ///Name & Duration & Price
+                                                                        Column(
+                                                                          mainAxisAlignment: MainAxisAlignment.start,
+                                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                                          children: [
+                                                                            Column(
+                                                                              mainAxisAlignment: MainAxisAlignment.start,
+                                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                                              children: [
+                                                                                ///Service Name
+                                                                                Utils.textShimmer(150, 12.5),
+                                                                                ///Duration
+                                                                                FittedBox(
+                                                                                  fit: BoxFit.fitHeight,
+                                                                                  child: Container(
+                                                                                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * .5),
+                                                                                      child: Utils.textShimmer(25, 10)
+                                                                                  ),
+                                                                                ),
+                                                                                ///Price
+                                                                                FittedBox(
+                                                                                  fit: BoxFit.fitHeight,
+                                                                                  child: Container(
+                                                                                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
+                                                                                      child: Utils.textShimmer(25, 10)
+                                                                                  ),
+                                                                                ),
+                                                                              ],
+                                                                            )
+                                                                          ],
+                                                                        ),
+                                                                        ///Message
+                                                                        FittedBox(
+                                                                          fit: BoxFit.fitHeight,
+                                                                          child: Container(
+                                                                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * .25, bottom: SizeConfig.safeBlockVertical * .25),
+                                                                              child: Utils.textShimmer(180, 10)
+                                                                          ),
+                                                                        )
+                                                                      ],
+                                                                    ),
+                                                                  ),
+
+                                                                ],
+                                                              ),
+                                                              Icon(
+                                                                Icons.settings_ethernet,
+                                                                color: BuytimeTheme.ActionButton,
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        )
+                                                    )
+                                                ),
+                                                Container(
+                                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 30),
+                                                  height: SizeConfig.safeBlockVertical * .2,
+                                                  color: BuytimeTheme.DividerGrey,
+                                                )
+                                              ],
+                                            );
+                                          }).toList(),
                                         ) :
                                         ///No List
                                         Container(
@@ -1167,12 +1377,92 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                         ) : noActivity ?
                                         Container(
                                           margin: EdgeInsets.only(top: 10, bottom: 10),
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            children: [
-                                              CircularProgressIndicator()
-                                            ],
-                                          ),
+                                          child: Column(
+                                            children: [0,0,0,0,0]
+                                                .map((int service) {
+                                              return Column(
+                                                children: [
+                                                  Container(
+                                                      //margin: EdgeInsets.only(top: 10),
+                                                      child: Container(
+                                                        //margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 4, right: SizeConfig.safeBlockHorizontal * 4),
+                                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 0),
+                                                          child: Container(
+                                                            height: 91,  ///SizeConfig.safeBlockVertical * 15
+                                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 2.5, top: 1, bottom: 1),
+                                                            child: Row(
+                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                              children: [
+                                                                Row(
+                                                                  children: [
+                                                                    ///Service Image
+                                                                    Utils.imageShimmer(91, 91),
+                                                                    ///Service Name & Description
+                                                                    Container(
+                                                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1),
+                                                                      child:  Column(
+                                                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                                        children: [
+                                                                          ///Name & Duration & Price
+                                                                          Column(
+                                                                            mainAxisAlignment: MainAxisAlignment.start,
+                                                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                                                            children: [
+                                                                              Column(
+                                                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                children: [
+                                                                                  ///Service Name
+                                                                                  Utils.textShimmer(150, 12.5),
+                                                                                  ///Duration
+                                                                                  FittedBox(
+                                                                                    fit: BoxFit.fitHeight,
+                                                                                    child: Container(
+                                                                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * .5),
+                                                                                        child: Utils.textShimmer(25, 10)
+                                                                                    ),
+                                                                                  ),
+                                                                                  ///Price
+                                                                                  FittedBox(
+                                                                                    fit: BoxFit.fitHeight,
+                                                                                    child: Container(
+                                                                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
+                                                                                        child: Utils.textShimmer(25, 10)
+                                                                                    ),
+                                                                                  ),
+                                                                                ],
+                                                                              )
+                                                                            ],
+                                                                          ),
+                                                                          ///Message
+                                                                          FittedBox(
+                                                                            fit: BoxFit.fitHeight,
+                                                                            child: Container(
+                                                                                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * .25, bottom: SizeConfig.safeBlockVertical * .25),
+                                                                                child: Utils.textShimmer(180, 10)
+                                                                            ),
+                                                                          )
+                                                                        ],
+                                                                      ),
+                                                                    ),
+
+                                                                  ],
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          )
+                                                      )
+                                                  ),
+                                                  Container(
+                                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 30),
+                                                    height: SizeConfig.safeBlockVertical * .2,
+                                                    color: BuytimeTheme.DividerGrey,
+                                                  )
+                                                ],
+                                              );
+                                            }).toList(),
+                                          )
                                         ) :
                                         ///No List
                                         Container(
@@ -1381,12 +1671,92 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                         ) : noActivity ?
                                         Container(
                                           margin: EdgeInsets.only(top: 10, bottom: 10),
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            children: [
-                                              CircularProgressIndicator()
-                                            ],
-                                          ),
+                                          child: Column(
+                                            children: [0,0,0,0,0]
+                                                .map((int service) {
+                                              return Column(
+                                                children: [
+                                                  Container(
+                                                      //margin: EdgeInsets.only(top: 10),
+                                                      child: Container(
+                                                        //margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 4, right: SizeConfig.safeBlockHorizontal * 4),
+                                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 0),
+                                                          child: Container(
+                                                            height: 91,  ///SizeConfig.safeBlockVertical * 15
+                                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 2.5, top: 1, bottom: 1),
+                                                            child: Row(
+                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                              children: [
+                                                                Row(
+                                                                  children: [
+                                                                    ///Service Image
+                                                                    Utils.imageShimmer(91, 91),
+                                                                    ///Service Name & Description
+                                                                    Container(
+                                                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1),
+                                                                      child:  Column(
+                                                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                                        children: [
+                                                                          ///Name & Duration & Price
+                                                                          Column(
+                                                                            mainAxisAlignment: MainAxisAlignment.start,
+                                                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                                                            children: [
+                                                                              Column(
+                                                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                children: [
+                                                                                  ///Service Name
+                                                                                  Utils.textShimmer(150, 12.5),
+                                                                                  ///Duration
+                                                                                  FittedBox(
+                                                                                    fit: BoxFit.fitHeight,
+                                                                                    child: Container(
+                                                                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * .5),
+                                                                                        child: Utils.textShimmer(25, 10)
+                                                                                    ),
+                                                                                  ),
+                                                                                  ///Price
+                                                                                  FittedBox(
+                                                                                    fit: BoxFit.fitHeight,
+                                                                                    child: Container(
+                                                                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
+                                                                                        child: Utils.textShimmer(25, 10)
+                                                                                    ),
+                                                                                  ),
+                                                                                ],
+                                                                              )
+                                                                            ],
+                                                                          ),
+                                                                          ///Message
+                                                                          FittedBox(
+                                                                            fit: BoxFit.fitHeight,
+                                                                            child: Container(
+                                                                                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * .25, bottom: SizeConfig.safeBlockVertical * .25),
+                                                                                child: Utils.textShimmer(180, 10)
+                                                                            ),
+                                                                          )
+                                                                        ],
+                                                                      ),
+                                                                    ),
+
+                                                                  ],
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          )
+                                                      )
+                                                  ),
+                                                  Container(
+                                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 30),
+                                                    height: SizeConfig.safeBlockVertical * .2,
+                                                    color: BuytimeTheme.DividerGrey,
+                                                  )
+                                                ],
+                                              );
+                                            }).toList(),
+                                          )
                                         ) :
                                         ///No List
                                         Container(
