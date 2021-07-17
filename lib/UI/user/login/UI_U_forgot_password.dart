@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:Buytime/UI/management/business/RUI_M_business_list.dart';
 import 'package:Buytime/UI/management/business/UI_M_business_list.dart';
 import 'package:Buytime/environment_abstract.dart';
 import 'package:Buytime/reblox/model/role/role.dart';
@@ -378,7 +379,7 @@ class ForgotPasswordState extends State<ForgotPassword> {
         _success = true;
 
         if (StoreProvider.of<AppState>(context).state.user.getRole() != Role.user)
-          Navigator.push(context, MaterialPageRoute(builder: (context) => UI_M_BusinessList()));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => RBusinessList()));
         else
           Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.landing, (Route<dynamic> route) => false);
         //Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.myBookings, ModalRoute.withName(AppRoutes.landing));

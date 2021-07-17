@@ -7,6 +7,8 @@ import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'RUI_M_business_list.dart';
+
 
 
 class UI_M_ManageBusiness extends StatefulWidget {
@@ -43,7 +45,7 @@ class UI_M_ManageBusinessState extends State<UI_M_ManageBusiness> {
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
-                          widget.indexBusiness == -1 ? UI_M_BusinessList() : UI_M_Business()),
+                          widget.indexBusiness == -1 ? RBusinessList() : UI_M_Business()),
                 ),
               ),
               Text(

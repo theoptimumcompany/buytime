@@ -24,6 +24,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
+import 'RUI_M_business_list.dart';
+
 class UI_M_BusinessList extends StatefulWidget {
   static String route = '/businessList';
 
@@ -179,7 +181,7 @@ class UI_M_BusinessListState extends State<UI_M_BusinessList> {
                                     onBusinessCardTap: (BusinessState businessState) async{
                                       StoreProvider.of<AppState>(context).dispatch(SetBusiness(businessListState[index]));
                                       //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_Business()),);
-                                      Navigator.push(context, EnterExitRoute(enterPage: UI_M_Business(), exitPage: UI_M_BusinessList(), from: true));
+                                      Navigator.push(context, EnterExitRoute(enterPage: UI_M_Business(), exitPage: RBusinessList(), from: true));
                                     },
                                     imageUrl: businessListState[index].profile,
                                     mediaSize: media,

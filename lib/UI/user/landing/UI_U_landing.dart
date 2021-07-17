@@ -116,7 +116,7 @@ class LandingState extends State<Landing> {
     // await storage.delete(key: 'categoryInvite');
     if (categoryCode.isNotEmpty) {
       StoreProvider.of<AppState>(context).dispatch(UserBookingListRequest(StoreProvider.of<AppState>(context).state.user.email, false));
-      Navigator.push(context, MaterialPageRoute(builder: (context) => UI_M_BusinessList()));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => RBusinessList()));
     }
   }
   ///List
@@ -172,7 +172,7 @@ class LandingState extends State<Landing> {
           if (FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty) {
             debugPrint('UI_U_landing: USER Is LOGGED in onLink');
             StoreProvider.of<AppState>(context).dispatch(UserBookingListRequest(StoreProvider.of<AppState>(context).state.user.email, false));
-            Navigator.push(context, MaterialPageRoute(builder: (context) => UI_M_BusinessList()));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => RBusinessList()));
           } else
             debugPrint('UI_U_landing: USER NOT LOGGED in onLink');
         } else if (deepLink.queryParameters.containsKey('orderId') && orderIdRead != 'true') {
@@ -184,7 +184,7 @@ class LandingState extends State<Landing> {
           if (FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty) {
             debugPrint('UI_U_landing: USER Is LOGGED in onLink');
             StoreProvider.of<AppState>(context).dispatch(SetOrderDetailAndNavigatePopOrderId(orderId));
-            Navigator.push(context, MaterialPageRoute(builder: (context) => UI_M_BusinessList()));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => RBusinessList()));
           } else
             debugPrint('UI_U_landing: USER NOT LOGGED in onLink');
         } else if (deepLink.queryParameters.containsKey('selfBookingCode') && deepLink.queryParameters['selfBookingCode'].length > 5) {
@@ -254,7 +254,7 @@ class LandingState extends State<Landing> {
         if (FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty) {
           debugPrint('UI_U_landing: USER Is LOGGED in onLink');
           StoreProvider.of<AppState>(context).dispatch(UserBookingListRequest(StoreProvider.of<AppState>(context).state.user.email, false));
-          Navigator.push(context, MaterialPageRoute(builder: (context) => UI_M_BusinessList()));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => RBusinessList()));
         } else if (deepLink.queryParameters.containsKey('orderId') && orderIdRead != 'true') {
           String orderId = deepLink.queryParameters['orderId'];
           debugPrint('UI_U_landing: orderId from dynamic link: $orderId');
@@ -264,7 +264,7 @@ class LandingState extends State<Landing> {
           if (FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty) {
             debugPrint('UI_U_landing: USER Is LOGGED in onLink');
             StoreProvider.of<AppState>(context).dispatch(SetOrderDetailAndNavigatePopOrderId(orderId));
-            Navigator.push(context, MaterialPageRoute(builder: (context) => UI_M_BusinessList()));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => RBusinessList()));
           } else
             debugPrint('UI_U_landing: USER NOT LOGGED in onLink');
         } else
@@ -570,7 +570,7 @@ class LandingState extends State<Landing> {
                                       StoreProvider.of<AppState>(context).dispatch(SetOrderListToEmpty());*/
                                                   Navigator.push(
                                                     context,
-                                                    MaterialPageRoute(builder: (context) => drawerSelection == DrawerSelection.BusinessList ? UI_M_BusinessList() : RActivityManagement()),
+                                                    MaterialPageRoute(builder: (context) => drawerSelection == DrawerSelection.BusinessList ? RBusinessList() : RActivityManagement()),
                                                   );
                                                 },
                                                 child: CustomBottomButtonWidget(

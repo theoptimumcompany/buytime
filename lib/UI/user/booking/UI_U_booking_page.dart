@@ -1,3 +1,4 @@
+import 'package:Buytime/UI/management/business/RUI_M_business_list.dart';
 import 'package:Buytime/UI/management/business/UI_M_business_list.dart';
 import 'package:Buytime/UI/user/booking/RUI_U_all_bookings.dart';
 import 'package:Buytime/UI/user/booking/UI_U_all_bookings.dart';
@@ -1319,7 +1320,7 @@ class _BookingPageState extends State<BookingPage> {
                                                 StoreProvider.of<AppState>(context).dispatch(SetOrderListToEmpty());
                                                 Navigator.pushReplacement(
                                                   context,
-                                                  MaterialPageRoute(builder: (context) => UI_M_BusinessList()),
+                                                  MaterialPageRoute(builder: (context) => RBusinessList()),
                                                 );
                                               },
                                               child: CustomBottomButtonWidget(

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
+import 'package:Buytime/UI/management/business/RUI_M_business_list.dart';
 import 'package:Buytime/UI/management/business/UI_M_business_list.dart';
 import 'package:Buytime/UI/user/landing/UI_U_landing.dart';
 import 'package:Buytime/UI/user/login/UI_U_forgot_password.dart';
@@ -1226,7 +1227,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
         _success = true;
 
         if (StoreProvider.of<AppState>(context).state.user.getRole() != Role.user)
-          Navigator.push(context, MaterialPageRoute(builder: (context) => UI_M_BusinessList()));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => RBusinessList()));
         else
           Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.landing, (Route<dynamic> route) => false);
         //Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.myBookings, ModalRoute.withName(AppRoutes.landing));

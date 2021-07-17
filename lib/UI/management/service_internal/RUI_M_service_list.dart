@@ -666,14 +666,14 @@ class RServiceListState extends State<RServiceList> {
                                                   if (spinnerState.getSpinner(i, index)) {
                                                     iconVisibility = spinner;
                                                   } else {
-                                                    iconVisibility = Icon(Icons.visibility_off, color: BuytimeTheme.SymbolGrey, size: mediaWidth * 0.07);
+                                                    iconVisibility = Icon(Icons.do_disturb_alt_outlined, color: BuytimeTheme.SymbolGrey, size: mediaWidth * 0.07);
                                                   }
                                                   break;
                                                 case 'Invisible':
                                                   if (spinnerState.getSpinner(i, index)) {
                                                     iconVisibility = spinner;
                                                   } else {
-                                                    iconVisibility = Icon(Icons.do_disturb_alt_outlined, color: BuytimeTheme.SymbolGrey, size: mediaWidth * 0.07);
+                                                    iconVisibility = Icon(Icons.visibility_off, color: BuytimeTheme.SymbolGrey, size: mediaWidth * 0.07);
                                                   }
                                                   break;
                                               }

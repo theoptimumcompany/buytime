@@ -20,6 +20,7 @@ import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/navigation/route_aware_widget.dart';
 import 'package:flutter/material.dart';
 
+import 'UI/management/business/RUI_M_business_list.dart';
 import 'UI/management/service_internal/RUI_M_service_list.dart';
 
 MaterialPageRoute<dynamic> appRoutes(RouteSettings settings) {
@@ -39,7 +40,7 @@ MaterialPageRoute<dynamic> appRoutes(RouteSettings settings) {
     case AppRoutes.categories:
       return SlideInExitRoute(ManageCategory(), settings: settings);
     case AppRoutes.businessList:
-      return FabRoute(UI_M_BusinessList(), settings: settings);
+      return FabRoute(RBusinessList(), settings: settings);
     case AppRoutes.business:
       return FabRoute(UI_M_Business(), settings: settings);
     case AppRoutes.confirmBooking:

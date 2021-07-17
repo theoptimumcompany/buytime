@@ -143,11 +143,13 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                   externalBusinessState.state_province;
           }
         });
+
+        /// TODO update
         if(store.state.business.id_firestore.isNotEmpty){
-          debugPrint('BUSINESS NAME: ${store.state.business.name}');
           bussinessName = store.state.business.name;
         }
         store.state.businessList.businessListState.forEach((element) {
+          debugPrint('BUSINESS NAME: ${element.id_firestore} VS ${widget.serviceState.businessId}');
           if(widget.serviceState.businessId == element.id_firestore)
             bussinessName = element.name;
         });

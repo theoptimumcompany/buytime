@@ -8,6 +8,7 @@ part 'service_state.g.dart';
 class ServiceState {
   String serviceId;
   String businessId;
+  // String serviceCreatorId;
   List<String> categoryId;
   String image1;
   String image2;

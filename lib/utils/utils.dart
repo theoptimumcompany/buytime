@@ -219,7 +219,7 @@ class Utils {
   }
 
   static String retriveField(String myLocale, String field){
-    List<String> tmpField = field.split('|');
+    List<String> tmpField = field.trim().split('|');
     String tmp = '';
     if(field.contains('|')){
       tmpField.forEach((element) {
@@ -245,7 +245,7 @@ class Utils {
   static String saveField(String myLocale, String newField, String oldField){
     debugPrint('saveField => old field: $oldField');
     debugPrint('saveField => new field: $newField');
-    List<String> tmpField = oldField.split('|');
+    List<String> tmpField = oldField.trim().split('|');
     String tmp = '';
     if(oldField.contains('|')){
       debugPrint('saveField => old field not empty');
@@ -356,7 +356,7 @@ class Utils {
 
     List<TextEditingController> controllers = List.generate(flags.length, (index) => TextEditingController());
     int myIndex = 0;
-    List<String> stateFiledList = stateField.split('|');
+    List<String> stateFiledList = stateField.trim().split('|');
     debugPrint('UI_M_create_service => State field list: $stateFiledList');
     //nameController.text = Utils.retriveFiled(myLanguage, snapshot.serviceState.name);
     for(int i = 0; i < flags.length; i++){

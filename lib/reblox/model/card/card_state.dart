@@ -101,7 +101,7 @@ class CardState {
     debugPrint('card_state => CARDS: $tmpString');
 
     if(tmpString.isNotEmpty){
-      List<String> cards = tmpString.split('|');
+      List<String> cards = tmpString.trim().split('|');
       cards.forEach((element) {
         Map<String, dynamic> map = jsonDecode(element);
         debugPrint('card_state => SECRET TOKEN: ${map['secretToken']}');

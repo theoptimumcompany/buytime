@@ -89,7 +89,7 @@ class AutoCompleteState {
     debugPrint('auto_complete_state => List: $tmpString');
 
     if (tmpString.isNotEmpty) {
-      List<String> cards = tmpString.split('|');
+      List<String> cards = tmpString.trim().split('|');
       cards.forEach((element) {
         Map<String, dynamic> map = jsonDecode(element);
         debugPrint('auto_complete_state => EMAIL: ${map['email']}');
