@@ -35,13 +35,17 @@ OrderState configureOrder(OrderState orderStateFromEvent, EpicStore<AppState> st
       orderState.business.id = orderState.itemList.first.id_business;
     }
   }
-
-  store.state.cardListState.cardList.forEach((element) {
-    if (element.selected) {
-      orderState.cardType = element.stripeState.stripeCard.brand;
-      orderState.cardLast4Digit = element.stripeState.stripeCard.last4;
-    }
-  });
+  if (store.state.cardListState.cardList != null) {
+    store.state.cardListState.cardList.forEach((element) {
+      if (element.selected) {
+        orderState.cardType = element.stripeState.stripeCard.brand;
+        orderState.cardLast4Digit = element.stripeState.stripeCard.last4;
+      }
+    });
+  } else {
+    orderState.cardType = '';
+    orderState.cardLast4Digit = '';
+  }
 
   /// set the creation date
   orderState.creationDate = DateTime.now().toUtc();
