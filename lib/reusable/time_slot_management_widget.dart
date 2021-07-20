@@ -38,6 +38,7 @@ class _TimeSlotManagementWidgetState extends State<TimeSlotManagementWidget> {
   void initState() {
     super.initState();
     free = widget.squareSlot.free;
+    debugPrint('FREE: ${widget.squareSlot.free}');
   }
 
   @override
@@ -120,12 +121,12 @@ class _TimeSlotManagementWidgetState extends State<TimeSlotManagementWidget> {
                        child: InkWell(
                          borderRadius: BorderRadius.all(Radius.circular(12)),
                          onTap: (){
-                           int minus = free;
+                           int minus = widget.squareSlot.free;
                             if(minus > 0)
                               setState(() {
                                 widget.squareSlot.free = minus--;
-                                free = minus--;
-                                widget.onChange(free);
+                                //widget.squareSlot.free = minus--;
+                                widget.onChange(widget.squareSlot.free);
                               });
                          },
                          child: Container(
@@ -144,7 +145,7 @@ class _TimeSlotManagementWidgetState extends State<TimeSlotManagementWidget> {
                    Container(
                      margin: EdgeInsets.only(top: 0, left: 10, right: 10),
                      child: Text(
-                       '${free}',
+                       '${widget.squareSlot.free}',
                        style: TextStyle(fontFamily: BuytimeTheme.FontFamily, fontSize: 16, fontWeight: FontWeight.w500),
                      ),
                    ),
@@ -159,12 +160,12 @@ class _TimeSlotManagementWidgetState extends State<TimeSlotManagementWidget> {
                        child: InkWell(
                          borderRadius: BorderRadius.all(Radius.circular(12)),
                          onTap: (){
-                           int sum = free;
+                           int sum = widget.squareSlot.free;
                            if(sum < widget.squareSlot.max)
                              setState(() {
                                widget.squareSlot.free = sum++;
-                               free = sum++;
-                               widget.onChange(free);
+                               //free = sum++;
+                               widget.onChange(widget.squareSlot.free);
                              });
                          },
                          child: Container(

@@ -165,6 +165,7 @@ class _RServiceSlotManagementState extends State<RServiceSlotManagement> {
         )
     );
     map.forEach((key, value) {
+      debugPrint('here');
       DateTime orderTime = DateFormat('dd/MM/yyyy').parse(value.first.date);
       DateTime tmp = DateFormat('dd/MM/yyyy').parse(value.first.date);
       tmp = DateTime(orderTime.year, orderTime.month, 1, 0,0,0,0,0);
@@ -317,7 +318,7 @@ class _RServiceSlotManagementState extends State<RServiceSlotManagement> {
                                             slotSnippetListState.slotListSnippet.first.slot.forEach((element) {
                                               if(element.uid == slot.uid)
                                                 element.free = value;
-                                              debugPrint('${element.date} - ${element.on} - ${element.free}');
+                                              //debugPrint('${element.date} - ${element.on} - ${element.free}');
                                             });
                                             StoreProvider.of<AppState>(context).dispatch(UpdateSlotSnippet(widget.serviceState.serviceId, slotSnippetListState));
                                             /*squareSlotList.forEach((element) {
@@ -780,6 +781,7 @@ class _RServiceSlotManagementState extends State<RServiceSlotManagement> {
   @override
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
+
     _serviceSnippet = FirebaseFirestore.instance.collection('service')
         .doc(widget.serviceState.serviceId)
         .collection('slotSnippet')
@@ -814,7 +816,7 @@ class _RServiceSlotManagementState extends State<RServiceSlotManagement> {
             .snapshots();
       }
     }*/
-
+    debugPrint('UPDATE');
     //debugPrint('RUI_M_activity_management => STREAM LENGTH: ${_orderListRealtime.length}');
 
     ///Init sizeConfig
@@ -891,13 +893,12 @@ class _RServiceSlotManagementState extends State<RServiceSlotManagement> {
                   ],
                 );
               }
-              serviceSnapshot.data.docs.forEach((element) {
-                //squareSlotList.add(SquareSlotState.fromJson(element.data()));
-              });
               slotSnippetListState = SlotListSnippetState.fromJson(serviceSnapshot.data.docs.first.data());
               slotSnippetListState.slotListSnippet.first.id = serviceSnapshot.data.docs.first.id;
               debugPrint("slotSnippetListState: ${slotSnippetListState.slotListSnippet.length}");
+              squareSlotList.clear();
               squareSlotList = slotSnippetListState.slotListSnippet.first.slot;
+              allMap.clear();
               squareSlotList.forEach((element) {
                 DateTime tmp = DateFormat('dd/MM/yyyy').parse(element.date);
                 DateTime tmp2 = DateFormat('dd/MM/yyyy').parse(element.date);
@@ -905,7 +906,7 @@ class _RServiceSlotManagementState extends State<RServiceSlotManagement> {
                 tmp = DateTime(tmp.year, tmp.month, 1, 0,0,0,0,0);
                 tmp2 = DateTime(tmp2.year, tmp2.month, tmp2.day, 0,0,0,0,0);
                 allMap.putIfAbsent(tmp, () => tmpMap);
-                //debugPrint('RUI_M_activity_management: VALUE LENGTH: ${value.length}');
+                debugPrint('RUI_M_activity_management: VALUE LENGTH: ${element.free}');
                 if(allMap.containsKey(tmp)){
                   allMap[tmp].putIfAbsent(tmp2, () => []);
                   //debugPrint('RUI_M_activity_management: KEY: $key');
@@ -918,6 +919,7 @@ class _RServiceSlotManagementState extends State<RServiceSlotManagement> {
             }*/
                 }
               });
+
 
               return CustomScrollView(
                   shrinkWrap: true, slivers: [MultiSliver(
