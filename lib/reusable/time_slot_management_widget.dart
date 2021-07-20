@@ -37,12 +37,13 @@ class _TimeSlotManagementWidgetState extends State<TimeSlotManagementWidget> {
   @override
   void initState() {
     super.initState();
-    free = widget.squareSlot.free;
-    debugPrint('FREE: ${widget.squareSlot.free}');
+
   }
 
   @override
   Widget build(BuildContext context) {
+    free = widget.squareSlot.free;
+    debugPrint('FREE: ${widget.squareSlot.free}');
     DateTime tmp = DateFormat('dd/MM/yyyy').parse(widget.squareSlot.date);
     Map<DateTime, List<SquareSlotState>> tmpMap = Map();
     //tmp = DateTime(tmp.year, tmp.month, 1, 0,0,0,0,0);
@@ -121,12 +122,12 @@ class _TimeSlotManagementWidgetState extends State<TimeSlotManagementWidget> {
                        child: InkWell(
                          borderRadius: BorderRadius.all(Radius.circular(12)),
                          onTap: (){
-                           int minus = widget.squareSlot.free;
+                           int minus = free;
                             if(minus > 0)
                               setState(() {
                                 widget.squareSlot.free = minus--;
-                                //widget.squareSlot.free = minus--;
-                                widget.onChange(widget.squareSlot.free);
+                                free = minus--;
+                                widget.onChange(free);
                               });
                          },
                          child: Container(
@@ -145,7 +146,7 @@ class _TimeSlotManagementWidgetState extends State<TimeSlotManagementWidget> {
                    Container(
                      margin: EdgeInsets.only(top: 0, left: 10, right: 10),
                      child: Text(
-                       '${widget.squareSlot.free}',
+                       '${free}',
                        style: TextStyle(fontFamily: BuytimeTheme.FontFamily, fontSize: 16, fontWeight: FontWeight.w500),
                      ),
                    ),
@@ -160,12 +161,12 @@ class _TimeSlotManagementWidgetState extends State<TimeSlotManagementWidget> {
                        child: InkWell(
                          borderRadius: BorderRadius.all(Radius.circular(12)),
                          onTap: (){
-                           int sum = widget.squareSlot.free;
+                           int sum = free;
                            if(sum < widget.squareSlot.max)
                              setState(() {
                                widget.squareSlot.free = sum++;
-                               //free = sum++;
-                               widget.onChange(widget.squareSlot.free);
+                               free = sum++;
+                               widget.onChange(free);
                              });
                          },
                          child: Container(
