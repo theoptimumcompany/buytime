@@ -4,6 +4,7 @@ import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
 import 'package:Buytime/reblox/reducer/order_reservable_reducer.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:redux_epics/redux_epics.dart';
 
 /// constructs the order based on the information in the store
@@ -45,6 +46,14 @@ OrderState configureOrder(OrderState orderStateFromEvent, EpicStore<AppState> st
   } else {
     orderState.cardType = '';
     orderState.cardLast4Digit = '';
+  }
+
+  if( orderState.businessId.isEmpty || orderState.businessId == '') {
+    debugPrint("configureOrder sicuramente dovrebbe funzionare ma il business id é vuoto anche qui " );
+    orderState.businessId = orderState.itemList[0].id_business;
+    orderState.business.id = orderState.itemList[0].id_business;
+    debugPrint("configureOrder sicuramente dovrebbe funzionare " + orderState.businessId);
+
   }
 
   /// set the creation date
