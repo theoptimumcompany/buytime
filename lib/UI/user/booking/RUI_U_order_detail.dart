@@ -241,7 +241,10 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
       _orderStream = FirebaseFirestore.instance.collection('order').doc(orderDetails.orderId).snapshots();
     }
     notificationState = StoreProvider.of<AppState>(context).state.notificationState;
-    _businessStream = FirebaseFirestore.instance.collection('business').doc(notificationState.data.state.businessId).snapshots();
+    if(notificationState.data.state.businessId.isNotEmpty)
+      _businessStream = FirebaseFirestore.instance.collection('business').doc(notificationState.data.state.businessId).snapshots();
+    if(orderDetails.businessId.isNotEmpty)
+      _businessStream = FirebaseFirestore.instance.collection('business').doc(orderDetails.businessId).snapshots();
     refundAsked = false;
       return GestureDetector(
         onTap: (){

@@ -118,7 +118,7 @@ class _SlotManagementState extends State<SlotManagement> {
 
       },
       builder: (context, snapshot) {
-
+        Locale myLocale = Localizations.localeOf(context);
         List<CategoryState> categoryRootList = snapshot.categoryList.categoryListState;
         //print("UI_M_Business => Categories : ${snapshot.serviceListSnippetState.businessSnippet}");
         /*if(snapshot.serviceListSnippetState.businessSnippet != null && snapshot.serviceListSnippetState.businessSnippet.isNotEmpty){
@@ -131,7 +131,9 @@ class _SlotManagementState extends State<SlotManagement> {
           if(snapshot.serviceList.serviceListState.isNotEmpty){
             print("UI_M_slot_management=> Service List Length: ${snapshot.serviceList.serviceListState.length}");
             serviceList = snapshot.serviceList.serviceListState;
-            serviceList.sort((a,b) => a.name.compareTo(b.name));
+            serviceList.sort((a, b) => (Utils.retriveField(myLocale.languageCode, a.name)).compareTo(Utils.retriveField(myLocale.languageCode, b.name)));
+
+            //serviceList.sort((a,b) => a.name.compareTo(b.name));
             noActivity = false;
             startRequest = false;
           }

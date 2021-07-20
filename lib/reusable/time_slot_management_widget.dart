@@ -46,6 +46,7 @@ class _TimeSlotManagementWidgetState extends State<TimeSlotManagementWidget> {
 
   @override
   Widget build(BuildContext context) {
+
     free = widget.squareSlot.free;
     debugPrint('FREE: ${widget.squareSlot.free} - bool: ${widget.load}');
     DateTime tmp = DateFormat('dd/MM/yyyy').parse(widget.squareSlot.date);
